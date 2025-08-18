@@ -1,18 +1,15 @@
 import {
-  AutoFocus
-} from "./chunk-HKP5PLII.js";
-import "./chunk-LGMF4Z35.js";
-import {
   BaseEditableHolder
 } from "./chunk-XVWHFUO4.js";
 import "./chunk-FM2DOPB4.js";
 import {
+  AutoFocus
+} from "./chunk-HKP5PLII.js";
+import "./chunk-LGMF4Z35.js";
+import {
   StarFillIcon,
   StarIcon
 } from "./chunk-UB26PZL4.js";
-import {
-  NG_VALUE_ACCESSOR
-} from "./chunk-F3LB25CD.js";
 import "./chunk-RNO32UBA.js";
 import {
   BaseStyle
@@ -27,6 +24,9 @@ import {
   s3 as s,
   vt
 } from "./chunk-ICG2ZITK.js";
+import {
+  NG_VALUE_ACCESSOR
+} from "./chunk-F3LB25CD.js";
 import {
   CommonModule,
   NgClass,

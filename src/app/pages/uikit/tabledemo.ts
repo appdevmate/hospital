@@ -7,9 +7,23 @@ import { DatePipe } from '@angular/common';
 @Component({
     selector: 'app-table-demo',
     standalone: true,
-    imports: [TableModule, DatePipe /* ... other modules */],
-    template: ` <div class="card">
-        <p-table #dt1 [value]="patients" dataKey="PK" [rows]="pageSize" [loading]="loading" [paginator]="true" [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="loadPatients($event)" [showGridlines]="true" responsiveLayout="scroll">
+    imports: [TableModule, DatePipe],
+    template: `
+    <div class="card">
+        <p-table
+            #dt1
+            [value]="patients"
+            dataKey="PK"
+            [loading]="loading"
+            [paginator]="true"
+            [rows]="pageSize"
+            [rowsPerPageOptions]="pageSizeOptions"
+            [totalRecords]="totalRecords"
+            [lazy]="true"
+            (onLazyLoad)="loadPatients($event)"
+            [showGridlines]="true"
+            responsiveLayout="scroll"
+        >
             <ng-template #header>
                 <tr>
                     <th>Name</th>
@@ -32,17 +46,14 @@ import { DatePipe } from '@angular/common';
     </div>`
 })
 export class TableDemo implements OnInit, OnDestroy {
+    
     @ViewChild('dt1') dt1!: Table;
-
     patients: Patient[] = [];
     loading = true;
+    pageSize = 2;
+    pageSizeOptions = [1, 5, 10, 25, 50, 100];
     totalRecords = 0;
-    pageSize = 1;
-
-    private lastKeys: (string | null)[] = [null];
-    private reachedEnd = false;
-    private finalTotal = 0;
-
+    private lastKeys: (string | null)[] = [null]
     private destroy$ = new Subject<void>();
 
     constructor(private patientsService: PatientService) {}
@@ -50,70 +61,37 @@ export class TableDemo implements OnInit, OnDestroy {
     ngOnInit() {}
 
     loadPatients(event: any) {
+        console.log(event);
         this.loading = true;
-
-        const pageIndex = Math.floor(event.first / event.rows); // 0-based
-
-        // If end known, clamp nav
-        if (this.reachedEnd) {
-            const maxPageIndex = Math.max(0, Math.ceil(this.finalTotal / this.pageSize) - 1);
-            if (pageIndex > maxPageIndex) {
-                this.dt1.first = maxPageIndex * this.pageSize;
-                this.loading = false;
-                return;
-            }
+        const requestedRows: number = event?.rows ?? this.pageSize;
+        if (requestedRows !== this.pageSize) {
+            this.pageSize = requestedRows;
+            this.lastKeys = [null];
+            this.totalRecords = 0;
+            if (this.dt1) this.dt1.first = 0;
         }
-
-        const lastKey = this.lastKeys[pageIndex] ?? null;
-
+        const pageIndex = Math.floor((event?.first ?? 0) / this.pageSize);
         this.patientsService
-            .getPatientsPage({ pageSize: this.pageSize, lastKey })
+            .getPatientsPage({ pageNumber: (((event?.first ?? 0) / event?.rows) + 1), pageSize: this.pageSize })
             .pipe(takeUntil(this.destroy$))
             .subscribe({
-                next: (res) => {
-                    const rows = res?.data ?? [];
-                    const hasData = rows.length > 0;
-                    const hasNext = !!res?.lastKey;
-
-                    // If API returned an empty page (can happen with scans), clamp and snap back
-                    if (!hasData) {
-                        this.reachedEnd = true;
-                        // pages before this are valid; this page is not
-                        this.lastKeys.length = Math.max(1, pageIndex); // keep previous pages only
-                        this.finalTotal = this.lastKeys.length * this.pageSize;
-                        this.totalRecords = this.finalTotal;
-
-                        // snap back to the last valid page
-                        const prevIndex = Math.max(0, pageIndex - 1);
-                        this.dt1.first = prevIndex * this.pageSize;
-
-                        this.loading = false;
-                        return;
-                    }
-
-                    // render current page rows
-                    this.patients = rows;
-
-                    if (hasNext) {
-                        // only advertise exactly one more page
-                        this.lastKeys.length = pageIndex + 2;
-                        this.lastKeys[pageIndex + 1] = res!.lastKey!;
-                        if (!this.reachedEnd) {
-                            this.totalRecords = (pageIndex + 2) * this.pageSize;
-                        }
+                next: (res: any) => {
+                    this.patients = res?.data ?? [];
+                    if (res?.lastKey) {
+                        this.lastKeys[pageIndex + 1] = res.lastKey;
+                        console.log("Last Keys: ", this.lastKeys);
                     } else {
-                        // no more pages — lock totals & trim cursors
-                        this.reachedEnd = true;
                         this.lastKeys.length = pageIndex + 1;
-                        this.finalTotal = this.lastKeys.length * this.pageSize;
-                        this.totalRecords = this.finalTotal;
+                        console.log("Last Keys: ", this.lastKeys);
                     }
-
+                    if (typeof res?.totalPages === 'number') {
+                        this.totalRecords = res.totalPages * this.pageSize;
+                    } else {
+                        this.totalRecords = this.lastKeys.length * this.pageSize;
+                    }
                     this.loading = false;
                 },
-                error: () => {
-                    this.loading = false;
-                }
+                error: () => { this.loading = false; }
             });
     }
 
@@ -122,6 +100,127 @@ export class TableDemo implements OnInit, OnDestroy {
         this.destroy$.complete();
     }
 }
+
+// import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+// import { Table, TableModule } from 'primeng/table';
+// import { Patient, PatientService } from '../service/patients.service';
+// import { Subject, takeUntil } from 'rxjs';
+// import { DatePipe } from '@angular/common';
+
+// @Component({
+//     selector: 'app-table-demo',
+//     standalone: true,
+//     imports: [TableModule, DatePipe /* ... other modules */],
+//     template: ` <div class="card">
+//         <p-table 
+//         #dt1
+//         [value]="patients"
+//         dataKey="PK"
+//         [rows]="pageSize"
+//         [loading]="loading"
+//         [paginator]="true"
+//         [totalRecords]="totalPages"
+//         [lazy]="true"
+//         (onLazyLoad)="loadPatients($event)"
+//         [showGridlines]="true"
+//         responsiveLayout="scroll"
+//         >
+//             <ng-template #header>
+//                 <tr>
+//                     <th>Name</th>
+//                     <th>Gender</th>
+//                     <th>Insurance</th>
+//                     <th>Date of Birth</th>
+//                     <th>Submitted Date</th>
+//                 </tr>
+//             </ng-template>
+//             <ng-template #body let-patient>
+//                 <tr>
+//                     <td>{{ patient?.name }}</td>
+//                     <td>{{ patient?.gender }}</td>
+//                     <td>{{ patient?.insurance }}</td>
+//                     <td>{{ patient?.dob | date: 'MM/dd/yyyy' }}</td>
+//                     <td>{{ patient?.timestamp | date: 'MM/dd/yyyy' }}</td>
+//                 </tr>
+//             </ng-template>
+//         </p-table>
+//     </div>`
+// })
+// export class TableDemo implements OnInit, OnDestroy {
+//     @ViewChild('dt1') dt1!: Table;
+
+//     patients: Patient[] = [];
+//     loading = true;
+//     totalPages = 0;
+//     pageSize = 1;
+
+//     private lastKeys: (string | null)[] = [null];
+//     private reachedEnd = false;
+
+//     private destroy$ = new Subject<void>();
+
+//     constructor(private patientsService: PatientService) {}
+
+//     ngOnInit() {}
+
+//     loadPatients(event: any) {
+//         this.loading = true;
+
+//         const pageIndex = Math.floor(event.first / event.rows); // 0-based
+
+//         const lastKey = this.lastKeys[pageIndex] ?? null;
+
+//         this.patientsService
+//             .getPatientsPage({ pageSize: this.pageSize, lastKey })
+//             .pipe(takeUntil(this.destroy$))
+//             .subscribe({
+//                 next: (res) => {
+//                     console.log(res);
+//                     this.totalPages = res.totalPages ?? 0;
+//                     const rows = res?.data ?? [];
+//                     const hasData = rows.length > 0;
+//                     console.log(res?.lastKey);                    
+//                     const hasNext = !!res?.lastKey;
+
+//                     // If API returned an empty page (can happen with scans), clamp and snap back
+//                     if (!hasData) {
+//                         this.reachedEnd = true;
+//                         // pages before this are valid; this page is not
+//                         this.lastKeys.length = Math.max(1, pageIndex); // keep previous pages only
+//                         // snap back to the last valid page
+//                         const prevIndex = Math.max(0, pageIndex - 1);
+//                         this.dt1.first = prevIndex * this.pageSize;
+
+//                         this.loading = false;
+//                         return;
+//                     }
+
+//                     // render current page rows
+//                     this.patients = rows;
+
+//                     if (hasNext) {
+//                         // only advertise exactly one more page
+//                         this.lastKeys.length = pageIndex + 2;
+//                         this.lastKeys[pageIndex + 1] = res!.lastKey!;
+//                     } else {
+//                         // no more pages — lock totals & trim cursors
+//                         this.reachedEnd = true;
+//                         this.lastKeys.length = pageIndex + 1;
+//                     }
+
+//                     this.loading = false;
+//                 },
+//                 error: () => {
+//                     this.loading = false;
+//                 }
+//             });
+//     }
+
+//     ngOnDestroy() {
+//         this.destroy$.next();
+//         this.destroy$.complete();
+//     }
+// }
 
 // @Component({
 //     selector: 'app-table-demo',

@@ -78,10 +78,12 @@ export interface PagedPatientsResponse {
     data: Patient[];
     lastKey?: string | null;
     count?: number;
+    totalPages?: number;
 }
 
 export interface GetPatientsPageOpts {
     pageSize: number;
+    pageNumber: number;
     lastKey?: string | null;
     gender?: string;
     insurance?: string;
@@ -101,6 +103,7 @@ export class PatientService {
 
     getPatientsPage(opts: GetPatientsPageOpts): Observable<PagedPatientsResponse> {
         let params = new HttpParams().set('pageSize', String(opts.pageSize));
+        if (opts.pageNumber) params = params.set('pageNumber', opts.pageNumber);
         if (opts.lastKey) params = params.set('lastKey', opts.lastKey);
         if (opts.gender) params = params.set('gender', opts.gender);
         if (opts.insurance) params = params.set('insurance', opts.insurance);

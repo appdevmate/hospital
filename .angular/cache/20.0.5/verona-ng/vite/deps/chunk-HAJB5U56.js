@@ -1,4 +1,8 @@
 import {
+  Badge,
+  BadgeModule
+} from "./chunk-7YYC3ZVP.js";
+import {
   Fluid
 } from "./chunk-CMZ5LWSO.js";
 import {
@@ -10,10 +14,6 @@ import {
 import {
   SpinnerIcon
 } from "./chunk-UB26PZL4.js";
-import {
-  Badge,
-  BadgeModule
-} from "./chunk-7YYC3ZVP.js";
 import {
   BaseComponent
 } from "./chunk-RNO32UBA.js";
@@ -1947,4 +1947,4 @@ export {
   Button,
   ButtonModule
 };
-//# sourceMappingURL=chunk-6YEY7IKS.js.map
+//# sourceMappingURL=chunk-HAJB5U56.js.map

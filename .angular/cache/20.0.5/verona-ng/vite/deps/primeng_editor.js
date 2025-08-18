@@ -2,9 +2,6 @@ import {
   BaseEditableHolder
 } from "./chunk-XVWHFUO4.js";
 import "./chunk-FM2DOPB4.js";
-import {
-  NG_VALUE_ACCESSOR
-} from "./chunk-F3LB25CD.js";
 import "./chunk-RNO32UBA.js";
 import {
   BaseStyle
@@ -18,6 +15,9 @@ import {
 import {
   z2 as z
 } from "./chunk-ICG2ZITK.js";
+import {
+  NG_VALUE_ACCESSOR
+} from "./chunk-F3LB25CD.js";
 import {
   CommonModule,
   NgIf,

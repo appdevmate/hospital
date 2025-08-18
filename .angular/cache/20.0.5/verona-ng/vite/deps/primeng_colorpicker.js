@@ -1,4 +1,8 @@
 import {
+  BaseEditableHolder
+} from "./chunk-XVWHFUO4.js";
+import "./chunk-FM2DOPB4.js";
+import {
   AutoFocus,
   AutoFocusModule
 } from "./chunk-HKP5PLII.js";
@@ -9,13 +13,6 @@ import {
 import {
   zindexutils
 } from "./chunk-BB55NINM.js";
-import {
-  BaseEditableHolder
-} from "./chunk-XVWHFUO4.js";
-import "./chunk-FM2DOPB4.js";
-import {
-  NG_VALUE_ACCESSOR
-} from "./chunk-F3LB25CD.js";
 import "./chunk-RNO32UBA.js";
 import {
   BaseStyle
@@ -39,6 +36,9 @@ import {
   transition,
   trigger
 } from "./chunk-53DGU4C2.js";
+import {
+  NG_VALUE_ACCESSOR
+} from "./chunk-F3LB25CD.js";
 import {
   CommonModule,
   NgIf,

@@ -31,6 +31,11 @@ import {
   s3 as s2,
   z2 as z
 } from "./chunk-ICG2ZITK.js";
+import {
+  RouterLink,
+  RouterLinkActive,
+  RouterModule
+} from "./chunk-L44RE7TB.js";
 import "./chunk-QARVQJSV.js";
 import {
   animate,
@@ -39,11 +44,6 @@ import {
   transition,
   trigger
 } from "./chunk-53DGU4C2.js";
-import {
-  RouterLink,
-  RouterLinkActive,
-  RouterModule
-} from "./chunk-L44RE7TB.js";
 import "./chunk-F5SJET6F.js";
 import "./chunk-V75OULSU.js";
 import "./chunk-XJ4KX4UW.js";

@@ -2,6 +2,10 @@ import {
   Tooltip,
   TooltipModule
 } from "./chunk-VAIML43G.js";
+import {
+  Badge,
+  BadgeModule
+} from "./chunk-7YYC3ZVP.js";
 import "./chunk-LGMF4Z35.js";
 import {
   zindexutils
@@ -14,10 +18,6 @@ import {
   AngleRightIcon,
   BarsIcon
 } from "./chunk-UB26PZL4.js";
-import {
-  Badge,
-  BadgeModule
-} from "./chunk-7YYC3ZVP.js";
 import {
   BaseComponent
 } from "./chunk-RNO32UBA.js";

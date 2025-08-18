@@ -43,16 +43,16 @@ import {
   zt
 } from "./chunk-ICG2ZITK.js";
 import {
+  RouterLink,
+  RouterLinkActive,
+  RouterModule
+} from "./chunk-L44RE7TB.js";
+import {
   animate,
   style,
   transition,
   trigger
 } from "./chunk-53DGU4C2.js";
-import {
-  RouterLink,
-  RouterLinkActive,
-  RouterModule
-} from "./chunk-L44RE7TB.js";
 import {
   CommonModule,
   NgForOf,
@@ -2101,4 +2101,4 @@ export {
   TieredMenu,
   TieredMenuModule
 };
-//# sourceMappingURL=chunk-7KUDT4EL.js.map
+//# sourceMappingURL=chunk-2ALFWLCR.js.map
