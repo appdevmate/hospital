@@ -46,12 +46,12 @@ import { DatePipe } from '@angular/common';
     </div>`
 })
 export class TableDemo implements OnInit, OnDestroy {
-    
+
     @ViewChild('dt1') dt1!: Table;
     patients: Patient[] = [];
     loading = true;
-    pageSize = 2;
-    pageSizeOptions = [1, 5, 10, 25, 50, 100];
+    pageSize = 1;
+    pageSizeOptions = [1, 2, 5, 10, 25, 50, 100];
     totalRecords = 0;
     private lastKeys: (string | null)[] = [null]
     private destroy$ = new Subject<void>();
