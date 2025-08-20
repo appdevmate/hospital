@@ -2,9 +2,6 @@ import {
   BaseEditableHolder
 } from "./chunk-XUDNEHKK.js";
 import {
-  NG_VALUE_ACCESSOR
-} from "./chunk-F3LB25CD.js";
-import {
   Ripple
 } from "./chunk-LAT37U4B.js";
 import {
@@ -14,6 +11,9 @@ import {
   PrimeTemplate,
   SharedModule
 } from "./chunk-6W6MVVYN.js";
+import {
+  NG_VALUE_ACCESSOR
+} from "./chunk-F3LB25CD.js";
 import {
   CommonModule,
   NgTemplateOutlet
@@ -572,4 +572,4 @@ export {
   ToggleButton,
   ToggleButtonModule
 };
-//# sourceMappingURL=chunk-LXR4MBWP.js.map
+//# sourceMappingURL=chunk-XXUF4TLE.js.map

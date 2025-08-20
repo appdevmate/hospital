@@ -1,4 +1,8 @@
 import {
+  BaseEditableHolder
+} from "./chunk-XUDNEHKK.js";
+import "./chunk-HYYAGKH6.js";
+import {
   AutoFocus,
   AutoFocusModule
 } from "./chunk-PWGHT7WG.js";
@@ -6,13 +10,6 @@ import {
   ConnectedOverlayScrollHandler,
   DomHandler
 } from "./chunk-LGMF4Z35.js";
-import {
-  BaseEditableHolder
-} from "./chunk-XUDNEHKK.js";
-import "./chunk-HYYAGKH6.js";
-import {
-  NG_VALUE_ACCESSOR
-} from "./chunk-F3LB25CD.js";
 import {
   zindexutils
 } from "./chunk-BB55NINM.js";
@@ -25,6 +22,9 @@ import {
   SharedModule,
   TranslationKeys
 } from "./chunk-6W6MVVYN.js";
+import {
+  NG_VALUE_ACCESSOR
+} from "./chunk-F3LB25CD.js";
 import "./chunk-QARVQJSV.js";
 import {
   animate,

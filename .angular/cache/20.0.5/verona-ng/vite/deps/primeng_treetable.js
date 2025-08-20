@@ -1,34 +1,33 @@
 import {
+  Checkbox
+} from "./chunk-TS4UB7YB.js";
+import {
   Paginator,
   PaginatorModule
-} from "./chunk-ETL347YG.js";
-import "./chunk-OI73V3JF.js";
-import "./chunk-VLNBDIXI.js";
+} from "./chunk-NITSKSJX.js";
+import "./chunk-N5UATF4V.js";
+import "./chunk-3YUOJ3MJ.js";
 import "./chunk-MJBCUJJH.js";
 import "./chunk-XSJ6NFNI.js";
-import "./chunk-P3EBGP23.js";
 import "./chunk-AYRMVNWB.js";
 import {
   Scroller
 } from "./chunk-WO2HXLNS.js";
-import "./chunk-GALD7GOW.js";
-import "./chunk-BMM6RJMK.js";
+import "./chunk-XZYCGDL7.js";
+import "./chunk-TN5ADRDY.js";
+import "./chunk-XUDNEHKK.js";
+import "./chunk-HYYAGKH6.js";
+import "./chunk-P3EBGP23.js";
 import "./chunk-J26OPXND.js";
 import "./chunk-6PBBDZZF.js";
 import "./chunk-PWGHT7WG.js";
 import {
+  Badge,
+  BadgeModule
+} from "./chunk-5IUHQYCF.js";
+import {
   DomHandler
 } from "./chunk-LGMF4Z35.js";
-import {
-  Checkbox
-} from "./chunk-UC6XMZAI.js";
-import "./chunk-XUDNEHKK.js";
-import "./chunk-HYYAGKH6.js";
-import {
-  FormsModule,
-  NgControlStatus,
-  NgModel
-} from "./chunk-F3LB25CD.js";
 import "./chunk-BB55NINM.js";
 import {
   Ripple
@@ -45,10 +44,6 @@ import {
   SpinnerIcon
 } from "./chunk-ZUWJ75XG.js";
 import {
-  Badge,
-  BadgeModule
-} from "./chunk-5IUHQYCF.js";
-import {
   BaseComponent
 } from "./chunk-SDIPDP6M.js";
 import {
@@ -59,6 +54,11 @@ import {
   PrimeTemplate,
   SharedModule
 } from "./chunk-6W6MVVYN.js";
+import {
+  FormsModule,
+  NgControlStatus,
+  NgModel
+} from "./chunk-F3LB25CD.js";
 import "./chunk-QARVQJSV.js";
 import "./chunk-53DGU4C2.js";
 import "./chunk-3P3YI57Q.js";

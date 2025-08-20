@@ -1,15 +1,9 @@
 import {
   ToggleButton
-} from "./chunk-LXR4MBWP.js";
+} from "./chunk-XXUF4TLE.js";
 import {
   BaseEditableHolder
 } from "./chunk-XUDNEHKK.js";
-import {
-  FormsModule,
-  NG_VALUE_ACCESSOR,
-  NgControlStatus,
-  NgModel
-} from "./chunk-F3LB25CD.js";
 import {
   BaseStyle
 } from "./chunk-UZ6FKPFG.js";
@@ -17,6 +11,12 @@ import {
   PrimeTemplate,
   SharedModule
 } from "./chunk-6W6MVVYN.js";
+import {
+  FormsModule,
+  NG_VALUE_ACCESSOR,
+  NgControlStatus,
+  NgModel
+} from "./chunk-F3LB25CD.js";
 import {
   c,
   k
@@ -606,4 +606,4 @@ export {
   SelectButton,
   SelectButtonModule
 };
-//# sourceMappingURL=chunk-FDYROIIN.js.map
+//# sourceMappingURL=chunk-YTULQCNW.js.map
