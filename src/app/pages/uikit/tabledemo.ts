@@ -1,15 +1,19 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Table, TableModule } from 'primeng/table';
 import { Patient, PatientService } from '../service/patients.service';
 import { Subject, takeUntil } from 'rxjs';
 import { DatePipe } from '@angular/common';
+import { IconFieldModule } from "primeng/iconfield";
+import { InputIconModule } from "primeng/inputicon";
+import { InputTextModule } from "primeng/inputtext";
 
 @Component({
     selector: 'app-table-demo',
     standalone: true,
-    imports: [TableModule, DatePipe],
+    imports: [TableModule, DatePipe, IconFieldModule, InputIconModule, InputTextModule],
     template: `
     <div class="card">
+        <div class="font-semibold text-xl mb-4">Filtering</div>
         <p-table
             #dt1
             [value]="patients"
@@ -20,10 +24,23 @@ import { DatePipe } from '@angular/common';
             [rowsPerPageOptions]="pageSizeOptions"
             [totalRecords]="totalRecords"
             [lazy]="true"
+            [rowHover]="true"
             (onLazyLoad)="loadPatients($event)"
             [showGridlines]="true"
+            [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
             responsiveLayout="scroll"
         >
+        <ng-template #caption>
+                <div class="flex justify-between items-center flex-col sm:flex-row">
+                    <button pButton label="Clear" class="p-button-outlined mb-2" icon="pi pi-filter-slash" (click)="clear(dt1)"></button>
+                    <p-iconfield iconPosition="left" class="ml-auto">
+                        <p-inputicon>
+                            <i class="pi pi-search"></i>
+                        </p-inputicon>
+                        <input pInputText type="text" (input)="onGlobalFilter(dt1, $event)" placeholder="Search keyword" />
+                    </p-iconfield>
+                </div>
+            </ng-template>
             <ng-template #header>
                 <tr>
                     <th>Name</th>
@@ -42,12 +59,32 @@ import { DatePipe } from '@angular/common';
                     <td>{{ patient?.timestamp | date: 'MM/dd/yyyy' }}</td>
                 </tr>
             </ng-template>
+            <ng-template #emptymessage>
+                <tr>
+                    <td colspan="8">No patients found.</td>
+                </tr>
+            </ng-template>
+            <ng-template #loadingbody>
+                <tr>
+                    <td colspan="8">Loading patients data. Please wait.</td>
+                </tr>
+            </ng-template>
         </p-table>
-    </div>`
+    </div>`,
+    styles: `
+        .p-datatable-frozen-tbody {
+            font-weight: bold;
+        }
+
+        .p-datatable-scrollable .p-frozen-column {
+            font-weight: bold;
+        }
+    `,
 })
 export class TableDemo implements OnInit, OnDestroy {
 
     @ViewChild('dt1') dt1!: Table;
+    @ViewChild('filter') filter!: ElementRef;
     patients: Patient[] = [];
     loading = true;
     pageSize = 1;
@@ -59,6 +96,15 @@ export class TableDemo implements OnInit, OnDestroy {
     constructor(private patientsService: PatientService) {}
 
     ngOnInit() {}
+
+    clear(table: Table) {
+        table.clear();
+        this.filter.nativeElement.value = '';
+    }
+
+    onGlobalFilter(table: Table, event: Event) {
+        table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+    }
 
     loadPatients(event: any) {
         console.log(event);
