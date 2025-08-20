@@ -1,7 +1,12 @@
 import {
   Router
-} from "./chunk-L44RE7TB.js";
-import "./chunk-F5SJET6F.js";
+} from "./chunk-O6FYICNB.js";
+import "./chunk-SETNWRGA.js";
+import "./chunk-XJ4KX4UW.js";
+import {
+  CommonModule,
+  isPlatformBrowser
+} from "./chunk-7ACODBRA.js";
 import {
   HttpClient,
   HttpErrorResponse,
@@ -11,11 +16,6 @@ import {
   provideHttpClient,
   withInterceptorsFromDi
 } from "./chunk-V75OULSU.js";
-import "./chunk-XJ4KX4UW.js";
-import {
-  CommonModule,
-  isPlatformBrowser
-} from "./chunk-7ACODBRA.js";
 import "./chunk-5KK3G4LL.js";
 import {
   APP_INITIALIZER,
