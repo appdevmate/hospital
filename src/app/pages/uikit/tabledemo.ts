@@ -64,7 +64,7 @@ interface FilterState {
                 <label class="block text-sm font-medium mb-1">Birth Date Range</label>
                 <div class="flex gap-2">
                     <p-datepicker [formControl]="dobFromControl" placeholder="From" dateFormat="mm/dd/yy" [showIcon]="true" [showOnFocus]="false" styleClass="flex-1"> </p-datepicker>
-                    <p-datepicker [formControl]="dobToControl" placeholder="To" dateFormat="mm/dd/yy" [showIcon]="true" styleClass="flex-1"> </p-datepicker>
+                    <p-datepicker [formControl]="dobToControl" placeholder="To" dateFormat="mm/dd/yy" [showIcon]="true" [showOnFocus]="false" styleClass="flex-1"> </p-datepicker>
                 </div>
             </div>
         </div>
@@ -99,9 +99,9 @@ interface FilterState {
 
             <ng-template pTemplate="body" let-patient>
                 <tr>
-                    <td>{{ patient?.name || '-' }}</td>
-                    <td>{{ patient?.gender || '-' }}</td>
-                    <td>{{ patient?.insurance || '-' }}</td>
+                    <td>{{ patient?.name ? (patient.name | titlecase) : '-' }}</td>
+                    <td>{{ patient?.gender ? (patient.gender | titlecase) : '-' }}</td>
+                    <td>{{ patient?.insurance ? (patient.insurance | titlecase) : '-' }}</td>
                     <td>{{ patient?.dob | date: 'MM/dd/yyyy' }}</td>
                     <td>{{ patient?.timestamp | date: 'MM/dd/yyyy' }}</td>
                 </tr>
