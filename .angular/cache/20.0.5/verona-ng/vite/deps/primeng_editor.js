@@ -2,9 +2,6 @@ import {
   BaseEditableHolder
 } from "./chunk-XUDNEHKK.js";
 import "./chunk-HYYAGKH6.js";
-import {
-  NG_VALUE_ACCESSOR
-} from "./chunk-F3LB25CD.js";
 import "./chunk-SDIPDP6M.js";
 import {
   BaseStyle
@@ -14,6 +11,9 @@ import {
   PrimeTemplate,
   SharedModule
 } from "./chunk-6W6MVVYN.js";
+import {
+  NG_VALUE_ACCESSOR
+} from "./chunk-F3LB25CD.js";
 import "./chunk-3P3YI57Q.js";
 import {
   z2 as z
@@ -64,8 +64,8 @@ import {
   ɵɵtemplate,
   ɵɵtext
 } from "./chunk-DL5YMDBM.js";
-import "./chunk-G6ECYYJH.js";
 import "./chunk-YVXMBCE5.js";
+import "./chunk-G6ECYYJH.js";
 import "./chunk-RTGP7ALM.js";
 import {
   __spreadValues

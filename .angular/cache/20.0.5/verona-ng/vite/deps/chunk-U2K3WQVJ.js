@@ -6,15 +6,15 @@ import {
   SharedStylesHost
 } from "./chunk-XJ4KX4UW.js";
 import {
+  withHttpTransferCache
+} from "./chunk-V75OULSU.js";
+import {
   CommonModule,
   DomAdapter,
   PLATFORM_BROWSER_ID,
   getDOM,
   setRootDomAdapter
 } from "./chunk-7ACODBRA.js";
-import {
-  withHttpTransferCache
-} from "./chunk-V75OULSU.js";
 import {
   XhrFactory,
   parseCookieValue
@@ -1298,4 +1298,4 @@ export {
    * License: MIT
    *)
 */
-//# sourceMappingURL=chunk-SETNWRGA.js.map
+//# sourceMappingURL=chunk-U2K3WQVJ.js.map

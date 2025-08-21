@@ -26,6 +26,11 @@ import {
   SharedModule
 } from "./chunk-6W6MVVYN.js";
 import {
+  RouterLink,
+  RouterLinkActive,
+  RouterModule
+} from "./chunk-ZK2OD2FE.js";
+import {
   animate,
   style,
   transition,
@@ -48,11 +53,6 @@ import {
   z2 as z,
   zt
 } from "./chunk-ICG2ZITK.js";
-import {
-  RouterLink,
-  RouterLinkActive,
-  RouterModule
-} from "./chunk-O6FYICNB.js";
 import {
   CommonModule,
   NgForOf,
@@ -2101,4 +2101,4 @@ export {
   TieredMenu,
   TieredMenuModule
 };
-//# sourceMappingURL=chunk-GUS2PVBI.js.map
+//# sourceMappingURL=chunk-CNLEHEEO.js.map

@@ -63,7 +63,7 @@ interface FilterState {
             <div class="field">
                 <label class="block text-sm font-medium mb-1">Birth Date Range</label>
                 <div class="flex gap-2">
-                    <p-datepicker [formControl]="dobFromControl" placeholder="From" dateFormat="mm/dd/yy" [showIcon]="true" styleClass="flex-1"> </p-datepicker>
+                    <p-datepicker [formControl]="dobFromControl" placeholder="From" dateFormat="mm/dd/yy" [showIcon]="true" [showOnFocus]="false" styleClass="flex-1"> </p-datepicker>
                     <p-datepicker [formControl]="dobToControl" placeholder="To" dateFormat="mm/dd/yy" [showIcon]="true" styleClass="flex-1"> </p-datepicker>
                 </div>
             </div>
@@ -207,7 +207,8 @@ export class TableDemo implements OnInit, OnDestroy {
             this.resetPagination();
             this.filterChanged$.next();
         });
-
+        
+        
         // Individual filter listeners
         [this.nameFilterControl, this.genderFilterControl, this.insuranceFilterControl, this.dobFromControl, this.dobToControl].forEach((control) => {
             control.valueChanges.pipe(debounceTime(300), distinctUntilChanged(), takeUntil(this.destroy$)).subscribe(() => {
@@ -286,23 +287,23 @@ export class TableDemo implements OnInit, OnDestroy {
         // Global search across all fields
         const globalSearch = this.globalSearchControl.value?.trim();
         if (globalSearch) {
-            filters.search = globalSearch;
+            filters.search = globalSearch.toLowerCase();
         }
 
         // Specific name filter
         const nameFilter = this.nameFilterControl.value?.trim();
-        if (nameFilter) {
-            filters.name = nameFilter;
+        if (nameFilter) {          
+            filters.name = nameFilter.toLowerCase();
         }
 
         const genderFilter = this.genderFilterControl.value?.trim();
         if (genderFilter) {
-            filters.gender = genderFilter;
+            filters.gender = genderFilter.toLowerCase();
         }
 
         const insuranceFilter = this.insuranceFilterControl.value?.trim();
         if (insuranceFilter) {
-            filters.insurance = insuranceFilter;
+            filters.insurance = insuranceFilter.toLowerCase();
         }
 
         // Date filters
