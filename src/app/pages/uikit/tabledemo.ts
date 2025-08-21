@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Table, TableModule } from 'primeng/table';
 import { Patient, PatientService, GetPatientsPageOpts } from '../service/patients.service';
-import { Subject, takeUntil, debounceTime, distinctUntilChanged } from 'rxjs';
+import { Subject, takeUntil, debounceTime, distinctUntilChanged, filter } from 'rxjs';
 import { DatePipe, CommonModule } from '@angular/common';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
@@ -26,18 +26,6 @@ interface FilterState {
     imports: [CommonModule, TableModule, DatePipe, IconFieldModule, InputIconModule, InputTextModule, AutoCompleteModule, DatePickerModule, ButtonModule, ReactiveFormsModule],
     template: ` <div class="card">
         <div class="font-semibold text-xl mb-4">Patient Management</div>
-
-        <!-- Global Search -->
-        <div class="flex justify-between items-center mb-4">
-            <button pButton label="Clear All Filters" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clearAllFilters()"></button>
-
-            <p-iconfield iconPosition="left" class="ml-auto">
-                <p-inputicon>
-                    <i class="pi pi-search"></i>
-                </p-inputicon>
-                <input pInputText type="text" [formControl]="globalSearchControl" placeholder="Search across all fields..." class="w-80" />
-            </p-iconfield>
-        </div>
 
         <!-- Filters Row -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
@@ -87,11 +75,37 @@ interface FilterState {
             [scrollable]="true"
             scrollHeight="600px"
         >
+        <ng-template #caption>
+                <div class="flex justify-between items-center flex-col sm:flex-row">
+                    <button pButton label="Clear" class="p-button-outlined mb-2" icon="pi pi-filter-slash" (click)="clear(dt1)"></button>
+                    <p-iconfield iconPosition="left" class="ml-auto">
+                        <p-inputicon>
+                            <i class="pi pi-search"></i>
+                        </p-inputicon>
+                        <input pInputText type="text" (input)="onGlobalFilter(dt1, $event)" placeholder="Global Search" />
+                    </p-iconfield>
+                </div>
+            </ng-template>
             <ng-template pTemplate="header">
                 <tr>
-                    <th>Name</th>
-                    <th>Gender</th>
-                    <th>Insurance</th>
+                    <th style="min-width: 12rem">
+                        <div class="flex justify-between items-center">
+                            Name
+                            <p-columnFilter type="text" field="name" display="menu" placeholder="Search by name" [showOperator]="false" [showAddButton]="false"></p-columnFilter>
+                        </div>
+                    </th>
+                    <th style="min-width: 12rem">
+                        <div class="flex justify-between items-center">
+                            Gender
+                            <p-columnFilter type="text" field="gender" display="menu" placeholder="Search by gender" [showOperator]="false" [showAddButton]="false"></p-columnFilter>
+                        </div>
+                    </th>
+                    <th style="min-width: 12rem">
+                        <div class="flex justify-between items-center">
+                            Insurance
+                            <p-columnFilter type="text" field="insurance" display="menu" placeholder="Search by insurance" [showOperator]="false" [showAddButton]="false"></p-columnFilter>
+                        </div>
+                    </th>
                     <th>Date of Birth</th>
                     <th>Submitted Date</th>
                 </tr>
@@ -164,12 +178,14 @@ interface FilterState {
 })
 export class TableDemo implements OnInit, OnDestroy {
     @ViewChild('dt1') dt1!: Table;
+    @ViewChild('filter') filter!: ElementRef;
 
     patients: Patient[] = [];
     loading = true;
     pageSize = 25;
     pageSizeOptions = [10, 25, 50, 100];
     totalRecords = 0;
+    filters: GetPatientsPageOpts | undefined;
 
     // Pagination state
     private currentLastKey: string | null = null;
@@ -228,8 +244,6 @@ export class TableDemo implements OnInit, OnDestroy {
     }
 
     loadPatients(event: any) {
-        console.log('Lazy load event:', event);
-
         // Handle page size changes
         if (event.rows !== this.pageSize) {
             this.pageSize = event.rows;
@@ -248,11 +262,8 @@ export class TableDemo implements OnInit, OnDestroy {
 
     private loadData() {
         this.loading = true;
-
-        const filters = this.buildFilterOptions();
-
         this.patientsService
-            .getPatientsPage(filters)
+            .getPatientsPage(this.filters)
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (response) => {
@@ -276,6 +287,23 @@ export class TableDemo implements OnInit, OnDestroy {
                     this.totalRecords = 0;
                 }
             });
+    }
+
+    private buildFilterOptionsIcon(event: any): GetPatientsPageOpts {
+        const filters: GetPatientsPageOpts = {
+            pageSize: this.pageSize,
+            lastKey: this.currentLastKey
+        }; 
+        if(event && event?.filters?.name && event?.filters?.name != 0 && event?.filters?.name[0]) {
+            filters.name = event?.filters?.name[0].value
+        }
+        if(event && event?.filters?.gender && event?.filters?.gender != 0 && event?.filters?.gender[0]) {
+            filters.gender = event?.filters?.gender[0].value
+        }
+        if(event && event?.filters?.insurance && event?.filters?.insurance != 0 && event?.filters?.insurance[0]) {
+            filters.insurance = event?.filters?.insurance[0].value
+        }
+        return filters;
     }
 
     private buildFilterOptions(): GetPatientsPageOpts {
@@ -349,6 +377,17 @@ export class TableDemo implements OnInit, OnDestroy {
 
         if (this.dt1) {
             this.dt1.first = 0;
+        }
+    }
+
+    onGlobalFilter(table: Table, event: Event) {
+        table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+    }
+
+    clear(table: Table) {
+        table.clear();
+        if(this.filter && this.filter.nativeElement?.value) {
+            this.filter.nativeElement.value = '';
         }
     }
 
