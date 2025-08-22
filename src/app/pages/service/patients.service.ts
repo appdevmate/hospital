@@ -22,7 +22,7 @@ export interface PagedPatientsResponse {
 }
 
 export interface GetPatientsPageOpts {
-    pageSize: number;
+    pageSize?: number;
     lastKey?: string | null;
 
     // Filter options
@@ -36,6 +36,9 @@ export interface GetPatientsPageOpts {
     // Sorting (for future implementation)
     sortField?: string;
     sortOrder?: 'asc' | 'desc';
+
+    // index
+    [key: string]: any;
 }
 
 export interface ColumnFilter {

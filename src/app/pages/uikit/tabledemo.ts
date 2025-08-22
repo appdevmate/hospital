@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Table, TableModule } from 'primeng/table';
 import { Patient, PatientService, GetPatientsPageOpts } from '../service/patients.service';
-import { Subject, takeUntil, debounceTime, distinctUntilChanged, filter } from 'rxjs';
+import { Subject, takeUntil, debounceTime, distinctUntilChanged, filter, map, of } from 'rxjs';
 import { DatePipe, CommonModule } from '@angular/common';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
@@ -27,36 +27,6 @@ interface FilterState {
     template: ` <div class="card">
         <div class="font-semibold text-xl mb-4">Patient Management</div>
 
-        <!-- Filters Row -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-            <!-- Name Filter -->
-            <div class="field">
-                <label for="nameFilter" class="block text-sm font-medium mb-1">Name</label>
-                <input pInputText id="nameFilter" [formControl]="nameFilterControl" placeholder="Filter by name" class="w-full" />
-            </div>
-
-            <!-- Gender Filter -->
-            <div class="field">
-                <label for="genderFilter" class="block text-sm font-medium mb-1">Gender</label>
-                <p-autocomplete [suggestions]="genderOptions" [formControl]="genderFilterControl" placeholder="Select gender" [showClear]="true" optionLabel="label" optionValue="value" class="w-full"> </p-autocomplete>
-            </div>
-
-            <!-- Insurance Filter -->
-            <div class="field">
-                <label for="insuranceFilter" class="block text-sm font-medium mb-1">Insurance</label>
-                <input pInputText id="insuranceFilter" [formControl]="insuranceFilterControl" placeholder="Filter by insurance" class="w-full" />
-            </div>
-
-            <!-- Date Range -->
-            <div class="field">
-                <label class="block text-sm font-medium mb-1">Birth Date Range</label>
-                <div class="flex gap-2">
-                    <p-datepicker [formControl]="dobFromControl" placeholder="From" dateFormat="mm/dd/yy" [showIcon]="true" [showOnFocus]="false" styleClass="flex-1"> </p-datepicker>
-                    <p-datepicker [formControl]="dobToControl" placeholder="To" dateFormat="mm/dd/yy" [showIcon]="true" [showOnFocus]="false" styleClass="flex-1"> </p-datepicker>
-                </div>
-            </div>
-        </div>
-
         <!-- Data Table -->
         <p-table
             #dt1
@@ -75,7 +45,7 @@ interface FilterState {
             [scrollable]="true"
             scrollHeight="600px"
         >
-        <ng-template #caption>
+            <ng-template #caption>
                 <div class="flex justify-between items-center flex-col sm:flex-row">
                     <button pButton label="Clear" class="p-button-outlined mb-2" icon="pi pi-filter-slash" (click)="clear(dt1)"></button>
                     <p-iconfield iconPosition="left" class="ml-auto">
@@ -94,20 +64,34 @@ interface FilterState {
                             <p-columnFilter type="text" field="name" display="menu" placeholder="Search by name" [showOperator]="false" [showAddButton]="false"></p-columnFilter>
                         </div>
                     </th>
+
                     <th style="min-width: 12rem">
                         <div class="flex justify-between items-center">
                             Gender
                             <p-columnFilter type="text" field="gender" display="menu" placeholder="Search by gender" [showOperator]="false" [showAddButton]="false"></p-columnFilter>
                         </div>
                     </th>
+
                     <th style="min-width: 12rem">
                         <div class="flex justify-between items-center">
                             Insurance
                             <p-columnFilter type="text" field="insurance" display="menu" placeholder="Search by insurance" [showOperator]="false" [showAddButton]="false"></p-columnFilter>
                         </div>
                     </th>
-                    <th>Date of Birth</th>
-                    <th>Submitted Date</th>
+
+                    <th style="min-width: 12rem">
+                        <div class="flex justify-between items-center">
+                            Date of Birth
+                            <p-columnFilter type="text" field="dob" display="menu" placeholder="Search by Date of Birth" [showOperator]="false" [showAddButton]="false"></p-columnFilter>
+                        </div>
+                    </th>
+
+                    <th style="min-width: 12rem">
+                        <div class="flex justify-between items-center">
+                            Submitted Date
+                            <p-columnFilter type="text" field="submittedDate" display="menu" placeholder="Search by Date of Birth" [showOperator]="false" [showAddButton]="false"></p-columnFilter>
+                        </div>
+                    </th>
                 </tr>
             </ng-template>
 
@@ -145,10 +129,7 @@ interface FilterState {
         </p-table>
 
         <!-- Results Summary -->
-        <div class="mt-4 text-sm text-gray-600" *ngIf="!loading">
-            Showing {{ patients.length }} of {{ totalRecords | number }} patients
-            <span *ngIf="hasFilters()"> (filtered)</span>
-        </div>
+        <div class="mt-4 text-sm text-gray-600" *ngIf="!loading">Showing {{ patients.length }} of {{ totalRecords | number }} patients</div>
     </div>`,
     styles: `
         .p-datatable-frozen-tbody {
@@ -176,106 +157,101 @@ interface FilterState {
         }
     `
 })
-export class TableDemo implements OnInit, OnDestroy {
+export class TableDemo implements OnDestroy {
     @ViewChild('dt1') dt1!: Table;
     @ViewChild('filter') filter!: ElementRef;
 
     patients: Patient[] = [];
     loading = true;
-    pageSize = 25;
+    pageSize = 3;
     pageSizeOptions = [10, 25, 50, 100];
     totalRecords = 0;
-    filters: GetPatientsPageOpts | undefined;
+
+    filters: GetPatientsPageOpts = {
+        pageSize: 25,
+        lastKey: null
+    };
 
     // Pagination state
     private currentLastKey: string | null = null;
-    private pageKeys: (string | null)[] = [null]; // Store keys for each page
+    private pageKeys: (string | null)[] = [null];
     private currentPage = 0;
-
-    // Filter controls
-    globalSearchControl = new FormControl('');
-    nameFilterControl = new FormControl('');
-    genderFilterControl = new FormControl('');
-    insuranceFilterControl = new FormControl('');
-    dobFromControl = new FormControl();
-    dobToControl = new FormControl();
-
-    // Filter options
-    genderOptions = [
-        { label: 'Male', value: 'Male' },
-        { label: 'Female', value: 'Female' },
-        { label: 'Other', value: 'Other' }
-    ];
+    private isInitialized = false;
 
     private destroy$ = new Subject<void>();
-    private filterChanged$ = new Subject<void>();
 
     constructor(private patientsService: PatientService) {}
 
-    ngOnInit() {
-        this.setupFilterListeners();
-        this.loadInitialData();
-    }
-
-    private setupFilterListeners() {
-        // Global search with debounce
-        this.globalSearchControl.valueChanges.pipe(debounceTime(500), distinctUntilChanged(), takeUntil(this.destroy$)).subscribe(() => {
-            this.resetPagination();
-            this.filterChanged$.next();
-        });
-        
-        
-        // Individual filter listeners
-        [this.nameFilterControl, this.genderFilterControl, this.insuranceFilterControl, this.dobFromControl, this.dobToControl].forEach((control) => {
-            control.valueChanges.pipe(debounceTime(300), distinctUntilChanged(), takeUntil(this.destroy$)).subscribe(() => {
-                this.resetPagination();
-                this.filterChanged$.next();
-            });
-        });
-
-        // React to filter changes
-        this.filterChanged$.pipe(debounceTime(100), takeUntil(this.destroy$)).subscribe(() => {
-            this.loadData();
-        });
-    }
-
-    private loadInitialData() {
-        this.loadData();
-    }
-
     loadPatients(event: any) {
+        console.log('loadPatients event:', event);
+
+        if (!event) return;
+
+        // Prevent duplicate initialization calls
+        if (!this.isInitialized) {
+            this.isInitialized = true;
+        } else if (event.first === 0 && !this.hasActiveFilters(event.filters) && this.patients.length > 0) {
+            console.log('Skipping duplicate initialization call');
+            return;
+        }
+
         // Handle page size changes
-        if (event.rows !== this.pageSize) {
+        if (event.rows && event.rows !== this.pageSize) {
+            console.log('Page size changed from', this.pageSize, 'to', event.rows);
             this.pageSize = event.rows;
             this.resetPagination();
         }
 
-        // Calculate current page
-        const newPage = Math.floor(event.first / this.pageSize);
-        this.currentPage = newPage;
+        // Calculate current page based on event.first
+        const newPage = Math.floor((event.first || 0) / this.pageSize);
+        console.log('Calculated page:', newPage, 'from first:', event.first, 'pageSize:', this.pageSize);
 
-        // Set the last key for this page
+        this.currentPage = newPage;
         this.currentLastKey = this.pageKeys[newPage] || null;
 
+        console.log('Current page:', this.currentPage, 'lastKey:', this.currentLastKey);
+
+        // Build filters
+        this.buildFilterOptions(event.filters || {});
+
+        // Update filters object with correct pagination info
+        this.filters = {
+            ...this.filters,
+            pageSize: this.pageSize,
+            lastKey: this.currentLastKey
+        };
+
+        console.log('Final filters being sent:', this.filters);
         this.loadData();
+    }
+
+    private hasActiveFilters(filters: any): boolean {
+        if (!filters) return false;
+        return Object.keys(filters).some((key) => filters[key] && filters[key][0] && filters[key][0].value);
     }
 
     private loadData() {
         this.loading = true;
+
         this.patientsService
             .getPatientsPage(this.filters)
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (response) => {
+                    console.log('API Response:', response);
+                    console.log('Items returned:', response.data?.length);
+
                     this.patients = response.data || [];
                     this.totalRecords = response.totalCount || 0;
 
-                    // Update pagination keys
+                    // Handle pagination keys for next page
                     if (response.lastKey) {
                         this.pageKeys[this.currentPage + 1] = response.lastKey;
+                        console.log('Stored lastKey for next page:', response.lastKey);
                     } else {
-                        // No more pages, trim the keys array
+                        // No more pages, trim the pageKeys array
                         this.pageKeys = this.pageKeys.slice(0, this.currentPage + 1);
+                        console.log('No more pages, trimmed pageKeys');
                     }
 
                     this.loading = false;
@@ -289,61 +265,36 @@ export class TableDemo implements OnInit, OnDestroy {
             });
     }
 
-    private buildFilterOptionsIcon(event: any): GetPatientsPageOpts {
-        const filters: GetPatientsPageOpts = {
-            pageSize: this.pageSize,
-            lastKey: this.currentLastKey
-        }; 
-        if(event && event?.filters?.name && event?.filters?.name != 0 && event?.filters?.name[0]) {
-            filters.name = event?.filters?.name[0].value
-        }
-        if(event && event?.filters?.gender && event?.filters?.gender != 0 && event?.filters?.gender[0]) {
-            filters.gender = event?.filters?.gender[0].value
-        }
-        if(event && event?.filters?.insurance && event?.filters?.insurance != 0 && event?.filters?.insurance[0]) {
-            filters.insurance = event?.filters?.insurance[0].value
-        }
-        return filters;
-    }
-
-    private buildFilterOptions(): GetPatientsPageOpts {
-        const filters: GetPatientsPageOpts = {
-            pageSize: this.pageSize,
-            lastKey: this.currentLastKey
+    private buildFilterOptions(filtersObject: any) {
+        // Clear existing filters except pageSize and lastKey
+        const baseFilters = {
+            pageSize: this.filters.pageSize,
+            lastKey: this.filters.lastKey
         };
 
-        // Global search across all fields
-        const globalSearch = this.globalSearchControl.value?.trim();
-        if (globalSearch) {
-            filters.search = globalSearch.toLowerCase();
+        // Add new filters
+        for (const key in filtersObject) {
+            if (filtersObject.hasOwnProperty(key) && filtersObject[key] && filtersObject[key][0]) {
+                const filterValue = filtersObject[key][0].value;
+                if (filterValue !== null && filterValue !== undefined && filterValue !== '') {
+                    (baseFilters as any)[key] = filterValue;
+                }
+            }
         }
 
-        // Specific name filter
-        const nameFilter = this.nameFilterControl.value?.trim();
-        if (nameFilter) {          
-            filters.name = nameFilter.toLowerCase();
-        }
+        this.filters = baseFilters as GetPatientsPageOpts;
+        console.log('Built filters:', this.filters);
+    }
 
-        const genderFilter = this.genderFilterControl.value?.trim();
-        if (genderFilter) {
-            filters.gender = genderFilter.toLowerCase();
-        }
+    private resetPagination() {
+        console.log('Resetting pagination');
+        this.currentPage = 0;
+        this.currentLastKey = null;
+        this.pageKeys = [null];
 
-        const insuranceFilter = this.insuranceFilterControl.value?.trim();
-        if (insuranceFilter) {
-            filters.insurance = insuranceFilter.toLowerCase();
+        if (this.dt1) {
+            this.dt1.first = 0;
         }
-
-        // Date filters
-        if (this.dobFromControl.value) {
-            filters.dobFrom = this.formatDate(this.dobFromControl.value);
-        }
-
-        if (this.dobToControl.value) {
-            filters.dobTo = this.formatDate(this.dobToControl.value);
-        }
-
-        return filters;
     }
 
     private formatDate(date: Date): string {
@@ -354,41 +305,23 @@ export class TableDemo implements OnInit, OnDestroy {
         return `${year}-${month}-${day}`;
     }
 
-    clearAllFilters() {
-        this.globalSearchControl.reset();
-        this.nameFilterControl.reset();
-        this.genderFilterControl.reset();
-        this.insuranceFilterControl.reset();
-        this.dobFromControl.reset();
-        this.dobToControl.reset();
-
-        this.resetPagination();
-        this.filterChanged$.next();
-    }
-
-    hasFilters(): boolean {
-        return !!(this.globalSearchControl.value || this.nameFilterControl.value || this.genderFilterControl.value || this.insuranceFilterControl.value || this.dobFromControl.value || this.dobToControl.value);
-    }
-
-    private resetPagination() {
-        this.currentPage = 0;
-        this.currentLastKey = null;
-        this.pageKeys = [null];
-
-        if (this.dt1) {
-            this.dt1.first = 0;
-        }
-    }
-
     onGlobalFilter(table: Table, event: Event) {
         table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
     }
 
     clear(table: Table) {
         table.clear();
-        if(this.filter && this.filter.nativeElement?.value) {
+
+        if (this.filter && this.filter.nativeElement?.value) {
             this.filter.nativeElement.value = '';
         }
+
+        // Reset pagination when clearing
+        this.resetPagination();
+        this.filters = {
+            pageSize: this.pageSize,
+            lastKey: null
+        };
     }
 
     ngOnDestroy() {
