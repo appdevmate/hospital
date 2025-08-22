@@ -176,7 +176,6 @@ export class TableDemo implements OnDestroy {
     private currentLastKey: string | null = null;
     private pageKeys: (string | null)[] = [null];
     private currentPage = 0;
-    private isInitialized = false;
 
     private destroy$ = new Subject<void>();
 
@@ -186,14 +185,6 @@ export class TableDemo implements OnDestroy {
         console.log('loadPatients event:', event);
 
         if (!event) return;
-
-        // Prevent duplicate initialization calls
-        if (!this.isInitialized) {
-            this.isInitialized = true;
-        } else if (event.first === 0 && !this.hasActiveFilters(event.filters) && this.patients.length > 0) {
-            console.log('Skipping duplicate initialization call');
-            return;
-        }
 
         // Handle page size changes
         if (event.rows && event.rows !== this.pageSize) {
@@ -223,11 +214,6 @@ export class TableDemo implements OnDestroy {
 
         console.log('Final filters being sent:', this.filters);
         this.loadData();
-    }
-
-    private hasActiveFilters(filters: any): boolean {
-        if (!filters) return false;
-        return Object.keys(filters).some((key) => filters[key] && filters[key][0] && filters[key][0].value);
     }
 
     private loadData() {
