@@ -21,17 +21,24 @@ export interface PagedPatientsResponse {
     pageSize?: number;
 }
 
+export interface FilterOption {
+    value: string;       // the actual filter value
+    matchMode: string;          // e.g., "startsWith", "contains", etc.
+    operator: 'and' | 'or';     // logical operator
+}
+
+
 export interface GetPatientsPageOpts {
     pageSize?: number;
     lastKey?: string | null;
 
     // Filter options
     search?: string; // Global search across all fields
-    name?: string; // Specific name filter
-    gender?: string;
-    insurance?: string;
-    dobFrom?: string;
-    dobTo?: string;
+    name?: FilterOption; // Specific name filter
+    gender?: FilterOption;
+    insurance?: FilterOption;
+    dobFrom?: FilterOption;
+    dobTo?: FilterOption;
 
     // Sorting (for future implementation)
     sortField?: string;
@@ -51,7 +58,7 @@ export interface ColumnFilter {
 export class PatientService {
     path: string = 'patients';
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) { }
 
     private authHeaders(): HttpHeaders {
         const jwt = sessionStorage.getItem('accessToken') || '';
@@ -59,45 +66,51 @@ export class PatientService {
     }
 
     getPatientsPage(opts: GetPatientsPageOpts): Observable<PagedPatientsResponse> {
-        let params = new HttpParams().set('pageSize', String(opts.pageSize));
+        let params = new HttpParams();
 
-        if (opts.lastKey) {
-            params = params.set('lastKey', opts.lastKey);
-        }
+        const setIf = (k: string, v?: string | number | null) => {
+            if (v === null || v === undefined) return;
+            const s = String(v).trim();
+            if (s !== '') params = params.set(k, s);
+        };
 
+        const addFilter = (key: keyof GetPatientsPageOpts, f?: FilterOption) => {
+            if (!f) return;
+            const value = typeof f.value === 'string' ? f.value.trim() : f.value;
+            if (!value) return;
+
+            // If matchMode is "equals", just use plain key
+            if (f.matchMode === 'equals') {
+                params = params.set(String(key), value);
+            } else {
+                // otherwise append .matchMode
+                params = params.set(`${String(key)}.${f.matchMode}`, value);
+            }
+        };
+
+        // Paging
+        setIf('pageSize', opts.pageSize ?? 25);
+        setIf('lastKey', opts.lastKey ?? null);
+
+        // Global search
         if (opts.search && opts.search.trim()) {
             params = params.set('search', opts.search.trim());
         }
 
-        if (opts.name && opts.name.trim()) {
-            params = params.set('name', opts.name.trim());
-        }
+        // Filters
+        addFilter('name', opts.name);
+        addFilter('gender', opts.gender);
+        addFilter('insurance', opts.insurance);
+        addFilter('dobFrom', opts.dobFrom);
+        addFilter('dobTo', opts.dobTo);
 
-        if (opts.gender && opts.gender.trim()) {
-            params = params.set('gender', opts.gender.trim());
-        }
+        // Sorting
+        setIf('sortField', opts.sortField);
+        setIf('sortOrder', opts.sortOrder);
 
-        if (opts.insurance && opts.insurance.trim()) {
-            params = params.set('insurance', opts.insurance.trim());
-        }
+        console.log('GET /patients query:', params.toString());
 
-        if (opts.dobFrom && opts.dobFrom.trim()) {
-            params = params.set('dobFrom', opts.dobFrom.trim());
-        }
-
-        if (opts.dobTo && opts.dobTo.trim()) {
-            params = params.set('dobTo', opts.dobTo.trim());
-        }
-
-        if (opts.sortField) {
-            params = params.set('sortField', opts.sortField);
-        }
-
-        if (opts.sortOrder) {
-            params = params.set('sortOrder', opts.sortOrder);
-        }
-
-        return this.http.get<PagedPatientsResponse>(`${Config.buildUrl(this.path)}`, {
+        return this.http.get<PagedPatientsResponse>(Config.buildUrl(this.path), {
             headers: this.authHeaders(),
             params
         });

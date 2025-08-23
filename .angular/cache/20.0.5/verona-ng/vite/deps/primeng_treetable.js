@@ -4,11 +4,12 @@ import {
 import {
   Paginator,
   PaginatorModule
-} from "./chunk-WJZJKEEJ.js";
-import "./chunk-24WSVEGR.js";
+} from "./chunk-7VDAX2UH.js";
+import "./chunk-HSJJYCKO.js";
 import "./chunk-OFLS5EHN.js";
 import "./chunk-MJBCUJJH.js";
 import "./chunk-XSJ6NFNI.js";
+import "./chunk-P3EBGP23.js";
 import {
   Badge,
   BadgeModule
@@ -25,13 +26,12 @@ import "./chunk-J26OPXND.js";
 import "./chunk-6PBBDZZF.js";
 import "./chunk-PWGHT7WG.js";
 import {
-  Ripple
-} from "./chunk-LAT37U4B.js";
-import "./chunk-P3EBGP23.js";
-import {
   DomHandler
 } from "./chunk-LGMF4Z35.js";
 import "./chunk-BB55NINM.js";
+import {
+  Ripple
+} from "./chunk-LAT37U4B.js";
 import {
   ArrowDownIcon,
   ArrowUpIcon,
@@ -160,8 +160,8 @@ import {
   ɵɵtemplateRefExtractor,
   ɵɵviewQuery
 } from "./chunk-DL5YMDBM.js";
-import "./chunk-G6ECYYJH.js";
 import "./chunk-YVXMBCE5.js";
+import "./chunk-G6ECYYJH.js";
 import {
   Subject
 } from "./chunk-RTGP7ALM.js";

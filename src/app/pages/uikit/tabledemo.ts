@@ -251,26 +251,72 @@ export class TableDemo implements OnDestroy {
             });
     }
 
-    private buildFilterOptions(filtersObject: any) {
-        // Clear existing filters except pageSize and lastKey
-        const baseFilters = {
-            pageSize: this.filters.pageSize,
-            lastKey: this.filters.lastKey
-        };
+    // private buildFilterOptions(filtersObject: any) {
+    //     console.log(filtersObject);
+        
+    //     // Clear existing filters except pageSize and lastKey
+    //     const baseFilters = {
+    //         pageSize: this.filters.pageSize,
+    //         lastKey: this.filters.lastKey
+    //     };
 
-        // Add new filters
-        for (const key in filtersObject) {
-            if (filtersObject.hasOwnProperty(key) && filtersObject[key] && filtersObject[key][0]) {
-                const filterValue = filtersObject[key][0].value;
-                if (filterValue !== null && filterValue !== undefined && filterValue !== '') {
-                    (baseFilters as any)[key] = filterValue;
-                }
-            }
-        }
+    //     // Add new filters
+    //     for (const key in filtersObject) {
+    //         if (filtersObject.hasOwnProperty(key) && filtersObject[key] && filtersObject[key][0]) {
+    //             const filterValue = filtersObject[key][0].value;
+    //             if (filterValue !== null && filterValue !== undefined && filterValue !== '') {
+    //                 (baseFilters as any)[key] = filterValue;
+    //             }
+    //         }
+    //     }
 
-        this.filters = baseFilters as GetPatientsPageOpts;
-        console.log('Built filters:', this.filters);
+    //     this.filters = baseFilters as GetPatientsPageOpts;
+    //     console.log('Built filters:', this.filters);
+    // }
+
+    private buildFilterOptions(filtersObject: Record<string, any>) {
+  // Preserve paging keys
+  const baseFilters: GetPatientsPageOpts = {
+    pageSize: this.filters?.pageSize,
+    lastKey: this.filters?.lastKey ?? null
+  };
+
+  const toYmd = (d: Date) => d.toISOString().slice(0, 10);
+  const isBlank = (v: unknown) =>
+    v === null || v === undefined || (typeof v === 'string' && v.trim() === '');
+
+  for (const [key, rawVal] of Object.entries(filtersObject ?? {})) {
+    // PrimeNG gives arrays; accept both array or plain object
+    const first = Array.isArray(rawVal) ? rawVal[0] : rawVal;
+    if (!first) continue;
+
+    let { value, matchMode, operator } = first as {
+      value: any; matchMode?: string; operator?: 'and' | 'or';
+    };
+
+    // Normalize value
+    if (value instanceof Date) value = toYmd(value);
+    if (typeof value === 'string') value = value.trim();
+    if (isBlank(value)) continue;
+
+    // Map PrimeNG "global" to our "search"
+    if (key === 'global') {
+      baseFilters.search = value as string;
+      continue;
     }
+
+    // Build single-object filter: { value, matchMode, operator }
+    (baseFilters as any)[key] = {
+      value,
+      matchMode: matchMode ?? 'contains',
+      operator: (operator as 'and' | 'or') ?? 'and'
+    };
+  }
+
+  this.filters = baseFilters;
+  console.log('Built filters:', this.filters);
+}
+
 
     private resetPagination() {
         console.log('Resetting pagination');
