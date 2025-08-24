@@ -4,11 +4,12 @@ import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { GenericTableComponent, TableColumn, TableConfig } from './tableplugin';
+import { TagModule } from 'primeng/tag';
 
 @Component({
     selector: 'app-table-demo',
     standalone: true,
-    imports: [CommonModule, GenericTableComponent, ButtonModule],
+    imports: [CommonModule, GenericTableComponent, ButtonModule, TagModule],
     template: `
         <!-- Your Generic Table -->
         <app-generic-table
@@ -39,17 +40,7 @@ import { GenericTableComponent, TableColumn, TableConfig } from './tableplugin';
 
             <!-- Improved Status Template with Better Color Hierarchy -->
             <ng-template #statusTemplate let-patient let-value="value">
-                <span
-                    class="px-2 py-1 rounded-full text-xs font-medium"
-                    [ngClass]="{
-                        'bg-emerald-100 text-emerald-800': value?.toLowerCase() === 'qualified',
-                        'bg-blue-100 text-blue-800': value?.toLowerCase() === 'senior',
-                        'bg-indigo-100 text-indigo-800': value?.toLowerCase() === 'mid-senior',
-                        'bg-orange-100 text-orange-800': value?.toLowerCase() === 'junior'
-                    }"
-                >
-                    {{ value | titlecase }}
-                </span>
+                <p-tag [value]="value" [severity]="getSeverity(value)"></p-tag>
             </ng-template>
 
             <!-- Actions template -->
@@ -133,8 +124,8 @@ export class TableDemo implements OnDestroy {
         title: 'Patient Management',
         showGlobalSearch: true,
         showClearButton: true,
-        pageSizeOptions: [1, 2, 5, 10, 25, 50, 100],
-        defaultPageSize: 3,
+        pageSizeOptions: [5, 10, 15, 25, 50, 100],
+        defaultPageSize: 15,
         scrollHeight: '600px',
         emptyMessage: 'No patients found matching your criteria.',
         loadingMessage: 'Loading patient data...'
@@ -288,6 +279,21 @@ export class TableDemo implements OnDestroy {
     deletePatient(patient: Patient) {
         console.log('Delete patient:', patient);
         // Add your delete logic here
+    }
+
+    getSeverity(val?: string): 'success' | 'info' | 'warn' | 'danger' {
+        switch ((val || '').toLowerCase().trim()) {
+            case 'qualified':
+                return 'success'; // green
+            case 'senior':
+                return 'danger'; // red
+            case 'mid-senior':
+                return 'info'; // blue
+            case 'junior':
+                return 'warn'; // yellow/amber
+            default:
+                return 'info';
+        }
     }
 
     ngOnDestroy() {
