@@ -55,7 +55,7 @@ export interface TableConfig {
                 [lazy]="isLazy"
                 [paginator]="true"
                 [rows]="pageSize"
-                [rowsPerPageOptions]="config.pageSizeOptions || [1, 2, 5, 10, 25, 50, 100]"
+                [rowsPerPageOptions]="config.pageSizeOptions || [5, 10, 15, 25, 50, 100]"
                 [totalRecords]="totalRecords"
                 [rowHover]="config.rowHover !== false"
                 [showGridlines]="config.showGridlines !== false"
@@ -157,7 +157,7 @@ export interface TableConfig {
             </p-table>
 
             <!-- Results Summary -->
-            <div class="mt-4 text-sm text-gray-600" *ngIf="!loading && config.showResultsSummary !== false">Showing {{ data?.length || 0 }} of {{ totalRecords | number }} records</div>
+            <div class="mt-4 text-sm text-gray-600" *ngIf="!loading && config.showResultsSummary !== false">Showing {{ data.length || 0 }} of {{ totalRecords | number }} records</div>
         </div>
 
         <!-- Content projection for custom templates -->
@@ -223,7 +223,7 @@ export class GenericTableComponent<T = any> implements OnDestroy, AfterContentIn
 
     ngAfterContentInit() {
         // Set default page size from config
-        this.pageSize = this.config.defaultPageSize || 3;
+        this.pageSize = this.config.defaultPageSize || 15;
     }
 
     get hasActionsSlot(): boolean {
