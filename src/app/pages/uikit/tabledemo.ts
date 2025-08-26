@@ -1,10 +1,10 @@
-import { Component, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TagModule } from 'primeng/tag';
 import { Subject, takeUntil } from 'rxjs';
 
+import { GenericTableComponent, TableColumn, TableConfig, RowEditEvent } from './tableplugin';
 import { Patient, PatientService, GetPatientsPageOpts } from '../service/patients.service';
-import { GenericTableComponent, TableColumn, TableConfig } from './tableplugin';
 
 @Component({
   selector: 'app-table-demo',
@@ -20,11 +20,21 @@ import { GenericTableComponent, TableColumn, TableConfig } from './tableplugin';
       [isLazy]="true"
       dataKey="PK"
       (lazyLoad)="loadPatients($event)"
-      [actionsTemplate]="actionsTemplate"
+      (rowEditInit)="onRowEditInit($event)"
+      (rowEditSave)="onRowEditSave($event)"
+      (rowEditCancel)="onRowEditCancel($event)"
       [customTemplates]="customTemplates"
+      [actionsTemplate]="actionsTemplate"
     >
-      <ng-template #statusTemplate let-patient let-value="value">
-        <p-tag [value]="value | titlecase" [severity]="getSeverity(value)"></p-tag>
+      <!-- Status tag (view mode) -->
+      <ng-template #statusTemplate let-row let-value="value">
+        <p-tag [value]="(value || '') | uppercase" [severity]="getSeverity(value)"></p-tag>
+      </ng-template>
+
+      <!-- (Optional) extra actions next to edit/save/cancel -->
+      <ng-template #actionsTemplate let-row>
+        <!-- Example placeholder: -->
+        <!-- <button pButton icon="pi pi-info-circle" text (click)="inspect(row)"></button> -->
       </ng-template>
     </app-generic-table>
   `
@@ -33,32 +43,54 @@ export class TableDemo implements OnDestroy {
   @ViewChild('statusTemplate') statusTemplate!: TemplateRef<any>;
   @ViewChild('actionsTemplate') actionsTemplate!: TemplateRef<any>;
 
+  // Editor types as class property (so you can use this.EditorType.X)
+  EditorType = {
+    Text: 'text',
+    Date: 'date',
+    Number: 'number',
+    Textarea: 'textarea',
+    Autocomplete: 'autocomplete'
+  } as const;
+
+  // Autocomplete options: labels UPPERCASE, values lowercase
+  STATUS_OPTIONS = [
+    { label: 'QUALIFIED',  value: 'qualified' },
+    { label: 'SENIOR',     value: 'senior' },
+    { label: 'MID-SENIOR', value: 'mid-senior' },
+    { label: 'JUNIOR',     value: 'junior' }
+  ] as const;
+
+  // Data state
   patients: Patient[] = [];
   loading = true;
   totalRecords = 0;
 
-  // pagination state
+  // Pagination (compatible with your lastKey approach)
   private currentLastKey: string | null = null;
   private pageKeys: (string | null)[] = [null];
   private currentPage = 0;
-
-  // keep pageSize consistent with table config
   private pageSize = 15;
 
+  // Filters sent to backend
   filters: GetPatientsPageOpts = {
     pageSize: this.pageSize,
     lastKey: null
   };
 
+  // Columns (mark editable + editorType)
   patientColumns: TableColumn[] = [
-    { field: 'name', header: 'Name', pipe: 'titlecase', filterable: true, sortable: true },
-    { field: 'gender', header: 'Gender', pipe: 'titlecase', filterable: true },
-    { field: 'insurance', header: 'Insurance', pipe: 'titlecase', filterable: true },
-    { field: 'dob', header: 'Date of Birth', type: 'date', pipe: 'date', dateFormat: 'MM/dd/yyyy', filterable: true },
-    { field: 'timestamp', header: 'Submitted Date', type: 'date', pipe: 'date', dateFormat: 'MM/dd/yyyy', filterable: true },
-    { field: 'status', header: 'Level', customTemplate: true, filterable: true }
+    { field: 'name', header: 'Name', editable: true, editorType: this.EditorType.Text, pipe: 'titlecase', sortable: true, filterable: true },
+    { field: 'gender', header: 'Gender', editable: true, editorType: this.EditorType.Text, pipe: 'titlecase', filterable: true },
+    { field: 'insurance', header: 'Insurance', editable: true, editorType: this.EditorType.Text, pipe: 'titlecase', filterable: true },
+    { field: 'dob', header: 'Date of Birth', editable: true, editorType: this.EditorType.Date, type: 'date', pipe: 'date', dateFormat: 'MM/dd/yyyy', filterable: true },
+
+    // Autocomplete editor for status
+    { field: 'status', header: 'Level', editable: true, editorType: this.EditorType.Autocomplete, editorOptions: this.STATUS_OPTIONS, customTemplate: true, filterable: true },
+
+    { field: 'timestamp', header: 'Submitted Date', editable: false, type: 'date', pipe: 'date', dateFormat: 'MM/dd/yyyy', filterable: true }
   ];
 
+  // Table configuration
   tableConfig: TableConfig = {
     title: 'Patient Management',
     showGlobalSearch: true,
@@ -74,7 +106,7 @@ export class TableDemo implements OnDestroy {
     showResultsSummary: true
   };
 
-  // map of field -> template
+  // Custom templates mapping
   customTemplates: { [key: string]: TemplateRef<any> } = {};
 
   private destroy$ = new Subject<void>();
@@ -82,39 +114,32 @@ export class TableDemo implements OnDestroy {
   constructor(private patientsService: PatientService) {}
 
   ngAfterViewInit() {
-    // set templates used by the generic table
+    // map templates
     this.customTemplates = {
       status: this.statusTemplate
     };
 
-    // sync local page size with config default
     this.pageSize = this.tableConfig.defaultPageSize ?? 15;
     this.filters.pageSize = this.pageSize;
   }
 
+  // Lazy load handler (PrimeNG event)
   loadPatients(event: any) {
     if (!event) return;
 
-    // handle page size change
     if (event.rows && event.rows !== this.pageSize) {
       this.pageSize = event.rows;
       this.resetPagination();
     }
 
-    // compute current page from PrimeNG event
+    // compute current page from event.first
     const newPage = Math.floor((event.first || 0) / this.pageSize);
     this.currentPage = newPage;
     this.currentLastKey = this.pageKeys[newPage] || null;
 
-    // build filters from PrimeNG column filters
+    // build filters for backend
     this.buildFilterOptions(event.filters || {});
-
-    // update paging params
-    this.filters = {
-      ...this.filters,
-      pageSize: this.pageSize,
-      lastKey: this.currentLastKey
-    };
+    this.filters = { ...this.filters, pageSize: this.pageSize, lastKey: this.currentLastKey };
 
     this.loadData();
   }
@@ -133,7 +158,6 @@ export class TableDemo implements OnDestroy {
           if (response.lastKey) {
             this.pageKeys[this.currentPage + 1] = response.lastKey;
           } else {
-            // no next page
             this.pageKeys = this.pageKeys.slice(0, this.currentPage + 1);
           }
 
@@ -154,8 +178,7 @@ export class TableDemo implements OnDestroy {
     };
 
     const toYmd = (d: Date) => d.toISOString().slice(0, 10);
-    const isBlank = (v: unknown) =>
-      v === null || v === undefined || (typeof v === 'string' && v.trim() === '');
+    const isBlank = (v: unknown) => v === null || v === undefined || (typeof v === 'string' && v.trim() === '');
 
     for (const [key, rawVal] of Object.entries(filtersObject ?? {})) {
       const first = Array.isArray(rawVal) ? rawVal[0] : rawVal;
@@ -192,18 +215,31 @@ export class TableDemo implements OnDestroy {
     this.pageKeys = [null];
   }
 
+  // Row edit events (hook to your API as needed)
+  onRowEditInit(ev: RowEditEvent<Patient>) {
+    // Optionally clone original row for cancel revert
+    // this._originalRow = structuredClone(ev.data);
+    console.log('Edit INIT:', ev.data);
+  }
+
+  onRowEditSave(ev: RowEditEvent<Patient>) {
+    console.log('Edit SAVE:', ev.data);
+    // Example persist:
+    // this.patientsService.updatePatient(ev.data.PK, ev.data).subscribe(...)
+  }
+
+  onRowEditCancel(ev: RowEditEvent<Patient>) {
+    console.log('Edit CANCEL:', ev.data);
+    // Optionally restore original row if you cloned it on init
+  }
+
   getSeverity(val?: string): 'success' | 'info' | 'warn' | 'danger' {
     switch ((val || '').toLowerCase().trim()) {
-      case 'qualified':
-        return 'success';
-      case 'senior':
-        return 'danger';
-      case 'mid-senior':
-        return 'info';
-      case 'junior':
-        return 'warn';
-      default:
-        return 'info';
+      case 'qualified': return 'success';
+      case 'senior': return 'danger';
+      case 'mid-senior': return 'info';
+      case 'junior': return 'warn';
+      default: return 'info';
     }
   }
 

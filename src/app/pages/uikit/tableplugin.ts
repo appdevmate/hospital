@@ -10,13 +10,16 @@ import {
   SimpleChanges
 } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Table, TableModule } from 'primeng/table';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
+import { DatePickerModule } from 'primeng/datepicker';
 
-// Interfaces for configuration
+// Column configuration
 export interface TableColumn {
   field: string;
   header: string;
@@ -27,6 +30,11 @@ export interface TableColumn {
   sortable?: boolean;
   width?: string;
   customTemplate?: boolean;
+
+  // Row-edit additions:
+  editable?: boolean; // mark editable columns explicitly
+  editorType?: 'text' | 'date' | 'number' | 'textarea' | 'autocomplete';
+  editorOptions?: ReadonlyArray<{ label: string; value: any }>;
 }
 
 export interface TableConfig {
@@ -44,16 +52,24 @@ export interface TableConfig {
   showResultsSummary?: boolean;
 }
 
+export interface RowEditEvent<T = any> {
+  data: T;
+  index?: number;
+}
+
 @Component({
   selector: 'app-generic-table',
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,          // for [ngModel]/(ngModelChange)
     TableModule,
     IconFieldModule,
     InputIconModule,
     InputTextModule,
-    ButtonModule
+    AutoCompleteModule,   // for <p-autocomplete>
+    ButtonModule,
+    DatePickerModule
   ],
   template: `
     <div class="card">
@@ -65,6 +81,7 @@ export interface TableConfig {
         [dataKey]="dataKey"
         [loading]="loading"
         [lazy]="isLazy"
+        editMode="row"
         [paginator]="true"
         [rows]="pageSize"
         [rowsPerPageOptions]="config.pageSizeOptions || [5, 10, 15, 25, 50, 100]"
@@ -72,10 +89,15 @@ export interface TableConfig {
         [rowHover]="config.rowHover !== false"
         [showGridlines]="config.showGridlines !== false"
         (onLazyLoad)="onLazyLoad($event)"
+        (onRowEditInit)="emitRowEditInit($event)"
+        (onRowEditSave)="emitRowEditSave($event)"
+        (onRowEditCancel)="emitRowEditCancel($event)"
         [responsiveLayout]="config.responsive !== false ? 'scroll' : 'stack'"
         [scrollable]="true"
         [scrollHeight]="config.scrollHeight || '600px'"
+        [tableStyle]="{ 'table-layout': 'fixed', width: '100%' }"
       >
+        <!-- Caption -->
         <ng-template #caption>
           <div class="flex justify-between items-center flex-col sm:flex-row">
             <button
@@ -88,14 +110,13 @@ export interface TableConfig {
             ></button>
 
             <p-iconfield *ngIf="config.showGlobalSearch !== false" iconPosition="left" class="ml-auto">
-              <p-inputicon>
-                <i class="pi pi-search"></i>
-              </p-inputicon>
+              <p-inputicon><i class="pi pi-search"></i></p-inputicon>
               <input #globalFilter pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Global Search" />
             </p-iconfield>
           </div>
         </ng-template>
 
+        <!-- Header -->
         <ng-template pTemplate="header">
           <tr>
             <th *ngFor="let col of columns" [style.min-width]="col.width || '12rem'">
@@ -112,43 +133,166 @@ export interface TableConfig {
                 ></p-columnFilter>
               </div>
             </th>
-            <th *ngIf="hasActionsSlot" style="min-width: 8rem">Actions</th>
+            <th style="min-width: 8rem">Actions</th>
           </tr>
         </ng-template>
 
-        <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
-          <tr>
+        <!-- Body (ROW EDIT) -->
+        <ng-template pTemplate="body" let-rowData let-editing="editing" let-rowIndex="rowIndex">
+          <tr [pEditableRow]="rowData">
             <td *ngFor="let col of columns">
-              <ng-container *ngIf="col.customTemplate && getCustomTemplate(col.field); else defaultCell">
-                <ng-container
-                  *ngTemplateOutlet="
-                    getCustomTemplate(col.field);
-                    context: {
-                      $implicit: rowData,
-                      rowIndex: rowIndex,
-                      field: col.field,
-                      value: getFieldValue(rowData, col.field)
-                    }
-                  "
-                ></ng-container>
+              <!-- Editable column -->
+              <ng-container *ngIf="col.editable === true; else nonEditableCell">
+                <p-cellEditor>
+                  <!-- INPUT (edit mode) -->
+                  <ng-template pTemplate="input">
+                    <!-- TEXT -->
+                    <input
+                      *ngIf="(col.editorType || 'text') === 'text'"
+                      pInputText
+                      [ngModel]="getCellModel(rowData, col.field)"
+                      (ngModelChange)="setCellModel(rowData, col.field, $event)"
+                      [attr.placeholder]="col.header"
+                    />
+                    <!-- DATE -->
+                  <p-datepicker
+                    *ngIf="col.editorType === 'date'"                                                   
+                    [showIcon]="true"
+                    [iconDisplay]="'input'"
+                    [appendTo]="'body'"
+                    [dateFormat]="toPickerFormat(col.dateFormat)"
+                    [ngModel]="getDateModel(rowData, col.field)"
+                    (ngModelChange)="setDateModel(rowData, col.field, $event)"
+                    class="w-full"
+                  ></p-datepicker>
+
+                    <!-- NUMBER -->
+                    <input
+                      *ngIf="col.editorType === 'number'"
+                      type="number"
+                      pInputText
+                      [ngModel]="getCellModel(rowData, col.field)"
+                      (ngModelChange)="setCellModel(rowData, col.field, $event)"
+                    />
+                    <!-- TEXTAREA -->
+                    <textarea
+                      *ngIf="col.editorType === 'textarea'"
+                      pInputText
+                      rows="2"
+                      [ngModel]="getCellModel(rowData, col.field)"
+                      (ngModelChange)="setCellModel(rowData, col.field, $event)"
+                    ></textarea>
+                    <!-- AUTOCOMPLETE -->
+                    <p-autocomplete
+  *ngIf="col.editorType === 'autocomplete'"
+  [suggestions]="acSuggestions[col.field] || []"
+  (completeMethod)="completeAC(col, $event)"
+  [optionLabel]="'label'"
+  [dropdown]="true"
+  [forceSelection]="true"
+  class="w-full"
+  [ngModel]="getACSelected(rowData, col)"
+  (ngModelChange)="setACSelected(rowData, col, $event)"
+>
+  <ng-template pTemplate="item" let-opt>
+    {{ opt.label }}
+  </ng-template>
+</p-autocomplete>
+
+
+                  </ng-template>
+
+                  <!-- OUTPUT (view mode) -->
+                  <ng-template pTemplate="output">
+                    <ng-container *ngIf="col.customTemplate && getCustomTemplate(col.field); else formattedValue">
+                      <ng-container
+                        *ngTemplateOutlet="
+                          getCustomTemplate(col.field);
+                          context: {
+                            $implicit: rowData,
+                            rowIndex: rowIndex,
+                            field: col.field,
+                            value: getFieldValue(rowData, col.field)
+                          }
+                        "
+                      ></ng-container>
+                    </ng-container>
+                    <ng-template #formattedValue>
+                      {{ formatCellValue(rowData, col) }}
+                    </ng-template>
+                  </ng-template>
+                </p-cellEditor>
               </ng-container>
 
-              <ng-template #defaultCell>
-                {{ formatCellValue(rowData, col) }}
+              <!-- Non-editable column -->
+              <ng-template #nonEditableCell>
+                <ng-container *ngIf="col.customTemplate && getCustomTemplate(col.field); else nonEditableText">
+                  <ng-container
+                    *ngTemplateOutlet="
+                      getCustomTemplate(col.field);
+                      context: {
+                        $implicit: rowData,
+                        rowIndex: rowIndex,
+                        field: col.field,
+                        value: getFieldValue(rowData, col.field)
+                      }
+                    "
+                  ></ng-container>
+                </ng-container>
+                <ng-template #nonEditableText>
+                  {{ formatCellValue(rowData, col) }}
+                </ng-template>
               </ng-template>
             </td>
 
-            <td *ngIf="hasActionsSlot">
-              <ng-container
-                *ngTemplateOutlet="
-                  actionsTemplate;
-                  context: { $implicit: rowData, rowIndex: rowIndex }
-                "
-              ></ng-container>
+            <!-- Row actions -->
+            <td>
+              <div class="flex items-center justify-center gap-2">
+                <button
+                  *ngIf="!editing"
+                  pButton
+                  type="button"
+                  pInitEditableRow
+                  icon="pi pi-pencil"
+                  text
+                  rounded
+                  severity="secondary"
+                ></button>
+
+                <button
+                  *ngIf="editing"
+                  pButton
+                  type="button"
+                  pSaveEditableRow
+                  icon="pi pi-check"
+                  text
+                  rounded
+                  severity="secondary"
+                ></button>
+
+                <button
+                  *ngIf="editing"
+                  pButton
+                  type="button"
+                  pCancelEditableRow
+                  icon="pi pi-times"
+                  text
+                  rounded
+                  severity="secondary"
+                ></button>
+
+                <!-- Optional extra actions injected by parent -->
+                <ng-container
+                  *ngIf="actionsTemplate"
+                  [ngTemplateOutlet]="actionsTemplate"
+                  [ngTemplateOutletContext]="{ $implicit: rowData, rowIndex: rowIndex }"
+                ></ng-container>
+              </div>
             </td>
           </tr>
         </ng-template>
 
+        <!-- Empty -->
         <ng-template pTemplate="emptymessage">
           <tr>
             <td [colSpan]="getTotalColumns()" class="text-center py-8">
@@ -160,6 +304,7 @@ export interface TableConfig {
           </tr>
         </ng-template>
 
+        <!-- Loading -->
         <ng-template pTemplate="loadingbody">
           <tr>
             <td [colSpan]="getTotalColumns()" class="text-center py-8">
@@ -180,6 +325,7 @@ export interface TableConfig {
   styles: [`
     :host ::ng-deep .p-calendar { width: 100%; }
     :host ::ng-deep .p-dropdown { width: 100%; }
+    :host ::ng-deep .p-autocomplete { width: 100%; }
   `]
 })
 export class GenericTableComponent<T = any> implements OnChanges {
@@ -197,13 +343,20 @@ export class GenericTableComponent<T = any> implements OnChanges {
   @Input() isLazy = true;
   @Input() config: TableConfig = {};
 
-  // templates passed as inputs
+  // template inputs
   @Input() actionsTemplate?: TemplateRef<any>;
   @Input() customTemplates: { [fieldName: string]: TemplateRef<any> } = {};
 
+  // events
   @Output() lazyLoad = new EventEmitter<any>();
+  @Output() rowEditInit = new EventEmitter<RowEditEvent<T>>();
+  @Output() rowEditSave = new EventEmitter<RowEditEvent<T>>();
+  @Output() rowEditCancel = new EventEmitter<RowEditEvent<T>>();
 
-  pageSize = 15; // will sync from config
+  pageSize = 15; // sync from config
+
+  // AutoComplete suggestions per field
+  acSuggestions: Record<string, { label: string; value: any }[]> = {};
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['config']) {
@@ -211,17 +364,19 @@ export class GenericTableComponent<T = any> implements OnChanges {
     }
   }
 
-  get hasActionsSlot(): boolean {
-    return !!this.actionsTemplate;
-  }
-
   getTotalColumns(): number {
-    return this.columns.length + (this.hasActionsSlot ? 1 : 0);
+    // data columns + actions column
+    return this.columns.length + 1;
   }
 
   onLazyLoad(event: any): void {
     this.lazyLoad.emit(event);
   }
+
+  // Row-edit event relays
+  emitRowEditInit(e: any) { this.rowEditInit.emit({ data: e.data, index: e.index }); }
+  emitRowEditSave(e: any) { this.rowEditSave.emit({ data: e.data, index: e.index }); }
+  emitRowEditCancel(e: any) { this.rowEditCancel.emit({ data: e.data, index: e.index }); }
 
   onGlobalFilter(table: Table, event: Event): void {
     table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
@@ -234,6 +389,31 @@ export class GenericTableComponent<T = any> implements OnChanges {
     }
   }
 
+  // Generic editors helpers (Option 1)
+  getCellModel(row: any, field: string) {
+    return row?.[field];
+  }
+  setCellModel(row: any, field: string, value: any) {
+    if (row) row[field] = value;
+  }
+
+  // AutoComplete helpers
+  completeAC(col: TableColumn, event: { query?: string }) {
+    const all = col.editorOptions || [];
+    const q = (event?.query || '').toLowerCase();
+    this.acSuggestions[col.field] = q
+      ? all.filter(o => o.label.toLowerCase().includes(q) || String(o.value).toLowerCase().includes(q))
+      : all.slice(0, 50);
+  }
+  getACSelected(row: any, col: TableColumn) {
+    const val = row?.[col.field];
+    return (col.editorOptions || []).find(o => o.value === val) || null;
+  }
+  setACSelected(row: any, col: TableColumn, selected: any) {
+    row[col.field] = selected?.value ?? null;
+  }
+
+  // Formatting helpers
   formatCellValue(rowData: T, column: TableColumn): string {
     const value = this.getFieldValue(rowData, column.field);
     if (value === null || value === undefined) return '-';
@@ -267,10 +447,54 @@ export class GenericTableComponent<T = any> implements OnChanges {
   }
 
   private toTitleCase(str: string): string {
-    return str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase());
+    return str.replace(/\w\S*/g, (t) => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase());
   }
 
   getCustomTemplate(field: string): TemplateRef<any> | null {
     return this.customTemplates[field] || null;
   }
+
+  // Coerce whatever is in the row to a Date (DatePicker wants a Date object)
+private dateCache = new WeakMap<any, Map<string, Date | null>>();
+
+// replace your previous date helpers with these:
+getDateModel(row: any, field: string): Date | null {
+  if (!row) return null;
+
+  let map = this.dateCache.get(row);
+  if (!map) {
+    map = new Map<string, Date | null>();
+    this.dateCache.set(row, map);
+  }
+
+  // If we already computed/stored it, return the same instance
+  if (map.has(field)) return map.get(field) ?? null;
+
+  const v = row[field];
+  const d = v == null ? null : (v instanceof Date ? v : new Date(v));
+  map.set(field, d);
+  return d;
+}
+
+setDateModel(row: any, field: string, value: Date | null) {
+  if (!row) return;
+  let map = this.dateCache.get(row);
+  if (!map) {
+    map = new Map<string, Date | null>();
+    this.dateCache.set(row, map);
+  }
+  map.set(field, value);
+  row[field] = value; // keep your data in sync
+}
+
+
+  // Convert Angular DatePipe format (e.g., 'MM/dd/yyyy') to PrimeNG DatePicker format (e.g., 'mm/dd/yy')
+  toPickerFormat(pipeFmt?: string): string {
+    if (!pipeFmt) return 'mm/dd/yy';
+    return pipeFmt
+      .replace(/yyyy/g, 'yy')  // 4-digit year → 'yy' in PrimeNG
+      .replace(/MM/g, 'mm')    // month
+      .replace(/dd/g, 'dd');   // day (same)
+  }
+
 }
