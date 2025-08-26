@@ -64,6 +64,7 @@ export interface RowEditEvent<T = any> { data: T; index?: number; }
         [responsiveLayout]="config.responsive !== false ? 'scroll' : 'stack'"
         [scrollable]="true"
         [scrollHeight]="config.scrollHeight || '600px'"
+        sortMode="single"
         [tableStyle]="{ 'table-layout': 'fixed', width:'100%' }"
       >
         <ng-template #caption>
@@ -76,19 +77,54 @@ export interface RowEditEvent<T = any> { data: T; index?: number; }
           </div>
         </ng-template>
 
-        <ng-template pTemplate="header">
-          <tr>
-            <th *ngFor="let col of columns" [style.min-width]="col.width || '12rem'">
-              <div class="flex justify-between items-center">
-                {{ col.header }}
-                <p-columnFilter *ngIf="col.filterable !== false" type="text" [field]="col.field" display="menu"
-                  [placeholder]="'Search by ' + col.header.toLowerCase()" [showOperator]="false" [showAddButton]="false">
-                </p-columnFilter>
-              </div>
-            </th>
-            <th style="min-width:8rem">Actions</th>
-          </tr>
-        </ng-template>
+<ng-template pTemplate="header">
+  <tr>
+    <ng-container *ngFor="let col of columns">
+      <!-- Sortable by default -->
+      <th *ngIf="col.sortable !== false; else noSort"
+          [style.min-width]="col.width || '12rem'"
+          [pSortableColumn]="col.field">
+        <div class="flex justify-between items-center">
+          <span class="flex items-center gap-2">
+            {{ col.header }}
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+          </span>
+          <p-columnFilter
+            *ngIf="col.filterable !== false"
+            type="text"
+            [field]="col.field"
+            display="menu"
+            [placeholder]="'Search by ' + col.header.toLowerCase()"
+            [showOperator]="false"
+            [showAddButton]="false">
+          </p-columnFilter>
+        </div>
+      </th>
+
+      <!-- Non-sortable -->
+      <ng-template #noSort>
+        <th [style.min-width]="col.width || '12rem'">
+          <div class="flex justify-between items-center">
+            {{ col.header }}
+            <p-columnFilter
+              *ngIf="col.filterable !== false"
+              type="text"
+              [field]="col.field"
+              display="menu"
+              [placeholder]="'Search by ' + col.header.toLowerCase()"
+              [showOperator]="false"
+              [showAddButton]="false">
+            </p-columnFilter>
+          </div>
+        </th>
+      </ng-template>
+    </ng-container>
+
+    <th style="min-width:8rem">Actions</th>
+  </tr>
+</ng-template>
+
+
 
         <ng-template pTemplate="body" let-row let-editing="editing" let-ri="rowIndex">
           <tr [pEditableRow]="row">
@@ -226,7 +262,7 @@ export class GenericTableComponent<T = any> implements OnChanges {
     m.set(f, d); return d;
   }
   setDate(row: any, f: string, v: Date | null) { if (!row) return; this.ref(row).set(f, v); row[f] = v; }
-  fmt = (pipeFmt?: string) => !pipeFmt ? 'mm/dd/yy' : pipeFmt.replace(/yyyy/g,'yy').replace(/MM/g,'mm').replace(/dd/g,'dd');
+  fmt = (pipeFmt?: string) => !pipeFmt ? 'mm/dd/yy' : pipeFmt.replace(/yyyy/g, 'yy').replace(/MM/g, 'mm').replace(/dd/g, 'dd');
 
   // display
   display(row: T, col: TableColumn): string {
@@ -239,8 +275,8 @@ export class GenericTableComponent<T = any> implements OnChanges {
       case 'titlecase': return typeof v === 'string' ? v.replace(/\w\S*/g, t => t[0].toUpperCase() + t.slice(1).toLowerCase()) : String(v);
       case 'uppercase': return String(v).toUpperCase();
       case 'lowercase': return String(v).toLowerCase();
-      case 'currency': return new Intl.NumberFormat('en-US', { style:'currency', currency:'USD' }).format(Number(v));
-      case 'number'  : return new Intl.NumberFormat('en-US').format(Number(v));
+      case 'currency': return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Number(v));
+      case 'number': return new Intl.NumberFormat('en-US').format(Number(v));
       default: return String(v);
     }
   }
@@ -249,9 +285,9 @@ export class GenericTableComponent<T = any> implements OnChanges {
   custom = (f: string) => this.customTemplates[f] || null;
 
   // row edit events
-  emitRowEditInit  = (e: any) => this.rowEditInit.emit({ data: e.data, index: e.index });
-  emitRowEditSave  = (e: any) => this.rowEditSave.emit({ data: e.data, index: e.index });
-  emitRowEditCancel= (e: any) => this.rowEditCancel.emit({ data: e.data, index: e.index });
+  emitRowEditInit = (e: any) => this.rowEditInit.emit({ data: e.data, index: e.index });
+  emitRowEditSave = (e: any) => this.rowEditSave.emit({ data: e.data, index: e.index });
+  emitRowEditCancel = (e: any) => this.rowEditCancel.emit({ data: e.data, index: e.index });
 }
 // import {
 //   Component,

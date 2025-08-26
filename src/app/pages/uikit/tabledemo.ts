@@ -52,6 +52,10 @@ export class TableDemo implements OnDestroy {
   private pageKeys: (string | null)[] = [null];
   private page = 0;
   private pageSize = 15;
+  
+  private prevSortField: string | null = null;
+  private prevSortOrder: 1 | -1 | 0 | null = null;
+
 
   filters: GetPatientsPageOpts = { pageSize: this.pageSize, lastKey: null };
 
@@ -86,14 +90,38 @@ export class TableDemo implements OnDestroy {
   }
 
   loadPatients(e: any) {
-    if (!e) return;
-    if (e.rows && e.rows !== this.pageSize) { this.pageSize = e.rows; this.reset(); }
-    this.page = Math.floor((e.first || 0) / this.pageSize);
-    this.lastKey = this.pageKeys[this.page] || null;
-    this.filters = { ...this.filters, pageSize: this.pageSize, lastKey: this.lastKey };
-    this.applyFilters(e.filters || {});
-    this.fetch();
+  if (!e) return;
+
+  // page size change
+  if (e.rows && e.rows !== this.pageSize) {
+    this.pageSize = e.rows;
+    this.reset();
   }
+
+  // sort change? reset pagination (invalidates lastKey sequence)
+  const newSortField = e.sortField ?? null;
+  const newSortOrder: 1 | -1 | 0 = (e.sortOrder ?? 1) as 1 | -1 | 0;
+  if (newSortField !== this.prevSortField || newSortOrder !== this.prevSortOrder) {
+    this.prevSortField = newSortField;
+    this.prevSortOrder = newSortOrder;
+    this.reset();
+  }
+
+  // page calc
+  this.page = Math.floor((e.first || 0) / this.pageSize);
+  this.lastKey = this.pageKeys[this.page] || null;
+
+  // filters: search/column filters
+  this.applyFilters(e.filters || {});
+
+  // include sort in backend request
+  (this.filters as any).sortField = newSortField;
+  (this.filters as any).sortOrder = newSortOrder; // 1 asc, -1 desc
+
+  this.filters = { ...this.filters, pageSize: this.pageSize, lastKey: this.lastKey };
+  this.fetch();
+}
+
 
   private fetch() {
     this.loading = true;
