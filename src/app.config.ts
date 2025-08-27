@@ -6,6 +6,7 @@ import Aura from '@primeuix/themes/aura';
 import { providePrimeNG } from 'primeng/config';
 import { appRoutes } from './app.routes';
 import { provideAuth } from 'angular-auth-oidc-client';
+import { MessageService } from 'primeng/api';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -23,6 +24,7 @@ export const appConfig: ApplicationConfig = {
                 useRefreshToken: true,
                 scope: 'openid email phone profile'
             }
-        })
+        }),
+        MessageService
     ]
 };

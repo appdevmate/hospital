@@ -27,7 +27,15 @@ export interface FilterOption {
     operator: 'and' | 'or';     // logical operator
 }
 
-
+export interface CreatePatientRequest {
+    name: string;
+    gender: string;
+    insurance?: string;
+    dob: string;
+    phone?: string;
+    qid?: string;
+    job?: string;
+}
 export interface GetPatientsPageOpts {
     pageSize?: number;
     lastKey?: string | null;
@@ -131,4 +139,11 @@ export class PatientService {
     getFilterOptions(field: 'gender' | 'insurance'): Observable<string[]> {
         return this.http.get<string[]>(`${Config.buildUrl(this.path)}/filter-options/${field}`, { headers: this.authHeaders() });
     }
+
+    createPatient(patientData: CreatePatientRequest): Observable<{ data: Patient }> {
+    return this.http.post<{ data: Patient }>(Config.buildUrl(this.path), patientData, {
+        headers: this.authHeaders()
+    });
+}
+
 }

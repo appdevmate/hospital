@@ -1,42 +1,42 @@
 import {
   Paginator,
   PaginatorModule
-} from "./chunk-LANDMYKA.js";
-import "./chunk-UQR27XW7.js";
-import "./chunk-ERTRC4LO.js";
-import "./chunk-B7K3NRBX.js";
-import "./chunk-SJ7AR6BC.js";
+} from "./chunk-B4QF4KAN.js";
+import "./chunk-6CFGVPWE.js";
+import "./chunk-H2LWH7NS.js";
+import "./chunk-VLOVIKW2.js";
+import "./chunk-JGL4SAYN.js";
 import {
   Checkbox
-} from "./chunk-O7CR7E5F.js";
+} from "./chunk-27G4EU6S.js";
+import "./chunk-7QD4KSOF.js";
+import {
+  Scroller
+} from "./chunk-M7DM6ZTB.js";
+import "./chunk-KJUVOWLV.js";
 import {
   Badge,
   BadgeModule
-} from "./chunk-H76AO4NP.js";
-import "./chunk-B6UPPDAI.js";
+} from "./chunk-XY2GCPJQ.js";
 import {
-  Scroller
-} from "./chunk-VO43IB26.js";
-import "./chunk-ZAN5OYVG.js";
-import "./chunk-PJHIT4CY.js";
-import "./chunk-T7UCBUWT.js";
-import "./chunk-5ESO4YQD.js";
-import "./chunk-XYYI7XJH.js";
-import "./chunk-6PBBDZZF.js";
-import "./chunk-JFK7W26O.js";
+  Ripple
+} from "./chunk-RGDKEITI.js";
+import "./chunk-BB55NINM.js";
+import "./chunk-KJBQWEHZ.js";
+import "./chunk-YJNT6EUI.js";
+import "./chunk-UVBYZ3PB.js";
+import "./chunk-6PEVOYB3.js";
 import {
   FormsModule,
   NgControlStatus,
   NgModel
-} from "./chunk-F3LB25CD.js";
-import {
-  Ripple
-} from "./chunk-T257BNFA.js";
-import "./chunk-WWLVO5HG.js";
+} from "./chunk-RZEKJVYA.js";
+import "./chunk-UXGIRUBT.js";
+import "./chunk-6PBBDZZF.js";
+import "./chunk-KVKRHQWM.js";
 import {
   DomHandler
-} from "./chunk-LGMF4Z35.js";
-import "./chunk-BB55NINM.js";
+} from "./chunk-RCVZEDT3.js";
 import {
   ArrowDownIcon,
   ArrowUpIcon,
@@ -47,19 +47,42 @@ import {
   SortAmountDownIcon,
   SortAmountUpAltIcon,
   SpinnerIcon
-} from "./chunk-663YIKOD.js";
+} from "./chunk-NHULQEU6.js";
 import {
   BaseComponent
-} from "./chunk-SEMAMV4Q.js";
+} from "./chunk-DMQ536BV.js";
 import {
   BaseStyle
-} from "./chunk-3ZIQOXH2.js";
+} from "./chunk-BDASDOIZ.js";
+import "./chunk-B4BE4RUR.js";
 import {
   FilterService,
   PrimeTemplate,
   SharedModule
-} from "./chunk-OM2S6Z2C.js";
-import "./chunk-QARVQJSV.js";
+} from "./chunk-U4VSUP4P.js";
+import {
+  G,
+  Ht,
+  J,
+  K,
+  O,
+  P,
+  Q,
+  Q2,
+  R,
+  W,
+  Y,
+  a,
+  bt,
+  c,
+  ct,
+  k2 as k,
+  kt,
+  pt,
+  s2 as s,
+  z
+} from "./chunk-AFCQQ4GX.js";
+import "./chunk-6QGHQEN4.js";
 import "./chunk-53DGU4C2.js";
 import {
   CommonModule,
@@ -69,7 +92,7 @@ import {
   NgStyle,
   NgTemplateOutlet,
   isPlatformBrowser
-} from "./chunk-7ACODBRA.js";
+} from "./chunk-FHZAWWEY.js";
 import "./chunk-5KK3G4LL.js";
 import {
   ChangeDetectionStrategy,
@@ -77,7 +100,6 @@ import {
   Component,
   ContentChild,
   ContentChildren,
-  DOCUMENT,
   Directive,
   ElementRef,
   EventEmitter,
@@ -93,7 +115,6 @@ import {
   ViewChild,
   ViewEncapsulation,
   booleanAttribute,
-  inject,
   numberAttribute,
   setClassMetadata,
   ɵɵInheritDefinitionFeature,
@@ -105,8 +126,6 @@ import {
   ɵɵcontentQuery,
   ɵɵdefineComponent,
   ɵɵdefineDirective,
-  ɵɵdefineInjectable,
-  ɵɵdefineInjector,
   ɵɵdefineNgModule,
   ɵɵdirectiveInject,
   ɵɵdomProperty,
@@ -120,7 +139,6 @@ import {
   ɵɵgetInheritedFactory,
   ɵɵlistener,
   ɵɵloadQuery,
-  ɵɵnamespaceSVG,
   ɵɵnextContext,
   ɵɵproperty,
   ɵɵpureFunction0,
@@ -129,42 +147,26 @@ import {
   ɵɵpureFunction4,
   ɵɵqueryRefresh,
   ɵɵreference,
-  ɵɵresetView,
-  ɵɵrestoreView,
   ɵɵstyleMap,
   ɵɵstyleProp,
   ɵɵtemplate,
   ɵɵtemplateRefExtractor,
   ɵɵviewQuery
-} from "./chunk-DL5YMDBM.js";
+} from "./chunk-EIF6IUR4.js";
+import {
+  DOCUMENT,
+  inject,
+  ɵɵdefineInjectable,
+  ɵɵdefineInjector,
+  ɵɵnamespaceSVG,
+  ɵɵresetView,
+  ɵɵrestoreView
+} from "./chunk-LW34VNAR.js";
 import "./chunk-G6ECYYJH.js";
 import "./chunk-YVXMBCE5.js";
 import {
   Subject
 } from "./chunk-RTGP7ALM.js";
-import "./chunk-3P3YI57Q.js";
-import {
-  G2 as G,
-  Ht,
-  J,
-  K,
-  O,
-  P,
-  Q,
-  Q2,
-  R,
-  W,
-  Y2 as Y,
-  a,
-  bt,
-  c,
-  ct,
-  k,
-  kt,
-  pt,
-  s,
-  z2 as z
-} from "./chunk-ICG2ZITK.js";
 import {
   __spreadProps,
   __spreadValues
@@ -2974,7 +2976,7 @@ var TreeTable = class _TreeTable extends BaseComponent {
         dropIndex = dropIndex - 1;
       }
       if (allowDrop) {
-        Q(this.columns, dragIndex, dropIndex);
+        Q2(this.columns, dragIndex, dropIndex);
         this.onColReorder.emit({
           dragIndex,
           dropIndex,
@@ -6491,12 +6493,12 @@ var TTRow = class _TTRow extends BaseComponent {
   onTabKey(event) {
     const rows = this.el.nativeElement ? [...Y(this.el.nativeElement.parentNode, "tr")] : void 0;
     if (rows && s(rows)) {
-      const hasSelectedRow = rows.some((row) => Q2(row, "data-p-highlight") || row.getAttribute("aria-checked") === "true");
+      const hasSelectedRow = rows.some((row) => Q(row, "data-p-highlight") || row.getAttribute("aria-checked") === "true");
       rows.forEach((row) => {
         row.tabIndex = -1;
       });
       if (hasSelectedRow) {
-        const selectedNodes = rows.filter((node) => Q2(node, "data-p-highlight") || node.getAttribute("aria-checked") === "true");
+        const selectedNodes = rows.filter((node) => Q(node, "data-p-highlight") || node.getAttribute("aria-checked") === "true");
         selectedNodes[0].tabIndex = 0;
         return;
       }

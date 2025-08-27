@@ -1,16 +1,20 @@
-import { ChangeDetectorRef, Component, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, inject, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subject, takeUntil } from 'rxjs';
 import { GenericTableComponent, TableColumn, TableConfig, RowEditEvent, ToolbarConfig } from './tableplugin';
 import { Patient, PatientService, GetPatientsPageOpts } from '../service/patients.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TagModule } from 'primeng/tag';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NewPatient } from '@/components/new-patient/new-patient';
+import { Helpers } from '@/services/helpers';
 
 @Component({
     selector: 'app-table-demo',
     standalone: true,
     imports: [CommonModule, GenericTableComponent, TagModule], // Add TagModule for p-tag in template
-    providers: [MessageService, ConfirmationService],
+    providers: [ConfirmationService, DialogService],
     template: `
         <app-generic-table
             [columns]="patientColumns"
@@ -23,7 +27,7 @@ import { TagModule } from 'primeng/tag';
             [hasSelectedItems]="!!selectedProducts?.length"
             dataKey="PK"
             (lazyLoad)="loadPatients($event)"
-            (newClick)="openNew()"
+            (newClick)="openNewPatient()"
             (deleteClick)="deleteSelectedProducts()"
             (exportClick)="exportCSV()"
             (rowEditInit)="onRowEditInit($event)"
@@ -66,11 +70,19 @@ export class TableDemo implements OnDestroy {
     customTemplates: { [key: string]: TemplateRef<any> } = {};
     private destroy$ = new Subject<void>();
 
+    private dialog = inject(DialogService);
+  private ref?: DynamicDialogRef;
+  lastResult: unknown;
+private destroyRef = inject(DestroyRef);
+
+
+
     constructor(
         private svc: PatientService,
         private confirmationService: ConfirmationService,
         private cd: ChangeDetectorRef,
-        private messageService: MessageService
+        private messageService: MessageService,
+        private helpersFunctions: Helpers
     ) {}
 
     ngAfterViewInit() {
@@ -209,6 +221,36 @@ export class TableDemo implements OnDestroy {
             this.tableCmp.exportCSV();
         }
     }
+
+    openNewPatient() {
+  this.ref = this.dialog.open(NewPatient, {
+    width: '50vw',
+    modal: true,
+    dismissableMask: true,
+    data: { name: 'Sami' }
+  });
+
+  this.ref.onClose
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe(result => {
+      if (result) {
+        console.log('New patient created:', result);
+        this.lastResult = result;
+        
+        // Show success notification after dialog closes
+        this.helpersFunctions.notifySuccess('Patient profile created successfully!');
+        
+        // Refresh the table to show the new patient
+        this.refreshPatientTable(); // or whatever method you use to reload data
+      }
+    });
+}
+
+refreshPatientTable(): void {
+  this.fetch();
+}
+
+
 
     ngOnDestroy() {
         this.destroy$.next();
