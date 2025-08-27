@@ -13,7 +13,7 @@ import { Helpers } from '@/services/helpers';
 @Component({
     selector: 'app-table-demo',
     standalone: true,
-    imports: [CommonModule, GenericTableComponent, TagModule], // Add TagModule for p-tag in template
+    imports: [CommonModule, GenericTableComponent, TagModule],
     providers: [ConfirmationService, DialogService],
     template: `
         <app-generic-table
@@ -24,22 +24,26 @@ import { Helpers } from '@/services/helpers';
             [config]="tableConfig"
             [toolbarConfig]="toolbarConfig"
             [isLazy]="true"
-            [hasSelectedItems]="!!selectedProducts?.length"
+            [selectedRows]="selectedPatients"
+            [hasSelectedItems]="selectedPatients.length > 0"
             dataKey="PK"
             (lazyLoad)="loadPatients($event)"
             (newClick)="openNewPatient()"
-            (deleteClick)="deleteSelectedProducts()"
+            (deleteClick)="deleteSelectedPatients()"
             (exportClick)="exportCSV()"
             (rowEditInit)="onRowEditInit($event)"
             (rowEditSave)="onRowEditSave($event)"
             (rowEditCancel)="onRowEditCancel($event)"
+            (selectionChange)="onSelectionChange($event)"
             [customTemplates]="customTemplates"
             [actionsTemplate]="actionsTemplate"
         >
             <ng-template #statusTemplate let-row let-value="value">
                 <p-tag [value]="value || '' | uppercase" [severity]="getSeverity(value)"></p-tag>
             </ng-template>
-            <ng-template #actionsTemplate let-row></ng-template>
+            <ng-template #actionsTemplate let-row>
+                <!-- Add any custom action buttons here if needed -->
+            </ng-template>
         </app-generic-table>
     `
 })
@@ -57,6 +61,7 @@ export class TableDemo implements OnDestroy {
     ] as const;
 
     patients: Patient[] = [];
+    selectedPatients: Patient[] = []; // NEW: Track selected patients
     loading = true;
     totalRecords = 0;
     private lastKey: string | null = null;
@@ -66,16 +71,13 @@ export class TableDemo implements OnDestroy {
     private prevSortField: string | null = null;
     private prevSortOrder: 1 | -1 | 0 | null = null;
     filters: GetPatientsPageOpts = { pageSize: this.pageSize, lastKey: null };
-    selectedProducts: any;
     customTemplates: { [key: string]: TemplateRef<any> } = {};
     private destroy$ = new Subject<void>();
 
     private dialog = inject(DialogService);
-  private ref?: DynamicDialogRef;
-  lastResult: unknown;
-private destroyRef = inject(DestroyRef);
-
-
+    private ref?: DynamicDialogRef;
+    lastResult: unknown;
+    private destroyRef = inject(DestroyRef);
 
     constructor(
         private svc: PatientService,
@@ -158,6 +160,14 @@ private destroyRef = inject(DestroyRef);
         this.page = 0;
         this.lastKey = null;
         this.pageKeys = [null];
+        // Clear selection when resetting
+        this.selectedPatients = [];
+    }
+
+    // NEW: Handle selection changes
+    onSelectionChange(selectedRows: Patient[]) {
+        this.selectedPatients = selectedRows;
+        console.log('Selected patients:', this.selectedPatients);
     }
 
     onRowEditInit(ev: RowEditEvent<Patient>) {
@@ -190,10 +200,21 @@ private destroyRef = inject(DestroyRef);
         // Implement your new record logic here
     }
 
-    deleteSelectedProducts() {
+    // UPDATED: Delete selected patients instead of products
+    deleteSelectedPatients() {
+        if (this.selectedPatients.length === 0) {
+            this.messageService.add({
+                severity: 'warn',
+                summary: 'Warning',
+                detail: 'No patients selected for deletion',
+                life: 3000
+            });
+            return;
+        }
+
         this.confirmationService.confirm({
-            message: 'Are you sure you want to delete the selected products?',
-            header: 'Confirm',
+            message: `Are you sure you want to delete ${this.selectedPatients.length} selected patient(s)?`,
+            header: 'Confirm Deletion',
             icon: 'pi pi-exclamation-triangle',
             rejectButtonProps: {
                 label: 'No',
@@ -205,13 +226,21 @@ private destroyRef = inject(DestroyRef);
                 label: 'Yes'
             },
             accept: () => {
-                this.selectedProducts = null;
+                // Here you would typically call your service to delete the patients
+                console.log('Deleting patients:', this.selectedPatients);
+                
+                // For demo purposes, just clear the selection
+                this.selectedPatients = [];
+                
                 this.messageService.add({
                     severity: 'success',
                     summary: 'Successful',
-                    detail: 'Products Deleted',
+                    detail: 'Patients Deleted',
                     life: 3000
                 });
+                
+                // Optionally refresh the table data
+                this.refreshPatientTable();
             }
         });
     }
@@ -223,34 +252,55 @@ private destroyRef = inject(DestroyRef);
     }
 
     openNewPatient() {
-  this.ref = this.dialog.open(NewPatient, {
-    width: '50vw',
-    modal: true,
-    dismissableMask: true,
-    data: { name: 'Sami' }
-  });
+        this.ref = this.dialog.open(NewPatient, {
+            width: '50vw',
+            modal: true,
+            dismissableMask: true,
+            data: { name: 'Sami' }
+        });
 
-  this.ref.onClose
-    .pipe(takeUntilDestroyed(this.destroyRef))
-    .subscribe(result => {
-      if (result) {
-        console.log('New patient created:', result);
-        this.lastResult = result;
-        
-        // Show success notification after dialog closes
-        this.helpersFunctions.notifySuccess('Patient profile created successfully!');
-        
-        // Refresh the table to show the new patient
-        this.refreshPatientTable(); // or whatever method you use to reload data
-      }
-    });
-}
+        this.ref.onClose
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(result => {
+                if (result) {
+                    console.log('New patient created:', result);
+                    this.lastResult = result;
+                    
+                    // Show success notification after dialog closes
+                    this.helpersFunctions.notifySuccess('Patient profile created successfully!');
+                    
+                    // Refresh the table to show the new patient
+                    this.refreshPatientTable();
+                }
+            });
+    }
 
-refreshPatientTable(): void {
-  this.fetch();
-}
+    refreshPatientTable(): void {
+        this.fetch();
+    }
 
+    // NEW: Utility methods for working with selection
+    clearSelection() {
+        this.selectedPatients = [];
+        if (this.tableCmp) {
+            this.tableCmp.clearSelection();
+        }
+    }
 
+    selectAllVisiblePatients() {
+        this.selectedPatients = [...this.patients];
+        if (this.tableCmp) {
+            this.tableCmp.selectAll();
+        }
+    }
+
+    getSelectedPatientIds(): string[] {
+        return this.selectedPatients.map(patient => patient.PK);
+    }
+
+    isPatientSelected(patient: Patient): boolean {
+        return this.selectedPatients.some(selected => selected.PK === patient.PK);
+    }
 
     ngOnDestroy() {
         this.destroy$.next();
@@ -279,7 +329,11 @@ refreshPatientTable(): void {
         showGridlines: true,
         rowHover: true,
         responsive: true,
-        showResultsSummary: true
+        showResultsSummary: true,
+        // NEW: Selection configuration
+        selectable: true,
+        selectionMode: 'multiple',
+        showSelectAll: true
     };
 
     toolbarConfig: ToolbarConfig = {
@@ -287,8 +341,8 @@ refreshPatientTable(): void {
         showDelete: true,
         showImport: true,
         showExport: true,
-        newLabel: 'New',
-        deleteLabel: 'Delete',
+        newLabel: 'New Patient',
+        deleteLabel: 'Delete Selected',
         importLabel: 'Import',
         exportLabel: 'Export'
     };

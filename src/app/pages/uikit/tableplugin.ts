@@ -41,6 +41,9 @@ export interface TableConfig {
     loadingMessage?: string;
     showResultsSummary?: boolean;
     showToolbar?: boolean;
+    selectable?: boolean; // NEW: Enable row selection
+    selectionMode?: 'single' | 'multiple'; // NEW: Selection mode
+    showSelectAll?: boolean; // NEW: Show select all checkbox in header
 }
 
 export interface ToolbarConfig {
@@ -117,10 +120,13 @@ export interface RowEditEvent<T = any> {
                 [totalRecords]="totalRecords"
                 [rowHover]="config.rowHover !== false"
                 [showGridlines]="config.showGridlines !== false"
+                [selection]="selectedRows"
+                [selectionMode]="getSelectionMode()"
                 (onLazyLoad)="lazyLoad.emit($event)"
                 (onRowEditInit)="emitRowEditInit($event)"
                 (onRowEditSave)="emitRowEditSave($event)"
                 (onRowEditCancel)="emitRowEditCancel($event)"
+                (onSelectionChange)="onSelectionChange($event)"
                 [responsiveLayout]="config.responsive !== false ? 'scroll' : 'stack'"
                 [scrollable]="true"
                 [scrollHeight]="config.scrollHeight || '600px'"
@@ -139,6 +145,13 @@ export interface RowEditEvent<T = any> {
 
                 <ng-template pTemplate="header">
                     <tr>
+                        <!-- Selection checkbox column -->
+                        <th *ngIf="config?.selectable" style="width: 4rem">
+                            <p-tableHeaderCheckbox 
+                                *ngIf="config?.selectionMode === 'multiple' && config?.showSelectAll !== false"
+                            ></p-tableHeaderCheckbox>
+                        </th>
+
                         <ng-container *ngFor="let col of columns">
                             <!-- Sortable by default -->
                             <th *ngIf="col.sortable !== false; else noSort" [style.min-width]="col.width || '12rem'" [pSortableColumn]="col.field">
@@ -170,6 +183,11 @@ export interface RowEditEvent<T = any> {
 
                 <ng-template pTemplate="body" let-row let-editing="editing" let-ri="rowIndex">
                     <tr [pEditableRow]="row">
+                        <!-- Selection checkbox column -->
+                        <td *ngIf="config?.selectable">
+                            <p-tableCheckbox [value]="row"></p-tableCheckbox>
+                        </td>
+
                         <td *ngFor="let col of columns">
                             <ng-container *ngIf="col.editable === true; else readCell">
                                 <p-cellEditor>
@@ -234,7 +252,7 @@ export interface RowEditEvent<T = any> {
 
                 <ng-template pTemplate="emptymessage">
                     <tr>
-                        <td [colSpan]="columns.length + 1" class="text-center py-8">
+                        <td [colSpan]="getColSpan()" class="text-center py-8">
                             <div class="text-gray-500">
                                 <i class="pi pi-search text-3xl mb-2"></i>
                                 <div>{{ config.emptyMessage || 'No records found matching your criteria.' }}</div>
@@ -245,7 +263,7 @@ export interface RowEditEvent<T = any> {
 
                 <ng-template pTemplate="loadingbody">
                     <tr>
-                        <td [colSpan]="columns.length + 1" class="text-center py-8">
+                        <td [colSpan]="getColSpan()" class="text-center py-8">
                             <div class="text-gray-500">
                                 <i class="pi pi-spin pi-spinner text-2xl mb-2"></i>
                                 <div>{{ config.loadingMessage || 'Loading data...' }}</div>
@@ -255,7 +273,14 @@ export interface RowEditEvent<T = any> {
                 </ng-template>
             </p-table>
 
-            <div class="mt-4 text-sm text-gray-600" *ngIf="!loading && config.showResultsSummary !== false">Showing {{ data.length || 0 }} of {{ totalRecords | number }} records</div>
+            <div class="mt-4 text-sm text-gray-600" *ngIf="!loading && config.showResultsSummary !== false">
+                <div class="flex justify-between items-center">
+                    <span>Showing {{ data.length || 0 }} of {{ totalRecords | number }} records</span>
+                    <span *ngIf="config?.selectable && selectedRows?.length">
+                        {{ selectedRows.length }} item(s) selected
+                    </span>
+                </div>
+            </div>
         </div>
     `,
     styles: [
@@ -282,11 +307,13 @@ export class GenericTableComponent<T = any> implements OnChanges {
     @Input() actionsTemplate?: TemplateRef<any>;
     @Input() customTemplates: { [field: string]: TemplateRef<any> } = {};
     @Input() hasSelectedItems = false; // For toolbar delete button state
+    @Input() selectedRows: T[] = []; // NEW: Selected rows input
 
     @Output() lazyLoad = new EventEmitter<any>();
     @Output() rowEditInit = new EventEmitter<RowEditEvent<T>>();
     @Output() rowEditSave = new EventEmitter<RowEditEvent<T>>();
     @Output() rowEditCancel = new EventEmitter<RowEditEvent<T>>();
+    @Output() selectionChange = new EventEmitter<T[]>(); // NEW: Selection change output
 
     // Toolbar events
     @Output() newClick = new EventEmitter<void>();
@@ -300,6 +327,27 @@ export class GenericTableComponent<T = any> implements OnChanges {
 
     ngOnChanges(ch: SimpleChanges) {
         if (ch['config']) this.pageSize = this.config?.defaultPageSize ?? 15;
+    }
+
+    // NEW: Handle selection changes
+    onSelectionChange(event: any) {
+        console.log(event);
+        
+        this.selectedRows = event;
+        this.selectionChange.emit(this.selectedRows);
+    }
+
+    // NEW: Get selection mode for PrimeNG table
+    getSelectionMode(): 'single' | 'multiple' | null {
+        if (!this.config?.selectable) return null;
+        return this.config.selectionMode === 'single' ? 'single' : 'multiple';
+    }
+
+    // NEW: Get column span for empty/loading messages
+    getColSpan(): number {
+        let baseColSpan = this.columns.length + 1; // columns + actions
+        if (this.config?.selectable) baseColSpan += 1; // add selection column
+        return baseColSpan;
     }
 
     // Toolbar event handlers
@@ -408,5 +456,24 @@ export class GenericTableComponent<T = any> implements OnChanges {
         if (this.dt) {
             this.dt.exportCSV();
         }
+    }
+
+    // NEW: Utility methods for selection
+    clearSelection() {
+        this.selectedRows = [];
+        this.selectionChange.emit(this.selectedRows);
+    }
+
+    selectAll() {
+        this.selectedRows = [...this.data];
+        this.selectionChange.emit(this.selectedRows);
+    }
+
+    isRowSelected(row: T): boolean {
+        if (!this.selectedRows?.length) return false;
+        const dataKey = this.dataKey;
+        return this.selectedRows.some(selected => 
+            (selected as any)[dataKey] === (row as any)[dataKey]
+        );
     }
 }
