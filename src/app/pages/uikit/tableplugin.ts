@@ -41,9 +41,9 @@ export interface TableConfig {
     loadingMessage?: string;
     showResultsSummary?: boolean;
     showToolbar?: boolean;
-    selectable?: boolean; // NEW: Enable row selection
-    selectionMode?: 'single' | 'multiple'; // NEW: Selection mode
-    showSelectAll?: boolean; // NEW: Show select all checkbox in header
+    selectable?: boolean;
+    selectionMode?: 'single' | 'multiple';
+    showSelectAll?: boolean;
 }
 
 export interface ToolbarConfig {
@@ -73,12 +73,11 @@ export interface RowEditEvent<T = any> {
     template: `
         <div class="card">
             <div class="font-semibold text-xl mb-4" *ngIf="config?.title">{{ config.title }}</div>
-
+            
             <!-- Toolbar -->
             <p-toolbar class="mb-6" *ngIf="config?.showToolbar">
                 <ng-template #start>
                     <p-button *ngIf="toolbarConfig?.showNew !== false" [label]="toolbarConfig.newLabel || 'New'" [icon]="toolbarConfig.newIcon || 'pi pi-plus'" class="mr-2" (onClick)="onNewClick()" />
-
                     <p-button
                         *ngIf="toolbarConfig?.showDelete !== false"
                         severity="danger"
@@ -89,7 +88,6 @@ export interface RowEditEvent<T = any> {
                         [disabled]="!hasSelectedItems"
                     />
                 </ng-template>
-
                 <ng-template #end>
                     <p-fileUpload
                         *ngIf="toolbarConfig?.showImport !== false"
@@ -102,11 +100,10 @@ export interface RowEditEvent<T = any> {
                         class="mr-2 inline-block"
                         [chooseButtonProps]="{ severity: 'secondary' }"
                     />
-
                     <p-button *ngIf="toolbarConfig?.showExport !== false" [label]="toolbarConfig.exportLabel || 'Export'" [icon]="toolbarConfig.exportIcon || 'pi pi-upload'" severity="secondary" (onClick)="onExportClick()" />
                 </ng-template>
             </p-toolbar>
-
+            
             <p-table
                 #dt
                 [value]="data"
@@ -120,17 +117,17 @@ export interface RowEditEvent<T = any> {
                 [totalRecords]="totalRecords"
                 [rowHover]="config.rowHover !== false"
                 [showGridlines]="config.showGridlines !== false"
-                [selection]="selectedRows"
+                [(selection)]="selectedRows"
                 [selectionMode]="getSelectionMode()"
-                (onLazyLoad)="lazyLoad.emit($event)"
-                (onRowEditInit)="emitRowEditInit($event)"
-                (onRowEditSave)="emitRowEditSave($event)"
-                (onRowEditCancel)="emitRowEditCancel($event)"
-                (onSelectionChange)="onSelectionChange($event)"
+                (selectionChange)="onSelectionChange()"
+                (onRowEditInit)="onTableRowEditInit($event)"
+                (onRowEditSave)="onTableRowEditSave($event)"
+                (onRowEditCancel)="onTableRowEditCancel($event)"
                 [responsiveLayout]="config.responsive !== false ? 'scroll' : 'stack'"
                 [scrollable]="true"
                 [scrollHeight]="config.scrollHeight || '600px'"
                 sortMode="single"
+                (onLazyLoad)="lazyLoad.emit($event)"
                 [tableStyle]="{ 'table-layout': 'fixed', width: '100%' }"
             >
                 <ng-template #caption>
@@ -142,7 +139,7 @@ export interface RowEditEvent<T = any> {
                         </p-iconfield>
                     </div>
                 </ng-template>
-
+                
                 <ng-template pTemplate="header">
                     <tr>
                         <!-- Selection checkbox column -->
@@ -151,7 +148,6 @@ export interface RowEditEvent<T = any> {
                                 *ngIf="config?.selectionMode === 'multiple' && config?.showSelectAll !== false"
                             ></p-tableHeaderCheckbox>
                         </th>
-
                         <ng-container *ngFor="let col of columns">
                             <!-- Sortable by default -->
                             <th *ngIf="col.sortable !== false; else noSort" [style.min-width]="col.width || '12rem'" [pSortableColumn]="col.field">
@@ -164,7 +160,6 @@ export interface RowEditEvent<T = any> {
                                     </p-columnFilter>
                                 </div>
                             </th>
-
                             <!-- Non-sortable -->
                             <ng-template #noSort>
                                 <th [style.min-width]="col.width || '12rem'">
@@ -176,18 +171,16 @@ export interface RowEditEvent<T = any> {
                                 </th>
                             </ng-template>
                         </ng-container>
-
                         <th style="min-width:8rem">Actions</th>
                     </tr>
                 </ng-template>
-
+                
                 <ng-template pTemplate="body" let-row let-editing="editing" let-ri="rowIndex">
                     <tr [pEditableRow]="row">
                         <!-- Selection checkbox column -->
                         <td *ngIf="config?.selectable">
                             <p-tableCheckbox [value]="row"></p-tableCheckbox>
                         </td>
-
                         <td *ngFor="let col of columns">
                             <ng-container *ngIf="col.editable === true; else readCell">
                                 <p-cellEditor>
@@ -230,7 +223,6 @@ export interface RowEditEvent<T = any> {
                                     </ng-template>
                                 </p-cellEditor>
                             </ng-container>
-
                             <ng-template #readCell>
                                 <ng-container *ngIf="col.customTemplate && custom(col.field); else plain">
                                     <ng-container *ngTemplateOutlet="custom(col.field)!; context: { $implicit: row, rowIndex: ri, field: col.field, value: val(row, col.field) }"></ng-container>
@@ -238,18 +230,44 @@ export interface RowEditEvent<T = any> {
                                 <ng-template #plain>{{ display(row, col) }}</ng-template>
                             </ng-template>
                         </td>
-
                         <td>
                             <div class="flex items-center justify-center gap-2">
-                                <button *ngIf="!editing" pButton type="button" pInitEditableRow icon="pi pi-pencil" text rounded severity="secondary"></button>
-                                <button *ngIf="editing" pButton type="button" pSaveEditableRow icon="pi pi-check" text rounded severity="secondary"></button>
-                                <button *ngIf="editing" pButton type="button" pCancelEditableRow icon="pi pi-times" text rounded severity="secondary"></button>
+                                <button *ngIf="!editing" 
+                                    pButton 
+                                    type="button" 
+                                    pInitEditableRow 
+                                    icon="pi pi-pencil" 
+                                    text 
+                                    rounded 
+                                    severity="secondary"
+                                    (click)="onEditButtonClick(row, ri)">
+                                </button>
+                                <button *ngIf="editing" 
+                                    pButton 
+                                    type="button" 
+                                    pSaveEditableRow 
+                                    icon="pi pi-check" 
+                                    text 
+                                    rounded 
+                                    severity="secondary"
+                                    (click)="onSaveButtonClick(row, ri)">
+                                </button>
+                                <button *ngIf="editing" 
+                                    pButton 
+                                    type="button" 
+                                    pCancelEditableRow 
+                                    icon="pi pi-times" 
+                                    text 
+                                    rounded 
+                                    severity="secondary"
+                                    (click)="onCancelButtonClick(row, ri)">
+                                </button>
                                 <ng-container *ngIf="actionsTemplate" [ngTemplateOutlet]="actionsTemplate" [ngTemplateOutletContext]="{ $implicit: row, rowIndex: ri }"></ng-container>
                             </div>
                         </td>
                     </tr>
                 </ng-template>
-
+                
                 <ng-template pTemplate="emptymessage">
                     <tr>
                         <td [colSpan]="getColSpan()" class="text-center py-8">
@@ -260,7 +278,7 @@ export interface RowEditEvent<T = any> {
                         </td>
                     </tr>
                 </ng-template>
-
+                
                 <ng-template pTemplate="loadingbody">
                     <tr>
                         <td [colSpan]="getColSpan()" class="text-center py-8">
@@ -272,7 +290,7 @@ export interface RowEditEvent<T = any> {
                     </tr>
                 </ng-template>
             </p-table>
-
+            
             <div class="mt-4 text-sm text-gray-600" *ngIf="!loading && config.showResultsSummary !== false">
                 <div class="flex justify-between items-center">
                     <span>Showing {{ data.length || 0 }} of {{ totalRecords | number }} records</span>
@@ -295,7 +313,7 @@ export interface RowEditEvent<T = any> {
 export class GenericTableComponent<T = any> implements OnChanges {
     @ViewChild('dt') dt!: Table;
     @ViewChild('globalFilter') globalFilter!: ElementRef;
-
+    
     @Input({ required: true }) columns: TableColumn[] = [];
     @Input({ required: true }) dataKey = 'id';
     @Input() data: T[] = [];
@@ -306,95 +324,176 @@ export class GenericTableComponent<T = any> implements OnChanges {
     @Input() toolbarConfig: ToolbarConfig = {};
     @Input() actionsTemplate?: TemplateRef<any>;
     @Input() customTemplates: { [field: string]: TemplateRef<any> } = {};
-    @Input() hasSelectedItems = false; // For toolbar delete button state
-    @Input() selectedRows: T[] = []; // NEW: Selected rows input
-
+    @Input() hasSelectedItems = false;
+    @Input() selectedRows: T[] = [];
+    
     @Output() lazyLoad = new EventEmitter<any>();
     @Output() rowEditInit = new EventEmitter<RowEditEvent<T>>();
     @Output() rowEditSave = new EventEmitter<RowEditEvent<T>>();
     @Output() rowEditCancel = new EventEmitter<RowEditEvent<T>>();
-    @Output() selectionChange = new EventEmitter<T[]>(); // NEW: Selection change output
-
+    @Output() selectionChange = new EventEmitter<T[]>();
+    
     // Toolbar events
     @Output() newClick = new EventEmitter<void>();
     @Output() deleteClick = new EventEmitter<void>();
     @Output() importClick = new EventEmitter<any>();
     @Output() exportClick = new EventEmitter<void>();
-
+    
     pageSize = 15;
     ac: Record<string, { label: string; value: any }[]> = {};
     private dateCache = new WeakMap<any, Map<string, Date | null>>();
-
+    private clonedRows: { [s: string]: T } = {};
+    
     ngOnChanges(ch: SimpleChanges) {
         if (ch['config']) this.pageSize = this.config?.defaultPageSize ?? 15;
     }
+    
+    // Row edit event handlers - properly typed and emit events
+    // Replace the event handler methods in your GenericTableComponent with these corrected versions:
 
-    // NEW: Handle selection changes
-    onSelectionChange(event: any) {
-        console.log(event);
-        
-        this.selectedRows = event;
+// Row edit event handlers - properly typed for PrimeNG events
+onTableRowEditInit(event: any) {
+    console.log('Table Row Edit Init', event);
+    
+    // PrimeNG passes the row data directly in event.data
+    const rowData = event.data || event;
+    const rowIndex = event.index;
+    
+    // Clone the original row for cancel functionality
+    const key = rowData[this.dataKey];
+    this.clonedRows[key] = { ...rowData };
+    
+    // Emit the event to parent with proper structure
+    this.rowEditInit.emit({
+        data: rowData,
+        index: rowIndex
+    });
+}
+
+onTableRowEditSave(event: any) {
+    console.log('Table Row Edit Save', event);
+    
+    // PrimeNG passes the row data directly in event.data
+    const rowData = event.data || event;
+    const rowIndex = event.index;
+    
+    // Clean up cloned row
+    const key = rowData[this.dataKey];
+    delete this.clonedRows[key];
+    
+    // Emit the event to parent with proper structure
+    this.rowEditSave.emit({
+        data: rowData,
+        index: rowIndex
+    });
+}
+
+onTableRowEditCancel(event: any) {
+    console.log('Table Row Edit Cancel', event);
+    
+    // PrimeNG passes the row data directly in event.data
+    const rowData = event.data || event;
+    const rowIndex = event.index;
+    
+    // Restore original values
+    const key = rowData[this.dataKey];
+    if (this.clonedRows[key]) {
+        const index = this.data.findIndex(item => (item as any)[this.dataKey] === key);
+        if (index !== -1) {
+            this.data[index] = this.clonedRows[key];
+        }
+        delete this.clonedRows[key];
+    }
+    
+    // Emit the event to parent with proper structure
+    this.rowEditCancel.emit({
+        data: rowData,
+        index: rowIndex
+    });
+}
+    
+    // Additional click handlers for debugging
+    onEditButtonClick(row: T, index: number) {
+        console.log('Edit button clicked', { row, index });
+        // The pInitEditableRow directive handles the actual editing
+    }
+    
+    onSaveButtonClick(row: T, index: number) {
+        console.log('Save button clicked', { row, index });
+        // The pSaveEditableRow directive handles the actual saving
+    }
+    
+    onCancelButtonClick(row: T, index: number) {
+        console.log('Cancel button clicked', { row, index });
+        // The pCancelEditableRow directive handles the actual canceling
+    }
+    
+    onSelectionChange() {
         this.selectionChange.emit(this.selectedRows);
     }
-
-    // NEW: Get selection mode for PrimeNG table
+    
     getSelectionMode(): 'single' | 'multiple' | null {
         if (!this.config?.selectable) return null;
         return this.config.selectionMode === 'single' ? 'single' : 'multiple';
     }
-
-    // NEW: Get column span for empty/loading messages
+    
     getColSpan(): number {
         let baseColSpan = this.columns.length + 1; // columns + actions
         if (this.config?.selectable) baseColSpan += 1; // add selection column
         return baseColSpan;
     }
-
+    
     // Toolbar event handlers
     onNewClick() {
         this.newClick.emit();
     }
+    
     onDeleteClick() {
         this.deleteClick.emit();
     }
+    
     onImportClick(event: any) {
         this.importClick.emit(event);
     }
+    
     onExportClick() {
         this.exportClick.emit();
     }
-
-    // table utils
+    
+    // Table utils
     onGlobalFilter(t: Table, e: Event) {
         t.filterGlobal((e.target as HTMLInputElement).value, 'contains');
     }
+    
     clear(t: Table) {
         t.clear();
         if (this.globalFilter?.nativeElement) this.globalFilter.nativeElement.value = '';
     }
-
-    // model helpers
+    
+    // Model helpers
     get = (row: any, f: string) => row?.[f];
     set = (row: any, f: string, v: any) => {
         if (row) row[f] = v;
     };
     val = (row: any, f: string) => f.split('.').reduce((o, p) => (o ? o[p] : undefined), row);
-
-    // autocomplete
+    
+    // Autocomplete
     acFill(col: TableColumn, e: { query?: string }) {
         const all = col.editorOptions || [];
         const q = (e.query || '').toLowerCase();
         this.ac[col.field] = q ? all.filter((o) => o.label.toLowerCase().includes(q) || String(o.value).toLowerCase().includes(q)) : all.slice(0, 50);
     }
+    
     acSel(row: any, col: TableColumn) {
         const v = row?.[col.field];
         return (col.editorOptions || []).find((o) => o.value === v) || null;
     }
+    
     acSet(row: any, col: TableColumn, sel: any) {
         row[col.field] = sel?.value ?? null;
     }
-
-    // datepicker (stable reference)
+    
+    // Datepicker (stable reference)
     private ref(row: any) {
         let m = this.dateCache.get(row);
         if (!m) {
@@ -403,6 +502,7 @@ export class GenericTableComponent<T = any> implements OnChanges {
         }
         return m;
     }
+    
     getDate(row: any, f: string): Date | null {
         if (!row) return null;
         const m = this.ref(row);
@@ -412,14 +512,16 @@ export class GenericTableComponent<T = any> implements OnChanges {
         m.set(f, d);
         return d;
     }
+    
     setDate(row: any, f: string, v: Date | null) {
         if (!row) return;
         this.ref(row).set(f, v);
         row[f] = v;
     }
+    
     fmt = (pipeFmt?: string) => (!pipeFmt ? 'mm/dd/yy' : pipeFmt.replace(/yyyy/g, 'yy').replace(/MM/g, 'mm').replace(/dd/g, 'dd'));
-
-    // display
+    
+    // Display
     display(row: T, col: TableColumn): string {
         const v = this.val(row, col.field);
         if (v == null) return '-';
@@ -442,37 +544,27 @@ export class GenericTableComponent<T = any> implements OnChanges {
                 return String(v);
         }
     }
-
-    // templates
+    
+    // Templates
     custom = (f: string) => this.customTemplates[f] || null;
-
-    // row edit events
-    emitRowEditInit = (e: any) => this.rowEditInit.emit({ data: e.data, index: e.index });
-    emitRowEditSave = (e: any) => this.rowEditSave.emit({ data: e.data, index: e.index });
-    emitRowEditCancel = (e: any) => this.rowEditCancel.emit({ data: e.data, index: e.index });
-
+    
     // CSV Export method for external access
     exportCSV() {
         if (this.dt) {
             this.dt.exportCSV();
         }
     }
-
-    // NEW: Utility methods for selection
+    
+    // Utility methods for selection
     clearSelection() {
         this.selectedRows = [];
         this.selectionChange.emit(this.selectedRows);
     }
-
-    selectAll() {
-        this.selectedRows = [...this.data];
-        this.selectionChange.emit(this.selectedRows);
-    }
-
+    
     isRowSelected(row: T): boolean {
         if (!this.selectedRows?.length) return false;
         const dataKey = this.dataKey;
-        return this.selectedRows.some(selected => 
+        return this.selectedRows.some(selected =>
             (selected as any)[dataKey] === (row as any)[dataKey]
         );
     }

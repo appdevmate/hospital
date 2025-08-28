@@ -16,35 +16,33 @@ import { Helpers } from '@/services/helpers';
     imports: [CommonModule, GenericTableComponent, TagModule],
     providers: [ConfirmationService, DialogService],
     template: `
-        <app-generic-table
-            [columns]="patientColumns"
-            [data]="patients"
-            [totalRecords]="totalRecords"
-            [loading]="loading"
-            [config]="tableConfig"
-            [toolbarConfig]="toolbarConfig"
-            [isLazy]="true"
-            [selectedRows]="selectedPatients"
-            [hasSelectedItems]="selectedPatients.length > 0"
-            dataKey="PK"
-            (lazyLoad)="loadPatients($event)"
-            (newClick)="openNewPatient()"
-            (deleteClick)="deleteSelectedPatients()"
-            (exportClick)="exportCSV()"
-            (rowEditInit)="onRowEditInit($event)"
-            (rowEditSave)="onRowEditSave($event)"
-            (rowEditCancel)="onRowEditCancel($event)"
-            (selectionChange)="onSelectionChange($event)"
-            [customTemplates]="customTemplates"
-            [actionsTemplate]="actionsTemplate"
-        >
-            <ng-template #statusTemplate let-row let-value="value">
-                <p-tag [value]="value || '' | uppercase" [severity]="getSeverity(value)"></p-tag>
-            </ng-template>
-            <ng-template #actionsTemplate let-row>
-                <!-- Add any custom action buttons here if needed -->
-            </ng-template>
-        </app-generic-table>
+        <!-- Add the missing event bindings for rowEditInit and rowEditSave -->
+<app-generic-table
+    [columns]="patientColumns"
+    [data]="patients"
+    [totalRecords]="totalRecords"
+    [loading]="loading"
+    [config]="tableConfig"
+    [toolbarConfig]="toolbarConfig"
+    [customTemplates]="customTemplates"
+    [selectedRows]="selectedPatients"
+    dataKey="PK"
+    (lazyLoad)="loadPatients($event)"
+    (selectionChange)="onSelectionChange($event)"
+    (newClick)="openNewPatient()"
+    (deleteClick)="deleteSelectedPatients()"
+    (exportClick)="exportCSV()"
+    (rowEditInit)="onRowEditInit($event)"
+    (rowEditSave)="onRowEditSave($event)">
+    
+    <ng-template #statusTemplate let-value="value" let-row="row" let-col="col">
+        <p-tag [value]="value" [severity]="getSeverity(value)"></p-tag>
+    </ng-template>
+    
+    <ng-template #actionsTemplate let-row="row" let-index="index">
+        <!-- Your action buttons here if needed -->
+    </ng-template>
+</app-generic-table>
     `
 })
 export class TableDemo implements OnDestroy {
@@ -85,7 +83,7 @@ export class TableDemo implements OnDestroy {
         private cd: ChangeDetectorRef,
         private messageService: MessageService,
         private helpersFunctions: Helpers
-    ) {}
+    ) { }
 
     ngAfterViewInit() {
         this.customTemplates = { status: this.statusTemplate };
@@ -170,16 +168,6 @@ export class TableDemo implements OnDestroy {
         console.log('Selected patients:', this.selectedPatients);
     }
 
-    onRowEditInit(ev: RowEditEvent<Patient>) {
-        console.log('Edit INIT', ev.data);
-    }
-    onRowEditSave(ev: RowEditEvent<Patient>) {
-        console.log('Edit SAVE', ev.data);
-    }
-    onRowEditCancel(ev: RowEditEvent<Patient>) {
-        console.log('Edit CANCEL', ev.data);
-    }
-
     getSeverity(v?: string): 'success' | 'info' | 'warn' | 'danger' {
         switch ((v || '').toLowerCase().trim()) {
             case 'qualified':
@@ -228,17 +216,17 @@ export class TableDemo implements OnDestroy {
             accept: () => {
                 // Here you would typically call your service to delete the patients
                 console.log('Deleting patients:', this.selectedPatients);
-                
+
                 // For demo purposes, just clear the selection
                 this.selectedPatients = [];
-                
+
                 this.messageService.add({
                     severity: 'success',
                     summary: 'Successful',
                     detail: 'Patients Deleted',
                     life: 3000
                 });
-                
+
                 // Optionally refresh the table data
                 this.refreshPatientTable();
             }
@@ -265,10 +253,10 @@ export class TableDemo implements OnDestroy {
                 if (result) {
                     console.log('New patient created:', result);
                     this.lastResult = result;
-                    
+
                     // Show success notification after dialog closes
                     this.helpersFunctions.notifySuccess('Patient profile created successfully!');
-                    
+
                     // Refresh the table to show the new patient
                     this.refreshPatientTable();
                 }
@@ -287,13 +275,6 @@ export class TableDemo implements OnDestroy {
         }
     }
 
-    selectAllVisiblePatients() {
-        this.selectedPatients = [...this.patients];
-        if (this.tableCmp) {
-            this.tableCmp.selectAll();
-        }
-    }
-
     getSelectedPatientIds(): string[] {
         return this.selectedPatients.map(patient => patient.PK);
     }
@@ -301,6 +282,9 @@ export class TableDemo implements OnDestroy {
     isPatientSelected(patient: Patient): boolean {
         return this.selectedPatients.some(selected => selected.PK === patient.PK);
     }
+
+    onRowEditInit(ev: RowEditEvent<any>) { console.log('Edit INIT', ev); }
+    onRowEditSave(ev: RowEditEvent<any>) { console.log('Edit SAVE', ev); }
 
     ngOnDestroy() {
         this.destroy$.next();
