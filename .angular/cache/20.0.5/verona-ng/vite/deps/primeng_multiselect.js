@@ -1,67 +1,66 @@
 import {
   InputIcon
-} from "./chunk-VLOVIKW2.js";
+} from "./chunk-MVK2T3BV.js";
 import {
   IconField
-} from "./chunk-JGL4SAYN.js";
+} from "./chunk-GV2QZIWY.js";
 import {
   Checkbox
-} from "./chunk-27G4EU6S.js";
-import {
-  Overlay
-} from "./chunk-7QD4KSOF.js";
-import {
-  Scroller
-} from "./chunk-M7DM6ZTB.js";
-import {
-  Chip
-} from "./chunk-XGYTWDKQ.js";
+} from "./chunk-XCMQLY6U.js";
 import {
   Tooltip
-} from "./chunk-KJUVOWLV.js";
+} from "./chunk-5MYOFSAL.js";
+import {
+  Overlay
+} from "./chunk-LLUU2QVA.js";
+import {
+  Scroller
+} from "./chunk-V5VM5VX6.js";
+import {
+  InputText
+} from "./chunk-EOQSH2AZ.js";
+import {
+  BaseEditableHolder
+} from "./chunk-3JOUBOVN.js";
+import "./chunk-GGHJ33RA.js";
+import {
+  Fluid
+} from "./chunk-XQRN46ZX.js";
+import "./chunk-6PBBDZZF.js";
+import {
+  AutoFocus
+} from "./chunk-NSRC7NBD.js";
+import {
+  Chip
+} from "./chunk-DOU4IWIS.js";
 import {
   Ripple
-} from "./chunk-RGDKEITI.js";
+} from "./chunk-ZGQMWLLM.js";
+import {
+  DomHandler,
+  unblockBodyScroll
+} from "./chunk-QVUTNZUY.js";
 import {
   ObjectUtils
 } from "./chunk-BB55NINM.js";
 import {
-  InputText
-} from "./chunk-YJNT6EUI.js";
+  CheckIcon,
+  ChevronDownIcon,
+  SearchIcon,
+  TimesIcon
+} from "./chunk-7J3R4TGM.js";
 import {
-  BaseEditableHolder
-} from "./chunk-UVBYZ3PB.js";
-import "./chunk-6PEVOYB3.js";
+  BaseComponent
+} from "./chunk-LEFSMMS4.js";
+import {
+  BaseStyle
+} from "./chunk-TT45BO2Q.js";
 import {
   FormsModule,
   NG_VALUE_ACCESSOR,
   NgControlStatus,
   NgModel
 } from "./chunk-RZEKJVYA.js";
-import {
-  Fluid
-} from "./chunk-UXGIRUBT.js";
-import "./chunk-6PBBDZZF.js";
-import {
-  AutoFocus
-} from "./chunk-KVKRHQWM.js";
-import {
-  DomHandler,
-  unblockBodyScroll
-} from "./chunk-RCVZEDT3.js";
-import {
-  CheckIcon,
-  ChevronDownIcon,
-  SearchIcon,
-  TimesIcon
-} from "./chunk-NHULQEU6.js";
-import {
-  BaseComponent
-} from "./chunk-DMQ536BV.js";
-import {
-  BaseStyle
-} from "./chunk-BDASDOIZ.js";
-import "./chunk-B4BE4RUR.js";
 import {
   FilterService,
   Footer,
@@ -70,7 +69,10 @@ import {
   PrimeTemplate,
   SharedModule,
   TranslationKeys
-} from "./chunk-U4VSUP4P.js";
+} from "./chunk-NUKU6X6H.js";
+import "./chunk-6QGHQEN4.js";
+import "./chunk-53DGU4C2.js";
+import "./chunk-BMDSN43F.js";
 import {
   Lt,
   M,
@@ -78,16 +80,14 @@ import {
   b2,
   bt,
   c,
-  j2 as j,
-  k2 as k,
-  s2 as s,
+  j,
+  k,
+  s,
   s3 as s2,
   vt,
   y,
-  z
-} from "./chunk-AFCQQ4GX.js";
-import "./chunk-6QGHQEN4.js";
-import "./chunk-53DGU4C2.js";
+  z2 as z
+} from "./chunk-RK2DVQNP.js";
 import {
   CommonModule,
   NgClass,
@@ -2073,7 +2073,7 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
   }
   visibleOptions = computed(() => {
     const options = this.getAllVisibleAndNonVisibleOptions();
-    const isArrayOfObjects = b2(options) && ObjectUtils.isObject(options[0]);
+    const isArrayOfObjects = b(options) && ObjectUtils.isObject(options[0]);
     if (this._filterValue()) {
       let filteredOptions;
       if (isArrayOfObjects) {
@@ -2836,7 +2836,7 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
     return matched;
   }
   hasFocusableElements() {
-    return b(this.overlayViewChild.overlayViewChild.nativeElement, ':not([data-p-hidden-focusable="true"])').length > 0;
+    return b2(this.overlayViewChild.overlayViewChild.nativeElement, ':not([data-p-hidden-focusable="true"])').length > 0;
   }
   hasFilter() {
     return this._filterValue() && this._filterValue().trim().length > 0;

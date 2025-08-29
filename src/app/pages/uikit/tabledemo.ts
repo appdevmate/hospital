@@ -17,32 +17,32 @@ import { Helpers } from '@/services/helpers';
     providers: [ConfirmationService, DialogService],
     template: `
         <!-- Add the missing event bindings for rowEditInit and rowEditSave -->
-<app-generic-table
-    [columns]="patientColumns"
-    [data]="patients"
-    [totalRecords]="totalRecords"
-    [loading]="loading"
-    [config]="tableConfig"
-    [toolbarConfig]="toolbarConfig"
-    [customTemplates]="customTemplates"
-    [selectedRows]="selectedPatients"
-    dataKey="PK"
-    (lazyLoad)="loadPatients($event)"
-    (selectionChange)="onSelectionChange($event)"
-    (newClick)="openNewPatient()"
-    (deleteClick)="deleteSelectedPatients()"
-    (exportClick)="exportCSV()"
-    (rowEditInit)="onRowEditInit($event)"
-    (rowEditSave)="onRowEditSave($event)">
-    
-    <ng-template #statusTemplate let-value="value" let-row="row" let-col="col">
-        <p-tag [value]="value" [severity]="getSeverity(value)"></p-tag>
-    </ng-template>
-    
-    <ng-template #actionsTemplate let-row="row" let-index="index">
-        <!-- Your action buttons here if needed -->
-    </ng-template>
-</app-generic-table>
+        <app-generic-table
+            [columns]="patientColumns"
+            [data]="patients"
+            [totalRecords]="totalRecords"
+            [loading]="loading"
+            [config]="tableConfig"
+            [toolbarConfig]="toolbarConfig"
+            [customTemplates]="customTemplates"
+            [selectedRows]="selectedPatients"
+            dataKey="PK"
+            (lazyLoad)="loadPatients($event)"
+            (selectionChange)="onSelectionChange($event)"
+            (newClick)="openNewPatient()"
+            (deleteClick)="deleteSelectedPatients()"
+            (exportClick)="exportCSV()"
+            (rowEditInit)="onRowEditInit($event)"
+            (rowEditSave)="onRowEditSave($event)"
+        >
+            <ng-template #statusTemplate let-value="value" let-row="row" let-col="col">
+                <p-tag [value]="value | uppercase" [severity]="getSeverity(value)"></p-tag>
+            </ng-template>
+
+            <ng-template #actionsTemplate let-row="row" let-index="index">
+                <!-- Your action buttons here if needed -->
+            </ng-template>
+        </app-generic-table>
     `
 })
 export class TableDemo implements OnDestroy {
@@ -83,7 +83,7 @@ export class TableDemo implements OnDestroy {
         private cd: ChangeDetectorRef,
         private messageService: MessageService,
         private helpersFunctions: Helpers
-    ) { }
+    ) {}
 
     ngAfterViewInit() {
         this.customTemplates = { status: this.statusTemplate };
@@ -190,16 +190,11 @@ export class TableDemo implements OnDestroy {
 
     // UPDATED: Delete selected patients instead of products
     deleteSelectedPatients() {
+        console.log(this.selectedPatients);
         if (this.selectedPatients.length === 0) {
-            this.messageService.add({
-                severity: 'warn',
-                summary: 'Warning',
-                detail: 'No patients selected for deletion',
-                life: 3000
-            });
+            this.helpersFunctions.notifyInfo('Warning', 'No patients selected for deletion');
             return;
         }
-
         this.confirmationService.confirm({
             message: `Are you sure you want to delete ${this.selectedPatients.length} selected patient(s)?`,
             header: 'Confirm Deletion',
@@ -247,20 +242,18 @@ export class TableDemo implements OnDestroy {
             data: { name: 'Sami' }
         });
 
-        this.ref.onClose
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(result => {
-                if (result) {
-                    console.log('New patient created:', result);
-                    this.lastResult = result;
+        this.ref.onClose.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((result) => {
+            if (result) {
+                console.log('New patient created:', result);
+                this.lastResult = result;
 
-                    // Show success notification after dialog closes
-                    this.helpersFunctions.notifySuccess('Patient profile created successfully!');
+                // Show success notification after dialog closes
+                this.helpersFunctions.notifySuccess('Patient profile created successfully!');
 
-                    // Refresh the table to show the new patient
-                    this.refreshPatientTable();
-                }
-            });
+                // Refresh the table to show the new patient
+                this.refreshPatientTable();
+            }
+        });
     }
 
     refreshPatientTable(): void {
@@ -276,15 +269,19 @@ export class TableDemo implements OnDestroy {
     }
 
     getSelectedPatientIds(): string[] {
-        return this.selectedPatients.map(patient => patient.PK);
+        return this.selectedPatients.map((patient) => patient.PK);
     }
 
     isPatientSelected(patient: Patient): boolean {
-        return this.selectedPatients.some(selected => selected.PK === patient.PK);
+        return this.selectedPatients.some((selected) => selected.PK === patient.PK);
     }
 
-    onRowEditInit(ev: RowEditEvent<any>) { console.log('Edit INIT', ev); }
-    onRowEditSave(ev: RowEditEvent<any>) { console.log('Edit SAVE', ev); }
+    onRowEditInit(ev: RowEditEvent<any>) {
+        console.log('Edit INIT', ev);
+    }
+    onRowEditSave(ev: RowEditEvent<any>) {
+        console.log('Edit SAVE', ev);
+    }
 
     ngOnDestroy() {
         this.destroy$.next();
@@ -294,7 +291,7 @@ export class TableDemo implements OnDestroy {
     patientColumns: TableColumn[] = [
         { field: 'name', header: 'Name', editable: true, editorType: this.EditorType.Text, pipe: 'titlecase', sortable: true, filterable: true },
         { field: 'gender', header: 'Gender', editable: true, editorType: this.EditorType.Text, pipe: 'titlecase', filterable: true },
-        { field: 'insurance', header: 'Insurance', editable: true, editorType: this.EditorType.Text, pipe: 'titlecase', filterable: true },
+        { field: 'insurance', header: 'Insurance', editable: true, editorType: this.EditorType.Text, pipe: 'uppercase', filterable: true },
         { field: 'dob', header: 'Date of Birth', editable: true, editorType: this.EditorType.Date, type: 'date', pipe: 'date', dateFormat: 'MM/dd/yyyy', filterable: true },
         { field: 'status', header: 'Level', editable: true, editorType: this.EditorType.Autocomplete, editorOptions: this.STATUS_OPTIONS, customTemplate: true, filterable: true },
         { field: 'timestamp', header: 'Submitted Date', editable: false, type: 'date', pipe: 'date', dateFormat: 'MM/dd/yyyy', filterable: true }
