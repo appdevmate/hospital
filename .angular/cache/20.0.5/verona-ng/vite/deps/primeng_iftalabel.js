@@ -1,20 +1,18 @@
 import {
   BaseComponent
-} from "./chunk-LEFSMMS4.js";
+} from "./chunk-4YMQ5OOY.js";
 import {
   BaseStyle
-} from "./chunk-TT45BO2Q.js";
+} from "./chunk-L2L2T6ID.js";
 import {
   SharedModule
-} from "./chunk-NUKU6X6H.js";
+} from "./chunk-ZKOTJBQ6.js";
 import {
   RouterModule
-} from "./chunk-Y35IOCZT.js";
-import "./chunk-BMDSN43F.js";
-import "./chunk-RK2DVQNP.js";
-import "./chunk-SRUCT75H.js";
-import "./chunk-L26I7UJA.js";
+} from "./chunk-EFY5GPDX.js";
+import "./chunk-J5N23VJV.js";
 import "./chunk-3XGGEXNB.js";
+import "./chunk-L26I7UJA.js";
 import {
   CommonModule
 } from "./chunk-FHZAWWEY.js";
@@ -40,9 +38,11 @@ import {
   ɵɵdefineInjectable,
   ɵɵdefineInjector
 } from "./chunk-LW34VNAR.js";
-import "./chunk-G6ECYYJH.js";
 import "./chunk-YVXMBCE5.js";
+import "./chunk-G6ECYYJH.js";
 import "./chunk-RTGP7ALM.js";
+import "./chunk-BMDSN43F.js";
+import "./chunk-RK2DVQNP.js";
 import "./chunk-4MWRP73S.js";
 
 // node_modules/@primeuix/styles/dist/iftalabel/index.mjs

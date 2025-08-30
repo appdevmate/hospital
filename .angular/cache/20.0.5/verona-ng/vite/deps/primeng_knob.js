@@ -1,21 +1,17 @@
 import {
   BaseEditableHolder
-} from "./chunk-3JOUBOVN.js";
-import "./chunk-GGHJ33RA.js";
-import "./chunk-LEFSMMS4.js";
+} from "./chunk-67V7CIUT.js";
+import "./chunk-5OCKW6BF.js";
+import "./chunk-4YMQ5OOY.js";
 import {
   BaseStyle
-} from "./chunk-TT45BO2Q.js";
+} from "./chunk-L2L2T6ID.js";
+import {
+  SharedModule
+} from "./chunk-ZKOTJBQ6.js";
 import {
   NG_VALUE_ACCESSOR
 } from "./chunk-RZEKJVYA.js";
-import {
-  SharedModule
-} from "./chunk-NUKU6X6H.js";
-import {
-  tr
-} from "./chunk-BMDSN43F.js";
-import "./chunk-RK2DVQNP.js";
 import {
   CommonModule,
   NgIf
@@ -59,9 +55,13 @@ import {
   ɵɵdefineInjector,
   ɵɵnamespaceSVG
 } from "./chunk-LW34VNAR.js";
-import "./chunk-G6ECYYJH.js";
 import "./chunk-YVXMBCE5.js";
+import "./chunk-G6ECYYJH.js";
 import "./chunk-RTGP7ALM.js";
+import {
+  tr
+} from "./chunk-BMDSN43F.js";
+import "./chunk-RK2DVQNP.js";
 import "./chunk-4MWRP73S.js";
 
 // node_modules/@primeuix/styles/dist/knob/index.mjs

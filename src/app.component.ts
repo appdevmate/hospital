@@ -3,12 +3,13 @@ import { RouterModule } from '@angular/router';
 import { ToastModule } from 'primeng/toast';
 
 @Component({
-    selector: 'app-root',
-    standalone: true,
-    imports: [RouterModule, ToastModule],
-    template: `
-    <router-outlet></router-outlet>
+  selector: 'app-root',
+  standalone: true,
+  imports: [RouterModule, ToastModule],
+  template: `
+    <!-- Single global host -->
     <p-toast></p-toast>
-    `
+    <router-outlet></router-outlet>
+  `
 })
 export class AppComponent {}
