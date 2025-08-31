@@ -154,4 +154,10 @@ export class PatientsService {
       headers: this.authHeaders()
     });
   }
+
+  deletePatient(patientID: string): Observable<{ data: Patient }> {
+    return this.http.delete<{ data: Patient }>(Config.buildUrl(this.path + '/' + patientID), {
+      headers: this.authHeaders()
+    });
+  }
 }

@@ -12,6 +12,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NewPatient } from '@/components/new-patient/new-patient';
 import { Helpers } from '@/services/helpers';
 import { ConfirmDialogModule } from "primeng/confirmdialog";
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-table-demo',
@@ -235,25 +237,45 @@ export class TableDemo implements AfterViewInit, OnDestroy {
     }
   }
 
+  private pkToId(pk: string): string {
+  const m = /^PATIENTS?#(.+)$/.exec(pk); // handles PATIENT# and PATIENTS#
+  return m ? m[1] : (pk?.split('#')[1] ?? pk);
+}
+
+
   deleteSelectedPatients() {
-    if (!this.selectedPatients.length) {
-      this.helpersFunctions.notifyInfo('Warning', 'No patients selected for deletion');
-      return;
+  const ids = Array.from(new Set(
+    (this.selectedPatients || [])
+      .map(p => this.pkToId(p.PK))
+      .filter(Boolean)
+  ));
+  if (!ids.length) return;
+
+  this.loading = true;
+
+  const tasks = ids.map(id =>
+    this.patientsService.deletePatient(id).pipe(catchError(() => of(null)))
+  );
+
+  forkJoin(tasks).subscribe({
+    next: (results) => {
+      const ok = results.filter(r => r !== null).length;
+      const total = ids.length;
+      this.loading = false;
+      this.selectedPatients = [];
+      this.helpersFunctions.notifySuccess(`${ok}/${total} patient(s) deleted`);
+      this.refreshPatientTable();
+    },
+    error: () => {
+      this.loading = false;
+      this.selectedPatients = [];
+      this.helpersFunctions.notifyInfo('Delete', 'Some items could not be deleted');
+      this.refreshPatientTable();
     }
-    this.confirmationService.confirm({
-      key: 'global',
-      message: `Are you sure you want to delete ${this.selectedPatients.length} selected patient(s)?`,
-      header: 'Confirm Deletion',
-      icon: 'pi pi-exclamation-triangle',
-      rejectButtonProps: { label: 'No', severity: 'secondary', variant: 'text' },
-      acceptButtonProps: { label: 'Yes', severity: 'danger' },
-      accept: () => {
-        this.selectedPatients = [];
-        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Patients Deleted', life: 3000 });
-        this.refreshPatientTable();
-      }
-    });
-  }
+  });
+}
+
+
 
   exportCSV() {
     this.tableCmp?.exportCSV();
