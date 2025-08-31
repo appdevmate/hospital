@@ -1,3 +1,5 @@
+// tableplugin.ts - Enhanced GenericTableComponent with Row Edit Implementation
+
 import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, TemplateRef, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -11,6 +13,7 @@ import { ButtonModule } from 'primeng/button';
 import { ToolbarModule } from 'primeng/toolbar';
 import { FileUploadModule } from 'primeng/fileupload';
 import { TagModule } from 'primeng/tag';
+import { TooltipModule } from 'primeng/tooltip';
 
 export interface TableColumn {
     field: string;
@@ -25,6 +28,9 @@ export interface TableColumn {
     editable?: boolean;
     editorType?: 'text' | 'date' | 'number' | 'textarea' | 'autocomplete';
     editorOptions?: ReadonlyArray<{ label: string; value: any }>;
+    filterType?: 'text' | 'dropdown';
+    filterOptions?: Array<{ label: string; value: any }>;
+    filterMatchMode?: 'contains' | 'equals' | 'startsWith' | 'endsWith';
 }
 
 export interface TableConfig {
@@ -44,6 +50,7 @@ export interface TableConfig {
     selectable?: boolean;
     selectionMode?: 'single' | 'multiple';
     showSelectAll?: boolean;
+    editType?: 'row' | 'cell' | 'none'; // Add edit type configuration
 }
 
 export interface ToolbarConfig {
@@ -69,7 +76,7 @@ export interface RowEditEvent<T = any> {
 @Component({
     selector: 'app-generic-table',
     standalone: true,
-    imports: [CommonModule, FormsModule, TableModule, IconFieldModule, InputIconModule, InputTextModule, AutoCompleteModule, DatePickerModule, ButtonModule, ToolbarModule, FileUploadModule, TagModule],
+    imports: [CommonModule, FormsModule, TableModule, IconFieldModule, InputIconModule, InputTextModule, AutoCompleteModule, DatePickerModule, ButtonModule, ToolbarModule, FileUploadModule, TagModule, TooltipModule],
     template: `
         <div class="card">
             <div class="font-semibold text-xl mb-4" *ngIf="config?.title">{{ config.title }}</div>
@@ -120,14 +127,14 @@ export interface RowEditEvent<T = any> {
                 [(selection)]="selectedRows"
                 [selectionMode]="getSelectionMode()"
                 (selectionChange)="onSelectionChange()"
-                (onRowEditInit)="onTableRowEditInit($event)"
-                (onRowEditSave)="onTableRowEditSave($event)"
-                (onRowEditCancel)="onTableRowEditCancel($event)"
                 [responsiveLayout]="config.responsive !== false ? 'scroll' : 'stack'"
                 [scrollable]="true"
                 [scrollHeight]="config.scrollHeight || '600px'"
                 sortMode="single"
                 (onLazyLoad)="lazyLoad.emit($event)"
+                (onRowEditInit)="onTableRowEditInit($event)"
+                (onRowEditSave)="onTableRowEditSave($event)"
+                (onRowEditCancel)="onTableRowEditCancel($event)"
                 [tableStyle]="{ 'table-layout': 'fixed', width: '100%' }"
             >
                 <ng-template #caption>
@@ -182,13 +189,28 @@ export interface RowEditEvent<T = any> {
                             <p-tableCheckbox [value]="row"></p-tableCheckbox>
                         </td>
                         <td *ngFor="let col of columns">
-                            <ng-container *ngIf="col.editable === true; else readCell">
+                            <ng-container *ngIf="isColumnEditable(col) && isEditingEnabled(); else readCell">
                                 <p-cellEditor>
                                     <ng-template pTemplate="input">
                                         <ng-container [ngSwitch]="col.editorType || 'text'">
-                                            <input *ngSwitchCase="'text'" pInputText [ngModel]="get(row, col.field)" (ngModelChange)="set(row, col.field, $event)" [attr.placeholder]="col.header" />
-                                            <input *ngSwitchCase="'number'" type="number" pInputText [ngModel]="get(row, col.field)" (ngModelChange)="set(row, col.field, $event)" />
-                                            <textarea *ngSwitchCase="'textarea'" pInputText rows="2" [ngModel]="get(row, col.field)" (ngModelChange)="set(row, col.field, $event)"></textarea>
+                                            <input *ngSwitchCase="'text'" 
+                                                pInputText 
+                                                [ngModel]="get(row, col.field)" 
+                                                (ngModelChange)="set(row, col.field, $event)" 
+                                                [attr.placeholder]="col.header"
+                                                class="w-full" />
+                                            <input *ngSwitchCase="'number'" 
+                                                type="number" 
+                                                pInputText 
+                                                [ngModel]="get(row, col.field)" 
+                                                (ngModelChange)="set(row, col.field, $event)"
+                                                class="w-full" />
+                                            <textarea *ngSwitchCase="'textarea'" 
+                                                pInputText 
+                                                rows="2" 
+                                                [ngModel]="get(row, col.field)" 
+                                                (ngModelChange)="set(row, col.field, $event)"
+                                                class="w-full"></textarea>
                                             <p-datepicker
                                                 *ngSwitchCase="'date'"
                                                 [showIcon]="true"
@@ -232,37 +254,43 @@ export interface RowEditEvent<T = any> {
                         </td>
                         <td>
                             <div class="flex items-center justify-center gap-2">
-                                <button *ngIf="!editing" 
-                                    pButton 
-                                    type="button" 
-                                    pInitEditableRow 
-                                    icon="pi pi-pencil" 
-                                    text 
-                                    rounded 
-                                    severity="secondary"
-                                    (click)="onEditButtonClick(row, ri)">
-                                </button>
-                                <button *ngIf="editing" 
-                                    pButton 
-                                    type="button" 
-                                    pSaveEditableRow 
-                                    icon="pi pi-check" 
-                                    text 
-                                    rounded 
-                                    severity="secondary"
-                                    (click)="onSaveButtonClick(row, ri)">
-                                </button>
-                                <button *ngIf="editing" 
-                                    pButton 
-                                    type="button" 
-                                    pCancelEditableRow 
-                                    icon="pi pi-times" 
-                                    text 
-                                    rounded 
-                                    severity="secondary"
-                                    (click)="onCancelButtonClick(row, ri)">
-                                </button>
-                                <ng-container *ngIf="actionsTemplate" [ngTemplateOutlet]="actionsTemplate" [ngTemplateOutletContext]="{ $implicit: row, rowIndex: ri }"></ng-container>
+                                <!-- Row Edit Controls -->
+                                <ng-container *ngIf="isEditingEnabled() && hasEditableColumns()">
+                                    <ng-container *ngIf="!editing; else editControls">
+                                        <p-button 
+                                            icon="pi pi-pencil" 
+                                            severity="secondary" 
+                                            size="small"
+                                            text
+                                            pInitEditableRow 
+                                            pTooltip="Edit"
+                                            (click)="onRowEditInit(row, ri)"
+                                        ></p-button>
+                                    </ng-container>
+                                    <ng-template #editControls>
+                                        <p-button 
+                                            icon="pi pi-check" 
+                                            severity="success" 
+                                            size="small"
+                                            text
+                                            pSaveEditableRow
+                                            pTooltip="Save"
+                                            (click)="onRowEditSave(row, ri)"
+                                        ></p-button>
+                                        <p-button 
+                                            icon="pi pi-times" 
+                                            severity="danger" 
+                                            size="small"
+                                            text
+                                            pCancelEditableRow
+                                            pTooltip="Cancel"
+                                            (click)="onRowEditCancel(row, ri)"
+                                        ></p-button>
+                                    </ng-template>
+                                </ng-container>
+                                
+                                <!-- Custom Actions Template -->
+                                <ng-container *ngIf="actionsTemplate" [ngTemplateOutlet]="actionsTemplate" [ngTemplateOutletContext]="{ $implicit: row, rowIndex: ri, row: row, index: ri }"></ng-container>
                             </div>
                         </td>
                     </tr>
@@ -307,6 +335,11 @@ export interface RowEditEvent<T = any> {
             :host ::ng-deep .p-datepicker {
                 width: 100%;
             }
+            
+            :host ::ng-deep .p-button.p-button-text {
+                padding: 0.25rem;
+                min-width: auto;
+            }
         `
     ]
 })
@@ -348,84 +381,103 @@ export class GenericTableComponent<T = any> implements OnChanges {
         if (ch['config']) this.pageSize = this.config?.defaultPageSize ?? 15;
     }
     
-    // Row edit event handlers - properly typed and emit events
-    // Replace the event handler methods in your GenericTableComponent with these corrected versions:
-
-// Row edit event handlers - properly typed for PrimeNG events
-onTableRowEditInit(event: any) {
-    console.log('Table Row Edit Init', event);
+    // Check if editing is enabled
+    isEditingEnabled(): boolean {
+        return this.config?.editType === 'row' || this.config?.editType === 'cell';
+    }
     
-    // PrimeNG passes the row data directly in event.data
-    const rowData = event.data || event;
-    const rowIndex = event.index;
+    // Check if column is editable
+    isColumnEditable(col: TableColumn): boolean {
+        return col.editable === true;
+    }
     
-    // Clone the original row for cancel functionality
-    const key = rowData[this.dataKey];
-    this.clonedRows[key] = { ...rowData };
+    // Check if table has any editable columns
+    hasEditableColumns(): boolean {
+        return this.columns.some(col => col.editable === true);
+    }
     
-    // Emit the event to parent with proper structure
-    this.rowEditInit.emit({
-        data: rowData,
-        index: rowIndex
-    });
-}
-
-onTableRowEditSave(event: any) {
-    console.log('Table Row Edit Save', event);
+    // Row edit event handlers
+    onRowEditInit(rowData: T, rowIndex: number) {
+        const key = (rowData as any)[this.dataKey];
+        this.clonedRows[key] = { ...rowData };
+    }
     
-    // PrimeNG passes the row data directly in event.data
-    const rowData = event.data || event;
-    const rowIndex = event.index;
-    
-    // Clean up cloned row
-    const key = rowData[this.dataKey];
-    delete this.clonedRows[key];
-    
-    // Emit the event to parent with proper structure
-    this.rowEditSave.emit({
-        data: rowData,
-        index: rowIndex
-    });
-}
-
-onTableRowEditCancel(event: any) {
-    console.log('Table Row Edit Cancel', event);
-    
-    // PrimeNG passes the row data directly in event.data
-    const rowData = event.data || event;
-    const rowIndex = event.index;
-    
-    // Restore original values
-    const key = rowData[this.dataKey];
-    if (this.clonedRows[key]) {
-        const index = this.data.findIndex(item => (item as any)[this.dataKey] === key);
-        if (index !== -1) {
-            this.data[index] = this.clonedRows[key];
-        }
+    onRowEditSave(rowData: T, rowIndex: number) {
+        const key = (rowData as any)[this.dataKey];
         delete this.clonedRows[key];
+        
+        this.rowEditSave.emit({
+            data: rowData,
+            index: rowIndex
+        });
     }
     
-    // Emit the event to parent with proper structure
-    this.rowEditCancel.emit({
-        data: rowData,
-        index: rowIndex
-    });
-}
-    
-    // Additional click handlers for debugging
-    onEditButtonClick(row: T, index: number) {
-        console.log('Edit button clicked', { row, index });
-        // The pInitEditableRow directive handles the actual editing
+    onRowEditCancel(rowData: T, rowIndex: number) {
+        const key = (rowData as any)[this.dataKey];
+        if (this.clonedRows[key]) {
+            const index = this.data.findIndex(item => (item as any)[this.dataKey] === key);
+            if (index !== -1) {
+                this.data[index] = this.clonedRows[key];
+            }
+            delete this.clonedRows[key];
+        }
+        
+        this.rowEditCancel.emit({
+            data: rowData,
+            index: rowIndex
+        });
     }
     
-    onSaveButtonClick(row: T, index: number) {
-        console.log('Save button clicked', { row, index });
-        // The pSaveEditableRow directive handles the actual saving
+    // PrimeNG Table event handlers
+    onTableRowEditInit(event: any) {
+        console.log('Table Row Edit Init', event);
+        
+        const rowData = event.data || event;
+        const rowIndex = event.index;
+        
+        const key = rowData[this.dataKey];
+        this.clonedRows[key] = { ...rowData };
+        
+        this.rowEditInit.emit({
+            data: rowData,
+            index: rowIndex
+        });
     }
-    
-    onCancelButtonClick(row: T, index: number) {
-        console.log('Cancel button clicked', { row, index });
-        // The pCancelEditableRow directive handles the actual canceling
+
+    onTableRowEditSave(event: any) {
+        console.log('Table Row Edit Save', event);
+        
+        const rowData = event.data || event;
+        const rowIndex = event.index;
+        
+        const key = rowData[this.dataKey];
+        delete this.clonedRows[key];
+        
+        this.rowEditSave.emit({
+            data: rowData,
+            index: rowIndex
+        });
+    }
+
+    onTableRowEditCancel(event: any) {
+        console.log('Table Row Edit Cancel', event);
+        
+        const rowData = event.data || event;
+        const rowIndex = event.index;
+        
+        const key = rowData[this.dataKey];
+        if (this.clonedRows[key]) {
+            const index = this.data.findIndex(item => (item as any)[this.dataKey] === key);
+            if (index !== -1) {
+                this.data[index] = this.clonedRows[key];
+            }
+            delete this.clonedRows[key];
+        }
+        
+        this.rowEditCancel.emit({
+            data: rowData,
+            index: rowIndex
+        });
     }
     
     onSelectionChange() {
@@ -490,7 +542,7 @@ onTableRowEditCancel(event: any) {
     }
     
     acSet(row: any, col: TableColumn, sel: any) {
-        row[col.field] = sel?.value ?? null;
+        row[col.field] = sel ?? null;
     }
     
     // Datepicker (stable reference)

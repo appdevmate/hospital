@@ -13,8 +13,8 @@ import { ToastModule } from 'primeng/toast';
 import { FloatLabelModule } from 'primeng/floatlabel';
 
 import { Helpers } from '../../services/helpers';
-import { PatientService } from '../../../app/pages/service/patients.service';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { PatientsService } from '@/pages/service/patients.service';
 
 @Component({
   selector: 'app-new-patient',
@@ -222,7 +222,7 @@ export class NewPatient implements AfterViewInit {
   constructor(
     private fb: FormBuilder,
     private helpersFunctions: Helpers,
-    private patientService: PatientService,
+    private patientService: PatientsService,
     public ref: DynamicDialogRef
   ) {
     this.form = this.fb.group({

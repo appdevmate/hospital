@@ -27,7 +27,7 @@ export interface FilterOption {
   operator: 'and' | 'or';
 }
 
-export interface CreatePatientRequest {
+export interface CreateUpdatePatientRequest {
   name: string;
   gender: string;
   insurance?: string;
@@ -57,7 +57,7 @@ export interface GetPatientsPageOpts {
 }
 
 @Injectable({ providedIn: 'root' })
-export class PatientService {
+export class PatientsService {
   path = 'patients';
   constructor(private http: HttpClient) {}
 
@@ -143,8 +143,14 @@ export class PatientService {
     );
   }
 
-  createPatient(patientData: CreatePatientRequest): Observable<{ data: Patient }> {
+  createPatient(patientData: CreateUpdatePatientRequest): Observable<{ data: Patient }> {
     return this.http.post<{ data: Patient }>(Config.buildUrl(this.path), patientData, {
+      headers: this.authHeaders()
+    });
+  }
+
+  updatePatient(patientID: string, patientData: CreateUpdatePatientRequest): Observable<{ data: Patient }> {
+    return this.http.patch<{ data: Patient }>(Config.buildUrl(this.path + '/' + patientID), patientData, {
       headers: this.authHeaders()
     });
   }
