@@ -97,16 +97,17 @@ export interface RowEditEvent<T = any> {
                 </ng-template>
                 <ng-template #end>
                     <p-fileUpload
-                        *ngIf="toolbarConfig?.showImport !== false"
-                        mode="basic"
-                        accept="image/*"
-                        [maxFileSize]="1000000"
-                        [chooseLabel]="toolbarConfig.importLabel || 'Import'"
-                        auto
-                        customUpload
-                        class="mr-2 inline-block"
-                        [chooseButtonProps]="{ severity: 'secondary' }"
-                    />
+  mode="basic"
+  accept=".xlsx,.xls,.csv"
+  [maxFileSize]="10_000_000"
+  [chooseLabel]="toolbarConfig.importLabel || 'Import'"
+  auto
+  customUpload
+  class="mr-2 inline-block"
+  [chooseButtonProps]="{ severity: 'secondary' }"
+  (uploadHandler)="onImportUpload($event)">
+</p-fileUpload>
+
                     <p-button *ngIf="toolbarConfig?.showExport !== false" [label]="toolbarConfig.exportLabel || 'Export'" [icon]="toolbarConfig.exportIcon || 'pi pi-upload'" severity="secondary" (onClick)="onExportClick()" />
                 </ng-template>
             </p-toolbar>
@@ -359,6 +360,7 @@ export class GenericTableComponent<T = any> implements OnChanges {
     @Input() customTemplates: { [field: string]: TemplateRef<any> } = {};
     @Input() hasSelectedItems = false;
     @Input() selectedRows: T[] = [];
+    @Output() importUpload = new EventEmitter<File[]>();
     
     @Output() lazyLoad = new EventEmitter<any>();
     @Output() rowEditInit = new EventEmitter<RowEditEvent<T>>();
@@ -596,6 +598,12 @@ export class GenericTableComponent<T = any> implements OnChanges {
                 return String(v);
         }
     }
+
+    onImportUpload(e: any) {
+  this.importUpload.emit(e?.files ?? []);
+  // clear the chooser if available
+  if (e?.options?.clear) e.options.clear();
+}
     
     // Templates
     custom = (f: string) => this.customTemplates[f] || null;
