@@ -1,21 +1,23 @@
 import {
+  RouterModule
+} from "./chunk-OL63TFKD.js";
+import {
   BaseComponent
-} from "./chunk-4YMQ5OOY.js";
+} from "./chunk-HCZA7HLM.js";
 import {
   BaseStyle
-} from "./chunk-L2L2T6ID.js";
+} from "./chunk-VL2GOVWI.js";
+import "./chunk-BMDSN43F.js";
 import {
   SharedModule
-} from "./chunk-ZKOTJBQ6.js";
-import {
-  RouterModule
-} from "./chunk-EFY5GPDX.js";
-import "./chunk-J5N23VJV.js";
-import "./chunk-3XGGEXNB.js";
+} from "./chunk-NUKU6X6H.js";
+import "./chunk-RK2DVQNP.js";
+import "./chunk-7DCYZKWD.js";
 import "./chunk-L26I7UJA.js";
 import {
   CommonModule
 } from "./chunk-FHZAWWEY.js";
+import "./chunk-3XGGEXNB.js";
 import "./chunk-5KK3G4LL.js";
 import {
   ChangeDetectionStrategy,
@@ -41,8 +43,6 @@ import {
 import "./chunk-YVXMBCE5.js";
 import "./chunk-G6ECYYJH.js";
 import "./chunk-RTGP7ALM.js";
-import "./chunk-BMDSN43F.js";
-import "./chunk-RK2DVQNP.js";
 import "./chunk-4MWRP73S.js";
 
 // node_modules/@primeuix/styles/dist/iftalabel/index.mjs

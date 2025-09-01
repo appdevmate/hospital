@@ -36,11 +36,21 @@ import { PatientsService } from '@/pages/service/patients.service';
     <div class="patient-form-container">
       <p-card>
         <ng-template pTemplate="header">
-          <div class="form-header">
-            <i class="pi pi-user-plus"></i>
-            <h3>New Patient</h3>
-          </div>
-        </ng-template>
+  <div class="form-header">
+    <div class="title">
+      <i class="pi pi-user-plus"></i>
+      <h3>New Patient</h3>
+    </div>
+    <p-button
+      icon="pi pi-times"
+      text
+      severity="secondary"
+      pTooltip="Close"
+      (click)="ref.close()">
+    </p-button>
+  </div>
+</ng-template>
+
 
         <form [formGroup]="form" (ngSubmit)="submit()" class="form-content" autocomplete="off">
   <!-- Name -->
@@ -69,6 +79,7 @@ import { PatientsService } from '@/pages/service/patients.service';
           [maxDate]="today"
           [showOnFocus]="false"
           [class.p-invalid]="invalid('dob')"
+          [readonlyInput]="true" 
           styleClass="w-full" />
         <label for="dob"><i class="pi pi-calendar"></i> Date of Birth</label>
       </p-floatlabel>
@@ -162,20 +173,32 @@ import { PatientsService } from '@/pages/service/patients.service';
 
   <!-- Actions -->
   <div class="form-actions">
-    <p-button
-      type="button"
-      label="Reset"
-      icon="pi pi-refresh"
-      severity="secondary"
-      [outlined]="true"
-      (click)="reset()" />
-    <p-button
-      type="submit"
-      label="Save Patient"
-      icon="pi pi-save"
-      [disabled]="form.invalid"
-      [loading]="isSubmitting" />
-  </div>
+  <p-button
+    type="button"
+    label="Close"
+    icon="pi pi-times"
+    severity="secondary"
+    (click)="ref.close()">
+  </p-button>
+
+  <p-button
+    type="button"
+    label="Reset"
+    icon="pi pi-refresh"
+    severity="secondary"
+    [outlined]="true"
+    (click)="reset()">
+  </p-button>
+
+  <p-button
+    type="submit"
+    label="Save Patient"
+    icon="pi pi-save"
+    [disabled]="form.invalid"
+    [loading]="isSubmitting">
+  </p-button>
+</div>
+
 </form>
 
       </p-card>
@@ -193,6 +216,8 @@ import { PatientsService } from '@/pages/service/patients.service';
     .p-error { display:block; margin-top:0.25rem; font-size:0.875rem; color:var(--p-red-500); }
     .gender-item { display:flex; align-items:center; gap:0.5rem; }
     .form-actions { display:flex; gap:0.75rem; justify-content:flex-end; margin-top:2rem; padding-top:1rem; border-top:1px solid var(--p-surface-border); }
+    .form-header { justify-content: space-between; }
+    .form-header .title { display: flex; align-items: center; gap: .5rem; }
     :host ::ng-deep .p-inputtext,
     :host ::ng-deep .p-datepicker,
     :host ::ng-deep .p-autocomplete,

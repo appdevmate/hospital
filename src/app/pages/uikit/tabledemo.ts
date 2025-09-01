@@ -2,7 +2,7 @@
 
 import { Component, AfterViewInit, DestroyRef, inject, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Subject, takeUntil } from 'rxjs';
+import { forkJoin, of, from, Subject, takeUntil } from 'rxjs';
 import { GenericTableComponent, TableColumn, TableConfig, RowEditEvent, ToolbarConfig } from './tableplugin';
 import { Patient, GetPatientsPageOpts, PatientsService, CreateUpdatePatientRequest } from '../service/patients.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -12,8 +12,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NewPatient } from '@/components/new-patient/new-patient';
 import { Helpers } from '@/services/helpers';
 import { ConfirmDialogModule } from "primeng/confirmdialog";
-import { forkJoin, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import * as XLSX from 'xlsx';
+import { catchError, finalize, map, mergeMap, toArray } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-table-demo',
@@ -38,6 +39,7 @@ import { catchError } from 'rxjs/operators';
       (rowEditCancel)="onRowEditCancel($event)"
       (newClick)="openNewPatient()"
       (deleteClick)="deleteSelectedPatients()"
+      (importUpload)="onImportPatients($event)"
       (exportClick)="exportCSV()"
     >
       <ng-template #statusTemplate let-value="value">
@@ -242,38 +244,51 @@ export class TableDemo implements AfterViewInit, OnDestroy {
   return m ? m[1] : (pk?.split('#')[1] ?? pk);
 }
 
-
   deleteSelectedPatients() {
-  const ids = Array.from(new Set(
-    (this.selectedPatients || [])
-      .map(p => this.pkToId(p.PK))
-      .filter(Boolean)
-  ));
-  if (!ids.length) return;
+  if (!this.selectedPatients?.length) {
+    this.helpersFunctions.notifyInfo('Warning', 'No patients selected for deletion');
+    return;
+  }
 
-  this.loading = true;
+  this.confirmationService.confirm({
+    key: 'global',
+    header: 'Confirm Deletion',
+    message: `Delete ${this.selectedPatients.length} selected patient(s)?`,
+    icon: 'pi pi-exclamation-triangle',
+    rejectButtonProps: { label: 'No', severity: 'secondary', variant: 'text' },
+    acceptButtonProps: { label: 'Yes', severity: 'danger' },
+    accept: () => {
+      const ids = Array.from(new Set(
+        this.selectedPatients.map(p => this.pkToId(p.PK)).filter(Boolean)
+      ));
 
-  const tasks = ids.map(id =>
-    this.patientsService.deletePatient(id).pipe(catchError(() => of(null)))
-  );
+      this.loading = true;
 
-  forkJoin(tasks).subscribe({
-    next: (results) => {
-      const ok = results.filter(r => r !== null).length;
-      const total = ids.length;
-      this.loading = false;
-      this.selectedPatients = [];
-      this.helpersFunctions.notifySuccess(`${ok}/${total} patient(s) deleted`);
-      this.refreshPatientTable();
-    },
-    error: () => {
-      this.loading = false;
-      this.selectedPatients = [];
-      this.helpersFunctions.notifyInfo('Delete', 'Some items could not be deleted');
-      this.refreshPatientTable();
+      const tasks = ids.map(id =>
+        this.patientsService.deletePatient(id).pipe(
+          map(() => ({ id, ok: true as const })),
+          catchError(() => of({ id, ok: false as const }))
+        )
+      );
+
+      forkJoin(tasks)
+        .pipe(finalize(() => (this.loading = false)))
+        .subscribe(results => {
+          const failed = results.filter(r => !r.ok).length;
+          this.selectedPatients = [];
+
+          if (failed === 0) {
+            this.helpersFunctions.notifySuccess('Patient(s) profile delete successfully!');
+          } else {
+            this.helpersFunctions.notifyError('Delete failed', 'Could not delete patient(s) profile!');
+          }
+
+          this.refreshPatientTable();
+        });
     }
   });
 }
+
 
 
 
@@ -286,7 +301,8 @@ export class TableDemo implements AfterViewInit, OnDestroy {
       width: '50vw',
       modal: true,
       dismissableMask: true,
-      data: { name: 'Sami' }
+      data: { name: 'Sami' },
+      focusOnShow: false
     });
     ref.onClose.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((result) => {
       if (result) {
@@ -313,6 +329,152 @@ export class TableDemo implements AfterViewInit, OnDestroy {
   isPatientSelected(patient: Patient): boolean {
     return this.selectedPatients.some(s => s.PK === patient.PK);
   }
+
+  onImportPatients(files: File[]) {
+  const file = files?.[0];
+  if (!file) return;
+
+  this.loading = true;
+  this.readWorkbook(file)
+    .then(rows => {
+      const prepared = this.preparePatients(rows);
+      const { valid, skipped, reason } = prepared;
+
+      // de-dupe by phone inside the file
+      const seen = new Set<string>();
+      const unique = valid.filter(r => {
+        if (seen.has(r.phone)) return false;
+        seen.add(r.phone);
+        return true;
+      });
+
+      this.confirmationService.confirm({
+        key: 'global',
+        header: 'Confirm Import',
+        message: `Create ${unique.length} patient(s). Skipped ${skipped.length}. Proceed?`,
+        icon: 'pi pi-exclamation-triangle',
+        rejectButtonProps: { label: 'No', severity: 'secondary', variant: 'text' },
+        acceptButtonProps: { label: 'Yes', severity: 'primary' },
+        accept: () => this.bulkCreatePatients(unique),
+        reject: () => { this.loading = false; }
+      });
+    })
+    .catch(() => {
+      this.loading = false;
+      this.helpersFunctions.notifyError('Import failed', 'Could not read the file');
+    });
+}
+
+// remove: import * as XLSX from 'xlsx';
+
+private async readWorkbook(file: File): Promise<any[]> {
+  const { read, utils } = await import('xlsx');
+  const buf = await file.arrayBuffer();
+  const wb = read(buf, { type: 'array' });
+  const ws = wb.Sheets[wb.SheetNames[0]];
+  return utils.sheet_to_json(ws, { defval: '' });
+}
+
+
+private preparePatients(rows: any[]) {
+  const accepted = new Set([
+    'name','phone','dob','gender','insurance','job','licenseNumber','qatarID','qid'
+  ]);
+  const valid: any[] = [];
+  const skipped: any[] = [];
+  const reason: string[] = [];
+
+  for (const r of rows) {
+    // normalize keys (case-insensitive)
+    const get = (k: string) => r[k] ?? r[k.toLowerCase()] ?? r[k.toUpperCase()];
+    const name = String(get('name') || '').trim();
+    const phone = String(get('phone') || '').replace(/\D/g, '');
+    const qatarID = String(get('qatarID') ?? get('qid') ?? '').replace(/\D/g, '');
+    const genderRaw = String(get('gender') || '').trim().toLowerCase();
+    const gender = genderRaw.startsWith('m') ? 'male'
+                 : genderRaw.startsWith('f') ? 'female'
+                 : genderRaw.startsWith('prefer') ? 'na'
+                 : genderRaw || '';
+
+    if (!name || !phone || !gender || !qatarID) {
+      skipped.push(r); reason.push('missing required field(s)');
+      continue;
+    }
+
+    const dob = this.toISODate(get('dob'));
+    const item: any = {
+      name,
+      phone,
+      gender,                  // expected by backend
+      qid: qatarID,            // your API uses 'qid'
+      insurance: String(get('insurance') || '').trim(),
+      job: String(get('job') || '').trim(),
+      licenseNumber: String(get('licenseNumber') || '').trim(),
+      ...(dob ? { dob } : {})
+    };
+
+    // drop unknown columns (accepted set governs)
+    for (const k of Object.keys(r)) {
+      if (!accepted.has(k)) continue;
+    }
+
+    valid.push(item);
+  }
+
+  return { valid, skipped, reason };
+}
+
+private toISODate(v: any): string | undefined {
+  if (!v) return undefined;
+  if (typeof v === 'string') {
+    const s = v.trim();
+    // ISO or yyyy-mm-dd
+    if (/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0, 10);
+    // dd/mm/yy or dd/mm/yyyy
+    const m = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/);
+    if (m) {
+      const [ , d, mo, y ] = m;
+      const yr = (+y < 100) ? 2000 + +y : +y;
+      const dt = new Date(yr, +mo - 1, +d);
+      return isNaN(+dt) ? undefined : dt.toISOString().slice(0, 10);
+    }
+    const d = new Date(s);
+    return isNaN(+d) ? undefined : d.toISOString().slice(0, 10);
+  }
+  // Excel serial number
+  if (typeof v === 'number' && isFinite(v)) {
+    const epoch = new Date(Math.round((v - 25569) * 86400 * 1000));
+    return isNaN(+epoch) ? undefined : epoch.toISOString().slice(0, 10);
+  }
+  return undefined;
+}
+
+private bulkCreatePatients(rows: any[]) {
+  // throttle in batches of 10
+  from(rows).pipe(
+    mergeMap(r =>
+      this.patientsService.createPatient(r).pipe(
+        map(() => true),
+        catchError(() => of(false))
+      ),
+      10
+    ),
+    toArray(),
+    finalize(() => this.loading = false)
+  ).subscribe(results => {
+    const ok = results.filter(Boolean).length;
+    const total = results.length;
+    if (ok === total) {
+      this.helpersFunctions.notifySuccess('Import completed successfully.');
+    } else if (ok === 0) {
+      this.helpersFunctions.notifyError('Import failed', 'No patient was created.');
+    } else {
+      this.helpersFunctions.notifyError('Import partial', `${ok}/${total} patient(s) created.`);
+    }
+    this.refreshPatientTable();
+  });
+}
+
 
   ngOnDestroy() {
     this.destroy$.next();
