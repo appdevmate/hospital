@@ -14,6 +14,13 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { FileUploadModule } from 'primeng/fileupload';
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
+import { Popover } from 'primeng/popover';
+import { Listbox } from 'primeng/listbox';
+import { Checkbox } from 'primeng/checkbox';
+
+
+import { ListboxModule } from 'primeng/listbox';
+import { CheckboxModule } from 'primeng/checkbox';
 
 export interface TableColumn {
     field: string;
@@ -76,7 +83,12 @@ export interface RowEditEvent<T = any> {
 @Component({
     selector: 'app-generic-table',
     standalone: true,
-    imports: [CommonModule, FormsModule, TableModule, IconFieldModule, InputIconModule, InputTextModule, AutoCompleteModule, DatePickerModule, ButtonModule, ToolbarModule, FileUploadModule, TagModule, TooltipModule],
+    imports: [
+        CommonModule, FormsModule, TableModule, IconFieldModule, InputIconModule, InputTextModule,
+        AutoCompleteModule, DatePickerModule, ButtonModule, ToolbarModule, FileUploadModule,
+        TagModule, TooltipModule,
+        Popover, Listbox, Checkbox, ListboxModule, CheckboxModule
+    ],
     template: `
         <div class="card">
             <div class="font-semibold text-xl mb-4" *ngIf="config?.title">{{ config.title }}</div>
@@ -139,14 +151,78 @@ export interface RowEditEvent<T = any> {
                 [tableStyle]="{ 'table-layout': 'fixed', width: '100%' }"
             >
                 <ng-template #caption>
-                    <div class="flex justify-between items-center flex-col sm:flex-row">
-                        <button *ngIf="config.showClearButton !== false" pButton label="Clear" class="p-button-outlined mb-2" icon="pi pi-filter-slash" (click)="clear(dt)"></button>
-                        <p-iconfield *ngIf="config.showGlobalSearch !== false" iconPosition="left" class="ml-auto">
-                            <p-inputicon><i class="pi pi-search"></i></p-inputicon>
-                            <input #globalFilter pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Global Search" />
-                        </p-iconfield>
-                    </div>
-                </ng-template>
+  <div class="flex justify-between items-center flex-col sm:flex-row gap-2">
+    <button *ngIf="config.showClearButton !== false"
+            pButton label="Clear" class="p-button-outlined"
+            icon="pi pi-filter-slash" (click)="clear(dt)"></button>
+
+    <div class="flex items-center gap-2 ml-auto">
+      <!-- Columns button -->
+<button pButton class="p-button-outlined" label="Select Columns" icon="pi pi-bars" (click)="colsPop.toggle($event)"></button>
+
+<p-popover #colsPop appendTo="body">
+  <div class="w-72 p-2">
+    <div class="flex items-center justify-between mb-2">
+      <span class="font-medium">Patients Columns</span>
+      <button pButton type="button" icon="pi pi-times" text (click)="colsPop.hide()"></button>
+    </div>
+
+    <input pInputText type="text"
+           [(ngModel)]="columnFilter"
+           placeholder="Search columns"
+           class="w-full mb-2"
+           (input)="filterColumnOptions()" />
+
+<p-listbox
+  [options]="columnOptions"
+  optionLabel="header"
+  [multiple]="true"
+  [metaKeySelection]="false"
+  [(ngModel)]="selectedColumnOptions"
+  (ngModelChange)="setVisibleFromOptions($event)"
+  [listStyle]="{ 'max-height': '280px' }">
+
+  <!-- Select All row -->
+  <ng-template pTemplate="header">
+    <div class="flex items-center gap-2 p-2 border-b">
+      <p-checkbox
+        binary="true"
+        [ngModel]="isAllSelected()"
+        (onChange)="toggleAll($event.checked)">
+      </p-checkbox>
+      <span class="font-medium">Select All</span>
+    </div>
+  </ng-template>
+
+  <!-- Item rows -->
+  <ng-template let-opt pTemplate="item">
+    <div class="flex items-center gap-2">
+      <p-checkbox
+        [binary]="true"
+        [ngModel]="isSelectedField(opt.field)">
+      </p-checkbox>
+      <span class="truncate">{{ opt.header }}</span>
+    </div>
+  </ng-template>
+</p-listbox>
+
+
+  </div>
+</p-popover>
+
+
+
+
+
+      <p-iconfield *ngIf="config.showGlobalSearch !== false" iconPosition="left">
+        <p-inputicon><i class="pi pi-search"></i></p-inputicon>
+        <input #globalFilter pInputText type="text"
+               (input)="onGlobalFilter(dt, $event)" placeholder="Global Search" />
+      </p-iconfield>
+    </div>
+  </div>
+</ng-template>
+
                 
                 <ng-template pTemplate="header">
                     <tr>
@@ -156,7 +232,7 @@ export interface RowEditEvent<T = any> {
                                 *ngIf="config?.selectionMode === 'multiple' && config?.showSelectAll !== false"
                             ></p-tableHeaderCheckbox>
                         </th>
-                        <ng-container *ngFor="let col of columns">
+                        <ng-container *ngFor="let col of viewColumns">
                             <!-- Sortable by default -->
                             <th *ngIf="col.sortable !== false; else noSort" [style.min-width]="col.width || '12rem'" [pSortableColumn]="col.field">
                                 <div class="flex justify-between items-center">
@@ -189,7 +265,7 @@ export interface RowEditEvent<T = any> {
                         <td *ngIf="config?.selectable">
                             <p-tableCheckbox [value]="row"></p-tableCheckbox>
                         </td>
-                        <td *ngFor="let col of columns">
+                        <td *ngFor="let col of viewColumns">
                             <ng-container *ngIf="isColumnEditable(col) && isEditingEnabled(); else readCell">
                                 <p-cellEditor>
                                     <ng-template pTemplate="input">
@@ -347,7 +423,7 @@ export interface RowEditEvent<T = any> {
 export class GenericTableComponent<T = any> implements OnChanges {
     @ViewChild('dt') dt!: Table;
     @ViewChild('globalFilter') globalFilter!: ElementRef;
-    
+
     @Input({ required: true }) columns: TableColumn[] = [];
     @Input({ required: true }) dataKey = 'id';
     @Input() data: T[] = [];
@@ -361,59 +437,122 @@ export class GenericTableComponent<T = any> implements OnChanges {
     @Input() hasSelectedItems = false;
     @Input() selectedRows: T[] = [];
     @Output() importUpload = new EventEmitter<File[]>();
-    
+    @Input() visibleColumnFields?: string[];
+    @Output() columnsVisibilityChange = new EventEmitter<string[]>();
+    columnHeaderMap: Record<string, string> = {};
+    @Input() requireAtLeastOneColumn = true;
+    columnFilter = '';
+
     @Output() lazyLoad = new EventEmitter<any>();
     @Output() rowEditInit = new EventEmitter<RowEditEvent<T>>();
     @Output() rowEditSave = new EventEmitter<RowEditEvent<T>>();
     @Output() rowEditCancel = new EventEmitter<RowEditEvent<T>>();
     @Output() selectionChange = new EventEmitter<T[]>();
-    
+
     // Toolbar events
     @Output() newClick = new EventEmitter<void>();
     @Output() deleteClick = new EventEmitter<void>();
     @Output() importClick = new EventEmitter<any>();
     @Output() exportClick = new EventEmitter<void>();
-    
+
     pageSize = 15;
     ac: Record<string, { label: string; value: any }[]> = {};
     private dateCache = new WeakMap<any, Map<string, Date | null>>();
     private clonedRows: { [s: string]: T } = {};
-    
+
     ngOnChanges(ch: SimpleChanges) {
         if (ch['config']) this.pageSize = this.config?.defaultPageSize ?? 15;
+        if (ch['config']) this.pageSize = this.config?.defaultPageSize ?? 15;
+        if (ch['columns'] || ch['visibleColumnFields']) this.ensureVisibleInit();
     }
-    
+
+    private visibleFields: string[] = [];
+    columnOptions: { header: string; field: string }[] = [];
+    columnSuggestions: { header: string; field: string }[] = [];
+    // replace selectedColumnFields with objects
+    selectedColumnOptions: { header: string; field: string }[] = [];
+
+
+    private ensureVisibleInit() {
+        this.columnOptions = (this.columns || []).map(c => ({ header: c.header || c.field, field: c.field }));
+        this.columnHeaderMap = Object.fromEntries(this.columnOptions.map(o => [o.field, o.header]));
+        const all = this.columnOptions.map(o => o.field);
+
+        let seed: string[];
+        if (this.visibleColumnFields !== undefined) {
+            seed = this.visibleColumnFields.filter(f => all.includes(f));
+            if (this.requireAtLeastOneColumn && seed.length === 0 && this.columnOptions[0]) {
+                seed = [this.columnOptions[0].field];
+            }
+        } else {
+            seed = all.slice();
+        }
+        this.visibleFields = seed.slice();
+        this.selectedColumnOptions = this.columnOptions.filter(o => seed.includes(o.field));
+        this.columnSuggestions = this.columnOptions.slice(0, 50);
+    }
+
+
+    setVisibleFromOptions(list: { header: string; field: string }[]) {
+        const want = list || [];
+        if (this.requireAtLeastOneColumn && want.length === 0) {
+            const fallback = this.columnOptions[0] ? [this.columnOptions[0]] : [];
+            this.selectedColumnOptions = fallback;
+        } else {
+            this.selectedColumnOptions = want;
+        }
+        this.visibleFields = this.selectedColumnOptions.map(o => o.field);
+        this.columnsVisibilityChange.emit(this.visibleFields);
+    }
+
+
+
+
+    searchColumns(e: { query?: string }) {
+        const q = (e.query || '').toLowerCase();
+        this.columnSuggestions = q
+            ? this.columnOptions.filter(o => o.header.toLowerCase().includes(q) || o.field.toLowerCase().includes(q))
+            : this.columnOptions.slice(0, 50);
+    }
+
+
+
     // Check if editing is enabled
     isEditingEnabled(): boolean {
         return this.config?.editType === 'row' || this.config?.editType === 'cell';
     }
-    
+
     // Check if column is editable
     isColumnEditable(col: TableColumn): boolean {
         return col.editable === true;
     }
-    
+
     // Check if table has any editable columns
     hasEditableColumns(): boolean {
         return this.columns.some(col => col.editable === true);
     }
-    
+
     // Row edit event handlers
     onRowEditInit(rowData: T, rowIndex: number) {
         const key = (rowData as any)[this.dataKey];
         this.clonedRows[key] = { ...rowData };
     }
-    
+
     onRowEditSave(rowData: T, rowIndex: number) {
         const key = (rowData as any)[this.dataKey];
         delete this.clonedRows[key];
-        
+
         this.rowEditSave.emit({
             data: rowData,
             index: rowIndex
         });
     }
-    
+
+    isSelectedField(field: string): boolean {
+        return (this.selectedColumnOptions || []).some(o => o.field === field);
+    }
+
+
     onRowEditCancel(rowData: T, rowIndex: number) {
         const key = (rowData as any)[this.dataKey];
         if (this.clonedRows[key]) {
@@ -423,38 +562,59 @@ export class GenericTableComponent<T = any> implements OnChanges {
             }
             delete this.clonedRows[key];
         }
-        
+
         this.rowEditCancel.emit({
             data: rowData,
             index: rowIndex
         });
     }
-    
+
+    isAllSelected(): boolean {
+        return this.selectedColumnOptions?.length === this.columnOptions?.length;
+    }
+
+    toggleAll(checked: boolean) {
+        this.selectedColumnOptions = checked ? [...this.columnOptions] : [];
+        this.setVisibleFromOptions(this.selectedColumnOptions);
+    }
+
+
     // PrimeNG Table event handlers
     onTableRowEditInit(event: any) {
         console.log('Table Row Edit Init', event);
-        
+
         const rowData = event.data || event;
         const rowIndex = event.index;
-        
+
         const key = rowData[this.dataKey];
         this.clonedRows[key] = { ...rowData };
-        
+
         this.rowEditInit.emit({
             data: rowData,
             index: rowIndex
         });
     }
 
+    filterColumnOptions() {
+        const q = this.columnFilter.trim().toLowerCase();
+        this.columnOptions = (this.columns || [])
+            .map(c => ({ header: c.header || c.field, field: c.field }))
+            .filter(o => !q || o.header.toLowerCase().includes(q) || o.field.toLowerCase().includes(q));
+        // keep existing selections visible
+        this.selectedColumnOptions = this.selectedColumnOptions
+            .filter(s => this.columnOptions.some(o => o.field === s.field));
+    }
+
+
     onTableRowEditSave(event: any) {
         console.log('Table Row Edit Save', event);
-        
+
         const rowData = event.data || event;
         const rowIndex = event.index;
-        
+
         const key = rowData[this.dataKey];
         delete this.clonedRows[key];
-        
+
         this.rowEditSave.emit({
             data: rowData,
             index: rowIndex
@@ -463,10 +623,10 @@ export class GenericTableComponent<T = any> implements OnChanges {
 
     onTableRowEditCancel(event: any) {
         console.log('Table Row Edit Cancel', event);
-        
+
         const rowData = event.data || event;
         const rowIndex = event.index;
-        
+
         const key = rowData[this.dataKey];
         if (this.clonedRows[key]) {
             const index = this.data.findIndex(item => (item as any)[this.dataKey] === key);
@@ -475,78 +635,84 @@ export class GenericTableComponent<T = any> implements OnChanges {
             }
             delete this.clonedRows[key];
         }
-        
+
         this.rowEditCancel.emit({
             data: rowData,
             index: rowIndex
         });
     }
-    
+
     onSelectionChange() {
         this.selectionChange.emit(this.selectedRows);
     }
-    
+
     getSelectionMode(): 'single' | 'multiple' | null {
         if (!this.config?.selectable) return null;
         return this.config.selectionMode === 'single' ? 'single' : 'multiple';
     }
-    
-    getColSpan(): number {
-        let baseColSpan = this.columns.length + 1; // columns + actions
-        if (this.config?.selectable) baseColSpan += 1; // add selection column
-        return baseColSpan;
+
+    get viewColumns(): TableColumn[] {
+        return (this.columns || []).filter(c => this.visibleFields.includes(c.field));
     }
-    
+
+    getColSpan(): number {
+        let base = this.viewColumns.length + 1;
+        if (this.config?.selectable) base += 1;
+        return base;
+    }
+
+
+
     // Toolbar event handlers
     onNewClick() {
         this.newClick.emit();
     }
-    
+
     onDeleteClick() {
         this.deleteClick.emit();
     }
-    
+
     onImportClick(event: any) {
         this.importClick.emit(event);
     }
-    
+
     onExportClick() {
         this.exportClick.emit();
     }
-    
+
     // Table utils
     onGlobalFilter(t: Table, e: Event) {
         t.filterGlobal((e.target as HTMLInputElement).value, 'contains');
     }
-    
+
     clear(t: Table) {
         t.clear();
         if (this.globalFilter?.nativeElement) this.globalFilter.nativeElement.value = '';
     }
-    
+
     // Model helpers
     get = (row: any, f: string) => row?.[f];
     set = (row: any, f: string, v: any) => {
         if (row) row[f] = v;
     };
     val = (row: any, f: string) => f.split('.').reduce((o, p) => (o ? o[p] : undefined), row);
-    
+
     // Autocomplete
     acFill(col: TableColumn, e: { query?: string }) {
         const all = col.editorOptions || [];
         const q = (e.query || '').toLowerCase();
         this.ac[col.field] = q ? all.filter((o) => o.label.toLowerCase().includes(q) || String(o.value).toLowerCase().includes(q)) : all.slice(0, 50);
     }
-    
+
     acSel(row: any, col: TableColumn) {
         const v = row?.[col.field];
         return (col.editorOptions || []).find((o) => o.value === v) || null;
     }
-    
+
     acSet(row: any, col: TableColumn, sel: any) {
         row[col.field] = sel ?? null;
     }
-    
+
     // Datepicker (stable reference)
     private ref(row: any) {
         let m = this.dateCache.get(row);
@@ -556,7 +722,7 @@ export class GenericTableComponent<T = any> implements OnChanges {
         }
         return m;
     }
-    
+
     getDate(row: any, f: string): Date | null {
         if (!row) return null;
         const m = this.ref(row);
@@ -566,15 +732,15 @@ export class GenericTableComponent<T = any> implements OnChanges {
         m.set(f, d);
         return d;
     }
-    
+
     setDate(row: any, f: string, v: Date | null) {
         if (!row) return;
         this.ref(row).set(f, v);
         row[f] = v;
     }
-    
+
     fmt = (pipeFmt?: string) => (!pipeFmt ? 'mm/dd/yy' : pipeFmt.replace(/yyyy/g, 'yy').replace(/MM/g, 'mm').replace(/dd/g, 'dd'));
-    
+
     // Display
     display(row: T, col: TableColumn): string {
         const v = this.val(row, col.field);
@@ -600,27 +766,92 @@ export class GenericTableComponent<T = any> implements OnChanges {
     }
 
     onImportUpload(e: any) {
-  this.importUpload.emit(e?.files ?? []);
-  // clear the chooser if available
-  if (e?.options?.clear) e.options.clear();
-}
-    
+        this.importUpload.emit(e?.files ?? []);
+        // clear the chooser if available
+        if (e?.options?.clear) e.options.clear();
+    }
+
     // Templates
     custom = (f: string) => this.customTemplates[f] || null;
-    
+
     // CSV Export method for external access
-    exportCSV() {
-        if (this.dt) {
-            this.dt.exportCSV();
-        }
+    // ---- CSV helpers ----
+    private csvEscape(v: any): string {
+        const s = v == null ? '' : String(v);
+        // wrap in quotes and double-escape quotes to be RFC-4180 safe
+        return `"${s.replace(/"/g, '""')}"`;
     }
-    
+
+    private raw(row: any, col: TableColumn): any {
+        // no pipes; return raw field value
+        const v = this.val(row, col.field);
+        if (v instanceof Date) return v.toISOString();
+        return v ?? '';
+    }
+
+    /**
+     * Exports current table data to CSV.
+     * @param opts.selectionOnly  export only selectedRows
+     * @param opts.filename       download name without extension
+     * @param opts.separator      default ','
+     * @param opts.includeHeaders default true
+     * @param opts.applyPipes     use display() formatting; default true
+     * @param opts.columns        restrict columns (by field)
+     */
+    exportCSV(opts?: {
+        selectionOnly?: boolean;
+        filename?: string;
+        separator?: string;
+        includeHeaders?: boolean;
+        applyPipes?: boolean;
+        columns?: string[];
+    }) {
+        const {
+            selectionOnly = false,
+            filename = (this.config?.title || 'export').replace(/\s+/g, '_').toLowerCase(),
+            separator = ',',
+            includeHeaders = true,
+            applyPipes = true,
+            columns,
+        } = opts || {};
+
+        const rows: any[] = selectionOnly ? (this.selectedRows || []) : (this.data || []);
+        if (!rows.length || !this.columns?.length) return;
+
+        const cols = (columns && columns.length)
+            ? this.columns.filter(c => columns.includes(c.field))
+            : this.viewColumns;
+
+
+        const header = includeHeaders
+            ? cols.map(c => this.csvEscape(c.header || c.field)).join(separator) + '\r\n'
+            : '';
+
+        const body = rows.map(r =>
+            cols.map(c => {
+                const v = applyPipes ? this.display(r as any, c) : this.raw(r as any, c);
+                return this.csvEscape(v);
+            }).join(separator)
+        ).join('\r\n');
+
+        const blob = new Blob([header + body], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${filename}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+
     // Utility methods for selection
     clearSelection() {
         this.selectedRows = [];
         this.selectionChange.emit(this.selectedRows);
     }
-    
+
     isRowSelected(row: T): boolean {
         if (!this.selectedRows?.length) return false;
         const dataKey = this.dataKey;
