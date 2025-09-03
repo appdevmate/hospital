@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/api';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { StyleClassModule } from 'primeng/styleclass';
 import { LayoutService } from '@/layout/service/layout.service';
@@ -9,7 +9,10 @@ import { InputText } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { FormsModule } from '@angular/forms';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+
 
 @Component({
     selector: '[app-topbar]',
@@ -83,7 +86,7 @@ import { FormsModule } from '@angular/forms';
                                 <i class="pi pi-cog mr-4"></i>
                                 <span>Settings</span>
                             </a>
-                            <a pRipple class="flex p-2 rounded-border w-full items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer">
+                            <a (click)="logout()" pRipple class="flex p-2 rounded-border w-full items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer">
                                 <i class="pi pi-power-off mr-4"></i>
                                 <span>Sign Out</span>
                             </a>
@@ -106,7 +109,11 @@ export class AppTopbar {
 
     searchActive: boolean = false;
 
-    constructor(public layoutService: LayoutService) {}
+    constructor(public layoutService: LayoutService,
+        private oidc: OidcSecurityService,
+        private router: Router,
+        private http: HttpClient) { }
+
 
     onMenuButtonClick() {
         this.layoutService.onMenuToggle();
@@ -137,7 +144,7 @@ export class AppTopbar {
 
     get logo(): string {
         const path = '/layout/images/logo-';
-        const logo = this.layoutService.isDarkTheme() || this.layoutService.layoutConfig().layoutTheme === 'primaryColor'? 'light.png' : 'dark.png';
+        const logo = this.layoutService.isDarkTheme() || this.layoutService.layoutConfig().layoutTheme === 'primaryColor' ? 'light.png' : 'dark.png';
         return path + logo;
     }
 
@@ -162,4 +169,38 @@ export class AppTopbar {
         layoutState.configSidebarVisible = !layoutState.configSidebarVisible;
         this.layoutService.layoutState.set(layoutState);
     }
+
+    logout() {
+        const clientId = '294jljvu34snu0nd4cm8fqf9bu';
+        const revokeUrl = 'https://eu-north-1dvt3zga6h.auth.eu-north-1.amazoncognito.com/oauth2/revoke';
+        const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
+        const authority = 'https://eu-north-1dvt3zga6h.auth.eu-north-1.amazoncognito.com';
+        const finish = () => {
+            this.oidc.logoffLocal();
+            window.location.href = `${authority}/logout?client_id=${encodeURIComponent(clientId)}` + `&logout_uri=${encodeURIComponent(window.location.origin + '/')}`;
+        };
+
+
+        this.oidc.getRefreshToken().subscribe({
+            next: (refreshToken) => {
+                if (refreshToken) {
+                    const body = new URLSearchParams({
+                        token: refreshToken,
+                        token_type_hint: 'refresh_token',
+                        client_id: clientId
+                    }).toString();
+
+                    this.http.post(revokeUrl, body, { headers }).subscribe({ next: finish, error: finish });
+                } else {
+                    finish();
+                }
+            },
+            error: () => finish()
+        });
+    }
+
+
+
+
+
 }
