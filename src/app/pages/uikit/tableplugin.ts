@@ -460,6 +460,7 @@ export class GenericTableComponent<T = any> implements OnChanges {
     @Output() importUpload = new EventEmitter<File[]>();
     @Input() visibleColumnFields?: string[];
     @Output() columnsVisibilityChange = new EventEmitter<string[]>();
+    @Output() clearAll = new EventEmitter<void>();
     columnHeaderMap: Record<string, string> = {};
     @Input() requireAtLeastOneColumn = true;
     columnFilter = '';
@@ -716,11 +717,13 @@ export class GenericTableComponent<T = any> implements OnChanges {
     }
 
     clear(t: Table) {
-        t.clear();
-        if (this.globalFilter?.nativeElement) this.globalFilter.nativeElement.value = '';
-        this.quickFilterChange.emit(null);      // existing quick-filter clear
-        this.genderFilterChange.emit(null);     // clear gender too
+        this.clearAll.emit();
+        setTimeout(() => {
+            t.clear();
+            if (this.globalFilter?.nativeElement) this.globalFilter.nativeElement.value = '';
+        }, 0);
     }
+
 
 
 

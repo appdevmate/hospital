@@ -44,6 +44,7 @@ import { catchError, finalize, map, mergeMap, toArray } from 'rxjs/operators';
       [quickFilters]="quickFilters"
       [activeQuickFilterId]="activeQuickFilterId"
       (quickFilterChange)="onQuickFilterChange($event)"
+      (clearAll)="onClearAll()"
       [activeGender]="activeGender"
       (genderFilterChange)="onGenderFilterChange($event)"
       (exportClick)="exportCSV()"
@@ -72,6 +73,8 @@ export class TableDemo implements AfterViewInit, OnDestroy {
   @ViewChild('genderTemplate') genderTemplate!: TemplateRef<any>;
   @ViewChild('actionsTemplate') actionsTemplate!: TemplateRef<any>;
   @ViewChild(GenericTableComponent) tableCmp?: GenericTableComponent;
+  private reqSeq = 0;
+  activeGender: 'male' | 'female' | null = null;
   visibleColumnFields: string[] = ['name', 'gender', 'insurance', 'dob', 'timestamp', 'status'];
 
   EditorType = { Text: 'text', Date: 'date', Number: 'number', Textarea: 'textarea', Autocomplete: 'autocomplete' } as const;
@@ -89,8 +92,6 @@ export class TableDemo implements AfterViewInit, OnDestroy {
     { label: 'Female', value: 'female' },
     { label: 'Prefer not to Answer', value: 'na' }
   ] as const;
-
-  activeGender: 'male' | 'female' | null = null;
 
   patients: Patient[] = [];
   selectedPatients: Patient[] = [];
@@ -162,11 +163,13 @@ export class TableDemo implements AfterViewInit, OnDestroy {
   loadPatients(e: any) {
     if (!e) return;
 
+    // page size change → reset pagination
     if (e.rows && e.rows !== this.pageSize) {
       this.pageSize = e.rows;
       this.reset();
     }
 
+    // sort change → reset pagination
     const newSortField = e.sortField ?? null;
     const newSortOrder: 1 | -1 | 0 = (e.sortOrder ?? 1) as 1 | -1 | 0;
     if (newSortField !== this.prevSortField || newSortOrder !== this.prevSortOrder) {
@@ -175,32 +178,62 @@ export class TableDemo implements AfterViewInit, OnDestroy {
       this.reset();
     }
 
+    // compute paging anchors
     const first = e.first || 0;
     this.page = Math.floor(first / this.pageSize);
     this.lastKey = this.pageKeys[this.page] || null;
 
+    // base filters from table UI
     this.applyFilters(e.filters || {});
     (this.filters as any).sortField = newSortField;
     (this.filters as any).sortOrder = newSortOrder;
 
+    // enforce paging params
     this.filters = { ...this.filters, pageSize: this.pageSize, lastKey: this.lastKey };
-    if (!this.lastKey) (this.filters as any).offset = first; else delete (this.filters as any).offset;
-    this.applyQuickFilters();
+    if (!this.lastKey) (this.filters as any).offset = first;
+    else delete (this.filters as any).offset;
+
+    // purge stale quick-filter params
+    delete (this.filters as any)['status.notEquals'];
+    delete (this.filters as any)['status.equals'];
+    delete (this.filters as any)['gender.equals'];
+
+    // re-apply current quick filters
+    if (this.activeQuickFilterId === 'active') {
+      (this.filters as any)['status.notEquals'] = 'dead,discharged';
+    } else if (this.activeQuickFilterId === 'nonactive') {
+      (this.filters as any)['status.equals'] = 'dead,discharged';
+    }
+
+    if (this.activeGender === 'male' || this.activeGender === 'female') {
+      (this.filters as any)['gender.equals'] = this.activeGender;
+    }
+
     this.fetch();
   }
 
   private fetch() {
     this.loading = true;
+    const seq = ++this.reqSeq;
+
     this.patientsService.getPatientsPage(this.filters).pipe(takeUntil(this.destroy$)).subscribe({
       next: (r) => {
+        if (seq !== this.reqSeq) return;
         this.patients = r.data || [];
         this.totalRecords = r.totalCount || 0;
-        if (r.lastKey) this.pageKeys[this.page + 1] = r.lastKey; else this.pageKeys = this.pageKeys.slice(0, this.page + 1);
+        if (r.lastKey) this.pageKeys[this.page + 1] = r.lastKey;
+        else this.pageKeys = this.pageKeys.slice(0, this.page + 1);
         this.loading = false;
       },
-      error: () => { this.loading = false; this.patients = []; this.totalRecords = 0; }
+      error: () => {
+        if (seq !== this.reqSeq) return;
+        this.loading = false;
+        this.patients = [];
+        this.totalRecords = 0;
+      }
     });
   }
+
 
   private applyFilters(obj: Record<string, any>) {
     const toYmd = (d: Date) => d.toISOString().slice(0, 10);
@@ -499,6 +532,15 @@ export class TableDemo implements AfterViewInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  onClearAll() {
+    this.activeQuickFilterId = null;
+    this.activeGender = null;
+    this.reset();                                   // resets page, lastKey, selection
+    this.filters = { pageSize: this.pageSize, lastKey: null, offset: 0 }; // wipe all params
+    // Do NOT call fetch(); p-table will emit onLazyLoad after clear(), which calls loadPatients()
+  }
+
 
   private applyQuickFilters() {
     // status quick-filter
