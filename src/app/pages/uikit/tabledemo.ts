@@ -13,6 +13,7 @@ import { NewPatient } from '@/components/new-patient/new-patient';
 import { Helpers } from '@/services/helpers';
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import * as XLSX from 'xlsx';
+import { QuickFilter } from './tableplugin';
 import { catchError, finalize, map, mergeMap, toArray } from 'rxjs/operators';
 
 
@@ -40,6 +41,11 @@ import { catchError, finalize, map, mergeMap, toArray } from 'rxjs/operators';
       (newClick)="openNewPatient()"
       (deleteClick)="deleteSelectedPatients()"
       (importUpload)="onImportPatients($event)"
+      [quickFilters]="quickFilters"
+      [activeQuickFilterId]="activeQuickFilterId"
+      (quickFilterChange)="onQuickFilterChange($event)"
+      [activeGender]="activeGender"
+      (genderFilterChange)="onGenderFilterChange($event)"
       (exportClick)="exportCSV()"
       [visibleColumnFields]="visibleColumnFields"
       (columnsVisibilityChange)="visibleColumnFields = $event">
@@ -84,6 +90,7 @@ export class TableDemo implements AfterViewInit, OnDestroy {
     { label: 'Prefer not to Answer', value: 'na' }
   ] as const;
 
+  activeGender: 'male' | 'female' | null = null;
 
   patients: Patient[] = [];
   selectedPatients: Patient[] = [];
@@ -178,7 +185,7 @@ export class TableDemo implements AfterViewInit, OnDestroy {
 
     this.filters = { ...this.filters, pageSize: this.pageSize, lastKey: this.lastKey };
     if (!this.lastKey) (this.filters as any).offset = first; else delete (this.filters as any).offset;
-
+    this.applyQuickFilters();
     this.fetch();
   }
 
@@ -224,13 +231,14 @@ export class TableDemo implements AfterViewInit, OnDestroy {
     this.selectedPatients = selectedRows;
   }
 
-  getStatusSeverity(v?: string): 'success' | 'info' | 'warn' | 'danger' | 'contrast' {
+  getStatusSeverity(v?: string): 'success' | 'info' | 'warn' | 'danger' | 'contrast' | 'secondary' {
     switch ((v || '').toLowerCase().trim()) {
       case 'stable': return 'success';
       case 'critical': return 'danger';
       case 'admitted': return 'info';
       case 'under treatment': return 'warn';
       case 'dead': return 'contrast';
+      case 'discharged': return 'secondary';
       default: return 'info';
     }
   }
@@ -491,6 +499,50 @@ export class TableDemo implements AfterViewInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  private applyQuickFilters() {
+    // status quick-filter
+    delete (this.filters as any)['status.notEquals'];
+    if (this.activeQuickFilterId === 'active') {
+      (this.filters as any)['status.notEquals'] = 'dead,discharged';
+    } else if (this.activeQuickFilterId === 'nonactive') {
+      (this.filters as any)['status.notEquals'] = 'admitted,stable, critical, "under treatment"';
+    }
+
+    // gender quick-filter
+    delete (this.filters as any)['gender.equals'];
+    if (this.activeGender === 'male' || this.activeGender === 'female') {
+      (this.filters as any)['gender.equals'] = this.activeGender;
+    }
+  }
+
+
+
+
+  quickFilters: QuickFilter[] = [
+    { id: 'active', label: 'Active Patients', icon: 'pi pi-users', tooltip: "status != dead, discharged" }
+  ];
+
+  activeQuickFilterId: string | null = null;
+
+  onQuickFilterChange(id: string | null) {
+    this.activeQuickFilterId = id;
+    this.reset();
+    this.filters = { pageSize: this.pageSize, lastKey: null, offset: 0 };
+    this.applyQuickFilters();
+    this.fetch();
+  }
+
+  onGenderFilterChange(v: 'male' | 'female' | null) {
+    this.activeGender = v;
+    this.reset();
+    this.filters = { pageSize: this.pageSize, lastKey: null, offset: 0 };
+    this.applyQuickFilters();
+    this.fetch();
+  }
+
+
+
 
   patientColumns: TableColumn[] = [
     {

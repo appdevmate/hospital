@@ -80,6 +80,8 @@ export interface RowEditEvent<T = any> {
     index?: number;
 }
 
+export interface QuickFilter { id: string; label: string; icon?: string; tooltip?: string; }
+
 @Component({
     selector: 'app-generic-table',
     standalone: true,
@@ -152,76 +154,95 @@ export interface RowEditEvent<T = any> {
             >
                 <ng-template #caption>
   <div class="flex justify-between items-center flex-col sm:flex-row gap-2">
-    <button *ngIf="config.showClearButton !== false"
-            pButton label="Clear" class="p-button-outlined"
-            icon="pi pi-filter-slash" (click)="clear(dt)"></button>
-
-    <div class="flex items-center gap-2 ml-auto">
-      <!-- Columns button -->
-<button pButton class="p-button-outlined" label="Select Columns" icon="pi pi-bars" (click)="colsPop.toggle($event)"></button>
-
-<p-popover #colsPop appendTo="body">
-  <div class="w-72 p-2">
-    <div class="flex items-center justify-between mb-2">
-      <span class="font-medium">Patients Columns</span>
-      <button pButton type="button" icon="pi pi-times" text (click)="colsPop.hide()"></button>
-    </div>
-
-    <input pInputText type="text"
-           [(ngModel)]="columnFilter"
-           placeholder="Search columns"
-           class="w-full mb-2"
-           (input)="filterColumnOptions()" />
-
-<p-listbox
-  [options]="columnOptions"
-  optionLabel="header"
-  [multiple]="true"
-  [metaKeySelection]="false"
-  [(ngModel)]="selectedColumnOptions"
-  (ngModelChange)="setVisibleFromOptions($event)"
-  [listStyle]="{ 'max-height': '280px' }">
-
-  <!-- Select All row -->
-  <ng-template pTemplate="header">
-    <div class="flex items-center gap-2 p-2 border-b">
-      <p-checkbox
-        binary="true"
-        [ngModel]="isAllSelected()"
-        (onChange)="toggleAll($event.checked)">
-      </p-checkbox>
-      <span class="font-medium">Select All</span>
-    </div>
-  </ng-template>
-
-  <!-- Item rows -->
-  <ng-template let-opt pTemplate="item">
     <div class="flex items-center gap-2">
-      <p-checkbox
-        [binary]="true"
-        [ngModel]="isSelectedField(opt.field)">
-      </p-checkbox>
-      <span class="truncate">{{ opt.header }}</span>
+      <!-- Clear all filters -->
+      <button *ngIf="config.showClearButton !== false"
+              pButton label="Clear"
+              class="p-button-outlined"
+              icon="pi pi-filter-slash"
+              (click)="clear(dt)"></button>
+
+      <!-- Quick filter(s): show only when not active -->
+      <p-button
+  [label]="activeQuickFilterId === 'active' ? 'Non-Active Patients' : 'Active Patients'"
+  [icon]="activeQuickFilterId === 'active' ? 'pi pi-user-minus' : 'pi pi-users'"
+  severity="secondary"
+  outlined
+  (onClick)="toggleQuickFilter(activeQuickFilterId === 'active' ? 'nonactive' : 'active')">
+</p-button>
     </div>
-  </ng-template>
-</p-listbox>
+<p-button
+  [label]="activeGender === 'male' ? 'Female' : activeGender === 'female' ? 'All Genders' : 'Male'"
+  icon="pi pi-user"
+  severity="secondary" outlined
+  (onClick)="toggleGenderFilter()">
+</p-button>
+    <div class="flex items-center gap-2 ml-auto">
+      <!-- Columns selection -->
+      <button pButton class="p-button-outlined"
+              label="Select Columns"
+              icon="pi pi-bars"
+              (click)="colsPop.toggle($event)"></button>
 
+      <p-popover #colsPop appendTo="body">
+        <div class="w-72 p-2">
+          <div class="flex items-center justify-between mb-2">
+            <span class="font-medium">Patients Columns</span>
+            <button pButton type="button" icon="pi pi-times" text (click)="colsPop.hide()"></button>
+          </div>
 
-  </div>
-</p-popover>
+          <input pInputText type="text"
+                 [(ngModel)]="columnFilter"
+                 placeholder="Search columns"
+                 class="w-full mb-2"
+                 (input)="filterColumnOptions()" />
 
+          <p-listbox
+            [options]="columnOptions"
+            optionLabel="header"
+            [multiple]="true"
+            [metaKeySelection]="false"
+            [(ngModel)]="selectedColumnOptions"
+            (ngModelChange)="setVisibleFromOptions($event)"
+            [listStyle]="{ 'max-height': '280px' }">
 
+            <!-- Select All row -->
+            <ng-template pTemplate="header">
+              <div class="flex items-center gap-2 p-2 border-b">
+                <p-checkbox
+                  binary="true"
+                  [ngModel]="isAllSelected()"
+                  (onChange)="toggleAll($event.checked)">
+                </p-checkbox>
+                <span class="font-medium">Select All</span>
+              </div>
+            </ng-template>
 
+            <!-- Item rows -->
+            <ng-template let-opt pTemplate="item">
+              <div class="flex items-center gap-2">
+                <p-checkbox
+                  [binary]="true"
+                  [ngModel]="isSelectedField(opt.field)">
+                </p-checkbox>
+                <span class="truncate">{{ opt.header }}</span>
+              </div>
+            </ng-template>
+          </p-listbox>
+        </div>
+      </p-popover>
 
-
+      <!-- Global search -->
       <p-iconfield *ngIf="config.showGlobalSearch !== false" iconPosition="left">
         <p-inputicon><i class="pi pi-search"></i></p-inputicon>
         <input #globalFilter pInputText type="text"
-               (input)="onGlobalFilter(dt, $event)" placeholder="Global Search" />
+               (input)="onGlobalFilter(dt, $event)"
+               placeholder="Global Search" />
       </p-iconfield>
     </div>
   </div>
 </ng-template>
+
 
                 
                 <ng-template pTemplate="header">
@@ -455,6 +476,12 @@ export class GenericTableComponent<T = any> implements OnChanges {
     @Output() importClick = new EventEmitter<any>();
     @Output() exportClick = new EventEmitter<void>();
 
+    @Input() quickFilters: QuickFilter[] = [];
+    @Input() activeQuickFilterId: string | null = null;
+    @Output() quickFilterChange = new EventEmitter<string | null>();
+    @Input() activeGender: 'male' | 'female' | null = null;
+    @Output() genderFilterChange = new EventEmitter<'male' | 'female' | null>();
+
     pageSize = 15;
     ac: Record<string, { label: string; value: any }[]> = {};
     private dateCache = new WeakMap<any, Map<string, Date | null>>();
@@ -472,6 +499,9 @@ export class GenericTableComponent<T = any> implements OnChanges {
     // replace selectedColumnFields with objects
     selectedColumnOptions: { header: string; field: string }[] = [];
 
+    toggleQuickFilter(id: string | null) {
+        this.quickFilterChange.emit(id);
+    }
 
     private ensureVisibleInit() {
         this.columnOptions = (this.columns || []).map(c => ({ header: c.header || c.field, field: c.field }));
@@ -688,7 +718,11 @@ export class GenericTableComponent<T = any> implements OnChanges {
     clear(t: Table) {
         t.clear();
         if (this.globalFilter?.nativeElement) this.globalFilter.nativeElement.value = '';
+        this.quickFilterChange.emit(null);      // existing quick-filter clear
+        this.genderFilterChange.emit(null);     // clear gender too
     }
+
+
 
     // Model helpers
     get = (row: any, f: string) => row?.[f];
@@ -859,4 +893,12 @@ export class GenericTableComponent<T = any> implements OnChanges {
             (selected as any)[dataKey] === (row as any)[dataKey]
         );
     }
+
+    toggleGenderFilter() {
+        const next = this.activeGender === 'male' ? 'female'
+            : this.activeGender === 'female' ? null
+                : 'male';
+        this.genderFilterChange.emit(next);
+    }
+
 }

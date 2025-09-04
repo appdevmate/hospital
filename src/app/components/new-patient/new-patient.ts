@@ -97,6 +97,7 @@ import { PatientsService } from '@/pages/service/patients.service';
           [optionValue]="'value'"
           [forceSelection]="true"
           [dropdown]="true"
+          [readonly]="true"
           [class.p-invalid]="invalid('gender')"
           styleClass="w-full"
           autocomplete="off">

@@ -40,26 +40,28 @@ export interface CreateUpdatePatientRequest {
 export interface GetPatientsPageOpts {
   pageSize?: number;
   lastKey?: string | null;
-  offset?: number;                   // <-- needed for jump to page N
+  offset?: number;
 
   // filters
   search?: string;
   name?: FilterOption;
   gender?: FilterOption;
   insurance?: FilterOption;
-  dobFrom?: FilterOption;            // will be sent as plain dobFrom
-  dobTo?: FilterOption;              // will be sent as plain dobTo
+  dobFrom?: FilterOption;
+  dobTo?: FilterOption;
 
   // sorting
   sortField?: string | null;
-  sortOrder?: number | 'asc' | 'desc'; // component sends 1 | -1
+  sortOrder?: number | 'asc' | 'desc';
+
+  // allow arbitrary extra params like "status.notEquals"
   [key: string]: any;
 }
 
 @Injectable({ providedIn: 'root' })
 export class PatientsService {
   path = 'patients';
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   private authHeaders(): HttpHeaders {
     const jwt = sessionStorage.getItem('accessToken') || '';
@@ -80,7 +82,7 @@ export class PatientsService {
       const raw = typeof f.value === 'string' ? f.value.trim() : f.value;
       if (raw === '' || raw === undefined || raw === null) return;
 
-      // dobFrom/dobTo must be plain keys (Lambda expects exact names)
+      // dobFrom/dobTo must be plain keys
       if (key === 'dobFrom' || key === 'dobTo') {
         params = params.set(String(key), String(raw));
         return;
@@ -97,7 +99,7 @@ export class PatientsService {
     // paging
     setIf('pageSize', opts.pageSize ?? 25);
     setIf('lastKey', opts.lastKey ?? null);
-    setIf('offset', opts.offset ?? null);      // <-- send offset when present
+    setIf('offset', opts.offset ?? null);
 
     // sorting
     setIf('sortField', opts.sortField ?? null);
@@ -110,10 +112,50 @@ export class PatientsService {
     addFilter('name', opts.name);
     addFilter('gender', opts.gender);
     addFilter('insurance', opts.insurance);
-    addFilter('dobFrom', opts.dobFrom);  // plain
-    addFilter('dobTo', opts.dobTo);      // plain
+    addFilter('dobFrom', opts.dobFrom);
+    addFilter('dobTo', opts.dobTo);
 
-    // if you have other flattened filters, add here similarly
+    // -------- pass-through for arbitrary quick filters --------
+    // Anything not handled above (e.g., "status.notEquals": "dead,discharged")
+    const knownKeys = new Set([
+      'pageSize', 'lastKey', 'offset', 'sortField', 'sortOrder',
+      'search', 'name', 'gender', 'insurance', 'dobFrom', 'dobTo'
+    ]);
+
+    Object.entries(opts).forEach(([k, v]) => {
+      if (knownKeys.has(k)) return;
+      if (v === null || v === undefined) return;
+
+      // If caller passes arrays (e.g., ['dead','discharged']), join them.
+      if (Array.isArray(v)) {
+        if (v.length === 0) return;
+        params = params.set(k, v.map(x => String(x)).join(','));
+        return;
+      }
+
+      // If key already contains a dot, send as-is (status.notEquals, etc.)
+      if (k.includes('.')) {
+        params = params.set(k, String(v));
+        return;
+      }
+
+      // Primitive passthrough
+      if (typeof v !== 'object') {
+        params = params.set(k, String(v));
+        return;
+      }
+
+      // If someone passed an ad-hoc FilterOption-like object, serialize similar to addFilter.
+      const maybe = v as Partial<FilterOption>;
+      if (maybe && 'value' in maybe && 'matchMode' in maybe) {
+        const raw = typeof maybe.value === 'string' ? maybe.value.trim() : maybe.value;
+        if (raw !== '' && raw !== undefined && raw !== null) {
+          if (maybe.matchMode === 'equals') params = params.set(k, String(raw));
+          else params = params.set(`${k}.${maybe.matchMode}`, String(raw));
+        }
+      }
+    });
+    // ----------------------------------------------------------
 
     const url = Config.buildUrl(this.path);
     console.log('GET /patients query ->', params.toString());
