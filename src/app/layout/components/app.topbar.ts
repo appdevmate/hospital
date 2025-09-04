@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/api';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { StyleClassModule } from 'primeng/styleclass';
 import { LayoutService } from '@/layout/service/layout.service';
@@ -12,6 +12,7 @@ import { InputIcon } from 'primeng/inputicon';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { take } from 'rxjs';
 
 
 @Component({
@@ -30,7 +31,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
             </button>
 
             <ul class="topbar-menu">
-                <li *ngFor="let item of tabs; let i = index">
+                @for (item of tabs; track $index; let i = $index) {
+                <li>
                     <a
                         [routerLink]="item.routerLink"
                         routerLinkActive="active-route"
@@ -47,7 +49,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
                     </a>
                     <i class="pi pi-times" (click)="removeTab($event, item, i)"></i>
                 </li>
-                <li *ngIf="!tabs || tabs.length === 0" class="topbar-menu-empty">Use (cmd + click) on a menu item to open a tab</li>
+                } @empty {
+        <li class="topbar-menu-empty">Use (cmd + click) on a menu item to open a tab</li>
+    }
             </ul>
 
             <div class="topbar-actions">
@@ -66,10 +70,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
                 <div class="topbar-profile">
                     <button class="topbar-profile-button" type="button" pStyleClass="@next" enterFromClass="hidden" enterActiveClass="animate-scalein" leaveToClass="hidden" leaveActiveClass="animate-fadeout" [hideOnOutsideClick]="true">
                         <img alt="avatar" src="/layout/images/avatar.png" />
+                        @if (userData$ | async; as ud) {
                         <span class="profile-details">
-                            <span class="profile-name">Gene Russell</span>
-                            <span class="profile-job">Developer</span>
+                            <span class="profile-name">{{ ud.userData?.given_name || ud.userData?.email || 'User' }}</span>
+                            <span class="profile-job">{{ ud.userData?.email || '' }}</span>
                         </span>
+                        }
                         <i class="pi pi-angle-down"></i>
                     </button>
                     <ul class="list-none hidden p-2 sm:p-4 m-0 rounded-border shadow absolute bg-surface-0 dark:bg-surface-900 origin-top w-48 mt-2 right-0 top-auto">
@@ -101,6 +107,36 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
     }
 })
 export class AppTopbar {
+
+    username: string = '';
+    role: string = '';
+
+    constructor(public layoutService: LayoutService,
+        private oidc: OidcSecurityService,
+        private http: HttpClient) {
+
+        const token = sessionStorage.getItem('accessToken') || '';
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        console.log(payload);
+        const groups: string[] = payload['cognito:groups'] ?? [];
+        if (groups.includes('Patients')) {
+            console.log('Logged in user is a patient!');
+        } else if (groups.includes('Doctors')) {
+            console.log('Logged in user is a doctor!');
+        } else if (groups.includes('Developers')) {
+            console.log('Logged in user is a developer!');
+
+        }
+        this.oidc.userData$
+            .pipe(take(10))
+            .subscribe(({ userData }) => {
+                console.log(userData);
+                this.username = userData?.given_name
+            });
+
+
+    }
+
     menu: MenuItem[] = [];
 
     @ViewChild('searchinput') searchInput!: ElementRef;
@@ -109,10 +145,12 @@ export class AppTopbar {
 
     searchActive: boolean = false;
 
-    constructor(public layoutService: LayoutService,
-        private oidc: OidcSecurityService,
-        private router: Router,
-        private http: HttpClient) { }
+
+
+    get userData$() {
+        return this.oidc.userData$;
+    }
+
 
 
     onMenuButtonClick() {

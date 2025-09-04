@@ -71,10 +71,11 @@ export class TableDemo implements AfterViewInit, OnDestroy {
   EditorType = { Text: 'text', Date: 'date', Number: 'number', Textarea: 'textarea', Autocomplete: 'autocomplete' } as const;
 
   STATUS_OPTIONS = [
-    { label: 'QUALIFIED', value: 'qualified' },
-    { label: 'SENIOR', value: 'senior' },
-    { label: 'MID-SENIOR', value: 'mid-senior' },
-    { label: 'JUNIOR', value: 'junior' }
+    { label: 'ADMITTED', value: 'admitted' },
+    { label: 'STABLE', value: 'stable' },
+    { label: 'UNDER TREATMENT', value: 'under treatment' },
+    { label: 'DISCHARGED', value: 'discharged' },
+    { label: 'DEAD', value: 'dead' }
   ] as const;
 
   GENDER_OPTIONS = [
@@ -223,12 +224,13 @@ export class TableDemo implements AfterViewInit, OnDestroy {
     this.selectedPatients = selectedRows;
   }
 
-  getStatusSeverity(v?: string): 'success' | 'info' | 'warn' | 'danger' {
+  getStatusSeverity(v?: string): 'success' | 'info' | 'warn' | 'danger' | 'contrast' {
     switch ((v || '').toLowerCase().trim()) {
-      case 'qualified': return 'success';
-      case 'senior': return 'danger';
-      case 'mid-senior': return 'info';
-      case 'junior': return 'warn';
+      case 'stable': return 'success';
+      case 'critical': return 'danger';
+      case 'admitted': return 'info';
+      case 'under treatment': return 'warn';
+      case 'dead': return 'contrast';
       default: return 'info';
     }
   }
