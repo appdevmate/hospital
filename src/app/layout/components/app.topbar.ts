@@ -1,3 +1,4 @@
+// app.topbar.ts
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { RouterModule } from '@angular/router';
@@ -13,7 +14,6 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { take } from 'rxjs';
-
 
 @Component({
     selector: '[app-topbar]',
@@ -32,33 +32,33 @@ import { take } from 'rxjs';
 
             <ul class="topbar-menu">
                 @for (item of tabs; track $index; let i = $index) {
-                <li>
-                    <a
-                        [routerLink]="item.routerLink"
-                        routerLinkActive="active-route"
-                        [routerLinkActiveOptions]="item.routerLinkActiveOptions || { paths: 'exact', queryParams: 'ignored', fragment: 'ignored', matrixParams: 'ignored' }"
-                        [fragment]="item.fragment"
-                        [queryParamsHandling]="item.queryParamsHandling"
-                        [preserveFragment]="item.preserveFragment!"
-                        [skipLocationChange]="item.skipLocationChange!"
-                        [replaceUrl]="item.replaceUrl!"
-                        [state]="item.state"
-                        [queryParams]="item.queryParams"
-                    >
-                        <span>{{ item.label }}</span>
-                    </a>
-                    <i class="pi pi-times" (click)="removeTab($event, item, i)"></i>
-                </li>
+                    <li>
+                        <a
+                            [routerLink]="item.routerLink"
+                            routerLinkActive="active-route"
+                            [routerLinkActiveOptions]="item.routerLinkActiveOptions || { paths: 'exact', queryParams: 'ignored', fragment: 'ignored', matrixParams: 'ignored' }"
+                            [fragment]="item.fragment"
+                            [queryParamsHandling]="item.queryParamsHandling"
+                            [preserveFragment]="item.preserveFragment!"
+                            [skipLocationChange]="item.skipLocationChange!"
+                            [replaceUrl]="item.replaceUrl!"
+                            [state]="item.state"
+                            [queryParams]="item.queryParams"
+                        >
+                            <span>{{ item.label }}</span>
+                        </a>
+                        <i class="pi pi-times" (click)="removeTab($event, item, i)"></i>
+                    </li>
                 } @empty {
-        <li class="topbar-menu-empty">Use (cmd + click) on a menu item to open a tab</li>
-    }
+                    <li class="topbar-menu-empty">Use (cmd + click) on a menu item to open a tab</li>
+                }
             </ul>
 
             <div class="topbar-actions">
                 <p-button icon="pi pi-palette" rounded (onClick)="layoutService.showConfigSidebar()"></p-button>
+
                 <div class="topbar-search" [ngClass]="{ 'topbar-search-active': searchActive }">
                     <button pButton [rounded]="true" severity="secondary" type="button" icon="pi pi-search" (click)="activateSearch()"></button>
-
                     <div class="search-input-wrapper">
                         <p-icon-field>
                             <input #searchinput type="text" pInputText placeholder="Search" (blur)="deactivateSearch()" (keydown.escape)="deactivateSearch()" />
@@ -71,10 +71,10 @@ import { take } from 'rxjs';
                     <button class="topbar-profile-button" type="button" pStyleClass="@next" enterFromClass="hidden" enterActiveClass="animate-scalein" leaveToClass="hidden" leaveActiveClass="animate-fadeout" [hideOnOutsideClick]="true">
                         <img alt="avatar" src="/layout/images/avatar.png" />
                         @if (userData$ | async; as ud) {
-                        <span class="profile-details">
-                            <span class="profile-name">{{ ud.userData?.given_name || ud.userData?.email || 'User' }}</span>
-                            <span class="profile-job">{{ ud.userData?.email || '' }}</span>
-                        </span>
+                            <span class="profile-details">
+                                <span class="profile-name">{{ ud.userData?.given_name || ud.userData?.email || 'User' }}</span>
+                                <span class="profile-job">{{ ud.userData?.email || '' }}</span>
+                            </span>
                         }
                         <i class="pi pi-angle-down"></i>
                     </button>
@@ -102,56 +102,46 @@ import { take } from 'rxjs';
             </div>
         </div>
     `,
-    host: {
-        class: 'layout-topbar'
-    }
+    host: { class: 'layout-topbar' }
 })
 export class AppTopbar {
-
-    username: string = '';
-    role: string = '';
-
-    constructor(public layoutService: LayoutService,
-        private oidc: OidcSecurityService,
-        private http: HttpClient) {
-
-        const token = sessionStorage.getItem('accessToken') || '';
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        console.log(payload);
-        const groups: string[] = payload['cognito:groups'] ?? [];
-        if (groups.includes('Patients')) {
-            console.log('Logged in user is a patient!');
-        } else if (groups.includes('Doctors')) {
-            console.log('Logged in user is a doctor!');
-        } else if (groups.includes('Developers')) {
-            console.log('Logged in user is a developer!');
-
-        }
-        this.oidc.userData$
-            .pipe(take(10))
-            .subscribe(({ userData }) => {
-                console.log(userData);
-                this.username = userData?.given_name
-            });
-
-
-    }
-
+    username = '';
+    role = '';
     menu: MenuItem[] = [];
 
     @ViewChild('searchinput') searchInput!: ElementRef;
-
     @ViewChild('menubutton') menuButton!: ElementRef;
 
-    searchActive: boolean = false;
+    searchActive = false;
 
+    constructor(
+        public layoutService: LayoutService,
+        private oidc: OidcSecurityService,
+        private http: HttpClient
+    ) {
+        // Safe decode only if accessToken is a JWT
+        const token = sessionStorage.getItem('accessToken') || '';
+        if (this.isJwt(token)) {
+            try {
+                const payload = JSON.parse(this.b64url(token.split('.')[1]));
+                const groups: string[] = payload['cognito:groups'] ?? [];
+                if (groups.includes('Patients')) console.log('Logged in user is a patient!');
+                else if (groups.includes('Doctors')) console.log('Logged in user is a doctor!');
+                else if (groups.includes('Developers')) console.log('Logged in user is a developer!');
+            } catch {
+                // ignore malformed payloads
+            }
+        }
 
+        this.oidc.userData$.pipe(take(10)).subscribe(({ userData }) => {
+            console.log(userData);
+            this.username = userData?.given_name;
+        });
+    }
 
     get userData$() {
         return this.oidc.userData$;
     }
-
-
 
     onMenuButtonClick() {
         this.layoutService.onMenuToggle();
@@ -159,9 +149,7 @@ export class AppTopbar {
 
     activateSearch() {
         this.searchActive = true;
-        setTimeout(() => {
-            this.searchInput.nativeElement.focus();
-        }, 100);
+        setTimeout(() => this.searchInput?.nativeElement?.focus(), 100);
     }
 
     deactivateSearch() {
@@ -195,8 +183,7 @@ export class AppTopbar {
     }
 
     toggleConfigSidebar() {
-        let layoutState = this.layoutService.layoutState();
-
+        const layoutState = this.layoutService.layoutState();
         if (this.layoutService.isSidebarActive()) {
             layoutState.overlayMenuActive = false;
             layoutState.overlaySubmenuActive = false;
@@ -210,14 +197,14 @@ export class AppTopbar {
 
     logout() {
         const clientId = '294jljvu34snu0nd4cm8fqf9bu';
-        const revokeUrl = 'https://eu-north-1dvt3zga6h.auth.eu-north-1.amazoncognito.com/oauth2/revoke';
-        const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
         const authority = 'https://eu-north-1dvt3zga6h.auth.eu-north-1.amazoncognito.com';
+        const revokeUrl = `${authority}/oauth2/revoke`;
+        const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
+
         const finish = () => {
             this.oidc.logoffLocal();
-            window.location.href = `${authority}/logout?client_id=${encodeURIComponent(clientId)}` + `&logout_uri=${encodeURIComponent(window.location.origin + '/')}`;
+            window.location.href = `${authority}/logout?client_id=${encodeURIComponent(clientId)}&logout_uri=${encodeURIComponent(window.location.origin + '/')}`;
         };
-
 
         this.oidc.getRefreshToken().subscribe({
             next: (refreshToken) => {
@@ -227,7 +214,6 @@ export class AppTopbar {
                         token_type_hint: 'refresh_token',
                         client_id: clientId
                     }).toString();
-
                     this.http.post(revokeUrl, body, { headers }).subscribe({ next: finish, error: finish });
                 } else {
                     finish();
@@ -237,8 +223,12 @@ export class AppTopbar {
         });
     }
 
-
-
-
-
+    // --- helpers ---
+    private isJwt(t: string) {
+        return !!t && t.split('.').length === 3;
+    }
+    private b64url(s: string) {
+        const pad = s.length % 4 ? '='.repeat(4 - (s.length % 4)) : '';
+        return atob(s.replace(/-/g, '+').replace(/_/g, '/') + pad);
+    }
 }

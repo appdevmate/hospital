@@ -34,7 +34,7 @@ bootstrapApplication(AppComponent, appConfig)
                         oidcSecurityService.authorize(); // send to Hosted UI
                     }
                 },
-                error: () => oidcSecurityService.logoffLocal(),
+                error: () => oidcSecurityService.logoffLocal()
             });
         } else {
             console.log('📢 Auth callback detected, processing...');

@@ -9,32 +9,28 @@ import { provideAuth } from 'angular-auth-oidc-client';
 import { MessageService, ConfirmationService } from 'primeng/api';
 
 export const appConfig: ApplicationConfig = {
-  providers: [
-    provideRouter(
-      appRoutes,
-      withInMemoryScrolling({ anchorScrolling: 'enabled', scrollPositionRestoration: 'enabled' }),
-      withEnabledBlockingInitialNavigation()
-    ),
-    provideHttpClient(withFetch()),
-    provideAnimationsAsync(),
-    providePrimeNG({ theme: { preset: Aura, options: { darkModeSelector: '.app-dark' } } }),
-    // app.config.ts
-    provideAuth({
-      config: {
-        authority: 'https://cognito-idp.eu-north-1.amazonaws.com/eu-north-1_DVT3Zga6h', // Hosted UI
-        clientId: '294jljvu34snu0nd4cm8fqf9bu',
-        redirectUrl: window.location.origin + '/',
-        postLogoutRedirectUri: window.location.origin + '/',  // ← back to /
-        responseType: 'code',
-        useRefreshToken: true,
-        scope: 'openid email phone profile',
-        // Cognito expects logout_uri
-        customParamsEndSessionRequest: {
-          logout_uri: window.location.origin + '/'
-        }
-      }
-    }),
-    MessageService,
-    ConfirmationService
-  ]
+    providers: [
+        provideRouter(appRoutes, withInMemoryScrolling({ anchorScrolling: 'enabled', scrollPositionRestoration: 'enabled' }), withEnabledBlockingInitialNavigation()),
+        provideHttpClient(withFetch()),
+        provideAnimationsAsync(),
+        providePrimeNG({ theme: { preset: Aura, options: { darkModeSelector: '.app-dark' } } }),
+        // app.config.ts
+        provideAuth({
+            config: {
+                authority: 'https://cognito-idp.eu-north-1.amazonaws.com/eu-north-1_DVT3Zga6h', // Hosted UI
+                clientId: '294jljvu34snu0nd4cm8fqf9bu',
+                redirectUrl: window.location.origin + '/',
+                postLogoutRedirectUri: window.location.origin + '/', // ← back to /
+                responseType: 'code',
+                useRefreshToken: true,
+                scope: 'openid email phone profile',
+                // Cognito expects logout_uri
+                customParamsEndSessionRequest: {
+                    logout_uri: window.location.origin + '/'
+                }
+            }
+        }),
+        MessageService,
+        ConfirmationService
+    ]
 };
