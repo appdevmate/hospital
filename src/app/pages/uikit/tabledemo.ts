@@ -16,7 +16,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 /* ---------- Quick-filter state (status / gender) ---------- */
 type StatusFilter = 'active' | 'nonactive' | null;
 type GenderFilter = 'male' | 'female' | null;
-type ActiveFilters = { status: StatusFilter; gender: GenderFilter; [key: string]: any };
+type ActiveFilters = { status: StatusFilter; gender: GenderFilter;[key: string]: any };
 
 @Component({
     selector: 'app-table-demo',
@@ -45,6 +45,7 @@ type ActiveFilters = { status: StatusFilter; gender: GenderFilter; [key: string]
             (rowEditSave)="onRowEditSave($event)"
             (rowEditCancel)="onRowEditCancel($event)"
             (newClick)="openNewPatient()"
+            (templateClick)="downloadTemplate()"
             (deleteClick)="deleteSelectedPatients()"
             (importUpload)="onImportPatients($event)"
             (exportClick)="exportCSV()"
@@ -79,7 +80,7 @@ export class TableDemo implements AfterViewInit, OnDestroy {
     filters: GetPatientsPageOpts = { pageSize: 15, lastKey: null };
 
     // Quick filters current values (used by the new generic filter-controls)
-    activeFilters: ActiveFilters = { status: null, gender: null, insurance: null };
+    activeFilters: ActiveFilters = { status: null, gender: null };
 
     /* ------------------------------- Consts ------------------------------- */
     EditorType = { Text: 'text', Date: 'date', Number: 'number', Textarea: 'textarea', Autocomplete: 'autocomplete' } as const;
@@ -120,15 +121,6 @@ export class TableDemo implements AfterViewInit, OnDestroy {
             values: [null, 'male', 'female'],
             getLabel: (v) => (v === 'male' ? 'Female' : v === 'female' ? 'All Genders' : 'Male')
         },
-        {
-            id: 'insurance',
-            type: 'cycle',
-            icon: 'pi pi-briefcase',
-            tooltip: 'Filter by insurance',
-            outlined: true,
-            values: [null, 'PALI INSURANCE', 'QATAR INSURANCE'],
-            getLabel: (v) => (v === 'PALI INSURANCE' ? 'QATAR INSURANCE' : v === 'QATAR INSURANCE' ? 'All Insurance' : 'PALI INSURANCE')
-        }
     ];
 
     /* ---------------------------- Pagination/Sort --------------------------- */
@@ -151,7 +143,7 @@ export class TableDemo implements AfterViewInit, OnDestroy {
         private patientsService: PatientsService,
         private confirmationService: ConfirmationService,
         private helpersFunctions: Helpers
-    ) {}
+    ) { }
 
     /* ------------------------------ Lifecycle ------------------------------ */
     ngAfterViewInit(): void {
@@ -198,7 +190,6 @@ export class TableDemo implements AfterViewInit, OnDestroy {
         delete (this.filters as any)['status.notEquals'];
         delete (this.filters as any)['status.equals'];
         delete (this.filters as any)['gender.equals'];
-        delete (this.filters as any)['insurance.equals'];
 
         const st = this.activeFilters.status;
         if (st === 'active') (this.filters as any)['status.notEquals'] = 'dead,discharged';
@@ -206,11 +197,6 @@ export class TableDemo implements AfterViewInit, OnDestroy {
 
         const g = this.activeFilters.gender;
         if (g === 'male' || g === 'female') (this.filters as any)['gender.equals'] = g;
-
-        const ins = this.activeFilters['insurance'];
-        if (typeof ins === 'string' && ins) {
-            (this.filters as any)['insurance.equals'] = ins;
-        }
 
         this.fetch();
     }
@@ -556,6 +542,21 @@ export class TableDemo implements AfterViewInit, OnDestroy {
         return m ? m[1] : (pk?.split('#')[1] ?? pk);
     }
 
+    // table-demo.component.ts
+    async downloadTemplate() {
+        const headers = this.patientColumns.map(c => c.header || c.field);
+        const base = (this.tableConfig?.title || 'table').replace(/\s+/g, '_').toLowerCase();
+
+        const { utils, writeFile } = await import('xlsx');
+        const wb = utils.book_new();
+        const ws = utils.aoa_to_sheet([headers]);
+        (ws as any)['!cols'] = headers.map(h => ({ wch: Math.max(12, h.length + 2) }));
+        utils.book_append_sheet(wb, ws, 'Template');
+        writeFile(wb, `${base}_template.xlsx`);
+    }
+
+
+
     /* -------------------------------- Columns ------------------------------- */
     patientColumns: TableColumn[] = [
         { field: 'name', header: 'Name', editable: true, editorType: this.EditorType.Text, pipe: 'titlecase', sortable: true, filterable: true },
@@ -591,9 +592,12 @@ export class TableDemo implements AfterViewInit, OnDestroy {
         showDelete: true,
         showImport: true,
         showExport: true,
+        showTemplate: true,
         newLabel: 'New Patient',
         deleteLabel: 'Delete Selected',
         importLabel: 'Import',
-        exportLabel: 'Export'
+        exportLabel: 'Export',
+        templateLabel: 'Template'
     };
+
 }
