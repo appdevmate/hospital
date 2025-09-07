@@ -3,7 +3,8 @@ import { Component, AfterViewInit, OnDestroy, TemplateRef, ViewChild, DestroyRef
 import { CommonModule } from '@angular/common';
 import { forkJoin, of, from, Subject } from 'rxjs';
 import { catchError, finalize, map, mergeMap, toArray } from 'rxjs/operators';
-import { GenericTableComponent, TableColumn, TableConfig, RowEditEvent, FilterControl } from './tableplugin';
+import { TableColumn, TableConfig, RowEditEvent, FilterControl } from '../../interfaces/tableplugin.interfaces';
+import { GenericTableComponent } from './tableplugin';
 import { Patient, GetPatientsPageOpts, PatientsService, CreateUpdatePatientRequest } from '../service/patients.service';
 import { ConfirmationService } from 'primeng/api';
 import { TagModule } from 'primeng/tag';
@@ -13,6 +14,7 @@ import { NewPatient } from '@/components/new-patient/new-patient';
 import { Helpers } from '@/services/helpers';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ButtonModule } from 'primeng/button';
+import { Tooltip } from "primeng/tooltip";
 
 type StatusFilter = 'active' | 'nonactive' | null;
 type GenderFilter = 'male' | 'female' | null;
@@ -21,7 +23,7 @@ type ActiveFilters = { status: StatusFilter; gender: GenderFilter; [k: string]: 
 @Component({
     selector: 'app-table-demo',
     standalone: true,
-    imports: [CommonModule, GenericTableComponent, TagModule, ConfirmDialogModule, ButtonModule],
+    imports: [CommonModule, GenericTableComponent, TagModule, ConfirmDialogModule, ButtonModule, Tooltip],
     providers: [DialogService],
     template: ` <ng-template #tbStart let-api="api" let-selected="selected">
             <p-button class="mr-2" [disabled]="loading" label="New Patient" icon="pi pi-plus" (onClick)="openNewPatient()"></p-button>
@@ -31,12 +33,11 @@ type ActiveFilters = { status: StatusFilter; gender: GenderFilter; [k: string]: 
             <p-button class="mr-2" label="Template" icon="pi pi-file-excel" severity="secondary" (onClick)="downloadTemplate()"></p-button>
         </ng-template>
         <ng-template #tbEnd let-api="api"><p-button label="Export" icon="pi pi-download" severity="secondary" (onClick)="exportCSV()"></p-button></ng-template>
-        <ng-template #capEnd let-api="api" let-selected="selected"><p-button label="Reset Filters" class="p-button-outlined" icon="pi pi-filter-slash" (onClick)="onClearAll()"></p-button></ng-template>
         <ng-template #rowActions let-row let-editing="editing" let-api="api" let-rowIndex="rowIndex">
-            <ng-container *ngIf="!editing; else editCtrls"><p-button icon="pi pi-pencil" text (onClick)="api.beginRowEdit(row, rowIndex)"></p-button></ng-container>
+            <ng-container *ngIf="!editing; else editCtrls"><p-button icon="pi pi-pencil" text (onClick)="api.beginRowEdit(row, rowIndex)" pTooltip="Edit"></p-button></ng-container>
             <ng-template #editCtrls>
-                <p-button icon="pi pi-check" text severity="success" (onClick)="saveRow(row, rowIndex, api)"></p-button>
-                <p-button icon="pi pi-times" text severity="danger" (onClick)="api.cancelRowEdit(row, rowIndex)"></p-button>
+                <p-button icon="pi pi-check" text severity="success" (onClick)="saveRow(row, rowIndex, api)" pTooltip="Save"></p-button>
+                <p-button icon="pi pi-times" text severity="danger" (onClick)="api.cancelRowEdit(row, rowIndex)" pTooltip="Cancel"></p-button>
             </ng-template>
         </ng-template>
         <app-generic-table
@@ -55,14 +56,12 @@ type ActiveFilters = { status: StatusFilter; gender: GenderFilter; [k: string]: 
             [actionsTemplate]="rowActions"
             [toolbarStart]="tbStart"
             [toolbarEnd]="tbEnd"
-            [captionEnd]="capEnd"
             dataKey="PK"
             (lazyLoad)="loadPatients($event)"
             (selectionChange)="onSelectionChange($event)"
             (rowEditInit)="onRowEditInit($event)"
             (rowEditSave)="onRowEditSave($event)"
             (rowEditCancel)="onRowEditCancel($event)"
-            (clearAll)="onClearAll()"
         >
             <ng-template #statusTemplate let-value="value"><p-tag [value]="value | uppercase" [severity]="getStatusSeverity(value)"></p-tag></ng-template>
             <ng-template #genderTemplate let-value="value"><p-tag [value]="value | titlecase" [severity]="getGenderSeverity(value)"></p-tag></ng-template>
@@ -218,11 +217,6 @@ export class TableDemo implements AfterViewInit, OnDestroy {
         this.reset();
         this.filters = { pageSize: this.pageSize, lastKey: null, offset: 0 };
         this.loadPatients({ first: 0, rows: this.pageSize, sortField: this.prevSortField, sortOrder: this.prevSortOrder, filters: {} });
-    }
-    onClearAll() {
-        this.activeFilters = { status: null, gender: null };
-        this.reset();
-        this.filters = { pageSize: this.pageSize, lastKey: null, offset: 0 };
     }
 
     onRowEditInit(event: RowEditEvent<Patient>) {
