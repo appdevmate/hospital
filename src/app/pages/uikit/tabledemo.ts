@@ -76,7 +76,7 @@ export class TableDemo implements AfterViewInit, OnDestroy {
     selectedPatients: Patient[] = [];
     loading = true;
     totalRecords = 0;
-    visibleColumnFields: string[] = ['name', 'gender', 'insurance', 'dob', 'timestamp', 'status'];
+    visibleColumnFields: string[] = ['name', 'gender', 'insurance', 'phone', 'qid', 'dob', 'timestamp', 'status'];
     customTemplates: { [k: string]: TemplateRef<any> } = {};
     filters: GetPatientsPageOpts = { pageSize: 15, lastKey: null };
     activeFilters: ActiveFilters = { status: null, gender: null };
@@ -303,13 +303,19 @@ export class TableDemo implements AfterViewInit, OnDestroy {
     onImportPatients(input: File[] | { files?: File[] } | Event) {
         const files: File[] = Array.isArray(input) ? input : ((input as any)?.files ?? []);
         const file = files?.[0];
+        console.log(file);        
         if (!file) return;
         this.loading = true;
         this.readWorkbook(file)
             .then((rows) => {
+                console.log(rows);
                 const { valid, skipped } = this.preparePatients(rows);
                 const seen = new Set<string>();
+                console.log(valid);
+                
                 const unique = valid.filter((r) => {
+                    console.log(r);
+                    
                     if (seen.has(r.phone)) return false;
                     seen.add(r.phone);
                     return true;
@@ -339,6 +345,7 @@ export class TableDemo implements AfterViewInit, OnDestroy {
         return utils.sheet_to_json(ws, { defval: '' });
     }
     private preparePatients(rows: any[]) {
+
         const accepted = new Set(['name', 'phone', 'dob', 'gender', 'insurance', 'job', 'licenseNumber', 'qatarID', 'qid']);
         const valid: any[] = [];
         const skipped: any[] = [];
@@ -388,6 +395,8 @@ export class TableDemo implements AfterViewInit, OnDestroy {
     }
 
     private bulkCreatePatients(rows: any[]) {
+        console.log(rows);
+        
         from(rows)
             .pipe(
                 mergeMap(
@@ -459,6 +468,8 @@ export class TableDemo implements AfterViewInit, OnDestroy {
         { field: 'name', header: 'Name', editable: true, editorType: this.EditorType.Text, pipe: 'titlecase', sortable: true, filterable: true },
         { field: 'gender', header: 'Gender', editable: true, editorType: this.EditorType.Autocomplete, editorOptions: this.GENDER_OPTIONS, customTemplate: true, filterable: true },
         { field: 'insurance', header: 'Insurance', editable: true, editorType: this.EditorType.Text, pipe: 'uppercase', filterable: true },
+        { field: 'phone', header: 'Phone', editable: true, editorType: this.EditorType.Text, filterable: true },
+        { field: 'qid', header: 'Qatar ID', editable: true, editorType: this.EditorType.Text, pipe: 'number', filterable: true },
         { field: 'dob', header: 'Date of Birth', editable: true, editorType: this.EditorType.Date, type: 'date', pipe: 'date', dateFormat: 'MM/dd/yyyy', filterable: true },
         { field: 'status', header: 'Level', editable: true, editorType: this.EditorType.Autocomplete, editorOptions: this.STATUS_OPTIONS, customTemplate: true, filterable: true },
         { field: 'timestamp', header: 'Submitted Date', editable: false, type: 'date', pipe: 'date', dateFormat: 'MM/dd/yyyy', filterable: true }
