@@ -471,7 +471,7 @@ export class TableDemo implements AfterViewInit, OnDestroy {
         { field: 'phone', header: 'Phone', editable: true, editorType: this.EditorType.Text, filterable: true },
         { field: 'qid', header: 'Qatar ID', editable: true, editorType: this.EditorType.Text, filterable: true },
         { field: 'dob', header: 'Date of Birth', editable: true, editorType: this.EditorType.Date, type: 'date', pipe: 'date', dateFormat: 'MM/dd/yyyy', filterable: true },
-        { field: 'status', header: 'Level', editable: true, editorType: this.EditorType.Autocomplete, editorOptions: this.STATUS_OPTIONS, customTemplate: true, filterable: true },
+        { field: 'status', header: 'Status', editable: true, editorType: this.EditorType.Autocomplete, editorOptions: this.STATUS_OPTIONS, customTemplate: true, filterable: true },
         { field: 'timestamp', header: 'Submitted Date', editable: false, type: 'date', pipe: 'date', dateFormat: 'MM/dd/yyyy', filterable: true }
     ];
     tableConfig: TableConfig = {
