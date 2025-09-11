@@ -11,10 +11,9 @@ import { InputMaskModule } from 'primeng/inputmask';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { FloatLabelModule } from 'primeng/floatlabel';
-
-import { Helpers } from '../../services/helpers';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { PatientsService } from '@/pages/service/patients.service';
+import { HelpersService } from '@/services/helpers-service';
 
 @Component({
   selector: 'app-new-patient',
@@ -31,7 +30,7 @@ import { PatientsService } from '@/pages/service/patients.service';
     ToastModule,
     FloatLabelModule
   ],
-  providers: [Helpers],
+  providers: [HelpersService],
   template: `
     <div class="patient-form-container">
       <p-card>
@@ -247,7 +246,7 @@ export class NewPatient implements AfterViewInit {
 
   constructor(
     private fb: FormBuilder,
-    private helpersFunctions: Helpers,
+    private helpersService: HelpersService,
     private patientService: PatientsService,
     public ref: DynamicDialogRef
   ) {
@@ -327,7 +326,7 @@ export class NewPatient implements AfterViewInit {
   submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      this.helpersFunctions.notifyError('Validation Error', 'Please fill in all required fields correctly');
+      this.helpersService.notifyError('Validation Error', 'Please fill in all required fields correctly');
       return;
     }
 
@@ -340,7 +339,7 @@ export class NewPatient implements AfterViewInit {
       },
       error: (err) => {
         console.error('Error creating patient:', err);
-        this.helpersFunctions.notifyError('Error', 'Failed to create patient profile');
+        this.helpersService.notifyError('Error', 'Failed to create patient profile');
         this.isSubmitting = false;
       }
     });
@@ -357,6 +356,6 @@ export class NewPatient implements AfterViewInit {
       insurance: ''
     }, { emitEvent: false });
     this.resetFormState();
-    this.helpersFunctions.notifyInfo('Form Reset', 'Form has been reset to initial state');
+    this.helpersService.notifyInfo('Form Reset', 'Form has been reset to initial state');
   }
 }

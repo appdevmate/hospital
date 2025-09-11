@@ -24,6 +24,11 @@ export class AppMenu {
 
     model: MenuItem[] = [
         {
+            label: 'Doctor Management',
+            icon: 'pi pi-briefcase',
+            routerLink: ['/doctors-management']
+        },
+        {
             label: 'Dashboard',
             icon: 'pi pi-home',
             items: [

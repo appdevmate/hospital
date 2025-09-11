@@ -78,7 +78,7 @@ import { CheckboxModule } from 'primeng/checkbox';
                     <input *ngSwitchCase="'number'" type="number" pInputText [ngModel]="get(row, col.field)" (ngModelChange)="set(row, col.field, $event)" class="w-full" />
                     <textarea *ngSwitchCase="'textarea'" pInputText rows="2" [ngModel]="get(row, col.field)" (ngModelChange)="set(row, col.field, $event)" class="w-full"></textarea>
                     <p-datepicker *ngSwitchCase="'date'" [showIcon]="true" [iconDisplay]="'input'" [appendTo]="'body'" [dateFormat]="fmt(col.dateFormat)" [ngModel]="getDate(row, col.field)" (ngModelChange)="setDate(row, col.field, $event)" class="w-full"></p-datepicker>
-                    <p-autocomplete *ngSwitchCase="'autocomplete'" [suggestions]="ac[col.field] || []" (completeMethod)="acFill(col, $event)" [optionLabel]="'label'" [dropdown]="true" [forceSelection]="true" class="w-full" [ngModel]="acSel(row, col)" (ngModelChange)="acSet(row, col, $event)"><ng-template pTemplate="item" let-opt>{{ opt.label }}</ng-template></p-autocomplete>
+                    <p-autocomplete appendTo="body" *ngSwitchCase="'autocomplete'" [suggestions]="ac[col.field] || []" (completeMethod)="acFill(col, $event)" [optionLabel]="'label'" [dropdown]="true" [forceSelection]="true" class="w-full" [ngModel]="acSel(row, col)" (ngModelChange)="acSet(row, col, $event)"><ng-template pTemplate="item" let-opt>{{ opt.label }}</ng-template></p-autocomplete>
                   </ng-container>
                 </ng-template>
                 <ng-template pTemplate="output">

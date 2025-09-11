@@ -13,7 +13,6 @@ export default [
     { path: 'misc', data: { breadcrumb: 'Misc' }, loadComponent: () => import('./miscdemo').then((c) => c.MiscDemo) },
     { path: 'panel', data: { breadcrumb: 'Panel' }, loadComponent: () => import('./panelsdemo').then((c) => c.PanelsDemo) },
     { path: 'timeline', data: { breadcrumb: 'Timeline' }, loadComponent: () => import('./timelinedemo').then((c) => c.TimelineDemo) },
-    { path: 'table', data: { breadcrumb: 'Table' }, loadComponent: () => import('./tabledemo').then((c) => c.TableDemo), providers: [ConfirmationService, MessageService] },
     { path: 'overlay', data: { breadcrumb: 'Overlay' }, loadComponent: () => import('./overlaydemo').then((c) => c.OverlayDemo) },
     { path: 'tree', data: { breadcrumb: 'Tree' }, loadComponent: () => import('./treedemo').then((c) => c.TreeDemo) },
     { path: 'menu', data: { breadcrumb: 'Menu' }, loadComponent: () => import('./menudemo').then((c) => c.MenuDemo) },
