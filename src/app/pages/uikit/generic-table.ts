@@ -22,88 +22,300 @@ import { CheckboxModule } from 'primeng/checkbox';
     imports: [CommonModule, FormsModule, TableModule, IconFieldModule, InputIconModule, InputTextModule, AutoCompleteModule, DatePickerModule, ButtonModule, ToolbarModule, TagModule, TooltipModule, PopoverModule, ListboxModule, CheckboxModule],
     template: `
   <div class="card">
-    <div class="font-semibold text-xl mb-4" *ngIf="config?.title">{{ config.title }}</div>
+    <!-- Title -->
+    <div class="font-semibold text-xl mb-4" *ngIf="config?.title">
+      {{ config.title }}
+    </div>
+
+    <!-- Toolbar -->
     <p-toolbar class="mb-6" *ngIf="config?.showToolbar">
-      <ng-template #start><ng-container *ngIf="toolbarStart" [ngTemplateOutlet]="toolbarStart" [ngTemplateOutletContext]="toolbarCtx"></ng-container></ng-template>
-      <ng-template #end><ng-container *ngIf="toolbarEnd" [ngTemplateOutlet]="toolbarEnd" [ngTemplateOutletContext]="toolbarCtx"></ng-container></ng-template>
+      <ng-template #start>
+        <ng-container *ngIf="toolbarStart" [ngTemplateOutlet]="toolbarStart" [ngTemplateOutletContext]="toolbarCtx"></ng-container>
+      </ng-template>
+      <ng-template #end>
+        <ng-container *ngIf="toolbarEnd" [ngTemplateOutlet]="toolbarEnd" [ngTemplateOutletContext]="toolbarCtx"></ng-container>
+      </ng-template>
     </p-toolbar>
-    <p-table #dt [value]="data" [dataKey]="dataKey" [loading]="loading" [lazy]="isLazy" [paginator]="true" [rows]="pageSize" [rowsPerPageOptions]="config.pageSizeOptions || [5,10,15,25,50,100]" [totalRecords]="totalRecords" [rowHover]="config.rowHover !== false" [showGridlines]="config.showGridlines !== false" [(selection)]="selectedRows" [selectionMode]="getSelectionMode()" (selectionChange)="onSelectionChange()" [responsiveLayout]="config.responsive !== false ? 'scroll' : 'stack'" [scrollable]="true" [scrollHeight]="config.scrollHeight || '600px'" [editMode]="config.editType === 'cell' ? 'cell' : 'row'" sortMode="single" (onLazyLoad)="lazyLoad.emit($event)" (onRowEditInit)="onTableRowEditInit($event)" (onRowEditSave)="onTableRowEditSave($event)" (onRowEditCancel)="onTableRowEditCancel($event)" [tableStyle]="{ 'table-layout': 'fixed', width: '100%' }">
+
+    <!-- Table -->
+    <p-table
+      #dt
+      [value]="data"
+      [dataKey]="dataKey"
+      [loading]="loading"
+      [lazy]="isLazy"
+      [paginator]="true"
+      [rows]="pageSize"
+      [rowsPerPageOptions]="config.pageSizeOptions || [5,10,15,25,50,100]"
+      [totalRecords]="totalRecords"
+      [rowHover]="config.rowHover !== false"
+      [showGridlines]="config.showGridlines !== false"
+      [(selection)]="selectedRows"
+      [selectionMode]="getSelectionMode()"
+      (selectionChange)="onSelectionChange()"
+      [responsiveLayout]="config.responsive !== false ? 'scroll' : 'stack'"
+      [scrollable]="true"
+      [scrollHeight]="config.scrollHeight || '600px'"
+      [editMode]="config.editType === 'cell' ? 'cell' : 'row'"
+      sortMode="single"
+      [tableStyle]="{ 'table-layout': 'fixed', 'width': '100%' }"
+      (onLazyLoad)="lazyLoad.emit($event)"
+      (onRowEditInit)="onTableRowEditInit($event)"
+      (onRowEditSave)="onTableRowEditSave($event)"
+      (onRowEditCancel)="onTableRowEditCancel($event)">
+
+      <!-- Caption -->
       <ng-template #caption>
         <div class="flex justify-between items-center flex-col sm:flex-row gap-2">
+          <!-- Left: quick filters -->
           <div class="flex items-center gap-2">
             <button *ngIf="config.showClearButton !== false" pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(dt)"></button>
+
             <ng-container *ngIf="captionStart" [ngTemplateOutlet]="captionStart" [ngTemplateOutletContext]="captionCtx"></ng-container>
+
             <ng-container *ngFor="let ctl of filterControls">
-              <p-button [label]="computeLabel(ctl)" [icon]="computeIcon(ctl)" [outlined]="ctl.outlined !== false" [severity]="isActive(ctl) ? ctl.severityOn || 'primary' : ctl.severityOff || 'secondary'" (onClick)="onFilterClick(ctl)" [pTooltip]="ctl.tooltip || ''"></p-button>
+              <p-button
+                [label]="computeLabel(ctl)"
+                [icon]="computeIcon(ctl)"
+                [outlined]="ctl.outlined !== false"
+                [severity]="isActive(ctl) ? ctl.severityOn || 'primary' : ctl.severityOff || 'secondary'"
+                (onClick)="onFilterClick(ctl)"
+                [pTooltip]="ctl.tooltip || ''">
+              </p-button>
             </ng-container>
           </div>
+
+          <!-- Right: column picker + global search -->
           <div class="flex items-center gap-2 ml-auto">
             <button *ngIf="config.showColumnPicker !== false" pButton class="p-button-outlined" label="Select Columns" icon="pi pi-bars" (click)="colsPop.toggle($event)"></button>
+
             <p-popover #colsPop appendTo="body">
               <div class="w-72 p-2">
-                <div class="flex items-center justify-between mb-2"><span class="font-medium">Columns</span><button pButton type="button" icon="pi pi-times" text (click)="colsPop.hide()"></button></div>
+                <div class="flex items-center justify-between mb-2">
+                  <span class="font-medium">Columns</span>
+                  <button pButton type="button" icon="pi pi-times" text (click)="colsPop.hide()"></button>
+                </div>
+
                 <input pInputText type="text" [(ngModel)]="columnFilter" placeholder="Search columns" class="w-full mb-2" (input)="filterColumnOptions()" />
-                <p-listbox [options]="columnOptions" optionLabel="header" [multiple]="true" [metaKeySelection]="false" [(ngModel)]="selectedColumnOptions" (ngModelChange)="setVisibleFromOptions($event)" [listStyle]="{ 'max-height': '280px' }">
-                  <ng-template pTemplate="header"><div class="flex items-center gap-2 p-2 border-b"><p-checkbox binary="true" [ngModel]="isAllSelected()" (onChange)="toggleAll($event.checked)"></p-checkbox><span class="font-medium">Select All</span></div></ng-template>
-                  <ng-template let-opt pTemplate="item"><div class="flex items-center gap-2"><p-checkbox [binary]="true" [ngModel]="isSelectedField(opt.field)"></p-checkbox><span class="truncate">{{ opt.header }}</span></div></ng-template>
+
+                <p-listbox
+                  [options]="columnOptions"
+                  optionLabel="header"
+                  [multiple]="true"
+                  [metaKeySelection]="false"
+                  [(ngModel)]="selectedColumnOptions"
+                  (ngModelChange)="setVisibleFromOptions($event)"
+                  [listStyle]="{ 'max-height': '280px' }">
+
+                  <ng-template pTemplate="header">
+                    <div class="flex items-center gap-2 p-2 border-b">
+                      <p-checkbox binary="true" [ngModel]="isAllSelected()" (onChange)="toggleAll($event.checked)"></p-checkbox>
+                      <span class="font-medium">Select All</span>
+                    </div>
+                  </ng-template>
+
+                  <ng-template let-opt pTemplate="item">
+                    <div class="flex items-center gap-2">
+                      <p-checkbox [binary]="true" [ngModel]="isSelectedField(opt.field)"></p-checkbox>
+                      <span class="truncate">{{ opt.header }}</span>
+                    </div>
+                  </ng-template>
                 </p-listbox>
               </div>
             </p-popover>
-            <p-iconfield *ngIf="config.showGlobalSearch !== false" iconPosition="left"><p-inputicon><i class="pi pi-search"></i></p-inputicon><input #globalFilter pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Global Search" /></p-iconfield>
+
+            <p-iconfield *ngIf="config.showGlobalSearch !== false" iconPosition="left">
+              <p-inputicon><i class="pi pi-search"></i></p-inputicon>
+              <input #globalFilter pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Global Search" />
+            </p-iconfield>
+
             <ng-container *ngIf="captionEnd" [ngTemplateOutlet]="captionEnd" [ngTemplateOutletContext]="captionCtx"></ng-container>
           </div>
         </div>
       </ng-template>
+
+      <!-- Header -->
       <ng-template pTemplate="header">
         <tr>
-          <th *ngIf="config?.selectable" style="width: 4rem"><p-tableHeaderCheckbox *ngIf="config?.selectionMode === 'multiple' && config?.showSelectAll !== false"></p-tableHeaderCheckbox></th>
+          <th *ngIf="config?.selectable" style="width: 5rem">
+            <p-tableHeaderCheckbox *ngIf="config?.selectionMode === 'multiple' && config?.showSelectAll !== false"></p-tableHeaderCheckbox>
+          </th>
+
           <ng-container *ngFor="let col of viewColumns">
             <th *ngIf="col.sortable !== false; else noSort" [style.min-width]="col.width || '12rem'" [pSortableColumn]="col.field">
-              <div class="flex justify-between items-center"><span class="flex items-center gap-2">{{ col.header }}<p-sortIcon [field]="col.field"></p-sortIcon></span><p-columnFilter *ngIf="col.filterable !== false" type="text" [field]="col.field" display="menu" [placeholder]="'Search by ' + col.header.toLowerCase()" [showOperator]="false" [showAddButton]="false"></p-columnFilter></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:.5rem;">
+                <!-- text + sort icon -->
+                <span style="display:flex;align-items:center;gap:.5rem;flex:1 1 0%;min-width:0;">
+                  <span style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                    {{ col.header }}
+                  </span>
+                  <p-sortIcon [field]="col.field"></p-sortIcon>
+                </span>
+
+                <!-- filter stays visible -->
+                <p-columnFilter
+                  *ngIf="col.filterable !== false"
+                  style="flex-shrink:0;"
+                  type="text"
+                  [field]="col.field"
+                  display="menu"
+                  [placeholder]="'Search by ' + col.header.toLowerCase()"
+                  [showOperator]="false"
+                  [showAddButton]="false">
+                </p-columnFilter>
+              </div>
             </th>
-            <ng-template #noSort><th [style.min-width]="col.width || '12rem'"><div class="flex justify-between items-center">{{ col.header }}<p-columnFilter *ngIf="col.filterable !== false" type="text" [field]="col.field" display="menu" [placeholder]="'Search by ' + col.header.toLowerCase()" [showOperator]="false" [showAddButton]="false"></p-columnFilter></div></th></ng-template>
+
+            <ng-template #noSort>
+              <th>
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:.5rem;">
+                  <span style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ col.header }}</span>
+                  <p-columnFilter
+                    *ngIf="col.filterable !== false"
+                    type="text"
+                    [field]="col.field"
+                    display="menu"
+                    [placeholder]="'Search by ' + col.header.toLowerCase()"
+                    [showOperator]="false"
+                    [showAddButton]="false">
+                  </p-columnFilter>
+                </div>
+              </th>
+            </ng-template>
           </ng-container>
-          <th style="min-width:8rem" *ngIf="showActionsCol()"><ng-container *ngIf="actionsHeaderTemplate; else defaultActionsHeader" [ngTemplateOutlet]="actionsHeaderTemplate" [ngTemplateOutletContext]="{ api: publicApi }"></ng-container><ng-template #defaultActionsHeader>Actions</ng-template></th>
+
+          <th style="min-width: 8rem" *ngIf="showActionsCol()">
+            <ng-container *ngIf="actionsHeaderTemplate; else defaultActionsHeader" [ngTemplateOutlet]="actionsHeaderTemplate" [ngTemplateOutletContext]="{ api: publicApi }"></ng-container>
+            <ng-template #defaultActionsHeader>Actions</ng-template>
+          </th>
         </tr>
       </ng-template>
+
+      <!-- Body -->
       <ng-template pTemplate="body" let-row let-editing="editing" let-ri="rowIndex">
         <tr [pEditableRow]="row">
-          <td *ngIf="config?.selectable"><p-tableCheckbox [value]="row"></p-tableCheckbox></td>
-          <td *ngFor="let col of viewColumns">
-            <ng-container *ngIf="isColumnEditable(col) && isEditingEnabled(); else readCell">
-              <p-cellEditor>
-                <ng-template pTemplate="input">
-                  <ng-container [ngSwitch]="col.editorType || 'text'">
-                    <input *ngSwitchCase="'text'" pInputText [ngModel]="get(row, col.field)" (ngModelChange)="set(row, col.field, $event)" class="w-full" />
-                    <input *ngSwitchCase="'number'" type="number" pInputText [ngModel]="get(row, col.field)" (ngModelChange)="set(row, col.field, $event)" class="w-full" />
-                    <textarea *ngSwitchCase="'textarea'" pInputText rows="2" [ngModel]="get(row, col.field)" (ngModelChange)="set(row, col.field, $event)" class="w-full"></textarea>
-                    <p-datepicker *ngSwitchCase="'date'" [showIcon]="true" [iconDisplay]="'input'" [appendTo]="'body'" [dateFormat]="fmt(col.dateFormat)" [ngModel]="getDate(row, col.field)" (ngModelChange)="setDate(row, col.field, $event)" class="w-full"></p-datepicker>
-                    <p-autocomplete appendTo="body" *ngSwitchCase="'autocomplete'" [suggestions]="ac[col.field] || []" (completeMethod)="acFill(col, $event)" [optionLabel]="'label'" [dropdown]="true" [forceSelection]="true" class="w-full" [ngModel]="acSel(row, col)" (ngModelChange)="acSet(row, col, $event)"><ng-template pTemplate="item" let-opt>{{ opt.label }}</ng-template></p-autocomplete>
-                  </ng-container>
-                </ng-template>
-                <ng-template pTemplate="output">
-                  <ng-container *ngIf="col.customTemplate && custom(col.field); else textOut"><ng-container *ngTemplateOutlet="custom(col.field)!; context: { $implicit: row, rowIndex: ri, field: col.field, value: val(row, col.field) }"></ng-container></ng-container>
-                  <ng-template #textOut>{{ display(row, col) }}</ng-template>
-                </ng-template>
-              </p-cellEditor>
-            </ng-container>
-            <ng-template #readCell>
-              <ng-container *ngIf="col.customTemplate && custom(col.field); else plain"><ng-container *ngTemplateOutlet="custom(col.field)!; context: { $implicit: row, rowIndex: ri, field: col.field, value: val(row, col.field) }"></ng-container></ng-container>
-              <ng-template #plain>{{ display(row, col) }}</ng-template>
-            </ng-template>
+          <td *ngIf="config?.selectable">
+            <p-tableCheckbox [value]="row"></p-tableCheckbox>
           </td>
-          <td *ngIf="showActionsCol()" style="text-align: center;">
+
+          <td *ngFor="let col of viewColumns">
+            <div style="min-width:0;max-width:100%;">
+              <!-- Editable cell -->
+              <ng-container *ngIf="isColumnEditable(col) && isEditingEnabled(); else readCell">
+                <p-cellEditor>
+                  <ng-template pTemplate="input">
+                    <ng-container [ngSwitch]="col.editorType || 'text'">
+                      <input *ngSwitchCase="'text'" pInputText class="w-full" [ngModel]="get(row, col.field)" (ngModelChange)="set(row, col.field, $event)" />
+                      <input *ngSwitchCase="'number'" type="number" pInputText class="w-full" [ngModel]="get(row, col.field)" (ngModelChange)="set(row, col.field, $event)" />
+                      <textarea *ngSwitchCase="'textarea'" pInputText rows="2" class="w-full" [ngModel]="get(row, col.field)" (ngModelChange)="set(row, col.field, $event)"></textarea>
+                      <p-datepicker *ngSwitchCase="'date'" class="w-full" [showIcon]="true" [iconDisplay]="'input'" [appendTo]="'body'" [dateFormat]="fmt(col.dateFormat)" [ngModel]="getDate(row, col.field)" (ngModelChange)="setDate(row, col.field, $event)"></p-datepicker>
+                      <p-autocomplete
+                        *ngSwitchCase="'autocomplete'"
+                        class="w-full"
+                        appendTo="body"
+                        [suggestions]="ac[col.field] || []"
+                        (completeMethod)="acFill(col, $event)"
+                        [optionLabel]="'label'"
+                        [dropdown]="true"
+                        [forceSelection]="true"
+                        [ngModel]="acSel(row, col)"
+                        (ngModelChange)="acSet(row, col, $event)">
+                        <ng-template pTemplate="item" let-opt>{{ opt.label }}</ng-template>
+                      </p-autocomplete>
+                    </ng-container>
+                  </ng-template>
+
+                  <ng-template pTemplate="output">
+                    <ng-container *ngIf="col.customTemplate && custom(col.field); else textOut">
+                      <div style="width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" [pTooltip]="display(row, col)">
+                        <ng-container *ngTemplateOutlet="custom(col.field)!; context: { $implicit: row, rowIndex: ri, field: col.field, value: val(row, col.field) }"></ng-container>
+                      </div>
+                    </ng-container>
+
+                    <ng-template #textOut>
+                      <span style="display:block;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" [pTooltip]="display(row, col)">
+                        {{ display(row, col) }}
+                      </span>
+                    </ng-template>
+                  </ng-template>
+                </p-cellEditor>
+              </ng-container>
+
+              <!-- Readonly cell -->
+              <ng-template #readCell>
+                <ng-container *ngIf="col.customTemplate && custom(col.field); else plain">
+                  <div style="width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" [pTooltip]="display(row, col)">
+                    <ng-container *ngTemplateOutlet="custom(col.field)!; context: { $implicit: row, rowIndex: ri, field: col.field, value: val(row, col.field) }"></ng-container>
+                  </div>
+                </ng-container>
+
+                <ng-template #plain>
+                  <span style="display:block;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" [pTooltip]="display(row, col)">
+                    {{ display(row, col) }}
+                  </span>
+                </ng-template>
+              </ng-template>
+            </div>
+          </td>
+
+          <!-- Actions -->
+          <td *ngIf="showActionsCol()" class="text-center">
             <ng-container *ngIf="actionsTemplate; else builtInActions" [ngTemplateOutlet]="actionsTemplate" [ngTemplateOutletContext]="{ $implicit: row, rowIndex: ri, editing: editing, api: publicApi, selected: selectedRows }"></ng-container>
-            <ng-template #builtInActions><div class="flex items-center justify-center gap-2" *ngIf="isEditingEnabled() && hasEditableColumns()"><ng-container *ngIf="!editing; else editControls"><p-button icon="pi pi-pencil" severity="secondary" size="small" text pInitEditableRow pTooltip="Edit"></p-button></ng-container><ng-template #editControls><p-button icon="pi pi-check" severity="success" size="small" text pSaveEditableRow pTooltip="Save"></p-button><p-button icon="pi pi-times" severity="danger" size="small" text pCancelEditableRow pTooltip="Cancel"></p-button></ng-template></div></ng-template>
+
+            <ng-template #builtInActions>
+              <div class="flex items-center justify-center gap-2" *ngIf="isEditingEnabled() && hasEditableColumns()">
+                <ng-container *ngIf="!editing; else editControls">
+                  <p-button icon="pi pi-pencil" severity="secondary" size="small" text pInitEditableRow pTooltip="Edit"></p-button>
+                </ng-container>
+
+                <ng-template #editControls>
+                  <p-button icon="pi pi-check" severity="success" size="small" text pSaveEditableRow pTooltip="Save"></p-button>
+                  <p-button icon="pi pi-times" severity="danger" size="small" text pCancelEditableRow pTooltip="Cancel"></p-button>
+                </ng-template>
+              </div>
+            </ng-template>
           </td>
         </tr>
       </ng-template>
-      <ng-template pTemplate="emptymessage"><tr><td [colSpan]="getColSpan()" class="text-center py-8"><div class="text-gray-500"><i class="pi pi-search text-3xl mb-2"></i><div>{{ config.emptyMessage || 'No records found matching your criteria.' }}</div></div></td></tr></ng-template>
-      <ng-template pTemplate="loadingbody"><tr><td [colSpan]="getColSpan()" class="text-center py-8"><div class="text-gray-500"><i class="pi pi-spin pi-spinner text-2xl mb-2"></i><div>{{ config.loadingMessage || 'Loading data...' }}</div></div></td></tr></ng-template>
+
+      <!-- Empty -->
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td [colSpan]="getColSpan()" class="text-center py-8">
+            <div class="text-gray-500">
+              <i class="pi pi-search text-3xl mb-2"></i>
+              <div>{{ config.emptyMessage || 'No records found matching your criteria.' }}</div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <!-- Loading -->
+      <ng-template pTemplate="loadingbody">
+        <tr>
+          <td [colSpan]="getColSpan()" class="text-center py-8">
+            <div class="text-gray-500">
+              <i class="pi pi-spin pi-spinner text-2xl mb-2"></i>
+              <div>{{ config.loadingMessage || 'Loading data...' }}</div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
     </p-table>
-    <div class="mt-4 text-sm text-gray-600" *ngIf="!loading && config.showResultsSummary !== false"><div class="flex justify-between items-center"><span>Showing {{ data.length || 0 }} of {{ totalRecords | number }} records</span><span *ngIf="config?.selectable && selectedRows?.length">{{ selectedRows.length }} item(s) selected</span></div></div>
-  </div>`,
-    styles: [`:host ::ng-deep .p-autocomplete,:host ::ng-deep .p-datepicker{width:100%}:host ::ng-deep .p-button.p-button-text{padding:.25rem;min-width:auto}`]
+
+    <!-- Footer summary -->
+    <div class="mt-4 text-sm text-gray-600" *ngIf="!loading && config.showResultsSummary !== false">
+      <div class="flex justify-between items-center">
+        <span>Showing {{ data.length || 0 }} of {{ totalRecords | number }} records</span>
+        <span *ngIf="config?.selectable && selectedRows?.length">{{ selectedRows.length }} item(s) selected</span>
+      </div>
+    </div>
+  </div>
+`,
+    styles: [
+        `:host ::ng-deep .p-autocomplete,:host ::ng-deep .p-datepicker{width:100%}:host ::ng-deep .p-button.p-button-text{padding:.25rem;min-width:auto} .p-datatable-wrapper { overflow-x: auto; }
+      `
+    ]
 })
 export class GenericTableComponent<T = any> implements OnChanges {
     @ViewChild('dt') dt!: Table;
