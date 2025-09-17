@@ -11,8 +11,12 @@ export interface TableColumn {
     width?: string;
     customTemplate?: boolean;
     editable?: boolean;
+    frozen?: boolean;
     editorType?: 'text' | 'date' | 'number' | 'textarea' | 'autocomplete';
-    editorOptions?: ReadonlyArray<{ label: string; value: any }>;
+    editorOptions?: ReadonlyArray<any>; // suggestions array
+    editorOptionField?: string; // p-autocomplete [field]
+    editorOptionValue?: string; // p-autocomplete [optionValue]
+    editorCompleteMethod?: (e: { query: string }, row?: any) => void; // server search
     filterType?: 'text' | 'dropdown';
     filterOptions?: Array<{ label: string; value: any }>;
     filterMatchMode?: 'contains' | 'equals' | 'startsWith' | 'endsWith';

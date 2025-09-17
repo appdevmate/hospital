@@ -16,6 +16,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { PopoverModule } from 'primeng/popover';
 import { ListboxModule } from 'primeng/listbox';
 import { CheckboxModule } from 'primeng/checkbox';
+
 @NgComponent({
     selector: 'app-generic-table',
     standalone: true,
@@ -58,7 +59,7 @@ import { CheckboxModule } from 'primeng/checkbox';
       [scrollHeight]="config.scrollHeight || '600px'"
       [editMode]="config.editType === 'cell' ? 'cell' : 'row'"
       sortMode="single"
-      [tableStyle]="{ 'table-layout': 'fixed', 'width': '100%' }"
+      [tableStyle]="{ 'table-layout': 'fixed', 'width': 'max-content', 'min-width': '100%' }"
       (onLazyLoad)="lazyLoad.emit($event)"
       (onRowEditInit)="onTableRowEditInit($event)"
       (onRowEditSave)="onTableRowEditSave($event)"
@@ -141,8 +142,13 @@ import { CheckboxModule } from 'primeng/checkbox';
             <p-tableHeaderCheckbox *ngIf="config?.selectionMode === 'multiple' && config?.showSelectAll !== false"></p-tableHeaderCheckbox>
           </th>
 
-          <ng-container *ngFor="let col of viewColumns">
-            <th *ngIf="col.sortable !== false; else noSort" [style.min-width]="col.width || '12rem'" [pSortableColumn]="col.field">
+          <ng-container *ngFor="let col of viewColumns; trackBy: trackByField">
+            <th *ngIf="col.sortable !== false; else noSort"
+                [style.min-width]="col.width || '12rem'"
+                [style.width]="col.width || '12rem'"
+                [pSortableColumn]="col.field"
+                [class.gt-sticky]="col.frozen"
+                [style.left.px]="col.frozen ? stickyLeftPx(col) : null">
               <div style="display:flex;align-items:center;justify-content:space-between;gap:.5rem;">
                 <!-- text + sort icon -->
                 <span style="display:flex;align-items:center;gap:.5rem;flex:1 1 0%;min-width:0;">
@@ -167,7 +173,10 @@ import { CheckboxModule } from 'primeng/checkbox';
             </th>
 
             <ng-template #noSort>
-              <th>
+              <th [style.min-width]="col.width || '12rem'"
+                  [style.width]="col.width || '12rem'"
+                  [class.gt-sticky]="col.frozen"
+                  [style.left.px]="col.frozen ? stickyLeftPx(col) : null">
                 <div style="display:flex;align-items:center;justify-content:space-between;gap:.5rem;">
                   <span style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ col.header }}</span>
                   <p-columnFilter
@@ -198,7 +207,11 @@ import { CheckboxModule } from 'primeng/checkbox';
             <p-tableCheckbox [value]="row"></p-tableCheckbox>
           </td>
 
-          <td *ngFor="let col of viewColumns">
+          <td *ngFor="let col of viewColumns; trackBy: trackByField"
+              [class.gt-sticky]="col.frozen"
+              [style.left.px]="col.frozen ? stickyLeftPx(col) : null"
+              [style.min-width]="col.width || '12rem'"
+              [style.width]="col.width || '12rem'">
             <div style="min-width:0;max-width:100%;">
               <!-- Editable cell -->
               <ng-container *ngIf="isColumnEditable(col) && isEditingEnabled(); else readCell">
@@ -210,32 +223,30 @@ import { CheckboxModule } from 'primeng/checkbox';
                       <textarea *ngSwitchCase="'textarea'" pInputText rows="2" class="w-full" [ngModel]="get(row, col.field)" (ngModelChange)="set(row, col.field, $event)"></textarea>
                       <p-datepicker *ngSwitchCase="'date'" class="w-full" [showIcon]="true" [iconDisplay]="'input'" [appendTo]="'body'" [dateFormat]="fmt(col.dateFormat)" [ngModel]="getDate(row, col.field)" (ngModelChange)="setDate(row, col.field, $event)"></p-datepicker>
                       <p-autocomplete
-                        *ngSwitchCase="'autocomplete'"
-                        class="w-full"
-                        appendTo="body"
-                        [suggestions]="ac[col.field] || []"
-                        (completeMethod)="acFill(col, $event)"
-                        [optionLabel]="'label'"
-                        [dropdown]="true"
-                        [forceSelection]="true"
-                        [ngModel]="acSel(row, col)"
-                        (ngModelChange)="acSet(row, col, $event)">
-                        <ng-template pTemplate="item" let-opt>{{ opt.label }}</ng-template>
-                      </p-autocomplete>
+                      *ngSwitchCase="'autocomplete'"
+                      class="w-full"
+                      appendTo="body"
+                      [suggestions]="ac[col.field] || []"
+                      (completeMethod)="acFill(col, $event)"
+                      [optionLabel]="'label'"
+                      [dropdown]="true"
+                      [forceSelection]="true"
+                      [ngModel]="acSel(row, col)"
+                      (ngModelChange)="acSet(row, col, $event)">
+                      <ng-template pTemplate="item" let-opt>{{ opt.label }}</ng-template>
+                    </p-autocomplete>
                     </ng-container>
                   </ng-template>
 
                   <ng-template pTemplate="output">
                     <ng-container *ngIf="col.customTemplate && custom(col.field); else textOut">
-                      <div style="width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" [pTooltip]="display(row, col)">
+                      <div class="gt-cell" [style.max-width]="maxW(col)" [pTooltip]="display(row, col)">
                         <ng-container *ngTemplateOutlet="custom(col.field)!; context: { $implicit: row, rowIndex: ri, field: col.field, value: val(row, col.field) }"></ng-container>
                       </div>
                     </ng-container>
 
                     <ng-template #textOut>
-                      <span style="display:block;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" [pTooltip]="display(row, col)">
-                        {{ display(row, col) }}
-                      </span>
+                      <span class="gt-cell" [style.max-width]="maxW(col)">{{ display(row, col) }}</span>
                     </ng-template>
                   </ng-template>
                 </p-cellEditor>
@@ -244,13 +255,13 @@ import { CheckboxModule } from 'primeng/checkbox';
               <!-- Readonly cell -->
               <ng-template #readCell>
                 <ng-container *ngIf="col.customTemplate && custom(col.field); else plain">
-                  <div style="width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" [pTooltip]="display(row, col)">
+                  <div class="gt-cell" [style.max-width]="maxW(col)" [pTooltip]="display(row, col)">
                     <ng-container *ngTemplateOutlet="custom(col.field)!; context: { $implicit: row, rowIndex: ri, field: col.field, value: val(row, col.field) }"></ng-container>
                   </div>
                 </ng-container>
 
                 <ng-template #plain>
-                  <span style="display:block;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" [pTooltip]="display(row, col)">
+                  <span class="gt-cell" [style.max-width]="maxW(col)" [pTooltip]="display(row, col)">
                     {{ display(row, col) }}
                   </span>
                 </ng-template>
@@ -313,7 +324,27 @@ import { CheckboxModule } from 'primeng/checkbox';
   </div>
 `,
     styles: [
-        `:host ::ng-deep .p-autocomplete,:host ::ng-deep .p-datepicker{width:100%}:host ::ng-deep .p-button.p-button-text{padding:.25rem;min-width:auto} .p-datatable-wrapper { overflow-x: auto; }
+        `
+      :host ::ng-deep .p-autocomplete, :host ::ng-deep .p-datepicker{width:100%}
+      :host ::ng-deep .p-button.p-button-text{padding:.25rem;min-width:auto}
+      :host ::ng-deep .p-datatable-wrapper{overflow-x:auto}
+
+      /* Ellipsis clamp for long values */
+      :host ::ng-deep .gt-cell{
+        display:block;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+      }
+
+      /* Frozen columns */
+      :host ::ng-deep th.gt-sticky, :host ::ng-deep td.gt-sticky{
+        position:sticky;
+        left:0;
+        z-index:2;
+        background:var(--p-datatable-sticky-bg, var(--p-surface-0));
+      }
+      :host ::ng-deep th.gt-sticky{ z-index:3 }
       `
     ]
 })
@@ -357,6 +388,19 @@ export class GenericTableComponent<T = any> implements OnChanges {
     private dateCache = new WeakMap<any, Map<string, Date | null>>();
     private clonedRows: { [s: string]: T } = {};
 
+    // trackBy
+    trackByField = (_: number, c: TableColumn) => c.field;
+
+    ngOnChanges(ch: SimpleChanges) {
+        if (ch['config']) this.pageSize = this.config?.defaultPageSize ?? 15;
+        if (ch['columns'] || ch['visibleColumnFields']) this.ensureVisibleInit();
+        this.refreshContexts();
+    }
+    private refreshContexts() {
+        this.toolbarCtx = { api: this.publicApi, selected: this.selectedRows, config: this.config, columns: this.columns, viewColumns: this.viewColumns, total: this.totalRecords };
+        this.captionCtx = { api: this.publicApi, selected: this.selectedRows, config: this.config };
+    }
+
     private rowElementAt(index?: number) {
         if (index == null || index < 0) return null;
         const host: HTMLElement | null = (this.dt as any)?.el?.nativeElement ?? null;
@@ -377,6 +421,10 @@ export class GenericTableComponent<T = any> implements OnChanges {
         if (el && (this.dt as any)?.cancelRowEdit) (this.dt as any).cancelRowEdit(row, el);
     }
 
+    toMutable<T>(arr?: ReadonlyArray<T> | null): T[] {
+        return arr ? arr.slice() : [];
+    }
+
     toolbarCtx: any = {};
     captionCtx: any = {};
     public readonly publicApi: TableApi<T> = {
@@ -390,14 +438,37 @@ export class GenericTableComponent<T = any> implements OnChanges {
         cancelRowEdit: (r: T, i?: number) => this._cancelRowEdit(r, i)
     };
 
-    ngOnChanges(ch: SimpleChanges) {
-        if (ch['config']) this.pageSize = this.config?.defaultPageSize ?? 15;
-        if (ch['columns'] || ch['visibleColumnFields']) this.ensureVisibleInit();
-        this.refreshContexts();
+    // width helpers for sticky calc & ellipsis
+    private rootFontSizePx(): number {
+        if (typeof window === 'undefined') return 16;
+        const fs = getComputedStyle(document.documentElement).fontSize;
+        return parseFloat(fs) || 16;
     }
-    private refreshContexts() {
-        this.toolbarCtx = { api: this.publicApi, selected: this.selectedRows, config: this.config, columns: this.columns, viewColumns: this.viewColumns, total: this.totalRecords };
-        this.captionCtx = { api: this.publicApi, selected: this.selectedRows, config: this.config };
+    private cssSizeToPx(size?: string): number {
+        if (!size) return 0;
+        const s = String(size).trim();
+        if (s.endsWith('px')) return parseFloat(s);
+        if (s.endsWith('rem')) return parseFloat(s) * this.rootFontSizePx();
+        if (s.endsWith('em')) return parseFloat(s) * this.rootFontSizePx();
+        const n = parseFloat(s);
+        return isNaN(n) ? 0 : n;
+    }
+    private colWidthPx(c: TableColumn): number {
+        return this.cssSizeToPx(c.width || '12rem');
+    }
+    /** Sum widths of preceding frozen columns */
+    stickyLeftPx(col: TableColumn): number {
+        let left = 0;
+        for (const c of this.viewColumns) {
+            if (c === col) break;
+            if (c.frozen) left += this.colWidthPx(c);
+        }
+        return left;
+    }
+    /** Safe max width resolver (allows ad-hoc maxWidth without typing it in TableColumn) */
+    maxW(col: TableColumn): string {
+        const anyCol = col as any;
+        return anyCol.maxWidth || col.width || '20rem';
     }
 
     isActive = (ctl: FilterControl) => (ctl.type === 'toggle' ? !!this.activeFilters?.[ctl.id] : this.activeFilters?.[ctl.id] !== undefined && this.activeFilters?.[ctl.id] !== null && this.activeFilters?.[ctl.id] !== '');
