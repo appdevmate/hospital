@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Patient icon">
+  <!-- Head -->
+  <circle cx="24" cy="13" r="7" fill="#ffd9b3"/>
+  <circle cx="24" cy="13" r="7" fill="none" stroke="#1f2937" stroke-width="2"/>
+
+  <!-- Neck -->
+  <rect x="21" y="19.5" width="6" height="4" rx="1" fill="#ffd9b3"/>
+
+  <!-- Shoulders and torso -->
+  <path d="M10 40c0-8.5 6.5-15 14-15s14 6.5 14 15" fill="#60a5fa"/>
+  <path d="M10 40c0-8.5 6.5-15 14-15s14 6.5 14 15" fill="none" stroke="#1f2937" stroke-width="2" stroke-linejoin="round"/>
+
+  <!-- Shirt neckline -->
+  <path d="M18 28c2.5 2 5 3 6 3s3.5-1 6-3" fill="none" stroke="#1f2937" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Simple cross badge on chest -->
+  <g transform="translate(33,30)">
+    <circle r="4.5" fill="#ffffff" stroke="#1f2937" stroke-width="2"/>
+    <path d="M0 -2.2v4.4M-2.2 0h4.4" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

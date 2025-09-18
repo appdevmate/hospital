@@ -1,13 +1,13 @@
-import {Component, computed, ElementRef, HostBinding, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {NavigationEnd, Router, RouterModule} from '@angular/router';
-import {animate, AnimationEvent, state, style, transition, trigger} from '@angular/animations';
-import {Subscription} from 'rxjs';
-import {filter} from 'rxjs/operators';
-import {DomHandler} from 'primeng/dom';
-import {TooltipModule} from 'primeng/tooltip';
-import {CommonModule} from '@angular/common';
-import {RippleModule} from 'primeng/ripple';
-import {LayoutService} from '@/layout/service/layout.service';
+import { Component, computed, ElementRef, HostBinding, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { NavigationEnd, Router, RouterModule } from '@angular/router';
+import { animate, AnimationEvent, state, style, transition, trigger } from '@angular/animations';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
+import { DomHandler } from 'primeng/dom';
+import { TooltipModule } from 'primeng/tooltip';
+import { CommonModule } from '@angular/common';
+import { RippleModule } from 'primeng/ripple';
+import { LayoutService } from '@/layout/service/layout.service';
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
@@ -102,8 +102,7 @@ import {LayoutService} from '@/layout/service/layout.service';
             ),
             transition('collapsed <=> expanded', animate('400ms cubic-bezier(0.86, 0, 0.07, 1)'))
         ])
-    ],
-
+    ]
 })
 export class AppMenuitem implements OnInit, OnDestroy {
     @Input() item: any;
@@ -148,7 +147,6 @@ export class AppMenuitem implements OnInit, OnDestroy {
     get isMobile() {
         return this.layoutService.isMobile();
     }
-
 
     constructor(
         public layoutService: LayoutService,
@@ -222,14 +220,14 @@ export class AppMenuitem implements OnInit, OnDestroy {
         if (overlay) {
             const { left, top } = target.getBoundingClientRect();
             const vHeight = window.innerHeight;
-            const  oHeight = overlay.offsetHeight;
+            const oHeight = overlay.offsetHeight;
             const topbarEl = document.querySelector('.layout-topbar') as HTMLElement;
             const topbarHeight = topbarEl?.offsetHeight || 0;
             // reset
             overlay.style.top = '';
             overlay.style.left = '';
 
-            if ( this.layoutService.isSlim() || this.layoutService.isSlimPlus()) {
+            if (this.layoutService.isSlim() || this.layoutService.isSlimPlus()) {
                 const topOffset = top - topbarHeight;
                 const height = topOffset + oHeight + topbarHeight;
                 overlay.style.top = vHeight < height ? `${topOffset - (height - vHeight)}px` : `${topOffset}px`;

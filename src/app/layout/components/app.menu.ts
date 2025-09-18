@@ -24,9 +24,20 @@ export class AppMenu {
 
     model: MenuItem[] = [
         {
-            label: 'Doctor Management',
-            icon: 'pi pi-briefcase',
-            routerLink: ['/doctors-management']
+            label: 'Management',
+            icon: 'pi pi-home',
+            items: [
+                {
+                    label: 'Doctor Management',
+                    icon: 'pi pi-briefcase',
+                    routerLink: ['/doctors-management']
+                },
+                {
+                    label: 'Patients Management',
+                    icon: 'pi pi-user-plus',
+                    routerLink: ['/patients-management']
+                }
+            ]
         },
         {
             label: 'Dashboard',
@@ -454,5 +465,5 @@ export class AppMenu {
                 }
             ]
         }
-    ]
+    ];
 }

@@ -13,13 +13,11 @@ export interface TableColumn {
     editable?: boolean;
     frozen?: boolean;
     editorType?: 'text' | 'date' | 'number' | 'textarea' | 'autocomplete';
-    editorOptions?: ReadonlyArray<any>; // suggestions array
-    editorOptionField?: string; // p-autocomplete [field]
-    editorOptionValue?: string; // p-autocomplete [optionValue]
-    editorCompleteMethod?: (e: { query: string }, row?: any) => void; // server search
+    editorOptions?: ReadonlyArray<{ label: string; value: any }>;
     filterType?: 'text' | 'dropdown';
     filterOptions?: Array<{ label: string; value: any }>;
     filterMatchMode?: 'contains' | 'equals' | 'startsWith' | 'endsWith';
+    showTooltip?: boolean;
 }
 
 export interface TableConfig {

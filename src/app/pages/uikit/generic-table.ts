@@ -138,9 +138,17 @@ import { CheckboxModule } from 'primeng/checkbox';
       <!-- Header -->
       <ng-template pTemplate="header">
         <tr>
-          <th *ngIf="config?.selectable" style="width: 5rem">
-            <p-tableHeaderCheckbox *ngIf="config?.selectionMode === 'multiple' && config?.showSelectAll !== false"></p-tableHeaderCheckbox>
-          </th>
+          <th
+  *ngIf="config?.selectable"
+  class="gt-sticky"
+  [style.left.px]="0"
+  style="width:5rem;min-width:5rem"
+>
+  <p-tableHeaderCheckbox
+    *ngIf="config?.selectionMode === 'multiple' && config?.showSelectAll !== false">
+  </p-tableHeaderCheckbox>
+</th>
+
 
           <ng-container *ngFor="let col of viewColumns; trackBy: trackByField">
             <th *ngIf="col.sortable !== false; else noSort"
@@ -203,9 +211,15 @@ import { CheckboxModule } from 'primeng/checkbox';
       <!-- Body -->
       <ng-template pTemplate="body" let-row let-editing="editing" let-ri="rowIndex">
         <tr [pEditableRow]="row">
-          <td *ngIf="config?.selectable">
-            <p-tableCheckbox [value]="row"></p-tableCheckbox>
-          </td>
+          <td
+  *ngIf="config?.selectable"
+  class="gt-sticky"
+  [style.left.px]="0"
+  style="width:5rem;min-width:5rem"
+>
+  <p-tableCheckbox [value]="row"></p-tableCheckbox>
+</td>
+
 
           <td *ngFor="let col of viewColumns; trackBy: trackByField"
               [class.gt-sticky]="col.frozen"
@@ -240,14 +254,20 @@ import { CheckboxModule } from 'primeng/checkbox';
 
                   <ng-template pTemplate="output">
                     <ng-container *ngIf="col.customTemplate && custom(col.field); else textOut">
-                      <div class="gt-cell" [style.max-width]="maxW(col)" [pTooltip]="display(row, col)">
-                        <ng-container *ngTemplateOutlet="custom(col.field)!; context: { $implicit: row, rowIndex: ri, field: col.field, value: val(row, col.field) }"></ng-container>
-                      </div>
-                    </ng-container>
+  <div class="gt-cell" [style.max-width]="maxW(col)">
+    <ng-container *ngTemplateOutlet="custom(col.field)!; context: { $implicit: row, rowIndex: ri, field: col.field, value: val(row, col.field) }"></ng-container>
+  </div>
+</ng-container>
 
                     <ng-template #textOut>
-                      <span class="gt-cell" [style.max-width]="maxW(col)">{{ display(row, col) }}</span>
-                    </ng-template>
+  <span class="gt-cell"
+      [style.max-width]="maxW(col)"
+      [pTooltip]="col.showTooltip ? display(row, col) : undefined">
+  {{ display(row, col) }}
+</span>
+
+</ng-template>
+
                   </ng-template>
                 </p-cellEditor>
               </ng-container>
@@ -255,16 +275,20 @@ import { CheckboxModule } from 'primeng/checkbox';
               <!-- Readonly cell -->
               <ng-template #readCell>
                 <ng-container *ngIf="col.customTemplate && custom(col.field); else plain">
-                  <div class="gt-cell" [style.max-width]="maxW(col)" [pTooltip]="display(row, col)">
-                    <ng-container *ngTemplateOutlet="custom(col.field)!; context: { $implicit: row, rowIndex: ri, field: col.field, value: val(row, col.field) }"></ng-container>
-                  </div>
-                </ng-container>
+  <div class="gt-cell" [style.max-width]="maxW(col)">
+    <ng-container *ngTemplateOutlet="custom(col.field)!; context: { $implicit: row, rowIndex: ri, field: col.field, value: val(row, col.field) }"></ng-container>
+  </div>
+</ng-container>
 
-                <ng-template #plain>
-                  <span class="gt-cell" [style.max-width]="maxW(col)" [pTooltip]="display(row, col)">
-                    {{ display(row, col) }}
-                  </span>
-                </ng-template>
+<ng-template #plain>
+  <span class="gt-cell"
+      [style.max-width]="maxW(col)"
+      [pTooltip]="col.showTooltip ? display(row, col) : undefined">
+  {{ display(row, col) }}
+</span>
+
+</ng-template>
+
               </ng-template>
             </div>
           </td>
@@ -387,6 +411,7 @@ export class GenericTableComponent<T = any> implements OnChanges {
     ac: Record<string, { label: string; value: any }[]> = {};
     private dateCache = new WeakMap<any, Map<string, Date | null>>();
     private clonedRows: { [s: string]: T } = {};
+    private readonly SELECT_COL_WIDTH = '5rem';
 
     // trackBy
     trackByField = (_: number, c: TableColumn) => c.field;
@@ -425,6 +450,10 @@ export class GenericTableComponent<T = any> implements OnChanges {
         return arr ? arr.slice() : [];
     }
 
+    private selectionColWidthPx(): number {
+        return this.cssSizeToPx('5rem'); // keep in sync with template width
+    }
+
     toolbarCtx: any = {};
     captionCtx: any = {};
     public readonly publicApi: TableApi<T> = {
@@ -459,12 +488,19 @@ export class GenericTableComponent<T = any> implements OnChanges {
     /** Sum widths of preceding frozen columns */
     stickyLeftPx(col: TableColumn): number {
         let left = 0;
+
+        // selection checkbox column is first and sticky
+        if (this.config?.selectable) {
+            left += this.cssSizeToPx(this.SELECT_COL_WIDTH);
+        }
+
         for (const c of this.viewColumns) {
             if (c === col) break;
             if (c.frozen) left += this.colWidthPx(c);
         }
         return left;
     }
+
     /** Safe max width resolver (allows ad-hoc maxWidth without typing it in TableColumn) */
     maxW(col: TableColumn): string {
         const anyCol = col as any;
