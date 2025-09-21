@@ -15,7 +15,7 @@ import { DialogModule } from 'primeng/dialog';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FileUploadModule, FileSelectEvent } from 'primeng/fileupload';
 
-import { DoctorsService, Department, Specialization } from '@/pages/service/doctors.service';
+import { DoctorsService, Department, Specialization, CreateUpdateDoctorRequest } from '@/pages/service/doctors.service';
 import { HelpersService } from '@/services/helpers-service';
 
 @Component({
@@ -45,14 +45,14 @@ import { HelpersService } from '@/services/helpers-service';
                         </p-floatlabel>
                     </div>
 
-                    <!-- DOB and Gender -->
+                    <!-- QID & Gender -->
                     <div class="form-row">
                         <div class="form-field form-field-half">
                             <p-floatlabel variant="on">
-                                <p-datepicker id="dob" formControlName="dob" [showIcon]="true" dateFormat="dd/MM/yy" [maxDate]="today" [showOnFocus]="false" [class.p-invalid]="invalid('dob')" [readonlyInput]="true" styleClass="w-full"></p-datepicker>
-                                <label for="dob"><i class="pi pi-calendar"></i> Date of Birth</label>
+                                <input id="qid" pInputText formControlName="qid" autocomplete="off" [class.p-invalid]="validateQID('qid')" class="w-full" />
+                                <label for="qid"><i class="pi pi-id-card"></i> Qatar ID</label>
                             </p-floatlabel>
-                            <small class="p-error" *ngIf="invalid('dob')">Date of birth is required</small>
+                            <small class="p-error" *ngIf="validateQID('qid')">Use numbers only (11-digit)</small>
                         </div>
 
                         <div class="form-field form-field-half">
@@ -84,22 +84,14 @@ import { HelpersService } from '@/services/helpers-service';
                         </div>
                     </div>
 
-                    <!-- Phone -->
-                    <div class="form-field">
-                        <p-floatlabel variant="on">
-                            <p-inputMask id="phone" formControlName="phone" mask="+999 9999 9999" styleClass="w-full" inputId="phone"></p-inputMask>
-                            <label for="phone"><i class="pi pi-phone"></i> Phone Number *</label>
-                        </p-floatlabel>
-                        <small class="p-error" *ngIf="validatePhoneNumber('phone')">Valid phone number is required</small>
-                    </div>
-
-                    <!-- Job and Insurance -->
+                    <!-- Phone & Insurance -->
                     <div class="form-row">
                         <div class="form-field form-field-half">
                             <p-floatlabel variant="on">
-                                <input id="job" pInputText formControlName="job" autocomplete="off" class="w-full" />
-                                <label for="job"><i class="pi pi-briefcase"></i> Job</label>
+                                <p-inputMask id="phone" formControlName="phone" mask="+999 9999 9999 9999 999" [autoClear]="false" styleClass="w-full" inputId="phone"></p-inputMask>
+                                <label for="phone"><i class="pi pi-phone"></i> Phone Number *</label>
                             </p-floatlabel>
+                            <small class="p-error" *ngIf="validatePhoneNumber('phone')">Valid phone number is required</small>
                         </div>
 
                         <div class="form-field form-field-half">
@@ -176,37 +168,55 @@ import { HelpersService } from '@/services/helpers-service';
                         </div>
                     </div>
 
-                    <!-- Status -->
-                    <div class="form-field">
-                        <p-floatlabel variant="on">
-                            <p-autocomplete
-                                id="status"
-                                formControlName="status"
-                                [suggestions]="filteredStatusOptions"
-                                (completeMethod)="filterStatus($event)"
-                                [forceSelection]="true"
-                                [dropdown]="true"
-                                [readonly]="true"
-                                [class.p-invalid]="invalid('status')"
-                                styleClass="w-full"
-                                autocomplete="off"
-                            >
-                                <ng-template pTemplate="item" let-option>
-                                    <span>{{ option }}</span>
-                                </ng-template>
-                            </p-autocomplete>
-                            <label for="status"><i class="pi pi-badge"></i> Status *</label>
-                        </p-floatlabel>
-                        <small class="p-error" *ngIf="invalid('status')">Status is required</small>
+                    <!-- Job & Status -->
+                    <div class="form-row">
+                        <div class="form-field form-field-half">
+                            <p-floatlabel variant="on">
+                                <input id="job" pInputText formControlName="job" autocomplete="off" class="w-full" />
+                                <label for="job"><i class="pi pi-briefcase"></i> Job</label>
+                            </p-floatlabel>
+                        </div>
+
+                        <div class="form-field form-field-half">
+                            <p-floatlabel variant="on">
+                                <p-autocomplete
+                                    id="status"
+                                    formControlName="status"
+                                    [suggestions]="filteredStatusOptions"
+                                    (completeMethod)="filterStatus($event)"
+                                    [forceSelection]="true"
+                                    [dropdown]="true"
+                                    [readonly]="true"
+                                    [class.p-invalid]="invalid('status')"
+                                    styleClass="w-full"
+                                    autocomplete="off"
+                                >
+                                    <ng-template pTemplate="item" let-option>
+                                        <span>{{ option }}</span>
+                                    </ng-template>
+                                </p-autocomplete>
+                                <label for="status"><i class="pi pi-badge"></i> Status *</label>
+                            </p-floatlabel>
+                            <small class="p-error" *ngIf="invalid('status')">Status is required</small>
+                        </div>
                     </div>
 
-                    <!-- QID -->
-                    <div class="form-field">
-                        <p-floatlabel variant="on">
-                            <input id="qid" pInputText formControlName="qid" autocomplete="off" [class.p-invalid]="validateQID('qid')" class="w-full" />
-                            <label for="qid"><i class="pi pi-id-card"></i> Qatar ID</label>
-                        </p-floatlabel>
-                        <small class="p-error" *ngIf="validateQID('qid')">Use numbers only (11-digit)</small>
+                    <!-- Join Date & DOB (last row) -->
+                    <div class="form-row">
+                        <div class="form-field form-field-half">
+                            <p-floatlabel variant="on">
+                                <p-datepicker id="hiringDate" formControlName="hiringDate" [showIcon]="true" [showOnFocus]="false" [readonlyInput]="true" styleClass="w-full"></p-datepicker>
+                                <label for="hiringDate"><i class="pi pi-calendar-plus"></i> Join Date</label>
+                            </p-floatlabel>
+                        </div>
+
+                        <div class="form-field form-field-half">
+                            <p-floatlabel variant="on">
+                                <p-datepicker id="dob" formControlName="dob" [showIcon]="true" dateFormat="dd/MM/yy" [maxDate]="today" [showOnFocus]="false" [class.p-invalid]="invalid('dob')" [readonlyInput]="true" styleClass="w-full"></p-datepicker>
+                                <label for="dob"><i class="pi pi-calendar"></i> Date of Birth</label>
+                            </p-floatlabel>
+                            <small class="p-error" *ngIf="invalid('dob')">Date of birth is required</small>
+                        </div>
                     </div>
 
                     <!-- Actions -->
@@ -432,7 +442,8 @@ export class NewDoctor implements AfterViewInit {
             insurance: ['', Validators.required],
             specialization: ['', Validators.required],
             department: ['', Validators.required],
-            status: ['', Validators.required]
+            status: ['', Validators.required],
+            hiringDate: [''] // ← added
         });
         this.resetFormState();
     }
@@ -539,6 +550,21 @@ export class NewDoctor implements AfterViewInit {
     }
 
     // ===== Submit / Reset =====
+    // add above submit()
+    sanitizePhone(x: any): string | null {
+        if (typeof x !== 'string') return x ?? null;
+        const s = x.trim();
+        if (!s) return null;
+        let sign = '';
+        let body = s;
+        if (body.startsWith('+')) {
+            sign = '+';
+            body = body.slice(1);
+        }
+        const digits = body.replace(/\D+/g, ''); // drops spaces, underscores, etc.
+        return digits ? sign + digits : null;
+    }
+
     submit(): void {
         if (this.form.invalid) {
             this.form.markAllAsTouched();
@@ -546,7 +572,25 @@ export class NewDoctor implements AfterViewInit {
             return;
         }
         this.isSubmitting = true;
-        this.doctorService.createDoctor(this.form.value).subscribe({
+
+        const f = this.form.getRawValue();
+        const lc = (x: any) => (typeof x === 'string' ? x.toLowerCase().trim() : (x ?? null));
+
+        const payload: CreateUpdateDoctorRequest = {
+            name: lc(f.name),
+            dob: f.dob ? new Date(f.dob).toISOString() : null,
+            gender: lc(f.gender),
+            phone: this.sanitizePhone(f.phone),
+            qid: lc(f.qid),
+            job: lc(f.job),
+            insurance: lc(f.insurance),
+            department: lc(f.department),
+            specialization: lc(f.specialization),
+            status: lc(f.status),
+            hiringDate: f.hiringDate ? new Date(f.hiringDate).toISOString() : null // ← added
+        };
+
+        this.doctorService.createDoctor(payload).subscribe({
             next: (res: any) => {
                 this.isSubmitting = false;
                 this.ref.close(res?.data ?? res);
@@ -571,7 +615,8 @@ export class NewDoctor implements AfterViewInit {
                 insurance: '',
                 specialization: '',
                 department: '',
-                status: ''
+                status: '',
+                hiringDate: '' // ← added
             },
             { emitEvent: false }
         );

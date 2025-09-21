@@ -30,12 +30,16 @@ export interface FilterOption {
 
 export interface CreateUpdateDoctorRequest {
     name: string;
+    dob: string | null;
     gender: string;
-    insurance?: string;
-    dob: string;
-    phone?: string;
-    qid?: string;
-    job?: string;
+    phone: string | null;
+    qid: string | null;
+    job: string | null;
+    insurance: string | null;
+    department: string | null;
+    specialization: string | null;
+    status: string | null;
+    hiringDate: string | null;
 }
 
 export interface GetDoctorsPageOpts {
@@ -199,6 +203,7 @@ export class DoctorsService {
     }
 
     createDoctor(doctorData: CreateUpdateDoctorRequest): Observable<{ data: Doctor }> {
+        console.log(doctorData);
         return this.http.post<{ data: Doctor }>(Config.buildUrl(this.path), doctorData, {
             headers: this.authHeaders()
         });

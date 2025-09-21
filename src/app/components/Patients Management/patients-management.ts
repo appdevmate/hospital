@@ -54,7 +54,7 @@ const STATUS_SEVERITY: Record<string, 'success' | 'info' | 'warn' | 'danger' | '
             <p-button class="mr-2" [disabled]="!selected?.length" label="Delete Selected" icon="pi pi-trash" severity="danger" outlined (onClick)="deleteSelected()"></p-button>
             <input type="file" #fileInput accept=".xlsx,.xls,.csv" (change)="onImportFromFileInput($event)" hidden />
             <p-button class="mr-2" label="Import" icon="pi pi-upload" severity="secondary" (onClick)="fileInput.click()"></p-button>
-            <p-button class="mr-2" label="Template" icon="pi pi-file-excel" severity="secondary" (onClick)="downloadTemplate()"></p-button>
+            <p-button class="mr-2" label="Download Template" icon="pi pi-file-excel" severity="secondary" (onClick)="downloadTemplate()"></p-button>
         </ng-template>
 
         <ng-template #tbEnd>

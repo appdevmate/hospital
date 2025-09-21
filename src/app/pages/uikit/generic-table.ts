@@ -682,10 +682,11 @@ export class GenericTableComponent<T = any> implements OnChanges {
     display(row: T, col: TableColumn): string {
         const v = this.val(row, col.field);
         if (v == null) return '-';
+
         switch (col.pipe) {
             case 'date': {
-                const d = v instanceof Date ? v : new Date(v);
-                return new DatePipe('en-US').transform(d, col.dateFormat || 'MM/dd/yyyy') || '-';
+                const d = this.toValidDate(v);
+                return d ? (new DatePipe('en-US').transform(d, col.dateFormat || 'MM/dd/yyyy') ?? '-') : '-';
             }
             case 'titlecase':
                 return typeof v === 'string' ? v.replace(/\w\S*/g, (t) => t[0].toUpperCase() + t.slice(1).toLowerCase()) : String(v);
@@ -693,13 +694,49 @@ export class GenericTableComponent<T = any> implements OnChanges {
                 return String(v).toUpperCase();
             case 'lowercase':
                 return String(v).toLowerCase();
-            case 'currency':
-                return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Number(v));
-            case 'number':
-                return new Intl.NumberFormat('en-US').format(Number(v));
+            case 'currency': {
+                const n = Number(v);
+                return Number.isFinite(n) ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n) : '-';
+            }
+            case 'number': {
+                const n = Number(v);
+                return Number.isFinite(n) ? new Intl.NumberFormat('en-US').format(n) : '-';
+            }
             default:
                 return String(v);
         }
+    }
+
+    toValidDate(val: unknown): Date | null {
+        if (val instanceof Date && !isNaN(val.getTime())) return val;
+
+        if (typeof val === 'number') {
+            const ms = val < 1e12 ? val * 1000 : val; // support seconds or ms
+            const d = new Date(ms);
+            return isNaN(d.getTime()) ? null : d;
+        }
+
+        if (typeof val === 'string') {
+            const s = val.trim();
+            if (!s || s.toLowerCase() === 'invalid date') return null;
+
+            // ISO or native-parsable
+            const d1 = new Date(s);
+            if (!isNaN(d1.getTime())) return d1;
+
+            // dd/MM/yy or dd-MM-yyyy
+            const m = s.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{2,4})$/);
+            if (m) {
+                const dd = +m[1],
+                    mm = +m[2],
+                    y = +m[3];
+                const yyyy = m[3].length === 2 ? 2000 + y : y;
+                const d2 = new Date(yyyy, mm - 1, dd);
+                return isNaN(d2.getTime()) ? null : d2;
+            }
+        }
+
+        return null;
     }
 
     private csvEscape(v: any): string {
