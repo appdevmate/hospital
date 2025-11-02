@@ -1,41 +1,56 @@
-# Stage 1: Build the Angular application
+# ---------- Stage 1: Build Angular ----------
 FROM node:20-alpine AS builder
 
-# Set working directory
 WORKDIR /app
 
-# Copy package files
+# Copy lockfiles first for better caching
 COPY package*.json ./
-
-# Install ALL dependencies (including devDependencies for build)
 RUN npm ci
 
-# Copy the rest of the application code
+# Copy source and build for production
 COPY . .
-
-# Build the Angular app for production
+# If you use Angular SSR, this still builds the browser bundle under /browser
 RUN npm run build -- --configuration=production
 
-# Debug: List the contents of dist folder
-RUN ls -la /app/dist && ls -la /app/dist/verona-ng || ls -la /app/dist/
+# Optional debug listings (safe on Alpine)
+RUN ls -la /app/dist || true
+RUN ls -la /app/dist/verona-ng || true
+RUN ls -la /app/dist/verona-ng/browser || true
 
-# Stage 2: Serve the application with nginx
+
+# ---------- Stage 2: Nginx static host ----------
 FROM nginx:alpine
 
-# Copy custom nginx config
+# Labels (optional)
+LABEL org.opencontainers.image.title="verona-ng" \
+    org.opencontainers.image.description="Angular + Nginx with API base injection" \
+    org.opencontainers.image.vendor="you"
+
+# Copy custom nginx config (must include SPA fallback to index.html)
+# If you don't have one, keep your existing nginx.conf that you already mentioned.
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# Copy the built Angular app from the builder stage
-# For Angular 17+ with SSR, use /browser subfolder
-# For Angular 16 and below, remove /browser
+# Copy the built Angular app
+# For Angular 17+ default builder with SSR layout: /browser
+# If you are CSR-only, switch to the commented copy lines below.
 COPY --from=builder /app/dist/verona-ng/browser /usr/share/nginx/html
-
-# If the above doesn't work, try one of these:
 # COPY --from=builder /app/dist/verona-ng /usr/share/nginx/html
 # COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Expose port 80
-EXPOSE 80
+# Create a default api-base.txt placeholder so the app can start
+# This file can be overwritten at runtime via env var API_BASE
+RUN printf "http://localhost:4566/restapis/REPLACE/dev/_user_request_\n" > /usr/share/nginx/html/api-base.txt
 
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Lightweight entrypoint to inject API base at container start on Windows
+# Usage (Compose or docker run):
+#   -e API_BASE=http://localhost:4566/restapis/xxxx/dev/_user_request_
+ENV API_BASE=""
+RUN printf '#!/bin/sh\n' \
+    'set -e\n' \
+    'if [ -n "$API_BASE" ]; then echo "$API_BASE" > /usr/share/nginx/html/api-base.txt; fi\n' \
+    'exec nginx -g "daemon off;"\n' \
+    > /docker-entrypoint.sh \
+    && chmod +x /docker-entrypoint.sh
+
+EXPOSE 80
+CMD ["/docker-entrypoint.sh"]

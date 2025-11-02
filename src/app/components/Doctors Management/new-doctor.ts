@@ -48,11 +48,13 @@ import { HelpersService } from '@/services/helpers-service';
                     <!-- QID & Gender -->
                     <div class="form-row">
                         <div class="form-field form-field-half">
-                            <p-floatlabel variant="on">
-                                <input id="qid" pInputText formControlName="qid" autocomplete="off" [class.p-invalid]="validateQID('qid')" class="w-full" />
-                                <label for="qid"><i class="pi pi-id-card"></i> Qatar ID</label>
-                            </p-floatlabel>
-                            <small class="p-error" *ngIf="validateQID('qid')">Use numbers only (11-digit)</small>
+                            <div class="form-field">
+                                <p-floatlabel variant="on">
+                                    <p-inputMask id="qid" formControlName="qid" mask="99999999999" [unmask]="true" [slotChar]="' '" inputmode="numeric" class="w-full"> </p-inputMask>
+                                    <label for="qid"><i class="pi pi-id-card"></i> Qatar ID</label>
+                                </p-floatlabel>
+                                <small class="p-error" *ngIf="validateQID('qid')">Use numbers only (11-digit)</small>
+                            </div>
                         </div>
 
                         <div class="form-field form-field-half">
@@ -88,7 +90,7 @@ import { HelpersService } from '@/services/helpers-service';
                     <div class="form-row">
                         <div class="form-field form-field-half">
                             <p-floatlabel variant="on">
-                                <p-inputMask id="phone" formControlName="phone" mask="+999 9999 9999 9999 999" [autoClear]="false" styleClass="w-full" inputId="phone"></p-inputMask>
+                                <p-inputMask id="phone" formControlName="phone" mask="+999 9999 9999" styleClass="w-full" inputId="phone" />
                                 <label for="phone"><i class="pi pi-phone"></i> Phone Number *</label>
                             </p-floatlabel>
                             <small class="p-error" *ngIf="validatePhoneNumber('phone')">Valid phone number is required</small>
@@ -621,7 +623,6 @@ export class NewDoctor implements AfterViewInit {
             { emitEvent: false }
         );
         this.resetFormState();
-        this.helpersService.notifyInfo('Form Reset', 'Form has been reset to initial state');
     }
 
     // ===== Dept dialog =====
