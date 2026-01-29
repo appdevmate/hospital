@@ -1,15 +1,20 @@
 import {
-  BaseComponent
-} from "./chunk-LEFSMMS4.js";
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
+import {
+  BaseComponent,
+  PARENT_INSTANCE
+} from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
-} from "./chunk-TT45BO2Q.js";
+} from "./chunk-4ATYD752.js";
 import {
   PrimeTemplate,
   SharedModule
-} from "./chunk-NUKU6X6H.js";
-import "./chunk-BMDSN43F.js";
-import "./chunk-RK2DVQNP.js";
+} from "./chunk-LMEEH3AJ.js";
+import "./chunk-GOP36Q47.js";
+import "./chunk-UCHM6OXG.js";
 import {
   CommonModule,
   NgIf,
@@ -26,6 +31,7 @@ import {
   NgModule,
   ViewEncapsulation,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -47,6 +53,7 @@ import {
   ɵɵtemplate
 } from "./chunk-EIF6IUR4.js";
 import {
+  InjectionToken,
   inject,
   ɵɵdefineInjectable,
   ɵɵdefineInjector
@@ -71,14 +78,14 @@ function Toolbar_div_1_ng_container_1_Template(rf, ctx) {
 }
 function Toolbar_div_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div");
-    ɵɵtemplate(1, Toolbar_div_1_ng_container_1_Template, 1, 0, "ng-container", 1);
+    ɵɵelementStart(0, "div", 1);
+    ɵɵtemplate(1, Toolbar_div_1_ng_container_1_Template, 1, 0, "ng-container", 2);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext();
     ɵɵclassMap(ctx_r0.cx("start"));
-    ɵɵattribute("data-pc-section", "start");
+    ɵɵproperty("pBind", ctx_r0.ptm("start"));
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r0.startTemplate || ctx_r0._startTemplate);
   }
@@ -90,14 +97,14 @@ function Toolbar_div_2_ng_container_1_Template(rf, ctx) {
 }
 function Toolbar_div_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div");
-    ɵɵtemplate(1, Toolbar_div_2_ng_container_1_Template, 1, 0, "ng-container", 1);
+    ɵɵelementStart(0, "div", 1);
+    ɵɵtemplate(1, Toolbar_div_2_ng_container_1_Template, 1, 0, "ng-container", 2);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext();
     ɵɵclassMap(ctx_r0.cx("center"));
-    ɵɵattribute("data-pc-section", "center");
+    ɵɵproperty("pBind", ctx_r0.ptm("center"));
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r0.centerTemplate || ctx_r0._centerTemplate);
   }
@@ -109,14 +116,14 @@ function Toolbar_div_3_ng_container_1_Template(rf, ctx) {
 }
 function Toolbar_div_3_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div");
-    ɵɵtemplate(1, Toolbar_div_3_ng_container_1_Template, 1, 0, "ng-container", 1);
+    ɵɵelementStart(0, "div", 1);
+    ɵɵtemplate(1, Toolbar_div_3_ng_container_1_Template, 1, 0, "ng-container", 2);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext();
     ɵɵclassMap(ctx_r0.cx("end"));
-    ɵɵattribute("data-pc-section", "end");
+    ɵɵproperty("pBind", ctx_r0.ptm("end"));
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r0.endTemplate || ctx_r0._endTemplate);
   }
@@ -129,7 +136,7 @@ var classes = {
 };
 var ToolbarStyle = class _ToolbarStyle extends BaseStyle {
   name = "toolbar";
-  theme = style;
+  style = style;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵToolbarStyle_BaseFactory;
@@ -154,7 +161,18 @@ var ToolbarClasses;
   ToolbarClasses2["center"] = "p-toolbar-center";
   ToolbarClasses2["end"] = "p-toolbar-end";
 })(ToolbarClasses || (ToolbarClasses = {}));
+var TOOLBAR_INSTANCE = new InjectionToken("TOOLBAR_INSTANCE");
 var Toolbar = class _Toolbar extends BaseComponent {
+  $pcToolbar = inject(TOOLBAR_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
+  }
   /**
    * Style class of the component.
    * @deprecated since v20.0.0, use `class` instead.
@@ -189,7 +207,7 @@ var Toolbar = class _Toolbar extends BaseComponent {
   _startTemplate;
   _endTemplate;
   _centerTemplate;
-  ngAfterContentInit() {
+  onAfterContentInit() {
     this.templates.forEach((item) => {
       switch (item.getType()) {
         case "start":
@@ -230,7 +248,7 @@ var Toolbar = class _Toolbar extends BaseComponent {
         ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.templates = _t);
       }
     },
-    hostAttrs: ["data-pc-section", "root", "data-pc-name", "toolbar", "role", "toolbar"],
+    hostAttrs: ["role", "toolbar"],
     hostVars: 3,
     hostBindings: function Toolbar_HostBindings(rf, ctx) {
       if (rf & 2) {
@@ -242,11 +260,17 @@ var Toolbar = class _Toolbar extends BaseComponent {
       styleClass: "styleClass",
       ariaLabelledBy: "ariaLabelledBy"
     },
-    features: [ɵɵProvidersFeature([ToolbarStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([ToolbarStyle, {
+      provide: TOOLBAR_INSTANCE,
+      useExisting: _Toolbar
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _Toolbar
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     ngContentSelectors: _c3,
     decls: 4,
     vars: 3,
-    consts: [[3, "class", 4, "ngIf"], [4, "ngTemplateOutlet"]],
+    consts: [[3, "class", "pBind", 4, "ngIf"], [3, "pBind"], [4, "ngTemplateOutlet"]],
     template: function Toolbar_Template(rf, ctx) {
       if (rf & 1) {
         ɵɵprojectionDef();
@@ -262,7 +286,7 @@ var Toolbar = class _Toolbar extends BaseComponent {
         ɵɵproperty("ngIf", ctx.endTemplate || ctx._endTemplate);
       }
     },
-    dependencies: [CommonModule, NgIf, NgTemplateOutlet, SharedModule],
+    dependencies: [CommonModule, NgIf, NgTemplateOutlet, SharedModule, BindModule, Bind],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -273,29 +297,34 @@ var Toolbar = class _Toolbar extends BaseComponent {
     args: [{
       selector: "p-toolbar",
       standalone: true,
-      imports: [CommonModule, SharedModule],
+      imports: [CommonModule, SharedModule, BindModule],
       template: `
         <ng-content></ng-content>
-        <div [class]="cx('start')" *ngIf="startTemplate || _startTemplate" [attr.data-pc-section]="'start'">
+        <div [class]="cx('start')" *ngIf="startTemplate || _startTemplate" [pBind]="ptm('start')">
             <ng-container *ngTemplateOutlet="startTemplate || _startTemplate"></ng-container>
         </div>
-        <div [class]="cx('center')" *ngIf="centerTemplate || _centerTemplate" [attr.data-pc-section]="'center'">
+        <div [class]="cx('center')" *ngIf="centerTemplate || _centerTemplate" [pBind]="ptm('center')">
             <ng-container *ngTemplateOutlet="centerTemplate || _centerTemplate"></ng-container>
         </div>
-        <div [class]="cx('end')" *ngIf="endTemplate || _endTemplate" [attr.data-pc-section]="'end'">
+        <div [class]="cx('end')" *ngIf="endTemplate || _endTemplate" [pBind]="ptm('end')">
             <ng-container *ngTemplateOutlet="endTemplate || _endTemplate"></ng-container>
         </div>
     `,
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
-      providers: [ToolbarStyle],
+      providers: [ToolbarStyle, {
+        provide: TOOLBAR_INSTANCE,
+        useExisting: Toolbar
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: Toolbar
+      }],
       host: {
         "[class]": 'cn(cx("root"), styleClass)',
-        "data-pc-section": "root",
-        "data-pc-name": "toolbar",
         role: "toolbar",
         "[attr.aria-labelledby]": "ariaLabelledBy"
-      }
+      },
+      hostDirectives: [Bind]
     }]
   }], null, {
     styleClass: [{
@@ -334,19 +363,19 @@ var ToolbarModule = class _ToolbarModule {
   };
   static ɵmod = ɵɵdefineNgModule({
     type: _ToolbarModule,
-    imports: [Toolbar, SharedModule],
-    exports: [Toolbar, SharedModule]
+    imports: [Toolbar, SharedModule, BindModule],
+    exports: [Toolbar, SharedModule, BindModule]
   });
   static ɵinj = ɵɵdefineInjector({
-    imports: [Toolbar, SharedModule, SharedModule]
+    imports: [Toolbar, SharedModule, BindModule, SharedModule, BindModule]
   });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(ToolbarModule, [{
     type: NgModule,
     args: [{
-      imports: [Toolbar, SharedModule],
-      exports: [Toolbar, SharedModule]
+      imports: [Toolbar, SharedModule, BindModule],
+      exports: [Toolbar, SharedModule, BindModule]
     }]
   }], null, null);
 })();

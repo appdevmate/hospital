@@ -1,35 +1,39 @@
 import {
   FocusTrap
-} from "./chunk-RSPVXXRC.js";
+} from "./chunk-PF7DN6OW.js";
 import {
   Button,
   ButtonModule
-} from "./chunk-5VQOKVHN.js";
-import "./chunk-CXAQXI32.js";
-import "./chunk-XQRN46ZX.js";
-import "./chunk-6PBBDZZF.js";
-import "./chunk-NSRC7NBD.js";
+} from "./chunk-YVQRESGR.js";
+import "./chunk-TENFQJBN.js";
+import "./chunk-PJRMHEN5.js";
+import "./chunk-YNLAOK3J.js";
 import {
   ConnectedOverlayScrollHandler
-} from "./chunk-QVUTNZUY.js";
+} from "./chunk-S73J4WE3.js";
 import {
   zindexutils
 } from "./chunk-BB55NINM.js";
-import "./chunk-ZGQMWLLM.js";
-import "./chunk-7J3R4TGM.js";
+import "./chunk-OC77X5LN.js";
+import "./chunk-RHA7RL5K.js";
+import "./chunk-YXZQJBKH.js";
 import {
-  BaseComponent
-} from "./chunk-LEFSMMS4.js";
+  Bind
+} from "./chunk-MLQGRGGO.js";
+import {
+  BaseComponent,
+  PARENT_INSTANCE
+} from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
-} from "./chunk-TT45BO2Q.js";
+} from "./chunk-4ATYD752.js";
 import {
   ConfirmationService,
   OverlayService,
   PrimeTemplate,
   SharedModule,
   TranslationKeys
-} from "./chunk-NUKU6X6H.js";
+} from "./chunk-LMEEH3AJ.js";
 import "./chunk-6QGHQEN4.js";
 import {
   animate,
@@ -38,7 +42,7 @@ import {
   transition,
   trigger
 } from "./chunk-53DGU4C2.js";
-import "./chunk-BMDSN43F.js";
+import "./chunk-GOP36Q47.js";
 import {
   D,
   K,
@@ -46,7 +50,7 @@ import {
   W,
   Yt,
   bt
-} from "./chunk-RK2DVQNP.js";
+} from "./chunk-UCHM6OXG.js";
 import {
   CommonModule,
   NgIf,
@@ -72,6 +76,7 @@ import {
   booleanAttribute,
   numberAttribute,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -105,6 +110,7 @@ import {
 } from "./chunk-EIF6IUR4.js";
 import {
   DOCUMENT,
+  InjectionToken,
   inject,
   ɵɵdefineInjectable,
   ɵɵdefineInjector,
@@ -171,17 +177,18 @@ function ConfirmPopup_div_0_ng_template_2_ng_container_2_Template(rf, ctx) {
 }
 function ConfirmPopup_div_0_ng_template_2_ng_template_3_i_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "i");
+    ɵɵelement(0, "i", 10);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(4);
     ɵɵclassMap(ctx_r1.cx("icon"));
+    ɵɵproperty("pBind", ctx_r1.ptm("icon"));
   }
 }
 function ConfirmPopup_div_0_ng_template_2_ng_template_3_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, ConfirmPopup_div_0_ng_template_2_ng_template_3_i_0_Template, 1, 2, "i", 12);
-    ɵɵelementStart(1, "span");
+    ɵɵtemplate(0, ConfirmPopup_div_0_ng_template_2_ng_template_3_i_0_Template, 1, 3, "i", 13);
+    ɵɵelementStart(1, "span", 10);
     ɵɵtext(2);
     ɵɵelementEnd();
   }
@@ -190,6 +197,7 @@ function ConfirmPopup_div_0_ng_template_2_ng_template_3_Template(rf, ctx) {
     ɵɵproperty("ngIf", ctx_r1.confirmation == null ? null : ctx_r1.confirmation.icon);
     ɵɵadvance();
     ɵɵclassMap(ctx_r1.cx("message"));
+    ɵɵproperty("pBind", ctx_r1.ptm("message"));
     ɵɵadvance();
     ɵɵtextInterpolate(ctx_r1.confirmation == null ? null : ctx_r1.confirmation.message);
   }
@@ -212,7 +220,7 @@ function ConfirmPopup_div_0_ng_template_2_p_button_6_ng_template_1_1_Template(rf
 }
 function ConfirmPopup_div_0_ng_template_2_p_button_6_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, ConfirmPopup_div_0_ng_template_2_p_button_6_ng_template_1_i_0_Template, 1, 2, "i", 14)(1, ConfirmPopup_div_0_ng_template_2_p_button_6_ng_template_1_1_Template, 2, 0, null, 15);
+    ɵɵtemplate(0, ConfirmPopup_div_0_ng_template_2_p_button_6_ng_template_1_i_0_Template, 1, 2, "i", 15)(1, ConfirmPopup_div_0_ng_template_2_p_button_6_ng_template_1_1_Template, 2, 0, null, 16);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(4);
@@ -224,7 +232,7 @@ function ConfirmPopup_div_0_ng_template_2_p_button_6_ng_template_1_Template(rf, 
 function ConfirmPopup_div_0_ng_template_2_p_button_6_Template(rf, ctx) {
   if (rf & 1) {
     const _r3 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "p-button", 13);
+    ɵɵelementStart(0, "p-button", 14);
     ɵɵlistener("onClick", function ConfirmPopup_div_0_ng_template_2_p_button_6_Template_p_button_onClick_0_listener() {
       ɵɵrestoreView(_r3);
       const ctx_r1 = ɵɵnextContext(3);
@@ -236,7 +244,7 @@ function ConfirmPopup_div_0_ng_template_2_p_button_6_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r1.cx("pcRejectButton"));
-    ɵɵproperty("label", ctx_r1.rejectButtonLabel)("styleClass", ctx_r1.confirmation == null ? null : ctx_r1.confirmation.rejectButtonStyleClass)("size", (ctx_r1.confirmation.rejectButtonProps == null ? null : ctx_r1.confirmation.rejectButtonProps.size) || "small")("text", (ctx_r1.confirmation.rejectButtonProps == null ? null : ctx_r1.confirmation.rejectButtonProps.text) || false)("buttonProps", ctx_r1.getRejectButtonProps())("autofocus", ctx_r1.autoFocusReject);
+    ɵɵproperty("label", ctx_r1.rejectButtonLabel)("pt", ctx_r1.ptm("pcRejectButton"))("styleClass", ctx_r1.confirmation == null ? null : ctx_r1.confirmation.rejectButtonStyleClass)("size", (ctx_r1.confirmation == null ? null : ctx_r1.confirmation.rejectButtonProps == null ? null : ctx_r1.confirmation.rejectButtonProps.size) || "small")("text", (ctx_r1.confirmation == null ? null : ctx_r1.confirmation.rejectButtonProps == null ? null : ctx_r1.confirmation.rejectButtonProps.text) || false)("buttonProps", ctx_r1.getRejectButtonProps())("autofocus", ctx_r1.autoFocusReject);
     ɵɵattribute("aria-label", ctx_r1.rejectButtonLabel);
   }
 }
@@ -258,7 +266,7 @@ function ConfirmPopup_div_0_ng_template_2_p_button_7_ng_template_1_1_Template(rf
 }
 function ConfirmPopup_div_0_ng_template_2_p_button_7_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, ConfirmPopup_div_0_ng_template_2_p_button_7_ng_template_1_i_0_Template, 1, 2, "i", 14)(1, ConfirmPopup_div_0_ng_template_2_p_button_7_ng_template_1_1_Template, 2, 0, null, 15);
+    ɵɵtemplate(0, ConfirmPopup_div_0_ng_template_2_p_button_7_ng_template_1_i_0_Template, 1, 2, "i", 15)(1, ConfirmPopup_div_0_ng_template_2_p_button_7_ng_template_1_1_Template, 2, 0, null, 16);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(4);
@@ -270,7 +278,7 @@ function ConfirmPopup_div_0_ng_template_2_p_button_7_ng_template_1_Template(rf, 
 function ConfirmPopup_div_0_ng_template_2_p_button_7_Template(rf, ctx) {
   if (rf & 1) {
     const _r4 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "p-button", 16);
+    ɵɵelementStart(0, "p-button", 17);
     ɵɵlistener("onClick", function ConfirmPopup_div_0_ng_template_2_p_button_7_Template_p_button_onClick_0_listener() {
       ɵɵrestoreView(_r4);
       const ctx_r1 = ɵɵnextContext(3);
@@ -282,27 +290,29 @@ function ConfirmPopup_div_0_ng_template_2_p_button_7_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r1.cx("pcAcceptButton"));
-    ɵɵproperty("label", ctx_r1.acceptButtonLabel)("styleClass", ctx_r1.confirmation == null ? null : ctx_r1.confirmation.acceptButtonStyleClass)("size", (ctx_r1.confirmation.acceptButtonProps == null ? null : ctx_r1.confirmation.acceptButtonProps.size) || "small")("buttonProps", ctx_r1.getAcceptButtonProps())("autofocus", ctx_r1.autoFocusAccept);
+    ɵɵproperty("label", ctx_r1.acceptButtonLabel)("pt", ctx_r1.ptm("pcAcceptButton"))("styleClass", ctx_r1.confirmation == null ? null : ctx_r1.confirmation.acceptButtonStyleClass)("size", (ctx_r1.confirmation == null ? null : ctx_r1.confirmation.acceptButtonProps == null ? null : ctx_r1.confirmation.acceptButtonProps.size) || "small")("buttonProps", ctx_r1.getAcceptButtonProps())("autofocus", ctx_r1.autoFocusAccept);
     ɵɵattribute("aria-label", ctx_r1.acceptButtonLabel);
   }
 }
 function ConfirmPopup_div_0_ng_template_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div", null, 1);
-    ɵɵtemplate(2, ConfirmPopup_div_0_ng_template_2_ng_container_2_Template, 2, 4, "ng-container", 8)(3, ConfirmPopup_div_0_ng_template_2_ng_template_3_Template, 3, 4, "ng-template", null, 2, ɵɵtemplateRefExtractor);
+    ɵɵelementStart(0, "div", 10, 1);
+    ɵɵtemplate(2, ConfirmPopup_div_0_ng_template_2_ng_container_2_Template, 2, 4, "ng-container", 8)(3, ConfirmPopup_div_0_ng_template_2_ng_template_3_Template, 3, 5, "ng-template", null, 2, ɵɵtemplateRefExtractor);
     ɵɵelementEnd();
-    ɵɵelementStart(5, "div");
-    ɵɵtemplate(6, ConfirmPopup_div_0_ng_template_2_p_button_6_Template, 3, 9, "p-button", 10)(7, ConfirmPopup_div_0_ng_template_2_p_button_7_Template, 3, 8, "p-button", 11);
+    ɵɵelementStart(5, "div", 10);
+    ɵɵtemplate(6, ConfirmPopup_div_0_ng_template_2_p_button_6_Template, 3, 10, "p-button", 11)(7, ConfirmPopup_div_0_ng_template_2_p_button_7_Template, 3, 9, "p-button", 12);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const withoutContentTemplate_r5 = ɵɵreference(4);
     const ctx_r1 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r1.cx("content"));
+    ɵɵproperty("pBind", ctx_r1.ptm("content"));
     ɵɵadvance(2);
     ɵɵproperty("ngIf", ctx_r1.contentTemplate || ctx_r1._contentTemplate)("ngIfElse", withoutContentTemplate_r5);
     ɵɵadvance(3);
     ɵɵclassMap(ctx_r1.cx("footer"));
+    ɵɵproperty("pBind", ctx_r1.ptm("footer"));
     ɵɵadvance();
     ɵɵproperty("ngIf", (ctx_r1.confirmation == null ? null : ctx_r1.confirmation.rejectVisible) !== false);
     ɵɵadvance();
@@ -326,14 +336,14 @@ function ConfirmPopup_div_0_Template(rf, ctx) {
       const ctx_r1 = ɵɵnextContext();
       return ɵɵresetView(ctx_r1.onAnimationEnd($event));
     });
-    ɵɵtemplate(1, ConfirmPopup_div_0_ng_container_1_Template, 2, 4, "ng-container", 8)(2, ConfirmPopup_div_0_ng_template_2_Template, 8, 8, "ng-template", null, 0, ɵɵtemplateRefExtractor);
+    ɵɵtemplate(1, ConfirmPopup_div_0_ng_container_1_Template, 2, 4, "ng-container", 8)(2, ConfirmPopup_div_0_ng_template_2_Template, 8, 10, "ng-template", null, 0, ɵɵtemplateRefExtractor);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const notHeadless_r6 = ɵɵreference(3);
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cn(ctx_r1.cx("root"), ctx_r1.styleClass));
-    ɵɵproperty("ngStyle", ctx_r1.style)("@animation", ɵɵpureFunction1(9, _c5, ɵɵpureFunction2(6, _c4, ctx_r1.showTransitionOptions, ctx_r1.hideTransitionOptions)));
+    ɵɵproperty("pBind", ctx_r1.ptm("root"))("ngStyle", ctx_r1.style)("@animation", ɵɵpureFunction1(10, _c5, ɵɵpureFunction2(7, _c4, ctx_r1.showTransitionOptions, ctx_r1.hideTransitionOptions)));
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r1.headlessTemplate || ctx_r1._headlessTemplate)("ngIfElse", notHeadless_r6);
   }
@@ -351,7 +361,7 @@ var classes = {
 };
 var ConfirmPopupStyle = class _ConfirmPopupStyle extends BaseStyle {
   name = "confirmpopup";
-  theme = style2;
+  style = style2;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵConfirmPopupStyle_BaseFactory;
@@ -379,6 +389,7 @@ var ConfirmPopupClasses;
   ConfirmPopupClasses2["pcRejectButton"] = "p-confirmpopup-reject-button";
   ConfirmPopupClasses2["pcAcceptButton"] = "p-confirmpopup-accept-button";
 })(ConfirmPopupClasses || (ConfirmPopupClasses = {}));
+var CONFIRMPOPUP_INSTANCE = new InjectionToken("CONFIRMPOPUP_INSTANCE");
 var ConfirmPopup = class _ConfirmPopup extends BaseComponent {
   el;
   confirmationService;
@@ -386,6 +397,16 @@ var ConfirmPopup = class _ConfirmPopup extends BaseComponent {
   cd;
   overlayService;
   document;
+  $pcConfirmPopup = inject(CONFIRMPOPUP_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptm("host"));
+  }
   /**
    * Optional key to match the key of confirm object, necessary to use when component tree has multiple confirm dialogs.
    * @group Props
@@ -489,7 +510,7 @@ var ConfirmPopup = class _ConfirmPopup extends BaseComponent {
     });
   }
   templates;
-  ngAfterContentInit() {
+  onAfterContentInit() {
     this.templates?.forEach((item) => {
       switch (item.getType()) {
         case "content":
@@ -518,7 +539,7 @@ var ConfirmPopup = class _ConfirmPopup extends BaseComponent {
     return void 0;
   }
   onEscapeKeydown(event) {
-    if (this.confirmation && this.confirmation.closeOnEscape) {
+    if (this.confirmation && this.confirmation.closeOnEscape !== false) {
       this.onReject();
     }
   }
@@ -549,18 +570,20 @@ var ConfirmPopup = class _ConfirmPopup extends BaseComponent {
     if (this.autoZIndex) {
       zindexutils.set("overlay", this.container, this.config.zIndex.overlay);
     }
-    if (!this.confirmation) {
+    if (!this.confirmation || !this.confirmation.target) {
       return;
     }
     D(this.container, this.confirmation?.target, false);
     const containerOffset = K(this.container);
     const targetOffset = K(this.confirmation?.target);
     let arrowLeft = 0;
-    if (containerOffset.left < targetOffset.left) {
+    if (containerOffset && targetOffset && containerOffset.left < targetOffset.left) {
       arrowLeft = targetOffset.left - containerOffset.left;
     }
-    this.container.style.setProperty("--p-confirmpopup-arrow-left", `${arrowLeft}px`);
-    if (containerOffset.top < targetOffset.top) {
+    if (this.container) {
+      this.container.style.setProperty("--p-confirmpopup-arrow-left", `${arrowLeft}px`);
+    }
+    if (containerOffset && targetOffset && containerOffset.top < targetOffset.top) {
       W(this.container, "p-confirm-popup-flipped");
     }
   }
@@ -681,7 +704,7 @@ var ConfirmPopup = class _ConfirmPopup extends BaseComponent {
   get rejectButtonLabel() {
     return this.confirmation?.rejectLabel || this.config.getTranslation(TranslationKeys.REJECT);
   }
-  ngOnDestroy() {
+  onDestroy() {
     this.restoreAppend();
     if (this.subscription) {
       this.subscription.unsubscribe();
@@ -712,7 +735,7 @@ var ConfirmPopup = class _ConfirmPopup extends BaseComponent {
     },
     hostBindings: function ConfirmPopup_HostBindings(rf, ctx) {
       if (rf & 1) {
-        ɵɵlistener("keydown.escape", function ConfirmPopup_keydown_escape_HostBindingHandler($event) {
+        ɵɵlistener("keydown.Escape", function ConfirmPopup_keydown_Escape_HostBindingHandler($event) {
           return ctx.onEscapeKeydown($event);
         }, ɵɵresolveDocument);
       }
@@ -728,19 +751,25 @@ var ConfirmPopup = class _ConfirmPopup extends BaseComponent {
       styleClass: "styleClass",
       visible: "visible"
     },
-    features: [ɵɵProvidersFeature([ConfirmPopupStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([ConfirmPopupStyle, {
+      provide: CONFIRMPOPUP_INSTANCE,
+      useExisting: _ConfirmPopup
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _ConfirmPopup
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     decls: 1,
     vars: 1,
-    consts: [["notHeadless", ""], ["content", ""], ["withoutContentTemplate", ""], ["icon", ""], ["rejecticon", ""], ["accepticontemplate", ""], ["pFocusTrap", "", "role", "alertdialog", 3, "class", "ngStyle", "click", 4, "ngIf"], ["pFocusTrap", "", "role", "alertdialog", 3, "click", "ngStyle"], [4, "ngIf", "ngIfElse"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], ["type", "button", 3, "label", "class", "styleClass", "size", "text", "buttonProps", "autofocus", "onClick", 4, "ngIf"], ["type", "button", 3, "label", "class", "styleClass", "size", "buttonProps", "autofocus", "onClick", 4, "ngIf"], [3, "class", 4, "ngIf"], ["type", "button", 3, "onClick", "label", "styleClass", "size", "text", "buttonProps", "autofocus"], [3, "class", 4, "ngIf", "ngIfElse"], [4, "ngTemplateOutlet"], ["type", "button", 3, "onClick", "label", "styleClass", "size", "buttonProps", "autofocus"]],
+    consts: [["notHeadless", ""], ["content", ""], ["withoutContentTemplate", ""], ["icon", ""], ["rejecticon", ""], ["accepticontemplate", ""], ["pFocusTrap", "", "role", "alertdialog", 3, "pBind", "class", "ngStyle", "click", 4, "ngIf"], ["pFocusTrap", "", "role", "alertdialog", 3, "click", "pBind", "ngStyle"], [4, "ngIf", "ngIfElse"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], [3, "pBind"], ["type", "button", 3, "label", "pt", "class", "styleClass", "size", "text", "buttonProps", "autofocus", "onClick", 4, "ngIf"], ["type", "button", 3, "label", "pt", "class", "styleClass", "size", "buttonProps", "autofocus", "onClick", 4, "ngIf"], [3, "pBind", "class", 4, "ngIf"], ["type", "button", 3, "onClick", "label", "pt", "styleClass", "size", "text", "buttonProps", "autofocus"], [3, "class", 4, "ngIf", "ngIfElse"], [4, "ngTemplateOutlet"], ["type", "button", 3, "onClick", "label", "pt", "styleClass", "size", "buttonProps", "autofocus"]],
     template: function ConfirmPopup_Template(rf, ctx) {
       if (rf & 1) {
-        ɵɵtemplate(0, ConfirmPopup_div_0_Template, 4, 11, "div", 6);
+        ɵɵtemplate(0, ConfirmPopup_div_0_Template, 4, 12, "div", 6);
       }
       if (rf & 2) {
         ɵɵproperty("ngIf", ctx.visible);
       }
     },
-    dependencies: [CommonModule, NgIf, NgTemplateOutlet, NgStyle, SharedModule, ButtonModule, Button, FocusTrap],
+    dependencies: [CommonModule, NgIf, NgTemplateOutlet, NgStyle, SharedModule, ButtonModule, Button, FocusTrap, Bind],
     encapsulation: 2,
     data: {
       animation: [trigger("animation", [state("void", style({
@@ -760,11 +789,20 @@ var ConfirmPopup = class _ConfirmPopup extends BaseComponent {
     args: [{
       selector: "p-confirmpopup",
       standalone: true,
-      imports: [CommonModule, SharedModule, ButtonModule, FocusTrap],
+      imports: [CommonModule, SharedModule, ButtonModule, FocusTrap, Bind],
+      providers: [ConfirmPopupStyle, {
+        provide: CONFIRMPOPUP_INSTANCE,
+        useExisting: ConfirmPopup
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: ConfirmPopup
+      }],
+      hostDirectives: [Bind],
       template: `
         <div
             *ngIf="visible"
             pFocusTrap
+            [pBind]="ptm('root')"
             [class]="cn(cx('root'), styleClass)"
             [ngStyle]="style"
             role="alertdialog"
@@ -780,24 +818,25 @@ var ConfirmPopup = class _ConfirmPopup extends BaseComponent {
                 <ng-container *ngTemplateOutlet="headlessTemplate || _headlessTemplate; context: { $implicit: confirmation }"></ng-container>
             </ng-container>
             <ng-template #notHeadless>
-                <div #content [class]="cx('content')">
+                <div #content [pBind]="ptm('content')" [class]="cx('content')">
                     <ng-container *ngIf="contentTemplate || _contentTemplate; else withoutContentTemplate">
                         <ng-container *ngTemplateOutlet="contentTemplate || _contentTemplate; context: { $implicit: confirmation }"></ng-container>
                     </ng-container>
                     <ng-template #withoutContentTemplate>
-                        <i [class]="cx('icon')" *ngIf="confirmation?.icon"></i>
-                        <span [class]="cx('message')">{{ confirmation?.message }}</span>
+                        <i [pBind]="ptm('icon')" [class]="cx('icon')" *ngIf="confirmation?.icon"></i>
+                        <span [pBind]="ptm('message')" [class]="cx('message')">{{ confirmation?.message }}</span>
                     </ng-template>
                 </div>
-                <div [class]="cx('footer')">
+                <div [pBind]="ptm('footer')" [class]="cx('footer')">
                     <p-button
                         type="button"
                         [label]="rejectButtonLabel"
                         (onClick)="onReject()"
+                        [pt]="ptm('pcRejectButton')"
                         [class]="cx('pcRejectButton')"
                         [styleClass]="confirmation?.rejectButtonStyleClass"
-                        [size]="confirmation.rejectButtonProps?.size || 'small'"
-                        [text]="confirmation.rejectButtonProps?.text || false"
+                        [size]="confirmation?.rejectButtonProps?.size || 'small'"
+                        [text]="confirmation?.rejectButtonProps?.text || false"
                         *ngIf="confirmation?.rejectVisible !== false"
                         [attr.aria-label]="rejectButtonLabel"
                         [buttonProps]="getRejectButtonProps()"
@@ -812,9 +851,10 @@ var ConfirmPopup = class _ConfirmPopup extends BaseComponent {
                         type="button"
                         [label]="acceptButtonLabel"
                         (onClick)="onAccept()"
+                        [pt]="ptm('pcAcceptButton')"
                         [class]="cx('pcAcceptButton')"
                         [styleClass]="confirmation?.acceptButtonStyleClass"
-                        [size]="confirmation.acceptButtonProps?.size || 'small'"
+                        [size]="confirmation?.acceptButtonProps?.size || 'small'"
                         *ngIf="confirmation?.acceptVisible !== false"
                         [attr.aria-label]="acceptButtonLabel"
                         [buttonProps]="getAcceptButtonProps()"
@@ -837,8 +877,7 @@ var ConfirmPopup = class _ConfirmPopup extends BaseComponent {
         opacity: 1
       })), transition("void => open", animate("{{showTransitionParams}}")), transition("open => void", animate("{{hideTransitionParams}}"))])],
       changeDetection: ChangeDetectionStrategy.OnPush,
-      encapsulation: ViewEncapsulation.None,
-      providers: [ConfirmPopupStyle]
+      encapsulation: ViewEncapsulation.None
     }]
   }], () => [{
     type: ElementRef
@@ -920,7 +959,7 @@ var ConfirmPopup = class _ConfirmPopup extends BaseComponent {
     }],
     onEscapeKeydown: [{
       type: HostListener,
-      args: ["document:keydown.escape", ["$event"]]
+      args: ["document:keydown.Escape", ["$event"]]
     }]
   });
 })();

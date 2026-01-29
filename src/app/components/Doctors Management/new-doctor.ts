@@ -17,212 +17,337 @@ import { FileUploadModule, FileSelectEvent } from 'primeng/fileupload';
 
 import { DoctorsService, Department, Specialization, CreateUpdateDoctorRequest } from '@/pages/service/doctors.service';
 import { HelpersService } from '@/services/helpers-service';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { Fluid } from 'primeng/fluid';
 
 @Component({
     selector: 'app-new-doctor',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, FormsModule, CardModule, InputTextModule, DatePickerModule, AutoCompleteModule, InputMaskModule, ButtonModule, ToastModule, FloatLabelModule, DialogModule, FileUploadModule],
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        FormsModule,
+        CardModule,
+        InputTextModule,
+        DatePickerModule,
+        AutoCompleteModule,
+        InputMaskModule,
+        ButtonModule,
+        ToastModule,
+        FloatLabelModule,
+        DialogModule,
+        FileUploadModule,
+        MultiSelectModule,
+        InputNumberModule,
+        Fluid
+    ],
     providers: [HelpersService],
     template: `
         <div class="doctor-form-container">
             <p-card>
                 <ng-template pTemplate="header">
-                    <div class="form-header">
-                        <div class="title">
-                            <i class="pi pi-user-plus"></i>
-                            <h3>New Doctor</h3>
+                    <div class="header flex items-center justify-between px-6 py-4">
+                        <div class="flex items-center gap-3">
+                            <i class="pi pi-user-plus text-6xl text-primary" style="font-size: 2rem;"></i>
+                            <h3 class="text-xl font-semibold m-0">New Doctor</h3>
                         </div>
                         <p-button icon="pi pi-times" text severity="secondary" pTooltip="Close" (click)="ref.close()"></p-button>
                     </div>
                 </ng-template>
 
                 <form [formGroup]="form" (ngSubmit)="submit()" class="form-content" autocomplete="off">
-                    <!-- Name -->
-                    <div class="form-field">
-                        <p-floatlabel variant="on">
-                            <input pInputText id="name" formControlName="name" autocomplete="off" [class.p-invalid]="invalid('name')" class="w-full" />
-                            <label for="name"><i class="pi pi-user"></i> Enter Full Name</label>
-                        </p-floatlabel>
-                    </div>
+                    <!-- Personal Information Section -->
+                    <div class="mb-6">
+                        <h4 class="devider text-lg font-semibold mb-4 text-gray-700 border-b pb-2">Personal Information</h4>
 
-                    <!-- QID & Gender -->
-                    <div class="form-row">
-                        <div class="form-field form-field-half">
-                            <div class="form-field">
-                                <p-floatlabel variant="on">
-                                    <p-inputMask id="qid" formControlName="qid" mask="99999999999" [unmask]="true" [slotChar]="' '" inputmode="numeric" class="w-full"> </p-inputMask>
+                        <!-- Full Name - Takes full width as it's usually long -->
+                        <div class="mb-4">
+                            <p-floatLabel variant="on">
+                                <input pInputText id="name" formControlName="name" autocomplete="off" [class.p-invalid]="invalid('name')" class="w-full" />
+                                <label for="name"><i class="pi pi-user"></i> Full Name</label>
+                            </p-floatLabel>
+                            <small class="p-error" *ngIf="invalid('name')">Valid name is required</small>
+                        </div>
+
+                        <!-- QID, Phone, Gender - Single row -->
+                        <p-fluid class="flex flex-wrap gap-4 mb-6">
+                            <div class="flex-1 md:flex-[2]">
+                                <p-floatLabel variant="on">
+                                    <p-inputMask inputId="qid" formControlName="qid" mask="99999999999" [unmask]="true" [slotChar]="' '" inputmode="numeric" styleClass="w-full" [class.p-invalid]="invalid('qid')"></p-inputMask>
                                     <label for="qid"><i class="pi pi-id-card"></i> Qatar ID</label>
-                                </p-floatlabel>
+                                </p-floatLabel>
                                 <small class="p-error" *ngIf="validateQID('qid')">Use numbers only (11-digit)</small>
                             </div>
-                        </div>
 
-                        <div class="form-field form-field-half">
-                            <p-floatlabel variant="on">
-                                <p-autocomplete
-                                    id="gender"
-                                    formControlName="gender"
-                                    [suggestions]="filteredGenderOptions"
-                                    (completeMethod)="filterGender($event)"
-                                    field="label"
-                                    [optionValue]="'value'"
-                                    [forceSelection]="true"
-                                    [dropdown]="true"
-                                    [readonly]="true"
-                                    [class.p-invalid]="invalid('gender')"
-                                    styleClass="w-full"
-                                    autocomplete="off"
-                                >
-                                    <ng-template pTemplate="item" let-option>
-                                        <div class="gender-item">
-                                            <i class="pi" [class]="getGenderIcon(option.value)"></i>
-                                            <span>{{ option.label }}</span>
-                                        </div>
-                                    </ng-template>
-                                </p-autocomplete>
-                                <label for="gender"><i class="pi pi-question-circle"></i> Select Gender</label>
-                            </p-floatlabel>
-                            <small class="p-error" *ngIf="invalid('gender')">Please select a gender</small>
-                        </div>
-                    </div>
+                            <div class="flex-1 md:flex-[1.5]">
+                                <p-floatLabel variant="on">
+                                    <p-inputMask inputId="phone" formControlName="phone" mask="+999 9999 9999" styleClass="w-full" [class.p-invalid]="invalid('phone')"></p-inputMask>
+                                    <label for="phone"><i class="pi pi-phone"></i> Phone Number *</label>
+                                </p-floatLabel>
+                                <small class="p-error" *ngIf="validatePhoneNumber('phone')">Valid phone number is required</small>
+                            </div>
 
-                    <!-- Phone & Insurance -->
-                    <div class="form-row">
-                        <div class="form-field form-field-half">
-                            <p-floatlabel variant="on">
-                                <p-inputMask id="phone" formControlName="phone" mask="+999 9999 9999" styleClass="w-full" inputId="phone" />
-                                <label for="phone"><i class="pi pi-phone"></i> Phone Number *</label>
-                            </p-floatlabel>
-                            <small class="p-error" *ngIf="validatePhoneNumber('phone')">Valid phone number is required</small>
-                        </div>
-
-                        <div class="form-field form-field-half">
-                            <p-floatlabel variant="on">
-                                <input id="insurance" pInputText formControlName="insurance" autocomplete="off" [class.p-invalid]="invalid('insurance')" class="w-full" />
-                                <label for="insurance"><i class="pi pi-shield"></i> Insurance *</label>
-                            </p-floatlabel>
-                            <small class="p-error" *ngIf="invalid('insurance')">Insurance is required</small>
-                        </div>
-                    </div>
-
-                    <!-- Department & Specialization -->
-                    <div class="form-row">
-                        <div class="form-field form-field-half">
-                            <div class="field-with-btn">
-                                <p-floatlabel variant="on" class="flex-1">
-                                    <p-autocomplete
-                                        id="department"
-                                        formControlName="department"
-                                        [suggestions]="filteredDepartmentOptions"
-                                        (completeMethod)="searchRefData('department', $event)"
-                                        field="name"
+                            <div class="flex-1 md:flex-[1.5]">
+                                <p-floatLabel variant="on">
+                                    <p-autoComplete
+                                        inputId="gender"
+                                        formControlName="gender"
+                                        [suggestions]="filteredGenderOptions"
+                                        (completeMethod)="filterGender($event)"
+                                        field="label"
+                                        [optionValue]="'value'"
                                         [forceSelection]="true"
                                         [dropdown]="true"
+                                        [readonly]="true"
+                                        [class.p-invalid]="invalid('gender')"
                                         styleClass="w-full"
                                         autocomplete="off"
-                                        (onSelect)="onDepartmentSelect($event)"
-                                        (onClear)="onDepartmentClear()"
+                                    >
+                                        <ng-template pTemplate="item" let-option>
+                                            <div class="gender-item">
+                                                <i class="pi" [class]="getGenderIcon(option.value)"></i>
+                                                <span>{{ option.label }}</span>
+                                            </div>
+                                        </ng-template>
+                                    </p-autoComplete>
+                                    <label for="gender"><i class="pi pi-venus-mars"></i> Gender</label>
+                                </p-floatLabel>
+                                <small class="p-error" *ngIf="invalid('gender')">Please select a gender</small>
+                            </div>
+                        </p-fluid>
+
+                        <!-- Date of Birth and Insurance -->
+
+                        <p-fluid class="flex flex-wrap gap-4 mb-6">
+                            <div class="flex-1 md:flex-[2]">
+                                <p-floatLabel variant="on">
+                                    <input id="insurance" pInputText formControlName="insurance" autocomplete="off" [class.p-invalid]="invalid('insurance')" />
+                                    <label for="insurance"><i class="pi pi-shield"></i> Insurance *</label>
+                                </p-floatLabel>
+                                <small class="p-error" *ngIf="invalid('insurance')">Insurance is required</small>
+                            </div>
+
+                            <!-- Hiring Date: 30% width -->
+                            <div class="flex-1 md:flex-[1.5]">
+                                <p-floatLabel variant="on">
+                                    <p-datepicker
+                                        inputId="hiringDate"
+                                        formControlName="hiringDate"
+                                        [showIcon]="true"
+                                        class="w-full"
+                                        dateFormat="dd/MM/yy"
+                                        [maxDate]="today"
+                                        [showOnFocus]="false"
+                                        [class.p-invalid]="invalid('hiringDate')"
+                                        [readonlyInput]="true"
+                                    >
+                                    </p-datepicker>
+                                    <label for="hiringDate"><i class="pi pi-calendar"></i> Hiring Date</label>
+                                </p-floatLabel>
+                                <small class="p-error" *ngIf="invalid('hiringDate')">Hiring Date is required</small>
+                            </div>
+
+                            <!-- DOB: 30% width -->
+                            <div class="flex-1 md:flex-[1.5]">
+                                <p-floatLabel variant="on">
+                                    <p-datepicker inputId="dob" formControlName="dob" [showIcon]="true" dateFormat="dd/MM/yy" [maxDate]="today" [showOnFocus]="false" [class.p-invalid]="invalid('dob')" [readonlyInput]="true" class="w-full">
+                                    </p-datepicker>
+                                    <label for="dob"><i class="pi pi-calendar"></i> Date of Birth</label>
+                                </p-floatLabel>
+                                <small class="p-error" *ngIf="invalid('dob')">Date of birth is required</small>
+                            </div>
+                        </p-fluid>
+                    </div>
+                    <!-- Date & Time Information Section -->
+
+                    <!-- Professional Information Section -->
+                    <div class="mb-6">
+                        <h4 class="devider text-lg font-semibold mb-4 text-gray-700 border-b pb-2">Professional Information</h4>
+
+                        <!-- Department and Specialization -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <div class="flex gap-2 items-start">
+                                    <p-floatLabel variant="on" class="flex-1">
+                                        <p-autoComplete
+                                            inputId="department"
+                                            formControlName="department"
+                                            [suggestions]="filteredDepartmentOptions"
+                                            (completeMethod)="searchRefData('department', $event)"
+                                            field="name"
+                                            [forceSelection]="true"
+                                            [dropdown]="true"
+                                            styleClass="w-full"
+                                            autocomplete="off"
+                                            (onSelect)="onDepartmentSelect($event)"
+                                            (onClear)="onDepartmentClear()"
+                                        >
+                                            <ng-template pTemplate="item" let-option>
+                                                <div class="flex items-center justify-between w-full">
+                                                    <span>{{ option.name }}</span>
+                                                    @if (option.code) {
+                                                        <small class="opacity-70">{{ option.code }}</small>
+                                                    }
+                                                </div>
+                                            </ng-template>
+                                        </p-autoComplete>
+                                        <label for="department"><i class="pi pi-sitemap"></i> Department</label>
+                                    </p-floatLabel>
+                                    <p-button type="button" icon="pi pi-plus" [text]="true" [rounded]="true" size="small" pTooltip="Add Department" (click)="openAddDepartment()"></p-button>
+                                    <p-button type="button" icon="pi pi-upload" [text]="true" [rounded]="true" size="small" pTooltip="Bulk import departments" (click)="openBulk('department')"></p-button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="flex gap-2 items-start">
+                                    <p-floatLabel variant="on" class="flex-1">
+                                        <p-autoComplete
+                                            inputId="specialization"
+                                            formControlName="specialization"
+                                            [suggestions]="filteredSpecializationOptions"
+                                            (completeMethod)="searchRefData('specialization', $event)"
+                                            field="name"
+                                            [forceSelection]="true"
+                                            [dropdown]="true"
+                                            styleClass="w-full"
+                                            autocomplete="off"
+                                            (onSelect)="onSpecializationSelect($event)"
+                                            (onClear)="onSpecializationClear()"
+                                        >
+                                            <ng-template pTemplate="item" let-option>
+                                                <div class="flex items-center justify-between w-full">
+                                                    <span>{{ option.name }}</span>
+                                                    @if (option.code) {
+                                                        <small class="opacity-70">{{ option.code }}</small>
+                                                    }
+                                                </div>
+                                            </ng-template>
+                                        </p-autoComplete>
+                                        <label for="specialization"><i class="pi pi-sparkles"></i> Specialization</label>
+                                    </p-floatLabel>
+                                    <p-button type="button" icon="pi pi-plus" [text]="true" [rounded]="true" size="small" pTooltip="Add Specialization" (click)="openAddSpec()"></p-button>
+                                    <p-button type="button" icon="pi pi-upload" [text]="true" [rounded]="true" size="small" pTooltip="Bulk import specializations" (click)="openBulk('specialization')"></p-button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Education and Status -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <p-floatLabel variant="on">
+                                    <p-autoComplete
+                                        inputId="education"
+                                        formControlName="education"
+                                        [suggestions]="filteredEducationOptions"
+                                        (completeMethod)="filterEducation($event)"
+                                        field="name"
+                                        [dropdown]="true"
+                                        [forceSelection]="true"
+                                        styleClass="w-full"
+                                        autocomplete="off"
+                                        (onSelect)="onEducationSelect($event)"
+                                        (onClear)="onEducationClear()"
                                     >
                                         <ng-template pTemplate="item" let-option>
                                             <div class="flex items-center justify-between w-full">
                                                 <span>{{ option.name }}</span>
-                                                <small class="opacity-70" *ngIf="option.code">{{ option.code }}</small>
+                                                @if (option.level) {
+                                                    <small class="opacity-70">{{ option.level }}</small>
+                                                }
                                             </div>
                                         </ng-template>
-                                    </p-autocomplete>
-                                    <label for="department"><i class="pi pi-sitemap"></i> Department</label>
-                                </p-floatlabel>
-
-                                <p-button type="button" icon="pi pi-plus" [text]="true" [rounded]="true" size="small" pTooltip="Add Department" (click)="openAddDepartment()"></p-button>
-                                <p-button type="button" icon="pi pi-upload" [text]="true" [rounded]="true" size="small" pTooltip="Bulk import departments" (click)="openBulk('department')"></p-button>
+                                    </p-autoComplete>
+                                    <label for="education"><i class="pi pi-book"></i> Education</label>
+                                </p-floatLabel>
                             </div>
-                        </div>
 
-                        <div class="form-field form-field-half">
-                            <div class="field-with-btn">
-                                <p-floatlabel variant="on" class="flex-1">
-                                    <p-autocomplete
-                                        id="specialization"
-                                        formControlName="specialization"
-                                        [suggestions]="filteredSpecializationOptions"
-                                        (completeMethod)="searchRefData('specialization', $event)"
-                                        field="name"
+                            <div>
+                                <p-floatLabel variant="on">
+                                    <p-autoComplete
+                                        inputId="status"
+                                        formControlName="status"
+                                        [suggestions]="filteredStatusOptions"
+                                        (completeMethod)="filterStatus($event)"
                                         [forceSelection]="true"
                                         [dropdown]="true"
+                                        [readonly]="true"
+                                        [class.p-invalid]="invalid('status')"
                                         styleClass="w-full"
                                         autocomplete="off"
-                                        (onSelect)="onSpecializationSelect($event)"
-                                        (onClear)="onSpecializationClear()"
                                     >
                                         <ng-template pTemplate="item" let-option>
-                                            <div class="flex items-center justify-between w-full">
-                                                <span>{{ option.name }}</span>
-                                                <small class="opacity-70" *ngIf="option.code">{{ option.code }}</small>
-                                            </div>
+                                            <span>{{ option }}</span>
                                         </ng-template>
-                                    </p-autocomplete>
-                                    <label for="specialization"><i class="pi pi-sparkles"></i> Specialization</label>
-                                </p-floatlabel>
+                                    </p-autoComplete>
+                                    <label for="status"><i class="pi pi-badge"></i> Status *</label>
+                                </p-floatLabel>
+                                @if (invalid('status')) {
+                                    <small class="p-error">Status is required</small>
+                                }
+                            </div>
+                        </div>
 
-                                <p-button type="button" icon="pi pi-plus" [text]="true" [rounded]="true" size="small" pTooltip="Add Specialization" (click)="openAddSpec()"></p-button>
-                                <p-button type="button" icon="pi pi-upload" [text]="true" [rounded]="true" size="small" pTooltip="Bulk import specializations" (click)="openBulk('specialization')"></p-button>
+                        <!-- Experience (Years and Months side by side, compact) -->
+                        <div class="grid grid-cols-2 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <p-floatLabel variant="on">
+                                    <p-inputNumber inputId="experienceYears" formControlName="experienceYears" [showButtons]="true" [min]="0" styleClass="w-full"></p-inputNumber>
+                                    <label for="experienceYears"><i class="pi pi-hourglass"></i>Years of Experience</label>
+                                </p-floatLabel>
+                            </div>
+
+                            <div>
+                                <p-floatLabel variant="on">
+                                    <p-inputNumber inputId="experienceMonths" formControlName="experienceMonths" [showButtons]="true" [min]="0" [max]="11" styleClass="w-full"></p-inputNumber>
+                                    <label for="experienceMonths"><i class="pi pi-hourglass"></i> Months</label>
+                                </p-floatLabel>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Job & Status -->
-                    <div class="form-row">
-                        <div class="form-field form-field-half">
-                            <p-floatlabel variant="on">
-                                <input id="job" pInputText formControlName="job" autocomplete="off" class="w-full" />
-                                <label for="job"><i class="pi pi-briefcase"></i> Job</label>
-                            </p-floatlabel>
-                        </div>
+                    <!-- Duty Schedule Section -->
+                    <div class="mb-40">
+                        <h4 class="devider text-lg font-semibold mb-4 text-gray-700 border-b pb-2">Duty Schedule</h4>
+                        <p-fluid class="flex flex-wrap gap-4 mb-6">
+                            <div class="flex-1 md:flex-[3]">
+                                <p-floatLabel variant="on">
+                                    <p-multiSelect inputId="dutyDays" formControlName="dutyDays" [options]="weekDays" optionLabel="label" optionValue="value" display="chip" selectedItemsLabel="{0}" class="w-full"> </p-multiSelect>
+                                    <label for="dutyDays"><i class="pi pi-calendar"></i> Duty Days</label>
+                                </p-floatLabel>
+                            </div>
 
-                        <div class="form-field form-field-half">
-                            <p-floatlabel variant="on">
-                                <p-autocomplete
-                                    id="status"
-                                    formControlName="status"
-                                    [suggestions]="filteredStatusOptions"
-                                    (completeMethod)="filterStatus($event)"
-                                    [forceSelection]="true"
-                                    [dropdown]="true"
-                                    [readonly]="true"
-                                    [class.p-invalid]="invalid('status')"
-                                    styleClass="w-full"
-                                    autocomplete="off"
-                                >
-                                    <ng-template pTemplate="item" let-option>
-                                        <span>{{ option }}</span>
-                                    </ng-template>
-                                </p-autocomplete>
-                                <label for="status"><i class="pi pi-badge"></i> Status *</label>
-                            </p-floatlabel>
-                            <small class="p-error" *ngIf="invalid('status')">Status is required</small>
+                            <div class="flex-1 md:flex-[1]">
+                                <p-floatLabel variant="on">
+                                    <p-datepicker inputId="dutyStart" formControlName="dutyStart" [timeOnly]="true" [showIcon]="true" [showOnFocus]="false" styleClass="w-full"> </p-datepicker>
+                                    <label for="dutyStart"><i class="pi pi-clock"></i> Start Time</label>
+                                </p-floatLabel>
+                            </div>
+
+                            <div class="flex-1 md:flex-[1]">
+                                <p-floatLabel variant="on">
+                                    <p-datepicker inputId="dutyEnd" formControlName="dutyEnd" [timeOnly]="true" [showIcon]="true" [showOnFocus]="false" styleClass="w-full"> </p-datepicker>
+                                    <label for="dutyEnd"><i class="pi pi-clock"></i> End Time</label>
+                                </p-floatLabel>
+                            </div>
+                        </p-fluid>
+                    </div>
+
+                    <div class="mb-6">
+                        <h4 class="devider text-lg font-semibold mb-4 text-gray-700 border-b pb-2">Notes</h4>
+                        <div class="mb-6">
+                            <!-- Full Name - Takes full width as it's usually long -->
+                            <div class="mb-4">
+                                <p-floatLabel variant="on">
+                                    <input pInputText id="notes" formControlName="notes" autocomplete="off" [class.p-invalid]="invalid('notes')" class="w-full" />
+                                    <label for="notes"><i class="pi pi-file-edit"></i> Write your notes here...</label>
+                                </p-floatLabel>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Join Date & DOB (last row) -->
-                    <div class="form-row">
-                        <div class="form-field form-field-half">
-                            <p-floatlabel variant="on">
-                                <p-datepicker id="hiringDate" formControlName="hiringDate" [showIcon]="true" [showOnFocus]="false" [readonlyInput]="true" styleClass="w-full"></p-datepicker>
-                                <label for="hiringDate"><i class="pi pi-calendar-plus"></i> Join Date</label>
-                            </p-floatlabel>
-                        </div>
-
-                        <div class="form-field form-field-half">
-                            <p-floatlabel variant="on">
-                                <p-datepicker id="dob" formControlName="dob" [showIcon]="true" dateFormat="dd/MM/yy" [maxDate]="today" [showOnFocus]="false" [class.p-invalid]="invalid('dob')" [readonlyInput]="true" styleClass="w-full"></p-datepicker>
-                                <label for="dob"><i class="pi pi-calendar"></i> Date of Birth</label>
-                            </p-floatlabel>
-                            <small class="p-error" *ngIf="invalid('dob')">Date of birth is required</small>
-                        </div>
-                    </div>
-
-                    <!-- Actions -->
-                    <div class="form-actions">
+                    <!-- Form Actions -->
+                    <div class="devider flex justify-end gap-3 pt-4">
                         <p-button type="button" label="Close" icon="pi pi-times" severity="secondary" (click)="ref.close()"></p-button>
                         <p-button type="button" label="Reset" icon="pi pi-refresh" severity="secondary" [outlined]="true" (click)="reset()"></p-button>
                         <p-button type="submit" label="Save Doctor" icon="pi pi-save" [disabled]="form.invalid" [loading]="isSubmitting"></p-button>
@@ -233,14 +358,14 @@ import { HelpersService } from '@/services/helpers-service';
 
         <!-- Add Department Dialog -->
         <p-dialog [(visible)]="addDeptVisible" [modal]="true" header="Add Department" [style]="{ width: '28rem' }" [draggable]="false" [resizable]="false">
-            <div class="p-fluid">
-                <div class="form-field">
-                    <label for="newDept" class="font-medium">Department name</label>
-                    <input id="newDept" pInputText [(ngModel)]="newDept" autocomplete="off" />
+            <div class="space-y-4">
+                <div>
+                    <label for="newDept" class="font-medium block mb-2">Department name</label>
+                    <input id="newDept" pInputText [(ngModel)]="newDept" autocomplete="off" class="w-full" />
                 </div>
-                <div class="form-field">
-                    <label for="newDeptCode" class="font-medium">Code</label>
-                    <input id="newDeptCode" pInputText [(ngModel)]="newDeptCode" autocomplete="off" />
+                <div>
+                    <label for="newDeptCode" class="font-medium block mb-2">Code</label>
+                    <input id="newDeptCode" pInputText [(ngModel)]="newDeptCode" autocomplete="off" class="w-full" />
                 </div>
                 <div class="flex justify-end gap-2 mt-3">
                     <p-button label="Cancel" icon="pi pi-times" severity="secondary" (click)="addDeptVisible = false"></p-button>
@@ -251,14 +376,14 @@ import { HelpersService } from '@/services/helpers-service';
 
         <!-- Add Specialization Dialog -->
         <p-dialog [(visible)]="addSpecVisible" [modal]="true" header="Add Specialization" [style]="{ width: '28rem' }" [draggable]="false" [resizable]="false">
-            <div class="p-fluid">
-                <div class="form-field">
-                    <label for="newSpec" class="font-medium">Specialization name</label>
-                    <input id="newSpec" pInputText [(ngModel)]="newSpec" autocomplete="off" />
+            <div class="space-y-4">
+                <div>
+                    <label for="newSpec" class="font-medium block mb-2">Specialization name</label>
+                    <input id="newSpec" pInputText [(ngModel)]="newSpec" autocomplete="off" class="w-full" />
                 </div>
-                <div class="form-field">
-                    <label for="newSpecCode" class="font-medium">Code (optional)</label>
-                    <input id="newSpecCode" pInputText [(ngModel)]="newSpecCode" autocomplete="off" />
+                <div>
+                    <label for="newSpecCode" class="font-medium block mb-2">Code (optional)</label>
+                    <input id="newSpecCode" pInputText [(ngModel)]="newSpecCode" autocomplete="off" class="w-full" />
                 </div>
                 <div class="flex justify-end gap-2 mt-3">
                     <p-button label="Cancel" icon="pi pi-times" severity="secondary" (click)="addSpecVisible = false"></p-button>
@@ -269,21 +394,31 @@ import { HelpersService } from '@/services/helpers-service';
 
         <!-- Unified Bulk Dialog -->
         <p-dialog [(visible)]="bulkVisible" [modal]="true" [header]="bulkType === 'department' ? 'Bulk Import Departments' : 'Bulk Import Specializations'" [style]="{ width: '36rem' }" [draggable]="false" [resizable]="false">
-            <div class="p-fluid">
-                <div class="mb-3 text-sm">
-                    <p class="m-0">Step 1: Download the template, then fill <b>name</b>, <b>code</b><span *ngIf="bulkType === 'specialization'"> (code optional)</span>.</p>
+            <div class="space-y-4">
+                <div class="text-sm">
+                    <p class="mb-2">
+                        Step 1: Download the template, then fill <b>name</b>, <b>code</b>
+                        @if (bulkType === 'specialization') {
+                            <span>(code optional)</span>
+                        }
+                        .
+                    </p>
                     <p-button size="small" icon="pi pi-download" label="Download template" (click)="downloadTemplate(bulkType)"></p-button>
                 </div>
 
-                <div class="mb-2 text-sm">Step 2: Upload the filled CSV or Excel file.</div>
-                <p-fileUpload mode="basic" [showUploadButton]="false" [showCancelButton]="false" accept=".csv,.xlsx,.xls" chooseLabel="Choose file" (onSelect)="onBulkFiles($event)"></p-fileUpload>
-
-                <div class="mt-3 text-sm">
-                    <div>Parsed: {{ bulkPreview.length }} rows</div>
-                    <div *ngIf="bulkInvalid.length">Invalid: {{ bulkInvalid.length }}</div>
+                <div class="text-sm">
+                    <div class="mb-2">Step 2: Upload the filled CSV or Excel file.</div>
+                    <p-fileUpload mode="basic" [showUploadButton]="false" [showCancelButton]="false" accept=".csv,.xlsx,.xls" chooseLabel="Choose file" (onSelect)="onBulkFiles($event)"></p-fileUpload>
                 </div>
 
-                <div class="flex justify-end gap-2 mt-3">
+                <div class="text-sm">
+                    <div>Parsed: {{ bulkPreview.length }} rows</div>
+                    @if (bulkInvalid.length) {
+                        <div>Invalid: {{ bulkInvalid.length }}</div>
+                    }
+                </div>
+
+                <div class="flex justify-end gap-2">
                     <p-button label="Cancel" icon="pi pi-times" severity="secondary" (click)="bulkVisible = false"></p-button>
                     <p-button label="Upload" icon="pi pi-check" (click)="saveBulk()" [disabled]="isUploadingBulk || !bulkPreview.length" [loading]="isUploadingBulk"></p-button>
                 </div>
@@ -292,101 +427,12 @@ import { HelpersService } from '@/services/helpers-service';
     `,
     styles: [
         `
-            .doctor-form-container {
-                width: 100%;
-                max-width: 100%;
+            /* make p-datepicker take full width inside p-floatLabel or grid column */
+            .devider {
+                color: #10b981;
             }
-            .form-header {
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-                padding: 1rem 1.5rem;
+            .header {
                 background: var(--p-primary-50);
-                border-bottom: 1px solid var(--p-surface-border);
-                justify-content: space-between;
-            }
-            .form-header i {
-                color: var(--p-primary-500);
-                font-size: 1.25rem;
-            }
-            .form-header h3 {
-                margin: 0;
-                color: var(--p-text-color);
-                font-weight: 600;
-            }
-            .form-header .title {
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-            }
-            .form-content {
-                padding: 1.5rem;
-            }
-            .form-field {
-                margin-bottom: 1.5rem;
-            }
-            .form-row {
-                display: flex;
-                gap: 1rem;
-                margin-bottom: 1.5rem;
-            }
-            .form-field-half {
-                flex: 1;
-                margin-bottom: 0;
-            }
-            .p-error {
-                display: block;
-                margin-top: 0.25rem;
-                font-size: 0.875rem;
-                color: var(--p-red-500);
-            }
-            .gender-item {
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-            }
-            .form-actions {
-                display: flex;
-                gap: 0.75rem;
-                justify-content: flex-end;
-                margin-top: 2rem;
-                padding-top: 1rem;
-                border-top: 1px solid var(--p-surface-border);
-            }
-            :host ::ng-deep .p-inputtext,
-            :host ::ng-deep .p-datepicker,
-            :host ::ng-deep .p-autocomplete,
-            :host ::ng-deep .p-inputmask {
-                width: 100%;
-            }
-            :host ::ng-deep .p-autocomplete .p-autocomplete-input {
-                width: 100%;
-            }
-            :host ::ng-deep .p-datepicker .p-inputtext {
-                width: 100%;
-            }
-            .field-with-btn {
-                display: flex;
-                align-items: flex-start;
-                gap: 0.5rem;
-            }
-            .field-with-btn .flex-1 {
-                flex: 1;
-            }
-            .code {
-                font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
-            }
-            @media (max-width: 600px) {
-                .form-row {
-                    flex-direction: column;
-                    gap: 0;
-                }
-                .form-field-half {
-                    margin-bottom: 1.5rem;
-                }
-                .form-actions {
-                    flex-direction: column;
-                }
             }
         `
     ]
@@ -428,6 +474,19 @@ export class NewDoctor implements AfterViewInit {
     statusOptions: string[] = ['senior', 'junior', 'under development', 'associate'];
     filteredStatusOptions: string[] = [];
 
+    weekDays = [
+        { label: 'Mon', value: 'MON' },
+        { label: 'Tue', value: 'TUE' },
+        { label: 'Wed', value: 'WED' },
+        { label: 'Thu', value: 'THU' },
+        { label: 'Fri', value: 'FRI' },
+        { label: 'Sat', value: 'SAT' },
+        { label: 'Sun', value: 'SUN' }
+    ];
+
+    educationOptions = [{ name: 'MBBS' }, { name: 'MD' }, { name: 'DO' }, { name: 'MS' }, { name: 'PhD' }, { name: 'Fellowship' }];
+    filteredEducationOptions: any[] = [];
+
     constructor(
         private fb: FormBuilder,
         private helpersService: HelpersService,
@@ -445,7 +504,14 @@ export class NewDoctor implements AfterViewInit {
             specialization: ['', Validators.required],
             department: ['', Validators.required],
             status: ['', Validators.required],
-            hiringDate: [''] // ← added
+            hiringDate: ['', Validators.required], // ← added
+            experienceYears: [0],
+            experienceMonths: [0],
+            notes: [''],
+            education: [null],
+            dutyDays: [[]],
+            dutyStart: [null],
+            dutyEnd: [null]
         });
         this.resetFormState();
     }
@@ -472,6 +538,11 @@ export class NewDoctor implements AfterViewInit {
     filterGender(event: any): void {
         const q = String(event?.query || '').toLowerCase();
         this.filteredGenderOptions = this.genderOptions.filter((o) => o.label.toLowerCase().includes(q));
+    }
+
+    filterEducation(e: any) {
+        const q = (e.query || '').toLowerCase();
+        this.filteredEducationOptions = this.educationOptions.filter((x) => x.name.toLowerCase().includes(q));
     }
 
     // Unified search for departments/specializations
@@ -502,8 +573,18 @@ export class NewDoctor implements AfterViewInit {
         const name = e?.value?.name ?? '';
         this.form.get('specialization')?.setValue(name);
     }
+
+    onEducationSelect(e: { value: Specialization }) {
+        const name = e?.value?.name ?? '';
+        this.form.get('education')?.setValue(name);
+    }
+
     onSpecializationClear() {
         this.form.get('specialization')?.setValue('');
+    }
+
+    onEducationClear() {
+        this.form.get('education')?.setValue('');
     }
 
     filterStatus(e: { query: string }) {

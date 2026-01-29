@@ -1,14 +1,19 @@
 import {
-  BaseComponent
-} from "./chunk-LEFSMMS4.js";
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
+import {
+  BaseComponent,
+  PARENT_INSTANCE
+} from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
-} from "./chunk-TT45BO2Q.js";
+} from "./chunk-4ATYD752.js";
 import {
   SharedModule
-} from "./chunk-NUKU6X6H.js";
-import "./chunk-BMDSN43F.js";
-import "./chunk-RK2DVQNP.js";
+} from "./chunk-LMEEH3AJ.js";
+import "./chunk-GOP36Q47.js";
+import "./chunk-UCHM6OXG.js";
 import {
   RouterModule
 } from "./chunk-Y35IOCZT.js";
@@ -26,6 +31,7 @@ import {
   NgModule,
   ViewEncapsulation,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵclassMap,
@@ -36,6 +42,7 @@ import {
   ɵɵprojectionDef
 } from "./chunk-EIF6IUR4.js";
 import {
+  InjectionToken,
   inject,
   ɵɵdefineInjectable,
   ɵɵdefineInjector
@@ -46,11 +53,11 @@ import "./chunk-RTGP7ALM.js";
 import "./chunk-4MWRP73S.js";
 
 // node_modules/@primeuix/styles/dist/iftalabel/index.mjs
-var style = "\n    .p-iftalabel {\n        display: block;\n        position: relative;\n    }\n\n    .p-iftalabel label {\n        position: absolute;\n        pointer-events: none;\n        top: dt('iftalabel.top');\n        transition-property: all;\n        transition-timing-function: ease;\n        line-height: 1;\n        font-size: dt('iftalabel.font.size');\n        font-weight: dt('iftalabel.font.weight');\n        inset-inline-start: dt('iftalabel.position.x');\n        color: dt('iftalabel.color');\n        transition-duration: dt('iftalabel.transition.duration');\n    }\n\n    .p-iftalabel .p-inputtext,\n    .p-iftalabel .p-textarea,\n    .p-iftalabel .p-select-label,\n    .p-iftalabel .p-multiselect-label,\n    .p-iftalabel .p-autocomplete-input-multiple,\n    .p-iftalabel .p-cascadeselect-label,\n    .p-iftalabel .p-treeselect-label {\n        padding-block-start: dt('iftalabel.input.padding.top');\n        padding-block-end: dt('iftalabel.input.padding.bottom');\n    }\n\n    .p-iftalabel:has(.p-invalid) label {\n        color: dt('iftalabel.invalid.color');\n    }\n\n    .p-iftalabel:has(input:focus) label,\n    .p-iftalabel:has(input:-webkit-autofill) label,\n    .p-iftalabel:has(textarea:focus) label,\n    .p-iftalabel:has(.p-inputwrapper-focus) label {\n        color: dt('iftalabel.focus.color');\n    }\n\n    .p-iftalabel .p-inputicon {\n        top: dt('iftalabel.input.padding.top');\n        transform: translateY(25%);\n        margin-top: 0;\n    }\n";
+var style = "\n    .p-iftalabel {\n        display: block;\n        position: relative;\n    }\n\n    .p-iftalabel label {\n        position: absolute;\n        pointer-events: none;\n        top: dt('iftalabel.top');\n        transition-property: all;\n        transition-timing-function: ease;\n        line-height: 1;\n        font-size: dt('iftalabel.font.size');\n        font-weight: dt('iftalabel.font.weight');\n        inset-inline-start: dt('iftalabel.position.x');\n        color: dt('iftalabel.color');\n        transition-duration: dt('iftalabel.transition.duration');\n    }\n\n    .p-iftalabel .p-inputtext,\n    .p-iftalabel .p-textarea,\n    .p-iftalabel .p-select-label,\n    .p-iftalabel .p-multiselect-label,\n    .p-iftalabel .p-multiselect-label:has(.p-chip),\n    .p-iftalabel .p-autocomplete-input-multiple,\n    .p-iftalabel .p-cascadeselect-label,\n    .p-iftalabel .p-treeselect-label {\n        padding-block-start: dt('iftalabel.input.padding.top');\n        padding-block-end: dt('iftalabel.input.padding.bottom');\n    }\n\n    .p-iftalabel:has(.p-invalid) label {\n        color: dt('iftalabel.invalid.color');\n    }\n\n    .p-iftalabel:has(input:focus) label,\n    .p-iftalabel:has(input:-webkit-autofill) label,\n    .p-iftalabel:has(textarea:focus) label,\n    .p-iftalabel:has(.p-inputwrapper-focus) label {\n        color: dt('iftalabel.focus.color');\n    }\n\n    .p-iftalabel .p-inputicon {\n        top: dt('iftalabel.input.padding.top');\n        transform: translateY(25%);\n        margin-top: 0;\n    }\n";
 
 // node_modules/primeng/fesm2022/primeng-iftalabel.mjs
 var _c0 = ["*"];
-var theme = (
+var style2 = (
   /*css*/
   `
     ${style}
@@ -66,7 +73,7 @@ var classes = {
 };
 var IftaLabelStyle = class _IftaLabelStyle extends BaseStyle {
   name = "iftalabel";
-  theme = theme;
+  style = style2;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵIftaLabelStyle_BaseFactory;
@@ -88,8 +95,19 @@ var IftaLabelClasses;
 (function(IftaLabelClasses2) {
   IftaLabelClasses2["root"] = "p-iftalabel";
 })(IftaLabelClasses || (IftaLabelClasses = {}));
+var IFTALABEL_INSTANCE = new InjectionToken("IFTALABEL_INSTANCE");
 var IftaLabel = class _IftaLabel extends BaseComponent {
   _componentStyle = inject(IftaLabelStyle);
+  $pcIftaLabel = inject(IFTALABEL_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
+  }
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵIftaLabel_BaseFactory;
     return function IftaLabel_Factory(__ngFactoryType__) {
@@ -105,7 +123,13 @@ var IftaLabel = class _IftaLabel extends BaseComponent {
         ɵɵclassMap(ctx.cx("root"));
       }
     },
-    features: [ɵɵProvidersFeature([IftaLabelStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([IftaLabelStyle, {
+      provide: IFTALABEL_INSTANCE,
+      useExisting: _IftaLabel
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _IftaLabel
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     ngContentSelectors: _c0,
     decls: 1,
     vars: 0,
@@ -115,6 +139,7 @@ var IftaLabel = class _IftaLabel extends BaseComponent {
         ɵɵprojection(0);
       }
     },
+    dependencies: [BindModule],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -125,10 +150,18 @@ var IftaLabel = class _IftaLabel extends BaseComponent {
     args: [{
       selector: "p-iftalabel, p-iftaLabel, p-ifta-label",
       standalone: true,
+      imports: [BindModule],
       template: ` <ng-content></ng-content> `,
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
-      providers: [IftaLabelStyle],
+      providers: [IftaLabelStyle, {
+        provide: IFTALABEL_INSTANCE,
+        useExisting: IftaLabel
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: IftaLabel
+      }],
+      hostDirectives: [Bind],
       host: {
         "[class]": "cx('root')"
       }
@@ -145,7 +178,7 @@ var IftaLabelModule = class _IftaLabelModule {
     exports: [IftaLabel, SharedModule]
   });
   static ɵinj = ɵɵdefineInjector({
-    imports: [CommonModule, SharedModule, RouterModule, SharedModule]
+    imports: [IftaLabel, CommonModule, SharedModule, RouterModule, SharedModule]
   });
 };
 (() => {

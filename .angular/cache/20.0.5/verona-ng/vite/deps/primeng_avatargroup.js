@@ -1,14 +1,18 @@
 import {
-  BaseComponent
-} from "./chunk-LEFSMMS4.js";
+  Bind
+} from "./chunk-MLQGRGGO.js";
+import {
+  BaseComponent,
+  PARENT_INSTANCE
+} from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
-} from "./chunk-TT45BO2Q.js";
+} from "./chunk-4ATYD752.js";
 import {
   SharedModule
-} from "./chunk-NUKU6X6H.js";
-import "./chunk-BMDSN43F.js";
-import "./chunk-RK2DVQNP.js";
+} from "./chunk-LMEEH3AJ.js";
+import "./chunk-GOP36Q47.js";
+import "./chunk-UCHM6OXG.js";
 import {
   CommonModule
 } from "./chunk-FHZAWWEY.js";
@@ -22,10 +26,10 @@ import {
   NgModule,
   ViewEncapsulation,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵclassMap,
-  ɵɵclassProp,
   ɵɵdefineComponent,
   ɵɵdefineNgModule,
   ɵɵgetInheritedFactory,
@@ -34,6 +38,7 @@ import {
   ɵɵstyleMap
 } from "./chunk-EIF6IUR4.js";
 import {
+  InjectionToken,
   inject,
   ɵɵdefineInjectable,
   ɵɵdefineInjector
@@ -71,7 +76,18 @@ var AvatarGroupClasses;
 (function(AvatarGroupClasses2) {
   AvatarGroupClasses2["root"] = "p-avatar-group";
 })(AvatarGroupClasses || (AvatarGroupClasses = {}));
+var AVATARGROUP_INSTANCE = new InjectionToken("AVATARGROUP_INSTANCE");
 var AvatarGroup = class _AvatarGroup extends BaseComponent {
+  $pcAvatarGroup = inject(AVATARGROUP_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
+  }
   /**
    * Style class of the component
    * @group Props
@@ -82,9 +98,6 @@ var AvatarGroup = class _AvatarGroup extends BaseComponent {
    * @group Props
    */
   style;
-  get hostClass() {
-    return this.styleClass;
-  }
   get hostStyle() {
     return this.style;
   }
@@ -98,19 +111,24 @@ var AvatarGroup = class _AvatarGroup extends BaseComponent {
   static ɵcmp = ɵɵdefineComponent({
     type: _AvatarGroup,
     selectors: [["p-avatarGroup"], ["p-avatar-group"], ["p-avatargroup"]],
-    hostVars: 8,
+    hostVars: 4,
     hostBindings: function AvatarGroup_HostBindings(rf, ctx) {
       if (rf & 2) {
         ɵɵstyleMap(ctx.hostStyle);
-        ɵɵclassMap(ctx.hostClass);
-        ɵɵclassProp("p-avatar-group", true)("p-component", true);
+        ɵɵclassMap(ctx.cn(ctx.cx("root"), ctx.styleClass));
       }
     },
     inputs: {
       styleClass: "styleClass",
       style: "style"
     },
-    features: [ɵɵProvidersFeature([AvatarGroupStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([AvatarGroupStyle, {
+      provide: AVATARGROUP_INSTANCE,
+      useExisting: _AvatarGroup
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _AvatarGroup
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     ngContentSelectors: _c0,
     decls: 1,
     vars: 0,
@@ -135,11 +153,17 @@ var AvatarGroup = class _AvatarGroup extends BaseComponent {
       template: ` <ng-content></ng-content> `,
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
-      providers: [AvatarGroupStyle],
+      providers: [AvatarGroupStyle, {
+        provide: AVATARGROUP_INSTANCE,
+        useExisting: AvatarGroup
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: AvatarGroup
+      }],
       host: {
-        "[class.p-avatar-group]": "true",
-        "[class.p-component]": "true"
-      }
+        "[class]": "cn(cx('root'), styleClass)"
+      },
+      hostDirectives: [Bind]
     }]
   }], null, {
     styleClass: [{
@@ -147,10 +171,6 @@ var AvatarGroup = class _AvatarGroup extends BaseComponent {
     }],
     style: [{
       type: Input
-    }],
-    hostClass: [{
-      type: HostBinding,
-      args: ["class"]
     }],
     hostStyle: [{
       type: HostBinding,

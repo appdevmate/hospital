@@ -1,24 +1,28 @@
 import {
   Dialog
-} from "./chunk-AYRTC7BJ.js";
-import "./chunk-RSPVXXRC.js";
+} from "./chunk-66RO57BK.js";
+import "./chunk-PF7DN6OW.js";
 import {
   Button
-} from "./chunk-5VQOKVHN.js";
-import "./chunk-CXAQXI32.js";
-import "./chunk-XQRN46ZX.js";
-import "./chunk-6PBBDZZF.js";
-import "./chunk-NSRC7NBD.js";
-import "./chunk-QVUTNZUY.js";
+} from "./chunk-YVQRESGR.js";
+import "./chunk-TENFQJBN.js";
+import "./chunk-PJRMHEN5.js";
+import "./chunk-YNLAOK3J.js";
+import "./chunk-S73J4WE3.js";
 import "./chunk-BB55NINM.js";
-import "./chunk-ZGQMWLLM.js";
-import "./chunk-7J3R4TGM.js";
+import "./chunk-OC77X5LN.js";
+import "./chunk-RHA7RL5K.js";
+import "./chunk-YXZQJBKH.js";
 import {
-  BaseComponent
-} from "./chunk-LEFSMMS4.js";
+  Bind
+} from "./chunk-MLQGRGGO.js";
+import {
+  BaseComponent,
+  PARENT_INSTANCE
+} from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
-} from "./chunk-TT45BO2Q.js";
+} from "./chunk-4ATYD752.js";
 import {
   ConfirmEventType,
   ConfirmationService,
@@ -26,7 +30,7 @@ import {
   PrimeTemplate,
   SharedModule,
   TranslationKeys
-} from "./chunk-NUKU6X6H.js";
+} from "./chunk-LMEEH3AJ.js";
 import "./chunk-6QGHQEN4.js";
 import {
   animate,
@@ -36,12 +40,12 @@ import {
   trigger,
   useAnimation
 } from "./chunk-53DGU4C2.js";
-import "./chunk-BMDSN43F.js";
+import "./chunk-GOP36Q47.js";
 import {
-  Kt,
+  _t,
   s3 as s,
   z2 as z
-} from "./chunk-RK2DVQNP.js";
+} from "./chunk-UCHM6OXG.js";
 import {
   CommonModule,
   NgClass,
@@ -64,6 +68,7 @@ import {
   booleanAttribute,
   numberAttribute,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -95,6 +100,7 @@ import {
   ɵɵtemplateRefExtractor
 } from "./chunk-EIF6IUR4.js";
 import {
+  InjectionToken,
   inject,
   ɵɵdefineInjectable,
   ɵɵdefineInjector,
@@ -188,12 +194,12 @@ function ConfirmDialog_Conditional_3_ng_template_1_Conditional_1_i_0_Template(rf
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(4);
     ɵɵclassMap(ctx_r1.option("icon"));
-    ɵɵproperty("ngClass", ctx_r1.cx("icon"));
+    ɵɵproperty("ngClass", ctx_r1.cx("icon"))("pBind", ctx_r1.ptm("icon"));
   }
 }
 function ConfirmDialog_Conditional_3_ng_template_1_Conditional_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, ConfirmDialog_Conditional_3_ng_template_1_Conditional_1_i_0_Template, 1, 3, "i", 11);
+    ɵɵtemplate(0, ConfirmDialog_Conditional_3_ng_template_1_Conditional_1_i_0_Template, 1, 4, "i", 11);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
@@ -223,13 +229,13 @@ function ConfirmDialog_Conditional_3_ng_template_1_Conditional_3_Template(rf, ct
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r1.cx("message"));
-    ɵɵproperty("innerHTML", ctx_r1.option("message"), ɵɵsanitizeHtml);
+    ɵɵproperty("pBind", ctx_r1.ptm("message"))("innerHTML", ctx_r1.option("message"), ɵɵsanitizeHtml);
   }
 }
 function ConfirmDialog_Conditional_3_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵconditionalCreate(0, ConfirmDialog_Conditional_3_ng_template_1_Conditional_0_Template, 1, 1)(1, ConfirmDialog_Conditional_3_ng_template_1_Conditional_1_Template, 1, 1, "i", 9);
-    ɵɵconditionalCreate(2, ConfirmDialog_Conditional_3_ng_template_1_Conditional_2_Template, 1, 4)(3, ConfirmDialog_Conditional_3_ng_template_1_Conditional_3_Template, 1, 3, "span", 10);
+    ɵɵconditionalCreate(2, ConfirmDialog_Conditional_3_ng_template_1_Conditional_2_Template, 1, 4)(3, ConfirmDialog_Conditional_3_ng_template_1_Conditional_3_Template, 1, 4, "span", 10);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
@@ -266,16 +272,17 @@ function ConfirmDialog_ng_template_4_Conditional_0_Template(rf, ctx) {
 }
 function ConfirmDialog_ng_template_4_Conditional_1_p_button_0_ng_template_1_Conditional_0_i_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "i");
+    ɵɵelement(0, "i", 18);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(6);
     ɵɵclassMap(ctx_r1.option("rejectIcon"));
+    ɵɵproperty("pBind", ctx_r1.ptm("pcRejectButton")["icon"]);
   }
 }
 function ConfirmDialog_ng_template_4_Conditional_1_p_button_0_ng_template_1_Conditional_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, ConfirmDialog_ng_template_4_Conditional_1_p_button_0_ng_template_1_Conditional_0_i_0_Template, 1, 2, "i", 17);
+    ɵɵtemplate(0, ConfirmDialog_ng_template_4_Conditional_1_p_button_0_ng_template_1_Conditional_0_i_0_Template, 1, 3, "i", 17);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(5);
@@ -315,21 +322,22 @@ function ConfirmDialog_ng_template_4_Conditional_1_p_button_0_Template(rf, ctx) 
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
-    ɵɵproperty("label", ctx_r1.rejectButtonLabel)("styleClass", ctx_r1.getButtonStyleClass("pcRejectButton", "rejectButtonStyleClass"))("ariaLabel", ctx_r1.option("rejectButtonProps", "ariaLabel"))("buttonProps", ctx_r1.getRejectButtonProps());
+    ɵɵproperty("pt", ctx_r1.ptm("pcRejectButton"))("label", ctx_r1.rejectButtonLabel)("styleClass", ctx_r1.getButtonStyleClass("pcRejectButton", "rejectButtonStyleClass"))("ariaLabel", ctx_r1.option("rejectButtonProps", "ariaLabel"))("buttonProps", ctx_r1.getRejectButtonProps());
   }
 }
 function ConfirmDialog_ng_template_4_Conditional_1_p_button_1_ng_template_1_Conditional_0_i_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "i");
+    ɵɵelement(0, "i", 18);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(6);
     ɵɵclassMap(ctx_r1.option("acceptIcon"));
+    ɵɵproperty("pBind", ctx_r1.ptm("pcAcceptButton")["icon"]);
   }
 }
 function ConfirmDialog_ng_template_4_Conditional_1_p_button_1_ng_template_1_Conditional_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, ConfirmDialog_ng_template_4_Conditional_1_p_button_1_ng_template_1_Conditional_0_i_0_Template, 1, 2, "i", 17);
+    ɵɵtemplate(0, ConfirmDialog_ng_template_4_Conditional_1_p_button_1_ng_template_1_Conditional_0_i_0_Template, 1, 3, "i", 17);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(5);
@@ -369,12 +377,12 @@ function ConfirmDialog_ng_template_4_Conditional_1_p_button_1_Template(rf, ctx) 
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
-    ɵɵproperty("label", ctx_r1.acceptButtonLabel)("styleClass", ctx_r1.getButtonStyleClass("pcAcceptButton", "acceptButtonStyleClass"))("ariaLabel", ctx_r1.option("acceptButtonProps", "ariaLabel"))("buttonProps", ctx_r1.getAcceptButtonProps());
+    ɵɵproperty("pt", ctx_r1.ptm("pcAcceptButton"))("label", ctx_r1.acceptButtonLabel)("styleClass", ctx_r1.getButtonStyleClass("pcAcceptButton", "acceptButtonStyleClass"))("ariaLabel", ctx_r1.option("acceptButtonProps", "ariaLabel"))("buttonProps", ctx_r1.getAcceptButtonProps());
   }
 }
 function ConfirmDialog_ng_template_4_Conditional_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, ConfirmDialog_ng_template_4_Conditional_1_p_button_0_Template, 3, 4, "p-button", 14)(1, ConfirmDialog_ng_template_4_Conditional_1_p_button_1_Template, 3, 4, "p-button", 14);
+    ɵɵtemplate(0, ConfirmDialog_ng_template_4_Conditional_1_p_button_0_Template, 3, 5, "p-button", 14)(1, ConfirmDialog_ng_template_4_Conditional_1_p_button_1_Template, 3, 5, "p-button", 14);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
@@ -404,7 +412,7 @@ var classes = {
 };
 var ConfirmDialogStyle = class _ConfirmDialogStyle extends BaseStyle {
   name = "confirmdialog";
-  theme = style2;
+  style = style2;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵConfirmDialogStyle_BaseFactory;
@@ -430,6 +438,7 @@ var ConfirmDialogClasses;
   ConfirmDialogClasses2["pcRejectButton"] = "p-confirmdialog-reject-button";
   ConfirmDialogClasses2["pcAcceptButton"] = "p-confirmdialog-accept-button";
 })(ConfirmDialogClasses || (ConfirmDialogClasses = {}));
+var CONFIRMDIALOG_INSTANCE = new InjectionToken("CONFIRMDIALOG_INSTANCE");
 var showAnimation = animation([style({
   transform: "{{transform}}",
   opacity: 0
@@ -444,6 +453,16 @@ var hideAnimation = animation([animate("{{transition}}", style({
 var ConfirmDialog = class _ConfirmDialog extends BaseComponent {
   confirmationService;
   zone;
+  $pcConfirmDialog = inject(CONFIRMDIALOG_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptm("host"));
+  }
   /**
    * Title text of the dialog.
    * @group Props
@@ -601,6 +620,11 @@ var ConfirmDialog = class _ConfirmDialog extends BaseComponent {
    */
   breakpoints;
   /**
+   * Defines if background should be blocked when dialog is displayed.
+   * @group Props
+   */
+  modal = true;
+  /**
    * Current visible state as a boolean.
    * @group Props
    */
@@ -715,8 +739,7 @@ var ConfirmDialog = class _ConfirmDialog extends BaseComponent {
       }
     });
   }
-  ngOnInit() {
-    super.ngOnInit();
+  onInit() {
     if (this.breakpoints) {
       this.createStyle();
     }
@@ -726,7 +749,7 @@ var ConfirmDialog = class _ConfirmDialog extends BaseComponent {
       }
     });
   }
-  ngAfterContentInit() {
+  onAfterContentInit() {
     this.templates?.forEach((item) => {
       switch (item.getType()) {
         case "header":
@@ -772,6 +795,7 @@ var ConfirmDialog = class _ConfirmDialog extends BaseComponent {
     return [cxClass, optionClass].filter(Boolean).join(" ");
   }
   getElementToFocus() {
+    if (!this.dialog?.el?.nativeElement) return;
     switch (this.option("defaultFocus")) {
       case "accept":
         return z(this.dialog.el.nativeElement, ".p-confirm-dialog-accept");
@@ -790,6 +814,7 @@ var ConfirmDialog = class _ConfirmDialog extends BaseComponent {
     if (!this.styleElement) {
       this.styleElement = this.document.createElement("style");
       this.styleElement.type = "text/css";
+      _t(this.styleElement, "nonce", this.config?.csp()?.nonce);
       this.document.head.appendChild(this.styleElement);
       let innerHTML = "";
       for (let breakpoint in this.breakpoints) {
@@ -802,7 +827,7 @@ var ConfirmDialog = class _ConfirmDialog extends BaseComponent {
                 `;
       }
       this.styleElement.innerHTML = innerHTML;
-      Kt(this.styleElement, "nonce", this.config?.csp()?.nonce);
+      _t(this.styleElement, "nonce", this.config?.csp()?.nonce);
     }
   }
   close() {
@@ -823,14 +848,13 @@ var ConfirmDialog = class _ConfirmDialog extends BaseComponent {
       this.styleElement = null;
     }
   }
-  ngOnDestroy() {
+  onDestroy() {
     this.subscription.unsubscribe();
     this.unsubscribeConfirmationEvents();
     if (this.translationSubscription) {
       this.translationSubscription.unsubscribe();
     }
     this.destroyStyle();
-    super.ngOnDestroy();
   }
   onVisibleChange(value) {
     if (!value) {
@@ -858,10 +882,10 @@ var ConfirmDialog = class _ConfirmDialog extends BaseComponent {
     }
   }
   get acceptButtonLabel() {
-    return this.option("acceptLabel") || this.config.getTranslation(TranslationKeys.ACCEPT);
+    return this.option("acceptLabel") || this.getAcceptButtonProps()?.label || this.config.getTranslation(TranslationKeys.ACCEPT);
   }
   get rejectButtonLabel() {
-    return this.option("rejectLabel") || this.config.getTranslation(TranslationKeys.REJECT);
+    return this.option("rejectLabel") || this.getRejectButtonProps()?.label || this.config.getTranslation(TranslationKeys.REJECT);
   }
   getAcceptButtonProps() {
     return this.option("acceptButtonProps");
@@ -888,16 +912,16 @@ var ConfirmDialog = class _ConfirmDialog extends BaseComponent {
         ɵɵcontentQuery(dirIndex, PrimeTemplate, 4);
       }
       if (rf & 2) {
-        let _t;
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.footer = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.headerTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.footerTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.rejectIconTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.acceptIconTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.messageTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.iconTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.headlessTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.templates = _t);
+        let _t2;
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.footer = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.headerTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.footerTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.rejectIconTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.acceptIconTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.messageTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.iconTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.headlessTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.templates = _t2);
       }
     },
     inputs: {
@@ -931,6 +955,7 @@ var ConfirmDialog = class _ConfirmDialog extends BaseComponent {
       focusTrap: [2, "focusTrap", "focusTrap", booleanAttribute],
       defaultFocus: "defaultFocus",
       breakpoints: "breakpoints",
+      modal: [2, "modal", "modal", booleanAttribute],
       visible: "visible",
       position: "position",
       draggable: [2, "draggable", "draggable", booleanAttribute]
@@ -938,11 +963,17 @@ var ConfirmDialog = class _ConfirmDialog extends BaseComponent {
     outputs: {
       onHide: "onHide"
     },
-    features: [ɵɵProvidersFeature([ConfirmDialogStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([ConfirmDialogStyle, {
+      provide: CONFIRMDIALOG_INSTANCE,
+      useExisting: _ConfirmDialog
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _ConfirmDialog
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     ngContentSelectors: _c8,
     decls: 6,
-    vars: 14,
-    consts: [["dialog", ""], ["footer", ""], ["headless", ""], ["content", ""], ["header", ""], ["icon", ""], ["role", "alertdialog", 3, "visibleChange", "visible", "closable", "styleClass", "modal", "header", "closeOnEscape", "blockScroll", "appendTo", "position", "dismissableMask", "draggable"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], [4, "ngTemplateOutlet"], [3, "ngClass", "class"], [3, "class", "innerHTML"], [3, "ngClass", "class", 4, "ngIf"], [3, "ngClass"], [3, "innerHTML"], [3, "label", "styleClass", "ariaLabel", "buttonProps", "onClick", 4, "ngIf"], [3, "onClick", "label", "styleClass", "ariaLabel", "buttonProps"], [3, "class"], [3, "class", 4, "ngIf"]],
+    vars: 18,
+    consts: [["dialog", ""], ["footer", ""], ["headless", ""], ["content", ""], ["header", ""], ["icon", ""], ["role", "alertdialog", 3, "visibleChange", "pt", "visible", "closable", "styleClass", "modal", "header", "closeOnEscape", "blockScroll", "appendTo", "position", "dismissableMask", "draggable", "baseZIndex", "autoZIndex", "maskStyleClass"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], [4, "ngTemplateOutlet"], [3, "ngClass", "class", "pBind"], [3, "class", "pBind", "innerHTML"], [3, "ngClass", "class", "pBind", 4, "ngIf"], [3, "ngClass", "pBind"], [3, "pBind", "innerHTML"], [3, "pt", "label", "styleClass", "ariaLabel", "buttonProps", "onClick", 4, "ngIf"], [3, "onClick", "pt", "label", "styleClass", "ariaLabel", "buttonProps"], [3, "class", "pBind"], [3, "class", "pBind", 4, "ngIf"], [3, "pBind"]],
     template: function ConfirmDialog_Template(rf, ctx) {
       if (rf & 1) {
         const _r1 = ɵɵgetCurrentView();
@@ -958,12 +989,12 @@ var ConfirmDialog = class _ConfirmDialog extends BaseComponent {
       }
       if (rf & 2) {
         ɵɵstyleMap(ctx.style);
-        ɵɵproperty("visible", ctx.visible)("closable", ctx.option("closable"))("styleClass", ctx.cn(ctx.cx("root"), ctx.styleClass))("modal", true)("header", ctx.option("header"))("closeOnEscape", ctx.option("closeOnEscape"))("blockScroll", ctx.option("blockScroll"))("appendTo", ctx.option("appendTo"))("position", ctx.position)("dismissableMask", ctx.dismissableMask)("draggable", ctx.draggable);
+        ɵɵproperty("pt", ctx.pt)("visible", ctx.visible)("closable", ctx.option("closable"))("styleClass", ctx.cn(ctx.cx("root"), ctx.styleClass))("modal", ctx.option("modal"))("header", ctx.option("header"))("closeOnEscape", ctx.option("closeOnEscape"))("blockScroll", ctx.option("blockScroll"))("appendTo", ctx.option("appendTo"))("position", ctx.position)("dismissableMask", ctx.dismissableMask)("draggable", ctx.draggable)("baseZIndex", ctx.baseZIndex)("autoZIndex", ctx.autoZIndex)("maskStyleClass", ctx.cn(ctx.cx("mask"), ctx.maskStyleClass));
         ɵɵadvance(2);
         ɵɵconditional(ctx.headlessTemplate || ctx._headlessTemplate ? 2 : 3);
       }
     },
-    dependencies: [CommonModule, NgClass, NgIf, NgTemplateOutlet, Button, Dialog, SharedModule],
+    dependencies: [CommonModule, NgClass, NgIf, NgTemplateOutlet, Button, Dialog, SharedModule, Bind],
     encapsulation: 2,
     data: {
       animation: [trigger("animation", [transition("void => visible", [useAnimation(showAnimation)]), transition("visible => void", [useAnimation(hideAnimation)])])]
@@ -977,16 +1008,17 @@ var ConfirmDialog = class _ConfirmDialog extends BaseComponent {
     args: [{
       selector: "p-confirmDialog, p-confirmdialog, p-confirm-dialog",
       standalone: true,
-      imports: [CommonModule, Button, Dialog, SharedModule],
+      imports: [CommonModule, Button, Dialog, SharedModule, Bind],
       template: `
         <p-dialog
+            [pt]="pt"
             #dialog
             [visible]="visible"
             (visibleChange)="onVisibleChange($event)"
             role="alertdialog"
             [closable]="option('closable')"
             [styleClass]="cn(cx('root'), styleClass)"
-            [modal]="true"
+            [modal]="option('modal')"
             [header]="option('header')"
             [closeOnEscape]="option('closeOnEscape')"
             [blockScroll]="option('blockScroll')"
@@ -995,6 +1027,9 @@ var ConfirmDialog = class _ConfirmDialog extends BaseComponent {
             [style]="style"
             [dismissableMask]="dismissableMask"
             [draggable]="draggable"
+            [baseZIndex]="baseZIndex"
+            [autoZIndex]="autoZIndex"
+            [maskStyleClass]="cn(cx('mask'), maskStyleClass)"
         >
             @if (headlessTemplate || _headlessTemplate) {
                 <ng-template #headless>
@@ -1020,12 +1055,12 @@ var ConfirmDialog = class _ConfirmDialog extends BaseComponent {
                     @if (iconTemplate || _iconTemplate) {
                         <ng-template *ngTemplateOutlet="iconTemplate || _iconTemplate"></ng-template>
                     } @else if (!iconTemplate && !_iconTemplate && !_messageTemplate && !messageTemplate) {
-                        <i [ngClass]="cx('icon')" [class]="option('icon')" *ngIf="option('icon')"></i>
+                        <i [ngClass]="cx('icon')" [class]="option('icon')" [pBind]="ptm('icon')" *ngIf="option('icon')"></i>
                     }
                     @if (messageTemplate || _messageTemplate) {
                         <ng-template *ngTemplateOutlet="messageTemplate || _messageTemplate; context: { $implicit: confirmation }"></ng-template>
                     } @else {
-                        <span [class]="cx('message')" [innerHTML]="option('message')"> </span>
+                        <span [class]="cx('message')" [pBind]="ptm('message')" [innerHTML]="option('message')"> </span>
                     }
                 </ng-template>
             }
@@ -1036,6 +1071,7 @@ var ConfirmDialog = class _ConfirmDialog extends BaseComponent {
                 }
                 @if (!footerTemplate && !_footerTemplate) {
                     <p-button
+                        [pt]="ptm('pcRejectButton')"
                         *ngIf="option('rejectVisible')"
                         [label]="rejectButtonLabel"
                         (onClick)="onReject()"
@@ -1045,12 +1081,13 @@ var ConfirmDialog = class _ConfirmDialog extends BaseComponent {
                     >
                         <ng-template #icon>
                             @if (rejectIcon && !rejectIconTemplate && !_rejectIconTemplate) {
-                                <i *ngIf="option('rejectIcon')" [class]="option('rejectIcon')"></i>
+                                <i *ngIf="option('rejectIcon')" [class]="option('rejectIcon')" [pBind]="ptm('pcRejectButton')['icon']"></i>
                             }
                             <ng-template *ngTemplateOutlet="rejectIconTemplate || _rejectIconTemplate"></ng-template>
                         </ng-template>
                     </p-button>
                     <p-button
+                        [pt]="ptm('pcAcceptButton')"
                         [label]="acceptButtonLabel"
                         (onClick)="onAccept()"
                         [styleClass]="getButtonStyleClass('pcAcceptButton', 'acceptButtonStyleClass')"
@@ -1060,7 +1097,7 @@ var ConfirmDialog = class _ConfirmDialog extends BaseComponent {
                     >
                         <ng-template #icon>
                             @if (acceptIcon && !_acceptIconTemplate && !acceptIconTemplate) {
-                                <i *ngIf="option('acceptIcon')" [class]="option('acceptIcon')"></i>
+                                <i *ngIf="option('acceptIcon')" [class]="option('acceptIcon')" [pBind]="ptm('pcAcceptButton')['icon']"></i>
                             }
                             <ng-template *ngTemplateOutlet="acceptIconTemplate || _acceptIconTemplate"></ng-template>
                         </ng-template>
@@ -1072,7 +1109,14 @@ var ConfirmDialog = class _ConfirmDialog extends BaseComponent {
       animations: [trigger("animation", [transition("void => visible", [useAnimation(showAnimation)]), transition("visible => void", [useAnimation(hideAnimation)])])],
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
-      providers: [ConfirmDialogStyle]
+      providers: [ConfirmDialogStyle, {
+        provide: CONFIRMDIALOG_INSTANCE,
+        useExisting: ConfirmDialog
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: ConfirmDialog
+      }],
+      hostDirectives: [Bind]
     }]
   }], () => [{
     type: ConfirmationService
@@ -1198,6 +1242,12 @@ var ConfirmDialog = class _ConfirmDialog extends BaseComponent {
     }],
     breakpoints: [{
       type: Input
+    }],
+    modal: [{
+      type: Input,
+      args: [{
+        transform: booleanAttribute
+      }]
     }],
     visible: [{
       type: Input

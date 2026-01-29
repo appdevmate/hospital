@@ -1,20 +1,24 @@
 import {
   BaseModelHolder
-} from "./chunk-GGHJ33RA.js";
+} from "./chunk-2R7VQYSP.js";
 import {
   Fluid
-} from "./chunk-XQRN46ZX.js";
-import "./chunk-6PBBDZZF.js";
-import "./chunk-LEFSMMS4.js";
+} from "./chunk-PJRMHEN5.js";
+import {
+  Bind
+} from "./chunk-MLQGRGGO.js";
+import {
+  PARENT_INSTANCE
+} from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
-} from "./chunk-TT45BO2Q.js";
-import "./chunk-NUKU6X6H.js";
-import "./chunk-BMDSN43F.js";
-import "./chunk-RK2DVQNP.js";
+} from "./chunk-4ATYD752.js";
+import "./chunk-LMEEH3AJ.js";
 import {
   NgControl
 } from "./chunk-RZEKJVYA.js";
+import "./chunk-GOP36Q47.js";
+import "./chunk-UCHM6OXG.js";
 import "./chunk-FHZAWWEY.js";
 import "./chunk-5KK3G4LL.js";
 import {
@@ -28,6 +32,7 @@ import {
   booleanAttribute,
   input,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵclassMap,
@@ -37,6 +42,7 @@ import {
   ɵɵlistener
 } from "./chunk-EIF6IUR4.js";
 import {
+  InjectionToken,
   computed,
   inject,
   ɵɵdefineInjectable,
@@ -51,7 +57,7 @@ import "./chunk-4MWRP73S.js";
 var style = "\n    .p-textarea {\n        font-family: inherit;\n        font-feature-settings: inherit;\n        font-size: 1rem;\n        color: dt('textarea.color');\n        background: dt('textarea.background');\n        padding-block: dt('textarea.padding.y');\n        padding-inline: dt('textarea.padding.x');\n        border: 1px solid dt('textarea.border.color');\n        transition:\n            background dt('textarea.transition.duration'),\n            color dt('textarea.transition.duration'),\n            border-color dt('textarea.transition.duration'),\n            outline-color dt('textarea.transition.duration'),\n            box-shadow dt('textarea.transition.duration');\n        appearance: none;\n        border-radius: dt('textarea.border.radius');\n        outline-color: transparent;\n        box-shadow: dt('textarea.shadow');\n    }\n\n    .p-textarea:enabled:hover {\n        border-color: dt('textarea.hover.border.color');\n    }\n\n    .p-textarea:enabled:focus {\n        border-color: dt('textarea.focus.border.color');\n        box-shadow: dt('textarea.focus.ring.shadow');\n        outline: dt('textarea.focus.ring.width') dt('textarea.focus.ring.style') dt('textarea.focus.ring.color');\n        outline-offset: dt('textarea.focus.ring.offset');\n    }\n\n    .p-textarea.p-invalid {\n        border-color: dt('textarea.invalid.border.color');\n    }\n\n    .p-textarea.p-variant-filled {\n        background: dt('textarea.filled.background');\n    }\n\n    .p-textarea.p-variant-filled:enabled:hover {\n        background: dt('textarea.filled.hover.background');\n    }\n\n    .p-textarea.p-variant-filled:enabled:focus {\n        background: dt('textarea.filled.focus.background');\n    }\n\n    .p-textarea:disabled {\n        opacity: 1;\n        background: dt('textarea.disabled.background');\n        color: dt('textarea.disabled.color');\n    }\n\n    .p-textarea::placeholder {\n        color: dt('textarea.placeholder.color');\n    }\n\n    .p-textarea.p-invalid::placeholder {\n        color: dt('textarea.invalid.placeholder.color');\n    }\n\n    .p-textarea-fluid {\n        width: 100%;\n    }\n\n    .p-textarea-resizable {\n        overflow: hidden;\n        resize: none;\n    }\n\n    .p-textarea-sm {\n        font-size: dt('textarea.sm.font.size');\n        padding-block: dt('textarea.sm.padding.y');\n        padding-inline: dt('textarea.sm.padding.x');\n    }\n\n    .p-textarea-lg {\n        font-size: dt('textarea.lg.font.size');\n        padding-block: dt('textarea.lg.padding.y');\n        padding-inline: dt('textarea.lg.padding.x');\n    }\n";
 
 // node_modules/primeng/fesm2022/primeng-textarea.mjs
-var theme = (
+var style2 = (
   /*css*/
   `
     ${style}
@@ -80,7 +86,7 @@ var classes = {
 };
 var TextareaStyle = class _TextareaStyle extends BaseStyle {
   name = "textarea";
-  theme = theme;
+  style = style2;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵTextareaStyle_BaseFactory;
@@ -102,7 +108,15 @@ var TextareaClasses;
 (function(TextareaClasses2) {
   TextareaClasses2["root"] = "p-textarea";
 })(TextareaClasses || (TextareaClasses = {}));
+var TEXTAREA_INSTANCE = new InjectionToken("TEXTAREA_INSTANCE");
 var Textarea = class _Textarea extends BaseModelHolder {
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  $pcTextarea = inject(TEXTAREA_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
   /**
    * When present, textarea size changes as being typed.
    * @group Props
@@ -152,7 +166,6 @@ var Textarea = class _Textarea extends BaseModelHolder {
    * @group Emits
    */
   onResize = new EventEmitter();
-  ngModelSubscription;
   ngControlSubscription;
   _componentStyle = inject(TextareaStyle);
   ngControl = inject(NgControl, {
@@ -167,24 +180,26 @@ var Textarea = class _Textarea extends BaseModelHolder {
   get hasFluid() {
     return this.fluid() ?? !!this.pcFluid;
   }
-  ngOnInit() {
-    super.ngOnInit();
+  onInit() {
     if (this.ngControl) {
       this.ngControlSubscription = this.ngControl.valueChanges.subscribe(() => {
         this.updateState();
       });
     }
   }
-  ngAfterViewInit() {
-    super.ngAfterViewInit();
+  onAfterViewInit() {
     if (this.autoResize) this.resize();
     this.cd.detectChanges();
   }
-  ngAfterViewChecked() {
-    if (this.autoResize) this.resize();
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
+    if (this.autoResize) {
+      this.resize();
+    }
+    this.writeModelValue(this.ngControl?.value ?? this.el.nativeElement.value);
   }
   onInput(e) {
-    this.writeModelValue(e.target["value"]);
+    this.writeModelValue(e.target?.value);
     this.updateState();
   }
   resize(event) {
@@ -203,14 +218,10 @@ var Textarea = class _Textarea extends BaseModelHolder {
       this.resize();
     }
   }
-  ngOnDestroy() {
-    if (this.ngModelSubscription) {
-      this.ngModelSubscription.unsubscribe();
-    }
+  onDestroy() {
     if (this.ngControlSubscription) {
       this.ngControlSubscription.unsubscribe();
     }
-    super.ngOnDestroy();
   }
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵTextarea_BaseFactory;
@@ -242,7 +253,13 @@ var Textarea = class _Textarea extends BaseModelHolder {
     outputs: {
       onResize: "onResize"
     },
-    features: [ɵɵProvidersFeature([TextareaStyle]), ɵɵInheritDefinitionFeature]
+    features: [ɵɵProvidersFeature([TextareaStyle, {
+      provide: TEXTAREA_INSTANCE,
+      useExisting: _Textarea
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _Textarea
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature]
   });
 };
 (() => {
@@ -254,7 +271,14 @@ var Textarea = class _Textarea extends BaseModelHolder {
       host: {
         "[class]": "cx('root')"
       },
-      providers: [TextareaStyle]
+      providers: [TextareaStyle, {
+        provide: TEXTAREA_INSTANCE,
+        useExisting: Textarea
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: Textarea
+      }],
+      hostDirectives: [Bind]
     }]
   }], null, {
     autoResize: [{

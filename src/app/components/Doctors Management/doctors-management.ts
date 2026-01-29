@@ -243,14 +243,17 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
     }
 
     openNew() {
-        const ref = this.dialog.open(NewDoctor, { width: '60vw', modal: true, dismissableMask: true, data: { kind: 'doctors' }, focusOnShow: false });
-        ref.onClose.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((r) => {
-            if (r) {
-                this.helpers.notifySuccess('Doctor created');
-                this.fetch();
-            }
-        });
+        const ref = this.dialog.open(NewDoctor, { width: '90vw', height: '100vh', modal: true, dismissableMask: true, data: { kind: 'doctors' }, focusOnShow: false });
+        if (ref) {
+            ref.onClose.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((r) => {
+                if (r) {
+                    this.helpers.notifySuccess('Doctor created');
+                    this.fetch();
+                }
+            });
+        }
     }
+
     deleteSelected() {
         const sel = this._selected();
         if (!sel?.length) {
@@ -373,6 +376,7 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
         this._loading.set(true);
         this.doctors.getDoctorsPage(this.filters).subscribe({
             next: (r) => {
+                console.log(r);
                 this._rows.set(r.data || []);
                 this._totalRecords.set(r.totalCount || 0);
                 this._loading.set(false);

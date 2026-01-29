@@ -1,7 +1,7 @@
 // config.ts
 export class Config {
     // Static constants (change values as needed)
-    private static readonly baseUrl = 'https://vbm8co91rb.execute-api.eu-north-1.amazonaws.com';
+    private static readonly baseUrl = 'https://xy829e3qw2.execute-api.us-east-1.amazonaws.com';
     private static readonly environment = 'development'; // or 'development'
 
     /**

@@ -205,13 +205,16 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
     }
     openNew() {
         const ref = this.dialog.open(NewPatient, { width: '50vw', modal: true, dismissableMask: true, data: { kind: 'patients' }, focusOnShow: false });
-        ref.onClose.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((r) => {
-            if (r) {
-                this.helpers.notifySuccess('Patient created');
-                this.fetch();
-            }
-        });
+        if (ref) {
+            ref.onClose.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((r) => {
+                if (r) {
+                    this.helpers.notifySuccess('Patient created');
+                    this.fetch();
+                }
+            });
+        }
     }
+
     deleteSelected() {
         const sel = this._selected();
         if (!sel?.length) {

@@ -1,24 +1,29 @@
 import {
-  BaseComponent
-} from "./chunk-LEFSMMS4.js";
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
+import {
+  BaseComponent,
+  PARENT_INSTANCE
+} from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
-} from "./chunk-TT45BO2Q.js";
+} from "./chunk-4ATYD752.js";
 import {
   PrimeTemplate,
   SharedModule
-} from "./chunk-NUKU6X6H.js";
-import "./chunk-BMDSN43F.js";
+} from "./chunk-LMEEH3AJ.js";
+import "./chunk-GOP36Q47.js";
 import {
   C2 as C,
-  O,
+  P,
   R,
   Rt,
   Tt,
-  V,
+  V2 as V,
   W,
   v
-} from "./chunk-RK2DVQNP.js";
+} from "./chunk-UCHM6OXG.js";
 import {
   CommonModule,
   NgForOf,
@@ -41,6 +46,7 @@ import {
   contentChild,
   numberAttribute,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -64,6 +70,7 @@ import {
   ɵɵtemplate
 } from "./chunk-EIF6IUR4.js";
 import {
+  InjectionToken,
   computed,
   forwardRef,
   inject,
@@ -126,11 +133,12 @@ function Splitter_ng_template_0_div_2_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r2.cx("gutter"));
-    ɵɵattribute("data-p-gutter-resizing", false)("data-pc-section", "gutter");
+    ɵɵproperty("pBind", ctx_r2.ptm("gutter"));
+    ɵɵattribute("data-p-gutter-resizing", false);
     ɵɵadvance();
     ɵɵclassMap(ctx_r2.cx("gutterHandle"));
-    ɵɵproperty("ngStyle", ctx_r2.gutterStyle());
-    ɵɵattribute("aria-orientation", ctx_r2.layout)("aria-valuenow", ctx_r2.prevSize)("data-pc-section", "gutterhandle");
+    ɵɵproperty("pBind", ctx_r2.ptm("gutterHandle"))("ngStyle", ctx_r2.gutterStyle());
+    ɵɵattribute("aria-orientation", ctx_r2.layout)("aria-valuenow", ctx_r2.prevSize);
   }
 }
 function Splitter_ng_template_0_Template(rf, ctx) {
@@ -145,8 +153,7 @@ function Splitter_ng_template_0_Template(rf, ctx) {
     const i_r2 = ctx.index;
     const ctx_r2 = ɵɵnextContext();
     ɵɵclassMap(ctx_r2.cn(ctx_r2.cx("panel"), ctx_r2.panelStyleClass));
-    ɵɵproperty("ngStyle", ctx_r2.panelStyle);
-    ɵɵattribute("data-pc-name", "splitterpanel")("data-pc-section", "panel");
+    ɵɵproperty("pBind", ctx_r2.ptm("panel"))("ngStyle", ctx_r2.panelStyle);
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", panel_r4);
     ɵɵadvance();
@@ -177,7 +184,7 @@ var inlineStyles = {
 };
 var SplitterStyle = class _SplitterStyle extends BaseStyle {
   name = "splitter";
-  theme = style;
+  style = style;
   classes = classes;
   inlineStyles = inlineStyles;
   static ɵfac = /* @__PURE__ */ (() => {
@@ -202,7 +209,18 @@ var SplitterClasses;
   SplitterClasses2["gutter"] = "p-splitter-gutter";
   SplitterClasses2["gutterHandle"] = "p-splitter-gutter-handle";
 })(SplitterClasses || (SplitterClasses = {}));
+var SPLITTER_INSTANCE = new InjectionToken("SPLITTER_INSTANCE");
 var Splitter = class _Splitter extends BaseComponent {
+  $pcSplitter = inject(SPLITTER_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
+  }
   /**
    * Style class of the component.
    * @deprecated since v20. Use `class` instead.
@@ -307,10 +325,7 @@ var Splitter = class _Splitter extends BaseComponent {
   timer;
   prevSize;
   _componentStyle = inject(SplitterStyle);
-  ngOnInit() {
-    super.ngOnInit();
-  }
-  ngAfterContentInit() {
+  onAfterContentInit() {
     if (this.templates && this.templates.toArray().length > 0) {
       this.templates.forEach((item) => {
         switch (item.getType()) {
@@ -329,8 +344,7 @@ var Splitter = class _Splitter extends BaseComponent {
       });
     }
   }
-  ngAfterViewInit() {
-    super.ngAfterViewInit();
+  onAfterViewInit() {
     if (isPlatformBrowser(this.platformId)) {
       if (this.panels && this.panels.length) {
         let initialized = false;
@@ -382,21 +396,21 @@ var Splitter = class _Splitter extends BaseComponent {
     let newPos, newPrevPanelSize, newNextPanelSize;
     if (isKeyDown) {
       if (this.horizontal()) {
-        newPrevPanelSize = 100 * (this.prevPanelSize + step) / this.size;
-        newNextPanelSize = 100 * (this.nextPanelSize - step) / this.size;
+        newPrevPanelSize = 100 * ((this.prevPanelSize ?? 0) + (step ?? 0)) / (this.size ?? 1);
+        newNextPanelSize = 100 * ((this.nextPanelSize ?? 0) - (step ?? 0)) / (this.size ?? 1);
       } else {
-        newPrevPanelSize = 100 * (this.prevPanelSize - step) / this.size;
-        newNextPanelSize = 100 * (this.nextPanelSize + step) / this.size;
+        newPrevPanelSize = 100 * ((this.prevPanelSize ?? 0) - (step ?? 0)) / (this.size ?? 1);
+        newNextPanelSize = 100 * ((this.nextPanelSize ?? 0) + (step ?? 0)) / (this.size ?? 1);
       }
     } else {
       if (this.horizontal()) {
         if (V(this.el.nativeElement)) {
-          newPos = (this.startPos - event.pageX) * 100 / this.size;
+          newPos = ((this.startPos ?? 0) - event.pageX) * 100 / (this.size ?? 1);
         } else {
-          newPos = (event.pageX - this.startPos) * 100 / this.size;
+          newPos = (event.pageX - (this.startPos ?? 0)) * 100 / (this.size ?? 1);
         }
       } else {
-        newPos = (event.pageY - this.startPos) * 100 / this.size;
+        newPos = (event.pageY - (this.startPos ?? 0)) * 100 / (this.size ?? 1);
       }
       newPrevPanelSize = this.prevPanelSize + newPos;
       newNextPanelSize = this.nextPanelSize - newPos;
@@ -417,8 +431,8 @@ var Splitter = class _Splitter extends BaseComponent {
       originalEvent: event,
       sizes: this._panelSizes
     });
-    O(this.gutterElement, "p-splitter-gutter-resizing");
-    O(this.el.nativeElement, "p-splitter-resizing");
+    P(this.gutterElement, "p-splitter-gutter-resizing");
+    P(this.el.nativeElement, "p-splitter-resizing");
     this.clear();
   }
   onGutterMouseDown(event, index) {
@@ -567,9 +581,9 @@ var Splitter = class _Splitter extends BaseComponent {
     if (isPlatformBrowser(this.platformId)) {
       switch (this.stateStorage) {
         case "local":
-          return this.document.defaultView.localStorage;
+          return this.document.defaultView?.localStorage;
         case "session":
-          return this.document.defaultView.sessionStorage;
+          return this.document.defaultView?.sessionStorage;
         default:
           throw new Error(this.stateStorage + ' is not a valid value for the state storage, supported values are "local" and "session".');
       }
@@ -578,11 +592,11 @@ var Splitter = class _Splitter extends BaseComponent {
     }
   }
   saveState() {
-    this.getStorage().setItem(this.stateKey, JSON.stringify(this._panelSizes));
+    this.getStorage()?.setItem(this.stateKey, JSON.stringify(this._panelSizes));
   }
   restoreState() {
     const storage = this.getStorage();
-    const stateString = storage.getItem(this.stateKey);
+    const stateString = storage?.getItem(this.stateKey);
     if (stateString) {
       this._panelSizes = JSON.parse(stateString);
       let children = [...this.el.nativeElement.children].filter((child) => R(child, "p-splitterpanel"));
@@ -626,7 +640,6 @@ var Splitter = class _Splitter extends BaseComponent {
         ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.panelChildren = _t);
       }
     },
-    hostAttrs: ["data-pc-name", "splitter", "data-pc-section", "root"],
     hostVars: 3,
     hostBindings: function Splitter_HostBindings(rf, ctx) {
       if (rf & 2) {
@@ -650,19 +663,25 @@ var Splitter = class _Splitter extends BaseComponent {
       onResizeEnd: "onResizeEnd",
       onResizeStart: "onResizeStart"
     },
-    features: [ɵɵProvidersFeature([SplitterStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([SplitterStyle, {
+      provide: SPLITTER_INSTANCE,
+      useExisting: _Splitter
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _Splitter
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     decls: 1,
     vars: 1,
-    consts: [["ngFor", "", 3, "ngForOf"], ["tabindex", "-1", 3, "ngStyle"], [4, "ngTemplateOutlet"], ["role", "separator", "tabindex", "-1", 3, "class", "mousedown", "touchstart", "touchmove", "touchend", 4, "ngIf"], ["role", "separator", "tabindex", "-1", 3, "mousedown", "touchstart", "touchmove", "touchend"], ["tabindex", "0", 3, "keyup", "keydown", "ngStyle"]],
+    consts: [["ngFor", "", 3, "ngForOf"], ["tabindex", "-1", 3, "pBind", "ngStyle"], [4, "ngTemplateOutlet"], ["role", "separator", "tabindex", "-1", 3, "pBind", "class", "mousedown", "touchstart", "touchmove", "touchend", 4, "ngIf"], ["role", "separator", "tabindex", "-1", 3, "mousedown", "touchstart", "touchmove", "touchend", "pBind"], ["tabindex", "0", 3, "keyup", "keydown", "pBind", "ngStyle"]],
     template: function Splitter_Template(rf, ctx) {
       if (rf & 1) {
-        ɵɵtemplate(0, Splitter_ng_template_0_Template, 3, 7, "ng-template", 0);
+        ɵɵtemplate(0, Splitter_ng_template_0_Template, 3, 6, "ng-template", 0);
       }
       if (rf & 2) {
         ɵɵproperty("ngForOf", ctx.panels);
       }
     },
-    dependencies: [CommonModule, NgForOf, NgIf, NgTemplateOutlet, NgStyle, SharedModule],
+    dependencies: [CommonModule, NgForOf, NgIf, NgTemplateOutlet, NgStyle, SharedModule, BindModule, Bind],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -673,14 +692,15 @@ var Splitter = class _Splitter extends BaseComponent {
     args: [{
       selector: "p-splitter",
       standalone: true,
-      imports: [CommonModule, SharedModule],
+      imports: [CommonModule, SharedModule, BindModule],
       template: `
         <ng-template ngFor let-panel [ngForOf]="panels" let-i="index">
-            <div [class]="cn(cx('panel'), panelStyleClass)" [ngStyle]="panelStyle" tabindex="-1" [attr.data-pc-name]="'splitterpanel'" [attr.data-pc-section]="'panel'">
+            <div [pBind]="ptm('panel')" [class]="cn(cx('panel'), panelStyleClass)" [ngStyle]="panelStyle" tabindex="-1">
                 <ng-container *ngTemplateOutlet="panel"></ng-container>
             </div>
             <div
                 *ngIf="i !== panels.length - 1"
+                [pBind]="ptm('gutter')"
                 [class]="cx('gutter')"
                 role="separator"
                 tabindex="-1"
@@ -689,15 +709,14 @@ var Splitter = class _Splitter extends BaseComponent {
                 (touchmove)="onGutterTouchMove($event)"
                 (touchend)="onGutterTouchEnd($event)"
                 [attr.data-p-gutter-resizing]="false"
-                [attr.data-pc-section]="'gutter'"
             >
                 <div
+                    [pBind]="ptm('gutterHandle')"
                     [class]="cx('gutterHandle')"
                     tabindex="0"
                     [ngStyle]="gutterStyle()"
                     [attr.aria-orientation]="layout"
                     [attr.aria-valuenow]="prevSize"
-                    [attr.data-pc-section]="'gutterhandle'"
                     (keyup)="onGutterKeyUp($event)"
                     (keydown)="onGutterKeyDown($event, i)"
                 ></div>
@@ -708,11 +727,16 @@ var Splitter = class _Splitter extends BaseComponent {
       changeDetection: ChangeDetectionStrategy.OnPush,
       host: {
         "[class]": "cn(cx('root'), styleClass)",
-        "data-pc-name": "splitter",
-        "data-pc-section": "root",
         "[attr.data-p-gutter-resizing]": "false"
       },
-      providers: [SplitterStyle]
+      providers: [SplitterStyle, {
+        provide: SPLITTER_INSTANCE,
+        useExisting: Splitter
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: Splitter
+      }],
+      hostDirectives: [Bind]
     }]
   }], null, {
     styleClass: [{
@@ -775,19 +799,19 @@ var SplitterModule = class _SplitterModule {
   };
   static ɵmod = ɵɵdefineNgModule({
     type: _SplitterModule,
-    imports: [Splitter, SharedModule],
-    exports: [Splitter, SharedModule]
+    imports: [Splitter, SharedModule, BindModule],
+    exports: [Splitter, SharedModule, BindModule]
   });
   static ɵinj = ɵɵdefineInjector({
-    imports: [Splitter, SharedModule, SharedModule]
+    imports: [Splitter, SharedModule, BindModule, SharedModule, BindModule]
   });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(SplitterModule, [{
     type: NgModule,
     args: [{
-      imports: [Splitter, SharedModule],
-      exports: [Splitter, SharedModule]
+      imports: [Splitter, SharedModule, BindModule],
+      exports: [Splitter, SharedModule, BindModule]
     }]
   }], null, null);
 })();

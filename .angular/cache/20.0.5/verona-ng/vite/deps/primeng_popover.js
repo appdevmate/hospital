@@ -1,20 +1,24 @@
 import {
   ConnectedOverlayScrollHandler
-} from "./chunk-QVUTNZUY.js";
+} from "./chunk-S73J4WE3.js";
 import {
   zindexutils
 } from "./chunk-BB55NINM.js";
 import {
-  BaseComponent
-} from "./chunk-LEFSMMS4.js";
+  Bind
+} from "./chunk-MLQGRGGO.js";
+import {
+  BaseComponent,
+  PARENT_INSTANCE
+} from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
-} from "./chunk-TT45BO2Q.js";
+} from "./chunk-4ATYD752.js";
 import {
   OverlayService,
   PrimeTemplate,
   SharedModule
-} from "./chunk-NUKU6X6H.js";
+} from "./chunk-LMEEH3AJ.js";
 import "./chunk-6QGHQEN4.js";
 import {
   animate,
@@ -24,8 +28,8 @@ import {
   trigger
 } from "./chunk-53DGU4C2.js";
 import {
-  tr
-} from "./chunk-BMDSN43F.js";
+  rr
+} from "./chunk-GOP36Q47.js";
 import {
   D,
   K,
@@ -34,7 +38,7 @@ import {
   Yt,
   ut,
   z2 as z
-} from "./chunk-RK2DVQNP.js";
+} from "./chunk-UCHM6OXG.js";
 import {
   CommonModule,
   NgIf,
@@ -59,6 +63,7 @@ import {
   booleanAttribute,
   numberAttribute,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -84,6 +89,7 @@ import {
   ɵɵtemplate
 } from "./chunk-EIF6IUR4.js";
 import {
+  InjectionToken,
   inject,
   ɵɵdefineInjectable,
   ɵɵdefineInjector,
@@ -150,15 +156,16 @@ function Popover_div_0_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cn(ctx_r1.cx("root"), ctx_r1.styleClass));
-    ɵɵproperty("ngStyle", ctx_r1.style)("@animation", ɵɵpureFunction2(14, _c3, ctx_r1.overlayVisible ? "open" : "close", ɵɵpureFunction2(11, _c2, ctx_r1.showTransitionOptions, ctx_r1.hideTransitionOptions)));
+    ɵɵproperty("pBind", ctx_r1.ptm("root"))("ngStyle", ctx_r1.style)("@animation", ɵɵpureFunction2(16, _c3, ctx_r1.overlayVisible ? "open" : "close", ɵɵpureFunction2(13, _c2, ctx_r1.showTransitionOptions, ctx_r1.hideTransitionOptions)));
     ɵɵattribute("aria-modal", ctx_r1.overlayVisible)("aria-label", ctx_r1.ariaLabel)("aria-labelledBy", ctx_r1.ariaLabelledBy);
     ɵɵadvance();
     ɵɵclassMap(ctx_r1.cx("content"));
+    ɵɵproperty("pBind", ctx_r1.ptm("content"));
     ɵɵadvance(2);
-    ɵɵproperty("ngTemplateOutlet", ctx_r1.contentTemplate || ctx_r1._contentTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(17, _c4, ctx_r1.onCloseClick.bind(ctx_r1)));
+    ɵɵproperty("ngTemplateOutlet", ctx_r1.contentTemplate || ctx_r1._contentTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(19, _c4, ctx_r1.onCloseClick.bind(ctx_r1)));
   }
 }
-var theme = (
+var style2 = (
   /*css*/
   `
 .p-popover {
@@ -248,7 +255,7 @@ var classes = {
 };
 var PopoverStyle = class _PopoverStyle extends BaseStyle {
   name = "popover";
-  theme = theme;
+  style = style2;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵPopoverStyle_BaseFactory;
@@ -266,7 +273,18 @@ var PopoverStyle = class _PopoverStyle extends BaseStyle {
     type: Injectable
   }], null, null);
 })();
+var POPOVER_INSTANCE = new InjectionToken("POPOVER_INSTANCE");
 var Popover = class _Popover extends BaseComponent {
+  $pcPopover = inject(POPOVER_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptm("host"));
+  }
   /**
    * Defines a string that labels the input for accessibility.
    * @group Props
@@ -360,7 +378,7 @@ var Popover = class _Popover extends BaseComponent {
   _componentStyle = inject(PopoverStyle);
   zone = inject(NgZone);
   overlayService = inject(OverlayService);
-  ngAfterContentInit() {
+  onAfterContentInit() {
     this.templates.forEach((item) => {
       switch (item.getType()) {
         case "content":
@@ -468,16 +486,16 @@ var Popover = class _Popover extends BaseComponent {
     if (containerOffset.left < targetOffset.left) {
       arrowLeft = targetOffset.left - containerOffset.left - parseFloat(borderRadius) * 2;
     }
-    this.container?.style.setProperty(tr("popover.arrow.left").name, `${arrowLeft}px`);
+    this.container?.style.setProperty(rr("popover.arrow.left").name, `${arrowLeft}px`);
     if (containerOffset.top < targetOffset.top) {
-      this.container.setAttribute("data-p-popover-flipped", "true");
+      this.container?.setAttribute("data-p-popover-flipped", "true");
       W(this.container, "p-popover-flipped");
     }
   }
   onAnimationStart(event) {
     if (event.toState === "open") {
       this.container = event.element;
-      this.container?.setAttribute(this.attrSelector, "");
+      this.container?.setAttribute(this.$attrSelector, "");
       this.appendContainer();
       this.align();
       this.bindDocumentClickListener();
@@ -588,7 +606,7 @@ var Popover = class _Popover extends BaseComponent {
     this.unbindDocumentResizeListener();
     this.unbindScrollListener();
   }
-  ngOnDestroy() {
+  onDestroy() {
     if (this.scrollHandler) {
       this.scrollHandler.destroy();
       this.scrollHandler = null;
@@ -607,7 +625,6 @@ var Popover = class _Popover extends BaseComponent {
     if (this.overlaySubscription) {
       this.overlaySubscription.unsubscribe();
     }
-    super.ngOnDestroy();
   }
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵPopover_BaseFactory;
@@ -654,21 +671,27 @@ var Popover = class _Popover extends BaseComponent {
       onShow: "onShow",
       onHide: "onHide"
     },
-    features: [ɵɵProvidersFeature([PopoverStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([PopoverStyle, {
+      provide: POPOVER_INSTANCE,
+      useExisting: _Popover
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _Popover
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     ngContentSelectors: _c1,
     decls: 1,
     vars: 1,
-    consts: [["role", "dialog", 3, "class", "ngStyle", "click", 4, "ngIf"], ["role", "dialog", 3, "click", "ngStyle"], [3, "click", "mousedown"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"]],
+    consts: [["role", "dialog", 3, "pBind", "class", "ngStyle", "click", 4, "ngIf"], ["role", "dialog", 3, "click", "pBind", "ngStyle"], [3, "click", "mousedown", "pBind"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"]],
     template: function Popover_Template(rf, ctx) {
       if (rf & 1) {
         ɵɵprojectionDef();
-        ɵɵtemplate(0, Popover_div_0_Template, 4, 19, "div", 0);
+        ɵɵtemplate(0, Popover_div_0_Template, 4, 21, "div", 0);
       }
       if (rf & 2) {
         ɵɵproperty("ngIf", ctx.render);
       }
     },
-    dependencies: [CommonModule, NgIf, NgTemplateOutlet, NgStyle, SharedModule],
+    dependencies: [CommonModule, NgIf, NgTemplateOutlet, NgStyle, SharedModule, Bind],
     encapsulation: 2,
     data: {
       animation: [trigger("animation", [state("void", style({
@@ -690,10 +713,19 @@ var Popover = class _Popover extends BaseComponent {
     args: [{
       selector: "p-popover",
       standalone: true,
-      imports: [CommonModule, SharedModule],
+      imports: [CommonModule, SharedModule, Bind],
+      providers: [PopoverStyle, {
+        provide: POPOVER_INSTANCE,
+        useExisting: Popover
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: Popover
+      }],
+      hostDirectives: [Bind],
       template: `
         <div
             *ngIf="render"
+            [pBind]="ptm('root')"
             [class]="cn(cx('root'), styleClass)"
             [ngStyle]="style"
             (click)="onOverlayClick($event)"
@@ -708,7 +740,7 @@ var Popover = class _Popover extends BaseComponent {
             [attr.aria-label]="ariaLabel"
             [attr.aria-labelledBy]="ariaLabelledBy"
         >
-            <div [class]="cx('content')" (click)="onContentClick($event)" (mousedown)="onContentClick($event)">
+            <div [pBind]="ptm('content')" [class]="cx('content')" (click)="onContentClick($event)" (mousedown)="onContentClick($event)">
                 <ng-content></ng-content>
                 <ng-template *ngTemplateOutlet="contentTemplate || _contentTemplate; context: { closeCallback: onCloseClick.bind(this) }"></ng-template>
             </div>
@@ -724,8 +756,7 @@ var Popover = class _Popover extends BaseComponent {
         opacity: 1
       })), transition("void => open", animate("{{showTransitionParams}}")), transition("open => close", animate("{{hideTransitionParams}}"))])],
       changeDetection: ChangeDetectionStrategy.OnPush,
-      encapsulation: ViewEncapsulation.None,
-      providers: [PopoverStyle]
+      encapsulation: ViewEncapsulation.None
     }]
   }], null, {
     ariaLabel: [{

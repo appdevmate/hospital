@@ -1,14 +1,18 @@
 import {
-  BaseComponent
-} from "./chunk-LEFSMMS4.js";
+  Bind
+} from "./chunk-MLQGRGGO.js";
+import {
+  BaseComponent,
+  PARENT_INSTANCE
+} from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
-} from "./chunk-TT45BO2Q.js";
+} from "./chunk-4ATYD752.js";
 import {
   SharedModule
-} from "./chunk-NUKU6X6H.js";
-import "./chunk-BMDSN43F.js";
-import "./chunk-RK2DVQNP.js";
+} from "./chunk-LMEEH3AJ.js";
+import "./chunk-GOP36Q47.js";
+import "./chunk-UCHM6OXG.js";
 import {
   CommonModule,
   NgClass,
@@ -25,6 +29,7 @@ import {
   Output,
   ViewEncapsulation,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -50,6 +55,7 @@ import {
   ɵɵtextInterpolate
 } from "./chunk-EIF6IUR4.js";
 import {
+  InjectionToken,
   inject,
   ɵɵdefineInjectable,
   ɵɵdefineInjector,
@@ -68,30 +74,31 @@ var style = "\n    .p-avatar {\n        display: inline-flex;\n        align-ite
 var _c0 = ["*"];
 function Avatar_span_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "span");
+    ɵɵelementStart(0, "span", 3);
     ɵɵtext(1);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext();
     ɵɵclassMap(ctx_r0.cx("label"));
+    ɵɵproperty("pBind", ctx_r0.ptm("label"));
     ɵɵadvance();
     ɵɵtextInterpolate(ctx_r0.label);
   }
 }
 function Avatar_ng_template_2_span_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "span", 4);
+    ɵɵelement(0, "span", 5);
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r0.icon);
-    ɵɵproperty("ngClass", ctx_r0.cx("icon"));
+    ɵɵproperty("pBind", ctx_r0.ptm("icon"))("ngClass", ctx_r0.cx("icon"));
   }
 }
 function Avatar_ng_template_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, Avatar_ng_template_2_span_0_Template, 1, 3, "span", 3);
+    ɵɵtemplate(0, Avatar_ng_template_2_span_0_Template, 1, 4, "span", 4);
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext();
@@ -102,7 +109,7 @@ function Avatar_ng_template_2_Template(rf, ctx) {
 function Avatar_ng_template_4_img_0_Template(rf, ctx) {
   if (rf & 1) {
     const _r3 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "img", 6);
+    ɵɵelementStart(0, "img", 7);
     ɵɵlistener("error", function Avatar_ng_template_4_img_0_Template_img_error_0_listener($event) {
       ɵɵrestoreView(_r3);
       const ctx_r0 = ɵɵnextContext(2);
@@ -112,13 +119,13 @@ function Avatar_ng_template_4_img_0_Template(rf, ctx) {
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext(2);
-    ɵɵproperty("src", ctx_r0.image, ɵɵsanitizeUrl);
+    ɵɵproperty("pBind", ctx_r0.ptm("image"))("src", ctx_r0.image, ɵɵsanitizeUrl);
     ɵɵattribute("aria-label", ctx_r0.ariaLabel);
   }
 }
 function Avatar_ng_template_4_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, Avatar_ng_template_4_img_0_Template, 1, 2, "img", 5);
+    ɵɵtemplate(0, Avatar_ng_template_4_img_0_Template, 1, 3, "img", 6);
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext();
@@ -139,7 +146,7 @@ var classes = {
 };
 var AvatarStyle = class _AvatarStyle extends BaseStyle {
   name = "avatar";
-  theme = style;
+  style = style;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵAvatarStyle_BaseFactory;
@@ -163,7 +170,18 @@ var AvatarClasses;
   AvatarClasses2["label"] = "p-avatar-label";
   AvatarClasses2["icon"] = "p-avatar-icon";
 })(AvatarClasses || (AvatarClasses = {}));
+var AVATAR_INSTANCE = new InjectionToken("AVATAR_INSTANCE");
 var Avatar = class _Avatar extends BaseComponent {
+  $pcAvatar = inject(AVATAR_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
+  }
   /**
    * Defines the text to display.
    * @group Props
@@ -224,10 +242,10 @@ var Avatar = class _Avatar extends BaseComponent {
   static ɵcmp = ɵɵdefineComponent({
     type: _Avatar,
     selectors: [["p-avatar"]],
-    hostVars: 5,
+    hostVars: 4,
     hostBindings: function Avatar_HostBindings(rf, ctx) {
       if (rf & 2) {
-        ɵɵattribute("data-pc-name", "avatar")("aria-label", ctx.ariaLabel)("aria-labelledby", ctx.ariaLabelledBy);
+        ɵɵattribute("aria-label", ctx.ariaLabel)("aria-labelledby", ctx.ariaLabelledBy);
         ɵɵclassMap(ctx.cn(ctx.cx("root"), ctx.styleClass));
       }
     },
@@ -244,16 +262,22 @@ var Avatar = class _Avatar extends BaseComponent {
     outputs: {
       onImageError: "onImageError"
     },
-    features: [ɵɵProvidersFeature([AvatarStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([AvatarStyle, {
+      provide: AVATAR_INSTANCE,
+      useExisting: _Avatar
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _Avatar
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     ngContentSelectors: _c0,
     decls: 6,
     vars: 2,
-    consts: [["iconTemplate", ""], ["imageTemplate", ""], [3, "class", 4, "ngIf", "ngIfElse"], [3, "class", "ngClass", 4, "ngIf", "ngIfElse"], [3, "ngClass"], [3, "src", "error", 4, "ngIf"], [3, "error", "src"]],
+    consts: [["iconTemplate", ""], ["imageTemplate", ""], [3, "pBind", "class", 4, "ngIf", "ngIfElse"], [3, "pBind"], [3, "pBind", "class", "ngClass", 4, "ngIf", "ngIfElse"], [3, "pBind", "ngClass"], [3, "pBind", "src", "error", 4, "ngIf"], [3, "error", "pBind", "src"]],
     template: function Avatar_Template(rf, ctx) {
       if (rf & 1) {
         ɵɵprojectionDef();
         ɵɵprojection(0);
-        ɵɵtemplate(1, Avatar_span_1_Template, 2, 3, "span", 2)(2, Avatar_ng_template_2_Template, 1, 2, "ng-template", null, 0, ɵɵtemplateRefExtractor)(4, Avatar_ng_template_4_Template, 1, 1, "ng-template", null, 1, ɵɵtemplateRefExtractor);
+        ɵɵtemplate(1, Avatar_span_1_Template, 2, 4, "span", 2)(2, Avatar_ng_template_2_Template, 1, 2, "ng-template", null, 0, ɵɵtemplateRefExtractor)(4, Avatar_ng_template_4_Template, 1, 1, "ng-template", null, 1, ɵɵtemplateRefExtractor);
       }
       if (rf & 2) {
         const iconTemplate_r4 = ɵɵreference(3);
@@ -261,7 +285,7 @@ var Avatar = class _Avatar extends BaseComponent {
         ɵɵproperty("ngIf", ctx.label)("ngIfElse", iconTemplate_r4);
       }
     },
-    dependencies: [CommonModule, NgClass, NgIf, SharedModule],
+    dependencies: [CommonModule, NgClass, NgIf, SharedModule, Bind],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -272,22 +296,28 @@ var Avatar = class _Avatar extends BaseComponent {
     args: [{
       selector: "p-avatar",
       standalone: true,
-      imports: [CommonModule, SharedModule],
+      imports: [CommonModule, SharedModule, Bind],
       template: `
         <ng-content></ng-content>
-        <span [class]="cx('label')" *ngIf="label; else iconTemplate">{{ label }}</span>
-        <ng-template #iconTemplate><span [class]="icon" [ngClass]="cx('icon')" *ngIf="icon; else imageTemplate"></span></ng-template>
-        <ng-template #imageTemplate> <img [src]="image" *ngIf="image" (error)="imageError($event)" [attr.aria-label]="ariaLabel" /></ng-template>
+        <span [pBind]="ptm('label')" [class]="cx('label')" *ngIf="label; else iconTemplate">{{ label }}</span>
+        <ng-template #iconTemplate><span [pBind]="ptm('icon')" [class]="icon" [ngClass]="cx('icon')" *ngIf="icon; else imageTemplate"></span></ng-template>
+        <ng-template #imageTemplate><img [pBind]="ptm('image')" [src]="image" *ngIf="image" (error)="imageError($event)" [attr.aria-label]="ariaLabel" /></ng-template>
     `,
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
       host: {
         "[class]": "cn(cx('root'), styleClass)",
-        "[attr.data-pc-name]": '"avatar"',
         "[attr.aria-label]": "ariaLabel",
         "[attr.aria-labelledby]": "ariaLabelledBy"
       },
-      providers: [AvatarStyle]
+      providers: [AvatarStyle, {
+        provide: AVATAR_INSTANCE,
+        useExisting: Avatar
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: Avatar
+      }],
+      hostDirectives: [Bind]
     }]
   }], null, {
     label: [{

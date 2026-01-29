@@ -1,28 +1,34 @@
 import {
   Button,
   ButtonModule
-} from "./chunk-5VQOKVHN.js";
-import "./chunk-CXAQXI32.js";
-import "./chunk-XQRN46ZX.js";
-import "./chunk-6PBBDZZF.js";
-import "./chunk-NSRC7NBD.js";
-import "./chunk-QVUTNZUY.js";
-import "./chunk-ZGQMWLLM.js";
+} from "./chunk-YVQRESGR.js";
+import "./chunk-TENFQJBN.js";
+import "./chunk-PJRMHEN5.js";
+import "./chunk-YNLAOK3J.js";
+import "./chunk-S73J4WE3.js";
+import "./chunk-OC77X5LN.js";
 import {
-  MinusIcon,
   PlusIcon
-} from "./chunk-7J3R4TGM.js";
+} from "./chunk-RHA7RL5K.js";
 import {
-  BaseComponent
-} from "./chunk-LEFSMMS4.js";
+  MinusIcon
+} from "./chunk-YXZQJBKH.js";
+import {
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
+import {
+  BaseComponent,
+  PARENT_INSTANCE
+} from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
-} from "./chunk-TT45BO2Q.js";
+} from "./chunk-4ATYD752.js";
 import {
   Footer,
   PrimeTemplate,
   SharedModule
-} from "./chunk-NUKU6X6H.js";
+} from "./chunk-LMEEH3AJ.js";
 import "./chunk-6QGHQEN4.js";
 import {
   animate,
@@ -31,10 +37,10 @@ import {
   transition,
   trigger
 } from "./chunk-53DGU4C2.js";
-import "./chunk-BMDSN43F.js";
+import "./chunk-GOP36Q47.js";
 import {
   s3 as s
-} from "./chunk-RK2DVQNP.js";
+} from "./chunk-UCHM6OXG.js";
 import {
   CommonModule,
   NgIf,
@@ -55,6 +61,7 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -87,7 +94,9 @@ import {
   ɵɵviewQuery
 } from "./chunk-EIF6IUR4.js";
 import {
+  InjectionToken,
   inject,
+  signal,
   ɵɵdefineInjectable,
   ɵɵdefineInjector,
   ɵɵnamespaceSVG,
@@ -134,13 +143,14 @@ var _c12 = (a0) => ({
 });
 function Panel_div_0_span_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "span");
+    ɵɵelementStart(0, "span", 4);
     ɵɵtext(1);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r2.cx("title"));
+    ɵɵproperty("pBind", ctx_r2.ptm("title"));
     ɵɵattribute("id", ctx_r2.id + "_header");
     ɵɵadvance();
     ɵɵtextInterpolate(ctx_r2._header);
@@ -162,22 +172,32 @@ function Panel_div_0_p_button_6_ng_template_1_ng_container_0_ng_container_1_Temp
   if (rf & 1) {
     ɵɵelementContainerStart(0);
     ɵɵnamespaceSVG();
-    ɵɵelement(1, "svg", 11);
+    ɵɵelement(1, "svg", 12);
     ɵɵelementContainerEnd();
+  }
+  if (rf & 2) {
+    const ctx_r2 = ɵɵnextContext(5);
+    ɵɵadvance();
+    ɵɵproperty("pBind", ctx_r2.ptm("pcToggleButton.icon"));
   }
 }
 function Panel_div_0_p_button_6_ng_template_1_ng_container_0_ng_container_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
     ɵɵnamespaceSVG();
-    ɵɵelement(1, "svg", 12);
+    ɵɵelement(1, "svg", 13);
     ɵɵelementContainerEnd();
+  }
+  if (rf & 2) {
+    const ctx_r2 = ɵɵnextContext(5);
+    ɵɵadvance();
+    ɵɵproperty("pBind", ctx_r2.ptm("pcToggleButton.icon"));
   }
 }
 function Panel_div_0_p_button_6_ng_template_1_ng_container_0_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, Panel_div_0_p_button_6_ng_template_1_ng_container_0_ng_container_1_Template, 2, 0, "ng-container", 9)(2, Panel_div_0_p_button_6_ng_template_1_ng_container_0_ng_container_2_Template, 2, 0, "ng-container", 9);
+    ɵɵtemplate(1, Panel_div_0_p_button_6_ng_template_1_ng_container_0_ng_container_1_Template, 2, 1, "ng-container", 10)(2, Panel_div_0_p_button_6_ng_template_1_ng_container_0_ng_container_2_Template, 2, 1, "ng-container", 10);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -197,7 +217,7 @@ function Panel_div_0_p_button_6_ng_template_1_1_Template(rf, ctx) {
 }
 function Panel_div_0_p_button_6_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, Panel_div_0_p_button_6_ng_template_1_ng_container_0_Template, 3, 2, "ng-container", 9)(1, Panel_div_0_p_button_6_ng_template_1_1_Template, 1, 0, null, 10);
+    ɵɵtemplate(0, Panel_div_0_p_button_6_ng_template_1_ng_container_0_Template, 3, 2, "ng-container", 10)(1, Panel_div_0_p_button_6_ng_template_1_1_Template, 1, 0, null, 11);
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(3);
@@ -209,7 +229,7 @@ function Panel_div_0_p_button_6_ng_template_1_Template(rf, ctx) {
 function Panel_div_0_p_button_6_Template(rf, ctx) {
   if (rf & 1) {
     const _r4 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "p-button", 8);
+    ɵɵelementStart(0, "p-button", 9);
     ɵɵlistener("click", function Panel_div_0_p_button_6_Template_p_button_click_0_listener($event) {
       ɵɵrestoreView(_r4);
       const ctx_r2 = ɵɵnextContext(2);
@@ -224,36 +244,38 @@ function Panel_div_0_p_button_6_Template(rf, ctx) {
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(2);
-    ɵɵproperty("text", true)("rounded", true)("styleClass", ctx_r2.cx("pcToggleButton"))("buttonProps", ctx_r2.toggleButtonProps);
+    ɵɵproperty("text", true)("rounded", true)("styleClass", ctx_r2.cx("pcToggleButton"))("buttonProps", ctx_r2.toggleButtonProps)("pt", ctx_r2.ptm("pcToggleButton"));
     ɵɵattribute("id", ctx_r2.id + "_header")("aria-label", ctx_r2.buttonAriaLabel)("aria-controls", ctx_r2.id + "_content")("aria-expanded", !ctx_r2.collapsed);
   }
 }
 function Panel_div_0_Template(rf, ctx) {
   if (rf & 1) {
     const _r2 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "div", 6);
+    ɵɵelementStart(0, "div", 7);
     ɵɵlistener("click", function Panel_div_0_Template_div_click_0_listener($event) {
       ɵɵrestoreView(_r2);
       const ctx_r2 = ɵɵnextContext();
       return ɵɵresetView(ctx_r2.onHeaderClick($event));
     });
-    ɵɵtemplate(1, Panel_div_0_span_1_Template, 2, 4, "span", 5);
+    ɵɵtemplate(1, Panel_div_0_span_1_Template, 2, 5, "span", 6);
     ɵɵprojection(2, 1);
-    ɵɵtemplate(3, Panel_div_0_ng_container_3_Template, 1, 0, "ng-container", 4);
-    ɵɵelementStart(4, "div");
-    ɵɵtemplate(5, Panel_div_0_5_Template, 1, 0, null, 4)(6, Panel_div_0_p_button_6_Template, 3, 8, "p-button", 7);
+    ɵɵtemplate(3, Panel_div_0_ng_container_3_Template, 1, 0, "ng-container", 5);
+    ɵɵelementStart(4, "div", 4);
+    ɵɵtemplate(5, Panel_div_0_5_Template, 1, 0, null, 5)(6, Panel_div_0_p_button_6_Template, 3, 9, "p-button", 8);
     ɵɵelementEnd()();
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext();
     ɵɵclassMap(ctx_r2.cx("header"));
+    ɵɵproperty("pBind", ctx_r2.ptm("header"));
     ɵɵattribute("id", ctx_r2.id + "-titlebar");
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r2._header);
     ɵɵadvance(2);
     ɵɵproperty("ngTemplateOutlet", ctx_r2.headerTemplate || ctx_r2._headerTemplate);
     ɵɵadvance();
-    ɵɵclassMap(ctx_r2.cx("icons"));
+    ɵɵclassMap(ctx_r2.cx("headerActions"));
+    ɵɵproperty("pBind", ctx_r2.ptm("headerActions"));
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r2.iconTemplate || ctx_r2._iconTemplate);
     ɵɵadvance();
@@ -272,28 +294,30 @@ function Panel_div_6_ng_container_2_Template(rf, ctx) {
 }
 function Panel_div_6_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div");
+    ɵɵelementStart(0, "div", 4);
     ɵɵprojection(1, 2);
-    ɵɵtemplate(2, Panel_div_6_ng_container_2_Template, 1, 0, "ng-container", 4);
+    ɵɵtemplate(2, Panel_div_6_ng_container_2_Template, 1, 0, "ng-container", 5);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext();
     ɵɵclassMap(ctx_r2.cx("footer"));
+    ɵɵproperty("pBind", ctx_r2.ptm("footer"));
     ɵɵadvance(2);
     ɵɵproperty("ngTemplateOutlet", ctx_r2.footerTemplate || ctx_r2._footerTemplate);
   }
 }
-var theme = (
+var style3 = (
   /*css*/
   `
     ${style2}
 
     /* For PrimeNG */
-    .p-panel-collapsed > .p-panel-content-container,
+    .p-panel-collapsed .p-panel-content-container,
     .p-panel-content-container.ng-animating {
-        overflow: hidden;
+        overflow: hidden !important;
     }
+
 `
 );
 var classes = {
@@ -301,19 +325,18 @@ var classes = {
     instance
   }) => ["p-panel p-component", {
     "p-panel-toggleable": instance.toggleable,
-    "p-panel-expanded": !instance.collapsed && instance.toggleable,
-    "p-panel-collapsed": instance.collapsed && instance.toggleable
+    "p-panel-expanded": !instance._collapsed && instance.toggleable,
+    "p-panel-collapsed": instance._collapsed && instance.toggleable
   }],
-  icons: ({
+  header: "p-panel-header",
+  title: "p-panel-title",
+  headerActions: ({
     instance
-  }) => ["p-panel-icons", {
+  }) => ["p-panel-header-actions", {
     "p-panel-icons-start": instance.iconPos === "start",
     "p-panel-icons-end": instance.iconPos === "end",
     "p-panel-icons-center": instance.iconPos === "center"
   }],
-  header: "p-panel-header",
-  title: "p-panel-title",
-  headerActions: "p-panel-header-actions",
   pcToggleButton: "p-panel-toggle-button",
   contentContainer: "p-panel-content-container",
   content: "p-panel-content",
@@ -321,7 +344,7 @@ var classes = {
 };
 var PanelStyle = class _PanelStyle extends BaseStyle {
   name = "panel";
-  theme = theme;
+  style = style3;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵPanelStyle_BaseFactory;
@@ -350,7 +373,23 @@ var PanelClasses;
   PanelClasses2["content"] = "p-panel-content";
   PanelClasses2["footer"] = "p-panel-footer";
 })(PanelClasses || (PanelClasses = {}));
+var PANEL_INSTANCE = new InjectionToken("PANEL_INSTANCE");
 var Panel = class _Panel extends BaseComponent {
+  $pcPanel = inject(PANEL_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  _componentStyle = inject(PanelStyle);
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
+  }
+  /**
+   * Id of the component.
+   */
+  id = s("pn_id_");
   /**
    * Defines if content of panel can be expanded and collapsed.
    * @group Props
@@ -362,14 +401,19 @@ var Panel = class _Panel extends BaseComponent {
    */
   _header;
   /**
+   * Internal collapsed state
+   */
+  _collapsed;
+  /**
    * Defines the initial state of panel content, supports one or two-way binding as well.
    * @group Props
    */
-  collapsed;
-  /**
-   * Id of the component.
-   */
-  id = s("pn_id_");
+  get collapsed() {
+    return this._collapsed;
+  }
+  set collapsed(value) {
+    this._collapsed = value;
+  }
   /**
    * Style class of the component.
    * @group Props
@@ -419,8 +463,10 @@ var Panel = class _Panel extends BaseComponent {
    * @group Emits
    */
   onAfterToggle = new EventEmitter();
+  animating = signal(false, ...ngDevMode ? [{
+    debugName: "animating"
+  }] : []);
   footerFacet;
-  animating;
   /**
    * Defines template option for header.
    * @group Templates
@@ -473,7 +519,6 @@ var Panel = class _Panel extends BaseComponent {
   get buttonAriaLabel() {
     return this._header;
   }
-  _componentStyle = inject(PanelStyle);
   onHeaderClick(event) {
     if (this.toggler === "header") {
       this.toggle(event);
@@ -485,10 +530,10 @@ var Panel = class _Panel extends BaseComponent {
     }
   }
   toggle(event) {
-    if (this.animating) {
+    if (this.animating()) {
       return false;
     }
-    this.animating = true;
+    this.animating.set(true);
     this.onBeforeToggle.emit({
       originalEvent: event,
       collapsed: this.collapsed
@@ -497,17 +542,16 @@ var Panel = class _Panel extends BaseComponent {
       if (this.collapsed) this.expand();
       else this.collapse();
     }
-    this.cd.markForCheck();
     event.preventDefault();
   }
   expand() {
-    this.collapsed = false;
-    this.collapsedChange.emit(this.collapsed);
+    this._collapsed = false;
+    this.collapsedChange.emit(false);
     this.updateTabIndex();
   }
   collapse() {
-    this.collapsed = true;
-    this.collapsedChange.emit(this.collapsed);
+    this._collapsed = true;
+    this.collapsedChange.emit(true);
     this.updateTabIndex();
   }
   getBlockableElement() {
@@ -515,7 +559,7 @@ var Panel = class _Panel extends BaseComponent {
   }
   updateTabIndex() {
     if (this.contentWrapperViewChild) {
-      const focusableElements = this.contentWrapperViewChild.nativeElement.querySelectorAll('input, button, select, a, textarea, [tabindex]:not([tabindex="-1"])');
+      const focusableElements = this.contentWrapperViewChild.nativeElement.querySelectorAll("input, button, select, a, textarea, [tabindex]");
       focusableElements.forEach((element) => {
         if (this.collapsed) {
           element.setAttribute("tabindex", "-1");
@@ -532,14 +576,14 @@ var Panel = class _Panel extends BaseComponent {
     }
   }
   onToggleDone(event) {
-    this.animating = false;
+    this.animating.set(false);
     this.onAfterToggle.emit({
       originalEvent: event,
       collapsed: this.collapsed
     });
   }
   templates;
-  ngAfterContentInit() {
+  onAfterContentInit() {
     this.templates.forEach((item) => {
       switch (item.getType()) {
         case "header":
@@ -561,6 +605,11 @@ var Panel = class _Panel extends BaseComponent {
           this._contentTemplate = item.template;
           break;
       }
+    });
+  }
+  dataP() {
+    return this.cn({
+      toggleable: this.toggleable
     });
   }
   static ɵfac = /* @__PURE__ */ (() => {
@@ -602,19 +651,19 @@ var Panel = class _Panel extends BaseComponent {
         ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.contentWrapperViewChild = _t.first);
       }
     },
-    hostAttrs: ["data-pc-name", "panel"],
-    hostVars: 3,
+    hostVars: 4,
     hostBindings: function Panel_HostBindings(rf, ctx) {
       if (rf & 2) {
         ɵɵdomProperty("id", ctx.id);
+        ɵɵattribute("data-p", ctx.dataP());
         ɵɵclassMap(ctx.cn(ctx.cx("root"), ctx.styleClass));
       }
     },
     inputs: {
+      id: "id",
       toggleable: [2, "toggleable", "toggleable", booleanAttribute],
       _header: [0, "header", "_header"],
       collapsed: [2, "collapsed", "collapsed", booleanAttribute],
-      id: "id",
       styleClass: "styleClass",
       iconPos: "iconPos",
       showHeader: [2, "showHeader", "showHeader", booleanAttribute],
@@ -627,43 +676,50 @@ var Panel = class _Panel extends BaseComponent {
       onBeforeToggle: "onBeforeToggle",
       onAfterToggle: "onAfterToggle"
     },
-    features: [ɵɵProvidersFeature([PanelStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([PanelStyle, {
+      provide: PANEL_INSTANCE,
+      useExisting: _Panel
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _Panel
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     ngContentSelectors: _c7,
     decls: 7,
-    vars: 20,
-    consts: [["contentWrapper", ""], ["icon", ""], [3, "class", "click", 4, "ngIf"], ["role", "region", 3, "id"], [4, "ngTemplateOutlet"], [3, "class", 4, "ngIf"], [3, "click"], ["severity", "secondary", "type", "button", "role", "button", 3, "text", "rounded", "styleClass", "buttonProps", "click", "keydown", 4, "ngIf"], ["severity", "secondary", "type", "button", "role", "button", 3, "click", "keydown", "text", "rounded", "styleClass", "buttonProps"], [4, "ngIf"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], ["data-p-icon", "minus"], ["data-p-icon", "plus"]],
+    vars: 22,
+    consts: [["contentWrapper", ""], ["icon", ""], [3, "pBind", "class", "click", 4, "ngIf"], ["role", "region", 3, "pBind", "id"], [3, "pBind"], [4, "ngTemplateOutlet"], [3, "pBind", "class", 4, "ngIf"], [3, "click", "pBind"], ["severity", "secondary", "type", "button", "role", "button", 3, "text", "rounded", "styleClass", "buttonProps", "pt", "click", "keydown", 4, "ngIf"], ["severity", "secondary", "type", "button", "role", "button", 3, "click", "keydown", "text", "rounded", "styleClass", "buttonProps", "pt"], [4, "ngIf"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], ["data-p-icon", "minus", 3, "pBind"], ["data-p-icon", "plus", 3, "pBind"]],
     template: function Panel_Template(rf, ctx) {
       if (rf & 1) {
         const _r1 = ɵɵgetCurrentView();
         ɵɵprojectionDef(_c6);
-        ɵɵtemplate(0, Panel_div_0_Template, 7, 9, "div", 2);
+        ɵɵtemplate(0, Panel_div_0_Template, 7, 11, "div", 2);
         ɵɵelementStart(1, "div", 3);
         ɵɵlistener("@panelContent.done", function Panel_Template_div_animation_panelContent_done_1_listener($event) {
           ɵɵrestoreView(_r1);
           return ɵɵresetView(ctx.onToggleDone($event));
         });
-        ɵɵelementStart(2, "div", null, 0);
+        ɵɵelementStart(2, "div", 4, 0);
         ɵɵprojection(4);
-        ɵɵtemplate(5, Panel_ng_container_5_Template, 1, 0, "ng-container", 4);
+        ɵɵtemplate(5, Panel_ng_container_5_Template, 1, 0, "ng-container", 5);
         ɵɵelementEnd();
-        ɵɵtemplate(6, Panel_div_6_Template, 3, 3, "div", 5);
+        ɵɵtemplate(6, Panel_div_6_Template, 3, 4, "div", 6);
         ɵɵelementEnd();
       }
       if (rf & 2) {
         ɵɵproperty("ngIf", ctx.showHeader);
         ɵɵadvance();
         ɵɵclassMap(ctx.cx("contentContainer"));
-        ɵɵproperty("id", ctx.id + "_content")("@panelContent", ctx.collapsed ? ɵɵpureFunction1(14, _c9, ɵɵpureFunction1(12, _c8, ctx.animating ? ctx.transitionOptions : "0ms")) : ɵɵpureFunction1(18, _c11, ɵɵpureFunction1(16, _c10, ctx.animating ? ctx.transitionOptions : "0ms")));
+        ɵɵproperty("pBind", ctx.ptm("contentContainer"))("id", ctx.id + "_content")("@panelContent", ctx.collapsed ? ɵɵpureFunction1(16, _c9, ɵɵpureFunction1(14, _c8, ctx.animating() ? ctx.transitionOptions : "0ms")) : ɵɵpureFunction1(20, _c11, ɵɵpureFunction1(18, _c10, ctx.animating() ? ctx.transitionOptions : "0ms")));
         ɵɵattribute("aria-labelledby", ctx.id + "_header")("aria-hidden", ctx.collapsed)("tabindex", ctx.collapsed ? "-1" : void 0);
         ɵɵadvance();
         ɵɵclassMap(ctx.cx("content"));
+        ɵɵproperty("pBind", ctx.ptm("content"));
         ɵɵadvance(3);
         ɵɵproperty("ngTemplateOutlet", ctx.contentTemplate || ctx._contentTemplate);
         ɵɵadvance();
         ɵɵproperty("ngIf", ctx.footerFacet || ctx.footerTemplate || ctx._footerTemplate);
       }
     },
-    dependencies: [CommonModule, NgIf, NgTemplateOutlet, PlusIcon, MinusIcon, ButtonModule, Button, SharedModule],
+    dependencies: [CommonModule, NgIf, NgTemplateOutlet, PlusIcon, MinusIcon, ButtonModule, Button, SharedModule, BindModule, Bind],
     encapsulation: 2,
     data: {
       animation: [trigger("panelContent", [state("hidden", style({
@@ -687,13 +743,13 @@ var Panel = class _Panel extends BaseComponent {
     args: [{
       selector: "p-panel",
       standalone: true,
-      imports: [CommonModule, PlusIcon, MinusIcon, ButtonModule, SharedModule],
+      imports: [CommonModule, PlusIcon, MinusIcon, ButtonModule, SharedModule, BindModule],
       template: `
-        <div [class]="cx('header')" *ngIf="showHeader" (click)="onHeaderClick($event)" [attr.id]="id + '-titlebar'">
-            <span [class]="cx('title')" *ngIf="_header" [attr.id]="id + '_header'">{{ _header }}</span>
+        <div [pBind]="ptm('header')" [class]="cx('header')" *ngIf="showHeader" (click)="onHeaderClick($event)" [attr.id]="id + '-titlebar'">
+            <span [pBind]="ptm('title')" [class]="cx('title')" *ngIf="_header" [attr.id]="id + '_header'">{{ _header }}</span>
             <ng-content select="p-header"></ng-content>
             <ng-container *ngTemplateOutlet="headerTemplate || _headerTemplate"></ng-container>
-            <div [class]="cx('icons')">
+            <div [pBind]="ptm('headerActions')" [class]="cx('headerActions')">
                 <ng-template *ngTemplateOutlet="iconTemplate || _iconTemplate"></ng-template>
                 <p-button
                     *ngIf="toggleable"
@@ -710,15 +766,16 @@ var Panel = class _Panel extends BaseComponent {
                     (click)="onIconClick($event)"
                     (keydown)="onKeyDown($event)"
                     [buttonProps]="toggleButtonProps"
+                    [pt]="ptm('pcToggleButton')"
                 >
                     <ng-template #icon>
                         <ng-container *ngIf="!headerIconsTemplate && !_headerIconsTemplate && !toggleButtonProps?.icon">
                             <ng-container *ngIf="!collapsed">
-                                <svg data-p-icon="minus" />
+                                <svg data-p-icon="minus" [pBind]="ptm('pcToggleButton.icon')" />
                             </ng-container>
 
                             <ng-container *ngIf="collapsed">
-                                <svg data-p-icon="plus" />
+                                <svg data-p-icon="plus" [pBind]="ptm('pcToggleButton.icon')" />
                             </ng-container>
                         </ng-container>
 
@@ -728,6 +785,7 @@ var Panel = class _Panel extends BaseComponent {
             </div>
         </div>
         <div
+            [pBind]="ptm('contentContainer')"
             [class]="cx('contentContainer')"
             [id]="id + '_content'"
             role="region"
@@ -739,7 +797,7 @@ var Panel = class _Panel extends BaseComponent {
                     ? {
                           value: 'hidden',
                           params: {
-                              transitionParams: animating ? transitionOptions : '0ms',
+                              transitionParams: animating() ? transitionOptions : '0ms',
                               height: '0',
                               opacity: '0'
                           }
@@ -747,7 +805,7 @@ var Panel = class _Panel extends BaseComponent {
                     : {
                           value: 'visible',
                           params: {
-                              transitionParams: animating ? transitionOptions : '0ms',
+                              transitionParams: animating() ? transitionOptions : '0ms',
                               height: '*',
                               opacity: '1'
                           }
@@ -755,12 +813,12 @@ var Panel = class _Panel extends BaseComponent {
             "
             (@panelContent.done)="onToggleDone($event)"
         >
-            <div [class]="cx('content')" #contentWrapper>
+            <div [pBind]="ptm('content')" [class]="cx('content')" #contentWrapper>
                 <ng-content></ng-content>
                 <ng-container *ngTemplateOutlet="contentTemplate || _contentTemplate"></ng-container>
             </div>
 
-            <div [class]="cx('footer')" *ngIf="footerFacet || footerTemplate || _footerTemplate">
+            <div [pBind]="ptm('footer')" [class]="cx('footer')" *ngIf="footerFacet || footerTemplate || _footerTemplate">
                 <ng-content select="p-footer"></ng-content>
                 <ng-container *ngTemplateOutlet="footerTemplate || _footerTemplate"></ng-container>
             </div>
@@ -779,14 +837,24 @@ var Panel = class _Panel extends BaseComponent {
       })), transition("visible <=> hidden", [animate("{{transitionParams}}")]), transition("void => hidden", animate("{{transitionParams}}")), transition("void => visible", animate("{{transitionParams}}"))])],
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
-      providers: [PanelStyle],
+      providers: [PanelStyle, {
+        provide: PANEL_INSTANCE,
+        useExisting: Panel
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: Panel
+      }],
       host: {
         "[id]": "id",
-        "data-pc-name": "panel",
-        "[class]": "cn(cx('root'), styleClass)"
-      }
+        "[class]": "cn(cx('root'), styleClass)",
+        "[attr.data-p]": "dataP()"
+      },
+      hostDirectives: [Bind]
     }]
   }], null, {
+    id: [{
+      type: Input
+    }],
     toggleable: [{
       type: Input,
       args: [{
@@ -802,9 +870,6 @@ var Panel = class _Panel extends BaseComponent {
       args: [{
         transform: booleanAttribute
       }]
-    }],
-    id: [{
-      type: Input
     }],
     styleClass: [{
       type: Input
@@ -886,19 +951,19 @@ var PanelModule = class _PanelModule {
   };
   static ɵmod = ɵɵdefineNgModule({
     type: _PanelModule,
-    imports: [Panel, SharedModule],
-    exports: [Panel, SharedModule]
+    imports: [Panel, SharedModule, BindModule],
+    exports: [Panel, SharedModule, BindModule]
   });
   static ɵinj = ɵɵdefineInjector({
-    imports: [Panel, SharedModule, SharedModule]
+    imports: [Panel, SharedModule, BindModule, SharedModule, BindModule]
   });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(PanelModule, [{
     type: NgModule,
     args: [{
-      imports: [Panel, SharedModule],
-      exports: [Panel, SharedModule]
+      imports: [Panel, SharedModule, BindModule],
+      exports: [Panel, SharedModule, BindModule]
     }]
   }], null, null);
 })();

@@ -1,43 +1,47 @@
 import {
   Message
-} from "./chunk-WFLJZRB6.js";
+} from "./chunk-Y23KUKGM.js";
 import {
   ProgressBar
-} from "./chunk-YAA4BHJH.js";
+} from "./chunk-I7OCNQD5.js";
 import {
   Button
-} from "./chunk-5VQOKVHN.js";
+} from "./chunk-YVQRESGR.js";
 import {
   Badge
-} from "./chunk-CXAQXI32.js";
-import "./chunk-XQRN46ZX.js";
-import "./chunk-6PBBDZZF.js";
-import "./chunk-NSRC7NBD.js";
-import "./chunk-QVUTNZUY.js";
-import "./chunk-ZGQMWLLM.js";
+} from "./chunk-TENFQJBN.js";
+import "./chunk-PJRMHEN5.js";
+import "./chunk-YNLAOK3J.js";
+import "./chunk-S73J4WE3.js";
+import "./chunk-OC77X5LN.js";
 import {
   PlusIcon,
   TimesIcon,
   UploadIcon
-} from "./chunk-7J3R4TGM.js";
+} from "./chunk-RHA7RL5K.js";
+import "./chunk-YXZQJBKH.js";
 import {
-  BaseComponent
-} from "./chunk-LEFSMMS4.js";
+  Bind
+} from "./chunk-MLQGRGGO.js";
+import {
+  BaseComponent,
+  PARENT_INSTANCE
+} from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
-} from "./chunk-TT45BO2Q.js";
+} from "./chunk-4ATYD752.js";
 import {
   PrimeTemplate,
   SharedModule,
   TranslationKeys
-} from "./chunk-NUKU6X6H.js";
+} from "./chunk-LMEEH3AJ.js";
 import "./chunk-6QGHQEN4.js";
 import "./chunk-53DGU4C2.js";
-import "./chunk-BMDSN43F.js";
+import "./chunk-GOP36Q47.js";
 import {
-  O,
+  P,
   W
-} from "./chunk-RK2DVQNP.js";
+} from "./chunk-UCHM6OXG.js";
 import {
   DomSanitizer
 } from "./chunk-SRUCT75H.js";
@@ -74,6 +78,7 @@ import {
   numberAttribute,
   output,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -115,6 +120,7 @@ import {
   ɵɵviewQuery
 } from "./chunk-EIF6IUR4.js";
 import {
+  InjectionToken,
   inject,
   ɵɵdefineInjectable,
   ɵɵdefineInjector,
@@ -147,7 +153,7 @@ function FileContent_For_1_ng_template_10_Conditional_0_0_Template(rf, ctx) {
 }
 function FileContent_For_1_ng_template_10_Conditional_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, FileContent_For_1_ng_template_10_Conditional_0_0_Template, 1, 0, null, 6);
+    ɵɵtemplate(0, FileContent_For_1_ng_template_10_Conditional_0_0_Template, 1, 0, null, 7);
   }
   if (rf & 2) {
     const iconClass_r4 = ɵɵnextContext().class;
@@ -161,7 +167,7 @@ function FileContent_For_1_ng_template_10_Conditional_0_Template(rf, ctx) {
 function FileContent_For_1_ng_template_10_Conditional_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 7);
+    ɵɵelement(0, "svg", 8);
   }
   if (rf & 2) {
     const iconClass_r4 = ɵɵnextContext().class;
@@ -171,7 +177,7 @@ function FileContent_For_1_ng_template_10_Conditional_1_Template(rf, ctx) {
 }
 function FileContent_For_1_ng_template_10_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵconditionalCreate(0, FileContent_For_1_ng_template_10_Conditional_0_Template, 1, 6)(1, FileContent_For_1_ng_template_10_Conditional_1_Template, 1, 3, ":svg:svg", 5);
+    ɵɵconditionalCreate(0, FileContent_For_1_ng_template_10_Conditional_0_Template, 1, 6)(1, FileContent_For_1_ng_template_10_Conditional_1_Template, 1, 3, ":svg:svg", 6);
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(2);
@@ -181,16 +187,16 @@ function FileContent_For_1_ng_template_10_Template(rf, ctx) {
 function FileContent_For_1_Template(rf, ctx) {
   if (rf & 1) {
     const _r1 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "div");
-    ɵɵelement(1, "img", 2);
-    ɵɵelementStart(2, "div")(3, "div");
+    ɵɵelementStart(0, "div", 2);
+    ɵɵelement(1, "img", 3);
+    ɵɵelementStart(2, "div", 2)(3, "div", 2);
     ɵɵtext(4);
     ɵɵelementEnd();
-    ɵɵelementStart(5, "span");
+    ɵɵelementStart(5, "span", 2);
     ɵɵtext(6);
     ɵɵelementEnd()();
-    ɵɵelement(7, "p-badge", 3);
-    ɵɵelementStart(8, "div")(9, "p-button", 4);
+    ɵɵelement(7, "p-badge", 4);
+    ɵɵelementStart(8, "div", 2)(9, "p-button", 5);
     ɵɵlistener("onClick", function FileContent_For_1_Template_p_button_onClick_9_listener($event) {
       const ɵ$index_1_r2 = ɵɵrestoreView(_r1).$index;
       const ctx_r2 = ɵɵnextContext();
@@ -203,27 +209,32 @@ function FileContent_For_1_Template(rf, ctx) {
     const file_r6 = ctx.$implicit;
     const ctx_r2 = ɵɵnextContext();
     ɵɵclassMap(ctx_r2.cx("file"));
+    ɵɵproperty("pBind", ctx_r2.$pcFileUpload.ptm("file"));
     ɵɵadvance();
     ɵɵclassMap(ctx_r2.cx("fileThumbnail"));
-    ɵɵproperty("src", file_r6.objectURL, ɵɵsanitizeUrl)("width", ctx_r2.previewWidth());
+    ɵɵproperty("src", file_r6.objectURL, ɵɵsanitizeUrl)("width", ctx_r2.previewWidth())("pBind", ctx_r2.$pcFileUpload.ptm("fileThumbnail"));
     ɵɵattribute("alt", file_r6.name);
     ɵɵadvance();
     ɵɵclassMap(ctx_r2.cx("fileInfo"));
+    ɵɵproperty("pBind", ctx_r2.$pcFileUpload.ptm("fileInfo"));
     ɵɵadvance();
     ɵɵclassMap(ctx_r2.cx("fileName"));
+    ɵɵproperty("pBind", ctx_r2.$pcFileUpload.ptm("fileName"));
     ɵɵadvance();
     ɵɵtextInterpolate(file_r6.name);
     ɵɵadvance();
     ɵɵclassMap(ctx_r2.cx("fileSize"));
+    ɵɵproperty("pBind", ctx_r2.$pcFileUpload.ptm("fileSize"));
     ɵɵadvance();
     ɵɵtextInterpolate(ctx_r2.formatSize(file_r6.size));
     ɵɵadvance();
     ɵɵclassMap(ctx_r2.cx("pcFileBadge"));
-    ɵɵproperty("value", ctx_r2.badgeValue())("severity", ctx_r2.badgeSeverity());
+    ɵɵproperty("value", ctx_r2.badgeValue())("severity", ctx_r2.badgeSeverity())("pt", ctx_r2.$pcFileUpload.ptm("pcFileBadge"));
     ɵɵadvance();
     ɵɵclassMap(ctx_r2.cx("fileActions"));
+    ɵɵproperty("pBind", ctx_r2.$pcFileUpload.ptm("fileActions"));
     ɵɵadvance();
-    ɵɵproperty("styleClass", ctx_r2.cx("pcFileRemoveButton"));
+    ɵɵproperty("styleClass", ctx_r2.cx("pcFileRemoveButton"))("pt", ctx_r2.$pcFileUpload.ptm("pcFileRemoveButton"));
   }
 }
 var _c2 = ["file"];
@@ -259,21 +270,26 @@ var _c15 = (a0) => ({
 });
 function FileUpload_div_0_ng_container_4_ng_template_4_span_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "span");
+    ɵɵelement(0, "span", 8);
   }
   if (rf & 2) {
+    let tmp_9_0;
     const ctx_r1 = ɵɵnextContext(4);
     ɵɵclassMap(ctx_r1.chooseIcon);
-    ɵɵattribute("aria-label", true)("data-pc-section", "chooseicon");
+    ɵɵproperty("pBind", (tmp_9_0 = ctx_r1.ptm("pcChooseButton")) == null ? null : tmp_9_0.icon);
+    ɵɵattribute("aria-label", true);
   }
 }
 function FileUpload_div_0_ng_container_4_ng_template_4_ng_container_1__svg_svg_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 15);
+    ɵɵelement(0, "svg", 17);
   }
   if (rf & 2) {
-    ɵɵattribute("aria-label", true)("data-pc-section", "chooseicon");
+    let tmp_9_0;
+    const ctx_r1 = ɵɵnextContext(5);
+    ɵɵproperty("pBind", (tmp_9_0 = ctx_r1.ptm("pcChooseButton")) == null ? null : tmp_9_0.icon);
+    ɵɵattribute("aria-label", true);
   }
 }
 function FileUpload_div_0_ng_container_4_ng_template_4_ng_container_1_span_2_1_ng_template_0_Template(rf, ctx) {
@@ -285,13 +301,15 @@ function FileUpload_div_0_ng_container_4_ng_template_4_ng_container_1_span_2_1_T
 }
 function FileUpload_div_0_ng_container_4_ng_template_4_ng_container_1_span_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "span");
-    ɵɵtemplate(1, FileUpload_div_0_ng_container_4_ng_template_4_ng_container_1_span_2_1_Template, 1, 0, null, 10);
+    ɵɵelementStart(0, "span", 8);
+    ɵɵtemplate(1, FileUpload_div_0_ng_container_4_ng_template_4_ng_container_1_span_2_1_Template, 1, 0, null, 11);
     ɵɵelementEnd();
   }
   if (rf & 2) {
+    let tmp_9_0;
     const ctx_r1 = ɵɵnextContext(5);
-    ɵɵattribute("aria-label", true)("data-pc-section", "chooseicon");
+    ɵɵproperty("pBind", (tmp_9_0 = ctx_r1.ptm("pcChooseButton")) == null ? null : tmp_9_0.icon);
+    ɵɵattribute("aria-label", true);
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r1.chooseIconTemplate || ctx_r1._chooseIconTemplate);
   }
@@ -299,7 +317,7 @@ function FileUpload_div_0_ng_container_4_ng_template_4_ng_container_1_span_2_Tem
 function FileUpload_div_0_ng_container_4_ng_template_4_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, FileUpload_div_0_ng_container_4_ng_template_4_ng_container_1__svg_svg_1_Template, 1, 2, "svg", 14)(2, FileUpload_div_0_ng_container_4_ng_template_4_ng_container_1_span_2_Template, 2, 3, "span", 8);
+    ɵɵtemplate(1, FileUpload_div_0_ng_container_4_ng_template_4_ng_container_1__svg_svg_1_Template, 1, 2, "svg", 15)(2, FileUpload_div_0_ng_container_4_ng_template_4_ng_container_1_span_2_Template, 2, 3, "span", 16);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -312,7 +330,7 @@ function FileUpload_div_0_ng_container_4_ng_template_4_ng_container_1_Template(r
 }
 function FileUpload_div_0_ng_container_4_ng_template_4_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, FileUpload_div_0_ng_container_4_ng_template_4_span_0_Template, 1, 4, "span", 5)(1, FileUpload_div_0_ng_container_4_ng_template_4_ng_container_1_Template, 3, 2, "ng-container", 8);
+    ɵɵtemplate(0, FileUpload_div_0_ng_container_4_ng_template_4_span_0_Template, 1, 4, "span", 5)(1, FileUpload_div_0_ng_container_4_ng_template_4_ng_container_1_Template, 3, 2, "ng-container", 9);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
@@ -323,18 +341,24 @@ function FileUpload_div_0_ng_container_4_ng_template_4_Template(rf, ctx) {
 }
 function FileUpload_div_0_ng_container_4_p_button_6_ng_template_1_span_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "span", 18);
+    ɵɵelement(0, "span", 20);
   }
   if (rf & 2) {
+    let tmp_11_0;
     const ctx_r1 = ɵɵnextContext(5);
-    ɵɵproperty("ngClass", ctx_r1.uploadIcon);
+    ɵɵproperty("ngClass", ctx_r1.uploadIcon)("pBind", (tmp_11_0 = ctx_r1.ptm("pcUploadButton")) == null ? null : tmp_11_0.icon);
     ɵɵattribute("aria-hidden", true);
   }
 }
 function FileUpload_div_0_ng_container_4_p_button_6_ng_template_1_ng_container_1__svg_svg_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 20);
+    ɵɵelement(0, "svg", 22);
+  }
+  if (rf & 2) {
+    let tmp_11_0;
+    const ctx_r1 = ɵɵnextContext(6);
+    ɵɵproperty("pBind", (tmp_11_0 = ctx_r1.ptm("pcUploadButton")) == null ? null : tmp_11_0.icon);
   }
 }
 function FileUpload_div_0_ng_container_4_p_button_6_ng_template_1_ng_container_1_span_2_1_ng_template_0_Template(rf, ctx) {
@@ -346,12 +370,14 @@ function FileUpload_div_0_ng_container_4_p_button_6_ng_template_1_ng_container_1
 }
 function FileUpload_div_0_ng_container_4_p_button_6_ng_template_1_ng_container_1_span_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "span");
-    ɵɵtemplate(1, FileUpload_div_0_ng_container_4_p_button_6_ng_template_1_ng_container_1_span_2_1_Template, 1, 0, null, 10);
+    ɵɵelementStart(0, "span", 8);
+    ɵɵtemplate(1, FileUpload_div_0_ng_container_4_p_button_6_ng_template_1_ng_container_1_span_2_1_Template, 1, 0, null, 11);
     ɵɵelementEnd();
   }
   if (rf & 2) {
+    let tmp_11_0;
     const ctx_r1 = ɵɵnextContext(6);
+    ɵɵproperty("pBind", (tmp_11_0 = ctx_r1.ptm("pcUploadButton")) == null ? null : tmp_11_0.icon);
     ɵɵattribute("aria-hidden", true);
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r1.uploadIconTemplate || ctx_r1._uploadIconTemplate);
@@ -360,7 +386,7 @@ function FileUpload_div_0_ng_container_4_p_button_6_ng_template_1_ng_container_1
 function FileUpload_div_0_ng_container_4_p_button_6_ng_template_1_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, FileUpload_div_0_ng_container_4_p_button_6_ng_template_1_ng_container_1__svg_svg_1_Template, 1, 0, "svg", 19)(2, FileUpload_div_0_ng_container_4_p_button_6_ng_template_1_ng_container_1_span_2_Template, 2, 2, "span", 8);
+    ɵɵtemplate(1, FileUpload_div_0_ng_container_4_p_button_6_ng_template_1_ng_container_1__svg_svg_1_Template, 1, 1, "svg", 21)(2, FileUpload_div_0_ng_container_4_p_button_6_ng_template_1_ng_container_1_span_2_Template, 2, 3, "span", 16);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -373,7 +399,7 @@ function FileUpload_div_0_ng_container_4_p_button_6_ng_template_1_ng_container_1
 }
 function FileUpload_div_0_ng_container_4_p_button_6_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, FileUpload_div_0_ng_container_4_p_button_6_ng_template_1_span_0_Template, 1, 2, "span", 17)(1, FileUpload_div_0_ng_container_4_p_button_6_ng_template_1_ng_container_1_Template, 3, 2, "ng-container", 8);
+    ɵɵtemplate(0, FileUpload_div_0_ng_container_4_p_button_6_ng_template_1_span_0_Template, 1, 3, "span", 19)(1, FileUpload_div_0_ng_container_4_p_button_6_ng_template_1_ng_container_1_Template, 3, 2, "ng-container", 9);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(4);
@@ -385,7 +411,7 @@ function FileUpload_div_0_ng_container_4_p_button_6_ng_template_1_Template(rf, c
 function FileUpload_div_0_ng_container_4_p_button_6_Template(rf, ctx) {
   if (rf & 1) {
     const _r4 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "p-button", 16);
+    ɵɵelementStart(0, "p-button", 18);
     ɵɵlistener("onClick", function FileUpload_div_0_ng_container_4_p_button_6_Template_p_button_onClick_0_listener() {
       ɵɵrestoreView(_r4);
       const ctx_r1 = ɵɵnextContext(3);
@@ -396,12 +422,12 @@ function FileUpload_div_0_ng_container_4_p_button_6_Template(rf, ctx) {
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
-    ɵɵproperty("label", ctx_r1.uploadButtonLabel)("disabled", !ctx_r1.hasFiles() || ctx_r1.isFileLimitExceeded())("styleClass", ctx_r1.cn(ctx_r1.cx("pcUploadButton"), ctx_r1.uploadStyleClass))("buttonProps", ctx_r1.uploadButtonProps);
+    ɵɵproperty("label", ctx_r1.uploadButtonLabel)("disabled", !ctx_r1.hasFiles() || ctx_r1.isFileLimitExceeded())("styleClass", ctx_r1.cn(ctx_r1.cx("pcUploadButton"), ctx_r1.uploadStyleClass))("buttonProps", ctx_r1.uploadButtonProps)("pt", ctx_r1.ptm("pcUploadButton"));
   }
 }
 function FileUpload_div_0_ng_container_4_p_button_7_ng_template_1_span_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "span", 18);
+    ɵɵelement(0, "span", 24);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(5);
@@ -411,7 +437,7 @@ function FileUpload_div_0_ng_container_4_p_button_7_ng_template_1_span_0_Templat
 function FileUpload_div_0_ng_container_4_p_button_7_ng_template_1_ng_container_1__svg_svg_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 22);
+    ɵɵelement(0, "svg", 26);
   }
   if (rf & 2) {
     ɵɵattribute("aria-hidden", true);
@@ -427,7 +453,7 @@ function FileUpload_div_0_ng_container_4_p_button_7_ng_template_1_ng_container_1
 function FileUpload_div_0_ng_container_4_p_button_7_ng_template_1_ng_container_1_span_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementStart(0, "span");
-    ɵɵtemplate(1, FileUpload_div_0_ng_container_4_p_button_7_ng_template_1_ng_container_1_span_2_1_Template, 1, 0, null, 10);
+    ɵɵtemplate(1, FileUpload_div_0_ng_container_4_p_button_7_ng_template_1_ng_container_1_span_2_1_Template, 1, 0, null, 11);
     ɵɵelementEnd();
   }
   if (rf & 2) {
@@ -440,7 +466,7 @@ function FileUpload_div_0_ng_container_4_p_button_7_ng_template_1_ng_container_1
 function FileUpload_div_0_ng_container_4_p_button_7_ng_template_1_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, FileUpload_div_0_ng_container_4_p_button_7_ng_template_1_ng_container_1__svg_svg_1_Template, 1, 1, "svg", 21)(2, FileUpload_div_0_ng_container_4_p_button_7_ng_template_1_ng_container_1_span_2_Template, 2, 2, "span", 8);
+    ɵɵtemplate(1, FileUpload_div_0_ng_container_4_p_button_7_ng_template_1_ng_container_1__svg_svg_1_Template, 1, 1, "svg", 25)(2, FileUpload_div_0_ng_container_4_p_button_7_ng_template_1_ng_container_1_span_2_Template, 2, 2, "span", 9);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -453,7 +479,7 @@ function FileUpload_div_0_ng_container_4_p_button_7_ng_template_1_ng_container_1
 }
 function FileUpload_div_0_ng_container_4_p_button_7_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, FileUpload_div_0_ng_container_4_p_button_7_ng_template_1_span_0_Template, 1, 1, "span", 17)(1, FileUpload_div_0_ng_container_4_p_button_7_ng_template_1_ng_container_1_Template, 3, 2, "ng-container", 8);
+    ɵɵtemplate(0, FileUpload_div_0_ng_container_4_p_button_7_ng_template_1_span_0_Template, 1, 1, "span", 23)(1, FileUpload_div_0_ng_container_4_p_button_7_ng_template_1_ng_container_1_Template, 3, 2, "ng-container", 9);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(4);
@@ -465,7 +491,7 @@ function FileUpload_div_0_ng_container_4_p_button_7_ng_template_1_Template(rf, c
 function FileUpload_div_0_ng_container_4_p_button_7_Template(rf, ctx) {
   if (rf & 1) {
     const _r5 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "p-button", 16);
+    ɵɵelementStart(0, "p-button", 18);
     ɵɵlistener("onClick", function FileUpload_div_0_ng_container_4_p_button_7_Template_p_button_onClick_0_listener() {
       ɵɵrestoreView(_r5);
       const ctx_r1 = ɵɵnextContext(3);
@@ -476,14 +502,14 @@ function FileUpload_div_0_ng_container_4_p_button_7_Template(rf, ctx) {
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
-    ɵɵproperty("label", ctx_r1.cancelButtonLabel)("disabled", !ctx_r1.hasFiles() || ctx_r1.uploading)("styleClass", ctx_r1.cn(ctx_r1.cx("pcCancelButton"), ctx_r1.cancelStyleClass))("buttonProps", ctx_r1.cancelButtonProps);
+    ɵɵproperty("label", ctx_r1.cancelButtonLabel)("disabled", !ctx_r1.hasFiles() || ctx_r1.uploading)("styleClass", ctx_r1.cn(ctx_r1.cx("pcCancelButton"), ctx_r1.cancelStyleClass))("buttonProps", ctx_r1.cancelButtonProps)("pt", ctx_r1.ptm("pcCancelButton"));
   }
 }
 function FileUpload_div_0_ng_container_4_Template(rf, ctx) {
   if (rf & 1) {
     const _r3 = ɵɵgetCurrentView();
     ɵɵelementContainerStart(0);
-    ɵɵelementStart(1, "p-button", 12);
+    ɵɵelementStart(1, "p-button", 13);
     ɵɵlistener("focus", function FileUpload_div_0_ng_container_4_Template_p_button_focus_1_listener() {
       ɵɵrestoreView(_r3);
       const ctx_r1 = ɵɵnextContext(2);
@@ -510,17 +536,16 @@ function FileUpload_div_0_ng_container_4_Template(rf, ctx) {
     ɵɵelementEnd();
     ɵɵtemplate(4, FileUpload_div_0_ng_container_4_ng_template_4_Template, 2, 2, "ng-template", null, 2, ɵɵtemplateRefExtractor);
     ɵɵelementEnd();
-    ɵɵtemplate(6, FileUpload_div_0_ng_container_4_p_button_6_Template, 3, 4, "p-button", 13)(7, FileUpload_div_0_ng_container_4_p_button_7_Template, 3, 4, "p-button", 13);
+    ɵɵtemplate(6, FileUpload_div_0_ng_container_4_p_button_6_Template, 3, 5, "p-button", 14)(7, FileUpload_div_0_ng_container_4_p_button_7_Template, 3, 5, "p-button", 14);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
     ɵɵadvance();
-    ɵɵproperty("styleClass", ctx_r1.cn(ctx_r1.cx("pcChooseButton"), ctx_r1.chooseStyleClass))("disabled", ctx_r1.disabled || ctx_r1.isChooseDisabled())("label", ctx_r1.chooseButtonLabel)("buttonProps", ctx_r1.chooseButtonProps);
-    ɵɵattribute("data-pc-section", "choosebutton");
+    ɵɵproperty("styleClass", ctx_r1.cn(ctx_r1.cx("pcChooseButton"), ctx_r1.chooseStyleClass))("disabled", ctx_r1.disabled || ctx_r1.isChooseDisabled())("label", ctx_r1.chooseButtonLabel)("buttonProps", ctx_r1.chooseButtonProps)("pt", ctx_r1.ptm("pcChooseButton"));
     ɵɵadvance();
-    ɵɵproperty("multiple", ctx_r1.multiple)("accept", ctx_r1.accept)("disabled", ctx_r1.disabled || ctx_r1.isChooseDisabled());
-    ɵɵattribute("aria-label", ctx_r1.browseFilesLabel)("title", "")("data-pc-section", "input");
+    ɵɵproperty("multiple", ctx_r1.multiple)("accept", ctx_r1.accept)("disabled", ctx_r1.disabled || ctx_r1.isChooseDisabled())("pBind", ctx_r1.ptm("input"));
+    ɵɵattribute("aria-label", ctx_r1.browseFilesLabel)("title", "");
     ɵɵadvance(4);
     ɵɵproperty("ngIf", !ctx_r1.auto && ctx_r1.showUploadButton);
     ɵɵadvance();
@@ -544,7 +569,7 @@ function FileUpload_div_0_Conditional_9_ng_container_0_Template(rf, ctx) {
 }
 function FileUpload_div_0_Conditional_9_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, FileUpload_div_0_Conditional_9_ng_container_0_Template, 1, 0, "ng-container", 9);
+    ɵɵtemplate(0, FileUpload_div_0_Conditional_9_ng_container_0_Template, 1, 0, "ng-container", 10);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
@@ -553,20 +578,21 @@ function FileUpload_div_0_Conditional_9_Template(rf, ctx) {
 }
 function FileUpload_div_0_Conditional_10_p_progressbar_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "p-progressbar", 26);
+    ɵɵelement(0, "p-progressbar", 30);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
-    ɵɵproperty("value", ctx_r1.progress)("showValue", false);
+    ɵɵproperty("value", ctx_r1.progress)("showValue", false)("pt", ctx_r1.ptm("pcProgressBar"));
   }
 }
 function FileUpload_div_0_Conditional_10_For_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "p-message", 24);
+    ɵɵelement(0, "p-message", 28);
   }
   if (rf & 2) {
     const message_r6 = ctx.$implicit;
-    ɵɵproperty("severity", message_r6.severity)("text", message_r6.text);
+    const ctx_r1 = ɵɵnextContext(3);
+    ɵɵproperty("severity", message_r6.severity)("text", message_r6.text)("pt", ctx_r1.ptm("pcMessage"));
   }
 }
 function FileUpload_div_0_Conditional_10_Conditional_3_ng_template_1_Template(rf, ctx) {
@@ -574,7 +600,7 @@ function FileUpload_div_0_Conditional_10_Conditional_3_ng_template_1_Template(rf
 function FileUpload_div_0_Conditional_10_Conditional_3_Conditional_2_Template(rf, ctx) {
   if (rf & 1) {
     const _r7 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "div", 29);
+    ɵɵelementStart(0, "div", 33);
     ɵɵlistener("onRemove", function FileUpload_div_0_Conditional_10_Conditional_3_Conditional_2_Template_div_onRemove_0_listener($event) {
       ɵɵrestoreView(_r7);
       const ctx_r1 = ɵɵnextContext(4);
@@ -589,14 +615,15 @@ function FileUpload_div_0_Conditional_10_Conditional_3_Conditional_2_Template(rf
 }
 function FileUpload_div_0_Conditional_10_Conditional_3_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div");
-    ɵɵtemplate(1, FileUpload_div_0_Conditional_10_Conditional_3_ng_template_1_Template, 0, 0, "ng-template", 27);
-    ɵɵconditionalCreate(2, FileUpload_div_0_Conditional_10_Conditional_3_Conditional_2_Template, 1, 4, "div", 28);
+    ɵɵelementStart(0, "div", 8);
+    ɵɵtemplate(1, FileUpload_div_0_Conditional_10_Conditional_3_ng_template_1_Template, 0, 0, "ng-template", 31);
+    ɵɵconditionalCreate(2, FileUpload_div_0_Conditional_10_Conditional_3_Conditional_2_Template, 1, 4, "div", 32);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r1.cx("fileList"));
+    ɵɵproperty("pBind", ctx_r1.ptm("fileList"));
     ɵɵadvance();
     ɵɵproperty("ngForOf", ctx_r1.files)("ngForTemplate", ctx_r1.fileTemplate || ctx_r1._fileTemplate);
     ɵɵadvance();
@@ -608,7 +635,7 @@ function FileUpload_div_0_Conditional_10_Conditional_4_ng_template_1_Template(rf
 function FileUpload_div_0_Conditional_10_Conditional_4_Conditional_2_Template(rf, ctx) {
   if (rf & 1) {
     const _r8 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "div", 31);
+    ɵɵelementStart(0, "div", 35);
     ɵɵlistener("onRemove", function FileUpload_div_0_Conditional_10_Conditional_4_Conditional_2_Template_div_onRemove_0_listener($event) {
       ɵɵrestoreView(_r8);
       const ctx_r1 = ɵɵnextContext(4);
@@ -623,14 +650,15 @@ function FileUpload_div_0_Conditional_10_Conditional_4_Conditional_2_Template(rf
 }
 function FileUpload_div_0_Conditional_10_Conditional_4_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div");
-    ɵɵtemplate(1, FileUpload_div_0_Conditional_10_Conditional_4_ng_template_1_Template, 0, 0, "ng-template", 27);
-    ɵɵconditionalCreate(2, FileUpload_div_0_Conditional_10_Conditional_4_Conditional_2_Template, 1, 4, "div", 30);
+    ɵɵelementStart(0, "div", 8);
+    ɵɵtemplate(1, FileUpload_div_0_Conditional_10_Conditional_4_ng_template_1_Template, 0, 0, "ng-template", 31);
+    ɵɵconditionalCreate(2, FileUpload_div_0_Conditional_10_Conditional_4_Conditional_2_Template, 1, 4, "div", 34);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r1.cx("fileList"));
+    ɵɵproperty("pBind", ctx_r1.ptm("fileList"));
     ɵɵadvance();
     ɵɵproperty("ngForOf", ctx_r1.uploadedFiles)("ngForTemplate", ctx_r1.fileTemplate || ctx_r1._fileTemplate);
     ɵɵadvance();
@@ -639,10 +667,10 @@ function FileUpload_div_0_Conditional_10_Conditional_4_Template(rf, ctx) {
 }
 function FileUpload_div_0_Conditional_10_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, FileUpload_div_0_Conditional_10_p_progressbar_0_Template, 1, 2, "p-progressbar", 23);
-    ɵɵrepeaterCreate(1, FileUpload_div_0_Conditional_10_For_2_Template, 1, 2, "p-message", 24, ɵɵrepeaterTrackByIdentity);
-    ɵɵconditionalCreate(3, FileUpload_div_0_Conditional_10_Conditional_3_Template, 3, 5, "div", 25);
-    ɵɵconditionalCreate(4, FileUpload_div_0_Conditional_10_Conditional_4_Template, 3, 5, "div", 25);
+    ɵɵtemplate(0, FileUpload_div_0_Conditional_10_p_progressbar_0_Template, 1, 3, "p-progressbar", 27);
+    ɵɵrepeaterCreate(1, FileUpload_div_0_Conditional_10_For_2_Template, 1, 3, "p-message", 28, ɵɵrepeaterTrackByIdentity);
+    ɵɵconditionalCreate(3, FileUpload_div_0_Conditional_10_Conditional_3_Template, 3, 6, "div", 29);
+    ɵɵconditionalCreate(4, FileUpload_div_0_Conditional_10_Conditional_4_Template, 3, 6, "div", 29);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
@@ -657,12 +685,16 @@ function FileUpload_div_0_Conditional_10_Template(rf, ctx) {
 }
 function FileUpload_div_0_Conditional_11_ng_container_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementContainer(0);
+    ɵɵelementContainer(0, 8);
+  }
+  if (rf & 2) {
+    const ctx_r1 = ɵɵnextContext(3);
+    ɵɵproperty("pBind", ctx_r1.ptm("empty"));
   }
 }
 function FileUpload_div_0_Conditional_11_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, FileUpload_div_0_Conditional_11_ng_container_0_Template, 1, 0, "ng-container", 10);
+    ɵɵtemplate(0, FileUpload_div_0_Conditional_11_ng_container_0_Template, 1, 1, "ng-container", 36);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
@@ -679,10 +711,10 @@ function FileUpload_div_0_Template(rf, ctx) {
       return ɵɵresetView(ctx_r1.onFileSelect($event));
     });
     ɵɵelementEnd();
-    ɵɵelementStart(3, "div");
-    ɵɵtemplate(4, FileUpload_div_0_ng_container_4_Template, 8, 13, "ng-container", 8)(5, FileUpload_div_0_ng_container_5_Template, 1, 0, "ng-container", 9)(6, FileUpload_div_0_ng_container_6_Template, 1, 0, "ng-container", 10);
+    ɵɵelementStart(3, "div", 8);
+    ɵɵtemplate(4, FileUpload_div_0_ng_container_4_Template, 8, 13, "ng-container", 9)(5, FileUpload_div_0_ng_container_5_Template, 1, 0, "ng-container", 10)(6, FileUpload_div_0_ng_container_6_Template, 1, 0, "ng-container", 11);
     ɵɵelementEnd();
-    ɵɵelementStart(7, "div", 11, 1);
+    ɵɵelementStart(7, "div", 12, 1);
     ɵɵlistener("dragenter", function FileUpload_div_0_Template_div_dragenter_7_listener($event) {
       ɵɵrestoreView(_r1);
       const ctx_r1 = ɵɵnextContext();
@@ -697,20 +729,20 @@ function FileUpload_div_0_Template(rf, ctx) {
       return ɵɵresetView(ctx_r1.onDrop($event));
     });
     ɵɵconditionalCreate(9, FileUpload_div_0_Conditional_9_Template, 1, 11, "ng-container")(10, FileUpload_div_0_Conditional_10_Template, 5, 3);
-    ɵɵconditionalCreate(11, FileUpload_div_0_Conditional_11_Template, 1, 1, "ng-container");
+    ɵɵconditionalCreate(11, FileUpload_div_0_Conditional_11_Template, 1, 1, "ng-container", 8);
     ɵɵelementEnd()();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cn(ctx_r1.cx("root"), ctx_r1.styleClass));
-    ɵɵproperty("ngStyle", ctx_r1.style);
-    ɵɵattribute("data-pc-name", "fileupload")("data-pc-section", "root");
+    ɵɵproperty("ngStyle", ctx_r1.style)("pBind", ctx_r1.ptm("root"));
     ɵɵadvance();
     ɵɵstyleProp("display", "none");
-    ɵɵproperty("multiple", ctx_r1.multiple)("accept", ctx_r1.accept)("disabled", ctx_r1.disabled || ctx_r1.isChooseDisabled());
-    ɵɵattribute("aria-label", ctx_r1.browseFilesLabel)("title", "")("data-pc-section", "input");
+    ɵɵproperty("multiple", ctx_r1.multiple)("accept", ctx_r1.accept)("disabled", ctx_r1.disabled || ctx_r1.isChooseDisabled())("pBind", ctx_r1.ptm("input"));
+    ɵɵattribute("aria-label", ctx_r1.browseFilesLabel)("title", "");
     ɵɵadvance(2);
     ɵɵclassMap(ctx_r1.cx("header"));
+    ɵɵproperty("pBind", ctx_r1.ptm("header"));
     ɵɵadvance();
     ɵɵproperty("ngIf", !ctx_r1.headerTemplate && !ctx_r1._headerTemplate);
     ɵɵadvance();
@@ -719,7 +751,7 @@ function FileUpload_div_0_Template(rf, ctx) {
     ɵɵproperty("ngTemplateOutlet", ctx_r1.toolbarTemplate || ctx_r1._toolbarTemplate);
     ɵɵadvance();
     ɵɵclassMap(ctx_r1.cx("content"));
-    ɵɵattribute("data-pc-section", "content");
+    ɵɵproperty("pBind", ctx_r1.ptm("content"));
     ɵɵadvance(2);
     ɵɵconditional(ctx_r1.contentTemplate || ctx_r1._contentTemplate ? 9 : 10);
     ɵɵadvance(2);
@@ -728,29 +760,34 @@ function FileUpload_div_0_Template(rf, ctx) {
 }
 function FileUpload_div_1_For_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "p-message", 24);
+    ɵɵelement(0, "p-message", 28);
   }
   if (rf & 2) {
     const message_r10 = ctx.$implicit;
-    ɵɵproperty("severity", message_r10.severity)("text", message_r10.text);
+    const ctx_r1 = ɵɵnextContext(2);
+    ɵɵproperty("severity", message_r10.severity)("text", message_r10.text)("pt", ctx_r1.ptm("pcMessage"));
   }
 }
 function FileUpload_div_1_ng_template_5_Conditional_0_span_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "span", 35);
+    ɵɵelement(0, "span", 40);
   }
   if (rf & 2) {
+    let tmp_7_0;
     const ctx_r1 = ɵɵnextContext(4);
-    ɵɵproperty("ngClass", ctx_r1.uploadIcon);
+    ɵɵproperty("ngClass", ctx_r1.uploadIcon)("pBind", (tmp_7_0 = ctx_r1.ptm("pcChooseButton")) == null ? null : tmp_7_0.icon);
   }
 }
 function FileUpload_div_1_ng_template_5_Conditional_0_ng_container_1__svg_svg_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 20);
+    ɵɵelement(0, "svg", 22);
   }
   if (rf & 2) {
+    let tmp_8_0;
+    const ctx_r1 = ɵɵnextContext(5);
     ɵɵclassMap("p-button-icon p-button-icon-left");
+    ɵɵproperty("pBind", (tmp_8_0 = ctx_r1.ptm("pcChooseButton")) == null ? null : tmp_8_0.icon);
   }
 }
 function FileUpload_div_1_ng_template_5_Conditional_0_ng_container_1_span_2_1_ng_template_0_Template(rf, ctx) {
@@ -762,12 +799,14 @@ function FileUpload_div_1_ng_template_5_Conditional_0_ng_container_1_span_2_1_Te
 }
 function FileUpload_div_1_ng_template_5_Conditional_0_ng_container_1_span_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "span", 38);
-    ɵɵtemplate(1, FileUpload_div_1_ng_template_5_Conditional_0_ng_container_1_span_2_1_Template, 1, 0, null, 10);
+    ɵɵelementStart(0, "span", 43);
+    ɵɵtemplate(1, FileUpload_div_1_ng_template_5_Conditional_0_ng_container_1_span_2_1_Template, 1, 0, null, 11);
     ɵɵelementEnd();
   }
   if (rf & 2) {
+    let tmp_7_0;
     const ctx_r1 = ɵɵnextContext(5);
+    ɵɵproperty("pBind", (tmp_7_0 = ctx_r1.ptm("pcChooseButton")) == null ? null : tmp_7_0.icon);
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r1._uploadIconTemplate || ctx_r1.uploadIconTemplate);
   }
@@ -775,7 +814,7 @@ function FileUpload_div_1_ng_template_5_Conditional_0_ng_container_1_span_2_Temp
 function FileUpload_div_1_ng_template_5_Conditional_0_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, FileUpload_div_1_ng_template_5_Conditional_0_ng_container_1__svg_svg_1_Template, 1, 2, "svg", 36)(2, FileUpload_div_1_ng_template_5_Conditional_0_ng_container_1_span_2_Template, 2, 1, "span", 37);
+    ɵɵtemplate(1, FileUpload_div_1_ng_template_5_Conditional_0_ng_container_1__svg_svg_1_Template, 1, 3, "svg", 41)(2, FileUpload_div_1_ng_template_5_Conditional_0_ng_container_1_span_2_Template, 2, 2, "span", 42);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -788,7 +827,7 @@ function FileUpload_div_1_ng_template_5_Conditional_0_ng_container_1_Template(rf
 }
 function FileUpload_div_1_ng_template_5_Conditional_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, FileUpload_div_1_ng_template_5_Conditional_0_span_0_Template, 1, 1, "span", 34)(1, FileUpload_div_1_ng_template_5_Conditional_0_ng_container_1_Template, 3, 2, "ng-container", 8);
+    ɵɵtemplate(0, FileUpload_div_1_ng_template_5_Conditional_0_span_0_Template, 1, 2, "span", 39)(1, FileUpload_div_1_ng_template_5_Conditional_0_ng_container_1_Template, 3, 2, "ng-container", 9);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
@@ -799,20 +838,23 @@ function FileUpload_div_1_ng_template_5_Conditional_0_Template(rf, ctx) {
 }
 function FileUpload_div_1_ng_template_5_Conditional_1_span_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "span", 40);
+    ɵɵelement(0, "span", 45);
   }
   if (rf & 2) {
+    let tmp_7_0;
     const ctx_r1 = ɵɵnextContext(4);
-    ɵɵproperty("ngClass", ctx_r1.chooseIcon);
+    ɵɵproperty("ngClass", ctx_r1.chooseIcon)("pBind", (tmp_7_0 = ctx_r1.ptm("pcChooseButton")) == null ? null : tmp_7_0.icon);
   }
 }
 function FileUpload_div_1_ng_template_5_Conditional_1_ng_container_1__svg_svg_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 15);
+    ɵɵelement(0, "svg", 17);
   }
   if (rf & 2) {
-    ɵɵattribute("data-pc-section", "uploadicon");
+    let tmp_7_0;
+    const ctx_r1 = ɵɵnextContext(5);
+    ɵɵproperty("pBind", (tmp_7_0 = ctx_r1.ptm("pcChooseButton")) == null ? null : tmp_7_0.icon);
   }
 }
 function FileUpload_div_1_ng_template_5_Conditional_1_ng_container_1_2_ng_template_0_Template(rf, ctx) {
@@ -825,7 +867,7 @@ function FileUpload_div_1_ng_template_5_Conditional_1_ng_container_1_2_Template(
 function FileUpload_div_1_ng_template_5_Conditional_1_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, FileUpload_div_1_ng_template_5_Conditional_1_ng_container_1__svg_svg_1_Template, 1, 1, "svg", 14)(2, FileUpload_div_1_ng_template_5_Conditional_1_ng_container_1_2_Template, 1, 0, null, 10);
+    ɵɵtemplate(1, FileUpload_div_1_ng_template_5_Conditional_1_ng_container_1__svg_svg_1_Template, 1, 1, "svg", 15)(2, FileUpload_div_1_ng_template_5_Conditional_1_ng_container_1_2_Template, 1, 0, null, 11);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -838,7 +880,7 @@ function FileUpload_div_1_ng_template_5_Conditional_1_ng_container_1_Template(rf
 }
 function FileUpload_div_1_ng_template_5_Conditional_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, FileUpload_div_1_ng_template_5_Conditional_1_span_0_Template, 1, 1, "span", 39)(1, FileUpload_div_1_ng_template_5_Conditional_1_ng_container_1_Template, 3, 2, "ng-container", 8);
+    ɵɵtemplate(0, FileUpload_div_1_ng_template_5_Conditional_1_span_0_Template, 1, 2, "span", 44)(1, FileUpload_div_1_ng_template_5_Conditional_1_ng_container_1_Template, 3, 2, "ng-container", 9);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
@@ -875,7 +917,7 @@ function FileUpload_div_1_Conditional_9_Conditional_1_ng_container_0_Template(rf
 }
 function FileUpload_div_1_Conditional_9_Conditional_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, FileUpload_div_1_Conditional_9_Conditional_1_ng_container_0_Template, 1, 0, "ng-container", 9);
+    ɵɵtemplate(0, FileUpload_div_1_Conditional_9_Conditional_1_ng_container_0_Template, 1, 0, "ng-container", 10);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
@@ -894,9 +936,9 @@ function FileUpload_div_1_Conditional_9_Template(rf, ctx) {
 function FileUpload_div_1_Template(rf, ctx) {
   if (rf & 1) {
     const _r9 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "div");
-    ɵɵrepeaterCreate(1, FileUpload_div_1_For_2_Template, 1, 2, "p-message", 24, ɵɵrepeaterTrackByIdentity);
-    ɵɵelementStart(3, "div")(4, "p-button", 32);
+    ɵɵelementStart(0, "div", 8);
+    ɵɵrepeaterCreate(1, FileUpload_div_1_For_2_Template, 1, 3, "p-message", 28, ɵɵrepeaterTrackByIdentity);
+    ɵɵelementStart(3, "div", 8)(4, "p-button", 37);
     ɵɵlistener("onClick", function FileUpload_div_1_Template_p_button_onClick_4_listener() {
       ɵɵrestoreView(_r9);
       const ctx_r1 = ɵɵnextContext();
@@ -907,7 +949,7 @@ function FileUpload_div_1_Template(rf, ctx) {
       return ɵɵresetView(ctx_r1.onBasicKeydown($event));
     });
     ɵɵtemplate(5, FileUpload_div_1_ng_template_5_Template, 2, 1, "ng-template", null, 2, ɵɵtemplateRefExtractor);
-    ɵɵelementStart(7, "input", 33, 3);
+    ɵɵelementStart(7, "input", 38, 3);
     ɵɵlistener("change", function FileUpload_div_1_Template_input_change_7_listener($event) {
       ɵɵrestoreView(_r9);
       const ctx_r1 = ɵɵnextContext();
@@ -928,17 +970,18 @@ function FileUpload_div_1_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cn(ctx_r1.cx("root"), ctx_r1.styleClass));
-    ɵɵattribute("data-pc-name", "fileupload");
+    ɵɵproperty("pBind", ctx_r1.ptm("root"));
     ɵɵadvance();
     ɵɵrepeater(ctx_r1.msgs);
     ɵɵadvance(2);
     ɵɵclassMap(ctx_r1.cx("basicContent"));
+    ɵɵproperty("pBind", ctx_r1.ptm("basicContent"));
     ɵɵadvance();
     ɵɵstyleMap(ctx_r1.style);
-    ɵɵproperty("styleClass", ctx_r1.cn(ctx_r1.cx("pcChooseButton"), ctx_r1.chooseStyleClass))("disabled", ctx_r1.disabled)("label", ctx_r1.chooseButtonLabel)("buttonProps", ctx_r1.chooseButtonProps);
+    ɵɵproperty("styleClass", ctx_r1.cn(ctx_r1.cx("pcChooseButton"), ctx_r1.chooseStyleClass))("disabled", ctx_r1.disabled)("label", ctx_r1.chooseButtonLabel)("buttonProps", ctx_r1.chooseButtonProps)("pt", ctx_r1.ptm("pcChooseButton"));
     ɵɵadvance(3);
-    ɵɵproperty("accept", ctx_r1.accept)("multiple", ctx_r1.multiple)("disabled", ctx_r1.disabled);
-    ɵɵattribute("aria-label", ctx_r1.browseFilesLabel)("data-pc-section", "input");
+    ɵɵproperty("accept", ctx_r1.accept)("multiple", ctx_r1.multiple)("disabled", ctx_r1.disabled)("pBind", ctx_r1.ptm("input"));
+    ɵɵattribute("aria-label", ctx_r1.browseFilesLabel);
     ɵɵadvance(2);
     ɵɵconditional(!ctx_r1.auto ? 9 : -1);
   }
@@ -965,7 +1008,7 @@ var classes = {
 };
 var FileUploadStyle = class _FileUploadStyle extends BaseStyle {
   name = "fileupload";
-  theme = style;
+  style = style;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵFileUploadStyle_BaseFactory;
@@ -1002,8 +1045,10 @@ var FileUploadClasses;
   FileUploadClasses2["pcFileRemoveButton"] = "p-fileupload-file-remove-button";
   FileUploadClasses2["basicContent"] = "p-fileupload-basic-content";
 })(FileUploadClasses || (FileUploadClasses = {}));
+var FILEUPLOAD_INSTANCE = new InjectionToken("FILEUPLOAD_INSTANCE");
 var FileContent = class _FileContent extends BaseComponent {
   _componentStyle = inject(FileUploadStyle);
+  $pcFileUpload = inject(FILEUPLOAD_INSTANCE);
   onRemove = output();
   files = input(...ngDevMode ? [void 0, {
     debugName: "files"
@@ -1060,16 +1105,16 @@ var FileContent = class _FileContent extends BaseComponent {
     attrs: _c0,
     decls: 2,
     vars: 0,
-    consts: [["icon", ""], [3, "class"], ["role", "presentation", 3, "src", "width"], [3, "value", "severity"], ["text", "", "rounded", "", "severity", "danger", 3, "onClick", "styleClass"], ["data-p-icon", "times", 3, "class"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], ["data-p-icon", "times"]],
+    consts: [["icon", ""], [3, "class", "pBind"], [3, "pBind"], ["role", "presentation", 3, "src", "width", "pBind"], [3, "value", "severity", "pt"], ["text", "", "rounded", "", "severity", "danger", 3, "onClick", "styleClass", "pt"], ["data-p-icon", "times", 3, "class"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], ["data-p-icon", "times"]],
     template: function FileContent_Template(rf, ctx) {
       if (rf & 1) {
-        ɵɵrepeaterCreate(0, FileContent_For_1_Template, 12, 22, "div", 1, _forTrack0);
+        ɵɵrepeaterCreate(0, FileContent_For_1_Template, 12, 30, "div", 1, _forTrack0);
       }
       if (rf & 2) {
         ɵɵrepeater(ctx.files());
       }
     },
-    dependencies: [CommonModule, NgTemplateOutlet, Badge, Button, TimesIcon],
+    dependencies: [CommonModule, NgTemplateOutlet, Badge, Button, TimesIcon, Bind],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -1081,15 +1126,15 @@ var FileContent = class _FileContent extends BaseComponent {
       selector: "[pFileContent]",
       standalone: true,
       template: `@for (file of files(); track file?.name + '-' + $index; let index = $index) {
-        <div [class]="cx('file')">
-            <img role="presentation" [class]="cx('fileThumbnail')" [attr.alt]="file.name" [src]="file.objectURL" [width]="previewWidth()" />
-            <div [class]="cx('fileInfo')">
-                <div [class]="cx('fileName')">{{ file.name }}</div>
-                <span [class]="cx('fileSize')">{{ formatSize(file.size) }}</span>
+        <div [class]="cx('file')" [pBind]="$pcFileUpload.ptm('file')">
+            <img role="presentation" [class]="cx('fileThumbnail')" [attr.alt]="file.name" [src]="file.objectURL" [width]="previewWidth()" [pBind]="$pcFileUpload.ptm('fileThumbnail')" />
+            <div [class]="cx('fileInfo')" [pBind]="$pcFileUpload.ptm('fileInfo')">
+                <div [class]="cx('fileName')" [pBind]="$pcFileUpload.ptm('fileName')">{{ file.name }}</div>
+                <span [class]="cx('fileSize')" [pBind]="$pcFileUpload.ptm('fileSize')">{{ formatSize(file.size) }}</span>
             </div>
-            <p-badge [value]="badgeValue()" [severity]="badgeSeverity()" [class]="cx('pcFileBadge')" />
-            <div [class]="cx('fileActions')">
-                <p-button (onClick)="onRemoveClick($event, index)" [styleClass]="cx('pcFileRemoveButton')" text rounded severity="danger">
+            <p-badge [value]="badgeValue()" [severity]="badgeSeverity()" [class]="cx('pcFileBadge')" [pt]="$pcFileUpload.ptm('pcFileBadge')" />
+            <div [class]="cx('fileActions')" [pBind]="$pcFileUpload.ptm('fileActions')">
+                <p-button (onClick)="onRemoveClick($event, index)" [styleClass]="cx('pcFileRemoveButton')" text rounded severity="danger" [pt]="$pcFileUpload.ptm('pcFileRemoveButton')">
                     <ng-template #icon let-iconClass="class">
                         @if (fileRemoveIconTemplate()) {
                             <ng-template *ngTemplateOutlet="fileRemoveIconTemplate(); context: { class: iconClass, file: file, index: index }"></ng-template>
@@ -1103,11 +1148,17 @@ var FileContent = class _FileContent extends BaseComponent {
     }`,
       changeDetection: ChangeDetectionStrategy.OnPush,
       providers: [FileUploadStyle],
-      imports: [CommonModule, Badge, Button, TimesIcon]
+      imports: [CommonModule, Badge, Button, TimesIcon, Bind]
     }]
   }], null, null);
 })();
 var FileUpload = class _FileUpload extends BaseComponent {
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptm("host"));
+  }
   /**
    * Name of the request parameter to identify the files at backend.
    * @group Props
@@ -1448,14 +1499,12 @@ var FileUpload = class _FileUpload extends BaseComponent {
   zone = inject(NgZone);
   http = inject(HttpClient);
   _componentStyle = inject(FileUploadStyle);
-  ngOnInit() {
-    super.ngOnInit();
+  onInit() {
     this.translationSubscription = this.config.translationObserver.subscribe(() => {
       this.cd.markForCheck();
     });
   }
-  ngAfterViewInit() {
-    super.ngAfterViewInit();
+  onAfterViewInit() {
     if (isPlatformBrowser(this.platformId)) {
       if (this.mode === "advanced") {
         this.zone.runOutsideAngular(() => {
@@ -1476,7 +1525,7 @@ var FileUpload = class _FileUpload extends BaseComponent {
   _fileTemplate;
   _fileLabelTemplate;
   templates;
-  ngAfterContentInit() {
+  onAfterContentInit() {
     this.templates?.forEach((item) => {
       switch (item.getType()) {
         case "header":
@@ -1712,7 +1761,6 @@ var FileUpload = class _FileUpload extends BaseComponent {
   }
   onRemoveUploadedFileClick(e) {
     const {
-      event,
       index
     } = e;
     if (this.hasUploadedFiles()) {
@@ -1822,12 +1870,12 @@ var FileUpload = class _FileUpload extends BaseComponent {
   }
   onDragLeave(event) {
     if (!this.disabled) {
-      O(this.content?.nativeElement, "p-fileupload-highlight");
+      P(this.content?.nativeElement, "p-fileupload-highlight");
     }
   }
   onDrop(event) {
     if (!this.disabled) {
-      O(this.content?.nativeElement, "p-fileupload-highlight");
+      P(this.content?.nativeElement, "p-fileupload-highlight");
       event.stopPropagation();
       event.preventDefault();
       let files = event.dataTransfer ? event.dataTransfer.files : event.target.files;
@@ -1890,7 +1938,7 @@ var FileUpload = class _FileUpload extends BaseComponent {
   get pendingLabel() {
     return this.config.getTranslation(TranslationKeys.PENDING);
   }
-  ngOnDestroy() {
+  onDestroy() {
     if (this.content && this.content.nativeElement) {
       if (this.dragOverListener) {
         this.dragOverListener();
@@ -1900,7 +1948,6 @@ var FileUpload = class _FileUpload extends BaseComponent {
     if (this.translationSubscription) {
       this.translationSubscription.unsubscribe();
     }
-    super.ngOnDestroy();
   }
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵFileUpload_BaseFactory;
@@ -1981,7 +2028,7 @@ var FileUpload = class _FileUpload extends BaseComponent {
       mode: "mode",
       headers: "headers",
       customUpload: [2, "customUpload", "customUpload", booleanAttribute],
-      fileLimit: [2, "fileLimit", "fileLimit", (value) => numberAttribute(value, null)],
+      fileLimit: [2, "fileLimit", "fileLimit", (value) => numberAttribute(value, void 0)],
       uploadStyleClass: "uploadStyleClass",
       cancelStyleClass: "cancelStyleClass",
       removeStyleClass: "removeStyleClass",
@@ -2004,13 +2051,19 @@ var FileUpload = class _FileUpload extends BaseComponent {
       onImageError: "onImageError",
       onRemoveUploadedFile: "onRemoveUploadedFile"
     },
-    features: [ɵɵProvidersFeature([FileUploadStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([FileUploadStyle, {
+      provide: FILEUPLOAD_INSTANCE,
+      useExisting: _FileUpload
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _FileUpload
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     decls: 2,
     vars: 2,
-    consts: [["advancedfileinput", ""], ["content", ""], ["icon", ""], ["basicfileinput", ""], [3, "class", "ngStyle", 4, "ngIf"], [3, "class", 4, "ngIf"], [3, "ngStyle"], ["type", "file", 3, "change", "multiple", "accept", "disabled"], [4, "ngIf"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], [4, "ngTemplateOutlet"], [3, "dragenter", "dragleave", "drop"], [3, "focus", "blur", "onClick", "keydown.enter", "styleClass", "disabled", "label", "buttonProps"], [3, "label", "disabled", "styleClass", "buttonProps", "onClick", 4, "ngIf"], ["data-p-icon", "plus", 4, "ngIf"], ["data-p-icon", "plus"], [3, "onClick", "label", "disabled", "styleClass", "buttonProps"], [3, "ngClass", 4, "ngIf"], [3, "ngClass"], ["data-p-icon", "upload", 4, "ngIf"], ["data-p-icon", "upload"], ["data-p-icon", "times", 4, "ngIf"], ["data-p-icon", "times"], [3, "value", "showValue", 4, "ngIf"], [3, "severity", "text"], [3, "class"], [3, "value", "showValue"], ["ngFor", "", 3, "ngForOf", "ngForTemplate"], ["pFileContent", "", 3, "files", "badgeValue", "previewWidth", "fileRemoveIconTemplate"], ["pFileContent", "", 3, "onRemove", "files", "badgeValue", "previewWidth", "fileRemoveIconTemplate"], ["pFileContent", "", "badgeSeverity", "success", 3, "files", "badgeValue", "previewWidth", "fileRemoveIconTemplate"], ["pFileContent", "", "badgeSeverity", "success", 3, "onRemove", "files", "badgeValue", "previewWidth", "fileRemoveIconTemplate"], [3, "onClick", "keydown", "styleClass", "disabled", "label", "buttonProps"], ["type", "file", 3, "change", "focus", "blur", "accept", "multiple", "disabled"], ["class", "p-button-icon p-button-icon-left", 3, "ngClass", 4, "ngIf"], [1, "p-button-icon", "p-button-icon-left", 3, "ngClass"], ["data-p-icon", "upload", 3, "class", 4, "ngIf"], ["class", "p-button-icon p-button-icon-left", 4, "ngIf"], [1, "p-button-icon", "p-button-icon-left"], ["class", "p-button-icon p-button-icon-left pi", 3, "ngClass", 4, "ngIf"], [1, "p-button-icon", "p-button-icon-left", "pi", 3, "ngClass"]],
+    consts: [["advancedfileinput", ""], ["content", ""], ["icon", ""], ["basicfileinput", ""], [3, "class", "ngStyle", "pBind", 4, "ngIf"], [3, "class", "pBind", 4, "ngIf"], [3, "ngStyle", "pBind"], ["type", "file", 3, "change", "multiple", "accept", "disabled", "pBind"], [3, "pBind"], [4, "ngIf"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], [4, "ngTemplateOutlet"], [3, "dragenter", "dragleave", "drop", "pBind"], [3, "focus", "blur", "onClick", "keydown.enter", "styleClass", "disabled", "label", "buttonProps", "pt"], [3, "label", "disabled", "styleClass", "buttonProps", "pt", "onClick", 4, "ngIf"], ["data-p-icon", "plus", 3, "pBind", 4, "ngIf"], [3, "pBind", 4, "ngIf"], ["data-p-icon", "plus", 3, "pBind"], [3, "onClick", "label", "disabled", "styleClass", "buttonProps", "pt"], [3, "ngClass", "pBind", 4, "ngIf"], [3, "ngClass", "pBind"], ["data-p-icon", "upload", 3, "pBind", 4, "ngIf"], ["data-p-icon", "upload", 3, "pBind"], [3, "ngClass", 4, "ngIf"], [3, "ngClass"], ["data-p-icon", "times", 4, "ngIf"], ["data-p-icon", "times"], [3, "value", "showValue", "pt", 4, "ngIf"], [3, "severity", "text", "pt"], [3, "class", "pBind"], [3, "value", "showValue", "pt"], ["ngFor", "", 3, "ngForOf", "ngForTemplate"], ["pFileContent", "", 3, "files", "badgeValue", "previewWidth", "fileRemoveIconTemplate"], ["pFileContent", "", 3, "onRemove", "files", "badgeValue", "previewWidth", "fileRemoveIconTemplate"], ["pFileContent", "", "badgeSeverity", "success", 3, "files", "badgeValue", "previewWidth", "fileRemoveIconTemplate"], ["pFileContent", "", "badgeSeverity", "success", 3, "onRemove", "files", "badgeValue", "previewWidth", "fileRemoveIconTemplate"], [3, "pBind", 4, "ngTemplateOutlet"], [3, "onClick", "keydown", "styleClass", "disabled", "label", "buttonProps", "pt"], ["type", "file", 3, "change", "focus", "blur", "accept", "multiple", "disabled", "pBind"], ["class", "p-button-icon p-button-icon-left", 3, "ngClass", "pBind", 4, "ngIf"], [1, "p-button-icon", "p-button-icon-left", 3, "ngClass", "pBind"], ["data-p-icon", "upload", 3, "class", "pBind", 4, "ngIf"], ["class", "p-button-icon p-button-icon-left", 3, "pBind", 4, "ngIf"], [1, "p-button-icon", "p-button-icon-left", 3, "pBind"], ["class", "p-button-icon p-button-icon-left pi", 3, "ngClass", "pBind", 4, "ngIf"], [1, "p-button-icon", "p-button-icon-left", "pi", 3, "ngClass", "pBind"]],
     template: function FileUpload_Template(rf, ctx) {
       if (rf & 1) {
-        ɵɵtemplate(0, FileUpload_div_0_Template, 12, 30, "div", 4)(1, FileUpload_div_1_Template, 10, 17, "div", 5);
+        ɵɵtemplate(0, FileUpload_div_0_Template, 12, 30, "div", 4)(1, FileUpload_div_1_Template, 10, 19, "div", 5);
       }
       if (rf & 2) {
         ɵɵproperty("ngIf", ctx.mode === "advanced");
@@ -2018,7 +2071,7 @@ var FileUpload = class _FileUpload extends BaseComponent {
         ɵɵproperty("ngIf", ctx.mode === "basic");
       }
     },
-    dependencies: [CommonModule, NgClass, NgForOf, NgIf, NgTemplateOutlet, NgStyle, Button, ProgressBar, Message, PlusIcon, UploadIcon, TimesIcon, SharedModule, FileContent],
+    dependencies: [CommonModule, NgClass, NgForOf, NgIf, NgTemplateOutlet, NgStyle, Button, ProgressBar, Message, PlusIcon, UploadIcon, TimesIcon, SharedModule, FileContent, Bind],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -2029,9 +2082,9 @@ var FileUpload = class _FileUpload extends BaseComponent {
     args: [{
       selector: "p-fileupload, p-fileUpload",
       standalone: true,
-      imports: [CommonModule, Button, ProgressBar, Message, PlusIcon, UploadIcon, TimesIcon, SharedModule, FileContent],
+      imports: [CommonModule, Button, ProgressBar, Message, PlusIcon, UploadIcon, TimesIcon, SharedModule, FileContent, Bind],
       template: `
-        <div [class]="cn(cx('root'), styleClass)" [ngStyle]="style" *ngIf="mode === 'advanced'" [attr.data-pc-name]="'fileupload'" [attr.data-pc-section]="'root'">
+        <div [class]="cn(cx('root'), styleClass)" [ngStyle]="style" *ngIf="mode === 'advanced'" [pBind]="ptm('root')">
             <input
                 [attr.aria-label]="browseFilesLabel"
                 #advancedfileinput
@@ -2041,10 +2094,10 @@ var FileUpload = class _FileUpload extends BaseComponent {
                 [accept]="accept"
                 [disabled]="disabled || isChooseDisabled()"
                 [attr.title]="''"
-                [attr.data-pc-section]="'input'"
                 [style.display]="'none'"
+                [pBind]="ptm('input')"
             />
-            <div [class]="cx('header')">
+            <div [class]="cx('header')" [pBind]="ptm('header')">
                 <ng-container *ngIf="!headerTemplate && !_headerTemplate">
                     <p-button
                         [styleClass]="cn(cx('pcChooseButton'), chooseStyleClass)"
@@ -2054,8 +2107,8 @@ var FileUpload = class _FileUpload extends BaseComponent {
                         (blur)="onBlur()"
                         (onClick)="choose()"
                         (keydown.enter)="choose()"
-                        [attr.data-pc-section]="'choosebutton'"
                         [buttonProps]="chooseButtonProps"
+                        [pt]="ptm('pcChooseButton')"
                     >
                         <input
                             [attr.aria-label]="browseFilesLabel"
@@ -2066,13 +2119,13 @@ var FileUpload = class _FileUpload extends BaseComponent {
                             [accept]="accept"
                             [disabled]="disabled || isChooseDisabled()"
                             [attr.title]="''"
-                            [attr.data-pc-section]="'input'"
+                            [pBind]="ptm('input')"
                         />
                         <ng-template #icon>
-                            <span *ngIf="chooseIcon" [class]="chooseIcon" [attr.aria-label]="true" [attr.data-pc-section]="'chooseicon'"></span>
+                            <span *ngIf="chooseIcon" [class]="chooseIcon" [attr.aria-label]="true" [pBind]="ptm('pcChooseButton')?.icon"></span>
                             <ng-container *ngIf="!chooseIcon">
-                                <svg data-p-icon="plus" *ngIf="!chooseIconTemplate && !_chooseIconTemplate" [attr.aria-label]="true" [attr.data-pc-section]="'chooseicon'" />
-                                <span *ngIf="chooseIconTemplate || _chooseIconTemplate" [attr.aria-label]="true" [attr.data-pc-section]="'chooseicon'">
+                                <svg data-p-icon="plus" *ngIf="!chooseIconTemplate && !_chooseIconTemplate" [attr.aria-label]="true" [pBind]="ptm('pcChooseButton')?.icon" />
+                                <span *ngIf="chooseIconTemplate || _chooseIconTemplate" [attr.aria-label]="true" [pBind]="ptm('pcChooseButton')?.icon">
                                     <ng-template *ngTemplateOutlet="chooseIconTemplate || _chooseIconTemplate"></ng-template>
                                 </span>
                             </ng-container>
@@ -2086,18 +2139,27 @@ var FileUpload = class _FileUpload extends BaseComponent {
                         [disabled]="!hasFiles() || isFileLimitExceeded()"
                         [styleClass]="cn(cx('pcUploadButton'), uploadStyleClass)"
                         [buttonProps]="uploadButtonProps"
+                        [pt]="ptm('pcUploadButton')"
                     >
                         <ng-template #icon>
-                            <span *ngIf="uploadIcon" [ngClass]="uploadIcon" [attr.aria-hidden]="true"></span>
+                            <span *ngIf="uploadIcon" [ngClass]="uploadIcon" [attr.aria-hidden]="true" [pBind]="ptm('pcUploadButton')?.icon"></span>
                             <ng-container *ngIf="!uploadIcon">
-                                <svg data-p-icon="upload" *ngIf="!uploadIconTemplate && !_uploadIconTemplate" />
-                                <span *ngIf="uploadIconTemplate || _uploadIconTemplate" [attr.aria-hidden]="true">
+                                <svg data-p-icon="upload" *ngIf="!uploadIconTemplate && !_uploadIconTemplate" [pBind]="ptm('pcUploadButton')?.icon" />
+                                <span *ngIf="uploadIconTemplate || _uploadIconTemplate" [attr.aria-hidden]="true" [pBind]="ptm('pcUploadButton')?.icon">
                                     <ng-template *ngTemplateOutlet="uploadIconTemplate || _uploadIconTemplate"></ng-template>
                                 </span>
                             </ng-container>
                         </ng-template>
                     </p-button>
-                    <p-button *ngIf="!auto && showCancelButton" [label]="cancelButtonLabel" (onClick)="clear()" [disabled]="!hasFiles() || uploading" [styleClass]="cn(cx('pcCancelButton'), cancelStyleClass)" [buttonProps]="cancelButtonProps">
+                    <p-button
+                        *ngIf="!auto && showCancelButton"
+                        [label]="cancelButtonLabel"
+                        (onClick)="clear()"
+                        [disabled]="!hasFiles() || uploading"
+                        [styleClass]="cn(cx('pcCancelButton'), cancelStyleClass)"
+                        [buttonProps]="cancelButtonProps"
+                        [pt]="ptm('pcCancelButton')"
+                    >
                         <ng-template #icon>
                             <span *ngIf="cancelIcon" [ngClass]="cancelIcon"></span>
                             <ng-container *ngIf="!cancelIcon">
@@ -2123,7 +2185,7 @@ var FileUpload = class _FileUpload extends BaseComponent {
                 ></ng-container>
                 <ng-container *ngTemplateOutlet="toolbarTemplate || _toolbarTemplate"></ng-container>
             </div>
-            <div #content [class]="cx('content')" (dragenter)="onDragEnter($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)" [attr.data-pc-section]="'content'">
+            <div #content [class]="cx('content')" (dragenter)="onDragEnter($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)" [pBind]="ptm('content')">
                 @if (contentTemplate || _contentTemplate) {
                     <ng-container
                         *ngTemplateOutlet="
@@ -2141,13 +2203,13 @@ var FileUpload = class _FileUpload extends BaseComponent {
                         "
                     ></ng-container>
                 } @else {
-                    <p-progressbar [value]="progress" [showValue]="false" *ngIf="hasFiles()"></p-progressbar>
+                    <p-progressbar [value]="progress" [showValue]="false" *ngIf="hasFiles()" [pt]="ptm('pcProgressBar')"></p-progressbar>
                     @for (message of msgs; track message) {
-                        <p-message [severity]="message.severity" [text]="message.text"></p-message>
+                        <p-message [severity]="message.severity" [text]="message.text" [pt]="ptm('pcMessage')"></p-message>
                     }
 
                     @if (hasFiles()) {
-                        <div [class]="cx('fileList')">
+                        <div [class]="cx('fileList')" [pBind]="ptm('fileList')">
                             <ng-template ngFor [ngForOf]="files" [ngForTemplate]="fileTemplate || _fileTemplate"></ng-template>
                             @if (!fileTemplate && !_fileTemplate) {
                                 <div pFileContent [files]="files" (onRemove)="onRemoveClick($event)" [badgeValue]="pendingLabel" [previewWidth]="previewWidth" [fileRemoveIconTemplate]="cancelIconTemplate || _cancelIconTemplate"></div>
@@ -2155,7 +2217,7 @@ var FileUpload = class _FileUpload extends BaseComponent {
                         </div>
                     }
                     @if (hasUploadedFiles()) {
-                        <div [class]="cx('fileList')">
+                        <div [class]="cx('fileList')" [pBind]="ptm('fileList')">
                             <ng-template ngFor [ngForOf]="uploadedFiles" [ngForTemplate]="fileTemplate || _fileTemplate"></ng-template>
                             @if (!fileTemplate && !_fileTemplate) {
                                 <div
@@ -2172,16 +2234,16 @@ var FileUpload = class _FileUpload extends BaseComponent {
                     }
                 }
                 @if ((emptyTemplate || _emptyTemplate) && !hasFiles() && !hasUploadedFiles()) {
-                    <ng-container *ngTemplateOutlet="emptyTemplate || _emptyTemplate"></ng-container>
+                    <ng-container *ngTemplateOutlet="emptyTemplate || _emptyTemplate" [pBind]="ptm('empty')"></ng-container>
                 }
             </div>
         </div>
-        <div [class]="cn(cx('root'), styleClass)" *ngIf="mode === 'basic'" [attr.data-pc-name]="'fileupload'">
+        <div [class]="cn(cx('root'), styleClass)" *ngIf="mode === 'basic'" [pBind]="ptm('root')">
             @for (message of msgs; track message) {
-                <p-message [severity]="message.severity" [text]="message.text"></p-message>
+                <p-message [severity]="message.severity" [text]="message.text" [pt]="ptm('pcMessage')"></p-message>
             }
 
-            <div [class]="cx('basicContent')">
+            <div [class]="cx('basicContent')" [pBind]="ptm('basicContent')">
                 <p-button
                     [styleClass]="cn(cx('pcChooseButton'), chooseStyleClass)"
                     [disabled]="disabled"
@@ -2190,36 +2252,26 @@ var FileUpload = class _FileUpload extends BaseComponent {
                     (onClick)="onBasicUploaderClick()"
                     (keydown)="onBasicKeydown($event)"
                     [buttonProps]="chooseButtonProps"
+                    [pt]="ptm('pcChooseButton')"
                 >
                     <ng-template #icon>
                         @if (hasFiles() && !auto) {
-                            <span *ngIf="uploadIcon" class="p-button-icon p-button-icon-left" [ngClass]="uploadIcon"></span>
+                            <span *ngIf="uploadIcon" class="p-button-icon p-button-icon-left" [ngClass]="uploadIcon" [pBind]="ptm('pcChooseButton')?.icon"></span>
                             <ng-container *ngIf="!uploadIcon">
-                                <svg data-p-icon="upload" *ngIf="!uploadIconTemplate && !_uploadIconTemplate" [class]="'p-button-icon p-button-icon-left'" />
-                                <span *ngIf="_uploadIconTemplate || uploadIconTemplate" class="p-button-icon p-button-icon-left">
+                                <svg data-p-icon="upload" *ngIf="!uploadIconTemplate && !_uploadIconTemplate" [class]="'p-button-icon p-button-icon-left'" [pBind]="ptm('pcChooseButton')?.icon" />
+                                <span *ngIf="_uploadIconTemplate || uploadIconTemplate" class="p-button-icon p-button-icon-left" [pBind]="ptm('pcChooseButton')?.icon">
                                     <ng-template *ngTemplateOutlet="_uploadIconTemplate || uploadIconTemplate"></ng-template>
                                 </span>
                             </ng-container>
                         } @else {
-                            <span *ngIf="chooseIcon" class="p-button-icon p-button-icon-left pi" [ngClass]="chooseIcon"></span>
+                            <span *ngIf="chooseIcon" class="p-button-icon p-button-icon-left pi" [ngClass]="chooseIcon" [pBind]="ptm('pcChooseButton')?.icon"></span>
                             <ng-container *ngIf="!chooseIcon">
-                                <svg data-p-icon="plus" *ngIf="!chooseIconTemplate && !_chooseIconTemplate" [attr.data-pc-section]="'uploadicon'" />
+                                <svg data-p-icon="plus" *ngIf="!chooseIconTemplate && !_chooseIconTemplate" [pBind]="ptm('pcChooseButton')?.icon" />
                                 <ng-template *ngTemplateOutlet="chooseIconTemplate || _chooseIconTemplate"></ng-template>
                             </ng-container>
                         }
                     </ng-template>
-                    <input
-                        [attr.aria-label]="browseFilesLabel"
-                        #basicfileinput
-                        type="file"
-                        [accept]="accept"
-                        [multiple]="multiple"
-                        [disabled]="disabled"
-                        (change)="onFileSelect($event)"
-                        (focus)="onFocus()"
-                        (blur)="onBlur()"
-                        [attr.data-pc-section]="'input'"
-                    />
+                    <input [attr.aria-label]="browseFilesLabel" #basicfileinput type="file" [accept]="accept" [multiple]="multiple" [disabled]="disabled" (change)="onFileSelect($event)" (focus)="onFocus()" (blur)="onBlur()" [pBind]="ptm('input')" />
                 </p-button>
                 @if (!auto) {
                     @if (!fileLabelTemplate && !_fileLabelTemplate) {
@@ -2235,7 +2287,14 @@ var FileUpload = class _FileUpload extends BaseComponent {
     `,
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
-      providers: [FileUploadStyle]
+      providers: [FileUploadStyle, {
+        provide: FILEUPLOAD_INSTANCE,
+        useExisting: FileUpload
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: FileUpload
+      }],
+      hostDirectives: [Bind]
     }]
   }], null, {
     name: [{
@@ -2355,7 +2414,7 @@ var FileUpload = class _FileUpload extends BaseComponent {
     fileLimit: [{
       type: Input,
       args: [{
-        transform: (value) => numberAttribute(value, null)
+        transform: (value) => numberAttribute(value, void 0)
       }]
     }],
     uploadStyleClass: [{

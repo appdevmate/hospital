@@ -1,17 +1,20 @@
 import {
-  BaseComponent
-} from "./chunk-LEFSMMS4.js";
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
+import {
+  BaseComponent,
+  PARENT_INSTANCE
+} from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
-} from "./chunk-TT45BO2Q.js";
+} from "./chunk-4ATYD752.js";
 import {
   SharedModule
-} from "./chunk-NUKU6X6H.js";
-import "./chunk-BMDSN43F.js";
-import "./chunk-RK2DVQNP.js";
-import {
-  CommonModule
-} from "./chunk-FHZAWWEY.js";
+} from "./chunk-LMEEH3AJ.js";
+import "./chunk-GOP36Q47.js";
+import "./chunk-UCHM6OXG.js";
+import "./chunk-FHZAWWEY.js";
 import "./chunk-5KK3G4LL.js";
 import {
   Component,
@@ -20,11 +23,10 @@ import {
   Input,
   NgModule,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
-  ɵɵattribute,
   ɵɵclassMap,
-  ɵɵclassProp,
   ɵɵdefineComponent,
   ɵɵdefineNgModule,
   ɵɵgetInheritedFactory,
@@ -33,6 +35,7 @@ import {
   ɵɵstyleMap
 } from "./chunk-EIF6IUR4.js";
 import {
+  InjectionToken,
   inject,
   ɵɵdefineInjectable,
   ɵɵdefineInjector
@@ -66,7 +69,19 @@ var InputGroupAddonStyle = class _InputGroupAddonStyle extends BaseStyle {
     type: Injectable
   }], null, null);
 })();
+var INPUTGROUPADDON_INSTANCE = new InjectionToken("INPUTGROUPADDON_INSTANCE");
 var InputGroupAddon = class _InputGroupAddon extends BaseComponent {
+  _componentStyle = inject(InputGroupAddonStyle);
+  $pcInputGroupAddon = inject(INPUTGROUPADDON_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
+  }
   /**
    * Inline style of the element.
    * @group Props
@@ -77,7 +92,6 @@ var InputGroupAddon = class _InputGroupAddon extends BaseComponent {
    * @group Props
    */
   styleClass;
-  _componentStyle = inject(InputGroupAddonStyle);
   get hostStyle() {
     return this.style;
   }
@@ -90,20 +104,24 @@ var InputGroupAddon = class _InputGroupAddon extends BaseComponent {
   static ɵcmp = ɵɵdefineComponent({
     type: _InputGroupAddon,
     selectors: [["p-inputgroup-addon"], ["p-inputGroupAddon"]],
-    hostVars: 7,
+    hostVars: 4,
     hostBindings: function InputGroupAddon_HostBindings(rf, ctx) {
       if (rf & 2) {
-        ɵɵattribute("data-pc-name", "inputgroupaddon");
         ɵɵstyleMap(ctx.hostStyle);
-        ɵɵclassMap(ctx.styleClass);
-        ɵɵclassProp("p-inputgroupaddon", true);
+        ɵɵclassMap(ctx.cn(ctx.cx("root"), ctx.styleClass));
       }
     },
     inputs: {
       style: "style",
       styleClass: "styleClass"
     },
-    features: [ɵɵProvidersFeature([InputGroupAddonStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([InputGroupAddonStyle, {
+      provide: INPUTGROUPADDON_INSTANCE,
+      useExisting: _InputGroupAddon
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _InputGroupAddon
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     ngContentSelectors: _c0,
     decls: 1,
     vars: 0,
@@ -113,7 +131,7 @@ var InputGroupAddon = class _InputGroupAddon extends BaseComponent {
         ɵɵprojection(0);
       }
     },
-    dependencies: [CommonModule],
+    dependencies: [BindModule],
     encapsulation: 2
   });
 };
@@ -124,13 +142,18 @@ var InputGroupAddon = class _InputGroupAddon extends BaseComponent {
       selector: "p-inputgroup-addon, p-inputGroupAddon",
       template: ` <ng-content></ng-content> `,
       standalone: true,
-      imports: [CommonModule],
+      imports: [BindModule],
       host: {
-        "[class]": "styleClass",
-        "[class.p-inputgroupaddon]": "true",
-        "[attr.data-pc-name]": '"inputgroupaddon"'
+        "[class]": "cn(cx('root'), styleClass)"
       },
-      providers: [InputGroupAddonStyle]
+      providers: [InputGroupAddonStyle, {
+        provide: INPUTGROUPADDON_INSTANCE,
+        useExisting: InputGroupAddon
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: InputGroupAddon
+      }],
+      hostDirectives: [Bind]
     }]
   }], null, {
     style: [{

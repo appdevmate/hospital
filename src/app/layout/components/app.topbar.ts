@@ -196,8 +196,8 @@ export class AppTopbar {
     }
 
     logout() {
-        const clientId = '294jljvu34snu0nd4cm8fqf9bu';
-        const authority = 'https://eu-north-1dvt3zga6h.auth.eu-north-1.amazoncognito.com';
+        const clientId = '5lfhb74v4e5m8gboof9sb230e8'; //294jljvu34snu0nd4cm8fqf9bu
+        const authority = 'eu-north-1dvt3zga6h.auth.eu-north-1.amazoncognito.com'; //https://us-east-1dvt3zga6h.auth.eu-north-1.amazoncognito.com';
         const revokeUrl = `${authority}/oauth2/revoke`;
         const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
 

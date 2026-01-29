@@ -17,8 +17,8 @@ export const appConfig: ApplicationConfig = {
         // app.config.ts
         provideAuth({
             config: {
-                authority: 'https://cognito-idp.eu-north-1.amazonaws.com/eu-north-1_DVT3Zga6h', // Hosted UI
-                clientId: '294jljvu34snu0nd4cm8fqf9bu',
+                authority: 'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_FHl62iNIq', // Hosted UI //'https://cognito-idp.eu-north-1.amazonaws.com/eu-north-1_DVT3Zga6h',
+                clientId: '5lfhb74v4e5m8gboof9sb230e8', // '294jljvu34snu0nd4cm8fqf9bu',
                 redirectUrl: window.location.origin + '/',
                 postLogoutRedirectUri: window.location.origin + '/', // ← back to /
                 responseType: 'code',
