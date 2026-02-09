@@ -236,6 +236,18 @@ import { CheckboxModule } from 'primeng/checkbox';
                       <input *ngSwitchCase="'number'" type="number" pInputText class="w-full" [ngModel]="get(row, col.field)" (ngModelChange)="set(row, col.field, $event)" />
                       <textarea *ngSwitchCase="'textarea'" pInputText rows="2" class="w-full" [ngModel]="get(row, col.field)" (ngModelChange)="set(row, col.field, $event)"></textarea>
                       <p-datepicker *ngSwitchCase="'date'" class="w-full" [showIcon]="true" [iconDisplay]="'input'" [appendTo]="'body'" [dateFormat]="fmt(col.dateFormat)" [ngModel]="getDate(row, col.field)" (ngModelChange)="setDate(row, col.field, $event)"></p-datepicker>
+                      <p-datepicker
+                        *ngSwitchCase="'time'"
+                        class="w-full"
+                        [timeOnly]="true"
+                        [showIcon]="true"
+                        [iconDisplay]="'input'"
+                        [appendTo]="'body'"
+                        [showOnFocus]="false"
+                        [ngModel]="getTime(row, col.field)"
+                        (ngModelChange)="setTime(row, col.field, $event)">
+                        </p-datepicker>
+                  
                       <p-autocomplete
                       *ngSwitchCase="'autocomplete'"
                       class="w-full"
@@ -424,6 +436,50 @@ export class GenericTableComponent<T = any> implements OnChanges {
     private refreshContexts() {
         this.toolbarCtx = { api: this.publicApi, selected: this.selectedRows, config: this.config, columns: this.columns, viewColumns: this.viewColumns, total: this.totalRecords };
         this.captionCtx = { api: this.publicApi, selected: this.selectedRows, config: this.config };
+    }
+
+    getTime(row: any, f: string): Date | null {
+        if (!row) return null;
+
+        const m = this.ref(row); // same cache used by getDate
+
+        if (m.has(f)) {
+            return m.get(f) ?? null;
+        }
+
+        const v = row[f];
+        if (!v) {
+            m.set(f, null);
+            return null;
+        }
+
+        let d: Date | null = null;
+
+        if (v instanceof Date) {
+            d = v;
+        } else if (typeof v === 'string' && /^\d{2}:\d{2}$/.test(v)) {
+            const [hh, mm] = v.split(':').map(Number);
+            d = new Date();
+            d.setHours(hh, mm, 0, 0);
+        }
+
+        m.set(f, d);
+        return d;
+    }
+
+    setTime(row: any, f: string, v: Date | null) {
+        if (!row) return;
+
+        this.ref(row).set(f, v);
+
+        if (!v) {
+            row[f] = null;
+            return;
+        }
+
+        const hh = String(v.getHours()).padStart(2, '0');
+        const mm = String(v.getMinutes()).padStart(2, '0');
+        row[f] = `${hh}:${mm}`;
     }
 
     private rowElementAt(index?: number) {

@@ -654,33 +654,59 @@ export class NewDoctor implements AfterViewInit {
             this.helpersService.notifyError('Validation Error', 'Please fill in all required fields correctly');
             return;
         }
-        this.isSubmitting = true;
 
+        this.isSubmitting = true;
         const f = this.form.getRawValue();
+
         const lc = (x: any) => (typeof x === 'string' ? x.toLowerCase().trim() : (x ?? null));
 
+        // Helper to format time from Date object to HH:mm string
+        const formatTime = (dateVal: any): string | null => {
+            if (!dateVal) return null;
+            const d = new Date(dateVal);
+            if (isNaN(d.getTime())) return null;
+            const hh = String(d.getHours()).padStart(2, '0');
+            const mm = String(d.getMinutes()).padStart(2, '0');
+            return `${hh}:${mm}`;
+        };
+
         const payload: CreateUpdateDoctorRequest = {
+            // Required fields
             name: lc(f.name),
-            dob: f.dob ? new Date(f.dob).toISOString() : null,
+            dob: f.dob ? new Date(f.dob).toISOString().slice(0, 10) : null,
             gender: lc(f.gender),
             phone: this.sanitizePhone(f.phone),
             qid: lc(f.qid),
-            job: lc(f.job),
             insurance: lc(f.insurance),
             department: lc(f.department),
             specialization: lc(f.specialization),
             status: lc(f.status),
-            hiringDate: f.hiringDate ? new Date(f.hiringDate).toISOString() : null // ← added
+            hiringDate: f.hiringDate ? new Date(f.hiringDate).toISOString().slice(0, 10) : null,
+
+            // Optional fields
+            job: lc(f.job),
+
+            // ✅ New fields added
+            experienceYears: f.experienceYears ?? 0,
+            experienceMonths: f.experienceMonths ?? 0,
+            notes: f.notes ? f.notes.trim() : null,
+            education: f.education ? (typeof f.education === 'string' ? f.education.trim() : f.education.name) : null,
+            dutyDays: Array.isArray(f.dutyDays) ? f.dutyDays.map((d: string) => d.toLowerCase()) : [],
+            dutyStart: formatTime(f.dutyStart),
+            dutyEnd: formatTime(f.dutyEnd)
         };
+
+        console.log('Submitting payload:', payload);
 
         this.doctorService.createDoctor(payload).subscribe({
             next: (res: any) => {
                 this.isSubmitting = false;
+                this.helpersService.notifySuccess('Doctor created successfully');
                 this.ref.close(res?.data ?? res);
             },
             error: (err) => {
                 console.error('Error creating doctor:', err);
-                this.helpersService.notifyError('Error', 'Failed to create doctor profile');
+                this.helpersService.notifyError('Error', err?.error?.message || 'Failed to create doctor profile');
                 this.isSubmitting = false;
             }
         });
@@ -699,7 +725,14 @@ export class NewDoctor implements AfterViewInit {
                 specialization: '',
                 department: '',
                 status: '',
-                hiringDate: '' // ← added
+                hiringDate: '',
+                experienceYears: 0,
+                experienceMonths: 0,
+                notes: '',
+                education: null,
+                dutyDays: [],
+                dutyStart: null,
+                dutyEnd: null
             },
             { emitEvent: false }
         );

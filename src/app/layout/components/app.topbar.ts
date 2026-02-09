@@ -14,7 +14,6 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { take } from 'rxjs';
-
 @Component({
     selector: '[app-topbar]',
     standalone: true,
@@ -50,7 +49,7 @@ import { take } from 'rxjs';
                         <i class="pi pi-times" (click)="removeTab($event, item, i)"></i>
                     </li>
                 } @empty {
-                    <li class="topbar-menu-empty">Use (cmd + click) on a menu item to open a tab</li>
+                    <!-- <li class="topbar-menu-empty">Use (cmd + click) on a menu item to open a tab</li> -->
                 }
             </ul>
 
@@ -72,7 +71,7 @@ import { take } from 'rxjs';
                         <img alt="avatar" src="/layout/images/avatar.png" />
                         @if (userData$ | async; as ud) {
                             <span class="profile-details">
-                                <span class="profile-name">{{ ud.userData?.given_name || ud.userData?.email || 'User' }}</span>
+                                <span class="profile-name">{{ ud.userData?.name || ud.userData?.email || 'User' }}</span>
                                 <span class="profile-job">{{ ud.userData?.email || '' }}</span>
                             </span>
                         }
@@ -102,6 +101,24 @@ import { take } from 'rxjs';
             </div>
         </div>
     `,
+    styles: `
+        .layout-topbar {
+            .app-logo {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+
+                img {
+                    height: 100px; // Increase this for larger logo
+                    width: auto; // Maintain aspect ratio
+                }
+
+                .app-name {
+                    font-size: 1.5rem; // Adjust as needed
+                }
+            }
+        }
+    `,
     host: { class: 'layout-topbar' }
 })
 export class AppTopbar {
@@ -121,9 +138,11 @@ export class AppTopbar {
     ) {
         // Safe decode only if accessToken is a JWT
         const token = sessionStorage.getItem('accessToken') || '';
+
         if (this.isJwt(token)) {
             try {
                 const payload = JSON.parse(this.b64url(token.split('.')[1]));
+                console.log(payload);
                 const groups: string[] = payload['cognito:groups'] ?? [];
                 if (groups.includes('Patients')) console.log('Logged in user is a patient!');
                 else if (groups.includes('Doctors')) console.log('Logged in user is a doctor!');
@@ -169,8 +188,11 @@ export class AppTopbar {
     }
 
     get logo(): string {
-        const path = '/layout/images/logo-';
-        const logo = this.layoutService.isDarkTheme() || this.layoutService.layoutConfig().layoutTheme === 'primaryColor' ? 'light.png' : 'dark.png';
+        // const path = '/layout/images/logo-';
+        // const logo = this.layoutService.isDarkTheme() || this.layoutService.layoutConfig().layoutTheme === 'primaryColor' ? 'light.png' : 'dark.png';
+        // return path + logo;
+        const path = '/layout/images/';
+        const logo = 'tiryaq_logo_v5.png';
         return path + logo;
     }
 
@@ -196,8 +218,8 @@ export class AppTopbar {
     }
 
     logout() {
-        const clientId = '5lfhb74v4e5m8gboof9sb230e8'; //294jljvu34snu0nd4cm8fqf9bu
-        const authority = 'eu-north-1dvt3zga6h.auth.eu-north-1.amazoncognito.com'; //https://us-east-1dvt3zga6h.auth.eu-north-1.amazoncognito.com';
+        const clientId = '4n7mna6irf5vjfg770l46aldij';
+        const authority = 'https://us-east-1k2smci5zb.auth.us-east-1.amazoncognito.com';
         const revokeUrl = `${authority}/oauth2/revoke`;
         const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
 

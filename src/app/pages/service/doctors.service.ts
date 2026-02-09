@@ -40,6 +40,15 @@ export interface CreateUpdateDoctorRequest {
     specialization: string | null;
     status: string | null;
     hiringDate: string | null;
+    // ✅ Add these new fields
+    experienceYears?: number;
+    experienceMonths?: number;
+    notes?: string | null;
+    education?: string | null;
+    dutyDays?: string[];
+    dutyStart?: string | null;
+    dutyEnd?: string | null;
+    licenseNumber?: string | null; // This might already be there
 }
 
 export interface GetDoctorsPageOpts {
@@ -216,6 +225,12 @@ export class DoctorsService {
     }
 
     deleteDoctor(doctorID: string): Observable<{ data: Doctor }> {
+        return this.http.delete<{ data: Doctor }>(Config.buildUrl(this.path + '/' + doctorID), {
+            headers: this.authHeaders()
+        });
+    }
+
+    hardDeleteDoctor(doctorID: string): Observable<{ data: Doctor }> {
         return this.http.delete<{ data: Doctor }>(Config.buildUrl(this.path + '/' + doctorID), {
             headers: this.authHeaders()
         });

@@ -17,7 +17,15 @@ import { ConfirmationService } from 'primeng/api';
 import { HelpersService } from '@/services/helpers-service';
 import { NewDoctor } from './new-doctor';
 
-const EditorType = { Text: 'text', Date: 'date', Number: 'number', Textarea: 'textarea', Autocomplete: 'autocomplete' } as const;
+const EditorType = {
+    Text: 'text',
+    Date: 'date',
+    Number: 'number',
+    Textarea: 'textarea',
+    Autocomplete: 'autocomplete',
+    Time: 'time' // ✅ Add this
+} as const;
+
 const GENDER_OPTIONS = [
     { label: 'Male', value: 'male' },
     { label: 'Female', value: 'female' },
@@ -47,23 +55,27 @@ const STATUS_SEVERITY: Record<string, 'success' | 'info' | 'warn' | 'danger' | '
     template: `
         <ng-template #tbStart let-api="api" let-selected="selected">
             <p-button class="mr-2" [disabled]="loading()" label="New Doctor" icon="pi pi-plus" (onClick)="openNew()"></p-button>
-            <p-button class="mr-2" [disabled]="!selected?.length" label="Delete Selected" icon="pi pi-trash" severity="danger" outlined (onClick)="deleteSelected()"></p-button>
+            <p-button class="mr-2" [disabled]="!selected?.length" label="Delete Selected" icon="pi pi-trash" severity="danger" (onClick)="deleteSelected('soft')"></p-button>
+            @if (this.isDeveloper) {
+                <p-button class="mr-2" [disabled]="!selected?.length" label="Hard Delete Selected" icon="pi pi-trash" severity="contrast" (onClick)="deleteSelected('hard')"></p-button>
+            }
             <input type="file" #fileInput accept=".xlsx,.xls,.csv" (change)="onImportFromFileInput($event)" hidden />
-            <p-button class="mr-2" label="Import" icon="pi pi-download" severity="secondary" (onClick)="fileInput.click()"></p-button>
-            <p-button class="mr-2" label="Download Template" icon="pi pi-file-excel" severity="secondary" (onClick)="downloadTemplate()"></p-button>
+            <p-button class="mr-2" label="Import Doctor(s) Data" icon="pi pi-download" severity="secondary" (onClick)="fileInput.click()"></p-button>
+            <p-button class="mr-2" label="Download Doctor Template" icon="pi pi-file-excel" severity="secondary" (onClick)="downloadTemplate()"></p-button>
         </ng-template>
 
         <ng-template #tbEnd>
-            <p-button label="Export" icon="pi pi-download" severity="secondary" (onClick)="exportCSV()"></p-button>
+            <p-button label="Export to Excel" icon="pi pi-download" severity="secondary" (onClick)="exportExcel()"></p-button>
         </ng-template>
 
+        // Update your template's rowActions section:
         <ng-template #rowActions let-row let-editing="editing" let-api="api" let-rowIndex="rowIndex">
             @if (!editing) {
-                <p-button icon="pi pi-pencil" text (onClick)="api.beginRowEdit(row, rowIndex)" pTooltip="Edit"></p-button>
+                <p-button icon="pi pi-pencil" text (onClick)="beginEdit(row, rowIndex, api)" pTooltip="Edit"></p-button>
                 <p-button icon="pi pi-trash" text severity="danger" class="ml-2" (onClick)="deleteRow(row)" pTooltip="Delete"></p-button>
             } @else {
                 <p-button icon="pi pi-check" text severity="success" (onClick)="saveRow(row, rowIndex, api)" pTooltip="Save"></p-button>
-                <p-button icon="pi pi-times" text severity="danger" (onClick)="api.cancelRowEdit(row, rowIndex)" pTooltip="Cancel"></p-button>
+                <p-button icon="pi pi-times" text severity="danger" (onClick)="cancelEdit(row, rowIndex, api)" pTooltip="Cancel"></p-button>
             }
         </ng-template>
 
@@ -114,11 +126,33 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
     private _selected = signal<DoctorLike[]>([]);
     private _loading = signal<boolean>(true);
     private _totalRecords = signal<number>(0);
+    private originalRowData: Map<string, any> = new Map();
+    isDeveloper = false; // Set this based on user groups/roles
     rows = this._rows.asReadonly();
     selected = this._selected;
     loading = this._loading.asReadonly();
     totalRecords = this._totalRecords.asReadonly();
-    visibleCols = signal<string[]>(['name', 'gender', 'insurance', 'department', 'specialization', 'phone', 'qid', 'dob', 'timestamp', 'status', 'hiringDate']);
+    visibleCols = signal<string[]>([
+        'name',
+        'gender',
+        'insurance',
+        'department',
+        'specialization',
+        'phone',
+        'qid',
+        'dob',
+        'hiringDate',
+        'status',
+        'experienceYears',
+        'experienceMonths',
+        'notes',
+        'education',
+        'dutyDays',
+        'dutyStart',
+        'dutyEnd',
+        'timestamp'
+    ]);
+
     private _customTemplates = signal<{ [k: string]: TemplateRef<any> }>({});
     customTemplates = this._customTemplates;
     ALLOWED_STATUS = new Set(['senior', 'junior', 'associate', 'under development']);
@@ -156,7 +190,7 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
     };
 
     columns: TableColumn[] = [
-        { field: 'name', header: 'Name', editable: true, editorType: EditorType.Text, pipe: 'titlecase', sortable: true, filterable: true, frozen: true },
+        { field: 'name', header: 'Name', editable: true, editorType: EditorType.Text, pipe: 'titlecase', sortable: true, filterable: true, width: '200px' }, // ✅ Removed frozen: true
         { field: 'gender', header: 'Gender', editable: true, editorType: EditorType.Autocomplete, editorOptions: GENDER_OPTIONS, customTemplate: true, filterable: true },
         { field: 'insurance', header: 'Insurance', editable: true, editorType: EditorType.Text, pipe: 'titlecase', showTooltip: true, filterable: true },
         { field: 'department', header: 'Department', editable: true, editorType: EditorType.Text, pipe: 'titlecase', showTooltip: true, filterable: true },
@@ -166,6 +200,13 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
         { field: 'dob', header: 'Date of Birth', editable: true, editorType: EditorType.Date, type: 'date', pipe: 'date', dateFormat: 'MM/dd/yyyy', filterable: true },
         { field: 'hiringDate', header: 'Join Date', editable: true, editorType: EditorType.Date, type: 'date', pipe: 'date', dateFormat: 'MM/dd/yyyy', filterable: true },
         { field: 'status', header: 'Level', editable: true, editorType: EditorType.Autocomplete, editorOptions: DOCTOR_STATUS_OPTIONS, customTemplate: true, filterable: true },
+        { field: 'experienceYears', header: 'Experience (Years)', editable: true, editorType: EditorType.Number, filterable: true },
+        { field: 'experienceMonths', header: 'Experience (Months)', editable: true, editorType: EditorType.Number, filterable: true },
+        { field: 'notes', header: 'Notes', editable: true, editorType: EditorType.Textarea, showTooltip: true, filterable: true },
+        { field: 'education', header: 'Education', editable: true, editorType: EditorType.Textarea, pipe: 'titlecase', showTooltip: true, filterable: true },
+        { field: 'dutyDays', header: 'Duty Days', editable: true, editorType: EditorType.Text, showTooltip: true, filterable: false },
+        { field: 'dutyStart', header: 'Duty Start', editable: true, editorType: EditorType.Time, filterable: false },
+        { field: 'dutyEnd', header: 'Duty End', editable: true, editorType: EditorType.Time, filterable: false },
         { field: 'timestamp', header: 'Submitted Date', editable: false, type: 'date', pipe: 'date', dateFormat: 'MM/dd/yyyy', filterable: true }
     ];
 
@@ -186,7 +227,33 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
         private confirm: ConfirmationService,
         private helpers: HelpersService,
         private dialog: DialogService
-    ) {}
+    ) {
+        const token = sessionStorage.getItem('accessToken') || '';
+
+        if (this.isJwt(token)) {
+            try {
+                const payload = JSON.parse(this.b64url(token.split('.')[1]));
+                console.log(payload);
+                const groups: string[] = payload['cognito:groups'] ?? [];
+                if (groups.includes('Patients')) console.log('Logged in user is a patient!');
+                else if (groups.includes('Doctors')) console.log('Logged in user is a doctor!');
+                else if (groups.includes('Developers')) {
+                    this.isDeveloper = true;
+                    console.log('Logged in user is a developer!');
+                }
+            } catch {
+                // ignore malformed payloads
+            }
+        }
+    }
+
+    private isJwt(t: string) {
+        return !!t && t.split('.').length === 3;
+    }
+    private b64url(s: string) {
+        const pad = s.length % 4 ? '='.repeat(4 - (s.length % 4)) : '';
+        return atob(s.replace(/-/g, '+').replace(/_/g, '/') + pad);
+    }
 
     ngAfterViewInit() {
         this._customTemplates.set({ status: this.statusTemplate, gender: this.genderTemplate });
@@ -204,42 +271,260 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
         this.filters = { pageSize: this.pageSize, lastKey: null, offset: 0 };
         this.load({ first: 0, rows: this.pageSize, sortField: this.prevSortField, sortOrder: this.prevSortOrder, filters: {} });
     }
-    onRowEditInit(ev: RowEditEvent<DoctorLike>) {
-        this.helpers.notifyInfo('Edit Mode', `Editing: ${ev.data.name || 'Unknown'}`);
-    }
+
     onRowEditSave(_: RowEditEvent<DoctorLike>) {}
-    onRowEditCancel(ev: RowEditEvent<DoctorLike>) {
-        this.helpers.notifyInfo('Edit Cancelled', `Discarded changes for ${ev.data.name || 'Unknown'}`);
-    }
+    // Add this method to handle edit button click
+    beginEdit(row: DoctorLike, rowIndex: number, api: any) {
+        const id = this.pkToId((row as any).PK || '');
+        console.log('beginEdit - ID:', id);
 
-    exportCSV() {
-        const ts = new Date().toISOString().slice(0, 16).replace(/[:T]/g, '-');
-        this.tableCmp?.exportCSV({ selectionOnly: this._selected().length > 0, filename: `doctors_${ts}`, applyPipes: true, columns: this.columns.map((c) => c.field) });
-    }
-    async downloadTemplate() {
-        // normalize: support ['name', ...] or [{ field: 'name', header: 'Name' }, ...]
-        const sel = this.visibleCols() as Array<string | TableColumn>;
-        const fields = sel.map((x: any) => (typeof x === 'string' ? x : x?.field)).filter(Boolean) as string[];
-
-        // map to display headers; fall back to field when header missing
-        const byField = new Map(this.columns.map((c) => [c.field, c]));
-        const headers = fields.map((f) => byField.get(f)?.header || f);
-
-        // optional: enforce exactly 11 selected columns
-        if (headers.length !== 11) {
-            // keep exporting whatever is selected; adjust/remove this guard if undesired
-            // this.helpers.notifyInfo('Columns', `Selected ${headers.length} columns; expected 11`);
+        if (id) {
+            // Find and clone the ORIGINAL row from _rows() before table mutates it
+            const originalRow = this._rows().find((r) => this.pkToId((r as any).PK) === id);
+            if (originalRow) {
+                const clone = JSON.parse(JSON.stringify(originalRow));
+                this.originalRowData.set(id, clone);
+                console.log('✅ Stored original data for ID:', id, clone);
+            }
         }
 
+        // Now trigger the table's edit mode
+        api.beginRowEdit(row, rowIndex);
+    }
+
+    // Add this method to handle cancel
+    cancelEdit(row: DoctorLike, rowIndex: number, api: any) {
+        const id = this.pkToId((row as any).PK || '');
+        console.log('cancelEdit - ID:', id);
+
+        if (id) {
+            this.originalRowData.delete(id);
+        }
+
+        api.cancelRowEdit(row, rowIndex);
+        this.helpers.notifyInfo('Edit Cancelled', `Discarded changes for ${row.name || 'Unknown'}`);
+    }
+
+    // Keep your existing saveRow method as is
+    saveRow(row: DoctorLike, rowIndex: number, api: any) {
+        const id = this.pkToId((row as any)?.PK || '');
+        console.log('saveRow - ID:', id);
+
+        if (!id) {
+            this.helpers.notifyError('Save failed', 'Missing id');
+            return;
+        }
+
+        const originalData = this.originalRowData.get(id);
+        console.log('saveRow - Original:', originalData);
+        console.log('saveRow - Current:', row);
+
+        if (!originalData) {
+            this.helpers.notifyError('Save failed', 'Original data not found');
+            return;
+        }
+
+        const changedFields: any = {};
+
+        const allFields = ['name', 'dob', 'gender', 'phone', 'qid', 'job', 'insurance', 'department', 'specialization', 'status', 'hiringDate', 'experienceYears', 'experienceMonths', 'notes', 'education', 'dutyDays', 'dutyStart', 'dutyEnd'];
+
+        let hasChanges = false;
+
+        // ✅ Helper to format time from Date to HH:mm string
+        const formatTime = (val: any): string | null => {
+            if (!val) return null;
+            if (typeof val === 'string' && /^\d{2}:\d{2}$/.test(val)) {
+                return val; // Already in HH:mm format
+            }
+            if (val instanceof Date) {
+                const hh = String(val.getHours()).padStart(2, '0');
+                const mm = String(val.getMinutes()).padStart(2, '0');
+                return `${hh}:${mm}`;
+            }
+            return null;
+        };
+
+        for (const field of allFields) {
+            let newValue = (row as any)[field];
+            let oldValue = originalData[field];
+
+            // ✅ Special handling for time fields
+            if (field === 'dutyStart' || field === 'dutyEnd') {
+                newValue = formatTime(newValue);
+                oldValue = formatTime(oldValue);
+            }
+
+            // Normalize values for comparison
+            const normalizeValue = (val: any) => {
+                if (val === null || val === undefined || val === '') return null;
+                if (typeof val === 'string') return val.trim().toLowerCase();
+                if (val instanceof Date) return val.toISOString().slice(0, 10);
+                if (Array.isArray(val)) return JSON.stringify(val.sort());
+                return val;
+            };
+
+            const normalizedNew = normalizeValue(newValue);
+            const normalizedOld = normalizeValue(oldValue);
+
+            if (normalizedNew !== normalizedOld) {
+                console.log(`✏️ Field "${field}" changed:`, {
+                    old: normalizedOld,
+                    new: normalizedNew,
+                    rawOld: oldValue,
+                    rawNew: newValue
+                });
+                changedFields[field] = newValue;
+                hasChanges = true;
+            }
+        }
+
+        if (!hasChanges) {
+            console.warn('⚠️ No changes detected!');
+            this.helpers.notifyInfo('No Changes', 'No fields were modified');
+            api.cancelRowEdit(row, rowIndex);
+            this.originalRowData.delete(id);
+            return;
+        }
+
+        console.log('📤 Sending changed fields:', changedFields);
+
+        this._loading.set(true);
+        this.doctors.updateDoctor(id, changedFields).subscribe({
+            next: () => {
+                this._loading.set(false);
+                api.saveRowEdit(row, rowIndex);
+                this.originalRowData.delete(id);
+                this.helpers.notifySuccess(`${new TitleCasePipe().transform(row?.name ?? '')} updated`);
+                this.fetch();
+            },
+            error: (err) => {
+                this._loading.set(false);
+                api.cancelRowEdit(row, rowIndex);
+                this.originalRowData.delete(id);
+                this.helpers.notifyError('Update failed', err?.error?.message || 'Could not save');
+            }
+        });
+    }
+
+    // Remove or keep these as fallbacks (they won't be triggered)
+    onRowEditInit(ev: RowEditEvent<DoctorLike>) {
+        // This might not be called, but keep it as a fallback
+        console.log('⚠️ onRowEditInit called (fallback)');
+    }
+
+    onRowEditCancel(ev: RowEditEvent<DoctorLike>) {
+        // This might not be called, but keep it as a fallback
+        console.log('⚠️ onRowEditCancel called (fallback)');
+    }
+
+    async exportExcel(): Promise<void> {
         const XLSX = await import('xlsx');
+
+        // Use _rows() signal for all data, or _selected() for selected rows
+        const allData: DoctorLike[] = this._rows();
+        const dataToExport: DoctorLike[] = this._selected().length > 0 ? this._selected() : allData;
+
+        if (!dataToExport || dataToExport.length === 0) {
+            this.helpers.notifyWarning('No Data');
+            return;
+        }
+
+        // Use your existing columns configuration
+        const fields: string[] = this.columns.map((c: TableColumn) => c.field).filter((field): field is string => Boolean(field));
+
+        const headers: string[] = this.columns.map((c: TableColumn) => c.header || c.field);
+
+        // Map data to rows
+        const rows: any[][] = dataToExport.map((item: DoctorLike) =>
+            fields.map((field: string) => {
+                const value: any = (item as any)[field];
+                return Array.isArray(value) ? value.join(', ') : (value ?? '');
+            })
+        );
+
+        // Create worksheet
+        const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+        ws['!cols'] = headers.map((h: string) => ({
+            wch: Math.max(12, String(h).length + 2)
+        }));
+
+        // Create workbook and download
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Doctors');
+
+        const ts: string = new Date().toISOString().slice(0, 16).replace(/[:T]/g, '-');
+        const selectionText = this._selected().length > 0 ? '_selected' : '';
+        XLSX.writeFile(wb, `doctors${selectionText}_${ts}.xlsx`);
+
+        this.helpers.notifySuccess('Export Successful');
+    }
+
+    async downloadTemplate() {
+        const XLSX = await import('xlsx');
+
+        // Define all columns in the exact order matching the upload format
+        const headers = ['name', 'dob', 'gender', 'phone', 'qid', 'job', 'insurance', 'specialization', 'department', 'status', 'hiringDate', 'experienceYears', 'experienceMonths', 'notes', 'education', 'dutyDays', 'dutyStart', 'dutyEnd'];
+
+        // Create workbook and worksheet
         const wb = XLSX.utils.book_new();
         const ws = XLSX.utils.aoa_to_sheet([headers]);
 
-        // widths
-        (ws as any)['!cols'] = headers.map((h) => ({ wch: Math.max(12, String(h).length + 2) }));
+        // Set column widths for better readability
+        const columnWidths = [
+            { wch: 25 }, // name
+            { wch: 12 }, // dob
+            { wch: 10 }, // gender
+            { wch: 18 }, // phone
+            { wch: 13 }, // qid
+            { wch: 20 }, // job
+            { wch: 25 }, // insurance
+            { wch: 20 }, // specialization
+            { wch: 20 }, // department
+            { wch: 12 }, // status
+            { wch: 13 }, // hiringDate
+            { wch: 12 }, // experienceYears
+            { wch: 12 }, // experienceMonths
+            { wch: 50 }, // notes
+            { wch: 55 }, // education
+            { wch: 35 }, // dutyDays
+            { wch: 12 }, // dutyStart
+            { wch: 12 } // dutyEnd
+        ];
 
-        XLSX.utils.book_append_sheet(wb, ws, 'Template');
-        XLSX.writeFile(wb, 'doctors_template.xlsx');
+        ws['!cols'] = columnWidths;
+
+        // Optional: Add a sample row with example data as guidance
+        const sampleRow = [
+            'Dr. Ahmed Hassan', // name
+            '1985-03-15', // dob
+            'Male', // gender
+            '+974-5512-3456', // phone
+            '28503156789', // qid (11 digits)
+            'Senior Consultant', // job
+            'Qatar Insurance Company', // insurance
+            'Cardiology', // specialization
+            'Cardiovascular', // department
+            'senior', // status
+            '2015-06-01', // hiringDate
+            12, // experienceYears
+            3, // experienceMonths
+            'Specialized in interventional cardiology', // notes
+            'MD from Weill Cornell Medicine-Qatar', // education
+            'Sunday, Monday, Tuesday, Wednesday', // dutyDays (comma-separated)
+            '08:00', // dutyStart
+            '16:00' // dutyEnd
+        ];
+
+        // Add sample row (comment this out if you want empty template)
+        XLSX.utils.sheet_add_aoa(ws, [sampleRow], { origin: 'A2' });
+
+        // Add the worksheet to workbook
+        XLSX.utils.book_append_sheet(wb, ws, 'Doctors');
+
+        // Download the file
+        XLSX.writeFile(wb, 'doctors_import_template.xlsx');
+
+        this.helpers.notifySuccess('Template Downloaded');
     }
 
     openNew() {
@@ -254,62 +539,61 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    deleteSelected() {
+    deleteSelected(deletionOption: 'hard' | 'soft') {
         const sel = this._selected();
+
         if (!sel?.length) {
             this.helpers.notifyInfo('Warning', 'No rows selected');
             return;
         }
+
         this.confirm.confirm({
             key: 'global',
             header: 'Confirm Deletion',
             message: `Delete ${sel.length} selected?`,
             icon: 'pi pi-exclamation-triangle',
-            rejectButtonProps: { label: 'No', severity: 'secondary', variant: 'text' },
-            acceptButtonProps: { label: 'Yes', severity: 'danger' },
+            rejectButtonProps: {
+                label: 'No',
+                severity: 'secondary',
+                variant: 'text'
+            },
+            acceptButtonProps: {
+                label: 'Yes',
+                severity: 'danger'
+            },
             accept: () => {
-                const ids = Array.from(new Set(sel.map((p) => this.pkToId(p.PK)).filter(Boolean)));
+                const ids = Array.from(new Set(sel.map((p) => this.pkToId(p.PK)).filter((id): id is string => !!id)));
+
                 this._loading.set(true);
+
                 forkJoin(
-                    ids.map((id) =>
-                        this.doctors.deleteDoctor(id!).pipe(
+                    ids.map((id) => {
+                        const request$ = deletionOption === 'hard' ? this.doctors.hardDeleteDoctor(id) : this.doctors.deleteDoctor(id);
+
+                        return request$.pipe(
                             map(() => true),
                             catchError(() => of(false))
-                        )
-                    )
+                        );
+                    })
                 )
                     .pipe(finalize(() => this._loading.set(false)))
                     .subscribe((res) => {
-                        const ok = res.filter(Boolean).length;
+                        const successCount = res.filter(Boolean).length;
+
                         this._selected.set([]);
-                        if (ok === res.length) this.helpers.notifySuccess('Deleted');
-                        else this.helpers.notifyError('Delete failed', 'Some items could not be deleted');
+
+                        if (successCount === res.length) {
+                            this.helpers.notifySuccess('Deleted');
+                        } else {
+                            this.helpers.notifyError('Delete failed', 'Some items could not be deleted');
+                        }
+
                         this.fetch();
                     });
             }
         });
     }
-    saveRow(row: DoctorLike, rowIndex: number, api: any) {
-        const id = this.pkToId((row as any)?.PK || '');
-        if (!id) {
-            this.helpers.notifyError('Save failed', 'Missing id');
-            return;
-        }
-        this._loading.set(true);
-        this.doctors.updateDoctor(id, row as unknown as CreateUpdateDoctorRequest).subscribe({
-            next: () => {
-                this._loading.set(false);
-                api.saveRowEdit(row, rowIndex);
-                this.helpers.notifySuccess(`${new TitleCasePipe().transform(row?.name ?? '')} updated`);
-                this.fetch();
-            },
-            error: () => {
-                this._loading.set(false);
-                api.cancelRowEdit(row, rowIndex);
-                this.helpers.notifyError('Update failed', 'Could not save');
-            }
-        });
-    }
+
     deleteRow(row: DoctorLike) {
         const id = this.pkToId((row as any)?.PK || '');
         if (!id) {
@@ -399,6 +683,7 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
         this.onImport(Array.from(list));
         (ev.target as HTMLInputElement).value = '';
     }
+
     onImport(input: File[] | { files?: File[] } | Event) {
         const files: File[] = Array.isArray(input) ? input : (((input as any)?.files as File[]) ?? []);
         const file = files?.[0];
@@ -438,7 +723,7 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
                 this.confirm.confirm({
                     key: 'global',
                     header: 'Confirm Import',
-                    message: `Create ${unique.length} record(s).${errSummary}`,
+                    message: `Create ${unique.length} doctor(s).${errSummary}`,
                     icon: 'pi pi-exclamation-triangle',
                     rejectButtonProps: { label: 'No', severity: 'secondary', variant: 'text' },
                     acceptButtonProps: { label: 'Yes', severity: 'primary' },
@@ -450,6 +735,89 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
                 this._loading.set(false);
                 this.helpers.notifyError('Import failed', 'Could not read file');
             });
+    }
+
+    prepare(rows: any[]): { valid: any[]; skipped: { row: any; reason: string }[] } {
+        const valid: any[] = [];
+        const skipped: { row: any; reason: string }[] = [];
+
+        rows.forEach((row, index) => {
+            const rowNum = index + 2; // Excel row number (1-indexed + header)
+            const errors: string[] = [];
+
+            // Required field validations
+            // name: required, min 3 chars
+            if (!row.name || typeof row.name !== 'string' || row.name.trim().length < 3) {
+                errors.push('Name required (min 3 chars)');
+            }
+
+            // dob: required
+            if (!row.dob) {
+                errors.push('DOB required');
+            }
+
+            // phone: required
+            if (!row.phone) {
+                errors.push('Phone required');
+            }
+
+            // qid: required, must be exactly 11 digits
+            const qidStr = String(row.qid || '').replace(/\D/g, '');
+            if (!qidStr || !/^\d{11}$/.test(qidStr)) {
+                errors.push('QID required (11 digits)');
+            }
+
+            if (errors.length > 0) {
+                skipped.push({
+                    row,
+                    reason: `Row ${rowNum}: ${errors.join(', ')}`
+                });
+            } else {
+                // ✅ ADD THIS SECTION HERE - Parse dutyDays if it's a comma-separated string
+                let dutyDaysArray: string[] = [];
+                if (row.dutyDays) {
+                    if (Array.isArray(row.dutyDays)) {
+                        dutyDaysArray = row.dutyDays;
+                    } else if (typeof row.dutyDays === 'string') {
+                        // Split by comma and trim each day
+                        dutyDaysArray = row.dutyDays
+                            .split(',')
+                            .map((day: string) => day.trim().toLowerCase())
+                            .filter((day: string) => day.length > 0);
+                    }
+                }
+
+                // Build valid doctor object with all fields
+                const doctor: any = {
+                    // Required fields
+                    name: row.name?.trim(),
+                    dob: row.dob,
+                    phone: row.phone,
+                    qid: qidStr,
+
+                    // Optional fields (include if present)
+                    gender: row.gender || null,
+                    job: row.job || null,
+                    insurance: row.insurance || null,
+                    specialization: row.specialization || null,
+                    department: row.department || null,
+                    status: row.status || null,
+                    hiringDate: row.hiringDate || null,
+                    licenseNumber: row.licenseNumber || null,
+                    experienceYears: row.experienceYears ?? 0,
+                    experienceMonths: row.experienceMonths ?? 0,
+                    notes: row.notes || null,
+                    education: row.education || null,
+                    dutyDays: dutyDaysArray, // ✅ USE THE PARSED ARRAY HERE
+                    dutyStart: row.dutyStart || null,
+                    dutyEnd: row.dutyEnd || null
+                };
+
+                valid.push(doctor);
+            }
+        });
+
+        return { valid, skipped };
     }
 
     private async readWorkbook(file: File) {
@@ -543,95 +911,6 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
         return String(obj[key] ?? '').trim();
     }
 
-    // ---------- VALIDATION + TRANSFORM ----------
-    private prepare(rows: any[]) {
-        const todayISO = this.toISODateOnly(new Date())!;
-        const valid: any[] = [];
-        const skipped: Array<{ row: any; reason: string }> = [];
-
-        for (const raw of rows) {
-            const r0 = this.normalizeKeys(raw); // map display labels -> backend fields
-
-            const name = this.getStr(r0, 'name');
-            const gRaw = this.getStr(r0, 'gender').toLowerCase();
-            const department = this.getStr(r0, 'department');
-            const phoneRaw = this.getStr(r0, 'phone');
-            const qidRaw = this.getStr(r0, 'qid');
-            const statusRaw = this.getStr(r0, 'status').toLowerCase();
-            const dobRaw = this.getStr(r0, 'dob');
-            const joinRaw = this.getStr(r0, 'hiringDate');
-
-            const gender = gRaw.startsWith('m') ? 'male' : gRaw.startsWith('f') ? 'female' : gRaw.startsWith('prefer') ? 'na' : gRaw;
-
-            const phone = this.onlyDigits(phoneRaw);
-            const qid = this.onlyDigits(qidRaw);
-
-            const dobDate = this.parseDateAny(dobRaw);
-            const joinDate = this.parseDateAny(joinRaw);
-            const submittedISO = todayISO; // rule 3
-
-            // rule 1: required
-            const missing: string[] = [];
-            if (!name) missing.push('name');
-            if (!gender) missing.push('gender');
-            if (!department) missing.push('department');
-            if (!phone) missing.push('phone');
-            if (!dobDate) missing.push('dob');
-            if (!joinDate) missing.push('hiringDate');
-            if (missing.length) {
-                skipped.push({ row: raw, reason: `Missing required: ${missing.join(', ')}` });
-                continue;
-            }
-
-            // rule 4: qid 11 digits
-            if (!(qid.length === 11 && /^\d{11}$/.test(qid))) {
-                skipped.push({ row: raw, reason: 'qid must be exactly 11 digits' });
-                continue;
-            }
-
-            // rule 5: phone 1..15 digits
-            if (!this.PHONE_REGEX.test(phone)) {
-                skipped.push({ row: raw, reason: 'phone must be 1..15 digits' });
-                continue;
-            }
-
-            // rule 6: allowed status (optional)
-            if (statusRaw && !this.ALLOWED_STATUS.has(statusRaw)) {
-                skipped.push({ row: raw, reason: 'status must be one of: senior, junior, associate, under development' });
-                continue;
-            }
-
-            // rule 7: dob < join and dob < submitted
-            const dobISO = this.toISODateOnly(dobDate)!;
-            const joinISO = this.toISODateOnly(joinDate)!;
-            if (!(new Date(dobISO) < new Date(joinISO))) {
-                skipped.push({ row: raw, reason: 'dob must be earlier than join date' });
-                continue;
-            }
-            if (!(new Date(dobISO) < new Date(submittedISO))) {
-                skipped.push({ row: raw, reason: 'dob must be earlier than submitted date' });
-                continue;
-            }
-
-            // payload
-            valid.push({
-                name,
-                gender,
-                department,
-                phone,
-                qid,
-                dob: dobISO,
-                hiringDate: joinISO,
-                status: statusRaw,
-                insurance: this.getStr(r0, 'insurance'),
-                specialization: this.getStr(r0, 'specialization'),
-                timestamp: submittedISO
-            });
-        }
-
-        return { valid, skipped };
-    }
-
     private bulkCreate(rows: any[]) {
         from(rows)
             .pipe(
@@ -685,8 +964,22 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
     getGenderSeverity(v?: string) {
         return GENDER_SEVERITY[(v || '').toLowerCase().trim()] || 'secondary';
     }
-    private pkToId(pk: string) {
-        const m = /^DOCTORS?#(.+)$/.exec(pk);
-        return m ? m[1] : (pk?.split('#')[1] ?? pk);
+    private pkToId(pk: string): string {
+        if (!pk) return '';
+
+        // Handle both DOCTOR# and DOCTORS# formats
+        const match = /^DOCTORS?#(.+)$/.exec(pk);
+        if (match) {
+            return match[1];
+        }
+
+        // Fallback: try splitting by #
+        const parts = pk.split('#');
+        if (parts.length > 1) {
+            return parts[1];
+        }
+
+        // Last resort: return as-is
+        return pk;
     }
 }

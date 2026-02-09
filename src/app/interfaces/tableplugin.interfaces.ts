@@ -12,7 +12,7 @@ export interface TableColumn {
     customTemplate?: boolean;
     editable?: boolean;
     frozen?: boolean;
-    editorType?: 'text' | 'date' | 'number' | 'textarea' | 'autocomplete';
+    editorType?: 'text' | 'number' | 'date' | 'textarea' | 'autocomplete' | 'time';
     editorOptions?: ReadonlyArray<{ label: string; value: any }>;
     filterType?: 'text' | 'dropdown';
     filterOptions?: Array<{ label: string; value: any }>;
