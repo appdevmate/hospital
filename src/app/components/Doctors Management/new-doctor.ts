@@ -70,6 +70,15 @@ import { Fluid } from 'primeng/fluid';
                             <small class="p-error" *ngIf="invalid('name')">Valid name is required</small>
                         </div>
 
+                        <!-- Email -->
+                        <div class="mb-4">
+                            <p-floatLabel variant="on">
+                                <input pInputText id="email" type="email" formControlName="email" autocomplete="off" class="w-full" [class.p-invalid]="invalid('email')" />
+                                <label for="email"> <i class="pi pi-envelope"></i> Email Address </label>
+                            </p-floatLabel>
+                            <small class="p-error" *ngIf="invalid('email')"> Valid email is required </small>
+                        </div>
+
                         <!-- QID, Phone, Gender - Single row -->
                         <p-fluid class="flex flex-wrap gap-4 mb-6">
                             <div class="flex-1 md:flex-[2]">
@@ -336,7 +345,7 @@ import { Fluid } from 'primeng/fluid';
                     <div class="mb-6">
                         <h4 class="devider text-lg font-semibold mb-4 text-gray-700 border-b pb-2">Notes</h4>
                         <div class="mb-6">
-                            <!-- Full Name - Takes full width as it's usually long -->
+                            <!-- Notes - Takes full width as it's usually long -->
                             <div class="mb-4">
                                 <p-floatLabel variant="on">
                                     <input pInputText id="notes" formControlName="notes" autocomplete="off" [class.p-invalid]="invalid('notes')" class="w-full" />
@@ -495,6 +504,7 @@ export class NewDoctor implements AfterViewInit {
     ) {
         this.form = this.fb.group({
             name: ['', [Validators.required, Validators.minLength(3)]],
+            email: ['', [Validators.required, Validators.email]], // ✅ ADDED
             dob: ['', Validators.required],
             gender: ['', Validators.required],
             phone: ['', Validators.required],
@@ -504,7 +514,7 @@ export class NewDoctor implements AfterViewInit {
             specialization: ['', Validators.required],
             department: ['', Validators.required],
             status: ['', Validators.required],
-            hiringDate: ['', Validators.required], // ← added
+            hiringDate: ['', Validators.required],
             experienceYears: [0],
             experienceMonths: [0],
             notes: [''],
@@ -513,6 +523,7 @@ export class NewDoctor implements AfterViewInit {
             dutyStart: [null],
             dutyEnd: [null]
         });
+
         this.resetFormState();
     }
 
@@ -655,6 +666,12 @@ export class NewDoctor implements AfterViewInit {
             return;
         }
 
+        const email = this.form.get('email')?.value;
+        if (!this.validateEmail(email)) {
+            this.helpersService.notifyError('Validation Error', 'Email must be a valid @tiryaq.com address with only ., _, or -');
+            return;
+        }
+
         this.isSubmitting = true;
         const f = this.form.getRawValue();
 
@@ -671,8 +688,8 @@ export class NewDoctor implements AfterViewInit {
         };
 
         const payload: CreateUpdateDoctorRequest = {
-            // Required fields
             name: lc(f.name),
+            email: lc(f.email), // ✅ ADDED
             dob: f.dob ? new Date(f.dob).toISOString().slice(0, 10) : null,
             gender: lc(f.gender),
             phone: this.sanitizePhone(f.phone),
@@ -683,10 +700,8 @@ export class NewDoctor implements AfterViewInit {
             status: lc(f.status),
             hiringDate: f.hiringDate ? new Date(f.hiringDate).toISOString().slice(0, 10) : null,
 
-            // Optional fields
             job: lc(f.job),
 
-            // ✅ New fields added
             experienceYears: f.experienceYears ?? 0,
             experienceMonths: f.experienceMonths ?? 0,
             notes: f.notes ? f.notes.trim() : null,
@@ -712,10 +727,16 @@ export class NewDoctor implements AfterViewInit {
         });
     }
 
+    validateEmail(email: string): boolean {
+        if (!email) return false;
+        return /^[a-zA-Z0-9._-]+@tiryaq\.com$/i.test(email.trim());
+    }
+
     reset(): void {
         this.form.reset(
             {
                 name: '',
+                email: '',
                 dob: '',
                 gender: '',
                 phone: '',

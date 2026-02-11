@@ -2,6 +2,7 @@
 import { Routes } from '@angular/router';
 import { AppLayout } from '@/layout/components/app.layout';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { UserProfileComponent } from '@/components/user-profile/user-profile';
 
 export const appRoutes: Routes = [
     {
@@ -27,7 +28,7 @@ export const appRoutes: Routes = [
                 loadComponent: () => import('@/components/Patients Management/patients-management').then((c) => c.PatientsManagementComponent),
                 providers: [ConfirmationService, MessageService]
             },
-
+            { path: 'user-profile', data: { breadcrumb: 'Profile' }, component: UserProfileComponent },
             { path: '', redirectTo: 'doctors-management', pathMatch: 'full' },
             { path: 'apps', data: { breadcrumb: 'Apps' }, loadChildren: () => import('@/apps/apps.routes') },
             { path: 'ecommerce', data: { breadcrumb: 'E-Commerce' }, loadChildren: () => import('@/pages/ecommerce/ecommerce.routes') },

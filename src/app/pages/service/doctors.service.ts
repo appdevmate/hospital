@@ -30,6 +30,7 @@ export interface FilterOption {
 
 export interface CreateUpdateDoctorRequest {
     name: string;
+    email: string;
     dob: string | null;
     gender: string;
     phone: string | null;

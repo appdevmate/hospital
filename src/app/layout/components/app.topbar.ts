@@ -69,20 +69,21 @@ import { take } from 'rxjs';
                 <div class="topbar-profile">
                     <button class="topbar-profile-button" type="button" pStyleClass="@next" enterFromClass="hidden" enterActiveClass="animate-scalein" leaveToClass="hidden" leaveActiveClass="animate-fadeout" [hideOnOutsideClick]="true">
                         <img alt="avatar" src="/layout/images/avatar.png" />
-                        @if (userData$ | async; as ud) {
+                        @if (userData) {
                             <span class="profile-details">
-                                <span class="profile-name">{{ ud.userData?.name || ud.userData?.email || 'User' }}</span>
-                                <span class="profile-job">{{ ud.userData?.email || '' }}</span>
+                                <span class="profile-name">{{ userData?.name || userData?.username || 'User' }}</span>
+                                <span class="profile-job">{{ userData?.email || '' }}</span>
                             </span>
                         }
                         <i class="pi pi-angle-down"></i>
                     </button>
                     <ul class="list-none hidden p-2 sm:p-4 m-0 rounded-border shadow absolute bg-surface-0 dark:bg-surface-900 origin-top w-48 mt-2 right-0 top-auto">
                         <li class="flex items-start flex-col">
-                            <a pRipple class="flex p-2 rounded-border w-full items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer">
+                            <a [routerLink]="['/user-profile']" pRipple class="flex p-2 rounded-border w-full items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer">
                                 <i class="pi pi-user mr-4"></i>
                                 <span>Profile</span>
                             </a>
+
                             <a pRipple class="flex p-2 rounded-border w-full items-center hover:bg-emphasis transition-colors duration-150 cursor-pointer">
                                 <i class="pi pi-inbox mr-4"></i>
                                 <span>Inbox</span>
@@ -154,12 +155,24 @@ export class AppTopbar {
 
         this.oidc.userData$.pipe(take(10)).subscribe(({ userData }) => {
             console.log(userData);
-            this.username = userData?.given_name;
+            localStorage.setItem('userData', JSON.stringify(userData));
+            // Dispatch custom event to notify other components (same-tab)
+            window.dispatchEvent(new CustomEvent('userDataChanged', { detail: userData }));
+            this.username = userData?.username;
         });
     }
 
-    get userData$() {
-        return this.oidc.userData$;
+    get userData() {
+        const userDataStr = localStorage.getItem('userData');
+        if (userDataStr) {
+            try {
+                return JSON.parse(userDataStr);
+            } catch (e) {
+                console.error('Failed to parse userData from localStorage', e);
+                return null;
+            }
+        }
+        return null;
     }
 
     onMenuButtonClick() {
