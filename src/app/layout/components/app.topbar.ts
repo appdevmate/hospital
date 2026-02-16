@@ -145,15 +145,23 @@ export class AppTopbar {
                 const payload = JSON.parse(this.b64url(token.split('.')[1]));
                 console.log(payload);
                 const groups: string[] = payload['cognito:groups'] ?? [];
-                if (groups.includes('Patients')) console.log('Logged in user is a patient!');
-                else if (groups.includes('Doctors')) console.log('Logged in user is a doctor!');
-                else if (groups.includes('Developers')) console.log('Logged in user is a developer!');
+                if (groups.includes('Patients')) {
+                    this.role = 'patient';
+                    console.log('Logged in user is a patient!');
+                } else if (groups.includes('Doctors')) {
+                    this.role = 'doctor';
+                    console.log('Logged in user is a doctor!');
+                } else if (groups.includes('Developers')) {
+                    this.role = 'developer';
+                    console.log('Logged in user is a developer!');
+                }
             } catch {
                 // ignore malformed payloads
             }
         }
 
         this.oidc.userData$.pipe(take(10)).subscribe(({ userData }) => {
+            userData.role = this.role;
             console.log(userData);
             localStorage.setItem('userData', JSON.stringify(userData));
             // Dispatch custom event to notify other components (same-tab)

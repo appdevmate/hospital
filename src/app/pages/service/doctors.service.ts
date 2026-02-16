@@ -202,6 +202,16 @@ export class DoctorsService {
         });
     }
 
+    getDoctorByEmail(email: string): Observable<any> {
+        return this.http.post<any>(
+            Config.buildUrl(this.path + '/email'),
+            { email, type: 'DOCTOR' },
+            {
+                headers: this.authHeaders()
+            }
+        );
+    }
+
     getDoctorPayments(doctorID: string, pageSize = 50, lastKey?: string | null) {
         let params = new HttpParams().set('pageSize', String(pageSize));
         if (lastKey) params = params.set('lastKey', lastKey);
