@@ -57,7 +57,7 @@ const STATUS_SEVERITY: Record<string, 'success' | 'info' | 'warn' | 'danger' | '
             <p-button class="mr-2" [disabled]="loading()" label="New Doctor" icon="pi pi-plus" (onClick)="openNew()"></p-button>
             <p-button class="mr-2" [disabled]="!selected?.length" label="Delete Selected" icon="pi pi-trash" severity="danger" (onClick)="deleteSelected('soft')"></p-button>
             @if (this.isDeveloper) {
-                <p-button class="mr-2" [disabled]="!selected?.length" label="Hard Delete Selected" icon="pi pi-trash" severity="contrast" (onClick)="deleteSelected('hard')"></p-button>
+                <p-button class="mr-2" [disabled]="!selected?.length" label="Hard Delete Selected Doctors" icon="pi pi-trash" severity="contrast" (onClick)="deleteSelected('hard')"></p-button>
             }
             <input type="file" #fileInput accept=".xlsx,.xls,.csv" (change)="onImportFromFileInput($event)" hidden />
             <p-button class="mr-2" label="Import Doctor(s) Data" icon="pi pi-download" severity="secondary" (onClick)="fileInput.click()"></p-button>
