@@ -6,7 +6,7 @@ import { DocumentService, DocumentFile, DocumentFolder } from '@/pages/service/d
 // PrimeNG imports
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
-// Removed DropdownModule import due to missing module/type declarations
+import { TooltipModule } from 'primeng/tooltip';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { ToastModule } from 'primeng/toast';
@@ -32,7 +32,8 @@ import { MessageService, ConfirmationService } from 'primeng/api';
         TagModule,
         ToolbarModule,
         CardModule,
-        SelectModule
+        SelectModule,
+        TooltipModule
     ],
     template: `
         <p-toast />
@@ -164,13 +165,14 @@ import { MessageService, ConfirmationService } from 'primeng/api';
                                 <td>
                                     <div class="flex items-center gap-2">
                                         <p-button
-                                            icon="pi pi-download"
-                                            rounded
-                                            text
-                                            severity="info"
-                                            (onClick)="download(file)"
-                                            pTooltip="Download"
-                                        />
+    [icon]="downloadingKeys.has(file.key) ? 'pi pi-spin pi-spinner' : 'pi pi-download'"
+    rounded
+    text
+    severity="info"
+    (onClick)="download(file)"
+    [disabled]="downloadingKeys.has(file.key)"
+    [pTooltip]="downloadingKeys.has(file.key) ? 'Downloading...' : 'Download'"
+/>
                                         <p-button
                                             icon="pi pi-trash"
                                             rounded
@@ -212,6 +214,7 @@ export class DocumentManagerComponent implements OnInit {
     uploading = false;
     uploadProgress = 0;
     currentUploadName = '';
+    downloadingKeys = new Set<string>();
 
     acceptedTypes = '.pdf,.jpg,.jpeg,.png,.gif,.webp,.doc,.docx,.xls,.xlsx,.txt,.dcm';
 
@@ -248,12 +251,14 @@ export class DocumentManagerComponent implements OnInit {
             next: (files) => {
               if (!files) {
                 this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load files' });
+                this.files = [];
                 this.loadingFiles = false;
               } else if(files && files.length > 0) {
                 this.files = files;
                 this.loadingFiles = false;
               } else {
                 this.messageService.add({ severity: 'warn', summary: 'Info', detail: 'No files in the selected directory' });
+                this.files = [];
                 this.loadingFiles = false;
               }
                 
@@ -314,9 +319,23 @@ export class DocumentManagerComponent implements OnInit {
         });
     }
 
-    download(file: DocumentFile) {
-        this.documentService.downloadFile(file.key);
-    }
+download(file: DocumentFile) {
+    this.downloadingKeys.add(file.key);
+    this.documentService.getDownloadUrl(file.key).subscribe({
+        next: (url) => {
+            window.open(url, '_blank');
+            this.downloadingKeys.delete(file.key);
+        },
+        error: (err) => {
+            this.downloadingKeys.delete(file.key);
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Download Failed',
+                detail: 'Failed to generate download link'
+            });
+        }
+    });
+}
 
     confirmDelete(file: DocumentFile) {
         this.confirmationService.confirm({
