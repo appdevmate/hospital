@@ -1,0 +1,14 @@
+{
+    "CORSRules": [
+        {
+            "AllowedHeaders": ["*"],
+            "AllowedMethods": ["GET", "PUT", "POST", "HEAD"],
+            "AllowedOrigins": [
+                "https://d342qui64t7xt0.cloudfront.net",
+                "http://localhost:4200"
+            ],
+            "ExposeHeaders": ["ETag", "Content-Length", "Content-Type"],
+            "MaxAgeSeconds": 3600
+        }
+    ]
+}

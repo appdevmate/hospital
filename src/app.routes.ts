@@ -28,6 +28,11 @@ export const appRoutes: Routes = [
                 loadComponent: () => import('@/components/Patients Management/patients-management').then((c) => c.PatientsManagementComponent),
                 providers: [ConfirmationService, MessageService]
             },
+            {
+                path: 'documents',
+                data: { breadcrumb: 'Documents' },
+                loadComponent: () => import('@/components/documents/document-manager/document-manager').then(m => m.DocumentManagerComponent)
+            },
             { path: 'user-profile', data: { breadcrumb: 'Profile' }, component: UserProfileComponent },
             { path: '', redirectTo: 'doctors-management', pathMatch: 'full' },
             { path: 'apps', data: { breadcrumb: 'Apps' }, loadChildren: () => import('@/apps/apps.routes') },

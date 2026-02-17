@@ -1,4 +1,4 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -14,7 +14,8 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { TextareaModule } from 'primeng/textarea';
 import { DialogModule } from 'primeng/dialog';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
-import { FileUploadModule, FileSelectEvent } from 'primeng/fileupload';
+import { FileUploadModule, FileUploadEvent } from 'primeng/fileupload';
+import { MessageService } from 'primeng/api';
 
 import { PatientsService, CreateUpdatePatientRequest } from '@/pages/service/patients.service';
 import { HelpersService } from '@/services/helpers-service';
@@ -44,7 +45,7 @@ import { Fluid } from 'primeng/fluid';
         InputNumberModule,
         Fluid
     ],
-    providers: [HelpersService],
+    providers: [HelpersService, MessageService],
     template: `
         <div class="patient-form-container">
             <p-card>
@@ -272,47 +273,28 @@ import { Fluid } from 'primeng/fluid';
                     <!-- Attachments Section -->
                     <div class="mb-6">
                         <h4 class="devider text-lg font-semibold mb-4 text-gray-700 border-b pb-2">Attachments</h4>
-                        <div class="mb-4">
+                        <div class="card">
+                            <p-toast />
                             <p-fileupload
-                                #patientUploader
-                                name="patient_attachments[]"
-                                [customUpload]="true"
+                                name="demo[]"
+                                url="https://www.primefaces.org/cdn/api/upload.php"
+                                (onUpload)="onUpload($event)"
                                 [multiple]="true"
-                                [showUploadButton]="false"
-                                [showCancelButton]="false"
-                                [auto]="false"
-                                (onSelect)="onAttachmentsSelect($event)"
-                                (onClear)="attachments = []"
-                                class="upload-button-hidden w-full"
+                                maxFileSize="1000000"
+                                mode="advanced"
                             >
-                                <ng-template pTemplate="content">
-                                    <div class="w-full py-4" style="cursor: copy" (click)="patientUploader.advancedFileInput.nativeElement.click()">
-                                        <div *ngIf="!attachments.length" class="h-full flex flex-col justify-center items-center">
-                                            <i class="pi pi-upload text-surface-900 dark:text-surface-0 text-2xl mb-4"></i>
-                                            <span class="font-bold text-surface-900 dark:text-surface-0 text-xl mb-4">Upload Attachments</span>
-                                            <span class="font-medium text-surface-600 dark:text-surface-200 text-md text-center">Drop or select files</span>
-                                        </div>
-                                        <div class="w-full py-4" *ngIf="attachments.length">
-                                            <div
-                                                *ngFor="let file of attachments"
-                                                class="flex items-center justify-between border rounded p-2 mb-2 gap-3"
-                                            >
-                                                <div class="flex items-center gap-2 min-w-0">
-                                                    <i class="pi pi-paperclip text-surface-600"></i>
-                                                    <span class="truncate max-w-xs">{{ file.name }}</span>
-                                                </div>
-                                                <button
-                                                    type="button"
-                                                    pButton
-                                                    pRipple
-                                                    icon="pi pi-times"
-                                                    [text]="true"
-                                                    class="shrink-0"
-                                                    (click)="removeAttachment(file)"
-                                                ></button>
-                                            </div>
-                                        </div>
+                                <ng-template #file let-file>
+                                    <div class="flex align-items-center gap-2">
+                                        @if (isImageFile(file)) {
+                                            <img [src]="getFilePreviewUrl(file)" [alt]="file.name" class="w-10 h-10 object-cover rounded shrink-0" />
+                                        } @else {
+                                            <i class="pi shrink-0" [ngClass]="getFileIcon(file)"></i>
+                                        }
+                                        <span class="text-ellipsis">{{ file.name }}</span>
                                     </div>
+                                </ng-template>
+                                <ng-template #empty>
+                                    <div>Drag and drop files to here to upload.</div>
                                 </ng-template>
                             </p-fileupload>
                         </div>
@@ -337,27 +319,17 @@ import { Fluid } from 'primeng/fluid';
             .header {
                 background: var(--p-primary-50);
             }
-
-            /* Match file upload look & feel from uploader.ts */
-            :host ::ng-deep .p-fileupload-header {
-                display: none;
-            }
-
-            :host ::ng-deep .p-fileupload {
-                border: none;
-            }
-
-            :host ::ng-deep .p-fileupload-file-list {
-                display: none;
-            }
         `
     ]
 })
-export class NewPatient implements AfterViewInit {
+export class NewPatient implements AfterViewInit, OnDestroy {
+    private messageService = inject(MessageService);
+    private objectUrls = new Set<string>();
+
     form: FormGroup;
     today = new Date();
     isSubmitting = false;
-    attachments: File[] = [];
+    uploadedFiles: any[] = [];
 
     genderOptions = [
         { label: 'Male', value: 'male' },
@@ -483,13 +455,52 @@ export class NewPatient implements AfterViewInit {
         return digits ? sign + digits : undefined;
     }
 
-    onAttachmentsSelect(ev: FileSelectEvent): void {
-        const files = Array.from(ev.files ?? []);
-        this.attachments = [...this.attachments, ...files];
+    isImageFile(file: File): boolean {
+        return !!file.type?.startsWith('image/');
     }
 
-    removeAttachment(file: File): void {
-        this.attachments = this.attachments.filter((f) => f !== file);
+    getFilePreviewUrl(file: File): string {
+        const withUrl = file as File & { objectURL?: string };
+        if (withUrl.objectURL) return withUrl.objectURL;
+        const url = URL.createObjectURL(file);
+        this.objectUrls.add(url);
+        return url;
+    }
+
+    ngOnDestroy(): void {
+        this.objectUrls.forEach((url) => URL.revokeObjectURL(url));
+        this.objectUrls.clear();
+    }
+
+    getFileIcon(file: File): string {
+        const ext = (file.name?.split('.').pop() || '').toLowerCase();
+        const iconMap: Record<string, string> = {
+            pdf: 'pi-file-pdf',
+            doc: 'pi-file-word',
+            docx: 'pi-file-word',
+            ppt: 'pi-chart-bar',
+            pptx: 'pi-chart-bar',
+            xls: 'pi-file-excel',
+            xlsx: 'pi-file-excel',
+            xlsm: 'pi-file-excel',
+            csv: 'pi-file-excel',
+            png: 'pi-image',
+            jpg: 'pi-image',
+            jpeg: 'pi-image',
+            gif: 'pi-image',
+            webp: 'pi-image',
+            svg: 'pi-image',
+            bmp: 'pi-image'
+        };
+        return iconMap[ext] || 'pi-file';
+    }
+
+    onUpload(event: FileUploadEvent): void {
+        this.messageService.add({
+            severity: 'info',
+            summary: 'File Uploaded',
+            detail: ''
+        });
     }
 
     submit(): void {

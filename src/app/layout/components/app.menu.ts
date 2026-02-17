@@ -40,6 +40,11 @@ export class AppMenu {
             ]
         },
         {
+            label: 'Documents',
+            icon: 'pi pi-folder',
+            routerLink: ['/documents']
+        },
+        {
             label: 'Dashboard',
             icon: 'pi pi-home',
             items: [
