@@ -59,7 +59,9 @@ import { CheckboxModule } from 'primeng/checkbox';
       [scrollHeight]="config.scrollHeight || '600px'"
       [editMode]="config.editType === 'cell' ? 'cell' : 'row'"
       sortMode="single"
-      [tableStyle]="{ 'table-layout': 'fixed', 'width': 'max-content', 'min-width': '100%' }"
+      [resizableColumns]="true"
+      columnResizeMode="fit"
+      [tableStyle]="{ 'table-layout': 'fixed', 'width': '100%' }"
       (onLazyLoad)="lazyLoad.emit($event)"
       (onRowEditInit)="onTableRowEditInit($event)"
       (onRowEditSave)="onTableRowEditSave($event)"
@@ -152,8 +154,9 @@ import { CheckboxModule } from 'primeng/checkbox';
 
           <ng-container *ngFor="let col of viewColumns; trackBy: trackByField">
             <th *ngIf="col.sortable !== false; else noSort"
-                [style.min-width]="col.width || '12rem'"
-                [style.width]="col.width || '12rem'"
+                pResizableColumn
+                [style.min-width]="col.width || '4rem'"
+                [style.width]="col.width || null"
                 [pSortableColumn]="col.field"
                 [class.gt-sticky]="col.frozen"
                 [style.left.px]="col.frozen ? stickyLeftPx(col) : null">
@@ -181,8 +184,9 @@ import { CheckboxModule } from 'primeng/checkbox';
             </th>
 
             <ng-template #noSort>
-              <th [style.min-width]="col.width || '12rem'"
-                  [style.width]="col.width || '12rem'"
+              <th pResizableColumn
+                  [style.min-width]="col.width || '4rem'"
+                  [style.width]="col.width || null"
                   [class.gt-sticky]="col.frozen"
                   [style.left.px]="col.frozen ? stickyLeftPx(col) : null">
                 <div style="display:flex;align-items:center;justify-content:space-between;gap:.5rem;">
@@ -201,7 +205,7 @@ import { CheckboxModule } from 'primeng/checkbox';
             </ng-template>
           </ng-container>
 
-          <th style="min-width: 8rem" *ngIf="showActionsCol()">
+          <th pResizableColumn style="min-width: 8rem; width: 8rem" *ngIf="showActionsCol()">
             <ng-container *ngIf="actionsHeaderTemplate; else defaultActionsHeader" [ngTemplateOutlet]="actionsHeaderTemplate" [ngTemplateOutletContext]="{ api: publicApi }"></ng-container>
             <ng-template #defaultActionsHeader>Actions</ng-template>
           </th>
@@ -224,8 +228,8 @@ import { CheckboxModule } from 'primeng/checkbox';
           <td *ngFor="let col of viewColumns; trackBy: trackByField"
               [class.gt-sticky]="col.frozen"
               [style.left.px]="col.frozen ? stickyLeftPx(col) : null"
-              [style.min-width]="col.width || '12rem'"
-              [style.width]="col.width || '12rem'">
+              [style.min-width]="col.width || '4rem'"
+              [style.width]="col.width || null">
             <div style="min-width:0;max-width:100%;">
               <!-- Editable cell -->
               <ng-container *ngIf="isColumnEditable(col) && isEditingEnabled(); else readCell">

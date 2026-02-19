@@ -551,8 +551,13 @@ export class NewPatient implements AfterViewInit, OnDestroy {
             },
             error: (err) => {
                 console.error('Error creating patient:', err);
-                this.helpersService.notifyError('Error', err?.error?.message || 'Failed to create patient profile');
-                this.isSubmitting = false;
+                if (err.error.message == 'Unauthorized') {
+                    this.helpersService.notifyError('Unauthorized', 'Please login again');
+                    this.isSubmitting = false;
+                } else {
+                    this.helpersService.notifyError('Error', err?.error?.message || 'Failed to create patient profile');
+                    this.isSubmitting = false;
+                }
             }
         });
     }

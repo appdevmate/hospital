@@ -721,8 +721,13 @@ export class NewDoctor implements AfterViewInit {
             },
             error: (err) => {
                 console.error('Error creating doctor:', err);
-                this.helpersService.notifyError('Error', err?.error?.message || 'Failed to create doctor profile');
-                this.isSubmitting = false;
+                if (err.error.message == 'Unauthorized') {
+                    this.helpersService.notifyError('Unauthorized', 'Please login again');
+                    this.isSubmitting = false;
+                } else {
+                    this.helpersService.notifyError('Error', err?.error?.message || 'Failed to create doctor profile');
+                    this.isSubmitting = false;
+                }
             }
         });
     }
@@ -783,8 +788,13 @@ export class NewDoctor implements AfterViewInit {
             },
             error: (err) => {
                 console.error('Error creating department:', err);
-                this.helpersService.notifyError('Error', 'Failed to add department');
-                this.isSavingDept = false;
+                if (err.error.message == 'Unauthorized') {
+                    this.helpersService.notifyError('Unauthorized', 'Please login again');
+                    this.isSavingDept = false;
+                } else {
+                    this.helpersService.notifyError('Error', 'Failed to add department');
+                    this.isSavingDept = false;
+                }
             }
         });
     }
@@ -812,8 +822,13 @@ export class NewDoctor implements AfterViewInit {
             },
             error: (err) => {
                 console.error('Error creating specialization:', err);
-                this.helpersService.notifyError('Error', 'Failed to add specialization');
-                this.isSavingSpec = false;
+                if (err.error.message == 'Unauthorized') {
+                    this.helpersService.notifyError('Unauthorized', 'Please login again');
+                    this.isSavingSpec = false;
+                } else {
+                    this.helpersService.notifyError('Error', 'Failed to add specialization');
+                    this.isSavingSpec = false;
+                }
             }
         });
     }
@@ -857,8 +872,13 @@ export class NewDoctor implements AfterViewInit {
             },
             error: (err) => {
                 console.error(err);
-                this.helpersService.notifyError('Upload failed', `Could not import ${this.bulkType}s`);
-                this.isUploadingBulk = false;
+                if (err.error.message == 'Unauthorized') {
+                    this.helpersService.notifyError('Unauthorized', 'Please login again');
+                    this.isUploadingBulk = false;
+                } else {
+                    this.helpersService.notifyError('Upload failed', `Could not import ${this.bulkType}s`);
+                    this.isUploadingBulk = false;
+                }
             }
         });
     }

@@ -538,10 +538,15 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
                 this.fetch();
             },
             error: (err) => {
-                this._loading.set(false);
-                api.cancelRowEdit(row, rowIndex);
-                this.originalRowData.delete(id);
-                this.helpers.notifyError('Update failed', err?.error?.message || 'Could not save');
+                if (err.error.message == 'Unauthorized') {
+                    this.helpers.notifyError('Unauthorized', 'Please login again');
+                    this._loading.set(false);
+                } else {
+                    this._loading.set(false);
+                    api.cancelRowEdit(row, rowIndex);
+                    this.originalRowData.delete(id);
+                    this.helpers.notifyError('Update failed', err?.error?.message || 'Could not save');
+                }
             }
         });
     }
