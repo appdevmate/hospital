@@ -1,41 +1,53 @@
 import {
-  Dialog,
   DialogStyle
-} from "./chunk-HNPMCPB7.js";
-import "./chunk-PF7DN6OW.js";
-import "./chunk-NKFNXLXI.js";
-import "./chunk-PJRMHEN5.js";
-import "./chunk-YNLAOK3J.js";
-import "./chunk-TENFQJBN.js";
-import "./chunk-S73J4WE3.js";
-import "./chunk-OC77X5LN.js";
-import "./chunk-RHA7RL5K.js";
-import "./chunk-YXZQJBKH.js";
-import "./chunk-BB55NINM.js";
+} from "./chunk-5BDJAND7.js";
 import {
-  Bind,
-  BindModule
-} from "./chunk-MLQGRGGO.js";
+  FocusTrap
+} from "./chunk-5UJGK5GI.js";
 import {
-  BaseComponent,
-  PARENT_INSTANCE
-} from "./chunk-YNJ5GKCH.js";
-import "./chunk-4ATYD752.js";
+  zindexutils
+} from "./chunk-BB55NINM.js";
+import {
+  Button
+} from "./chunk-6SV3UMTU.js";
+import "./chunk-KOXUNDHI.js";
+import "./chunk-AXS7T3GQ.js";
+import "./chunk-6PBBDZZF.js";
+import {
+  DomHandler
+} from "./chunk-QVUTNZUY.js";
+import "./chunk-VZLF74PJ.js";
+import {
+  TimesIcon,
+  WindowMaximizeIcon,
+  WindowMinimizeIcon
+} from "./chunk-BIL3W6KN.js";
+import "./chunk-EGVFVLQK.js";
+import {
+  BaseComponent
+} from "./chunk-4YMQ5OOY.js";
+import "./chunk-L2L2T6ID.js";
 import {
   SharedModule,
   TranslationKeys
-} from "./chunk-LMEEH3AJ.js";
+} from "./chunk-ZKOTJBQ6.js";
 import "./chunk-6QGHQEN4.js";
-import "./chunk-53DGU4C2.js";
-import "./chunk-GOP36Q47.js";
 import {
-  s3 as s,
-  ut
-} from "./chunk-UCHM6OXG.js";
+  animate,
+  animation,
+  style,
+  transition,
+  trigger,
+  useAnimation
+} from "./chunk-53DGU4C2.js";
 import {
   CommonModule,
+  NgClass,
   NgComponentOutlet,
-  NgIf
+  NgIf,
+  NgStyle,
+  NgTemplateOutlet,
+  isPlatformBrowser
 } from "./chunk-FHZAWWEY.js";
 import "./chunk-5KK3G4LL.js";
 import {
@@ -46,194 +58,395 @@ import {
   Inject,
   Injectable,
   NgModule,
+  NgZone,
+  Optional,
+  Renderer2,
+  SkipSelf,
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
   createComponent,
   setClassMetadata,
-  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
+  ɵɵattribute,
+  ɵɵclassMap,
   ɵɵdefineComponent,
   ɵɵdefineDirective,
   ɵɵdefineNgModule,
   ɵɵdirectiveInject,
+  ɵɵelement,
   ɵɵelementContainer,
+  ɵɵelementContainerEnd,
+  ɵɵelementContainerStart,
   ɵɵelementEnd,
   ɵɵelementStart,
+  ɵɵgetCurrentView,
   ɵɵgetInheritedFactory,
   ɵɵlistener,
   ɵɵloadQuery,
   ɵɵnextContext,
   ɵɵproperty,
   ɵɵpureFunction0,
+  ɵɵpureFunction1,
+  ɵɵpureFunction2,
+  ɵɵpureFunction3,
   ɵɵqueryRefresh,
   ɵɵstyleMap,
+  ɵɵstyleProp,
   ɵɵtemplate,
   ɵɵtemplateRefExtractor,
   ɵɵtext,
   ɵɵtextInterpolate,
-  ɵɵtwoWayBindingSet,
-  ɵɵtwoWayListener,
-  ɵɵtwoWayProperty,
+  ɵɵtextInterpolate1,
   ɵɵviewQuery
 } from "./chunk-EIF6IUR4.js";
 import {
   DOCUMENT,
-  InjectionToken,
   Injector,
   inject,
   ɵɵdefineInjectable,
   ɵɵdefineInjector,
-  ɵɵinject
+  ɵɵinject,
+  ɵɵnamespaceSVG,
+  ɵɵresetView,
+  ɵɵrestoreView
 } from "./chunk-LW34VNAR.js";
 import "./chunk-YVXMBCE5.js";
 import "./chunk-G6ECYYJH.js";
 import {
   Subject
 } from "./chunk-RTGP7ALM.js";
+import "./chunk-BMDSN43F.js";
+import {
+  C2 as C,
+  Kt,
+  O,
+  R,
+  W,
+  h,
+  s3 as s,
+  ut,
+  v
+} from "./chunk-RK2DVQNP.js";
 import {
   __spreadValues
 } from "./chunk-4MWRP73S.js";
 
 // node_modules/primeng/fesm2022/primeng-dynamicdialog.mjs
-var _c0 = () => ({
-  severity: "secondary",
-  variant: "text",
-  rounded: true
+var _c0 = ["mask"];
+var _c1 = ["content"];
+var _c2 = ["footer"];
+var _c3 = ["titlebar"];
+var _c4 = (a0, a1, a2) => ({
+  position: "fixed",
+  height: "100%",
+  width: "100%",
+  left: 0,
+  top: 0,
+  display: "flex",
+  "justify-content": a0,
+  "align-items": a1,
+  "pointer-events": a2
 });
-function DynamicDialog_1_ng_template_0_ng_container_0_Template(rf, ctx) {
+var _c5 = (a0) => ({
+  "p-dialog p-component": true,
+  "p-dialog-maximized": a0
+});
+var _c6 = () => ({
+  display: "flex",
+  "flex-direction": "column",
+  "pointer-events": "auto"
+});
+var _c7 = (a0, a1) => ({
+  transform: a0,
+  transition: a1
+});
+var _c8 = (a0) => ({
+  value: "visible",
+  params: a0
+});
+function DynamicDialogComponent_div_2_div_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementContainer(0);
-  }
-}
-function DynamicDialog_1_ng_template_0_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵtemplate(0, DynamicDialog_1_ng_template_0_ng_container_0_Template, 1, 0, "ng-container", 8);
-  }
-  if (rf & 2) {
-    const ctx_r0 = ɵɵnextContext(2);
-    ɵɵproperty("ngComponentOutlet", ctx_r0.headerTemplate);
-  }
-}
-function DynamicDialog_1_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵtemplate(0, DynamicDialog_1_ng_template_0_Template, 1, 1, "ng-template", null, 0, ɵɵtemplateRefExtractor);
-  }
-}
-function DynamicDialog_2_ng_template_0_ng_container_0_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵelementContainer(0);
-  }
-}
-function DynamicDialog_2_ng_template_0_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵtemplate(0, DynamicDialog_2_ng_template_0_ng_container_0_Template, 1, 0, "ng-container", 8);
-  }
-  if (rf & 2) {
-    const ctx_r0 = ɵɵnextContext(2);
-    ɵɵproperty("ngComponentOutlet", ctx_r0.contentTemplate);
-  }
-}
-function DynamicDialog_2_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵtemplate(0, DynamicDialog_2_ng_template_0_Template, 1, 1, "ng-template", null, 1, ɵɵtemplateRefExtractor);
-  }
-}
-function DynamicDialog_3_ng_template_0_ng_container_0_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵelementContainer(0);
-  }
-}
-function DynamicDialog_3_ng_template_0_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵtemplate(0, DynamicDialog_3_ng_template_0_ng_container_0_Template, 1, 0, "ng-container", 8);
-  }
-  if (rf & 2) {
-    const ctx_r0 = ɵɵnextContext(2);
-    ɵɵproperty("ngComponentOutlet", ctx_r0.footerTemplate);
-  }
-}
-function DynamicDialog_3_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵtemplate(0, DynamicDialog_3_ng_template_0_Template, 1, 1, "ng-template", null, 2, ɵɵtemplateRefExtractor);
-  }
-}
-function DynamicDialog_4_ng_template_0_ng_container_0_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵelementContainer(0);
-  }
-}
-function DynamicDialog_4_ng_template_0_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵtemplate(0, DynamicDialog_4_ng_template_0_ng_container_0_Template, 1, 0, "ng-container", 8);
-  }
-  if (rf & 2) {
-    const ctx_r0 = ɵɵnextContext(2);
-    ɵɵproperty("ngComponentOutlet", ctx_r0.closeIconTemplate);
-  }
-}
-function DynamicDialog_4_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵtemplate(0, DynamicDialog_4_ng_template_0_Template, 1, 1, "ng-template", null, 3, ɵɵtemplateRefExtractor);
-  }
-}
-function DynamicDialog_5_ng_template_0_ng_container_0_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵelementContainer(0);
-  }
-}
-function DynamicDialog_5_ng_template_0_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵtemplate(0, DynamicDialog_5_ng_template_0_ng_container_0_Template, 1, 0, "ng-container", 8);
-  }
-  if (rf & 2) {
-    const ctx_r0 = ɵɵnextContext(2);
-    ɵɵproperty("ngComponentOutlet", ctx_r0.maximizeIconTemplate);
-  }
-}
-function DynamicDialog_5_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵtemplate(0, DynamicDialog_5_ng_template_0_Template, 1, 1, "ng-template", null, 4, ɵɵtemplateRefExtractor);
-  }
-}
-function DynamicDialog_6_ng_template_0_ng_container_0_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵelementContainer(0);
-  }
-}
-function DynamicDialog_6_ng_template_0_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵtemplate(0, DynamicDialog_6_ng_template_0_ng_container_0_Template, 1, 0, "ng-container", 8);
-  }
-  if (rf & 2) {
-    const ctx_r0 = ɵɵnextContext(2);
-    ɵɵproperty("ngComponentOutlet", ctx_r0.minimizeIconTemplate);
-  }
-}
-function DynamicDialog_6_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵtemplate(0, DynamicDialog_6_ng_template_0_Template, 1, 1, "ng-template", null, 5, ɵɵtemplateRefExtractor);
-  }
-}
-function DynamicDialog_7_ng_template_0_Template(rf, ctx) {
-}
-function DynamicDialog_7_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵtemplate(0, DynamicDialog_7_ng_template_0_Template, 0, 0, "ng-template", 9);
-  }
-}
-function DynamicDialog_div_8_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵelementStart(0, "div");
-    ɵɵtext(1);
+    const _r3 = ɵɵgetCurrentView();
+    ɵɵelementStart(0, "div", 15);
+    ɵɵlistener("mousedown", function DynamicDialogComponent_div_2_div_2_Template_div_mousedown_0_listener($event) {
+      ɵɵrestoreView(_r3);
+      const ctx_r1 = ɵɵnextContext(2);
+      return ɵɵresetView(ctx_r1.initResize($event));
+    });
     ɵɵelementEnd();
   }
   if (rf & 2) {
-    const ctx_r0 = ɵɵnextContext();
+    ɵɵproperty("ngClass", "p-resizable-handle");
+  }
+}
+function DynamicDialogComponent_div_2_div_3_ng_container_2_Template(rf, ctx) {
+  if (rf & 1) {
+    ɵɵelementContainer(0);
+  }
+}
+function DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_4_ng_template_1_ng_container_0__svg_svg_1_Template(rf, ctx) {
+  if (rf & 1) {
+    ɵɵnamespaceSVG();
+    ɵɵelement(0, "svg", 24);
+  }
+}
+function DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_4_ng_template_1_ng_container_0_2_ng_template_0_Template(rf, ctx) {
+}
+function DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_4_ng_template_1_ng_container_0_2_Template(rf, ctx) {
+  if (rf & 1) {
+    ɵɵtemplate(0, DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_4_ng_template_1_ng_container_0_2_ng_template_0_Template, 0, 0, "ng-template");
+  }
+}
+function DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_4_ng_template_1_ng_container_0_Template(rf, ctx) {
+  if (rf & 1) {
+    ɵɵelementContainerStart(0);
+    ɵɵtemplate(1, DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_4_ng_template_1_ng_container_0__svg_svg_1_Template, 1, 0, "svg", 22)(2, DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_4_ng_template_1_ng_container_0_2_Template, 1, 0, null, 23);
+    ɵɵelementContainerEnd();
+  }
+  if (rf & 2) {
+    const ctx_r1 = ɵɵnextContext(6);
     ɵɵadvance();
-    ɵɵtextInterpolate(ctx_r0.ddconfig.footer);
+    ɵɵproperty("ngIf", !ctx_r1.maximizeIconTemplate);
+    ɵɵadvance();
+    ɵɵproperty("ngTemplateOutlet", ctx_r1.maximizeIconTemplate);
+  }
+}
+function DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_4_ng_template_1_ng_container_1__svg_svg_1_Template(rf, ctx) {
+  if (rf & 1) {
+    ɵɵnamespaceSVG();
+    ɵɵelement(0, "svg", 26);
+  }
+}
+function DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_4_ng_template_1_ng_container_1_2_ng_template_0_Template(rf, ctx) {
+}
+function DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_4_ng_template_1_ng_container_1_2_Template(rf, ctx) {
+  if (rf & 1) {
+    ɵɵtemplate(0, DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_4_ng_template_1_ng_container_1_2_ng_template_0_Template, 0, 0, "ng-template");
+  }
+}
+function DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_4_ng_template_1_ng_container_1_Template(rf, ctx) {
+  if (rf & 1) {
+    ɵɵelementContainerStart(0);
+    ɵɵtemplate(1, DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_4_ng_template_1_ng_container_1__svg_svg_1_Template, 1, 0, "svg", 25)(2, DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_4_ng_template_1_ng_container_1_2_Template, 1, 0, null, 23);
+    ɵɵelementContainerEnd();
+  }
+  if (rf & 2) {
+    const ctx_r1 = ɵɵnextContext(6);
+    ɵɵadvance();
+    ɵɵproperty("ngIf", !ctx_r1.minimizeIconTemplate);
+    ɵɵadvance();
+    ɵɵproperty("ngTemplateOutlet", ctx_r1.minimizeIconTemplate);
+  }
+}
+function DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_4_ng_template_1_Template(rf, ctx) {
+  if (rf & 1) {
+    ɵɵtemplate(0, DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_4_ng_template_1_ng_container_0_Template, 3, 2, "ng-container", 12)(1, DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_4_ng_template_1_ng_container_1_Template, 3, 2, "ng-container", 12);
+  }
+  if (rf & 2) {
+    const ctx_r1 = ɵɵnextContext(5);
+    ɵɵproperty("ngIf", !ctx_r1.maximized);
+    ɵɵadvance();
+    ɵɵproperty("ngIf", ctx_r1.maximized);
+  }
+}
+function DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_4_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r5 = ɵɵgetCurrentView();
+    ɵɵelementStart(0, "p-button", 21);
+    ɵɵlistener("onClick", function DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_4_Template_p_button_onClick_0_listener() {
+      ɵɵrestoreView(_r5);
+      const ctx_r1 = ɵɵnextContext(4);
+      return ɵɵresetView(ctx_r1.maximize());
+    })("keydown.enter", function DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_4_Template_p_button_keydown_enter_0_listener() {
+      ɵɵrestoreView(_r5);
+      const ctx_r1 = ɵɵnextContext(4);
+      return ɵɵresetView(ctx_r1.maximize());
+    });
+    ɵɵtemplate(1, DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_4_ng_template_1_Template, 2, 2, "ng-template", null, 4, ɵɵtemplateRefExtractor);
+    ɵɵelementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r1 = ɵɵnextContext(4);
+    ɵɵproperty("styleClass", "p-dialog-maximize-button")("tabindex", ctx_r1.maximizable ? "0" : "-1");
+  }
+}
+function DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_5_ng_template_1__svg_svg_0_Template(rf, ctx) {
+  if (rf & 1) {
+    ɵɵnamespaceSVG();
+    ɵɵelement(0, "svg", 29);
+  }
+}
+function DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_5_ng_template_1_1_ng_template_0_Template(rf, ctx) {
+}
+function DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_5_ng_template_1_1_Template(rf, ctx) {
+  if (rf & 1) {
+    ɵɵtemplate(0, DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_5_ng_template_1_1_ng_template_0_Template, 0, 0, "ng-template");
+  }
+}
+function DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_5_ng_template_1_Template(rf, ctx) {
+  if (rf & 1) {
+    ɵɵtemplate(0, DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_5_ng_template_1__svg_svg_0_Template, 1, 0, "svg", 28)(1, DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_5_ng_template_1_1_Template, 1, 0, null, 23);
+  }
+  if (rf & 2) {
+    const ctx_r1 = ɵɵnextContext(5);
+    ɵɵproperty("ngIf", !ctx_r1.closeIconTemplate);
+    ɵɵadvance();
+    ɵɵproperty("ngTemplateOutlet", ctx_r1.closeIconTemplate);
+  }
+}
+function DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_5_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r6 = ɵɵgetCurrentView();
+    ɵɵelementStart(0, "p-button", 27);
+    ɵɵlistener("onClick", function DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_5_Template_p_button_onClick_0_listener() {
+      ɵɵrestoreView(_r6);
+      const ctx_r1 = ɵɵnextContext(4);
+      return ɵɵresetView(ctx_r1.hide());
+    })("keydown.enter", function DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_5_Template_p_button_keydown_enter_0_listener() {
+      ɵɵrestoreView(_r6);
+      const ctx_r1 = ɵɵnextContext(4);
+      return ɵɵresetView(ctx_r1.hide());
+    });
+    ɵɵtemplate(1, DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_5_ng_template_1_Template, 2, 2, "ng-template", null, 4, ɵɵtemplateRefExtractor);
+    ɵɵelementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r1 = ɵɵnextContext(4);
+    ɵɵproperty("styleClass", "p-dialog-close-button")("ariaLabel", ctx_r1.ddconfig.closeAriaLabel || ctx_r1.defaultCloseAriaLabel);
+  }
+}
+function DynamicDialogComponent_div_2_div_3_ng_container_3_Template(rf, ctx) {
+  if (rf & 1) {
+    ɵɵelementContainerStart(0);
+    ɵɵelementStart(1, "span", 17);
+    ɵɵtext(2);
+    ɵɵelementEnd();
+    ɵɵelementStart(3, "div", 18);
+    ɵɵtemplate(4, DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_4_Template, 3, 2, "p-button", 19)(5, DynamicDialogComponent_div_2_div_3_ng_container_3_p_button_5_Template, 3, 2, "p-button", 20);
+    ɵɵelementEnd();
+    ɵɵelementContainerEnd();
+  }
+  if (rf & 2) {
+    const ctx_r1 = ɵɵnextContext(3);
+    ɵɵadvance();
+    ɵɵproperty("ngClass", "p-dialog-title")("id", ctx_r1.ariaLabelledBy);
+    ɵɵadvance();
+    ɵɵtextInterpolate(ctx_r1.ddconfig.header);
+    ɵɵadvance();
+    ɵɵproperty("ngClass", "p-dialog-header-actions");
+    ɵɵadvance();
+    ɵɵproperty("ngIf", ctx_r1.ddconfig.maximizable);
+    ɵɵadvance();
+    ɵɵproperty("ngIf", ctx_r1.closable);
+  }
+}
+function DynamicDialogComponent_div_2_div_3_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r4 = ɵɵgetCurrentView();
+    ɵɵelementStart(0, "div", 16, 3);
+    ɵɵlistener("mousedown", function DynamicDialogComponent_div_2_div_3_Template_div_mousedown_0_listener($event) {
+      ɵɵrestoreView(_r4);
+      const ctx_r1 = ɵɵnextContext(2);
+      return ɵɵresetView(ctx_r1.initDrag($event));
+    });
+    ɵɵtemplate(2, DynamicDialogComponent_div_2_div_3_ng_container_2_Template, 1, 0, "ng-container", 13)(3, DynamicDialogComponent_div_2_div_3_ng_container_3_Template, 6, 6, "ng-container", 12);
+    ɵɵelementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r1 = ɵɵnextContext(2);
+    ɵɵproperty("ngClass", "p-dialog-header");
+    ɵɵadvance(2);
+    ɵɵproperty("ngComponentOutlet", ctx_r1.headerTemplate);
+    ɵɵadvance();
+    ɵɵproperty("ngIf", !ctx_r1.headerTemplate);
+  }
+}
+function DynamicDialogComponent_div_2_6_ng_template_0_Template(rf, ctx) {
+}
+function DynamicDialogComponent_div_2_6_Template(rf, ctx) {
+  if (rf & 1) {
+    ɵɵtemplate(0, DynamicDialogComponent_div_2_6_ng_template_0_Template, 0, 0, "ng-template", 30);
+  }
+}
+function DynamicDialogComponent_div_2_ng_container_7_Template(rf, ctx) {
+  if (rf & 1) {
+    ɵɵelementContainer(0);
+  }
+}
+function DynamicDialogComponent_div_2_div_8_ng_container_2_Template(rf, ctx) {
+  if (rf & 1) {
+    ɵɵelementContainerStart(0);
+    ɵɵtext(1);
+    ɵɵelementContainerEnd();
+  }
+  if (rf & 2) {
+    const ctx_r1 = ɵɵnextContext(3);
+    ɵɵadvance();
+    ɵɵtextInterpolate1(" ", ctx_r1.ddconfig.footer, " ");
+  }
+}
+function DynamicDialogComponent_div_2_div_8_ng_container_3_Template(rf, ctx) {
+  if (rf & 1) {
+    ɵɵelementContainer(0);
+  }
+}
+function DynamicDialogComponent_div_2_div_8_Template(rf, ctx) {
+  if (rf & 1) {
+    ɵɵelementStart(0, "div", 18, 5);
+    ɵɵtemplate(2, DynamicDialogComponent_div_2_div_8_ng_container_2_Template, 2, 1, "ng-container", 12)(3, DynamicDialogComponent_div_2_div_8_ng_container_3_Template, 1, 0, "ng-container", 13);
+    ɵɵelementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r1 = ɵɵnextContext(2);
+    ɵɵproperty("ngClass", "p-dialog-footer");
+    ɵɵadvance(2);
+    ɵɵproperty("ngIf", !ctx_r1.footerTemplate);
+    ɵɵadvance();
+    ɵɵproperty("ngComponentOutlet", ctx_r1.footerTemplate);
+  }
+}
+function DynamicDialogComponent_div_2_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r1 = ɵɵgetCurrentView();
+    ɵɵelementStart(0, "div", 8, 1);
+    ɵɵlistener("@animation.start", function DynamicDialogComponent_div_2_Template_div_animation_animation_start_0_listener($event) {
+      ɵɵrestoreView(_r1);
+      const ctx_r1 = ɵɵnextContext();
+      return ɵɵresetView(ctx_r1.onAnimationStart($event));
+    })("@animation.done", function DynamicDialogComponent_div_2_Template_div_animation_animation_done_0_listener($event) {
+      ɵɵrestoreView(_r1);
+      const ctx_r1 = ɵɵnextContext();
+      return ɵɵresetView(ctx_r1.onAnimationEnd($event));
+    });
+    ɵɵtemplate(2, DynamicDialogComponent_div_2_div_2_Template, 1, 1, "div", 9)(3, DynamicDialogComponent_div_2_div_3_Template, 4, 3, "div", 10);
+    ɵɵelementStart(4, "div", 11, 2);
+    ɵɵtemplate(6, DynamicDialogComponent_div_2_6_Template, 1, 0, null, 12)(7, DynamicDialogComponent_div_2_ng_container_7_Template, 1, 0, "ng-container", 13);
+    ɵɵelementEnd();
+    ɵɵtemplate(8, DynamicDialogComponent_div_2_div_8_Template, 4, 3, "div", 14);
+    ɵɵelementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r1 = ɵɵnextContext();
+    ɵɵstyleMap(ctx_r1.ddconfig.style);
+    ɵɵclassMap(ctx_r1.ddconfig.styleClass);
+    ɵɵstyleProp("width", ctx_r1.ddconfig.width)("height", ctx_r1.ddconfig.height);
+    ɵɵproperty("ngClass", ɵɵpureFunction1(22, _c5, ctx_r1.maximizable && ctx_r1.maximized))("ngStyle", ɵɵpureFunction0(24, _c6))("@animation", ɵɵpureFunction1(28, _c8, ɵɵpureFunction2(25, _c7, ctx_r1.transformOptions, ctx_r1.ddconfig.transitionOptions || "150ms cubic-bezier(0, 0, 0.2, 1)")))("pFocusTrapDisabled", ctx_r1.ddconfig.focusTrap === false);
+    ɵɵattribute("aria-labelledby", ctx_r1.ariaLabelledBy)("aria-modal", true)("id", ctx_r1.dialogId);
+    ɵɵadvance(2);
+    ɵɵproperty("ngIf", ctx_r1.ddconfig.resizable);
+    ɵɵadvance();
+    ɵɵproperty("ngIf", ctx_r1.ddconfig.showHeader !== false);
+    ɵɵadvance();
+    ɵɵproperty("ngClass", "p-dialog-content")("ngStyle", ctx_r1.ddconfig.contentStyle);
+    ɵɵadvance(2);
+    ɵɵproperty("ngIf", !ctx_r1.contentTemplate);
+    ɵɵadvance();
+    ɵɵproperty("ngComponentOutlet", ctx_r1.contentTemplate);
+    ɵɵadvance();
+    ɵɵproperty("ngIf", ctx_r1.ddconfig.footer || ctx_r1.footerTemplate);
   }
 }
 var DynamicDialogContent = class _DynamicDialogContent {
@@ -442,7 +655,7 @@ var DynamicDialogConfig = class {
    */
   minimizeIcon;
   /**
-   * Position of the dialog, options are "center", "top", "bottom", "left", "right", "topleft", "topright", "bottomleft" or "bottomright".
+   * Position of the dialog, options are "center", "top", "bottom", "left", "right", "top-left", "top-right", "bottom-left" or "bottom-right".
    * @group Props
    */
   position;
@@ -586,28 +799,54 @@ var DynamicDialogRef = class {
    */
   onChildComponentLoaded = new Subject();
 };
-var DYNAMIC_DIALOG_INSTANCE = new InjectionToken("DYNAMIC_DIALOG_INSTANCE");
-var DynamicDialog = class _DynamicDialog extends BaseComponent {
+var showAnimation = animation([style({
+  transform: "{{transform}}",
+  opacity: 0
+}), animate("{{transition}}", style({
+  transform: "none",
+  opacity: 1
+}))]);
+var hideAnimation = animation([animate("{{transition}}", style({
+  transform: "{{transform}}",
+  opacity: 0
+}))]);
+var DynamicDialogComponent = class _DynamicDialogComponent extends BaseComponent {
+  renderer;
   ddconfig;
   dialogRef;
-  _componentStyle = inject(DynamicDialogStyle);
-  $pcDynamicDialog = inject(DYNAMIC_DIALOG_INSTANCE, {
-    optional: true,
-    skipSelf: true
-  }) ?? void 0;
-  bindDirectiveInstance = inject(Bind, {
-    self: true
-  });
-  onAfterViewChecked() {
-    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
-  }
+  zone;
+  parentDialog;
   visible = true;
   componentRef;
+  mask;
+  resizing;
+  dragging;
+  maximized;
+  _style = {};
+  originalStyle;
+  lastPageX;
+  lastPageY;
+  ariaLabelledBy;
   id = s("pn_id_");
+  styleElement;
   insertionPoint;
-  dialog;
+  maskViewChild;
+  contentViewChild;
+  footerViewChild;
+  headerViewChild;
   childComponentType;
   inputValues;
+  container;
+  wrapper;
+  documentKeydownListener;
+  documentEscapeListener;
+  maskClickListener;
+  transformOptions = "scale(0.7)";
+  documentResizeListener;
+  documentResizeEndListener;
+  documentDragListener;
+  documentDragEndListener;
+  _componentStyle = inject(DynamicDialogStyle);
   get minX() {
     return this.ddconfig.minX ? this.ddconfig.minX : 0;
   }
@@ -629,11 +868,39 @@ var DynamicDialog = class _DynamicDialog extends BaseComponent {
   get closable() {
     return this.ddconfig.closable;
   }
+  get style() {
+    return this._style;
+  }
   get position() {
     return this.ddconfig.position;
   }
   get defaultCloseAriaLabel() {
     return this.config.getTranslation(TranslationKeys.ARIA)["close"];
+  }
+  set style(value) {
+    if (value) {
+      this._style = __spreadValues({}, value);
+      this.originalStyle = value;
+    }
+  }
+  get parent() {
+    const domElements = Array.from(this.document.getElementsByClassName("p-dialog"));
+    if (domElements.length > 1) {
+      return domElements.pop();
+    }
+  }
+  get parentContent() {
+    const domElements = Array.from(this.document.getElementsByClassName("p-dialog"));
+    if (domElements.length > 0) {
+      const contentElements = domElements[domElements.length - 1].querySelector(".p-dialog-content");
+      if (contentElements) return Array.isArray(contentElements) ? contentElements[0] : contentElements;
+    }
+  }
+  get header() {
+    return this.ddconfig.header;
+  }
+  get data() {
+    return this.ddconfig.data;
   }
   get breakpoints() {
     return this.ddconfig.breakpoints;
@@ -656,46 +923,62 @@ var DynamicDialog = class _DynamicDialog extends BaseComponent {
   get closeIconTemplate() {
     return this.ddconfig?.templates?.closeicon;
   }
-  get dialogStyle() {
-    return __spreadValues(__spreadValues(__spreadValues({}, this.ddconfig?.style || {}), this.ddconfig?.width && {
-      width: this.ddconfig.width
-    }), this.ddconfig?.height && {
-      height: this.ddconfig.height
-    });
-  }
-  get header() {
-    return this.ddconfig.header;
-  }
-  get data() {
-    return this.ddconfig.data;
+  get maskClass() {
+    const positions = ["left", "right", "top", "topleft", "topright", "bottom", "bottomleft", "bottomright"];
+    const pos = positions.find((item) => item === this.position);
+    return {
+      "p-dialog-mask": true,
+      "p-overlay-mask p-overlay-mask-enter": this.ddconfig.modal || this.ddconfig.dismissableMask,
+      [`p-dialog-${pos}`]: pos
+    };
   }
   get dialogId() {
-    return this.$attrSelector;
+    return this.attrSelector;
   }
-  maximized;
-  dragging;
-  resizing;
-  ariaLabelledBy;
-  _style = {};
-  styleElement;
-  lastPageX;
-  lastPageY;
-  contentViewChild;
-  footerViewChild;
-  headerViewChild;
-  maskViewChild;
-  maskClickListener;
-  documentDragListener;
-  documentDragEndListener;
-  documentResizeListener;
-  documentResizeEndListener;
-  documentEscapeListener;
-  constructor(ddconfig, dialogRef) {
+  zIndexForLayering;
+  constructor(renderer, ddconfig, dialogRef, zone, parentDialog) {
     super();
+    this.renderer = renderer;
     this.ddconfig = ddconfig;
     this.dialogRef = dialogRef;
+    this.zone = zone;
+    this.parentDialog = parentDialog;
   }
-  onAfterViewInit() {
+  ngOnInit() {
+    super.ngOnInit();
+    if (this.breakpoints) {
+      this.createStyle();
+    }
+  }
+  createStyle() {
+    if (isPlatformBrowser(this.platformId)) {
+      if (!this.styleElement) {
+        this.styleElement = this.renderer.createElement("style");
+        this.styleElement.type = "text/css";
+        this.renderer.appendChild(this.document.head, this.styleElement);
+        let innerHTML = "";
+        for (let breakpoint in this.breakpoints) {
+          innerHTML += `
+                        @media screen and (max-width: ${breakpoint}) {
+                            .p-dialog[id=${this.dialogId}]:not(.p-dialog-maximized) {
+                                width: ${this.breakpoints[breakpoint]} !important;
+                            }
+                        }
+                    `;
+        }
+        this.renderer.setProperty(this.styleElement, "innerHTML", innerHTML);
+        Kt(this.styleElement, "nonce", this.config?.csp()?.nonce);
+      }
+    }
+  }
+  destroyStyle() {
+    if (this.styleElement) {
+      this.renderer.removeChild(this.document.head, this.styleElement);
+      this.styleElement = null;
+    }
+  }
+  ngAfterViewInit() {
+    super.ngAfterViewInit();
     this.loadChildComponent(this.childComponentType);
     this.ariaLabelledBy = this.getAriaLabelledBy();
     this.cd.detectChanges();
@@ -714,31 +997,67 @@ var DynamicDialog = class _DynamicDialog extends BaseComponent {
     let viewContainerRef = this.insertionPoint?.viewContainerRef;
     viewContainerRef?.clear();
     this.componentRef = viewContainerRef?.createComponent(componentType);
-    if (this.inputValues && this.componentRef) {
+    if (this.inputValues) {
       Object.entries(this.inputValues).forEach(([key, value]) => {
         this.componentRef.setInput(key, value);
       });
     }
     this.dialogRef.onChildComponentLoaded.next(this.componentRef.instance);
   }
-  onDialogHide(event) {
-    this.dialogRef.destroy();
+  moveOnTop() {
+    if (this.ddconfig.autoZIndex !== false) {
+      zindexutils.set("modal", this.container, (this.ddconfig.baseZIndex || 0) + this.config.zIndex.modal);
+      this.wrapper.style.zIndex = String(parseInt(this.container.style.zIndex, 10) - 1);
+    } else {
+      this.zIndexForLayering = zindexutils.generateZIndex("modal", (this.ddconfig.baseZIndex || 0) + this.config.zIndex.modal);
+    }
   }
-  onDialogMaximize(event) {
-    this.maximized = event.maximized;
-    this.dialogRef.maximize(event);
+  onAnimationStart(event) {
+    switch (event.toState) {
+      case "visible":
+        this.container = event.element;
+        this.wrapper = this.container.parentElement;
+        this.moveOnTop();
+        if (this.parent) {
+          this.unbindGlobalListeners();
+        }
+        this.bindGlobalListeners();
+        this.container?.setAttribute(this.id, "");
+        if (this.ddconfig.modal !== false) {
+          this.enableModality();
+        }
+        if (this.ddconfig.focusOnShow !== false) {
+          this.focus();
+        }
+        break;
+      case "void":
+        if (this.wrapper && this.ddconfig.modal !== false) {
+          W(this.wrapper, "p-overlay-mask-leave");
+        }
+        break;
+    }
   }
-  onDialogResizeInit(event) {
-    this.resizing = true;
-    this.dialogRef.resizeInit(event);
+  onAnimationEnd(event) {
+    if (event.toState === "void") {
+      if (this.parentContent) {
+        this.focus(this.parentContent);
+      }
+      this.onContainerDestroy();
+      this.dialogRef.destroy();
+    }
   }
-  onDialogResizeEnd(event) {
-    this.resizing = false;
-    this.dialogRef.resizeEnd(event);
-  }
-  onDialogDragEnd(event) {
-    this.dragging = false;
-    this.dialogRef.dragEnd(event);
+  onContainerDestroy() {
+    this.unbindGlobalListeners();
+    if (this.container && this.ddconfig.autoZIndex !== false) {
+      zindexutils.clear(this.container);
+    }
+    if (this.zIndexForLayering) {
+      zindexutils.revertZIndex(this.zIndexForLayering);
+    }
+    if (this.ddconfig.modal !== false) {
+      this.disableModality();
+    }
+    this.container = null;
   }
   close() {
     this.visible = false;
@@ -749,68 +1068,188 @@ var DynamicDialog = class _DynamicDialog extends BaseComponent {
       this.dialogRef.close();
     }
   }
-  get _parent() {
-    const domElements = Array.from(this.document.getElementsByClassName("p-dialog"));
-    if (domElements.length > 1) {
-      return domElements.pop();
+  enableModality() {
+    if (this.ddconfig.dismissableMask) {
+      this.maskClickListener = this.renderer.listen(this.wrapper, "mousedown", (event) => {
+        if (this.wrapper && this.wrapper.isSameNode(event.target)) {
+          this.hide();
+        }
+      });
+    }
+    if (this.ddconfig.modal !== false) {
+      W(this.document.body, "p-overflow-hidden");
     }
   }
-  get parentContent() {
-    const domElements = Array.from(this.document.getElementsByClassName("p-dialog"));
-    if (domElements.length > 0) {
-      const contentElements = domElements[domElements.length - 1].querySelector(".p-dialog-content");
-      if (contentElements) return Array.isArray(contentElements) ? contentElements[0] : contentElements;
-    }
-  }
-  container;
-  wrapper;
-  unbindGlobalListeners() {
-    this.unbindDocumentEscapeListener();
-    this.unbindDocumentResizeListeners();
-    this.unbindDocumentDragListener();
-    this.unbindDocumentDragEndListener();
-  }
-  onAnimationStart(event) {
-    if (event.toState === "visible") {
-      if (this._parent) {
-        this.unbindGlobalListeners();
+  disableModality() {
+    if (this.wrapper) {
+      if (this.ddconfig.dismissableMask) {
+        this.unbindMaskClickListener();
       }
-      if (this.ddconfig.modal) {
-        this.enableModality();
+      if (this.ddconfig.modal !== false) {
+        O(this.document.body, "p-overflow-hidden");
+      }
+      if (!this.cd.destroyed) {
+        this.cd.detectChanges();
       }
     }
   }
-  onAnimationEnd(event) {
-    if (event.toState === "void") {
-      this.onContainerDestroy();
-      this.dialogRef.destroy();
+  focus(focusParentElement = this.contentViewChild.nativeElement) {
+    let focusable = DomHandler.getFocusableElement(focusParentElement, "[autofocus]");
+    if (focusable) {
+      this.zone.runOutsideAngular(() => {
+        setTimeout(() => focusable.focus(), 5);
+      });
+      return;
+    }
+    const focusableElement = DomHandler.getFocusableElement(focusParentElement);
+    if (focusableElement) {
+      this.zone.runOutsideAngular(() => {
+        setTimeout(() => focusableElement.focus(), 5);
+      });
+    } else if (this.footerViewChild) {
+      this.focus(this.footerViewChild.nativeElement);
+    } else if (!focusableElement && this.headerViewChild) {
+      this.focus(this.headerViewChild.nativeElement);
     }
   }
-  onContainerDestroy() {
-    this.unbindGlobalListeners();
-    if (this.ddconfig.modal) {
-      this.disableModality();
+  maximize() {
+    this.maximized = !this.maximized;
+    if (this.maximized) {
+      W(this.document.body, "p-overflow-hidden");
+    } else {
+      O(this.document.body, "p-overflow-hidden");
     }
-    this.container = null;
+    this.dialogRef.maximize({
+      maximized: this.maximized
+    });
+  }
+  initResize(event) {
+    if (this.ddconfig.resizable) {
+      if (!this.documentResizeListener) {
+        this.bindDocumentResizeListeners();
+      }
+      this.resizing = true;
+      this.lastPageX = event.pageX;
+      this.lastPageY = event.pageY;
+      W(this.document.body, "p-unselectable-text");
+      this.dialogRef.resizeInit(event);
+    }
+  }
+  onResize(event) {
+    if (this.resizing) {
+      let deltaX = event.pageX - this.lastPageX;
+      let deltaY = event.pageY - this.lastPageY;
+      let containerWidth = v(this.container);
+      let containerHeight = C(this.container);
+      let contentHeight = C(this.contentViewChild.nativeElement);
+      let newWidth = containerWidth + deltaX;
+      let newHeight = containerHeight + deltaY;
+      let minWidth = this.container.style.minWidth;
+      let minHeight = this.container.style.minHeight;
+      let offset = this.container.getBoundingClientRect();
+      let viewport = h();
+      let hasBeenDragged = !parseInt(this.container.style.top) || !parseInt(this.container.style.left);
+      if (hasBeenDragged) {
+        newWidth += deltaX;
+        newHeight += deltaY;
+      }
+      if ((!minWidth || newWidth > parseInt(minWidth)) && offset.left + newWidth < viewport.width) {
+        this._style.width = newWidth + "px";
+        this.container.style.width = this._style.width;
+      }
+      if ((!minHeight || newHeight > parseInt(minHeight)) && offset.top + newHeight < viewport.height) {
+        this.contentViewChild.nativeElement.style.height = contentHeight + newHeight - containerHeight + "px";
+        if (this._style.height) {
+          this._style.height = newHeight + "px";
+          this.container.style.height = this._style.height;
+        }
+      }
+      this.lastPageX = event.pageX;
+      this.lastPageY = event.pageY;
+    }
+  }
+  resizeEnd(event) {
+    if (this.resizing) {
+      this.resizing = false;
+      O(this.document.body, "p-unselectable-text");
+      this.dialogRef.resizeEnd(event);
+    }
+  }
+  initDrag(event) {
+    if (R(event.target, "p-dialog-header-icon") || R(event.target.parentElement, "p-dialog-header-icon")) {
+      return;
+    }
+    if (this.ddconfig.draggable) {
+      this.dragging = true;
+      this.lastPageX = event.pageX;
+      this.lastPageY = event.pageY;
+      this.container.style.margin = "0";
+      W(this.document.body, "p-unselectable-text");
+      this.dialogRef.dragStart(event);
+    }
+  }
+  onDrag(event) {
+    if (this.dragging) {
+      let containerWidth = v(this.container);
+      let containerHeight = C(this.container);
+      let deltaX = event.pageX - this.lastPageX;
+      let deltaY = event.pageY - this.lastPageY;
+      let offset = this.container.getBoundingClientRect();
+      let leftPos = offset.left + deltaX;
+      let topPos = offset.top + deltaY;
+      let viewport = h();
+      this.container.style.position = "fixed";
+      if (this.keepInViewport) {
+        if (leftPos >= this.minX && leftPos + containerWidth < viewport.width) {
+          this._style.left = leftPos + "px";
+          this.lastPageX = event.pageX;
+          this.container.style.left = leftPos + "px";
+        }
+        if (topPos >= this.minY && topPos + containerHeight < viewport.height) {
+          this._style.top = topPos + "px";
+          this.lastPageY = event.pageY;
+          this.container.style.top = topPos + "px";
+        }
+      } else {
+        this.lastPageX = event.pageX;
+        this.container.style.left = leftPos + "px";
+        this.lastPageY = event.pageY;
+        this.container.style.top = topPos + "px";
+      }
+    }
+  }
+  endDrag(event) {
+    if (this.dragging) {
+      this.dragging = false;
+      O(this.document.body, "p-unselectable-text");
+      this.dialogRef.dragEnd(event);
+      this.cd.detectChanges();
+    }
+  }
+  resetPosition() {
+    this.container.style.position = "";
+    this.container.style.left = "";
+    this.container.style.top = "";
+    this.container.style.margin = "";
   }
   bindDocumentDragListener() {
-    if (!this.documentDragListener) {
-      this.documentDragListener = this.renderer.listen(this.document.defaultView, "mousemove", (event) => {
-        this.onDrag(event);
+    if (isPlatformBrowser(this.platformId)) {
+      this.zone.runOutsideAngular(() => {
+        this.documentDragListener = this.renderer.listen(this.document, "mousemove", this.onDrag.bind(this));
       });
     }
   }
   bindDocumentDragEndListener() {
-    if (!this.documentDragEndListener) {
-      this.documentDragEndListener = this.renderer.listen(this.document.defaultView, "mouseup", (event) => {
-        this.endDrag(event);
+    if (isPlatformBrowser(this.platformId)) {
+      this.zone.runOutsideAngular(() => {
+        this.documentDragEndListener = this.renderer.listen(this.document, "mouseup", this.endDrag.bind(this));
       });
     }
   }
   unbindDocumentDragEndListener() {
     if (this.documentDragEndListener) {
       this.documentDragEndListener();
-      this.documentDragEndListener = null;
+      this.documentDragListener = null;
     }
   }
   unbindDocumentDragListener() {
@@ -819,117 +1258,50 @@ var DynamicDialog = class _DynamicDialog extends BaseComponent {
       this.documentDragListener = null;
     }
   }
-  initDrag(event) {
-    if (event.target instanceof HTMLElement) {
-      const target = event.target;
-      if (target.closest(".p-dialog-header-icon") || target.closest(".p-dialog-header-icons")) {
-        return;
-      }
-    }
-    this.dragging = true;
-    this.lastPageX = event.pageX;
-    this.lastPageY = event.pageY;
-    this.dialogRef.dragStart(event);
-    this.bindDocumentDragListener();
-    this.bindDocumentDragEndListener();
-  }
-  onDrag(event) {
-    if (this.dragging) {
-      this.lastPageX = event.pageX;
-      this.lastPageY = event.pageY;
-      if (this.ddconfig.keepInViewport && this.container) {
-        this.container.style.position = "fixed";
-      }
-    }
-  }
-  endDrag(event) {
-    if (this.dragging) {
-      this.dragging = false;
-      this.dialogRef.dragEnd(event);
-      this.cd.detectChanges();
-    }
-  }
-  resetPosition() {
-    if (this.container) {
-      this.container.style.position = "";
-      this.container.style.left = "";
-      this.container.style.top = "";
-      this.container.style.margin = "";
-    }
-  }
   bindDocumentResizeListeners() {
-    if (!this.documentResizeListener) {
-      this.documentResizeListener = this.renderer.listen(this.document.defaultView, "mousemove", (event) => {
-        this.onResize(event);
-      });
-    }
-    if (!this.documentResizeEndListener) {
-      this.documentResizeEndListener = this.renderer.listen(this.document.defaultView, "mouseup", (event) => {
-        this.resizeEnd(event);
+    if (isPlatformBrowser(this.platformId)) {
+      this.zone.runOutsideAngular(() => {
+        this.documentResizeListener = this.renderer.listen(this.document, "mousemove", this.onResize.bind(this));
+        this.documentResizeEndListener = this.renderer.listen(this.document, "mouseup", this.resizeEnd.bind(this));
       });
     }
   }
   unbindDocumentResizeListeners() {
-    if (this.documentResizeListener) {
+    if (this.documentResizeListener && this.documentResizeEndListener) {
       this.documentResizeListener();
-      this.documentResizeListener = null;
-    }
-    if (this.documentResizeEndListener) {
       this.documentResizeEndListener();
+      this.documentResizeListener = null;
       this.documentResizeEndListener = null;
     }
   }
-  initResize(event) {
-    this.resizing = true;
-    this.lastPageX = event.pageX;
-    this.lastPageY = event.pageY;
-    this.dialogRef.resizeInit(event);
-  }
-  onResize(event) {
-    if (this.resizing) {
-      this.lastPageX = event.pageX;
-      this.lastPageY = event.pageY;
+  bindGlobalListeners() {
+    if (this.ddconfig.closeOnEscape !== false) {
+      this.bindDocumentEscapeListener();
+    }
+    if (this.ddconfig.resizable) {
+      this.bindDocumentResizeListeners();
+    }
+    if (this.ddconfig.draggable) {
+      this.bindDocumentDragListener();
+      this.bindDocumentDragEndListener();
     }
   }
-  resizeEnd(event) {
-    if (this.resizing) {
-      this.resizing = false;
-      this.dialogRef.resizeEnd(event);
-    }
-  }
-  maximize() {
-    this.maximized = !this.maximized;
-    this.dialogRef.maximize({
-      maximized: this.maximized
-    });
-  }
-  enableModality() {
-    if (this.ddconfig.dismissableMask && this.wrapper) {
-      this.maskClickListener = this.renderer.listen(this.wrapper, "mousedown", (event) => {
-        if (this.wrapper && this.wrapper.isSameNode(event.target)) {
-          this.hide();
-        }
-      });
-    }
-  }
-  disableModality() {
-    this.unbindMaskClickListener();
-    this.cd.detectChanges();
-  }
-  unbindMaskClickListener() {
-    if (this.maskClickListener) {
-      this.maskClickListener();
-      this.maskClickListener = null;
-    }
+  unbindGlobalListeners() {
+    this.unbindDocumentEscapeListener();
+    this.unbindDocumentResizeListeners();
+    this.unbindDocumentDragListener();
+    this.unbindDocumentDragEndListener();
   }
   bindDocumentEscapeListener() {
-    if (this.ddconfig.closeOnEscape) {
-      this.documentEscapeListener = this.renderer.listen(this.document, "keydown", (event) => {
-        if (event.key === "Escape" && this.container) {
+    const documentTarget = this.maskViewChild ? this.maskViewChild.nativeElement.ownerDocument : "document";
+    this.documentEscapeListener = this.renderer.listen(documentTarget, "keydown", (event) => {
+      if (event.which == 27) {
+        const currentZIndex = zindexutils.getCurrent();
+        if (parseInt(this.container.style.zIndex) == currentZIndex || this.zIndexForLayering == currentZIndex) {
           this.hide();
         }
-      });
-    }
+      }
+    });
   }
   unbindDocumentEscapeListener() {
     if (this.documentEscapeListener) {
@@ -937,209 +1309,196 @@ var DynamicDialog = class _DynamicDialog extends BaseComponent {
       this.documentEscapeListener = null;
     }
   }
-  createStyle() {
-    if (!this.styleElement && this.breakpoints) {
-      this.styleElement = this.renderer.createElement("style");
-      this.styleElement.type = "text/css";
-      this.renderer.appendChild(this.document.head, this.styleElement);
-      let innerHTML = "";
-      for (let breakpoint in this.breakpoints) {
-        innerHTML += `
-                    @media screen and (max-width: ${breakpoint}) {
-                        .p-dialog[${this.dialogId}] {
-                            width: ${this.breakpoints[breakpoint]} !important;
-                        }
-                    }
-                `;
-      }
-      this.renderer.setProperty(this.styleElement, "innerHTML", innerHTML);
-    }
-  }
-  destroyStyle() {
-    if (this.styleElement) {
-      this.renderer.removeChild(this.document.head, this.styleElement);
-      this.styleElement = null;
-    }
-  }
-  onDestroy() {
-    if (this.componentRef && typeof this.componentRef.destroy === "function") {
-      this.componentRef.destroy();
+  unbindMaskClickListener() {
+    if (this.maskClickListener) {
+      this.maskClickListener();
+      this.maskClickListener = null;
     }
   }
   ngOnDestroy() {
     this.onContainerDestroy();
-    if (this.componentRef && typeof this.componentRef.destroy === "function") {
+    if (this.componentRef) {
       this.componentRef.destroy();
     }
     this.destroyStyle();
+    super.ngOnDestroy();
   }
-  static ɵfac = function DynamicDialog_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _DynamicDialog)(ɵɵdirectiveInject(DynamicDialogConfig), ɵɵdirectiveInject(DynamicDialogRef));
+  static ɵfac = function DynamicDialogComponent_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _DynamicDialogComponent)(ɵɵdirectiveInject(Renderer2), ɵɵdirectiveInject(DynamicDialogConfig), ɵɵdirectiveInject(DynamicDialogRef), ɵɵdirectiveInject(NgZone), ɵɵdirectiveInject(_DynamicDialogComponent, 12));
   };
   static ɵcmp = ɵɵdefineComponent({
-    type: _DynamicDialog,
+    type: _DynamicDialogComponent,
     selectors: [["p-dynamicDialog"], ["p-dynamicdialog"], ["p-dynamic-dialog"]],
-    viewQuery: function DynamicDialog_Query(rf, ctx) {
+    viewQuery: function DynamicDialogComponent_Query(rf, ctx) {
       if (rf & 1) {
         ɵɵviewQuery(DynamicDialogContent, 5);
-        ɵɵviewQuery(Dialog, 5);
+        ɵɵviewQuery(_c0, 5);
+        ɵɵviewQuery(_c1, 5);
+        ɵɵviewQuery(_c2, 5);
+        ɵɵviewQuery(_c3, 5);
       }
       if (rf & 2) {
         let _t;
         ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.insertionPoint = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.dialog = _t.first);
+        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.maskViewChild = _t.first);
+        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.contentViewChild = _t.first);
+        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.footerViewChild = _t.first);
+        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.headerViewChild = _t.first);
       }
     },
-    features: [ɵɵProvidersFeature([DynamicDialogStyle, {
-      provide: DYNAMIC_DIALOG_INSTANCE,
-      useExisting: _DynamicDialog
-    }, {
-      provide: PARENT_INSTANCE,
-      useExisting: _DynamicDialog
-    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
-    decls: 9,
-    vars: 42,
-    consts: [["header", ""], ["content", ""], ["footer", ""], ["closeicon", ""], ["maximizeicon", ""], ["minimizeicon", ""], ["hostName", "DynamicDialog", 3, "visibleChange", "onHide", "onMaximize", "onResizeInit", "onResizeEnd", "onDragEnd", "visible", "header", "draggable", "resizable", "contentStyle", "modal", "closeOnEscape", "dismissableMask", "rtl", "closable", "breakpoints", "styleClass", "maskStyleClass", "showHeader", "autoZIndex", "baseZIndex", "minX", "minY", "focusOnShow", "maximizable", "keepInViewport", "focusTrap", "transitionOptions", "closeAriaLabel", "minimizeIcon", "maximizeIcon", "closeButtonProps", "maximizeButtonProps", "position", "pt"], [4, "ngIf"], [4, "ngComponentOutlet"], ["pDynamicDialogContent", ""]],
-    template: function DynamicDialog_Template(rf, ctx) {
+    features: [ɵɵProvidersFeature([DynamicDialogStyle]), ɵɵInheritDefinitionFeature],
+    decls: 3,
+    vars: 9,
+    consts: [["mask", ""], ["container", ""], ["content", ""], ["titlebar", ""], ["icon", ""], ["footer", ""], [3, "ngStyle", "ngClass"], ["role", "dialog", "pFocusTrap", "", 3, "ngClass", "ngStyle", "style", "class", "pFocusTrapDisabled", "width", "height", 4, "ngIf"], ["role", "dialog", "pFocusTrap", "", 3, "ngClass", "ngStyle", "pFocusTrapDisabled"], ["style", "z-index: 90;", 3, "ngClass", "mousedown", 4, "ngIf"], [3, "ngClass", "mousedown", 4, "ngIf"], [3, "ngClass", "ngStyle"], [4, "ngIf"], [4, "ngComponentOutlet"], [3, "ngClass", 4, "ngIf"], [2, "z-index", "90", 3, "mousedown", "ngClass"], [3, "mousedown", "ngClass"], [3, "ngClass", "id"], [3, "ngClass"], ["rounded", "", "text", "", 3, "styleClass", "tabindex", "onClick", "keydown.enter", 4, "ngIf"], ["rounded", "", "text", "", "severity", "secondary", 3, "styleClass", "ariaLabel", "onClick", "keydown.enter", 4, "ngIf"], ["rounded", "", "text", "", 3, "onClick", "keydown.enter", "styleClass", "tabindex"], ["data-p-icon", "window-maximize", 4, "ngIf"], [4, "ngTemplateOutlet"], ["data-p-icon", "window-maximize"], ["data-p-icon", "window-minimize", 4, "ngIf"], ["data-p-icon", "window-minimize"], ["rounded", "", "text", "", "severity", "secondary", 3, "onClick", "keydown.enter", "styleClass", "ariaLabel"], ["data-p-icon", "times", 4, "ngIf"], ["data-p-icon", "times"], ["pDynamicDialogContent", ""]],
+    template: function DynamicDialogComponent_Template(rf, ctx) {
       if (rf & 1) {
-        ɵɵelementStart(0, "p-dialog", 6);
-        ɵɵtwoWayListener("visibleChange", function DynamicDialog_Template_p_dialog_visibleChange_0_listener($event) {
-          ɵɵtwoWayBindingSet(ctx.visible, $event) || (ctx.visible = $event);
-          return $event;
-        });
-        ɵɵlistener("onHide", function DynamicDialog_Template_p_dialog_onHide_0_listener($event) {
-          return ctx.onDialogHide($event);
-        })("onMaximize", function DynamicDialog_Template_p_dialog_onMaximize_0_listener($event) {
-          return ctx.onDialogMaximize($event);
-        })("onResizeInit", function DynamicDialog_Template_p_dialog_onResizeInit_0_listener($event) {
-          return ctx.onDialogResizeInit($event);
-        })("onResizeEnd", function DynamicDialog_Template_p_dialog_onResizeEnd_0_listener($event) {
-          return ctx.onDialogResizeEnd($event);
-        })("onDragEnd", function DynamicDialog_Template_p_dialog_onDragEnd_0_listener($event) {
-          return ctx.onDialogDragEnd($event);
-        });
-        ɵɵtemplate(1, DynamicDialog_1_Template, 2, 0, null, 7)(2, DynamicDialog_2_Template, 2, 0, null, 7)(3, DynamicDialog_3_Template, 2, 0, null, 7)(4, DynamicDialog_4_Template, 2, 0, null, 7)(5, DynamicDialog_5_Template, 2, 0, null, 7)(6, DynamicDialog_6_Template, 2, 0, null, 7)(7, DynamicDialog_7_Template, 1, 0, null, 7)(8, DynamicDialog_div_8_Template, 2, 1, "div", 7);
+        ɵɵelementStart(0, "div", 6, 0);
+        ɵɵtemplate(2, DynamicDialogComponent_div_2_Template, 9, 30, "div", 7);
         ɵɵelementEnd();
       }
       if (rf & 2) {
-        ɵɵstyleMap(ctx.dialogStyle);
-        ɵɵtwoWayProperty("visible", ctx.visible);
-        ɵɵproperty("header", ctx.ddconfig == null ? null : ctx.ddconfig.header)("draggable", (ctx.ddconfig == null ? null : ctx.ddconfig.draggable) !== false)("resizable", (ctx.ddconfig == null ? null : ctx.ddconfig.resizable) !== false)("contentStyle", ctx.ddconfig == null ? null : ctx.ddconfig.contentStyle)("modal", (ctx.ddconfig == null ? null : ctx.ddconfig.modal) !== false)("closeOnEscape", (ctx.ddconfig == null ? null : ctx.ddconfig.closeOnEscape) !== false)("dismissableMask", ctx.ddconfig == null ? null : ctx.ddconfig.dismissableMask)("rtl", ctx.ddconfig == null ? null : ctx.ddconfig.rtl)("closable", ctx.closable)("breakpoints", ctx.breakpoints)("styleClass", ctx.ddconfig == null ? null : ctx.ddconfig.styleClass)("maskStyleClass", ctx.ddconfig == null ? null : ctx.ddconfig.maskStyleClass)("showHeader", (ctx.ddconfig == null ? null : ctx.ddconfig.showHeader) !== false)("autoZIndex", (ctx.ddconfig == null ? null : ctx.ddconfig.autoZIndex) !== false)("baseZIndex", (ctx.ddconfig == null ? null : ctx.ddconfig.baseZIndex) || 0)("minX", ctx.minX)("minY", ctx.minY)("focusOnShow", (ctx.ddconfig == null ? null : ctx.ddconfig.focusOnShow) !== false)("maximizable", ctx.maximizable)("keepInViewport", ctx.keepInViewport)("focusTrap", (ctx.ddconfig == null ? null : ctx.ddconfig.focusTrap) !== false)("transitionOptions", (ctx.ddconfig == null ? null : ctx.ddconfig.transitionOptions) || "150ms cubic-bezier(0, 0, 0.2, 1)")("closeAriaLabel", (ctx.ddconfig == null ? null : ctx.ddconfig.closeAriaLabel) || ctx.defaultCloseAriaLabel)("minimizeIcon", ctx.minimizeIcon)("maximizeIcon", ctx.maximizeIcon)("closeButtonProps", ɵɵpureFunction0(40, _c0))("maximizeButtonProps", ɵɵpureFunction0(41, _c0))("position", ctx.position)("pt", ctx.ptm("pcDialog"));
-        ɵɵadvance();
-        ɵɵproperty("ngIf", ctx.headerTemplate);
-        ɵɵadvance();
-        ɵɵproperty("ngIf", ctx.contentTemplate);
-        ɵɵadvance();
-        ɵɵproperty("ngIf", ctx.footerTemplate);
-        ɵɵadvance();
-        ɵɵproperty("ngIf", ctx.closeIconTemplate);
-        ɵɵadvance();
-        ɵɵproperty("ngIf", ctx.maximizeIconTemplate);
-        ɵɵadvance();
-        ɵɵproperty("ngIf", ctx.minimizeIconTemplate);
-        ɵɵadvance();
-        ɵɵproperty("ngIf", !ctx.contentTemplate);
-        ɵɵadvance();
-        ɵɵproperty("ngIf", ctx.ddconfig.footer && !ctx.footerTemplate);
+        ɵɵclassMap(ctx.ddconfig.maskStyleClass);
+        ɵɵproperty("ngStyle", ɵɵpureFunction3(5, _c4, ctx.position === "left" || ctx.position === "topleft" || ctx.position === "bottomleft" ? "flex-start" : ctx.position === "right" || ctx.position === "topright" || ctx.position === "bottomright" ? "flex-end" : "center", ctx.position === "top" || ctx.position === "topleft" || ctx.position === "topright" ? "flex-start" : ctx.position === "bottom" || ctx.position === "bottomleft" || ctx.position === "bottomright" ? "flex-end" : "center", ctx.ddconfig.modal ? "auto" : "none"))("ngClass", ctx.maskClass);
+        ɵɵadvance(2);
+        ɵɵproperty("ngIf", ctx.visible);
       }
     },
-    dependencies: [CommonModule, NgComponentOutlet, NgIf, SharedModule, DynamicDialogContent, Dialog, BindModule],
-    encapsulation: 2
+    dependencies: [CommonModule, NgClass, NgComponentOutlet, NgIf, NgTemplateOutlet, NgStyle, SharedModule, DynamicDialogContent, WindowMaximizeIcon, WindowMinimizeIcon, TimesIcon, Button, FocusTrap],
+    encapsulation: 2,
+    data: {
+      animation: [trigger("animation", [transition("void => visible", [useAnimation(showAnimation)]), transition("visible => void", [useAnimation(hideAnimation)])])]
+    }
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(DynamicDialog, [{
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(DynamicDialogComponent, [{
     type: Component,
     args: [{
       selector: "p-dynamicDialog, p-dynamicdialog, p-dynamic-dialog",
       standalone: true,
-      imports: [CommonModule, SharedModule, DynamicDialogContent, Dialog, BindModule],
+      imports: [CommonModule, SharedModule, DynamicDialogContent, WindowMaximizeIcon, WindowMinimizeIcon, TimesIcon, Button, FocusTrap],
       template: `
-        <p-dialog
-            [(visible)]="visible"
-            [header]="ddconfig?.header"
-            [draggable]="ddconfig?.draggable !== false"
-            [resizable]="ddconfig?.resizable !== false"
-            [contentStyle]="ddconfig?.contentStyle"
-            [modal]="ddconfig?.modal !== false"
-            [closeOnEscape]="ddconfig?.closeOnEscape !== false"
-            [dismissableMask]="ddconfig?.dismissableMask"
-            [rtl]="ddconfig?.rtl"
-            [closable]="closable"
-            [breakpoints]="breakpoints"
-            [styleClass]="ddconfig?.styleClass"
-            [maskStyleClass]="ddconfig?.maskStyleClass"
-            [showHeader]="ddconfig?.showHeader !== false"
-            [autoZIndex]="ddconfig?.autoZIndex !== false"
-            [baseZIndex]="ddconfig?.baseZIndex || 0"
-            [minX]="minX"
-            [minY]="minY"
-            [focusOnShow]="ddconfig?.focusOnShow !== false"
-            [maximizable]="maximizable"
-            [keepInViewport]="keepInViewport"
-            [focusTrap]="ddconfig?.focusTrap !== false"
-            [transitionOptions]="ddconfig?.transitionOptions || '150ms cubic-bezier(0, 0, 0.2, 1)'"
-            [closeAriaLabel]="ddconfig?.closeAriaLabel || defaultCloseAriaLabel"
-            [minimizeIcon]="minimizeIcon"
-            [maximizeIcon]="maximizeIcon"
-            [closeButtonProps]="{ severity: 'secondary', variant: 'text', rounded: true }"
-            [maximizeButtonProps]="{ severity: 'secondary', variant: 'text', rounded: true }"
-            [style]="dialogStyle"
-            [position]="position"
-            (onHide)="onDialogHide($event)"
-            (onMaximize)="onDialogMaximize($event)"
-            (onResizeInit)="onDialogResizeInit($event)"
-            (onResizeEnd)="onDialogResizeEnd($event)"
-            (onDragEnd)="onDialogDragEnd($event)"
-            [pt]="ptm('pcDialog')"
-            hostName="DynamicDialog"
+        <div
+            #mask
+            [ngStyle]="{
+                position: 'fixed',
+                height: '100%',
+                width: '100%',
+                left: 0,
+                top: 0,
+                display: 'flex',
+                'justify-content': position === 'left' || position === 'topleft' || position === 'bottomleft' ? 'flex-start' : position === 'right' || position === 'topright' || position === 'bottomright' ? 'flex-end' : 'center',
+                'align-items': position === 'top' || position === 'topleft' || position === 'topright' ? 'flex-start' : position === 'bottom' || position === 'bottomleft' || position === 'bottomright' ? 'flex-end' : 'center',
+                'pointer-events': ddconfig.modal ? 'auto' : 'none'
+            }"
+            [class]="ddconfig.maskStyleClass"
+            [ngClass]="maskClass"
         >
-            <ng-template #header *ngIf="headerTemplate">
-                <ng-container *ngComponentOutlet="headerTemplate"></ng-container>
-            </ng-template>
-            <ng-template #content *ngIf="contentTemplate">
-                <ng-container *ngComponentOutlet="contentTemplate"></ng-container>
-            </ng-template>
-            <ng-template #footer *ngIf="footerTemplate">
-                <ng-container *ngComponentOutlet="footerTemplate"></ng-container>
-            </ng-template>
-            <ng-template #closeicon *ngIf="closeIconTemplate">
-                <ng-container *ngComponentOutlet="closeIconTemplate"></ng-container>
-            </ng-template>
-            <ng-template #maximizeicon *ngIf="maximizeIconTemplate">
-                <ng-container *ngComponentOutlet="maximizeIconTemplate"></ng-container>
-            </ng-template>
-            <ng-template #minimizeicon *ngIf="minimizeIconTemplate">
-                <ng-container *ngComponentOutlet="minimizeIconTemplate"></ng-container>
-            </ng-template>
-
-            <ng-template pDynamicDialogContent *ngIf="!contentTemplate"></ng-template>
-            <div *ngIf="ddconfig.footer && !footerTemplate">{{ ddconfig.footer }}</div>
-        </p-dialog>
+            <div
+                *ngIf="visible"
+                #container
+                [ngClass]="{ 'p-dialog p-component': true, 'p-dialog-maximized': maximizable && maximized }"
+                [ngStyle]="{ display: 'flex', 'flex-direction': 'column', 'pointer-events': 'auto' }"
+                [style]="ddconfig.style"
+                [class]="ddconfig.styleClass"
+                [@animation]="{
+                    value: 'visible',
+                    params: {
+                        transform: transformOptions,
+                        transition: ddconfig.transitionOptions || '150ms cubic-bezier(0, 0, 0.2, 1)'
+                    }
+                }"
+                (@animation.start)="onAnimationStart($event)"
+                (@animation.done)="onAnimationEnd($event)"
+                role="dialog"
+                pFocusTrap
+                [pFocusTrapDisabled]="ddconfig.focusTrap === false"
+                [style.width]="ddconfig.width"
+                [style.height]="ddconfig.height"
+                [attr.aria-labelledby]="ariaLabelledBy"
+                [attr.aria-modal]="true"
+                [attr.id]="dialogId"
+            >
+                <div *ngIf="ddconfig.resizable" [ngClass]="'p-resizable-handle'" style="z-index: 90;" (mousedown)="initResize($event)"></div>
+                <div #titlebar [ngClass]="'p-dialog-header'" (mousedown)="initDrag($event)" *ngIf="ddconfig.showHeader !== false">
+                    <ng-container *ngComponentOutlet="headerTemplate"></ng-container>
+                    <ng-container *ngIf="!headerTemplate">
+                        <span [ngClass]="'p-dialog-title'" [id]="ariaLabelledBy">{{ ddconfig.header }}</span>
+                        <div [ngClass]="'p-dialog-header-actions'">
+                            <p-button *ngIf="ddconfig.maximizable" [styleClass]="'p-dialog-maximize-button'" (onClick)="maximize()" (keydown.enter)="maximize()" rounded text [tabindex]="maximizable ? '0' : '-1'">
+                                <ng-template #icon>
+                                    <ng-container *ngIf="!maximized">
+                                        <svg data-p-icon="window-maximize" *ngIf="!maximizeIconTemplate" />
+                                        <ng-template *ngTemplateOutlet="maximizeIconTemplate"></ng-template>
+                                    </ng-container>
+                                    <ng-container *ngIf="maximized">
+                                        <svg data-p-icon="window-minimize" *ngIf="!minimizeIconTemplate" />
+                                        <ng-template *ngTemplateOutlet="minimizeIconTemplate"></ng-template>
+                                    </ng-container>
+                                </ng-template>
+                            </p-button>
+                            <p-button *ngIf="closable" [styleClass]="'p-dialog-close-button'" [ariaLabel]="ddconfig.closeAriaLabel || defaultCloseAriaLabel" (onClick)="hide()" (keydown.enter)="hide()" rounded text severity="secondary">
+                                <ng-template #icon>
+                                    <svg *ngIf="!closeIconTemplate" data-p-icon="times" />
+                                    <ng-template *ngTemplateOutlet="closeIconTemplate"></ng-template>
+                                </ng-template>
+                            </p-button>
+                        </div>
+                    </ng-container>
+                </div>
+                <div #content [ngClass]="'p-dialog-content'" [ngStyle]="ddconfig.contentStyle">
+                    <ng-template pDynamicDialogContent *ngIf="!contentTemplate"></ng-template>
+                    <ng-container *ngComponentOutlet="contentTemplate"></ng-container>
+                </div>
+                <div #footer [ngClass]="'p-dialog-footer'" *ngIf="ddconfig.footer || footerTemplate">
+                    <ng-container *ngIf="!footerTemplate">
+                        {{ ddconfig.footer }}
+                    </ng-container>
+                    <ng-container *ngComponentOutlet="footerTemplate"></ng-container>
+                </div>
+            </div>
+        </div>
     `,
+      animations: [trigger("animation", [transition("void => visible", [useAnimation(showAnimation)]), transition("visible => void", [useAnimation(hideAnimation)])])],
       changeDetection: ChangeDetectionStrategy.Default,
       encapsulation: ViewEncapsulation.None,
-      providers: [DynamicDialogStyle, {
-        provide: DYNAMIC_DIALOG_INSTANCE,
-        useExisting: DynamicDialog
-      }, {
-        provide: PARENT_INSTANCE,
-        useExisting: DynamicDialog
-      }],
-      hostDirectives: [Bind]
+      providers: [DynamicDialogStyle]
     }]
   }], () => [{
+    type: Renderer2
+  }, {
     type: DynamicDialogConfig
   }, {
     type: DynamicDialogRef
+  }, {
+    type: NgZone
+  }, {
+    type: DynamicDialogComponent,
+    decorators: [{
+      type: SkipSelf
+    }, {
+      type: Optional
+    }]
   }], {
     insertionPoint: [{
       type: ViewChild,
       args: [DynamicDialogContent]
     }],
-    dialog: [{
+    maskViewChild: [{
       type: ViewChild,
-      args: [Dialog]
+      args: ["mask"]
+    }],
+    contentViewChild: [{
+      type: ViewChild,
+      args: ["content"]
+    }],
+    footerViewChild: [{
+      type: ViewChild,
+      args: ["footer"]
+    }],
+    headerViewChild: [{
+      type: ViewChild,
+      args: ["titlebar"]
     }]
   });
 })();
@@ -1149,19 +1508,19 @@ var DynamicDialogModule = class _DynamicDialogModule {
   };
   static ɵmod = ɵɵdefineNgModule({
     type: _DynamicDialogModule,
-    imports: [DynamicDialog, SharedModule],
-    exports: [DynamicDialog, SharedModule]
+    imports: [DynamicDialogComponent, SharedModule],
+    exports: [DynamicDialogComponent, SharedModule]
   });
   static ɵinj = ɵɵdefineInjector({
-    imports: [DynamicDialog, SharedModule, SharedModule]
+    imports: [DynamicDialogComponent, SharedModule, SharedModule]
   });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(DynamicDialogModule, [{
     type: NgModule,
     args: [{
-      imports: [DynamicDialog, SharedModule],
-      exports: [DynamicDialog, SharedModule]
+      imports: [DynamicDialogComponent, SharedModule],
+      exports: [DynamicDialogComponent, SharedModule]
     }]
   }], null, null);
 })();
@@ -1200,20 +1559,17 @@ var DialogService = class _DialogService {
       return null;
     }
     const dialogRef = this.appendDialogComponentToBody(config, componentType);
-    const componentRefInstance = this.dialogComponentRefMap.get(dialogRef);
-    if (componentRefInstance) {
-      componentRefInstance.instance.childComponentType = componentType;
-      componentRefInstance.instance.inputValues = config.inputValues || {};
-    }
+    this.dialogComponentRefMap.get(dialogRef).instance.childComponentType = componentType;
+    this.dialogComponentRefMap.get(dialogRef).instance.inputValues = config.inputValues;
     return dialogRef;
   }
   /**
    * Returns the dynamic dialog component instance.
-   * @param {DynamicDialogRef} ref - DynamicDialog instance.
+   * @param {ref} DynamicDialogRef - DynamicDialog instance.
    * @group Method
    */
   getInstance(ref) {
-    return this.dialogComponentRefMap.get(ref)?.instance;
+    return this.dialogComponentRefMap.get(ref).instance;
   }
   appendDialogComponentToBody(config, componentType) {
     const map = /* @__PURE__ */ new WeakMap();
@@ -1221,14 +1577,14 @@ var DialogService = class _DialogService {
     const dialogRef = new DynamicDialogRef();
     map.set(DynamicDialogRef, dialogRef);
     const sub = dialogRef.onClose.subscribe(() => {
-      this.dialogComponentRefMap.get(dialogRef)?.instance.close();
+      this.dialogComponentRefMap.get(dialogRef).instance.close();
     });
     const destroySub = dialogRef.onDestroy.subscribe(() => {
       this.removeDialogComponentFromBody(dialogRef);
       destroySub.unsubscribe();
       sub.unsubscribe();
     });
-    const componentRef = createComponent(DynamicDialog, {
+    const componentRef = createComponent(DynamicDialogComponent, {
       environmentInjector: this.appRef.injector,
       elementInjector: new DynamicDialogInjector(this.injector, map)
     });
@@ -1247,11 +1603,9 @@ var DialogService = class _DialogService {
       return;
     }
     const dialogComponentRef = this.dialogComponentRefMap.get(dialogRef);
-    if (dialogComponentRef) {
-      this.appRef.detachView(dialogComponentRef.hostView);
-      dialogComponentRef.destroy();
-      dialogComponentRef.changeDetectorRef.detectChanges();
-    }
+    this.appRef.detachView(dialogComponentRef.hostView);
+    dialogComponentRef.destroy();
+    dialogComponentRef.changeDetectorRef.detectChanges();
     this.dialogComponentRefMap.delete(dialogRef);
   }
   duplicationPermission(componentType, config) {
@@ -1292,8 +1646,8 @@ var DialogService = class _DialogService {
 })();
 export {
   DialogService,
-  DynamicDialog,
   DynamicDialogClasses,
+  DynamicDialogComponent,
   DynamicDialogConfig,
   DynamicDialogInjector,
   DynamicDialogModule,

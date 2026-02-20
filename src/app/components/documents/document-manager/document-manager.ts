@@ -360,10 +360,23 @@ export class DocumentManagerComponent implements OnInit, AfterViewInit {
         this.downloadingKeys.add(file.key);
         this.documentService.getDownloadUrl(file.key).subscribe({
             next: (url) => {
-                window.open(url, '_blank');
-                this.downloadingKeys.delete(file.key);
+                fetch(url)
+                    .then((res) => res.blob())
+                    .then((blob) => {
+                        const objectUrl = URL.createObjectURL(blob);
+                        const anchor = document.createElement('a');
+                        anchor.href = objectUrl;
+                        anchor.download = this.getDisplayName(file.fileName);
+                        anchor.click();
+                        URL.revokeObjectURL(objectUrl);
+                        this.downloadingKeys.delete(file.key);
+                    })
+                    .catch(() => {
+                        this.downloadingKeys.delete(file.key);
+                        this.helpers.notifyError('Download Failed', 'Failed to download file');
+                    });
             },
-            error: (err) => {
+            error: () => {
                 this.downloadingKeys.delete(file.key);
                 this.helpers.notifyError('Download Failed', 'Failed to generate download link');
             }

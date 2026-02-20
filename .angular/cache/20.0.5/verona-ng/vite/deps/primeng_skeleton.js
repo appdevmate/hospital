@@ -1,18 +1,12 @@
 import {
-  Bind
-} from "./chunk-MLQGRGGO.js";
-import {
-  BaseComponent,
-  PARENT_INSTANCE
-} from "./chunk-YNJ5GKCH.js";
+  BaseComponent
+} from "./chunk-4YMQ5OOY.js";
 import {
   BaseStyle
-} from "./chunk-4ATYD752.js";
+} from "./chunk-L2L2T6ID.js";
 import {
   SharedModule
-} from "./chunk-LMEEH3AJ.js";
-import "./chunk-GOP36Q47.js";
-import "./chunk-UCHM6OXG.js";
+} from "./chunk-ZKOTJBQ6.js";
 import {
   CommonModule
 } from "./chunk-FHZAWWEY.js";
@@ -25,7 +19,6 @@ import {
   NgModule,
   ViewEncapsulation,
   setClassMetadata,
-  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵattribute,
@@ -36,7 +29,6 @@ import {
   ɵɵstyleMap
 } from "./chunk-EIF6IUR4.js";
 import {
-  InjectionToken,
   inject,
   ɵɵdefineInjectable,
   ɵɵdefineInjector
@@ -44,6 +36,8 @@ import {
 import "./chunk-YVXMBCE5.js";
 import "./chunk-G6ECYYJH.js";
 import "./chunk-RTGP7ALM.js";
+import "./chunk-BMDSN43F.js";
+import "./chunk-RK2DVQNP.js";
 import {
   __spreadProps,
   __spreadValues
@@ -68,7 +62,7 @@ var classes = {
 };
 var SkeletonStyle = class _SkeletonStyle extends BaseStyle {
   name = "skeleton";
-  style = style;
+  theme = style;
   classes = classes;
   inlineStyles = inlineStyles;
   static ɵfac = /* @__PURE__ */ (() => {
@@ -91,18 +85,7 @@ var SkeletonClasses;
 (function(SkeletonClasses2) {
   SkeletonClasses2["root"] = "p-skeleton";
 })(SkeletonClasses || (SkeletonClasses = {}));
-var SKELETON_INSTANCE = new InjectionToken("SKELETON_INSTANCE");
 var Skeleton = class _Skeleton extends BaseComponent {
-  $pcSkeleton = inject(SKELETON_INSTANCE, {
-    optional: true,
-    skipSelf: true
-  }) ?? void 0;
-  bindDirectiveInstance = inject(Bind, {
-    self: true
-  });
-  onAfterViewChecked() {
-    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
-  }
   /**
    * Class of the element.
    * @deprecated since v20.0.0, use `class` instead.
@@ -164,10 +147,10 @@ var Skeleton = class _Skeleton extends BaseComponent {
   static ɵcmp = ɵɵdefineComponent({
     type: _Skeleton,
     selectors: [["p-skeleton"]],
-    hostVars: 5,
+    hostVars: 7,
     hostBindings: function Skeleton_HostBindings(rf, ctx) {
       if (rf & 2) {
-        ɵɵattribute("aria-hidden", true);
+        ɵɵattribute("aria-hidden", true)("data-pc-name", "skeleton")("data-pc-section", "root");
         ɵɵstyleMap(ctx.containerStyle);
         ɵɵclassMap(ctx.cn(ctx.cx("root"), ctx.styleClass));
       }
@@ -181,13 +164,7 @@ var Skeleton = class _Skeleton extends BaseComponent {
       width: "width",
       height: "height"
     },
-    features: [ɵɵProvidersFeature([SkeletonStyle, {
-      provide: SKELETON_INSTANCE,
-      useExisting: _Skeleton
-    }, {
-      provide: PARENT_INSTANCE,
-      useExisting: _Skeleton
-    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([SkeletonStyle]), ɵɵInheritDefinitionFeature],
     decls: 0,
     vars: 0,
     template: function Skeleton_Template(rf, ctx) {
@@ -207,19 +184,14 @@ var Skeleton = class _Skeleton extends BaseComponent {
       template: ``,
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
-      providers: [SkeletonStyle, {
-        provide: SKELETON_INSTANCE,
-        useExisting: Skeleton
-      }, {
-        provide: PARENT_INSTANCE,
-        useExisting: Skeleton
-      }],
+      providers: [SkeletonStyle],
       host: {
         "[attr.aria-hidden]": "true",
+        "[attr.data-pc-name]": "'skeleton'",
+        "[attr.data-pc-section]": "'root'",
         "[class]": "cn(cx('root'), styleClass)",
         "[style]": "containerStyle"
-      },
-      hostDirectives: [Bind]
+      }
     }]
   }], null, {
     styleClass: [{

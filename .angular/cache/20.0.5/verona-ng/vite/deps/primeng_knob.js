@@ -1,27 +1,17 @@
 import {
   BaseEditableHolder
-} from "./chunk-343RM6UZ.js";
-import "./chunk-2R7VQYSP.js";
-import {
-  Bind,
-  BindModule
-} from "./chunk-MLQGRGGO.js";
-import {
-  PARENT_INSTANCE
-} from "./chunk-YNJ5GKCH.js";
-import {
-  BaseStyle
-} from "./chunk-4ATYD752.js";
-import {
-  SharedModule
-} from "./chunk-LMEEH3AJ.js";
+} from "./chunk-67V7CIUT.js";
+import "./chunk-5OCKW6BF.js";
 import {
   NG_VALUE_ACCESSOR
 } from "./chunk-RZEKJVYA.js";
+import "./chunk-4YMQ5OOY.js";
 import {
-  rr
-} from "./chunk-GOP36Q47.js";
-import "./chunk-UCHM6OXG.js";
+  BaseStyle
+} from "./chunk-L2L2T6ID.js";
+import {
+  SharedModule
+} from "./chunk-ZKOTJBQ6.js";
 import {
   CommonModule,
   NgIf
@@ -39,7 +29,6 @@ import {
   booleanAttribute,
   numberAttribute,
   setClassMetadata,
-  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -60,7 +49,6 @@ import {
   ɵɵtextInterpolate1
 } from "./chunk-EIF6IUR4.js";
 import {
-  InjectionToken,
   forwardRef,
   inject,
   ɵɵdefineInjectable,
@@ -70,6 +58,10 @@ import {
 import "./chunk-YVXMBCE5.js";
 import "./chunk-G6ECYYJH.js";
 import "./chunk-RTGP7ALM.js";
+import {
+  tr
+} from "./chunk-BMDSN43F.js";
+import "./chunk-RK2DVQNP.js";
 import "./chunk-4MWRP73S.js";
 
 // node_modules/@primeuix/styles/dist/knob/index.mjs
@@ -79,14 +71,13 @@ var style = "\n    .p-knob-range {\n        fill: none;\n        transition: str
 function Knob__svg_text_3_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelementStart(0, "text", 3);
+    ɵɵelementStart(0, "text", 2);
     ɵɵtext(1);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext();
     ɵɵclassMap(ctx_r0.cx("text"));
-    ɵɵproperty("pBind", ctx_r0.ptm("text"));
     ɵɵattribute("x", 50)("y", 57)("fill", ctx_r0.textColor)("name", ctx_r0.name());
     ɵɵadvance();
     ɵɵtextInterpolate1(" ", ctx_r0.valueToDisplay(), " ");
@@ -104,7 +95,7 @@ var classes = {
 };
 var KnobStyle = class _KnobStyle extends BaseStyle {
   name = "knob";
-  style = style;
+  theme = style;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵKnobStyle_BaseFactory;
@@ -129,23 +120,12 @@ var KnobClasses;
   KnobClasses2["value"] = "p-knob-value";
   KnobClasses2["text"] = "p-knob-text";
 })(KnobClasses || (KnobClasses = {}));
-var KNOB_INSTANCE = new InjectionToken("KNOB_INSTANCE");
 var KNOB_VALUE_ACCESSOR = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => Knob),
   multi: true
 };
 var Knob = class _Knob extends BaseEditableHolder {
-  $pcKnob = inject(KNOB_INSTANCE, {
-    optional: true,
-    skipSelf: true
-  }) ?? void 0;
-  bindDirectiveInstance = inject(Bind, {
-    self: true
-  });
-  onAfterViewChecked() {
-    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
-  }
   /**
    * Style class of the component.
    * @deprecated since v20.0.0, use `class` instead.
@@ -171,17 +151,17 @@ var Knob = class _Knob extends BaseEditableHolder {
    * Background of the value.
    * @group Props
    */
-  valueColor = rr("knob.value.background").variable;
+  valueColor = tr("knob.value.background").variable;
   /**
    * Background color of the range.
    * @group Props
    */
-  rangeColor = rr("knob.range.background").variable;
+  rangeColor = tr("knob.range.background").variable;
   /**
    * Color of the value text.
    * @group Props
    */
-  textColor = rr("knob.text.color").variable;
+  textColor = tr("knob.text.color").variable;
   /**
    * Template string of the value.
    * @group Props
@@ -439,9 +419,10 @@ var Knob = class _Knob extends BaseEditableHolder {
   static ɵcmp = ɵɵdefineComponent({
     type: _Knob,
     selectors: [["p-knob"]],
-    hostVars: 2,
+    hostVars: 4,
     hostBindings: function Knob_HostBindings(rf, ctx) {
       if (rf & 2) {
+        ɵɵattribute("data-pc-name", "knob")("data-pc-section", "root");
         ɵɵclassMap(ctx.cn(ctx.cx("root"), ctx.styleClass));
       }
     },
@@ -465,16 +446,10 @@ var Knob = class _Knob extends BaseEditableHolder {
     outputs: {
       onChange: "onChange"
     },
-    features: [ɵɵProvidersFeature([KNOB_VALUE_ACCESSOR, KnobStyle, {
-      provide: KNOB_INSTANCE,
-      useExisting: _Knob
-    }, {
-      provide: PARENT_INSTANCE,
-      useExisting: _Knob
-    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([KNOB_VALUE_ACCESSOR, KnobStyle]), ɵɵInheritDefinitionFeature],
     decls: 4,
-    vars: 25,
-    consts: [["viewBox", "0 0 100 100", "role", "slider", 3, "click", "keydown", "mousedown", "mouseup", "touchstart", "touchend", "pBind"], [3, "pBind"], ["text-anchor", "middle", 3, "class", "pBind", 4, "ngIf"], ["text-anchor", "middle", 3, "pBind"]],
+    vars: 23,
+    consts: [["viewBox", "0 0 100 100", "role", "slider", 3, "click", "keydown", "mousedown", "mouseup", "touchstart", "touchend"], ["text-anchor", "middle", 3, "class", 4, "ngIf"], ["text-anchor", "middle"]],
     template: function Knob_Template(rf, ctx) {
       if (rf & 1) {
         ɵɵnamespaceSVG();
@@ -492,27 +467,24 @@ var Knob = class _Knob extends BaseEditableHolder {
         })("touchend", function Knob_Template_svg_touchend_0_listener($event) {
           return ctx.onTouchEnd($event);
         });
-        ɵɵelement(1, "path", 1)(2, "path", 1);
-        ɵɵtemplate(3, Knob__svg_text_3_Template, 2, 8, "text", 2);
+        ɵɵelement(1, "path")(2, "path");
+        ɵɵtemplate(3, Knob__svg_text_3_Template, 2, 7, "text", 1);
         ɵɵelementEnd();
       }
       if (rf & 2) {
         ɵɵstyleProp("width", ctx.size + "px")("height", ctx.size + "px");
-        ɵɵproperty("pBind", ctx.ptm("svg"));
-        ɵɵattribute("aria-valuemin", ctx.min)("aria-valuemax", ctx.max)("required", ctx.required() ? "" : void 0)("aria-valuenow", ctx._value)("aria-labelledby", ctx.ariaLabelledBy)("aria-label", ctx.ariaLabel)("tabindex", ctx.readonly || ctx.$disabled() ? -1 : ctx.tabindex);
+        ɵɵattribute("aria-valuemin", ctx.min)("aria-valuemax", ctx.max)("required", ctx.required() ? "" : void 0)("aria-valuenow", ctx._value)("aria-labelledby", ctx.ariaLabelledBy)("aria-label", ctx.ariaLabel)("tabindex", ctx.readonly || ctx.$disabled() ? -1 : ctx.tabindex)("data-pc-section", "svg");
         ɵɵadvance();
         ɵɵclassMap(ctx.cx("range"));
-        ɵɵproperty("pBind", ctx.ptm("range"));
         ɵɵattribute("d", ctx.rangePath())("stroke-width", ctx.strokeWidth)("stroke", ctx.rangeColor);
         ɵɵadvance();
         ɵɵclassMap(ctx.cx("value"));
-        ɵɵproperty("pBind", ctx.ptm("value"));
         ɵɵattribute("d", ctx.valuePath())("stroke-width", ctx.strokeWidth)("stroke", ctx.valueColor);
         ɵɵadvance();
         ɵɵproperty("ngIf", ctx.showValue);
       }
     },
-    dependencies: [CommonModule, NgIf, SharedModule, BindModule, Bind],
+    dependencies: [CommonModule, NgIf, SharedModule],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -523,7 +495,7 @@ var Knob = class _Knob extends BaseEditableHolder {
     args: [{
       selector: "p-knob",
       standalone: true,
-      imports: [CommonModule, SharedModule, BindModule],
+      imports: [CommonModule, SharedModule],
       template: `
         <svg
             viewBox="0 0 100 100"
@@ -543,28 +515,23 @@ var Knob = class _Knob extends BaseEditableHolder {
             [attr.aria-labelledby]="ariaLabelledBy"
             [attr.aria-label]="ariaLabel"
             [attr.tabindex]="readonly || $disabled() ? -1 : tabindex"
-            [pBind]="ptm('svg')"
+            [attr.data-pc-section]="'svg'"
         >
-            <path [attr.d]="rangePath()" [attr.stroke-width]="strokeWidth" [attr.stroke]="rangeColor" [class]="cx('range')" [pBind]="ptm('range')"></path>
-            <path [attr.d]="valuePath()" [attr.stroke-width]="strokeWidth" [attr.stroke]="valueColor" [class]="cx('value')" [pBind]="ptm('value')"></path>
-            <text *ngIf="showValue" [attr.x]="50" [attr.y]="57" text-anchor="middle" [attr.fill]="textColor" [class]="cx('text')" [attr.name]="name()" [pBind]="ptm('text')">
+            <path [attr.d]="rangePath()" [attr.stroke-width]="strokeWidth" [attr.stroke]="rangeColor" [class]="cx('range')"></path>
+            <path [attr.d]="valuePath()" [attr.stroke-width]="strokeWidth" [attr.stroke]="valueColor" [class]="cx('value')"></path>
+            <text *ngIf="showValue" [attr.x]="50" [attr.y]="57" text-anchor="middle" [attr.fill]="textColor" [class]="cx('text')" [attr.name]="name()">
                 {{ valueToDisplay() }}
             </text>
         </svg>
     `,
-      providers: [KNOB_VALUE_ACCESSOR, KnobStyle, {
-        provide: KNOB_INSTANCE,
-        useExisting: Knob
-      }, {
-        provide: PARENT_INSTANCE,
-        useExisting: Knob
-      }],
+      providers: [KNOB_VALUE_ACCESSOR, KnobStyle],
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
       host: {
+        "[attr.data-pc-name]": "'knob'",
+        "[attr.data-pc-section]": "'root'",
         "[class]": "cn(cx('root'), styleClass)"
-      },
-      hostDirectives: [Bind]
+      }
     }]
   }], null, {
     styleClass: [{

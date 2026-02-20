@@ -1,24 +1,15 @@
 import {
-  Bind,
-  BindModule
-} from "./chunk-MLQGRGGO.js";
-import {
-  BaseComponent,
-  PARENT_INSTANCE
-} from "./chunk-YNJ5GKCH.js";
+  BaseComponent
+} from "./chunk-4YMQ5OOY.js";
 import {
   BaseStyle
-} from "./chunk-4ATYD752.js";
+} from "./chunk-L2L2T6ID.js";
 import {
   Footer,
   Header,
   PrimeTemplate,
   SharedModule
-} from "./chunk-LMEEH3AJ.js";
-import "./chunk-GOP36Q47.js";
-import {
-  k
-} from "./chunk-UCHM6OXG.js";
+} from "./chunk-ZKOTJBQ6.js";
 import {
   CommonModule,
   NgIf,
@@ -35,10 +26,10 @@ import {
   NgModule,
   ViewEncapsulation,
   setClassMetadata,
-  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
+  ɵɵattribute,
   ɵɵclassMap,
   ɵɵcontentQuery,
   ɵɵdefineComponent,
@@ -61,7 +52,6 @@ import {
   ɵɵtextInterpolate
 } from "./chunk-EIF6IUR4.js";
 import {
-  InjectionToken,
   inject,
   signal,
   ɵɵdefineInjectable,
@@ -70,6 +60,10 @@ import {
 import "./chunk-YVXMBCE5.js";
 import "./chunk-G6ECYYJH.js";
 import "./chunk-RTGP7ALM.js";
+import "./chunk-BMDSN43F.js";
+import {
+  k
+} from "./chunk-RK2DVQNP.js";
 import "./chunk-4MWRP73S.js";
 
 // node_modules/@primeuix/styles/dist/card/index.mjs
@@ -90,15 +84,14 @@ function Card_div_0_ng_container_2_Template(rf, ctx) {
 }
 function Card_div_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div", 1);
+    ɵɵelementStart(0, "div");
     ɵɵprojection(1, 1);
-    ɵɵtemplate(2, Card_div_0_ng_container_2_Template, 1, 0, "ng-container", 2);
+    ɵɵtemplate(2, Card_div_0_ng_container_2_Template, 1, 0, "ng-container", 1);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext();
     ɵɵclassMap(ctx_r0.cx("header"));
-    ɵɵproperty("pBind", ctx_r0.ptm("header"));
     ɵɵadvance(2);
     ɵɵproperty("ngTemplateOutlet", ctx_r0.headerTemplate || ctx_r0._headerTemplate);
   }
@@ -122,14 +115,13 @@ function Card_div_2_ng_container_2_Template(rf, ctx) {
 }
 function Card_div_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div", 1);
-    ɵɵtemplate(1, Card_div_2_ng_container_1_Template, 2, 1, "ng-container", 3)(2, Card_div_2_ng_container_2_Template, 1, 0, "ng-container", 2);
+    ɵɵelementStart(0, "div");
+    ɵɵtemplate(1, Card_div_2_ng_container_1_Template, 2, 1, "ng-container", 2)(2, Card_div_2_ng_container_2_Template, 1, 0, "ng-container", 1);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext();
     ɵɵclassMap(ctx_r0.cx("title"));
-    ɵɵproperty("pBind", ctx_r0.ptm("title"));
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r0.header && !ctx_r0._titleTemplate && !ctx_r0.titleTemplate);
     ɵɵadvance();
@@ -155,14 +147,13 @@ function Card_div_3_ng_container_2_Template(rf, ctx) {
 }
 function Card_div_3_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div", 1);
-    ɵɵtemplate(1, Card_div_3_ng_container_1_Template, 2, 1, "ng-container", 3)(2, Card_div_3_ng_container_2_Template, 1, 0, "ng-container", 2);
+    ɵɵelementStart(0, "div");
+    ɵɵtemplate(1, Card_div_3_ng_container_1_Template, 2, 1, "ng-container", 2)(2, Card_div_3_ng_container_2_Template, 1, 0, "ng-container", 1);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext();
     ɵɵclassMap(ctx_r0.cx("subtitle"));
-    ɵɵproperty("pBind", ctx_r0.ptm("subtitle"));
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r0.subheader && !ctx_r0._subtitleTemplate && !ctx_r0.subtitleTemplate);
     ɵɵadvance();
@@ -181,20 +172,19 @@ function Card_div_7_ng_container_2_Template(rf, ctx) {
 }
 function Card_div_7_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div", 1);
+    ɵɵelementStart(0, "div");
     ɵɵprojection(1, 2);
-    ɵɵtemplate(2, Card_div_7_ng_container_2_Template, 1, 0, "ng-container", 2);
+    ɵɵtemplate(2, Card_div_7_ng_container_2_Template, 1, 0, "ng-container", 1);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext();
     ɵɵclassMap(ctx_r0.cx("footer"));
-    ɵɵproperty("pBind", ctx_r0.ptm("footer"));
     ɵɵadvance(2);
     ɵɵproperty("ngTemplateOutlet", ctx_r0.footerTemplate || ctx_r0._footerTemplate);
   }
 }
-var style2 = (
+var theme = (
   /*css*/
   `
     ${style}
@@ -216,7 +206,7 @@ var classes = {
 };
 var CardStyle = class _CardStyle extends BaseStyle {
   name = "card";
-  style = style2;
+  theme = theme;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵCardStyle_BaseFactory;
@@ -245,19 +235,7 @@ var CardClasses;
   CardClasses2["content"] = "p-card-content";
   CardClasses2["footer"] = "p-card-footer";
 })(CardClasses || (CardClasses = {}));
-var CARD_INSTANCE = new InjectionToken("CARD_INSTANCE");
 var Card = class _Card extends BaseComponent {
-  $pcCard = inject(CARD_INSTANCE, {
-    optional: true,
-    skipSelf: true
-  }) ?? void 0;
-  bindDirectiveInstance = inject(Bind, {
-    self: true
-  });
-  _componentStyle = inject(CardStyle);
-  onAfterViewChecked() {
-    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
-  }
   /**
    * Header of the card.
    * @group Props
@@ -275,17 +253,7 @@ var Card = class _Card extends BaseComponent {
   set style(value) {
     if (!k(this._style(), value)) {
       this._style.set(value);
-      if (this.el?.nativeElement) {
-        if (value) {
-          Object.keys(value).forEach((key) => {
-            this.el.nativeElement.style[key] = value[key];
-          });
-        }
-      }
     }
-  }
-  get style() {
-    return this._style();
   }
   /**
    * Class of the element.
@@ -308,11 +276,12 @@ var Card = class _Card extends BaseComponent {
   _style = signal(null, ...ngDevMode ? [{
     debugName: "_style"
   }] : []);
+  _componentStyle = inject(CardStyle);
   getBlockableElement() {
     return this.el.nativeElement.children[0];
   }
   templates;
-  onAfterContentInit() {
+  ngAfterContentInit() {
     this.templates.forEach((item) => {
       switch (item.getType()) {
         case "header":
@@ -368,9 +337,10 @@ var Card = class _Card extends BaseComponent {
         ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.templates = _t);
       }
     },
-    hostVars: 4,
+    hostVars: 5,
     hostBindings: function Card_HostBindings(rf, ctx) {
       if (rf & 2) {
+        ɵɵattribute("data-pc-name", "card");
         ɵɵstyleMap(ctx._style());
         ɵɵclassMap(ctx.cn(ctx.cx("root"), ctx.styleClass));
       }
@@ -381,49 +351,41 @@ var Card = class _Card extends BaseComponent {
       style: "style",
       styleClass: "styleClass"
     },
-    features: [ɵɵProvidersFeature([CardStyle, {
-      provide: CARD_INSTANCE,
-      useExisting: _Card
-    }, {
-      provide: PARENT_INSTANCE,
-      useExisting: _Card
-    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([CardStyle]), ɵɵInheritDefinitionFeature],
     ngContentSelectors: _c6,
     decls: 8,
-    vars: 11,
-    consts: [[3, "pBind", "class", 4, "ngIf"], [3, "pBind"], [4, "ngTemplateOutlet"], [4, "ngIf"]],
+    vars: 9,
+    consts: [[3, "class", 4, "ngIf"], [4, "ngTemplateOutlet"], [4, "ngIf"]],
     template: function Card_Template(rf, ctx) {
       if (rf & 1) {
         ɵɵprojectionDef(_c5);
-        ɵɵtemplate(0, Card_div_0_Template, 3, 4, "div", 0);
-        ɵɵelementStart(1, "div", 1);
-        ɵɵtemplate(2, Card_div_2_Template, 3, 5, "div", 0)(3, Card_div_3_Template, 3, 5, "div", 0);
-        ɵɵelementStart(4, "div", 1);
+        ɵɵtemplate(0, Card_div_0_Template, 3, 3, "div", 0);
+        ɵɵelementStart(1, "div");
+        ɵɵtemplate(2, Card_div_2_Template, 3, 4, "div", 0)(3, Card_div_3_Template, 3, 4, "div", 0);
+        ɵɵelementStart(4, "div");
         ɵɵprojection(5);
-        ɵɵtemplate(6, Card_ng_container_6_Template, 1, 0, "ng-container", 2);
+        ɵɵtemplate(6, Card_ng_container_6_Template, 1, 0, "ng-container", 1);
         ɵɵelementEnd();
-        ɵɵtemplate(7, Card_div_7_Template, 3, 4, "div", 0);
+        ɵɵtemplate(7, Card_div_7_Template, 3, 3, "div", 0);
         ɵɵelementEnd();
       }
       if (rf & 2) {
         ɵɵproperty("ngIf", ctx.headerFacet || ctx.headerTemplate || ctx._headerTemplate);
         ɵɵadvance();
         ɵɵclassMap(ctx.cx("body"));
-        ɵɵproperty("pBind", ctx.ptm("body"));
         ɵɵadvance();
         ɵɵproperty("ngIf", ctx.header || ctx.titleTemplate || ctx._titleTemplate);
         ɵɵadvance();
         ɵɵproperty("ngIf", ctx.subheader || ctx.subtitleTemplate || ctx._subtitleTemplate);
         ɵɵadvance();
         ɵɵclassMap(ctx.cx("content"));
-        ɵɵproperty("pBind", ctx.ptm("content"));
         ɵɵadvance(2);
         ɵɵproperty("ngTemplateOutlet", ctx.contentTemplate || ctx._contentTemplate);
         ɵɵadvance();
         ɵɵproperty("ngIf", ctx.footerFacet || ctx.footerTemplate || ctx._footerTemplate);
       }
     },
-    dependencies: [CommonModule, NgIf, NgTemplateOutlet, SharedModule, BindModule, Bind],
+    dependencies: [CommonModule, NgIf, NgTemplateOutlet, SharedModule],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -434,26 +396,26 @@ var Card = class _Card extends BaseComponent {
     args: [{
       selector: "p-card",
       standalone: true,
-      imports: [CommonModule, SharedModule, BindModule],
+      imports: [CommonModule, SharedModule],
       template: `
-        <div [pBind]="ptm('header')" [class]="cx('header')" *ngIf="headerFacet || headerTemplate || _headerTemplate">
+        <div [class]="cx('header')" *ngIf="headerFacet || headerTemplate || _headerTemplate">
             <ng-content select="p-header"></ng-content>
             <ng-container *ngTemplateOutlet="headerTemplate || _headerTemplate"></ng-container>
         </div>
-        <div [pBind]="ptm('body')" [class]="cx('body')">
-            <div [pBind]="ptm('title')" [class]="cx('title')" *ngIf="header || titleTemplate || _titleTemplate">
+        <div [class]="cx('body')">
+            <div [class]="cx('title')" *ngIf="header || titleTemplate || _titleTemplate">
                 <ng-container *ngIf="header && !_titleTemplate && !titleTemplate">{{ header }}</ng-container>
                 <ng-container *ngTemplateOutlet="titleTemplate || _titleTemplate"></ng-container>
             </div>
-            <div [pBind]="ptm('subtitle')" [class]="cx('subtitle')" *ngIf="subheader || subtitleTemplate || _subtitleTemplate">
+            <div [class]="cx('subtitle')" *ngIf="subheader || subtitleTemplate || _subtitleTemplate">
                 <ng-container *ngIf="subheader && !_subtitleTemplate && !subtitleTemplate">{{ subheader }}</ng-container>
                 <ng-container *ngTemplateOutlet="subtitleTemplate || _subtitleTemplate"></ng-container>
             </div>
-            <div [pBind]="ptm('content')" [class]="cx('content')">
+            <div [class]="cx('content')">
                 <ng-content></ng-content>
                 <ng-container *ngTemplateOutlet="contentTemplate || _contentTemplate"></ng-container>
             </div>
-            <div [pBind]="ptm('footer')" [class]="cx('footer')" *ngIf="footerFacet || footerTemplate || _footerTemplate">
+            <div [class]="cx('footer')" *ngIf="footerFacet || footerTemplate || _footerTemplate">
                 <ng-content select="p-footer"></ng-content>
                 <ng-container *ngTemplateOutlet="footerTemplate || _footerTemplate"></ng-container>
             </div>
@@ -461,18 +423,12 @@ var Card = class _Card extends BaseComponent {
     `,
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
-      providers: [CardStyle, {
-        provide: CARD_INSTANCE,
-        useExisting: Card
-      }, {
-        provide: PARENT_INSTANCE,
-        useExisting: Card
-      }],
+      providers: [CardStyle],
       host: {
         "[class]": "cn(cx('root'), styleClass)",
+        "[attr.data-pc-name]": '"card"',
         "[style]": "_style()"
-      },
-      hostDirectives: [Bind]
+      }
     }]
   }], null, {
     header: [{
@@ -537,19 +493,19 @@ var CardModule = class _CardModule {
   };
   static ɵmod = ɵɵdefineNgModule({
     type: _CardModule,
-    imports: [Card, SharedModule, BindModule],
-    exports: [Card, SharedModule, BindModule]
+    imports: [Card, SharedModule],
+    exports: [Card, SharedModule]
   });
   static ɵinj = ɵɵdefineInjector({
-    imports: [Card, SharedModule, BindModule, SharedModule, BindModule]
+    imports: [Card, SharedModule, SharedModule]
   });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(CardModule, [{
     type: NgModule,
     args: [{
-      imports: [Card, SharedModule, BindModule],
-      exports: [Card, SharedModule, BindModule]
+      imports: [Card, SharedModule],
+      exports: [Card, SharedModule]
     }]
   }], null, null);
 })();

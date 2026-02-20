@@ -1,34 +1,27 @@
 import {
   InputText
-} from "./chunk-IG3R3ILJ.js";
+} from "./chunk-35KXM4ZV.js";
 import {
   BaseEditableHolder
-} from "./chunk-343RM6UZ.js";
-import "./chunk-2R7VQYSP.js";
-import "./chunk-PJRMHEN5.js";
+} from "./chunk-67V7CIUT.js";
+import "./chunk-5OCKW6BF.js";
 import {
   AutoFocus
-} from "./chunk-YNLAOK3J.js";
-import "./chunk-S73J4WE3.js";
-import {
-  Bind,
-  BindModule
-} from "./chunk-MLQGRGGO.js";
-import {
-  PARENT_INSTANCE
-} from "./chunk-YNJ5GKCH.js";
-import {
-  BaseStyle
-} from "./chunk-4ATYD752.js";
-import {
-  PrimeTemplate,
-  SharedModule
-} from "./chunk-LMEEH3AJ.js";
+} from "./chunk-KOXUNDHI.js";
+import "./chunk-AXS7T3GQ.js";
+import "./chunk-6PBBDZZF.js";
+import "./chunk-QVUTNZUY.js";
 import {
   NG_VALUE_ACCESSOR
 } from "./chunk-RZEKJVYA.js";
-import "./chunk-GOP36Q47.js";
-import "./chunk-UCHM6OXG.js";
+import "./chunk-4YMQ5OOY.js";
+import {
+  BaseStyle
+} from "./chunk-L2L2T6ID.js";
+import {
+  PrimeTemplate,
+  SharedModule
+} from "./chunk-ZKOTJBQ6.js";
 import {
   CommonModule,
   NgForOf,
@@ -50,7 +43,6 @@ import {
   booleanAttribute,
   input,
   setClassMetadata,
-  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -75,7 +67,6 @@ import {
   ɵɵtemplate
 } from "./chunk-EIF6IUR4.js";
 import {
-  InjectionToken,
   computed,
   forwardRef,
   inject,
@@ -87,6 +78,8 @@ import {
 import "./chunk-YVXMBCE5.js";
 import "./chunk-G6ECYYJH.js";
 import "./chunk-RTGP7ALM.js";
+import "./chunk-BMDSN43F.js";
+import "./chunk-RK2DVQNP.js";
 import "./chunk-4MWRP73S.js";
 
 // node_modules/@primeuix/styles/dist/inputotp/index.mjs
@@ -134,7 +127,7 @@ function InputOtp_ng_container_0_ng_container_1_Template(rf, ctx) {
     const ctx_r2 = ɵɵnextContext();
     ɵɵadvance();
     ɵɵclassMap(ctx_r2.cn(ctx_r2.cx("pcInputText"), ctx_r2.styleClass));
-    ɵɵproperty("value", ctx_r2.getModelValue(i_r2))("pSize", ctx_r2.size())("variant", ctx_r2.$variant())("invalid", ctx_r2.invalid())("pAutoFocus", ctx_r2.getAutofocus(i_r2))("pt", ctx_r2.ptm("pcInputText"));
+    ɵɵproperty("value", ctx_r2.getModelValue(i_r2))("pSize", ctx_r2.size())("variant", ctx_r2.$variant())("invalid", ctx_r2.invalid())("pAutoFocus", ctx_r2.getAutofocus(i_r2));
     ɵɵattribute("maxlength", i_r2 === 1 ? ctx_r2.length : 1)("type", ctx_r2.inputType)("name", ctx_r2.name())("tabindex", ctx_r2.tabindex)("required", ctx_r2.required() ? "" : void 0)("readonly", ctx_r2.readonly ? "" : void 0)("disabled", ctx_r2.$disabled() ? "" : void 0);
   }
 }
@@ -159,7 +152,7 @@ function InputOtp_ng_container_0_ng_container_2_Template(rf, ctx) {
 function InputOtp_ng_container_0_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, InputOtp_ng_container_0_ng_container_1_Template, 2, 15, "ng-container", 1)(2, InputOtp_ng_container_0_ng_container_2_Template, 2, 6, "ng-container", 1);
+    ɵɵtemplate(1, InputOtp_ng_container_0_ng_container_1_Template, 2, 14, "ng-container", 1)(2, InputOtp_ng_container_0_ng_container_2_Template, 2, 6, "ng-container", 1);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -176,7 +169,7 @@ var classes = {
 };
 var InputOtpStyle = class _InputOtpStyle extends BaseStyle {
   name = "inputotp";
-  style = style;
+  theme = style;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵInputOtpStyle_BaseFactory;
@@ -199,24 +192,12 @@ var InputOtpClasses;
   InputOtpClasses2["root"] = "p-inputotp";
   InputOtpClasses2["pcInputText"] = "p-inputotp-input";
 })(InputOtpClasses || (InputOtpClasses = {}));
-var INPUTOTP_INSTANCE = new InjectionToken("INPUTOTP_INSTANCE");
 var INPUT_OTP_VALUE_ACCESSOR = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => InputOtp),
   multi: true
 };
 var InputOtp = class _InputOtp extends BaseEditableHolder {
-  _componentStyle = inject(InputOtpStyle);
-  $pcInputOtp = inject(INPUTOTP_INSTANCE, {
-    optional: true,
-    skipSelf: true
-  }) ?? void 0;
-  bindDirectiveInstance = inject(Bind, {
-    self: true
-  });
-  onAfterViewChecked() {
-    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
-  }
   /**
    * When present, it specifies that an input field is read-only.
    * @group Props
@@ -305,7 +286,8 @@ var InputOtp = class _InputOtp extends BaseEditableHolder {
   get inputType() {
     return this.mask ? "password" : "text";
   }
-  onAfterContentInit() {
+  _componentStyle = inject(InputOtpStyle);
+  ngAfterContentInit() {
     this.templates.forEach((item) => {
       switch (item.getType()) {
         case "input":
@@ -369,7 +351,7 @@ var InputOtp = class _InputOtp extends BaseEditableHolder {
   }
   getAutofocus(i) {
     if (i === 1) {
-      return this.autofocus || false;
+      return this.autofocus;
     }
     return false;
   }
@@ -520,16 +502,10 @@ var InputOtp = class _InputOtp extends BaseEditableHolder {
       onFocus: "onFocus",
       onBlur: "onBlur"
     },
-    features: [ɵɵProvidersFeature([INPUT_OTP_VALUE_ACCESSOR, InputOtpStyle, {
-      provide: INPUTOTP_INSTANCE,
-      useExisting: _InputOtp
-    }, {
-      provide: PARENT_INSTANCE,
-      useExisting: _InputOtp
-    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([INPUT_OTP_VALUE_ACCESSOR, InputOtpStyle]), ɵɵInheritDefinitionFeature],
     decls: 1,
     vars: 2,
-    consts: [[4, "ngFor", "ngForOf", "ngForTrackBy"], [4, "ngIf"], ["type", "text", "pInputText", "", 3, "input", "focus", "blur", "paste", "keydown", "value", "pSize", "variant", "invalid", "pAutoFocus", "pt"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"]],
+    consts: [[4, "ngFor", "ngForOf", "ngForTrackBy"], [4, "ngIf"], ["type", "text", "pInputText", "", 3, "input", "focus", "blur", "paste", "keydown", "value", "pSize", "variant", "invalid", "pAutoFocus"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"]],
     template: function InputOtp_Template(rf, ctx) {
       if (rf & 1) {
         ɵɵtemplate(0, InputOtp_ng_container_0_Template, 3, 2, "ng-container", 0);
@@ -538,7 +514,7 @@ var InputOtp = class _InputOtp extends BaseEditableHolder {
         ɵɵproperty("ngForOf", ctx.getRange(ctx.length))("ngForTrackBy", ctx.trackByFn);
       }
     },
-    dependencies: [CommonModule, NgForOf, NgIf, NgTemplateOutlet, InputText, AutoFocus, SharedModule, BindModule],
+    dependencies: [CommonModule, NgForOf, NgIf, NgTemplateOutlet, InputText, AutoFocus, SharedModule],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -549,7 +525,7 @@ var InputOtp = class _InputOtp extends BaseEditableHolder {
     args: [{
       selector: "p-inputOtp, p-inputotp, p-input-otp",
       standalone: true,
-      imports: [CommonModule, InputText, AutoFocus, SharedModule, BindModule],
+      imports: [CommonModule, InputText, AutoFocus, SharedModule],
       template: `
         <ng-container *ngFor="let i of getRange(length); trackBy: trackByFn">
             <ng-container *ngIf="!inputTemplate && !_inputTemplate">
@@ -574,7 +550,6 @@ var InputOtp = class _InputOtp extends BaseEditableHolder {
                     (paste)="onPaste($event)"
                     (keydown)="onKeyDown($event)"
                     [pAutoFocus]="getAutofocus(i)"
-                    [pt]="ptm('pcInputText')"
                 />
             </ng-container>
             <ng-container *ngIf="inputTemplate || _inputTemplate">
@@ -584,14 +559,7 @@ var InputOtp = class _InputOtp extends BaseEditableHolder {
     `,
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
-      providers: [INPUT_OTP_VALUE_ACCESSOR, InputOtpStyle, {
-        provide: INPUTOTP_INSTANCE,
-        useExisting: InputOtp
-      }, {
-        provide: PARENT_INSTANCE,
-        useExisting: InputOtp
-      }],
-      hostDirectives: [Bind],
+      providers: [INPUT_OTP_VALUE_ACCESSOR, InputOtpStyle],
       host: {
         "[class]": "cx('root')"
       }

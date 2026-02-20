@@ -1,44 +1,31 @@
 import {
   Button,
   ButtonModule
-} from "./chunk-NKFNXLXI.js";
-import "./chunk-PJRMHEN5.js";
-import "./chunk-YNLAOK3J.js";
-import "./chunk-TENFQJBN.js";
-import "./chunk-S73J4WE3.js";
-import "./chunk-OC77X5LN.js";
+} from "./chunk-6SV3UMTU.js";
+import "./chunk-KOXUNDHI.js";
+import "./chunk-AXS7T3GQ.js";
+import "./chunk-6PBBDZZF.js";
+import "./chunk-QVUTNZUY.js";
+import "./chunk-VZLF74PJ.js";
 import {
   ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   ChevronUpIcon
-} from "./chunk-RHA7RL5K.js";
-import "./chunk-YXZQJBKH.js";
+} from "./chunk-BIL3W6KN.js";
+import "./chunk-EGVFVLQK.js";
 import {
-  Bind,
-  BindModule
-} from "./chunk-MLQGRGGO.js";
-import {
-  BaseComponent,
-  PARENT_INSTANCE
-} from "./chunk-YNJ5GKCH.js";
+  BaseComponent
+} from "./chunk-4YMQ5OOY.js";
 import {
   BaseStyle
-} from "./chunk-4ATYD752.js";
+} from "./chunk-L2L2T6ID.js";
 import {
   Footer,
   Header,
   PrimeTemplate,
   SharedModule
-} from "./chunk-LMEEH3AJ.js";
-import "./chunk-GOP36Q47.js";
-import {
-  Q,
-  Y2 as Y,
-  _t,
-  s3 as s,
-  z2 as z
-} from "./chunk-UCHM6OXG.js";
+} from "./chunk-ZKOTJBQ6.js";
 import {
   CommonModule,
   NgClass,
@@ -66,8 +53,8 @@ import {
   booleanAttribute,
   numberAttribute,
   setClassMetadata,
-  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
+  ɵɵNgOnChangesFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
   ɵɵattribute,
@@ -107,6 +94,14 @@ import {
 import "./chunk-YVXMBCE5.js";
 import "./chunk-G6ECYYJH.js";
 import "./chunk-RTGP7ALM.js";
+import "./chunk-BMDSN43F.js";
+import {
+  Kt,
+  Q2 as Q,
+  Y2 as Y,
+  s3 as s,
+  z2 as z
+} from "./chunk-RK2DVQNP.js";
 import "./chunk-4MWRP73S.js";
 
 // node_modules/@primeuix/styles/dist/carousel/index.mjs
@@ -138,15 +133,14 @@ function Carousel_div_0_ng_container_2_Template(rf, ctx) {
 }
 function Carousel_div_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div", 5);
+    ɵɵelementStart(0, "div");
     ɵɵprojection(1);
-    ɵɵtemplate(2, Carousel_div_0_ng_container_2_Template, 1, 0, "ng-container", 13);
+    ɵɵtemplate(2, Carousel_div_0_ng_container_2_Template, 1, 0, "ng-container", 11);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cx("header"));
-    ɵɵproperty("pBind", ctx_r1.ptm("header"));
     ɵɵadvance(2);
     ɵɵproperty("ngTemplateOutlet", ctx_r1.headerTemplate);
   }
@@ -154,19 +148,19 @@ function Carousel_div_0_Template(rf, ctx) {
 function Carousel_p_button_3_ng_template_1_ng_container_0__svg_svg_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 18);
+    ɵɵelement(0, "svg", 16);
   }
 }
 function Carousel_p_button_3_ng_template_1_ng_container_0__svg_svg_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 19);
+    ɵɵelement(0, "svg", 17);
   }
 }
 function Carousel_p_button_3_ng_template_1_ng_container_0_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, Carousel_p_button_3_ng_template_1_ng_container_0__svg_svg_1_Template, 1, 0, "svg", 16)(2, Carousel_p_button_3_ng_template_1_ng_container_0__svg_svg_2_Template, 1, 0, "svg", 17);
+    ɵɵtemplate(1, Carousel_p_button_3_ng_template_1_ng_container_0__svg_svg_1_Template, 1, 0, "svg", 14)(2, Carousel_p_button_3_ng_template_1_ng_container_0__svg_svg_2_Template, 1, 0, "svg", 15);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -187,7 +181,7 @@ function Carousel_p_button_3_ng_template_1_ng_container_1_1_Template(rf, ctx) {
 function Carousel_p_button_3_ng_template_1_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, Carousel_p_button_3_ng_template_1_ng_container_1_1_Template, 1, 0, null, 13);
+    ɵɵtemplate(1, Carousel_p_button_3_ng_template_1_ng_container_1_1_Template, 1, 0, null, 11);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -198,7 +192,7 @@ function Carousel_p_button_3_ng_template_1_ng_container_1_Template(rf, ctx) {
 }
 function Carousel_p_button_3_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, Carousel_p_button_3_ng_template_1_ng_container_0_Template, 3, 2, "ng-container", 15)(1, Carousel_p_button_3_ng_template_1_ng_container_1_Template, 2, 1, "ng-container", 15);
+    ɵɵtemplate(0, Carousel_p_button_3_ng_template_1_ng_container_0_Template, 3, 2, "ng-container", 13)(1, Carousel_p_button_3_ng_template_1_ng_container_1_Template, 2, 1, "ng-container", 13);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
@@ -210,7 +204,7 @@ function Carousel_p_button_3_ng_template_1_Template(rf, ctx) {
 function Carousel_p_button_3_Template(rf, ctx) {
   if (rf & 1) {
     const _r3 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "p-button", 14);
+    ɵɵelementStart(0, "p-button", 12);
     ɵɵlistener("click", function Carousel_p_button_3_Template_p_button_click_0_listener($event) {
       ɵɵrestoreView(_r3);
       const ctx_r1 = ɵɵnextContext();
@@ -222,7 +216,7 @@ function Carousel_p_button_3_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cx("pcPrevButton"));
-    ɵɵproperty("text", true)("buttonProps", ctx_r1.prevButtonProps)("pt", ctx_r1.ptm("pcPrevButton"));
+    ɵɵproperty("text", true)("buttonProps", ctx_r1.prevButtonProps);
     ɵɵattribute("aria-label", ctx_r1.ariaPrevButtonLabel());
   }
 }
@@ -233,19 +227,18 @@ function Carousel_div_7_ng_container_1_Template(rf, ctx) {
 }
 function Carousel_div_7_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div", 5);
-    ɵɵtemplate(1, Carousel_div_7_ng_container_1_Template, 1, 0, "ng-container", 20);
+    ɵɵelementStart(0, "div");
+    ɵɵtemplate(1, Carousel_div_7_ng_container_1_Template, 1, 0, "ng-container", 18);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const item_r4 = ctx.$implicit;
     const index_r5 = ctx.index;
     const ctx_r1 = ɵɵnextContext();
-    ɵɵclassMap(ctx_r1.cx("itemClone", ɵɵpureFunction1(11, _c10, index_r5)));
-    ɵɵproperty("pBind", ctx_r1.ptm("itemClone"));
-    ɵɵattribute("aria-hidden", !(ctx_r1.totalShiftedItems * -1 === ctx_r1.value.length))("aria-label", ctx_r1.ariaSlideNumber(index_r5))("aria-roledescription", ctx_r1.ariaSlideLabel())("data-p-carousel-item-active", ctx_r1.totalShiftedItems * -1 === ctx_r1.value.length + ctx_r1._numVisible)("data-p-carousel-item-start", index_r5 === 0)("data-p-carousel-item-end", ctx_r1.clonedItemsForStarting && ctx_r1.clonedItemsForStarting.length - 1 === index_r5);
+    ɵɵclassMap(ctx_r1.cx("itemClone", ɵɵpureFunction1(7, _c10, index_r5)));
+    ɵɵattribute("aria-hidden", !(ctx_r1.totalShiftedItems * -1 === ctx_r1.value.length))("aria-label", ctx_r1.ariaSlideNumber(index_r5))("aria-roledescription", ctx_r1.ariaSlideLabel());
     ɵɵadvance();
-    ɵɵproperty("ngTemplateOutlet", ctx_r1.itemTemplate || ctx_r1._itemTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(13, _c11, item_r4));
+    ɵɵproperty("ngTemplateOutlet", ctx_r1.itemTemplate || ctx_r1._itemTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(9, _c11, item_r4));
   }
 }
 function Carousel_div_8_ng_container_1_Template(rf, ctx) {
@@ -255,19 +248,18 @@ function Carousel_div_8_ng_container_1_Template(rf, ctx) {
 }
 function Carousel_div_8_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div", 21);
-    ɵɵtemplate(1, Carousel_div_8_ng_container_1_Template, 1, 0, "ng-container", 20);
+    ɵɵelementStart(0, "div");
+    ɵɵtemplate(1, Carousel_div_8_ng_container_1_Template, 1, 0, "ng-container", 18);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const item_r6 = ctx.$implicit;
     const index_r7 = ctx.index;
     const ctx_r1 = ɵɵnextContext();
-    ɵɵclassMap(ctx_r1.cx("item", ɵɵpureFunction1(11, _c10, index_r7)));
-    ɵɵproperty("pBind", ctx_r1.getItemPTOptions("item", index_r7));
-    ɵɵattribute("aria-hidden", !(ctx_r1.firstIndex() <= index_r7 && ctx_r1.lastIndex() >= index_r7))("aria-label", ctx_r1.ariaSlideNumber(index_r7))("aria-roledescription", ctx_r1.ariaSlideLabel())("data-p-carousel-item-active", ctx_r1.firstIndex() <= index_r7 && ctx_r1.lastIndex() >= index_r7)("data-p-carousel-item-start", ctx_r1.firstIndex() === index_r7)("data-p-carousel-item-end", ctx_r1.lastIndex() === index_r7);
+    ɵɵclassMap(ctx_r1.cx("item", ɵɵpureFunction1(7, _c10, index_r7)));
+    ɵɵattribute("aria-hidden", !(ctx_r1.firstIndex() <= index_r7 && ctx_r1.lastIndex() >= index_r7))("aria-label", ctx_r1.ariaSlideNumber(index_r7))("aria-roledescription", ctx_r1.ariaSlideLabel());
     ɵɵadvance();
-    ɵɵproperty("ngTemplateOutlet", ctx_r1.itemTemplate || ctx_r1._itemTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(13, _c11, item_r6));
+    ɵɵproperty("ngTemplateOutlet", ctx_r1.itemTemplate || ctx_r1._itemTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(9, _c11, item_r6));
   }
 }
 function Carousel_div_9_ng_container_1_Template(rf, ctx) {
@@ -277,37 +269,35 @@ function Carousel_div_9_ng_container_1_Template(rf, ctx) {
 }
 function Carousel_div_9_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div", 5);
-    ɵɵtemplate(1, Carousel_div_9_ng_container_1_Template, 1, 0, "ng-container", 20);
+    ɵɵelementStart(0, "div");
+    ɵɵtemplate(1, Carousel_div_9_ng_container_1_Template, 1, 0, "ng-container", 18);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const item_r8 = ctx.$implicit;
     const index_r9 = ctx.index;
     const ctx_r1 = ɵɵnextContext();
-    ɵɵclassMap(ctx_r1.cx("itemClone", ɵɵpureFunction1(8, _c10, index_r9)));
-    ɵɵproperty("pBind", ctx_r1.ptm("itemClone"));
-    ɵɵattribute("data-p-carousel-item-active", false)("data-p-carousel-item-start", false)("data-p-carousel-item-end", false);
+    ɵɵclassMap(ctx_r1.cx("itemClone", ɵɵpureFunction1(4, _c10, index_r9)));
     ɵɵadvance();
-    ɵɵproperty("ngTemplateOutlet", ctx_r1.itemTemplate || ctx_r1._itemTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(10, _c11, item_r8));
+    ɵɵproperty("ngTemplateOutlet", ctx_r1.itemTemplate || ctx_r1._itemTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(6, _c11, item_r8));
   }
 }
 function Carousel_p_button_10_ng_template_1_ng_container_0__svg_svg_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 25);
+    ɵɵelement(0, "svg", 22);
   }
 }
 function Carousel_p_button_10_ng_template_1_ng_container_0__svg_svg_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 26);
+    ɵɵelement(0, "svg", 23);
   }
 }
 function Carousel_p_button_10_ng_template_1_ng_container_0_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, Carousel_p_button_10_ng_template_1_ng_container_0__svg_svg_1_Template, 1, 0, "svg", 23)(2, Carousel_p_button_10_ng_template_1_ng_container_0__svg_svg_2_Template, 1, 0, "svg", 24);
+    ɵɵtemplate(1, Carousel_p_button_10_ng_template_1_ng_container_0__svg_svg_1_Template, 1, 0, "svg", 20)(2, Carousel_p_button_10_ng_template_1_ng_container_0__svg_svg_2_Template, 1, 0, "svg", 21);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -328,7 +318,7 @@ function Carousel_p_button_10_ng_template_1_span_1_1_Template(rf, ctx) {
 function Carousel_p_button_10_ng_template_1_span_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementStart(0, "span");
-    ɵɵtemplate(1, Carousel_p_button_10_ng_template_1_span_1_1_Template, 1, 0, null, 13);
+    ɵɵtemplate(1, Carousel_p_button_10_ng_template_1_span_1_1_Template, 1, 0, null, 11);
     ɵɵelementEnd();
   }
   if (rf & 2) {
@@ -339,7 +329,7 @@ function Carousel_p_button_10_ng_template_1_span_1_Template(rf, ctx) {
 }
 function Carousel_p_button_10_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, Carousel_p_button_10_ng_template_1_ng_container_0_Template, 3, 2, "ng-container", 15)(1, Carousel_p_button_10_ng_template_1_span_1_Template, 2, 1, "span", 15);
+    ɵɵtemplate(0, Carousel_p_button_10_ng_template_1_ng_container_0_Template, 3, 2, "ng-container", 13)(1, Carousel_p_button_10_ng_template_1_span_1_Template, 2, 1, "span", 13);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
@@ -351,7 +341,7 @@ function Carousel_p_button_10_ng_template_1_Template(rf, ctx) {
 function Carousel_p_button_10_Template(rf, ctx) {
   if (rf & 1) {
     const _r10 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "p-button", 22);
+    ɵɵelementStart(0, "p-button", 19);
     ɵɵlistener("click", function Carousel_p_button_10_Template_p_button_click_0_listener($event) {
       ɵɵrestoreView(_r10);
       const ctx_r1 = ɵɵnextContext();
@@ -363,14 +353,14 @@ function Carousel_p_button_10_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cx("pcNextButton"));
-    ɵɵproperty("buttonProps", ctx_r1.nextButtonProps)("text", true)("pt", ctx_r1.ptm("pcNextButton"));
+    ɵɵproperty("buttonProps", ctx_r1.nextButtonProps)("text", true);
     ɵɵattribute("aria-label", ctx_r1.ariaNextButtonLabel());
   }
 }
 function Carousel_ul_11_li_2_Template(rf, ctx) {
   if (rf & 1) {
     const _r12 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "li", 5)(1, "button", 28);
+    ɵɵelementStart(0, "li")(1, "button", 25);
     ɵɵlistener("click", function Carousel_ul_11_li_2_Template_button_click_1_listener($event) {
       const i_r13 = ɵɵrestoreView(_r12).index;
       const ctx_r1 = ɵɵnextContext(2);
@@ -381,31 +371,30 @@ function Carousel_ul_11_li_2_Template(rf, ctx) {
   if (rf & 2) {
     const i_r13 = ctx.index;
     const ctx_r1 = ɵɵnextContext(2);
-    ɵɵclassMap(ctx_r1.cx("indicator", ɵɵpureFunction1(11, _c10, i_r13)));
-    ɵɵproperty("pBind", ctx_r1.getIndicatorPTOptions("indicator", i_r13));
-    ɵɵattribute("data-p-active", ctx_r1._page === i_r13);
+    ɵɵclassMap(ctx_r1.cx("indicator", ɵɵpureFunction1(9, _c10, i_r13)));
+    ɵɵattribute("data-pc-section", "indicator");
     ɵɵadvance();
     ɵɵclassMap(ctx_r1.cx("indicatorButton"));
-    ɵɵproperty("ngStyle", ctx_r1.indicatorStyle)("tabindex", ctx_r1._page === i_r13 ? 0 : -1)("pBind", ctx_r1.getIndicatorPTOptions("indicatorButton", i_r13));
+    ɵɵproperty("ngStyle", ctx_r1.indicatorStyle)("tabindex", ctx_r1._page === i_r13 ? 0 : -1);
     ɵɵattribute("aria-label", ctx_r1.ariaPageLabel(i_r13 + 1))("aria-current", ctx_r1._page === i_r13 ? "page" : void 0);
   }
 }
 function Carousel_ul_11_Template(rf, ctx) {
   if (rf & 1) {
     const _r11 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "ul", 27, 2);
+    ɵɵelementStart(0, "ul", 24, 2);
     ɵɵlistener("keydown", function Carousel_ul_11_Template_ul_keydown_0_listener($event) {
       ɵɵrestoreView(_r11);
       const ctx_r1 = ɵɵnextContext();
       return ɵɵresetView(ctx_r1.onIndicatorKeydown($event));
     });
-    ɵɵtemplate(2, Carousel_ul_11_li_2_Template, 2, 13, "li", 9);
+    ɵɵtemplate(2, Carousel_ul_11_li_2_Template, 2, 11, "li", 8);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cx("indicatorList"));
-    ɵɵproperty("ngStyle", ctx_r1.indicatorsContentStyle)("pBind", ctx_r1.ptm("indicatorList"));
+    ɵɵproperty("ngStyle", ctx_r1.indicatorsContentStyle);
     ɵɵadvance(2);
     ɵɵproperty("ngForOf", ctx_r1.totalDotsArray());
   }
@@ -417,15 +406,14 @@ function Carousel_div_12_ng_container_2_Template(rf, ctx) {
 }
 function Carousel_div_12_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div", 5);
+    ɵɵelementStart(0, "div");
     ɵɵprojection(1, 1);
-    ɵɵtemplate(2, Carousel_div_12_ng_container_2_Template, 1, 0, "ng-container", 13);
+    ɵɵtemplate(2, Carousel_div_12_ng_container_2_Template, 1, 0, "ng-container", 11);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cx("footer"));
-    ɵɵproperty("pBind", ctx_r1.ptm("footer"));
     ɵɵadvance(2);
     ɵɵproperty("ngTemplateOutlet", ctx_r1.footerTemplate || ctx_r1._footerTemplate);
   }
@@ -484,7 +472,7 @@ var classes = {
 };
 var CarouselStyle = class _CarouselStyle extends BaseStyle {
   name = "carousel";
-  style = style;
+  theme = style;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵCarouselStyle_BaseFactory;
@@ -522,12 +510,6 @@ var CarouselClasses;
 var Carousel = class _Carousel extends BaseComponent {
   el;
   zone;
-  bindDirectiveInstance = inject(Bind, {
-    self: true
-  });
-  onAfterViewChecked() {
-    this.bindDirectiveInstance.setAttrs(this.ptm("root"));
-  }
   /**
    * Index of the first item.
    * @defaultValue 0
@@ -744,7 +726,7 @@ var Carousel = class _Carousel extends BaseComponent {
     this.totalShiftedItems = this.page * this.numScroll * -1;
     this.window = this.document.defaultView;
   }
-  onChanges(simpleChange) {
+  ngOnChanges(simpleChange) {
     if (isPlatformBrowser(this.platformId)) {
       if (simpleChange.value) {
         if (this.circular && this._value) {
@@ -772,7 +754,7 @@ var Carousel = class _Carousel extends BaseComponent {
     this.cd.markForCheck();
   }
   templates;
-  onAfterContentInit() {
+  ngAfterContentInit() {
     this.id = s("pn_id_");
     if (isPlatformBrowser(this.platformId)) {
       this.allowAutoplay = !!this.autoplayInterval;
@@ -813,7 +795,7 @@ var Carousel = class _Carousel extends BaseComponent {
     });
     this.cd.detectChanges();
   }
-  onAfterContentChecked() {
+  ngAfterContentChecked() {
     if (isPlatformBrowser(this.platformId)) {
       const isCircular = this.isCircular();
       let totalShiftedItems = this.totalShiftedItems;
@@ -874,9 +856,8 @@ var Carousel = class _Carousel extends BaseComponent {
     if (!this.carouselStyle) {
       this.carouselStyle = this.renderer.createElement("style");
       this.carouselStyle.type = "text/css";
-      _t(this.carouselStyle, "nonce", this.config?.csp()?.nonce);
       this.renderer.appendChild(this.document.head, this.carouselStyle);
-      _t(this.carouselStyle, "nonce", this.config?.csp()?.nonce);
+      Kt(this.carouselStyle, "nonce", this.config?.csp()?.nonce);
     }
     let innerHTML = `
             #${this.id} .p-carousel-item {
@@ -1029,7 +1010,7 @@ var Carousel = class _Carousel extends BaseComponent {
     }
   }
   onRightKey() {
-    const indicators = [...Y(this.indicatorContent?.nativeElement, '[data-pc-section="indicator"]')];
+    const indicators = [...Y(this.indicatorContent.nativeElement, '[data-pc-section="indicator"]')];
     const activeIndex = this.findFocusedIndicatorIndex();
     this.changedFocusedIndicator(activeIndex, activeIndex + 1 === indicators.length ? indicators.length - 1 : activeIndex + 1);
   }
@@ -1042,25 +1023,25 @@ var Carousel = class _Carousel extends BaseComponent {
     this.changedFocusedIndicator(activeIndex, 0);
   }
   onEndKey() {
-    const indicators = [...Y(this.indicatorContent?.nativeElement, '[data-pc-section="indicator"]')];
+    const indicators = [...Y(this.indicatorContent.nativeElement, '[data-pc-section="indicator"]r')];
     const activeIndex = this.findFocusedIndicatorIndex();
     this.changedFocusedIndicator(activeIndex, indicators.length - 1);
   }
   onTabKey() {
-    const indicators = [...Y(this.indicatorContent?.nativeElement, '[data-pc-section="indicator"]')];
+    const indicators = [...Y(this.indicatorContent.nativeElement, '[data-pc-section="indicator"]')];
     const highlightedIndex = indicators.findIndex((ind) => Q(ind, "data-p-highlight") === true);
-    const activeIndicator = z(this.indicatorContent?.nativeElement, '[data-pc-section="indicator"] > button[tabindex="0"]');
+    const activeIndicator = z(this.indicatorContent.nativeElement, '[data-pc-section="indicator"] > button[tabindex="0"]');
     const activeIndex = indicators.findIndex((ind) => ind === activeIndicator.parentElement);
     indicators[activeIndex].children[0].tabIndex = "-1";
     indicators[highlightedIndex].children[0].tabIndex = "0";
   }
   findFocusedIndicatorIndex() {
-    const indicators = [...Y(this.indicatorContent?.nativeElement, '[data-pc-section="indicator"]')];
-    const activeIndicator = z(this.indicatorContent?.nativeElement, '[data-pc-section="indicator"] > button[tabindex="0"]');
-    return indicators.findIndex((ind) => ind === activeIndicator?.parentElement);
+    const indicators = [...Y(this.indicatorContent.nativeElement, '[data-pc-section="indicator"]')];
+    const activeIndicator = z(this.indicatorContent.nativeElement, '[data-pc-section="indicator"] > button[tabindex="0"]');
+    return indicators.findIndex((ind) => ind === activeIndicator.parentElement);
   }
   changedFocusedIndicator(prevInd, nextInd) {
-    const indicators = [...Y(this.indicatorContent?.nativeElement, '[data-pc-section="indicator"]')];
+    const indicators = [...Y(this.indicatorContent.nativeElement, '[data-pc-section="indicator"]')];
     indicators[prevInd].children[0].tabIndex = "-1";
     indicators[nextInd].children[0].tabIndex = "0";
     indicators[nextInd].children[0].focus();
@@ -1168,36 +1149,19 @@ var Carousel = class _Carousel extends BaseComponent {
     }
   }
   ariaPrevButtonLabel() {
-    return this.config.translation.aria ? this.config.translation.aria?.prevPageLabel : void 0;
+    return this.config.translation.aria ? this.config.translation.aria.prevPageLabel : void 0;
   }
   ariaSlideLabel() {
-    return this.config.translation.aria ? this.config.translation.aria?.slide : void 0;
+    return this.config.translation.aria ? this.config.translation.aria.slide : void 0;
   }
   ariaNextButtonLabel() {
-    return this.config.translation.aria ? this.config.translation.aria?.nextPageLabel : void 0;
+    return this.config.translation.aria ? this.config.translation.aria.nextPageLabel : void 0;
   }
   ariaSlideNumber(value) {
-    return this.config.translation.aria ? this.config.translation.aria?.slideNumber?.replace(/{slideNumber}/g, value) : void 0;
+    return this.config.translation.aria ? this.config.translation.aria.slideNumber.replace(/{slideNumber}/g, value) : void 0;
   }
   ariaPageLabel(value) {
-    return this.config.translation.aria ? this.config.translation.aria?.pageLabel?.replace(/{page}/g, value) : void 0;
-  }
-  getIndicatorPTOptions(key, index) {
-    return this.ptm(key, {
-      context: {
-        highlighted: index === this._page
-      }
-    });
-  }
-  getItemPTOptions(key, index) {
-    return this.ptm(key, {
-      context: {
-        index,
-        active: this.firstIndex() <= index && this.lastIndex() >= index,
-        start: this.firstIndex() === index,
-        end: this.lastIndex() === index
-      }
-    });
+    return this.config.translation.aria ? this.config.translation.aria.pageLabel.replace(/{page}/g, value) : void 0;
   }
   bindDocumentListeners() {
     if (isPlatformBrowser(this.platformId)) {
@@ -1216,7 +1180,7 @@ var Carousel = class _Carousel extends BaseComponent {
       }
     }
   }
-  onDestroy() {
+  ngOnDestroy() {
     if (this.responsiveOptions) {
       this.unbindDocumentListeners();
     }
@@ -1242,15 +1206,15 @@ var Carousel = class _Carousel extends BaseComponent {
         ɵɵcontentQuery(dirIndex, PrimeTemplate, 4);
       }
       if (rf & 2) {
-        let _t2;
-        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.headerFacet = _t2.first);
-        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.footerFacet = _t2.first);
-        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.itemTemplate = _t2.first);
-        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.headerTemplate = _t2.first);
-        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.footerTemplate = _t2.first);
-        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.previousIconTemplate = _t2.first);
-        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.nextIconTemplate = _t2.first);
-        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.templates = _t2);
+        let _t;
+        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.headerFacet = _t.first);
+        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.footerFacet = _t.first);
+        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.itemTemplate = _t.first);
+        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.headerTemplate = _t.first);
+        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.footerTemplate = _t.first);
+        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.previousIconTemplate = _t.first);
+        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.nextIconTemplate = _t.first);
+        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.templates = _t);
       }
     },
     viewQuery: function Carousel_Query(rf, ctx) {
@@ -1259,9 +1223,9 @@ var Carousel = class _Carousel extends BaseComponent {
         ɵɵviewQuery(_c6, 5);
       }
       if (rf & 2) {
-        let _t2;
-        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.itemsContainer = _t2.first);
-        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.indicatorContent = _t2.first);
+        let _t;
+        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.itemsContainer = _t.first);
+        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.indicatorContent = _t.first);
       }
     },
     hostVars: 4,
@@ -1295,22 +1259,19 @@ var Carousel = class _Carousel extends BaseComponent {
     outputs: {
       onPage: "onPage"
     },
-    features: [ɵɵProvidersFeature([CarouselStyle, {
-      provide: PARENT_INSTANCE,
-      useExisting: _Carousel
-    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([CarouselStyle]), ɵɵInheritDefinitionFeature, ɵɵNgOnChangesFeature],
     ngContentSelectors: _c8,
     decls: 13,
-    vars: 25,
-    consts: [["itemsContainer", ""], ["icon", ""], ["indicatorContent", ""], [3, "class", "pBind", 4, "ngIf"], [3, "ngClass", "pBind"], [3, "pBind"], ["attr.data-pc-group-section", "navigator", 3, "class", "text", "buttonProps", "pt", "click", 4, "ngIf"], [3, "touchend", "touchstart", "touchmove", "ngStyle", "pBind"], [3, "transitionend", "pBind"], [3, "class", "pBind", 4, "ngFor", "ngForOf"], ["role", "group", 3, "class", "pBind", 4, "ngFor", "ngForOf"], ["type", "button", "attr.data-pc-group-section", "navigator", 3, "class", "buttonProps", "text", "pt", "click", 4, "ngIf"], [3, "class", "ngStyle", "pBind", "keydown", 4, "ngIf"], [4, "ngTemplateOutlet"], ["attr.data-pc-group-section", "navigator", 3, "click", "text", "buttonProps", "pt"], [4, "ngIf"], ["data-p-icon", "chevron-left", 4, "ngIf"], ["data-p-icon", "chevron-up", 4, "ngIf"], ["data-p-icon", "chevron-left"], ["data-p-icon", "chevron-up"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], ["role", "group", 3, "pBind"], ["type", "button", "attr.data-pc-group-section", "navigator", 3, "click", "buttonProps", "text", "pt"], ["data-p-icon", "chevron-right", 4, "ngIf"], ["data-p-icon", "chevron-down", 4, "ngIf"], ["data-p-icon", "chevron-right"], ["data-p-icon", "chevron-down"], [3, "keydown", "ngStyle", "pBind"], ["type", "button", 3, "click", "ngStyle", "tabindex", "pBind"]],
+    vars: 21,
+    consts: [["itemsContainer", ""], ["icon", ""], ["indicatorContent", ""], [3, "class", 4, "ngIf"], [3, "ngClass"], [3, "class", "text", "buttonProps", "click", 4, "ngIf"], [3, "touchend", "touchstart", "touchmove", "ngStyle"], [3, "transitionend"], [3, "class", 4, "ngFor", "ngForOf"], ["type", "button", 3, "class", "buttonProps", "text", "click", 4, "ngIf"], [3, "class", "ngStyle", "keydown", 4, "ngIf"], [4, "ngTemplateOutlet"], [3, "click", "text", "buttonProps"], [4, "ngIf"], ["data-p-icon", "chevron-left", 4, "ngIf"], ["data-p-icon", "chevron-up", 4, "ngIf"], ["data-p-icon", "chevron-left"], ["data-p-icon", "chevron-up"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], ["type", "button", 3, "click", "buttonProps", "text"], ["data-p-icon", "chevron-right", 4, "ngIf"], ["data-p-icon", "chevron-down", 4, "ngIf"], ["data-p-icon", "chevron-right"], ["data-p-icon", "chevron-down"], [3, "keydown", "ngStyle"], ["type", "button", 3, "click", "ngStyle", "tabindex"]],
     template: function Carousel_Template(rf, ctx) {
       if (rf & 1) {
         const _r1 = ɵɵgetCurrentView();
         ɵɵprojectionDef(_c7);
-        ɵɵtemplate(0, Carousel_div_0_Template, 3, 4, "div", 3);
-        ɵɵelementStart(1, "div", 4)(2, "div", 5);
-        ɵɵtemplate(3, Carousel_p_button_3_Template, 3, 6, "p-button", 6);
-        ɵɵelementStart(4, "div", 7);
+        ɵɵtemplate(0, Carousel_div_0_Template, 3, 3, "div", 3);
+        ɵɵelementStart(1, "div", 4)(2, "div");
+        ɵɵtemplate(3, Carousel_p_button_3_Template, 3, 5, "p-button", 5);
+        ɵɵelementStart(4, "div", 6);
         ɵɵlistener("touchend", function Carousel_Template_div_touchend_4_listener($event) {
           ɵɵrestoreView(_r1);
           return ɵɵresetView(ctx.onTouchEnd($event));
@@ -1321,36 +1282,34 @@ var Carousel = class _Carousel extends BaseComponent {
           ɵɵrestoreView(_r1);
           return ɵɵresetView(ctx.onTouchMove($event));
         });
-        ɵɵelementStart(5, "div", 8, 0);
+        ɵɵelementStart(5, "div", 7, 0);
         ɵɵlistener("transitionend", function Carousel_Template_div_transitionend_5_listener() {
           ɵɵrestoreView(_r1);
           return ɵɵresetView(ctx.onTransitionEnd());
         });
-        ɵɵtemplate(7, Carousel_div_7_Template, 2, 15, "div", 9)(8, Carousel_div_8_Template, 2, 15, "div", 10)(9, Carousel_div_9_Template, 2, 12, "div", 9);
+        ɵɵtemplate(7, Carousel_div_7_Template, 2, 11, "div", 8)(8, Carousel_div_8_Template, 2, 11, "div", 8)(9, Carousel_div_9_Template, 2, 8, "div", 8);
         ɵɵelementEnd()();
-        ɵɵtemplate(10, Carousel_p_button_10_Template, 3, 6, "p-button", 11);
+        ɵɵtemplate(10, Carousel_p_button_10_Template, 3, 5, "p-button", 9);
         ɵɵelementEnd();
-        ɵɵtemplate(11, Carousel_ul_11_Template, 3, 5, "ul", 12);
+        ɵɵtemplate(11, Carousel_ul_11_Template, 3, 4, "ul", 10);
         ɵɵelementEnd();
-        ɵɵtemplate(12, Carousel_div_12_Template, 3, 4, "div", 3);
+        ɵɵtemplate(12, Carousel_div_12_Template, 3, 3, "div", 3);
       }
       if (rf & 2) {
         ɵɵproperty("ngIf", ctx.headerFacet || ctx.headerTemplate);
         ɵɵadvance();
         ɵɵclassMap(ctx.contentClass);
-        ɵɵproperty("ngClass", ctx.cx("contentContainer"))("pBind", ctx.ptm("contentContainer"));
+        ɵɵproperty("ngClass", ctx.cx("contentContainer"));
         ɵɵadvance();
         ɵɵclassMap(ctx.cx("content"));
-        ɵɵproperty("pBind", ctx.ptm("content"));
         ɵɵattribute("aria-live", ctx.allowAutoplay ? "polite" : "off");
         ɵɵadvance();
         ɵɵproperty("ngIf", ctx.showNavigators);
         ɵɵadvance();
         ɵɵclassMap(ctx.cx("viewport"));
-        ɵɵproperty("ngStyle", ɵɵpureFunction1(23, _c9, ctx.isVertical() ? ctx.verticalViewPortHeight : "auto"))("pBind", ctx.ptm("viewport"));
+        ɵɵproperty("ngStyle", ɵɵpureFunction1(19, _c9, ctx.isVertical() ? ctx.verticalViewPortHeight : "auto"));
         ɵɵadvance();
         ɵɵclassMap(ctx.cx("itemList"));
-        ɵɵproperty("pBind", ctx.ptm("itemList"));
         ɵɵadvance(2);
         ɵɵproperty("ngForOf", ctx.clonedItemsForStarting);
         ɵɵadvance();
@@ -1365,7 +1324,7 @@ var Carousel = class _Carousel extends BaseComponent {
         ɵɵproperty("ngIf", ctx.footerFacet || ctx.footerTemplate || ctx._footerTemplate);
       }
     },
-    dependencies: [CommonModule, NgClass, NgForOf, NgIf, NgTemplateOutlet, NgStyle, ChevronRightIcon, ButtonModule, Button, ChevronLeftIcon, ChevronDownIcon, ChevronUpIcon, SharedModule, BindModule, Bind],
+    dependencies: [CommonModule, NgClass, NgForOf, NgIf, NgTemplateOutlet, NgStyle, ChevronRightIcon, ButtonModule, Button, ChevronLeftIcon, ChevronDownIcon, ChevronUpIcon, SharedModule],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -1376,24 +1335,15 @@ var Carousel = class _Carousel extends BaseComponent {
     args: [{
       selector: "p-carousel",
       standalone: true,
-      imports: [CommonModule, ChevronRightIcon, ButtonModule, ChevronLeftIcon, ChevronDownIcon, ChevronUpIcon, SharedModule, BindModule],
+      imports: [CommonModule, ChevronRightIcon, ButtonModule, ChevronLeftIcon, ChevronDownIcon, ChevronUpIcon, SharedModule],
       template: `
-        <div [class]="cx('header')" *ngIf="headerFacet || headerTemplate" [pBind]="ptm('header')">
+        <div [class]="cx('header')" *ngIf="headerFacet || headerTemplate">
             <ng-content select="p-header"></ng-content>
             <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
         </div>
-        <div [class]="contentClass" [ngClass]="cx('contentContainer')" [pBind]="ptm('contentContainer')">
-            <div [class]="cx('content')" [attr.aria-live]="allowAutoplay ? 'polite' : 'off'" [pBind]="ptm('content')">
-                <p-button
-                    *ngIf="showNavigators"
-                    [class]="cx('pcPrevButton')"
-                    [attr.aria-label]="ariaPrevButtonLabel()"
-                    (click)="navBackward($event)"
-                    [text]="true"
-                    [buttonProps]="prevButtonProps"
-                    [pt]="ptm('pcPrevButton')"
-                    attr.data-pc-group-section="navigator"
-                >
+        <div [class]="contentClass" [ngClass]="cx('contentContainer')">
+            <div [class]="cx('content')" [attr.aria-live]="allowAutoplay ? 'polite' : 'off'">
+                <p-button *ngIf="showNavigators" [class]="cx('pcPrevButton')" [attr.aria-label]="ariaPrevButtonLabel()" (click)="navBackward($event)" [text]="true" [buttonProps]="prevButtonProps">
                     <ng-template #icon>
                         <ng-container *ngIf="!previousIconTemplate && !_previousIconTemplate && !prevButtonProps?.icon">
                             <svg data-p-icon="chevron-left" *ngIf="!isVertical()" />
@@ -1404,58 +1354,32 @@ var Carousel = class _Carousel extends BaseComponent {
                         </ng-container>
                     </ng-template>
                 </p-button>
-                <div [class]="cx('viewport')" [ngStyle]="{ height: isVertical() ? verticalViewPortHeight : 'auto' }" (touchend)="onTouchEnd($event)" (touchstart)="onTouchStart($event)" (touchmove)="onTouchMove($event)" [pBind]="ptm('viewport')">
-                    <div #itemsContainer [class]="cx('itemList')" (transitionend)="onTransitionEnd()" [pBind]="ptm('itemList')">
+                <div [class]="cx('viewport')" [ngStyle]="{ height: isVertical() ? verticalViewPortHeight : 'auto' }" (touchend)="onTouchEnd($event)" (touchstart)="onTouchStart($event)" (touchmove)="onTouchMove($event)">
+                    <div #itemsContainer [class]="cx('itemList')" (transitionend)="onTransitionEnd()">
                         <div
                             *ngFor="let item of clonedItemsForStarting; let index = index"
                             [class]="cx('itemClone', { index })"
                             [attr.aria-hidden]="!(totalShiftedItems * -1 === value.length)"
                             [attr.aria-label]="ariaSlideNumber(index)"
                             [attr.aria-roledescription]="ariaSlideLabel()"
-                            [attr.data-p-carousel-item-active]="totalShiftedItems * -1 === value.length + _numVisible"
-                            [attr.data-p-carousel-item-start]="index === 0"
-                            [attr.data-p-carousel-item-end]="clonedItemsForStarting && clonedItemsForStarting.length - 1 === index"
-                            [pBind]="ptm('itemClone')"
                         >
                             <ng-container *ngTemplateOutlet="itemTemplate || _itemTemplate; context: { $implicit: item }"></ng-container>
                         </div>
                         <div
                             *ngFor="let item of value; let index = index"
                             [class]="cx('item', { index })"
-                            role="group"
                             [attr.aria-hidden]="!(firstIndex() <= index && lastIndex() >= index)"
                             [attr.aria-label]="ariaSlideNumber(index)"
                             [attr.aria-roledescription]="ariaSlideLabel()"
-                            [attr.data-p-carousel-item-active]="firstIndex() <= index && lastIndex() >= index"
-                            [attr.data-p-carousel-item-start]="firstIndex() === index"
-                            [attr.data-p-carousel-item-end]="lastIndex() === index"
-                            [pBind]="getItemPTOptions('item', index)"
                         >
                             <ng-container *ngTemplateOutlet="itemTemplate || _itemTemplate; context: { $implicit: item }"></ng-container>
                         </div>
-                        <div
-                            *ngFor="let item of clonedItemsForFinishing; let index = index"
-                            [class]="cx('itemClone', { index })"
-                            [attr.data-p-carousel-item-active]="false"
-                            [attr.data-p-carousel-item-start]="false"
-                            [attr.data-p-carousel-item-end]="false"
-                            [pBind]="ptm('itemClone')"
-                        >
+                        <div *ngFor="let item of clonedItemsForFinishing; let index = index" [class]="cx('itemClone', { index })">
                             <ng-container *ngTemplateOutlet="itemTemplate || _itemTemplate; context: { $implicit: item }"></ng-container>
                         </div>
                     </div>
                 </div>
-                <p-button
-                    type="button"
-                    *ngIf="showNavigators"
-                    [class]="cx('pcNextButton')"
-                    (click)="navForward($event)"
-                    [attr.aria-label]="ariaNextButtonLabel()"
-                    [buttonProps]="nextButtonProps"
-                    [text]="true"
-                    [pt]="ptm('pcNextButton')"
-                    attr.data-pc-group-section="navigator"
-                >
+                <p-button type="button" *ngIf="showNavigators" [class]="cx('pcNextButton')" (click)="navForward($event)" [attr.aria-label]="ariaNextButtonLabel()" [buttonProps]="nextButtonProps" [text]="true">
                     <ng-template #icon>
                         <ng-container *ngIf="!nextIconTemplate && !_nextIconTemplate && !nextButtonProps?.icon">
                             <svg data-p-icon="chevron-right" *ngIf="!isVertical()" />
@@ -1467,8 +1391,8 @@ var Carousel = class _Carousel extends BaseComponent {
                     </ng-template>
                 </p-button>
             </div>
-            <ul #indicatorContent [class]="cx('indicatorList')" [ngStyle]="indicatorsContentStyle" *ngIf="showIndicators" (keydown)="onIndicatorKeydown($event)" [pBind]="ptm('indicatorList')">
-                <li *ngFor="let totalDot of totalDotsArray(); let i = index" [class]="cx('indicator', { index: i })" [attr.data-p-active]="_page === i" [pBind]="getIndicatorPTOptions('indicator', i)">
+            <ul #indicatorContent [class]="cx('indicatorList')" [ngStyle]="indicatorsContentStyle" *ngIf="showIndicators" (keydown)="onIndicatorKeydown($event)">
+                <li *ngFor="let totalDot of totalDotsArray(); let i = index" [class]="cx('indicator', { index: i })" [attr.data-pc-section]="'indicator'">
                     <button
                         type="button"
                         [class]="cx('indicatorButton')"
@@ -1477,23 +1401,18 @@ var Carousel = class _Carousel extends BaseComponent {
                         [attr.aria-label]="ariaPageLabel(i + 1)"
                         [attr.aria-current]="_page === i ? 'page' : undefined"
                         [tabindex]="_page === i ? 0 : -1"
-                        [pBind]="getIndicatorPTOptions('indicatorButton', i)"
                     ></button>
                 </li>
             </ul>
         </div>
-        <div [class]="cx('footer')" *ngIf="footerFacet || footerTemplate || _footerTemplate" [pBind]="ptm('footer')">
+        <div [class]="cx('footer')" *ngIf="footerFacet || footerTemplate || _footerTemplate">
             <ng-content select="p-footer"></ng-content>
             <ng-container *ngTemplateOutlet="footerTemplate || _footerTemplate"></ng-container>
         </div>
     `,
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
-      providers: [CarouselStyle, {
-        provide: PARENT_INSTANCE,
-        useExisting: Carousel
-      }],
-      hostDirectives: [Bind],
+      providers: [CarouselStyle],
       host: {
         "[attr.id]": "id",
         "[attr.role]": "'region'",

@@ -1,63 +1,66 @@
 import {
-  Checkbox
-} from "./chunk-FK5NSSRY.js";
-import {
   InputIcon
-} from "./chunk-NOMKJF35.js";
+} from "./chunk-TTXVI75E.js";
 import {
   IconField
-} from "./chunk-BFEG2ZPT.js";
-import {
-  Chip
-} from "./chunk-ZQAYUNRD.js";
-import {
-  Overlay
-} from "./chunk-EIBJYEJL.js";
-import {
-  Scroller
-} from "./chunk-K26YQORK.js";
-import {
-  InputText
-} from "./chunk-IG3R3ILJ.js";
-import {
-  BaseEditableHolder
-} from "./chunk-343RM6UZ.js";
-import "./chunk-2R7VQYSP.js";
-import {
-  Fluid
-} from "./chunk-PJRMHEN5.js";
-import {
-  AutoFocus
-} from "./chunk-YNLAOK3J.js";
+} from "./chunk-TBZ7QADV.js";
 import {
   Tooltip
-} from "./chunk-NG66ICPZ.js";
+} from "./chunk-IRWYTOKA.js";
 import {
-  DomHandler,
-  unblockBodyScroll
-} from "./chunk-S73J4WE3.js";
+  Checkbox
+} from "./chunk-TZCSIOQB.js";
 import {
-  ChevronDownIcon,
-  SearchIcon,
-  TimesIcon
-} from "./chunk-RHA7RL5K.js";
+  Overlay
+} from "./chunk-ERBKXNZB.js";
 import {
-  CheckIcon
-} from "./chunk-YXZQJBKH.js";
+  Scroller
+} from "./chunk-MUYJFYGV.js";
+import {
+  InputText
+} from "./chunk-35KXM4ZV.js";
+import {
+  BaseEditableHolder
+} from "./chunk-67V7CIUT.js";
+import "./chunk-5OCKW6BF.js";
+import {
+  Chip
+} from "./chunk-F4YQVUUW.js";
 import {
   ObjectUtils
 } from "./chunk-BB55NINM.js";
 import {
-  Bind,
-  BindModule
-} from "./chunk-MLQGRGGO.js";
+  AutoFocus
+} from "./chunk-KOXUNDHI.js";
 import {
-  BaseComponent,
-  PARENT_INSTANCE
-} from "./chunk-YNJ5GKCH.js";
+  Fluid
+} from "./chunk-AXS7T3GQ.js";
+import "./chunk-6PBBDZZF.js";
+import {
+  DomHandler,
+  unblockBodyScroll
+} from "./chunk-QVUTNZUY.js";
+import {
+  Ripple
+} from "./chunk-VZLF74PJ.js";
+import {
+  CheckIcon,
+  ChevronDownIcon,
+  SearchIcon,
+  TimesIcon
+} from "./chunk-BIL3W6KN.js";
+import {
+  FormsModule,
+  NG_VALUE_ACCESSOR,
+  NgControlStatus,
+  NgModel
+} from "./chunk-RZEKJVYA.js";
+import {
+  BaseComponent
+} from "./chunk-4YMQ5OOY.js";
 import {
   BaseStyle
-} from "./chunk-4ATYD752.js";
+} from "./chunk-L2L2T6ID.js";
 import {
   FilterService,
   Footer,
@@ -66,31 +69,9 @@ import {
   PrimeTemplate,
   SharedModule,
   TranslationKeys
-} from "./chunk-LMEEH3AJ.js";
+} from "./chunk-ZKOTJBQ6.js";
 import "./chunk-6QGHQEN4.js";
 import "./chunk-53DGU4C2.js";
-import {
-  FormsModule,
-  NG_VALUE_ACCESSOR,
-  NgControlStatus,
-  NgModel
-} from "./chunk-RZEKJVYA.js";
-import "./chunk-GOP36Q47.js";
-import {
-  C,
-  J,
-  Lt,
-  M,
-  b,
-  bt,
-  k,
-  p,
-  s,
-  s3 as s2,
-  vt,
-  y,
-  z2 as z
-} from "./chunk-UCHM6OXG.js";
 import {
   CommonModule,
   NgClass,
@@ -117,7 +98,6 @@ import {
   input,
   numberAttribute,
   setClassMetadata,
-  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -162,7 +142,6 @@ import {
   ɵɵviewQuery
 } from "./chunk-EIF6IUR4.js";
 import {
-  InjectionToken,
   computed,
   effect,
   forwardRef,
@@ -177,16 +156,34 @@ import {
 import "./chunk-YVXMBCE5.js";
 import "./chunk-G6ECYYJH.js";
 import "./chunk-RTGP7ALM.js";
+import "./chunk-BMDSN43F.js";
+import {
+  Lt,
+  M,
+  b,
+  b2,
+  bt,
+  c,
+  j,
+  k,
+  s,
+  s3 as s2,
+  vt,
+  y,
+  z2 as z
+} from "./chunk-RK2DVQNP.js";
 import {
   __spreadProps,
   __spreadValues
 } from "./chunk-4MWRP73S.js";
 
 // node_modules/@primeuix/styles/dist/multiselect/index.mjs
-var style = "\n    .p-multiselect {\n        display: inline-flex;\n        cursor: pointer;\n        position: relative;\n        user-select: none;\n        background: dt('multiselect.background');\n        border: 1px solid dt('multiselect.border.color');\n        transition:\n            background dt('multiselect.transition.duration'),\n            color dt('multiselect.transition.duration'),\n            border-color dt('multiselect.transition.duration'),\n            outline-color dt('multiselect.transition.duration'),\n            box-shadow dt('multiselect.transition.duration');\n        border-radius: dt('multiselect.border.radius');\n        outline-color: transparent;\n        box-shadow: dt('multiselect.shadow');\n    }\n\n    .p-multiselect:not(.p-disabled):hover {\n        border-color: dt('multiselect.hover.border.color');\n    }\n\n    .p-multiselect:not(.p-disabled).p-focus {\n        border-color: dt('multiselect.focus.border.color');\n        box-shadow: dt('multiselect.focus.ring.shadow');\n        outline: dt('multiselect.focus.ring.width') dt('multiselect.focus.ring.style') dt('multiselect.focus.ring.color');\n        outline-offset: dt('multiselect.focus.ring.offset');\n    }\n\n    .p-multiselect.p-variant-filled {\n        background: dt('multiselect.filled.background');\n    }\n\n    .p-multiselect.p-variant-filled:not(.p-disabled):hover {\n        background: dt('multiselect.filled.hover.background');\n    }\n\n    .p-multiselect.p-variant-filled.p-focus {\n        background: dt('multiselect.filled.focus.background');\n    }\n\n    .p-multiselect.p-invalid {\n        border-color: dt('multiselect.invalid.border.color');\n    }\n\n    .p-multiselect.p-disabled {\n        opacity: 1;\n        background: dt('multiselect.disabled.background');\n    }\n\n    .p-multiselect-dropdown {\n        display: flex;\n        align-items: center;\n        justify-content: center;\n        flex-shrink: 0;\n        background: transparent;\n        color: dt('multiselect.dropdown.color');\n        width: dt('multiselect.dropdown.width');\n        border-start-end-radius: dt('multiselect.border.radius');\n        border-end-end-radius: dt('multiselect.border.radius');\n    }\n\n    .p-multiselect-clear-icon {\n        align-self: center;\n        color: dt('multiselect.clear.icon.color');\n        inset-inline-end: dt('multiselect.dropdown.width');\n    }\n\n    .p-multiselect-label-container {\n        overflow: hidden;\n        flex: 1 1 auto;\n        cursor: pointer;\n    }\n\n    .p-multiselect-label {\n        white-space: nowrap;\n        cursor: pointer;\n        overflow: hidden;\n        text-overflow: ellipsis;\n        padding: dt('multiselect.padding.y') dt('multiselect.padding.x');\n        color: dt('multiselect.color');\n    }\n\n    .p-multiselect-display-chip .p-multiselect-label {\n        display: flex;\n        align-items: center;\n        gap: calc(dt('multiselect.padding.y') / 2);\n    }\n\n    .p-multiselect-label.p-placeholder {\n        color: dt('multiselect.placeholder.color');\n    }\n\n    .p-multiselect.p-invalid .p-multiselect-label.p-placeholder {\n        color: dt('multiselect.invalid.placeholder.color');\n    }\n\n    .p-multiselect.p-disabled .p-multiselect-label {\n        color: dt('multiselect.disabled.color');\n    }\n\n    .p-multiselect-label-empty {\n        overflow: hidden;\n        visibility: hidden;\n    }\n\n    .p-multiselect-overlay {\n        position: absolute;\n        top: 0;\n        left: 0;\n        background: dt('multiselect.overlay.background');\n        color: dt('multiselect.overlay.color');\n        border: 1px solid dt('multiselect.overlay.border.color');\n        border-radius: dt('multiselect.overlay.border.radius');\n        box-shadow: dt('multiselect.overlay.shadow');\n        min-width: 100%;\n    }\n\n    .p-multiselect-header {\n        display: flex;\n        align-items: center;\n        padding: dt('multiselect.list.header.padding');\n    }\n\n    .p-multiselect-header .p-checkbox {\n        margin-inline-end: dt('multiselect.option.gap');\n    }\n\n    .p-multiselect-filter-container {\n        flex: 1 1 auto;\n    }\n\n    .p-multiselect-filter {\n        width: 100%;\n    }\n\n    .p-multiselect-list-container {\n        overflow: auto;\n    }\n\n    .p-multiselect-list {\n        margin: 0;\n        padding: 0;\n        list-style-type: none;\n        padding: dt('multiselect.list.padding');\n        display: flex;\n        flex-direction: column;\n        gap: dt('multiselect.list.gap');\n    }\n\n    .p-multiselect-option {\n        cursor: pointer;\n        font-weight: normal;\n        white-space: nowrap;\n        position: relative;\n        overflow: hidden;\n        display: flex;\n        align-items: center;\n        gap: dt('multiselect.option.gap');\n        padding: dt('multiselect.option.padding');\n        border: 0 none;\n        color: dt('multiselect.option.color');\n        background: transparent;\n        transition:\n            background dt('multiselect.transition.duration'),\n            color dt('multiselect.transition.duration'),\n            border-color dt('multiselect.transition.duration'),\n            box-shadow dt('multiselect.transition.duration'),\n            outline-color dt('multiselect.transition.duration');\n        border-radius: dt('multiselect.option.border.radius');\n    }\n\n    .p-multiselect-option:not(.p-multiselect-option-selected):not(.p-disabled).p-focus {\n        background: dt('multiselect.option.focus.background');\n        color: dt('multiselect.option.focus.color');\n    }\n\n    .p-multiselect-option.p-multiselect-option-selected {\n        background: dt('multiselect.option.selected.background');\n        color: dt('multiselect.option.selected.color');\n    }\n\n    .p-multiselect-option.p-multiselect-option-selected.p-focus {\n        background: dt('multiselect.option.selected.focus.background');\n        color: dt('multiselect.option.selected.focus.color');\n    }\n\n    .p-multiselect-option-group {\n        cursor: auto;\n        margin: 0;\n        padding: dt('multiselect.option.group.padding');\n        background: dt('multiselect.option.group.background');\n        color: dt('multiselect.option.group.color');\n        font-weight: dt('multiselect.option.group.font.weight');\n    }\n\n    .p-multiselect-empty-message {\n        padding: dt('multiselect.empty.message.padding');\n    }\n\n    .p-multiselect-label .p-chip {\n        padding-block-start: calc(dt('multiselect.padding.y') / 2);\n        padding-block-end: calc(dt('multiselect.padding.y') / 2);\n        border-radius: dt('multiselect.chip.border.radius');\n    }\n\n    .p-multiselect-label:has(.p-chip) {\n        padding: calc(dt('multiselect.padding.y') / 2) calc(dt('multiselect.padding.x') / 2);\n    }\n\n    .p-multiselect-fluid {\n        display: flex;\n        width: 100%;\n    }\n\n    .p-multiselect-sm .p-multiselect-label {\n        font-size: dt('multiselect.sm.font.size');\n        padding-block: dt('multiselect.sm.padding.y');\n        padding-inline: dt('multiselect.sm.padding.x');\n    }\n\n    .p-multiselect-sm .p-multiselect-dropdown .p-icon {\n        font-size: dt('multiselect.sm.font.size');\n        width: dt('multiselect.sm.font.size');\n        height: dt('multiselect.sm.font.size');\n    }\n\n    .p-multiselect-lg .p-multiselect-label {\n        font-size: dt('multiselect.lg.font.size');\n        padding-block: dt('multiselect.lg.padding.y');\n        padding-inline: dt('multiselect.lg.padding.x');\n    }\n\n    .p-multiselect-lg .p-multiselect-dropdown .p-icon {\n        font-size: dt('multiselect.lg.font.size');\n        width: dt('multiselect.lg.font.size');\n        height: dt('multiselect.lg.font.size');\n    }\n\n    .p-floatlabel-in .p-multiselect-filter {\n        padding-block-start: dt('multiselect.padding.y');\n        padding-block-end: dt('multiselect.padding.y');\n    }\n";
+var style = "\n    .p-multiselect {\n        display: inline-flex;\n        cursor: pointer;\n        position: relative;\n        user-select: none;\n        background: dt('multiselect.background');\n        border: 1px solid dt('multiselect.border.color');\n        transition:\n            background dt('multiselect.transition.duration'),\n            color dt('multiselect.transition.duration'),\n            border-color dt('multiselect.transition.duration'),\n            outline-color dt('multiselect.transition.duration'),\n            box-shadow dt('multiselect.transition.duration');\n        border-radius: dt('multiselect.border.radius');\n        outline-color: transparent;\n        box-shadow: dt('multiselect.shadow');\n    }\n\n    .p-multiselect:not(.p-disabled):hover {\n        border-color: dt('multiselect.hover.border.color');\n    }\n\n    .p-multiselect:not(.p-disabled).p-focus {\n        border-color: dt('multiselect.focus.border.color');\n        box-shadow: dt('multiselect.focus.ring.shadow');\n        outline: dt('multiselect.focus.ring.width') dt('multiselect.focus.ring.style') dt('multiselect.focus.ring.color');\n        outline-offset: dt('multiselect.focus.ring.offset');\n    }\n\n    .p-multiselect.p-variant-filled {\n        background: dt('multiselect.filled.background');\n    }\n\n    .p-multiselect.p-variant-filled:not(.p-disabled):hover {\n        background: dt('multiselect.filled.hover.background');\n    }\n\n    .p-multiselect.p-variant-filled.p-focus {\n        background: dt('multiselect.filled.focus.background');\n    }\n\n    .p-multiselect.p-invalid {\n        border-color: dt('multiselect.invalid.border.color');\n    }\n\n    .p-multiselect.p-disabled {\n        opacity: 1;\n        background: dt('multiselect.disabled.background');\n    }\n\n    .p-multiselect-dropdown {\n        display: flex;\n        align-items: center;\n        justify-content: center;\n        flex-shrink: 0;\n        background: transparent;\n        color: dt('multiselect.dropdown.color');\n        width: dt('multiselect.dropdown.width');\n        border-start-end-radius: dt('multiselect.border.radius');\n        border-end-end-radius: dt('multiselect.border.radius');\n    }\n\n    .p-multiselect-clear-icon {\n        position: absolute;\n        top: 50%;\n        margin-top: -0.5rem;\n        color: dt('multiselect.clear.icon.color');\n        inset-inline-end: dt('multiselect.dropdown.width');\n    }\n\n    .p-multiselect-label-container {\n        overflow: hidden;\n        flex: 1 1 auto;\n        cursor: pointer;\n    }\n\n    .p-multiselect-label {\n        white-space: nowrap;\n        cursor: pointer;\n        overflow: hidden;\n        text-overflow: ellipsis;\n        padding: dt('multiselect.padding.y') dt('multiselect.padding.x');\n        color: dt('multiselect.color');\n    }\n\n    .p-multiselect-display-chip .p-multiselect-label {\n        display: flex;\n        align-items: center;\n        gap: calc(dt('multiselect.padding.y') / 2);\n    }\n\n    .p-multiselect-label.p-placeholder {\n        color: dt('multiselect.placeholder.color');\n    }\n\n    .p-multiselect.p-invalid .p-multiselect-label.p-placeholder {\n        color: dt('multiselect.invalid.placeholder.color');\n    }\n\n    .p-multiselect.p-disabled .p-multiselect-label {\n        color: dt('multiselect.disabled.color');\n    }\n\n    .p-multiselect-label-empty {\n        overflow: hidden;\n        visibility: hidden;\n    }\n\n    .p-multiselect-overlay {\n        position: absolute;\n        top: 0;\n        left: 0;\n        background: dt('multiselect.overlay.background');\n        color: dt('multiselect.overlay.color');\n        border: 1px solid dt('multiselect.overlay.border.color');\n        border-radius: dt('multiselect.overlay.border.radius');\n        box-shadow: dt('multiselect.overlay.shadow');\n        min-width: 100%;\n    }\n\n    .p-multiselect-header {\n        display: flex;\n        align-items: center;\n        padding: dt('multiselect.list.header.padding');\n    }\n\n    .p-multiselect-header .p-checkbox {\n        margin-inline-end: dt('multiselect.option.gap');\n    }\n\n    .p-multiselect-filter-container {\n        flex: 1 1 auto;\n    }\n\n    .p-multiselect-filter {\n        width: 100%;\n    }\n\n    .p-multiselect-list-container {\n        overflow: auto;\n    }\n\n    .p-multiselect-list {\n        margin: 0;\n        padding: 0;\n        list-style-type: none;\n        padding: dt('multiselect.list.padding');\n        display: flex;\n        flex-direction: column;\n        gap: dt('multiselect.list.gap');\n    }\n\n    .p-multiselect-option {\n        cursor: pointer;\n        font-weight: normal;\n        white-space: nowrap;\n        position: relative;\n        overflow: hidden;\n        display: flex;\n        align-items: center;\n        gap: dt('multiselect.option.gap');\n        padding: dt('multiselect.option.padding');\n        border: 0 none;\n        color: dt('multiselect.option.color');\n        background: transparent;\n        transition:\n            background dt('multiselect.transition.duration'),\n            color dt('multiselect.transition.duration'),\n            border-color dt('multiselect.transition.duration'),\n            box-shadow dt('multiselect.transition.duration'),\n            outline-color dt('multiselect.transition.duration');\n        border-radius: dt('multiselect.option.border.radius');\n    }\n\n    .p-multiselect-option:not(.p-multiselect-option-selected):not(.p-disabled).p-focus {\n        background: dt('multiselect.option.focus.background');\n        color: dt('multiselect.option.focus.color');\n    }\n\n    .p-multiselect-option.p-multiselect-option-selected {\n        background: dt('multiselect.option.selected.background');\n        color: dt('multiselect.option.selected.color');\n    }\n\n    .p-multiselect-option.p-multiselect-option-selected.p-focus {\n        background: dt('multiselect.option.selected.focus.background');\n        color: dt('multiselect.option.selected.focus.color');\n    }\n\n    .p-multiselect-option-group {\n        cursor: auto;\n        margin: 0;\n        padding: dt('multiselect.option.group.padding');\n        background: dt('multiselect.option.group.background');\n        color: dt('multiselect.option.group.color');\n        font-weight: dt('multiselect.option.group.font.weight');\n    }\n\n    .p-multiselect-empty-message {\n        padding: dt('multiselect.empty.message.padding');\n    }\n\n    .p-multiselect-label .p-chip {\n        padding-block-start: calc(dt('multiselect.padding.y') / 2);\n        padding-block-end: calc(dt('multiselect.padding.y') / 2);\n        border-radius: dt('multiselect.chip.border.radius');\n    }\n\n    .p-multiselect-label:has(.p-chip) {\n        padding: calc(dt('multiselect.padding.y') / 2) calc(dt('multiselect.padding.x') / 2);\n    }\n\n    .p-multiselect-fluid {\n        display: flex;\n        width: 100%;\n    }\n\n    .p-multiselect-sm .p-multiselect-label {\n        font-size: dt('multiselect.sm.font.size');\n        padding-block: dt('multiselect.sm.padding.y');\n        padding-inline: dt('multiselect.sm.padding.x');\n    }\n\n    .p-multiselect-sm .p-multiselect-dropdown .p-icon {\n        font-size: dt('multiselect.sm.font.size');\n        width: dt('multiselect.sm.font.size');\n        height: dt('multiselect.sm.font.size');\n    }\n\n    .p-multiselect-lg .p-multiselect-label {\n        font-size: dt('multiselect.lg.font.size');\n        padding-block: dt('multiselect.lg.padding.y');\n        padding-inline: dt('multiselect.lg.padding.x');\n    }\n\n    .p-multiselect-lg .p-multiselect-dropdown .p-icon {\n        font-size: dt('multiselect.lg.font.size');\n        width: dt('multiselect.lg.font.size');\n        height: dt('multiselect.lg.font.size');\n    }\n";
 
 // node_modules/primeng/fesm2022/primeng-multiselect.mjs
-var _c0 = ["pMultiSelectItem", ""];
+var _c0 = (a0) => ({
+  height: a0
+});
 var _c1 = (a0) => ({
   $implicit: a0
 });
@@ -194,16 +191,16 @@ var _c2 = (a0, a1) => ({
   checked: a0,
   class: a1
 });
-function MultiSelectItem_ng_container_1_ng_template_1_0_ng_template_0_Template(rf, ctx) {
+function MultiSelectItem_ng_container_2_ng_template_1_0_ng_template_0_Template(rf, ctx) {
 }
-function MultiSelectItem_ng_container_1_ng_template_1_0_Template(rf, ctx) {
+function MultiSelectItem_ng_container_2_ng_template_1_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, MultiSelectItem_ng_container_1_ng_template_1_0_ng_template_0_Template, 0, 0, "ng-template");
+    ɵɵtemplate(0, MultiSelectItem_ng_container_2_ng_template_1_0_ng_template_0_Template, 0, 0, "ng-template");
   }
 }
-function MultiSelectItem_ng_container_1_ng_template_1_Template(rf, ctx) {
+function MultiSelectItem_ng_container_2_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, MultiSelectItem_ng_container_1_ng_template_1_0_Template, 1, 0, null, 3);
+    ɵɵtemplate(0, MultiSelectItem_ng_container_2_ng_template_1_0_Template, 1, 0, null, 4);
   }
   if (rf & 2) {
     const klass_r1 = ctx.class;
@@ -211,14 +208,14 @@ function MultiSelectItem_ng_container_1_ng_template_1_Template(rf, ctx) {
     ɵɵproperty("ngTemplateOutlet", ctx_r1.itemCheckboxIconTemplate)("ngTemplateOutletContext", ɵɵpureFunction2(2, _c2, ctx_r1.selected, klass_r1));
   }
 }
-function MultiSelectItem_ng_container_1_Template(rf, ctx) {
+function MultiSelectItem_ng_container_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, MultiSelectItem_ng_container_1_ng_template_1_Template, 1, 5, "ng-template", null, 0, ɵɵtemplateRefExtractor);
+    ɵɵtemplate(1, MultiSelectItem_ng_container_2_ng_template_1_Template, 1, 5, "ng-template", null, 0, ɵɵtemplateRefExtractor);
     ɵɵelementContainerEnd();
   }
 }
-function MultiSelectItem_span_2_Template(rf, ctx) {
+function MultiSelectItem_span_3_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementStart(0, "span");
     ɵɵtext(1);
@@ -230,7 +227,7 @@ function MultiSelectItem_span_2_Template(rf, ctx) {
     ɵɵtextInterpolate(ctx_r1.label ?? "empty");
   }
 }
-function MultiSelectItem_ng_container_3_Template(rf, ctx) {
+function MultiSelectItem_ng_container_4_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainer(0);
   }
@@ -277,14 +274,11 @@ var _c33 = (a0, a1, a2) => ({
   partialSelected: a1,
   class: a2
 });
-var _c34 = (a0) => ({
-  height: a0
-});
-var _c35 = (a0, a1) => ({
+var _c34 = (a0, a1) => ({
   $implicit: a0,
   options: a1
 });
-var _c36 = () => ({});
+var _c35 = () => ({});
 function MultiSelect_ng_container_5_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
@@ -314,21 +308,20 @@ function MultiSelect_ng_container_5_ng_container_2_Conditional_2_div_0_ng_contai
 function MultiSelect_ng_container_5_ng_container_2_Conditional_2_div_0_ng_container_3_ng_template_1_ng_container_0_span_1_Template(rf, ctx) {
   if (rf & 1) {
     const _r5 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "span", 27);
+    ɵɵelementStart(0, "span", 26);
     ɵɵlistener("click", function MultiSelect_ng_container_5_ng_container_2_Conditional_2_div_0_ng_container_3_ng_template_1_ng_container_0_span_1_Template_span_click_0_listener($event) {
       ɵɵrestoreView(_r5);
       const item_r4 = ɵɵnextContext(4).$implicit;
       const ctx_r1 = ɵɵnextContext(4);
       return ɵɵresetView(ctx_r1.removeOption(item_r4, $event));
     });
-    ɵɵtemplate(1, MultiSelect_ng_container_5_ng_container_2_Conditional_2_div_0_ng_container_3_ng_template_1_ng_container_0_span_1_ng_container_1_Template, 1, 0, "ng-container", 28);
+    ɵɵtemplate(1, MultiSelect_ng_container_5_ng_container_2_Conditional_2_div_0_ng_container_3_ng_template_1_ng_container_0_span_1_ng_container_1_Template, 1, 0, "ng-container", 27);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(8);
     ɵɵclassMap(ctx_r1.cx("chipIcon"));
-    ɵɵproperty("pBind", ctx_r1.ptm("chipIcon"));
-    ɵɵattribute("aria-hidden", true);
+    ɵɵattribute("data-pc-section", "clearicon")("aria-hidden", true);
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r1.chipIconTemplate || ctx_r1._chipIconTemplate || ctx_r1.removeTokenIconTemplate || ctx_r1._removeTokenIconTemplate)("ngTemplateOutletContext", ɵɵpureFunction0(6, _c30));
   }
@@ -336,7 +329,7 @@ function MultiSelect_ng_container_5_ng_container_2_Conditional_2_div_0_ng_contai
 function MultiSelect_ng_container_5_ng_container_2_Conditional_2_div_0_ng_container_3_ng_template_1_ng_container_0_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, MultiSelect_ng_container_5_ng_container_2_Conditional_2_div_0_ng_container_3_ng_template_1_ng_container_0_span_1_Template, 2, 7, "span", 26);
+    ɵɵtemplate(1, MultiSelect_ng_container_5_ng_container_2_Conditional_2_div_0_ng_container_3_ng_template_1_ng_container_0_span_1_Template, 2, 7, "span", 25);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -347,7 +340,7 @@ function MultiSelect_ng_container_5_ng_container_2_Conditional_2_div_0_ng_contai
 }
 function MultiSelect_ng_container_5_ng_container_2_Conditional_2_div_0_ng_container_3_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, MultiSelect_ng_container_5_ng_container_2_Conditional_2_div_0_ng_container_3_ng_template_1_ng_container_0_Template, 2, 1, "ng-container", 20);
+    ɵɵtemplate(0, MultiSelect_ng_container_5_ng_container_2_Conditional_2_div_0_ng_container_3_ng_template_1_ng_container_0_Template, 2, 1, "ng-container", 19);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(6);
@@ -364,30 +357,29 @@ function MultiSelect_ng_container_5_ng_container_2_Conditional_2_div_0_ng_contai
 function MultiSelect_ng_container_5_ng_container_2_Conditional_2_div_0_Template(rf, ctx) {
   if (rf & 1) {
     const _r3 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "div", 19, 4)(2, "p-chip", 25);
+    ɵɵelementStart(0, "div", null, 4)(2, "p-chip", 24);
     ɵɵlistener("onRemove", function MultiSelect_ng_container_5_ng_container_2_Conditional_2_div_0_Template_p_chip_onRemove_2_listener($event) {
       const item_r4 = ɵɵrestoreView(_r3).$implicit;
       const ctx_r1 = ɵɵnextContext(4);
       return ɵɵresetView(ctx_r1.removeOption(item_r4, $event));
     });
-    ɵɵtemplate(3, MultiSelect_ng_container_5_ng_container_2_Conditional_2_div_0_ng_container_3_Template, 3, 0, "ng-container", 20);
+    ɵɵtemplate(3, MultiSelect_ng_container_5_ng_container_2_Conditional_2_div_0_ng_container_3_Template, 3, 0, "ng-container", 19);
     ɵɵelementEnd()();
   }
   if (rf & 2) {
     const item_r4 = ctx.$implicit;
     const ctx_r1 = ɵɵnextContext(4);
     ɵɵclassMap(ctx_r1.cx("chipItem"));
-    ɵɵproperty("pBind", ctx_r1.ptm("chipItem"));
     ɵɵadvance(2);
     ɵɵclassMap(ctx_r1.cx("pcChip"));
-    ɵɵproperty("pt", ctx_r1.ptm("pcChip"))("label", ctx_r1.getLabelByValue(item_r4))("removable", !ctx_r1.$disabled() && !ctx_r1.readonly)("removeIcon", ctx_r1.chipIcon);
+    ɵɵproperty("label", ctx_r1.getLabelByValue(item_r4))("removable", !ctx_r1.$disabled() && !ctx_r1.readonly)("removeIcon", ctx_r1.chipIcon);
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r1.chipIconTemplate || ctx_r1._chipIconTemplate || ctx_r1.removeTokenIconTemplate || ctx_r1._removeTokenIconTemplate);
   }
 }
 function MultiSelect_ng_container_5_ng_container_2_Conditional_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, MultiSelect_ng_container_5_ng_container_2_Conditional_2_div_0_Template, 4, 10, "div", 24);
+    ɵɵtemplate(0, MultiSelect_ng_container_5_ng_container_2_Conditional_2_div_0_Template, 4, 8, "div", 23);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
@@ -409,8 +401,8 @@ function MultiSelect_ng_container_5_ng_container_2_ng_container_3_Template(rf, c
 function MultiSelect_ng_container_5_ng_container_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵconditionalCreate(1, MultiSelect_ng_container_5_ng_container_2_Conditional_1_Template, 1, 1)(2, MultiSelect_ng_container_5_ng_container_2_Conditional_2_Template, 1, 1, "div", 23);
-    ɵɵtemplate(3, MultiSelect_ng_container_5_ng_container_2_ng_container_3_Template, 2, 1, "ng-container", 20);
+    ɵɵconditionalCreate(1, MultiSelect_ng_container_5_ng_container_2_Conditional_1_Template, 1, 1)(2, MultiSelect_ng_container_5_ng_container_2_Conditional_2_Template, 1, 1, "div", 22);
+    ɵɵtemplate(3, MultiSelect_ng_container_5_ng_container_2_ng_container_3_Template, 2, 1, "ng-container", 19);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -424,7 +416,7 @@ function MultiSelect_ng_container_5_ng_container_2_Template(rf, ctx) {
 function MultiSelect_ng_container_5_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, MultiSelect_ng_container_5_ng_container_1_Template, 2, 1, "ng-container", 20)(2, MultiSelect_ng_container_5_ng_container_2_Template, 4, 2, "ng-container", 20);
+    ɵɵtemplate(1, MultiSelect_ng_container_5_ng_container_1_Template, 2, 1, "ng-container", 19)(2, MultiSelect_ng_container_5_ng_container_2_Template, 4, 2, "ng-container", 19);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -455,7 +447,7 @@ function MultiSelect_ng_container_6_ng_container_2_Template(rf, ctx) {
 function MultiSelect_ng_container_6_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, MultiSelect_ng_container_6_ng_container_1_Template, 1, 0, "ng-container", 28)(2, MultiSelect_ng_container_6_ng_container_2_Template, 2, 1, "ng-container", 20);
+    ɵɵtemplate(1, MultiSelect_ng_container_6_ng_container_1_Template, 1, 0, "ng-container", 27)(2, MultiSelect_ng_container_6_ng_container_2_Template, 2, 1, "ng-container", 19);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -470,7 +462,7 @@ function MultiSelect_ng_container_7__svg_svg_1_Template(rf, ctx) {
   if (rf & 1) {
     const _r6 = ɵɵgetCurrentView();
     ɵɵnamespaceSVG();
-    ɵɵelementStart(0, "svg", 31);
+    ɵɵelementStart(0, "svg", 29);
     ɵɵlistener("click", function MultiSelect_ng_container_7__svg_svg_1_Template_svg_click_0_listener($event) {
       ɵɵrestoreView(_r6);
       const ctx_r1 = ɵɵnextContext(2);
@@ -481,8 +473,7 @@ function MultiSelect_ng_container_7__svg_svg_1_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r1.cx("clearIcon"));
-    ɵɵproperty("pBind", ctx_r1.ptm("clearIcon"));
-    ɵɵattribute("aria-hidden", true);
+    ɵɵattribute("data-pc-section", "clearicon")("aria-hidden", true);
   }
 }
 function MultiSelect_ng_container_7_span_2_1_ng_template_0_Template(rf, ctx) {
@@ -495,20 +486,19 @@ function MultiSelect_ng_container_7_span_2_1_Template(rf, ctx) {
 function MultiSelect_ng_container_7_span_2_Template(rf, ctx) {
   if (rf & 1) {
     const _r7 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "span", 27);
+    ɵɵelementStart(0, "span", 26);
     ɵɵlistener("click", function MultiSelect_ng_container_7_span_2_Template_span_click_0_listener($event) {
       ɵɵrestoreView(_r7);
       const ctx_r1 = ɵɵnextContext(2);
       return ɵɵresetView(ctx_r1.clear($event));
     });
-    ɵɵtemplate(1, MultiSelect_ng_container_7_span_2_1_Template, 1, 0, null, 32);
+    ɵɵtemplate(1, MultiSelect_ng_container_7_span_2_1_Template, 1, 0, null, 30);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r1.cx("clearIcon"));
-    ɵɵproperty("pBind", ctx_r1.ptm("clearIcon"));
-    ɵɵattribute("aria-hidden", true);
+    ɵɵattribute("data-pc-section", "clearicon")("aria-hidden", true);
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r1.clearIconTemplate || ctx_r1._clearIconTemplate);
   }
@@ -516,7 +506,7 @@ function MultiSelect_ng_container_7_span_2_Template(rf, ctx) {
 function MultiSelect_ng_container_7_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, MultiSelect_ng_container_7__svg_svg_1_Template, 1, 4, "svg", 29)(2, MultiSelect_ng_container_7_span_2_Template, 2, 5, "span", 30);
+    ɵɵtemplate(1, MultiSelect_ng_container_7__svg_svg_1_Template, 1, 4, "svg", 28)(2, MultiSelect_ng_container_7_span_2_Template, 2, 5, "span", 25);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -535,7 +525,7 @@ function MultiSelect_ng_container_9_ng_container_1_ng_container_1_Template(rf, c
 function MultiSelect_ng_container_9_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, MultiSelect_ng_container_9_ng_container_1_ng_container_1_Template, 1, 0, "ng-container", 32);
+    ɵɵtemplate(1, MultiSelect_ng_container_9_ng_container_1_ng_container_1_Template, 1, 0, "ng-container", 30);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -546,30 +536,28 @@ function MultiSelect_ng_container_9_ng_container_1_Template(rf, ctx) {
 }
 function MultiSelect_ng_container_9_ng_container_2_span_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "span", 19);
+    ɵɵelement(0, "span");
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r1.cn(ctx_r1.cx("loadingIcon"), "pi-spin " + ctx_r1.loadingIcon));
-    ɵɵproperty("pBind", ctx_r1.ptm("loadingIcon"));
     ɵɵattribute("aria-hidden", true);
   }
 }
 function MultiSelect_ng_container_9_ng_container_2_span_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "span", 19);
+    ɵɵelement(0, "span");
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r1.cn(ctx_r1.cx("loadingIcon"), "pi pi-spinner pi-spin"));
-    ɵɵproperty("pBind", ctx_r1.ptm("loadingIcon"));
     ɵɵattribute("aria-hidden", true);
   }
 }
 function MultiSelect_ng_container_9_ng_container_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, MultiSelect_ng_container_9_ng_container_2_span_1_Template, 1, 4, "span", 33)(2, MultiSelect_ng_container_9_ng_container_2_span_2_Template, 1, 4, "span", 33);
+    ɵɵtemplate(1, MultiSelect_ng_container_9_ng_container_2_span_1_Template, 1, 3, "span", 31)(2, MultiSelect_ng_container_9_ng_container_2_span_2_Template, 1, 3, "span", 31);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -583,7 +571,7 @@ function MultiSelect_ng_container_9_ng_container_2_Template(rf, ctx) {
 function MultiSelect_ng_container_9_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, MultiSelect_ng_container_9_ng_container_1_Template, 2, 1, "ng-container", 20)(2, MultiSelect_ng_container_9_ng_container_2_Template, 3, 2, "ng-container", 20);
+    ɵɵtemplate(1, MultiSelect_ng_container_9_ng_container_1_Template, 2, 1, "ng-container", 19)(2, MultiSelect_ng_container_9_ng_container_2_Template, 3, 2, "ng-container", 19);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -596,31 +584,30 @@ function MultiSelect_ng_container_9_Template(rf, ctx) {
 }
 function MultiSelect_ng_template_10_ng_container_0_span_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "span", 36);
+    ɵɵelement(0, "span", 34);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r1.cx("dropdownIcon"));
-    ɵɵproperty("pBind", ctx_r1.ptm("dropdownIcon"))("ngClass", ctx_r1.dropdownIcon);
-    ɵɵattribute("aria-hidden", true);
+    ɵɵproperty("ngClass", ctx_r1.dropdownIcon);
+    ɵɵattribute("data-pc-section", "triggericon")("aria-hidden", true);
   }
 }
 function MultiSelect_ng_template_10_ng_container_0__svg_svg_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 37);
+    ɵɵelement(0, "svg", 35);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r1.cx("dropdownIcon"));
-    ɵɵproperty("pBind", ctx_r1.ptm("dropdownIcon"));
-    ɵɵattribute("aria-hidden", true);
+    ɵɵattribute("data-pc-section", "triggericon")("aria-hidden", true);
   }
 }
 function MultiSelect_ng_template_10_ng_container_0_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, MultiSelect_ng_template_10_ng_container_0_span_1_Template, 1, 5, "span", 34)(2, MultiSelect_ng_template_10_ng_container_0__svg_svg_2_Template, 1, 4, "svg", 35);
+    ɵɵtemplate(1, MultiSelect_ng_template_10_ng_container_0_span_1_Template, 1, 5, "span", 32)(2, MultiSelect_ng_template_10_ng_container_0__svg_svg_2_Template, 1, 4, "svg", 33);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -640,22 +627,21 @@ function MultiSelect_ng_template_10_span_1_1_Template(rf, ctx) {
 }
 function MultiSelect_ng_template_10_span_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "span", 19);
-    ɵɵtemplate(1, MultiSelect_ng_template_10_span_1_1_Template, 1, 0, null, 32);
+    ɵɵelementStart(0, "span");
+    ɵɵtemplate(1, MultiSelect_ng_template_10_span_1_1_Template, 1, 0, null, 30);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r1.cx("dropdownIcon"));
-    ɵɵproperty("pBind", ctx_r1.ptm("dropdownIcon"));
-    ɵɵattribute("aria-hidden", true);
+    ɵɵattribute("data-pc-section", "triggericon")("aria-hidden", true);
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r1.dropdownIconTemplate || ctx_r1._dropdownIconTemplate);
   }
 }
 function MultiSelect_ng_template_10_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, MultiSelect_ng_template_10_ng_container_0_Template, 3, 2, "ng-container", 20)(1, MultiSelect_ng_template_10_span_1_Template, 2, 5, "span", 33);
+    ɵɵtemplate(0, MultiSelect_ng_template_10_ng_container_0_Template, 3, 2, "ng-container", 19)(1, MultiSelect_ng_template_10_span_1_Template, 2, 5, "span", 31);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext();
@@ -677,7 +663,7 @@ function MultiSelect_ng_template_14_div_4_ng_container_2_ng_container_1_Template
 function MultiSelect_ng_template_14_div_4_ng_container_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, MultiSelect_ng_template_14_div_4_ng_container_2_ng_container_1_Template, 1, 0, "ng-container", 28);
+    ɵɵtemplate(1, MultiSelect_ng_template_14_div_4_ng_container_2_ng_container_1_Template, 1, 0, "ng-container", 27);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -689,13 +675,12 @@ function MultiSelect_ng_template_14_div_4_ng_container_2_Template(rf, ctx) {
 function MultiSelect_ng_template_14_div_4_ng_template_3_p_checkbox_0_ng_template_2__svg_svg_0_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 45);
+    ɵɵelement(0, "svg", 42);
   }
   if (rf & 2) {
     const klass_r10 = ɵɵnextContext().class;
-    const ctx_r1 = ɵɵnextContext(5);
     ɵɵclassMap(klass_r10);
-    ɵɵproperty("pBind", ctx_r1.getHeaderCheckboxPTOptions("pcHeaderCheckbox.icon"));
+    ɵɵattribute("data-pc-section", "icon");
   }
 }
 function MultiSelect_ng_template_14_div_4_ng_template_3_p_checkbox_0_ng_template_2_1_ng_template_0_Template(rf, ctx) {
@@ -707,7 +692,7 @@ function MultiSelect_ng_template_14_div_4_ng_template_3_p_checkbox_0_ng_template
 }
 function MultiSelect_ng_template_14_div_4_ng_template_3_p_checkbox_0_ng_template_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, MultiSelect_ng_template_14_div_4_ng_template_3_p_checkbox_0_ng_template_2__svg_svg_0_Template, 1, 3, "svg", 44)(1, MultiSelect_ng_template_14_div_4_ng_template_3_p_checkbox_0_ng_template_2_1_Template, 1, 0, null, 28);
+    ɵɵtemplate(0, MultiSelect_ng_template_14_div_4_ng_template_3_p_checkbox_0_ng_template_2__svg_svg_0_Template, 1, 3, "svg", 41)(1, MultiSelect_ng_template_14_div_4_ng_template_3_p_checkbox_0_ng_template_2_1_Template, 1, 0, null, 27);
   }
   if (rf & 2) {
     const klass_r10 = ctx.class;
@@ -720,7 +705,7 @@ function MultiSelect_ng_template_14_div_4_ng_template_3_p_checkbox_0_ng_template
 function MultiSelect_ng_template_14_div_4_ng_template_3_p_checkbox_0_Template(rf, ctx) {
   if (rf & 1) {
     const _r9 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "p-checkbox", 43, 10);
+    ɵɵelementStart(0, "p-checkbox", 40, 10);
     ɵɵlistener("onChange", function MultiSelect_ng_template_14_div_4_ng_template_3_p_checkbox_0_Template_p_checkbox_onChange_0_listener($event) {
       ɵɵrestoreView(_r9);
       const ctx_r1 = ɵɵnextContext(4);
@@ -731,17 +716,13 @@ function MultiSelect_ng_template_14_div_4_ng_template_3_p_checkbox_0_Template(rf
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(4);
-    ɵɵproperty("pt", ctx_r1.getHeaderCheckboxPTOptions("pcHeaderCheckbox"))("ngModel", ctx_r1.allSelected())("ariaLabel", ctx_r1.toggleAllAriaLabel)("binary", true)("variant", ctx_r1.$variant())("disabled", ctx_r1.$disabled());
+    ɵɵproperty("ngModel", ctx_r1.allSelected())("ariaLabel", ctx_r1.toggleAllAriaLabel)("binary", true)("variant", ctx_r1.$variant())("disabled", ctx_r1.$disabled());
   }
 }
 function MultiSelect_ng_template_14_div_4_ng_template_3_p_iconfield_1__svg_svg_4_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 50);
-  }
-  if (rf & 2) {
-    const ctx_r1 = ɵɵnextContext(5);
-    ɵɵproperty("pBind", ctx_r1.ptm("filterIcon"));
+    ɵɵelement(0, "svg", 46);
   }
 }
 function MultiSelect_ng_template_14_div_4_ng_template_3_p_iconfield_1_span_5_1_ng_template_0_Template(rf, ctx) {
@@ -753,13 +734,12 @@ function MultiSelect_ng_template_14_div_4_ng_template_3_p_iconfield_1_span_5_1_T
 }
 function MultiSelect_ng_template_14_div_4_ng_template_3_p_iconfield_1_span_5_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "span", 51);
-    ɵɵtemplate(1, MultiSelect_ng_template_14_div_4_ng_template_3_p_iconfield_1_span_5_1_Template, 1, 0, null, 32);
+    ɵɵelementStart(0, "span", 47);
+    ɵɵtemplate(1, MultiSelect_ng_template_14_div_4_ng_template_3_p_iconfield_1_span_5_1_Template, 1, 0, null, 30);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(5);
-    ɵɵproperty("pBind", ctx_r1.ptm("filterIcon"));
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r1.filterIconTemplate || ctx_r1._filterIconTemplate);
   }
@@ -767,7 +747,7 @@ function MultiSelect_ng_template_14_div_4_ng_template_3_p_iconfield_1_span_5_Tem
 function MultiSelect_ng_template_14_div_4_ng_template_3_p_iconfield_1_Template(rf, ctx) {
   if (rf & 1) {
     const _r11 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "p-iconfield", 46)(1, "input", 47, 12);
+    ɵɵelementStart(0, "p-iconfield")(1, "input", 43, 12);
     ɵɵlistener("input", function MultiSelect_ng_template_14_div_4_ng_template_3_p_iconfield_1_Template_input_input_1_listener($event) {
       ɵɵrestoreView(_r11);
       const ctx_r1 = ɵɵnextContext(4);
@@ -786,21 +766,18 @@ function MultiSelect_ng_template_14_div_4_ng_template_3_p_iconfield_1_Template(r
       return ɵɵresetView(ctx_r1.onFilterBlur($event));
     });
     ɵɵelementEnd();
-    ɵɵelementStart(3, "p-inputicon", 46);
-    ɵɵtemplate(4, MultiSelect_ng_template_14_div_4_ng_template_3_p_iconfield_1__svg_svg_4_Template, 1, 1, "svg", 48)(5, MultiSelect_ng_template_14_div_4_ng_template_3_p_iconfield_1_span_5_Template, 2, 2, "span", 49);
+    ɵɵelementStart(3, "p-inputicon");
+    ɵɵtemplate(4, MultiSelect_ng_template_14_div_4_ng_template_3_p_iconfield_1__svg_svg_4_Template, 1, 0, "svg", 44)(5, MultiSelect_ng_template_14_div_4_ng_template_3_p_iconfield_1_span_5_Template, 2, 1, "span", 45);
     ɵɵelementEnd()();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(4);
     ɵɵclassMap(ctx_r1.cx("pcFilterContainer"));
-    ɵɵproperty("pt", ctx_r1.ptm("pcFilterContainer"));
     ɵɵadvance();
     ɵɵclassMap(ctx_r1.cx("pcFilter"));
-    ɵɵproperty("pt", ctx_r1.ptm("pcFilter"))("variant", ctx_r1.$variant())("value", ctx_r1._filterValue() || "");
+    ɵɵproperty("variant", ctx_r1.$variant())("value", ctx_r1._filterValue() || "");
     ɵɵattribute("autocomplete", ctx_r1.autocomplete)("aria-owns", ctx_r1.id + "_list")("aria-activedescendant", ctx_r1.focusedOptionId)("disabled", ctx_r1.$disabled() ? "" : void 0)("placeholder", ctx_r1.filterPlaceHolder)("aria-label", ctx_r1.ariaFilterLabel);
-    ɵɵadvance(2);
-    ɵɵproperty("pt", ctx_r1.ptm("pcFilterIconContainer"));
-    ɵɵadvance();
+    ɵɵadvance(3);
     ɵɵproperty("ngIf", !ctx_r1.filterIconTemplate && !ctx_r1._filterIconTemplate);
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r1.filterIconTemplate || ctx_r1._filterIconTemplate);
@@ -808,7 +785,7 @@ function MultiSelect_ng_template_14_div_4_ng_template_3_p_iconfield_1_Template(r
 }
 function MultiSelect_ng_template_14_div_4_ng_template_3_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, MultiSelect_ng_template_14_div_4_ng_template_3_p_checkbox_0_Template, 4, 6, "p-checkbox", 41)(1, MultiSelect_ng_template_14_div_4_ng_template_3_p_iconfield_1_Template, 6, 17, "p-iconfield", 42);
+    ɵɵtemplate(0, MultiSelect_ng_template_14_div_4_ng_template_3_p_checkbox_0_Template, 4, 5, "p-checkbox", 39)(1, MultiSelect_ng_template_14_div_4_ng_template_3_p_iconfield_1_Template, 6, 14, "p-iconfield", 31);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
@@ -819,16 +796,15 @@ function MultiSelect_ng_template_14_div_4_ng_template_3_Template(rf, ctx) {
 }
 function MultiSelect_ng_template_14_div_4_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div", 19);
+    ɵɵelementStart(0, "div");
     ɵɵprojection(1);
-    ɵɵtemplate(2, MultiSelect_ng_template_14_div_4_ng_container_2_Template, 2, 4, "ng-container", 21)(3, MultiSelect_ng_template_14_div_4_ng_template_3_Template, 2, 2, "ng-template", null, 9, ɵɵtemplateRefExtractor);
+    ɵɵtemplate(2, MultiSelect_ng_template_14_div_4_ng_container_2_Template, 2, 4, "ng-container", 20)(3, MultiSelect_ng_template_14_div_4_ng_template_3_Template, 2, 2, "ng-template", null, 9, ɵɵtemplateRefExtractor);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const builtInFilterElement_r12 = ɵɵreference(4);
     const ctx_r1 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r1.cx("header"));
-    ɵɵproperty("pBind", ctx_r1.ptm("header"));
     ɵɵadvance(2);
     ɵɵproperty("ngIf", ctx_r1.filterTemplate || ctx_r1._filterTemplate)("ngIfElse", builtInFilterElement_r12);
   }
@@ -840,14 +816,14 @@ function MultiSelect_ng_template_14_p_scroller_6_ng_template_2_ng_container_0_Te
 }
 function MultiSelect_ng_template_14_p_scroller_6_ng_template_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, MultiSelect_ng_template_14_p_scroller_6_ng_template_2_ng_container_0_Template, 1, 0, "ng-container", 28);
+    ɵɵtemplate(0, MultiSelect_ng_template_14_p_scroller_6_ng_template_2_ng_container_0_Template, 1, 0, "ng-container", 27);
   }
   if (rf & 2) {
     const items_r14 = ctx.$implicit;
     const scrollerOptions_r15 = ctx.options;
     ɵɵnextContext(2);
     const buildInItems_r16 = ɵɵreference(9);
-    ɵɵproperty("ngTemplateOutlet", buildInItems_r16)("ngTemplateOutletContext", ɵɵpureFunction2(2, _c35, items_r14, scrollerOptions_r15));
+    ɵɵproperty("ngTemplateOutlet", buildInItems_r16)("ngTemplateOutletContext", ɵɵpureFunction2(2, _c34, items_r14, scrollerOptions_r15));
   }
 }
 function MultiSelect_ng_template_14_p_scroller_6_ng_container_4_ng_template_1_ng_container_0_Template(rf, ctx) {
@@ -857,7 +833,7 @@ function MultiSelect_ng_template_14_p_scroller_6_ng_container_4_ng_template_1_ng
 }
 function MultiSelect_ng_template_14_p_scroller_6_ng_container_4_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, MultiSelect_ng_template_14_p_scroller_6_ng_container_4_ng_template_1_ng_container_0_Template, 1, 0, "ng-container", 28);
+    ɵɵtemplate(0, MultiSelect_ng_template_14_p_scroller_6_ng_container_4_ng_template_1_ng_container_0_Template, 1, 0, "ng-container", 27);
   }
   if (rf & 2) {
     const scrollerOptions_r17 = ctx.options;
@@ -875,18 +851,18 @@ function MultiSelect_ng_template_14_p_scroller_6_ng_container_4_Template(rf, ctx
 function MultiSelect_ng_template_14_p_scroller_6_Template(rf, ctx) {
   if (rf & 1) {
     const _r13 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "p-scroller", 52, 13);
+    ɵɵelementStart(0, "p-scroller", 48, 13);
     ɵɵlistener("onLazyLoad", function MultiSelect_ng_template_14_p_scroller_6_Template_p_scroller_onLazyLoad_0_listener($event) {
       ɵɵrestoreView(_r13);
       const ctx_r1 = ɵɵnextContext(2);
       return ɵɵresetView(ctx_r1.onLazyLoad.emit($event));
     });
-    ɵɵtemplate(2, MultiSelect_ng_template_14_p_scroller_6_ng_template_2_Template, 1, 5, "ng-template", null, 3, ɵɵtemplateRefExtractor)(4, MultiSelect_ng_template_14_p_scroller_6_ng_container_4_Template, 3, 0, "ng-container", 20);
+    ɵɵtemplate(2, MultiSelect_ng_template_14_p_scroller_6_ng_template_2_Template, 1, 5, "ng-template", null, 3, ɵɵtemplateRefExtractor)(4, MultiSelect_ng_template_14_p_scroller_6_ng_container_4_Template, 3, 0, "ng-container", 19);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
-    ɵɵstyleMap(ɵɵpureFunction1(9, _c34, ctx_r1.scrollHeight));
+    ɵɵstyleMap(ɵɵpureFunction1(9, _c0, ctx_r1.scrollHeight));
     ɵɵproperty("items", ctx_r1.visibleOptions())("itemSize", ctx_r1.virtualScrollItemSize)("autoSize", true)("tabindex", -1)("lazy", ctx_r1.lazy)("options", ctx_r1.virtualScrollOptions);
     ɵɵadvance(4);
     ɵɵproperty("ngIf", ctx_r1.loaderTemplate || ctx_r1._loaderTemplate);
@@ -900,7 +876,7 @@ function MultiSelect_ng_template_14_ng_container_7_ng_container_1_Template(rf, c
 function MultiSelect_ng_template_14_ng_container_7_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, MultiSelect_ng_template_14_ng_container_7_ng_container_1_Template, 1, 0, "ng-container", 28);
+    ɵɵtemplate(1, MultiSelect_ng_template_14_ng_container_7_ng_container_1_Template, 1, 0, "ng-container", 27);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -908,7 +884,7 @@ function MultiSelect_ng_template_14_ng_container_7_Template(rf, ctx) {
     const buildInItems_r16 = ɵɵreference(9);
     const ctx_r1 = ɵɵnextContext();
     ɵɵadvance();
-    ɵɵproperty("ngTemplateOutlet", buildInItems_r16)("ngTemplateOutletContext", ɵɵpureFunction2(3, _c35, ctx_r1.visibleOptions(), ɵɵpureFunction0(2, _c36)));
+    ɵɵproperty("ngTemplateOutlet", buildInItems_r16)("ngTemplateOutletContext", ɵɵpureFunction2(3, _c34, ctx_r1.visibleOptions(), ɵɵpureFunction0(2, _c35)));
   }
 }
 function MultiSelect_ng_template_14_ng_template_8_ng_template_2_ng_container_0_span_2_Template(rf, ctx) {
@@ -926,19 +902,14 @@ function MultiSelect_ng_template_14_ng_template_8_ng_template_2_ng_container_0_s
 }
 function MultiSelect_ng_template_14_ng_template_8_ng_template_2_ng_container_0_ng_container_3_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementContainer(0, 58);
-  }
-  if (rf & 2) {
-    const option_r18 = ɵɵnextContext(2).$implicit;
-    const ctx_r1 = ɵɵnextContext(3);
-    ɵɵproperty("ngTemplateOutlet", ctx_r1.groupTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(2, _c1, option_r18.optionGroup));
+    ɵɵelementContainer(0);
   }
 }
 function MultiSelect_ng_template_14_ng_template_8_ng_template_2_ng_container_0_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵelementStart(1, "li", 56);
-    ɵɵtemplate(2, MultiSelect_ng_template_14_ng_template_8_ng_template_2_ng_container_0_span_2_Template, 2, 1, "span", 20)(3, MultiSelect_ng_template_14_ng_template_8_ng_template_2_ng_container_0_ng_container_3_Template, 1, 4, "ng-container", 57);
+    ɵɵelementStart(1, "li", 52);
+    ɵɵtemplate(2, MultiSelect_ng_template_14_ng_template_8_ng_template_2_ng_container_0_span_2_Template, 2, 1, "span", 19)(3, MultiSelect_ng_template_14_ng_template_8_ng_template_2_ng_container_0_ng_container_3_Template, 1, 0, "ng-container", 27);
     ɵɵelementEnd();
     ɵɵelementContainerEnd();
   }
@@ -950,26 +921,26 @@ function MultiSelect_ng_template_14_ng_template_8_ng_template_2_ng_container_0_T
     const ctx_r1 = ɵɵnextContext(2);
     ɵɵadvance();
     ɵɵclassMap(ctx_r1.cx("optionGroup"));
-    ɵɵproperty("pBind", ctx_r1.ptm("optionGroup"))("ngStyle", ɵɵpureFunction1(7, _c34, scrollerOptions_r21.itemSize + "px"));
+    ɵɵproperty("ngStyle", ɵɵpureFunction1(7, _c0, scrollerOptions_r21.itemSize + "px"));
     ɵɵattribute("id", ctx_r1.id + "_" + ctx_r1.getOptionIndex(i_r20, scrollerOptions_r21));
     ɵɵadvance();
-    ɵɵproperty("ngIf", !ctx_r1.groupTemplate && option_r18.optionGroup);
+    ɵɵproperty("ngIf", !ctx_r1.groupTemplate);
     ɵɵadvance();
-    ɵɵproperty("ngIf", option_r18.optionGroup && ctx_r1.groupTemplate);
+    ɵɵproperty("ngTemplateOutlet", ctx_r1.groupTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(9, _c1, option_r18.optionGroup));
   }
 }
 function MultiSelect_ng_template_14_ng_template_8_ng_template_2_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
     const _r22 = ɵɵgetCurrentView();
     ɵɵelementContainerStart(0);
-    ɵɵelementStart(1, "li", 59);
-    ɵɵlistener("onClick", function MultiSelect_ng_template_14_ng_template_8_ng_template_2_ng_container_1_Template_li_onClick_1_listener($event) {
+    ɵɵelementStart(1, "p-multiselect-item", 53);
+    ɵɵlistener("onClick", function MultiSelect_ng_template_14_ng_template_8_ng_template_2_ng_container_1_Template_p_multiselect_item_onClick_1_listener($event) {
       ɵɵrestoreView(_r22);
       const i_r20 = ɵɵnextContext().index;
       const scrollerOptions_r21 = ɵɵnextContext().options;
       const ctx_r1 = ɵɵnextContext(2);
       return ɵɵresetView(ctx_r1.onOptionSelect($event, false, ctx_r1.getOptionIndex(i_r20, scrollerOptions_r21)));
-    })("onMouseEnter", function MultiSelect_ng_template_14_ng_template_8_ng_template_2_ng_container_1_Template_li_onMouseEnter_1_listener($event) {
+    })("onMouseEnter", function MultiSelect_ng_template_14_ng_template_8_ng_template_2_ng_container_1_Template_p_multiselect_item_onMouseEnter_1_listener($event) {
       ɵɵrestoreView(_r22);
       const i_r20 = ɵɵnextContext().index;
       const scrollerOptions_r21 = ɵɵnextContext().options;
@@ -986,12 +957,12 @@ function MultiSelect_ng_template_14_ng_template_8_ng_template_2_ng_container_1_T
     const scrollerOptions_r21 = ɵɵnextContext().options;
     const ctx_r1 = ɵɵnextContext(2);
     ɵɵadvance();
-    ɵɵproperty("pBind", ctx_r1.getPTOptions(option_r18, ctx_r1.getItemOptions, i_r20, "option"))("id", ctx_r1.id + "_" + ctx_r1.getOptionIndex(i_r20, scrollerOptions_r21))("option", option_r18)("selected", ctx_r1.isSelected(option_r18))("label", ctx_r1.getOptionLabel(option_r18))("disabled", ctx_r1.isOptionDisabled(option_r18))("template", ctx_r1.itemTemplate || ctx_r1._itemTemplate)("itemCheckboxIconTemplate", ctx_r1.itemCheckboxIconTemplate || ctx_r1._itemCheckboxIconTemplate)("itemSize", scrollerOptions_r21.itemSize)("focused", ctx_r1.focusedOptionIndex() === ctx_r1.getOptionIndex(i_r20, scrollerOptions_r21))("ariaPosInset", ctx_r1.getAriaPosInset(ctx_r1.getOptionIndex(i_r20, scrollerOptions_r21)))("ariaSetSize", ctx_r1.ariaSetSize)("variant", ctx_r1.$variant())("highlightOnSelect", ctx_r1.highlightOnSelect)("pt", ctx_r1.pt);
+    ɵɵproperty("id", ctx_r1.id + "_" + ctx_r1.getOptionIndex(i_r20, scrollerOptions_r21))("option", option_r18)("selected", ctx_r1.isSelected(option_r18))("label", ctx_r1.getOptionLabel(option_r18))("disabled", ctx_r1.isOptionDisabled(option_r18))("template", ctx_r1.itemTemplate || ctx_r1._itemTemplate)("itemCheckboxIconTemplate", ctx_r1.itemCheckboxIconTemplate || ctx_r1._itemCheckboxIconTemplate)("itemSize", scrollerOptions_r21.itemSize)("focused", ctx_r1.focusedOptionIndex() === ctx_r1.getOptionIndex(i_r20, scrollerOptions_r21))("ariaPosInset", ctx_r1.getAriaPosInset(ctx_r1.getOptionIndex(i_r20, scrollerOptions_r21)))("ariaSetSize", ctx_r1.ariaSetSize)("variant", ctx_r1.$variant())("highlightOnSelect", ctx_r1.highlightOnSelect);
   }
 }
 function MultiSelect_ng_template_14_ng_template_8_ng_template_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, MultiSelect_ng_template_14_ng_template_8_ng_template_2_ng_container_0_Template, 4, 9, "ng-container", 20)(1, MultiSelect_ng_template_14_ng_template_8_ng_template_2_ng_container_1_Template, 2, 15, "ng-container", 20);
+    ɵɵtemplate(0, MultiSelect_ng_template_14_ng_template_8_ng_template_2_ng_container_0_Template, 4, 11, "ng-container", 19)(1, MultiSelect_ng_template_14_ng_template_8_ng_template_2_ng_container_1_Template, 2, 13, "ng-container", 19);
   }
   if (rf & 2) {
     const option_r18 = ctx.$implicit;
@@ -1017,7 +988,7 @@ function MultiSelect_ng_template_14_ng_template_8_li_3_Conditional_2_ng_containe
 }
 function MultiSelect_ng_template_14_ng_template_8_li_3_Conditional_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, MultiSelect_ng_template_14_ng_template_8_li_3_Conditional_2_ng_container_0_Template, 1, 0, "ng-container", 32);
+    ɵɵtemplate(0, MultiSelect_ng_template_14_ng_template_8_li_3_Conditional_2_ng_container_0_Template, 1, 0, "ng-container", 30);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(4);
@@ -1026,7 +997,7 @@ function MultiSelect_ng_template_14_ng_template_8_li_3_Conditional_2_Template(rf
 }
 function MultiSelect_ng_template_14_ng_template_8_li_3_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "li", 56);
+    ɵɵelementStart(0, "li", 52);
     ɵɵconditionalCreate(1, MultiSelect_ng_template_14_ng_template_8_li_3_Conditional_1_Template, 1, 1)(2, MultiSelect_ng_template_14_ng_template_8_li_3_Conditional_2_Template, 1, 1, "ng-container");
     ɵɵelementEnd();
   }
@@ -1034,7 +1005,7 @@ function MultiSelect_ng_template_14_ng_template_8_li_3_Template(rf, ctx) {
     const scrollerOptions_r21 = ɵɵnextContext().options;
     const ctx_r1 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r1.cx("emptyMessage"));
-    ɵɵproperty("pBind", ctx_r1.ptm("emptyMessage"))("ngStyle", ɵɵpureFunction1(5, _c34, scrollerOptions_r21.itemSize + "px"));
+    ɵɵproperty("ngStyle", ɵɵpureFunction1(4, _c0, scrollerOptions_r21.itemSize + "px"));
     ɵɵadvance();
     ɵɵconditional(!ctx_r1.emptyFilterTemplate && !ctx_r1._emptyFilterTemplate && !ctx_r1.emptyTemplate && !ctx_r1._emptyTemplate ? 1 : 2);
   }
@@ -1055,7 +1026,7 @@ function MultiSelect_ng_template_14_ng_template_8_li_4_Conditional_2_ng_containe
 }
 function MultiSelect_ng_template_14_ng_template_8_li_4_Conditional_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, MultiSelect_ng_template_14_ng_template_8_li_4_Conditional_2_ng_container_0_Template, 1, 0, "ng-container", 32);
+    ɵɵtemplate(0, MultiSelect_ng_template_14_ng_template_8_li_4_Conditional_2_ng_container_0_Template, 1, 0, "ng-container", 30);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(4);
@@ -1064,7 +1035,7 @@ function MultiSelect_ng_template_14_ng_template_8_li_4_Conditional_2_Template(rf
 }
 function MultiSelect_ng_template_14_ng_template_8_li_4_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "li", 56);
+    ɵɵelementStart(0, "li", 52);
     ɵɵconditionalCreate(1, MultiSelect_ng_template_14_ng_template_8_li_4_Conditional_1_Template, 1, 1)(2, MultiSelect_ng_template_14_ng_template_8_li_4_Conditional_2_Template, 1, 1, "ng-container");
     ɵɵelementEnd();
   }
@@ -1072,15 +1043,15 @@ function MultiSelect_ng_template_14_ng_template_8_li_4_Template(rf, ctx) {
     const scrollerOptions_r21 = ɵɵnextContext().options;
     const ctx_r1 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r1.cx("emptyMessage"));
-    ɵɵproperty("pBind", ctx_r1.ptm("emptyMessage"))("ngStyle", ɵɵpureFunction1(5, _c34, scrollerOptions_r21.itemSize + "px"));
+    ɵɵproperty("ngStyle", ɵɵpureFunction1(4, _c0, scrollerOptions_r21.itemSize + "px"));
     ɵɵadvance();
     ɵɵconditional(!ctx_r1.emptyTemplate && !ctx_r1._emptyTemplate ? 1 : 2);
   }
 }
 function MultiSelect_ng_template_14_ng_template_8_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "ul", 53, 15);
-    ɵɵtemplate(2, MultiSelect_ng_template_14_ng_template_8_ng_template_2_Template, 2, 2, "ng-template", 54)(3, MultiSelect_ng_template_14_ng_template_8_li_3_Template, 3, 7, "li", 55)(4, MultiSelect_ng_template_14_ng_template_8_li_4_Template, 3, 7, "li", 55);
+    ɵɵelementStart(0, "ul", 49, 15);
+    ɵɵtemplate(2, MultiSelect_ng_template_14_ng_template_8_ng_template_2_Template, 2, 2, "ng-template", 50)(3, MultiSelect_ng_template_14_ng_template_8_li_3_Template, 3, 6, "li", 51)(4, MultiSelect_ng_template_14_ng_template_8_li_4_Template, 3, 6, "li", 51);
     ɵɵelementEnd();
   }
   if (rf & 2) {
@@ -1089,7 +1060,6 @@ function MultiSelect_ng_template_14_ng_template_8_Template(rf, ctx) {
     const ctx_r1 = ɵɵnextContext(2);
     ɵɵstyleMap(scrollerOptions_r21.contentStyle);
     ɵɵclassMap(ctx_r1.cn(ctx_r1.cx("list"), scrollerOptions_r21.contentStyleClass));
-    ɵɵproperty("pBind", ctx_r1.ptm("list"));
     ɵɵattribute("aria-label", ctx_r1.listLabel);
     ɵɵadvance(2);
     ɵɵproperty("ngForOf", items_r23);
@@ -1108,7 +1078,7 @@ function MultiSelect_ng_template_14_div_10_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementStart(0, "div");
     ɵɵprojection(1, 1);
-    ɵɵtemplate(2, MultiSelect_ng_template_14_div_10_ng_container_2_Template, 1, 0, "ng-container", 32);
+    ɵɵtemplate(2, MultiSelect_ng_template_14_div_10_ng_container_2_Template, 1, 0, "ng-container", 30);
     ɵɵelementEnd();
   }
   if (rf & 2) {
@@ -1120,19 +1090,19 @@ function MultiSelect_ng_template_14_div_10_Template(rf, ctx) {
 function MultiSelect_ng_template_14_Template(rf, ctx) {
   if (rf & 1) {
     const _r8 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "div", 38)(1, "span", 39, 6);
+    ɵɵelementStart(0, "div", 36)(1, "span", 37, 6);
     ɵɵlistener("focus", function MultiSelect_ng_template_14_Template_span_focus_1_listener($event) {
       ɵɵrestoreView(_r8);
       const ctx_r1 = ɵɵnextContext();
       return ɵɵresetView(ctx_r1.onFirstHiddenFocus($event));
     });
     ɵɵelementEnd();
-    ɵɵtemplate(3, MultiSelect_ng_template_14_ng_container_3_Template, 1, 0, "ng-container", 32)(4, MultiSelect_ng_template_14_div_4_Template, 5, 5, "div", 33);
-    ɵɵelementStart(5, "div", 19);
-    ɵɵtemplate(6, MultiSelect_ng_template_14_p_scroller_6_Template, 5, 11, "p-scroller", 40)(7, MultiSelect_ng_template_14_ng_container_7_Template, 2, 6, "ng-container", 20)(8, MultiSelect_ng_template_14_ng_template_8_Template, 5, 9, "ng-template", null, 7, ɵɵtemplateRefExtractor);
+    ɵɵtemplate(3, MultiSelect_ng_template_14_ng_container_3_Template, 1, 0, "ng-container", 30)(4, MultiSelect_ng_template_14_div_4_Template, 5, 4, "div", 31);
+    ɵɵelementStart(5, "div");
+    ɵɵtemplate(6, MultiSelect_ng_template_14_p_scroller_6_Template, 5, 11, "p-scroller", 38)(7, MultiSelect_ng_template_14_ng_container_7_Template, 2, 6, "ng-container", 19)(8, MultiSelect_ng_template_14_ng_template_8_Template, 5, 8, "ng-template", null, 7, ɵɵtemplateRefExtractor);
     ɵɵelementEnd();
-    ɵɵtemplate(10, MultiSelect_ng_template_14_div_10_Template, 3, 1, "div", 20);
-    ɵɵelementStart(11, "span", 39, 8);
+    ɵɵtemplate(10, MultiSelect_ng_template_14_div_10_Template, 3, 1, "div", 19);
+    ɵɵelementStart(11, "span", 37, 8);
     ɵɵlistener("focus", function MultiSelect_ng_template_14_Template_span_focus_11_listener($event) {
       ɵɵrestoreView(_r8);
       const ctx_r1 = ɵɵnextContext();
@@ -1143,10 +1113,9 @@ function MultiSelect_ng_template_14_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cn(ctx_r1.cx("overlay"), ctx_r1.panelStyleClass));
-    ɵɵproperty("pBind", ctx_r1.ptm("overlay"))("ngStyle", ctx_r1.panelStyle);
+    ɵɵproperty("ngStyle", ctx_r1.panelStyle);
     ɵɵattribute("id", ctx_r1.id + "_list");
     ɵɵadvance();
-    ɵɵproperty("pBind", ctx_r1.ptm("firstHiddenFocusableEl"));
     ɵɵattribute("tabindex", 0)("data-p-hidden-accessible", true)("data-p-hidden-focusable", true);
     ɵɵadvance(2);
     ɵɵproperty("ngTemplateOutlet", ctx_r1.headerTemplate || ctx_r1._headerTemplate);
@@ -1155,7 +1124,6 @@ function MultiSelect_ng_template_14_Template(rf, ctx) {
     ɵɵadvance();
     ɵɵclassMap(ctx_r1.cx("listContainer"));
     ɵɵstyleProp("max-height", ctx_r1.virtualScroll ? "auto" : ctx_r1.scrollHeight || "auto");
-    ɵɵproperty("pBind", ctx_r1.ptm("listContainer"));
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r1.virtualScroll);
     ɵɵadvance();
@@ -1163,11 +1131,10 @@ function MultiSelect_ng_template_14_Template(rf, ctx) {
     ɵɵadvance(3);
     ɵɵproperty("ngIf", ctx_r1.footerFacet || ctx_r1.footerTemplate || ctx_r1._footerTemplate);
     ɵɵadvance();
-    ɵɵproperty("pBind", ctx_r1.ptm("lastHiddenFocusableEl"));
     ɵɵattribute("tabindex", 0)("data-p-hidden-accessible", true)("data-p-hidden-focusable", true);
   }
 }
-var style2 = (
+var theme = (
   /*css*/
   `
     ${style}
@@ -1198,7 +1165,7 @@ var classes = {
     "p-multiselect-display-chip": instance.display === "chip",
     "p-disabled": instance.$disabled(),
     "p-invalid": instance.invalid(),
-    "p-variant-filled": instance.$variant() === "filled",
+    "p-variant-filled": instance.$variant(),
     "p-focus": instance.focused,
     "p-inputwrapper-filled": instance.$filled(),
     "p-inputwrapper-focus": instance.focused || instance.overlayVisible,
@@ -1241,7 +1208,7 @@ var classes = {
 };
 var MultiSelectStyle = class _MultiSelectStyle extends BaseStyle {
   name = "multiselect";
-  style = style2;
+  theme = theme;
   classes = classes;
   inlineStyles = inlineStyles;
   static ɵfac = /* @__PURE__ */ (() => {
@@ -1282,28 +1249,13 @@ var MultiSelectClasses;
   MultiSelectClasses2["emptyMessage"] = "p-multiselect-empty-message";
   MultiSelectClasses2["clearIcon"] = "p-autocomplete-clear-icon";
 })(MultiSelectClasses || (MultiSelectClasses = {}));
-var MULTISELECT_INSTANCE = new InjectionToken("MULTISELECT_INSTANCE");
-var MULTISELECT_ITEM_INSTANCE = new InjectionToken("MULTISELECT_ITEM_INSTANCE");
 var MULTISELECT_VALUE_ACCESSOR = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => MultiSelect),
   multi: true
 };
 var MultiSelectItem = class _MultiSelectItem extends BaseComponent {
-  $pcMultiSelectItem = inject(MULTISELECT_ITEM_INSTANCE, {
-    optional: true,
-    skipSelf: true
-  }) ?? void 0;
-  hostName = "MultiSelect";
-  getPTOptions(key) {
-    return this.ptm(key, {
-      context: {
-        selected: this.selected,
-        focused: this.focused,
-        disabled: this.disabled
-      }
-    });
-  }
+  id;
   option;
   selected;
   label;
@@ -1344,24 +1296,9 @@ var MultiSelectItem = class _MultiSelectItem extends BaseComponent {
   })();
   static ɵcmp = ɵɵdefineComponent({
     type: _MultiSelectItem,
-    selectors: [["li", "pMultiSelectItem", ""]],
-    hostAttrs: ["role", "option"],
-    hostVars: 12,
-    hostBindings: function MultiSelectItem_HostBindings(rf, ctx) {
-      if (rf & 1) {
-        ɵɵlistener("click", function MultiSelectItem_click_HostBindingHandler($event) {
-          return ctx.onOptionClick($event);
-        })("mouseenter", function MultiSelectItem_mouseenter_HostBindingHandler($event) {
-          return ctx.onOptionMouseEnter($event);
-        });
-      }
-      if (rf & 2) {
-        ɵɵattribute("aria-label", ctx.label)("aria-setsize", ctx.ariaSetSize)("aria-posinset", ctx.ariaPosInset)("aria-selected", ctx.selected)("data-p-focused", ctx.focused)("data-p-highlight", ctx.selected)("data-p-disabled", ctx.disabled)("aria-checked", ctx.selected);
-        ɵɵclassMap(ctx.cx("option"));
-        ɵɵstyleProp("height", ctx.itemSize, "px");
-      }
-    },
+    selectors: [["p-multiSelectItem"], ["p-multiselect-item"]],
     inputs: {
+      id: "id",
       option: "option",
       selected: [2, "selected", "selected", booleanAttribute],
       label: "label",
@@ -1381,28 +1318,38 @@ var MultiSelectItem = class _MultiSelectItem extends BaseComponent {
       onMouseEnter: "onMouseEnter"
     },
     features: [ɵɵProvidersFeature([MultiSelectStyle]), ɵɵInheritDefinitionFeature],
-    attrs: _c0,
-    decls: 4,
-    vars: 12,
-    consts: [["icon", ""], [3, "ngModel", "binary", "tabindex", "variant", "ariaLabel", "pt"], [4, "ngIf"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"]],
+    decls: 5,
+    vars: 25,
+    consts: [["checkboxicon", ""], ["pRipple", "", "role", "option", 3, "click", "mouseenter", "ngStyle", "id"], [3, "ngModel", "binary", "tabindex", "variant", "ariaLabel"], [4, "ngIf"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"]],
     template: function MultiSelectItem_Template(rf, ctx) {
       if (rf & 1) {
-        ɵɵelementStart(0, "p-checkbox", 1);
-        ɵɵtemplate(1, MultiSelectItem_ng_container_1_Template, 3, 0, "ng-container", 2);
+        ɵɵelementStart(0, "li", 1);
+        ɵɵlistener("click", function MultiSelectItem_Template_li_click_0_listener($event) {
+          return ctx.onOptionClick($event);
+        })("mouseenter", function MultiSelectItem_Template_li_mouseenter_0_listener($event) {
+          return ctx.onOptionMouseEnter($event);
+        });
+        ɵɵelementStart(1, "p-checkbox", 2);
+        ɵɵtemplate(2, MultiSelectItem_ng_container_2_Template, 3, 0, "ng-container", 3);
         ɵɵelementEnd();
-        ɵɵtemplate(2, MultiSelectItem_span_2_Template, 2, 1, "span", 2)(3, MultiSelectItem_ng_container_3_Template, 1, 0, "ng-container", 3);
+        ɵɵtemplate(3, MultiSelectItem_span_3_Template, 2, 1, "span", 3)(4, MultiSelectItem_ng_container_4_Template, 1, 0, "ng-container", 4);
+        ɵɵelementEnd();
       }
       if (rf & 2) {
-        ɵɵproperty("ngModel", ctx.selected)("binary", true)("tabindex", -1)("variant", ctx.variant)("ariaLabel", ctx.label)("pt", ctx.getPTOptions("pcOptionCheckbox"));
+        ɵɵclassMap(ctx.cx("option"));
+        ɵɵproperty("ngStyle", ɵɵpureFunction1(21, _c0, ctx.itemSize + "px"))("id", ctx.id);
+        ɵɵattribute("aria-label", ctx.label)("aria-setsize", ctx.ariaSetSize)("aria-posinset", ctx.ariaPosInset)("aria-selected", ctx.selected)("data-p-focused", ctx.focused)("data-p-highlight", ctx.selected)("data-p-disabled", ctx.disabled)("aria-checked", ctx.selected);
+        ɵɵadvance();
+        ɵɵproperty("ngModel", ctx.selected)("binary", true)("tabindex", -1)("variant", ctx.variant)("ariaLabel", ctx.label);
         ɵɵadvance();
         ɵɵproperty("ngIf", ctx.itemCheckboxIconTemplate);
         ɵɵadvance();
         ɵɵproperty("ngIf", !ctx.template);
         ɵɵadvance();
-        ɵɵproperty("ngTemplateOutlet", ctx.template)("ngTemplateOutletContext", ɵɵpureFunction1(10, _c1, ctx.option));
+        ɵɵproperty("ngTemplateOutlet", ctx.template)("ngTemplateOutletContext", ɵɵpureFunction1(23, _c1, ctx.option));
       }
     },
-    dependencies: [CommonModule, NgIf, NgTemplateOutlet, Checkbox, FormsModule, NgControlStatus, NgModel, SharedModule],
+    dependencies: [CommonModule, NgIf, NgTemplateOutlet, NgStyle, Checkbox, FormsModule, NgControlStatus, NgModel, Ripple, SharedModule],
     encapsulation: 2
   });
 };
@@ -1410,39 +1357,45 @@ var MultiSelectItem = class _MultiSelectItem extends BaseComponent {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(MultiSelectItem, [{
     type: Component,
     args: [{
-      selector: "li[pMultiSelectItem]",
+      selector: "p-multiSelectItem, p-multiselect-item",
       standalone: true,
-      imports: [CommonModule, Checkbox, FormsModule, SharedModule],
+      imports: [CommonModule, Checkbox, FormsModule, Ripple, SharedModule],
       template: `
-        <p-checkbox [ngModel]="selected" [binary]="true" [tabindex]="-1" [variant]="variant" [ariaLabel]="label" [pt]="getPTOptions('pcOptionCheckbox')">
-            <ng-container *ngIf="itemCheckboxIconTemplate">
-                <ng-template #icon let-klass="class">
-                    <ng-template *ngTemplateOutlet="itemCheckboxIconTemplate; context: { checked: selected, class: klass }"></ng-template>
-                </ng-template>
-            </ng-container>
-        </p-checkbox>
-        <span *ngIf="!template">{{ label ?? 'empty' }}</span>
-        <ng-container *ngTemplateOutlet="template; context: { $implicit: option }"></ng-container>
+        <li
+            pRipple
+            [class]="cx('option')"
+            role="option"
+            [ngStyle]="{ height: itemSize + 'px' }"
+            [id]="id"
+            [attr.aria-label]="label"
+            [attr.aria-setsize]="ariaSetSize"
+            [attr.aria-posinset]="ariaPosInset"
+            [attr.aria-selected]="selected"
+            [attr.data-p-focused]="focused"
+            [attr.data-p-highlight]="selected"
+            [attr.data-p-disabled]="disabled"
+            [attr.aria-checked]="selected"
+            (click)="onOptionClick($event)"
+            (mouseenter)="onOptionMouseEnter($event)"
+        >
+            <p-checkbox [ngModel]="selected" [binary]="true" [tabindex]="-1" [variant]="variant" [ariaLabel]="label">
+                <ng-container *ngIf="itemCheckboxIconTemplate">
+                    <ng-template #checkboxicon let-klass="class">
+                        <ng-template *ngTemplateOutlet="itemCheckboxIconTemplate; context: { checked: selected, class: klass }"></ng-template>
+                    </ng-template>
+                </ng-container>
+            </p-checkbox>
+            <span *ngIf="!template">{{ label ?? 'empty' }}</span>
+            <ng-container *ngTemplateOutlet="template; context: { $implicit: option }"></ng-container>
+        </li>
     `,
       encapsulation: ViewEncapsulation.None,
-      providers: [MultiSelectStyle],
-      host: {
-        "[style.height.px]": "itemSize",
-        "[attr.aria-label]": "label",
-        role: "option",
-        "[attr.aria-setsize]": "ariaSetSize",
-        "[attr.aria-posinset]": "ariaPosInset",
-        "[attr.aria-selected]": "selected",
-        "[attr.data-p-focused]": "focused",
-        "[attr.data-p-highlight]": "selected",
-        "[attr.data-p-disabled]": "disabled",
-        "[attr.aria-checked]": "selected",
-        "(click)": "onOptionClick($event)",
-        "(mouseenter)": "onOptionMouseEnter($event)",
-        "[class]": "cx('option')"
-      }
+      providers: [MultiSelectStyle]
     }]
   }], null, {
+    id: [{
+      type: Input
+    }],
     option: [{
       type: Input
     }],
@@ -1569,7 +1522,7 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
    * Specifies the visibility of the options panel.
    * @group Props
    */
-  overlayVisible = false;
+  overlayVisible;
   /**
    * Index of the element in tabbing order.
    * @group Props
@@ -1602,7 +1555,7 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
    * @defaultValue 3
    */
   set maxSelectedLabels(val) {
-    this._maxSelectedLabels = val || 0;
+    this._maxSelectedLabels = val;
   }
   get maxSelectedLabels() {
     return this._maxSelectedLabels;
@@ -1796,7 +1749,7 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
   }
   set options(val) {
     if (!y(this._options(), val)) {
-      this._options.set(val || []);
+      this._options.set(val);
     }
   }
   /**
@@ -1955,9 +1908,6 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
   footerFacet;
   headerFacet;
   _componentStyle = inject(MultiSelectStyle);
-  bindDirectiveInstance = inject(Bind, {
-    self: true
-  });
   searchValue;
   searchTimeout;
   _selectAll = null;
@@ -2010,10 +1960,6 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
   $appendTo = computed(() => this.appendTo() || this.config.overlayAppendTo(), ...ngDevMode ? [{
     debugName: "$appendTo"
   }] : []);
-  $pcMultiSelect = inject(MULTISELECT_INSTANCE, {
-    optional: true,
-    skipSelf: true
-  }) ?? void 0;
   pcFluid = inject(Fluid, {
     optional: true,
     host: true,
@@ -2022,7 +1968,7 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
   get hasFluid() {
     return this.fluid() ?? !!this.pcFluid;
   }
-  onAfterContentInit() {
+  ngAfterContentInit() {
     this.templates.forEach((item) => {
       switch (item.getType()) {
         case "item":
@@ -2096,7 +2042,7 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
   _filterValue = signal(null, ...ngDevMode ? [{
     debugName: "_filterValue"
   }] : []);
-  _options = signal([], ...ngDevMode ? [{
+  _options = signal(null, ...ngDevMode ? [{
     debugName: "_options"
   }] : []);
   startRangeIndex = signal(-1, ...ngDevMode ? [{
@@ -2127,7 +2073,7 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
   }
   visibleOptions = computed(() => {
     const options = this.getAllVisibleAndNonVisibleOptions();
-    const isArrayOfObjects = C(options) && ObjectUtils.isObject(options[0]);
+    const isArrayOfObjects = b(options) && ObjectUtils.isObject(options[0]);
     if (this._filterValue()) {
       let filteredOptions;
       if (isArrayOfObjects) {
@@ -2156,8 +2102,8 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
   label = computed(() => {
     let label;
     const modelValue = this.modelValue();
-    if (modelValue && modelValue?.length && this.displaySelectedLabel) {
-      if (s(this.maxSelectedLabels) && modelValue?.length > (this.maxSelectedLabels || 0)) {
+    if (modelValue && modelValue.length && this.displaySelectedLabel) {
+      if (s(this.maxSelectedLabels) && modelValue.length > this.maxSelectedLabels) {
         return this.getSelectedItemsLabel();
       } else {
         label = "";
@@ -2176,7 +2122,7 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
     debugName: "label"
   }] : []);
   chipSelectedItems = computed(() => {
-    return s(this.maxSelectedLabels) && this.modelValue() && this.modelValue()?.length > (this.maxSelectedLabels || 0) ? this.modelValue()?.slice(0, this.maxSelectedLabels) : this.modelValue();
+    return s(this.maxSelectedLabels) && this.modelValue() && this.modelValue().length > this.maxSelectedLabels ? this.modelValue().slice(0, this.maxSelectedLabels) : this.modelValue();
   }, ...ngDevMode ? [{
     debugName: "chipSelectedItems"
   }] : []);
@@ -2198,7 +2144,8 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
       }
     });
   }
-  onInit() {
+  ngOnInit() {
+    super.ngOnInit();
     this.id = this.id || s2("pn_id_");
     this.autoUpdateModel();
     if (this.filterBy) {
@@ -2211,13 +2158,13 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
   maxSelectionLimitReached() {
     return this.selectionLimit && this.modelValue() && this.modelValue().length === this.selectionLimit;
   }
-  onAfterViewInit() {
+  ngAfterViewInit() {
+    super.ngAfterViewInit();
     if (this.overlayVisible) {
       this.show();
     }
   }
-  onAfterViewChecked() {
-    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
+  ngAfterViewChecked() {
     if (this.filtered) {
       this.zone.runOutsideAngular(() => {
         setTimeout(() => {
@@ -2272,9 +2219,9 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
       return;
     }
     let selected = this.isSelected(option);
-    let value = [];
+    let value = null;
     if (selected) {
-      value = this.modelValue().filter((val) => !k(val, this.getOptionValue(option), this.equalityKey() || ""));
+      value = this.modelValue().filter((val) => !k(val, this.getOptionValue(option), this.equalityKey()));
     } else {
       value = [...this.modelValue() || [], this.getOptionValue(option)];
     }
@@ -2344,7 +2291,7 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
     return this.isValidOption(option) && this.isSelected(option);
   }
   isOptionGroup(option) {
-    return option && (this.group || this.optionGroupLabel) && option.optionGroup && option.group;
+    return (this.group || this.optionGroupLabel) && option.optionGroup && option.group;
   }
   isValidOption(option) {
     return option && !(this.isOptionDisabled(option) || this.isOptionGroup(option));
@@ -2353,14 +2300,14 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
     if (this.maxSelectionLimitReached() && !this.isSelected(option)) {
       return true;
     }
-    return this.optionDisabled ? p(option, this.optionDisabled) : option && option.disabled !== void 0 ? option.disabled : false;
+    return this.optionDisabled ? c(option, this.optionDisabled) : option && option.disabled !== void 0 ? option.disabled : false;
   }
   isSelected(option) {
     const optionValue = this.getOptionValue(option);
-    return (this.modelValue() || []).some((value) => k(value, optionValue, this.equalityKey() || ""));
+    return (this.modelValue() || []).some((value) => k(value, optionValue, this.equalityKey()));
   }
   isOptionMatched(option) {
-    return this.isValidOption(option) && this.getOptionLabel(option).toString().toLocaleLowerCase(this.filterLocale).startsWith(this.searchValue?.toLocaleLowerCase(this.filterLocale));
+    return this.isValidOption(option) && this.getOptionLabel(option).toString().toLocaleLowerCase(this.filterLocale).startsWith(this.searchValue.toLocaleLowerCase(this.filterLocale));
   }
   isEmpty() {
     return !this._options() || this.visibleOptions() && this.visibleOptions().length === 0;
@@ -2376,7 +2323,7 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
   }
   getLabelByValue(value) {
     const options = this.group ? this.flatOptions(this._options()) : this._options() || [];
-    const matchedOption = options.find((option) => !this.isOptionGroup(option) && k(this.getOptionValue(option), value, this.equalityKey() || ""));
+    const matchedOption = options.find((option) => !this.isOptionGroup(option) && k(this.getOptionValue(option), value, this.equalityKey()));
     return matchedOption ? this.getOptionLabel(matchedOption) : null;
   }
   getSelectedItemsLabel() {
@@ -2388,16 +2335,16 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
     return message;
   }
   getOptionLabel(option) {
-    return this.optionLabel ? p(option, this.optionLabel) : option && option.label != void 0 ? option.label : option;
+    return this.optionLabel ? c(option, this.optionLabel) : option && option.label != void 0 ? option.label : option;
   }
   getOptionValue(option) {
-    return this.optionValue ? p(option, this.optionValue) : !this.optionLabel && option && option.value !== void 0 ? option.value : option;
+    return this.optionValue ? c(option, this.optionValue) : !this.optionLabel && option && option.value !== void 0 ? option.value : option;
   }
   getOptionGroupLabel(optionGroup) {
-    return this.optionGroupLabel ? p(optionGroup, this.optionGroupLabel) : optionGroup && optionGroup.label != void 0 ? optionGroup.label : optionGroup;
+    return this.optionGroupLabel ? c(optionGroup, this.optionGroupLabel) : optionGroup && optionGroup.label != void 0 ? optionGroup.label : optionGroup;
   }
   getOptionGroupChildren(optionGroup) {
-    return optionGroup ? this.optionGroupChildren ? p(optionGroup, this.optionGroupChildren) : optionGroup.items : [];
+    return this.optionGroupChildren ? c(optionGroup, this.optionGroupChildren) : optionGroup.items;
   }
   onKeyDown(event) {
     if (this.$disabled()) {
@@ -2445,7 +2392,7 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
           event.preventDefault();
           break;
         }
-        if (!metaKey && J(event.key)) {
+        if (!metaKey && j(event.key)) {
           !this.overlayVisible && this.show();
           this.searchOptions(event, event.key);
           event.preventDefault();
@@ -2580,16 +2527,14 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
     event.preventDefault();
   }
   onEscapeKey(event) {
-    if (this.overlayVisible) {
-      this.hide(true);
-      event.stopPropagation();
-      event.preventDefault();
-    }
+    this.overlayVisible && this.hide(true);
+    event.stopPropagation();
+    event.preventDefault();
   }
   onTabKey(event, pressedInInputText = false) {
     if (!pressedInInputText) {
       if (this.overlayVisible && this.hasFocusableElements()) {
-        bt(event.shiftKey ? this.lastHiddenFocusableElementOnOverlay?.nativeElement : this.firstHiddenFocusableElementOnOverlay?.nativeElement);
+        bt(event.shiftKey ? this.lastHiddenFocusableElementOnOverlay.nativeElement : this.firstHiddenFocusableElementOnOverlay.nativeElement);
         event.preventDefault();
       } else {
         if (this.focusedOptionIndex() !== -1) {
@@ -2607,7 +2552,7 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
     this.startRangeIndex.set(this.focusedOptionIndex());
   }
   onContainerClick(event) {
-    if (this.$disabled() || this.loading || this.readonly || event.target?.isSameNode?.(this.focusInputViewChild?.nativeElement)) {
+    if (this.$disabled() || this.loading || this.readonly || event.target.isSameNode(this.focusInputViewChild?.nativeElement)) {
       return;
     }
     if (!this.overlayViewChild || !this.overlayViewChild.el.nativeElement.contains(event.target)) {
@@ -2657,9 +2602,9 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
       originalEvent: event,
       filter: this._filterValue()
     });
-    !this.virtualScrollerDisabled && this.scroller?.scrollToIndex(0);
+    !this.virtualScrollerDisabled && this.scroller.scrollToIndex(0);
     setTimeout(() => {
-      this.overlayViewChild?.alignOverlay();
+      this.overlayViewChild.alignOverlay();
     });
   }
   onLastHiddenFocus(event) {
@@ -2684,7 +2629,7 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
         checked: !this.allSelected()
       });
     } else {
-      const selectedDisabledOptions = this.getAllVisibleAndNonVisibleOptions().filter((option) => this.isSelected(option) && (this.optionDisabled ? p(option, this.optionDisabled) : option && option.disabled !== void 0 ? option.disabled : false));
+      const selectedDisabledOptions = this.getAllVisibleAndNonVisibleOptions().filter((option) => this.isSelected(option) && (this.optionDisabled ? c(option, this.optionDisabled) : option && option.disabled !== void 0 ? option.disabled : false));
       const visibleOptions = this.allSelected() ? this.visibleOptions().filter((option) => !this.isValidOption(option) && this.isSelected(option)) : this.visibleOptions().filter((option) => this.isSelected(option) || this.isValidOption(option));
       const selectedOptionsBeforeSearch = this.filter && !this.allSelected() ? this.getAllVisibleAndNonVisibleOptions().filter((option) => this.isSelected(option) && this.isValidOption(option)) : [];
       const optionValues = [...selectedOptionsBeforeSearch, ...selectedDisabledOptions, ...visibleOptions].map((option) => this.getOptionValue(option));
@@ -2698,7 +2643,7 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
       }
     }
     if (this.partialSelected()) {
-      this.selectedOptions = [];
+      this.selectedOptions = null;
       this.cd.markForCheck();
     }
     this.onChange.emit({
@@ -2742,7 +2687,7 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
     return this.selectAll !== null ? this.selectAll : s(this.visibleOptions()) && this.visibleOptions().every((option) => this.isOptionGroup(option) || this.isOptionDisabled(option) || this.isSelected(option));
   }
   partialSelected() {
-    return this.selectedOptions && this.selectedOptions.length > 0 && this.selectedOptions.length < (this.options?.length || 0);
+    return this.selectedOptions && this.selectedOptions.length > 0 && this.selectedOptions.length < this.options.length;
   }
   /**
    * Displays the panel.
@@ -2814,21 +2759,15 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
     this._filterValue.set(null);
     this._filteredOptions = null;
   }
-  onOverlayHide(event) {
-    this.focusedOptionIndex.set(-1);
-    if (this.filter && this.resetFilterOnHide) {
-      this.resetFilter();
-    }
-  }
   close(event) {
     this.hide();
     event.preventDefault();
     event.stopPropagation();
   }
   clear(event) {
-    this.value = [];
+    this.value = null;
     this.updateModel(null, event);
-    this.selectedOptions = [];
+    this.selectedOptions = null;
     this.onClear.emit();
     this._disableTooltip = true;
     event.stopPropagation();
@@ -2837,7 +2776,7 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
     if (this._disableTooltip) this._disableTooltip = false;
   }
   removeOption(optionValue, event) {
-    let value = this.modelValue().filter((val) => !k(val, optionValue, this.equalityKey() || ""));
+    let value = this.modelValue().filter((val) => !k(val, optionValue, this.equalityKey()));
     this.updateModel(value, event);
     this.onChange.emit({
       originalEvent: event,
@@ -2897,7 +2836,7 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
     return matched;
   }
   hasFocusableElements() {
-    return b(this.overlayViewChild?.overlayViewChild?.nativeElement, ':not([data-p-hidden-focusable="true"])').length > 0;
+    return b2(this.overlayViewChild.overlayViewChild.nativeElement, ':not([data-p-hidden-focusable="true"])').length > 0;
   }
   hasFilter() {
     return this._filterValue() && this._filterValue().trim().length > 0;
@@ -2912,22 +2851,6 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
     this.value = value;
     setModelValue(value);
     this.cd.markForCheck();
-  }
-  getHeaderCheckboxPTOptions(key) {
-    return this.ptm(key, {
-      context: {
-        selected: this.allSelected()
-      }
-    });
-  }
-  getPTOptions(option, itemOptions, index, key) {
-    return this.ptm(key, {
-      context: {
-        selected: this.isSelected(option),
-        focused: this.focusedOptionIndex() === this.getOptionIndex(index, itemOptions),
-        disabled: this.isOptionDisabled(option)
-      }
-    });
   }
   static ɵfac = function MultiSelect_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _MultiSelect)(ɵɵdirectiveInject(NgZone), ɵɵdirectiveInject(FilterService), ɵɵdirectiveInject(OverlayService));
@@ -3097,17 +3020,11 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
       onRemove: "onRemove",
       onSelectAllChange: "onSelectAllChange"
     },
-    features: [ɵɵProvidersFeature([MULTISELECT_VALUE_ACCESSOR, MultiSelectStyle, {
-      provide: MULTISELECT_INSTANCE,
-      useExisting: _MultiSelect
-    }, {
-      provide: PARENT_INSTANCE,
-      useExisting: _MultiSelect
-    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([MULTISELECT_VALUE_ACCESSOR, MultiSelectStyle]), ɵɵInheritDefinitionFeature],
     ngContentSelectors: _c29,
     decls: 16,
-    vars: 46,
-    consts: [["focusInput", ""], ["elseBlock", ""], ["overlay", ""], ["content", ""], ["token", ""], ["removeicon", ""], ["firstHiddenFocusableEl", ""], ["buildInItems", ""], ["lastHiddenFocusableEl", ""], ["builtInFilterElement", ""], ["headerCheckbox", ""], ["icon", ""], ["filterInput", ""], ["scroller", ""], ["loader", ""], ["items", ""], [1, "p-hidden-accessible", 3, "pBind"], ["role", "combobox", 3, "focus", "blur", "keydown", "pTooltip", "tooltipPosition", "positionStyle", "tooltipStyleClass", "pAutoFocus", "pBind"], [3, "mouseleave", "pBind", "pTooltip", "tooltipDisabled", "tooltipPosition", "positionStyle", "tooltipStyleClass"], [3, "pBind"], [4, "ngIf"], [4, "ngIf", "ngIfElse"], [3, "visibleChange", "onAnimationStart", "onHide", "hostAttrSelector", "visible", "options", "target", "appendTo", "pt"], [3, "pBind", "class"], [3, "pBind", "class", 4, "ngFor", "ngForOf"], [3, "onRemove", "pt", "label", "removable", "removeIcon"], [3, "class", "pBind", "click", 4, "ngIf"], [3, "click", "pBind"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], ["data-p-icon", "times", 3, "pBind", "class", "click", 4, "ngIf"], [3, "pBind", "class", "click", 4, "ngIf"], ["data-p-icon", "times", 3, "click", "pBind"], [4, "ngTemplateOutlet"], [3, "pBind", "class", 4, "ngIf"], [3, "pBind", "class", "ngClass", 4, "ngIf"], ["data-p-icon", "chevron-down", 3, "pBind", "class", 4, "ngIf"], [3, "pBind", "ngClass"], ["data-p-icon", "chevron-down", 3, "pBind"], [3, "pBind", "ngStyle"], ["role", "presentation", 1, "p-hidden-accessible", "p-hidden-focusable", 3, "focus", "pBind"], [3, "items", "style", "itemSize", "autoSize", "tabindex", "lazy", "options", "onLazyLoad", 4, "ngIf"], [3, "pt", "ngModel", "ariaLabel", "binary", "variant", "disabled", "onChange", 4, "ngIf"], [3, "pt", "class", 4, "ngIf"], [3, "onChange", "pt", "ngModel", "ariaLabel", "binary", "variant", "disabled"], ["data-p-icon", "check", 3, "class", "pBind", 4, "ngIf"], ["data-p-icon", "check", 3, "pBind"], [3, "pt"], ["pInputText", "", "type", "text", "role", "searchbox", 3, "input", "keydown", "click", "blur", "pt", "variant", "value"], ["data-p-icon", "search", 3, "pBind", 4, "ngIf"], ["class", "p-multiselect-filter-icon", 3, "pBind", 4, "ngIf"], ["data-p-icon", "search", 3, "pBind"], [1, "p-multiselect-filter-icon", 3, "pBind"], [3, "onLazyLoad", "items", "itemSize", "autoSize", "tabindex", "lazy", "options"], ["role", "listbox", "aria-multiselectable", "true", 3, "pBind"], ["ngFor", "", 3, "ngForOf"], ["role", "option", 3, "pBind", "class", "ngStyle", 4, "ngIf"], ["role", "option", 3, "pBind", "ngStyle"], [3, "ngTemplateOutlet", "ngTemplateOutletContext", 4, "ngIf"], [3, "ngTemplateOutlet", "ngTemplateOutletContext"], ["pMultiSelectItem", "", "pRipple", "", 3, "onClick", "onMouseEnter", "pBind", "id", "option", "selected", "label", "disabled", "template", "itemCheckboxIconTemplate", "itemSize", "focused", "ariaPosInset", "ariaSetSize", "variant", "highlightOnSelect", "pt"]],
+    vars: 40,
+    consts: [["focusInput", ""], ["elseBlock", ""], ["overlay", ""], ["content", ""], ["token", ""], ["removeicon", ""], ["firstHiddenFocusableEl", ""], ["buildInItems", ""], ["lastHiddenFocusableEl", ""], ["builtInFilterElement", ""], ["headerCheckbox", ""], ["checkboxicon", ""], ["filterInput", ""], ["scroller", ""], ["loader", ""], ["items", ""], [1, "p-hidden-accessible"], ["role", "combobox", 3, "focus", "blur", "keydown", "pTooltip", "tooltipPosition", "positionStyle", "tooltipStyleClass", "pAutoFocus"], [3, "mouseleave", "pTooltip", "tooltipDisabled", "tooltipPosition", "positionStyle", "tooltipStyleClass"], [4, "ngIf"], [4, "ngIf", "ngIfElse"], [3, "visibleChange", "onAnimationStart", "onHide", "hostAttrSelector", "visible", "options", "target", "appendTo"], [3, "class"], [3, "class", 4, "ngFor", "ngForOf"], [3, "onRemove", "label", "removable", "removeIcon"], [3, "class", "click", 4, "ngIf"], [3, "click"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], ["data-p-icon", "times", 3, "class", "click", 4, "ngIf"], ["data-p-icon", "times", 3, "click"], [4, "ngTemplateOutlet"], [3, "class", 4, "ngIf"], [3, "class", "ngClass", 4, "ngIf"], ["data-p-icon", "chevron-down", 3, "class", 4, "ngIf"], [3, "ngClass"], ["data-p-icon", "chevron-down"], [3, "ngStyle"], ["role", "presentation", 1, "p-hidden-accessible", "p-hidden-focusable", 3, "focus"], [3, "items", "style", "itemSize", "autoSize", "tabindex", "lazy", "options", "onLazyLoad", 4, "ngIf"], [3, "ngModel", "ariaLabel", "binary", "variant", "disabled", "onChange", 4, "ngIf"], [3, "onChange", "ngModel", "ariaLabel", "binary", "variant", "disabled"], ["data-p-icon", "check", 3, "class", 4, "ngIf"], ["data-p-icon", "check"], ["pInputText", "", "type", "text", "role", "searchbox", 3, "input", "keydown", "click", "blur", "variant", "value"], ["data-p-icon", "search", 4, "ngIf"], ["class", "p-multiselect-filter-icon", 4, "ngIf"], ["data-p-icon", "search"], [1, "p-multiselect-filter-icon"], [3, "onLazyLoad", "items", "itemSize", "autoSize", "tabindex", "lazy", "options"], ["role", "listbox", "aria-multiselectable", "true"], ["ngFor", "", 3, "ngForOf"], ["role", "option", 3, "class", "ngStyle", 4, "ngIf"], ["role", "option", 3, "ngStyle"], [3, "onClick", "onMouseEnter", "id", "option", "selected", "label", "disabled", "template", "itemCheckboxIconTemplate", "itemSize", "focused", "ariaPosInset", "ariaSetSize", "variant", "highlightOnSelect"]],
     template: function MultiSelect_Template(rf, ctx) {
       if (rf & 1) {
         const _r1 = ɵɵgetCurrentView();
@@ -3129,14 +3046,14 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
           ɵɵrestoreView(_r1);
           return ɵɵresetView(ctx.labelContainerMouseLeave());
         });
-        ɵɵelementStart(4, "div", 19);
-        ɵɵtemplate(5, MultiSelect_ng_container_5_Template, 3, 2, "ng-container", 20)(6, MultiSelect_ng_container_6_Template, 3, 6, "ng-container", 20);
+        ɵɵelementStart(4, "div");
+        ɵɵtemplate(5, MultiSelect_ng_container_5_Template, 3, 2, "ng-container", 19)(6, MultiSelect_ng_container_6_Template, 3, 6, "ng-container", 19);
         ɵɵelementEnd()();
-        ɵɵtemplate(7, MultiSelect_ng_container_7_Template, 3, 2, "ng-container", 20);
-        ɵɵelementStart(8, "div", 19);
-        ɵɵtemplate(9, MultiSelect_ng_container_9_Template, 3, 2, "ng-container", 21)(10, MultiSelect_ng_template_10_Template, 2, 2, "ng-template", null, 1, ɵɵtemplateRefExtractor);
+        ɵɵtemplate(7, MultiSelect_ng_container_7_Template, 3, 2, "ng-container", 19);
+        ɵɵelementStart(8, "div");
+        ɵɵtemplate(9, MultiSelect_ng_container_9_Template, 3, 2, "ng-container", 20)(10, MultiSelect_ng_template_10_Template, 2, 2, "ng-template", null, 1, ɵɵtemplateRefExtractor);
         ɵɵelementEnd();
-        ɵɵelementStart(12, "p-overlay", 22, 2);
+        ɵɵelementStart(12, "p-overlay", 21, 2);
         ɵɵtwoWayListener("visibleChange", function MultiSelect_Template_p_overlay_visibleChange_12_listener($event) {
           ɵɵrestoreView(_r1);
           ɵɵtwoWayBindingSet(ctx.overlayVisible, $event) || (ctx.overlayVisible = $event);
@@ -3145,26 +3062,24 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
         ɵɵlistener("onAnimationStart", function MultiSelect_Template_p_overlay_onAnimationStart_12_listener($event) {
           ɵɵrestoreView(_r1);
           return ɵɵresetView(ctx.onOverlayAnimationStart($event));
-        })("onHide", function MultiSelect_Template_p_overlay_onHide_12_listener($event) {
+        })("onHide", function MultiSelect_Template_p_overlay_onHide_12_listener() {
           ɵɵrestoreView(_r1);
-          return ɵɵresetView(ctx.onOverlayHide($event));
+          return ɵɵresetView(ctx.hide());
         });
-        ɵɵtemplate(14, MultiSelect_ng_template_14_Template, 13, 23, "ng-template", null, 3, ɵɵtemplateRefExtractor);
+        ɵɵtemplate(14, MultiSelect_ng_template_14_Template, 13, 19, "ng-template", null, 3, ɵɵtemplateRefExtractor);
         ɵɵelementEnd();
       }
       if (rf & 2) {
         const elseBlock_r24 = ɵɵreference(11);
-        ɵɵproperty("pBind", ctx.ptm("hiddenInputContainer"));
         ɵɵattribute("data-p-hidden-accessible", true);
         ɵɵadvance();
-        ɵɵproperty("pTooltip", ctx.tooltip)("tooltipPosition", ctx.tooltipPosition)("positionStyle", ctx.tooltipPositionStyle)("tooltipStyleClass", ctx.tooltipStyleClass)("pAutoFocus", ctx.autofocus)("pBind", ctx.ptm("hiddenInput"));
+        ɵɵproperty("pTooltip", ctx.tooltip)("tooltipPosition", ctx.tooltipPosition)("positionStyle", ctx.tooltipPositionStyle)("tooltipStyleClass", ctx.tooltipStyleClass)("pAutoFocus", ctx.autofocus);
         ɵɵattribute("aria-disabled", ctx.$disabled())("id", ctx.inputId)("aria-label", ctx.ariaLabel)("aria-labelledby", ctx.ariaLabelledBy)("aria-haspopup", "listbox")("aria-expanded", ctx.overlayVisible ?? false)("aria-controls", ctx.overlayVisible ? ctx.id + "_list" : null)("tabindex", !ctx.$disabled() ? ctx.tabindex : -1)("aria-activedescendant", ctx.focused ? ctx.focusedOptionId : void 0)("value", ctx.modelValue())("name", ctx.name())("required", ctx.required() ? "" : void 0)("disabled", ctx.$disabled() ? "" : void 0);
         ɵɵadvance(2);
         ɵɵclassMap(ctx.cx("labelContainer"));
-        ɵɵproperty("pBind", ctx.ptm("labelContainer"))("pTooltip", ctx.tooltip)("tooltipDisabled", ctx._disableTooltip)("tooltipPosition", ctx.tooltipPosition)("positionStyle", ctx.tooltipPositionStyle)("tooltipStyleClass", ctx.tooltipStyleClass);
+        ɵɵproperty("pTooltip", ctx.tooltip)("tooltipDisabled", ctx._disableTooltip)("tooltipPosition", ctx.tooltipPosition)("positionStyle", ctx.tooltipPositionStyle)("tooltipStyleClass", ctx.tooltipStyleClass);
         ɵɵadvance();
         ɵɵclassMap(ctx.cx("label"));
-        ɵɵproperty("pBind", ctx.ptm("label"));
         ɵɵadvance();
         ɵɵproperty("ngIf", !ctx.selectedItemsTemplate && !ctx._selectedItemsTemplate);
         ɵɵadvance();
@@ -3173,16 +3088,15 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
         ɵɵproperty("ngIf", ctx.isVisibleClearIcon);
         ɵɵadvance();
         ɵɵclassMap(ctx.cx("dropdown"));
-        ɵɵproperty("pBind", ctx.ptm("dropdown"));
         ɵɵadvance();
         ɵɵproperty("ngIf", ctx.loading)("ngIfElse", elseBlock_r24);
         ɵɵadvance(3);
-        ɵɵproperty("hostAttrSelector", ctx.$attrSelector);
+        ɵɵproperty("hostAttrSelector", ctx.attrSelector);
         ɵɵtwoWayProperty("visible", ctx.overlayVisible);
-        ɵɵproperty("options", ctx.overlayOptions)("target", "@parent")("appendTo", ctx.$appendTo())("pt", ctx.ptm("pcOverlay"));
+        ɵɵproperty("options", ctx.overlayOptions)("target", "@parent")("appendTo", ctx.$appendTo());
       }
     },
-    dependencies: [CommonModule, NgClass, NgForOf, NgIf, NgTemplateOutlet, NgStyle, MultiSelectItem, Overlay, SharedModule, Tooltip, Scroller, AutoFocus, CheckIcon, SearchIcon, TimesIcon, ChevronDownIcon, IconField, InputIcon, InputText, Chip, Checkbox, FormsModule, NgControlStatus, NgModel, BindModule, Bind],
+    dependencies: [CommonModule, NgClass, NgForOf, NgIf, NgTemplateOutlet, NgStyle, MultiSelectItem, Overlay, SharedModule, Tooltip, Scroller, AutoFocus, CheckIcon, SearchIcon, TimesIcon, ChevronDownIcon, IconField, InputIcon, InputText, Chip, Checkbox, FormsModule, NgControlStatus, NgModel],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -3193,10 +3107,9 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
     args: [{
       selector: "p-multiSelect, p-multiselect, p-multi-select",
       standalone: true,
-      imports: [CommonModule, MultiSelectItem, Overlay, SharedModule, Tooltip, Scroller, AutoFocus, CheckIcon, SearchIcon, TimesIcon, ChevronDownIcon, IconField, InputIcon, InputText, Chip, Checkbox, FormsModule, BindModule],
-      hostDirectives: [Bind],
+      imports: [CommonModule, MultiSelectItem, Overlay, SharedModule, Tooltip, Scroller, AutoFocus, CheckIcon, SearchIcon, TimesIcon, ChevronDownIcon, IconField, InputIcon, InputText, Chip, Checkbox, FormsModule],
       template: `
-        <div class="p-hidden-accessible" [attr.data-p-hidden-accessible]="true" [pBind]="ptm('hiddenInputContainer')">
+        <div class="p-hidden-accessible" [attr.data-p-hidden-accessible]="true">
             <input
                 #focusInput
                 [pTooltip]="tooltip"
@@ -3221,11 +3134,9 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
                 [attr.name]="name()"
                 [attr.required]="required() ? '' : undefined"
                 [attr.disabled]="$disabled() ? '' : undefined"
-                [pBind]="ptm('hiddenInput')"
             />
         </div>
         <div
-            [pBind]="ptm('labelContainer')"
             [class]="cx('labelContainer')"
             [pTooltip]="tooltip"
             (mouseleave)="labelContainerMouseLeave()"
@@ -3234,15 +3145,15 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
             [positionStyle]="tooltipPositionStyle"
             [tooltipStyleClass]="tooltipStyleClass"
         >
-            <div [pBind]="ptm('label')" [class]="cx('label')">
+            <div [class]="cx('label')">
                 <ng-container *ngIf="!selectedItemsTemplate && !_selectedItemsTemplate">
                     <ng-container *ngIf="display === 'comma'">{{ label() || 'empty' }}</ng-container>
                     <ng-container *ngIf="display === 'chip'">
                         @if (chipSelectedItems() && chipSelectedItems().length === maxSelectedLabels) {
                             {{ getSelectedItemsLabel() }}
                         } @else {
-                            <div #token *ngFor="let item of chipSelectedItems(); let i = index" [pBind]="ptm('chipItem')" [class]="cx('chipItem')">
-                                <p-chip [pt]="ptm('pcChip')" [class]="cx('pcChip')" [label]="getLabelByValue(item)" [removable]="!$disabled() && !readonly" (onRemove)="removeOption(item, $event)" [removeIcon]="chipIcon">
+                            <div #token *ngFor="let item of chipSelectedItems(); let i = index" [class]="cx('chipItem')">
+                                <p-chip [class]="cx('pcChip')" [label]="getLabelByValue(item)" [removable]="!$disabled() && !readonly" (onRemove)="removeOption(item, $event)" [removeIcon]="chipIcon">
                                     <ng-container *ngIf="chipIconTemplate || _chipIconTemplate || removeTokenIconTemplate || _removeTokenIconTemplate">
                                         <ng-template #removeicon>
                                             <ng-container *ngIf="!$disabled() && !readonly">
@@ -3250,8 +3161,8 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
                                                     [class]="cx('chipIcon')"
                                                     *ngIf="chipIconTemplate || _chipIconTemplate || removeTokenIconTemplate || _removeTokenIconTemplate"
                                                     (click)="removeOption(item, $event)"
+                                                    [attr.data-pc-section]="'clearicon'"
                                                     [attr.aria-hidden]="true"
-                                                    [pBind]="ptm('chipIcon')"
                                                 >
                                                     <ng-container *ngTemplateOutlet="chipIconTemplate || _chipIconTemplate || removeTokenIconTemplate || _removeTokenIconTemplate; context: { class: 'p-multiselect-chip-icon' }"></ng-container>
                                                 </span>
@@ -3271,44 +3182,34 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
             </div>
         </div>
         <ng-container *ngIf="isVisibleClearIcon">
-            <svg data-p-icon="times" *ngIf="!clearIconTemplate && !_clearIconTemplate" [pBind]="ptm('clearIcon')" [class]="cx('clearIcon')" (click)="clear($event)" [attr.aria-hidden]="true" />
-            <span *ngIf="clearIconTemplate || _clearIconTemplate" [pBind]="ptm('clearIcon')" [class]="cx('clearIcon')" (click)="clear($event)" [attr.aria-hidden]="true">
+            <svg data-p-icon="times" *ngIf="!clearIconTemplate && !_clearIconTemplate" [class]="cx('clearIcon')" (click)="clear($event)" [attr.data-pc-section]="'clearicon'" [attr.aria-hidden]="true" />
+            <span *ngIf="clearIconTemplate || _clearIconTemplate" [class]="cx('clearIcon')" (click)="clear($event)" [attr.data-pc-section]="'clearicon'" [attr.aria-hidden]="true">
                 <ng-template *ngTemplateOutlet="clearIconTemplate || _clearIconTemplate"></ng-template>
             </span>
         </ng-container>
-        <div [pBind]="ptm('dropdown')" [class]="cx('dropdown')">
+        <div [class]="cx('dropdown')">
             <ng-container *ngIf="loading; else elseBlock">
                 <ng-container *ngIf="loadingIconTemplate || _loadingIconTemplate">
                     <ng-container *ngTemplateOutlet="loadingIconTemplate || _loadingIconTemplate"></ng-container>
                 </ng-container>
                 <ng-container *ngIf="!loadingIconTemplate && !_loadingIconTemplate">
-                    <span *ngIf="loadingIcon" [pBind]="ptm('loadingIcon')" [class]="cn(cx('loadingIcon'), 'pi-spin ' + loadingIcon)" [attr.aria-hidden]="true"></span>
-                    <span *ngIf="!loadingIcon" [pBind]="ptm('loadingIcon')" [class]="cn(cx('loadingIcon'), 'pi pi-spinner pi-spin')" [attr.aria-hidden]="true"></span>
+                    <span *ngIf="loadingIcon" [class]="cn(cx('loadingIcon'), 'pi-spin ' + loadingIcon)" [attr.aria-hidden]="true"></span>
+                    <span *ngIf="!loadingIcon" [class]="cn(cx('loadingIcon'), 'pi pi-spinner pi-spin')" [attr.aria-hidden]="true"></span>
                 </ng-container>
             </ng-container>
             <ng-template #elseBlock>
                 <ng-container *ngIf="!dropdownIconTemplate && !_dropdownIconTemplate">
-                    <span *ngIf="dropdownIcon" [pBind]="ptm('dropdownIcon')" [class]="cx('dropdownIcon')" [ngClass]="dropdownIcon" [attr.aria-hidden]="true"></span>
-                    <svg data-p-icon="chevron-down" *ngIf="!dropdownIcon" [pBind]="ptm('dropdownIcon')" [class]="cx('dropdownIcon')" [attr.aria-hidden]="true" />
+                    <span *ngIf="dropdownIcon" [class]="cx('dropdownIcon')" [ngClass]="dropdownIcon" [attr.data-pc-section]="'triggericon'" [attr.aria-hidden]="true"></span>
+                    <svg data-p-icon="chevron-down" *ngIf="!dropdownIcon" [class]="cx('dropdownIcon')" [attr.data-pc-section]="'triggericon'" [attr.aria-hidden]="true" />
                 </ng-container>
-                <span *ngIf="dropdownIconTemplate || _dropdownIconTemplate" [pBind]="ptm('dropdownIcon')" [class]="cx('dropdownIcon')" [attr.aria-hidden]="true">
+                <span *ngIf="dropdownIconTemplate || _dropdownIconTemplate" [class]="cx('dropdownIcon')" [attr.data-pc-section]="'triggericon'" [attr.aria-hidden]="true">
                     <ng-template *ngTemplateOutlet="dropdownIconTemplate || _dropdownIconTemplate"></ng-template>
                 </span>
             </ng-template>
         </div>
-        <p-overlay
-            #overlay
-            [hostAttrSelector]="$attrSelector"
-            [(visible)]="overlayVisible"
-            [options]="overlayOptions"
-            [target]="'@parent'"
-            [appendTo]="$appendTo()"
-            (onAnimationStart)="onOverlayAnimationStart($event)"
-            (onHide)="onOverlayHide($event)"
-            [pt]="ptm('pcOverlay')"
-        >
+        <p-overlay #overlay [hostAttrSelector]="attrSelector" [(visible)]="overlayVisible" [options]="overlayOptions" [target]="'@parent'" [appendTo]="$appendTo()" (onAnimationStart)="onOverlayAnimationStart($event)" (onHide)="hide()">
             <ng-template #content>
-                <div [pBind]="ptm('overlay')" [attr.id]="id + '_list'" [class]="cn(cx('overlay'), panelStyleClass)" [ngStyle]="panelStyle">
+                <div [attr.id]="id + '_list'" [class]="cn(cx('overlay'), panelStyleClass)" [ngStyle]="panelStyle">
                     <span
                         #firstHiddenFocusableEl
                         role="presentation"
@@ -3317,18 +3218,16 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
                         (focus)="onFirstHiddenFocus($event)"
                         [attr.data-p-hidden-accessible]="true"
                         [attr.data-p-hidden-focusable]="true"
-                        [pBind]="ptm('firstHiddenFocusableEl')"
                     >
                     </span>
                     <ng-container *ngTemplateOutlet="headerTemplate || _headerTemplate"></ng-container>
-                    <div [pBind]="ptm('header')" [class]="cx('header')" *ngIf="showHeader">
+                    <div [class]="cx('header')" *ngIf="showHeader">
                         <ng-content select="p-header"></ng-content>
                         <ng-container *ngIf="filterTemplate || _filterTemplate; else builtInFilterElement">
                             <ng-container *ngTemplateOutlet="filterTemplate || _filterTemplate; context: { options: filterOptions }"></ng-container>
                         </ng-container>
                         <ng-template #builtInFilterElement>
                             <p-checkbox
-                                [pt]="getHeaderCheckboxPTOptions('pcHeaderCheckbox')"
                                 [ngModel]="allSelected()"
                                 [ariaLabel]="toggleAllAriaLabel"
                                 [binary]="true"
@@ -3338,8 +3237,8 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
                                 [disabled]="$disabled()"
                                 #headerCheckbox
                             >
-                                <ng-template #icon let-klass="class">
-                                    <svg data-p-icon="check" *ngIf="!headerCheckboxIconTemplate && !_headerCheckboxIconTemplate && allSelected()" [class]="klass" [pBind]="getHeaderCheckboxPTOptions('pcHeaderCheckbox.icon')" />
+                                <ng-template #checkboxicon let-klass="class">
+                                    <svg data-p-icon="check" *ngIf="!headerCheckboxIconTemplate && !_headerCheckboxIconTemplate && allSelected()" [class]="klass" [attr.data-pc-section]="'icon'" />
                                     <ng-template
                                         *ngTemplateOutlet="
                                             headerCheckboxIconTemplate || _headerCheckboxIconTemplate;
@@ -3353,11 +3252,10 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
                                 </ng-template>
                             </p-checkbox>
 
-                            <p-iconfield *ngIf="filter" [pt]="ptm('pcFilterContainer')" [class]="cx('pcFilterContainer')">
+                            <p-iconfield *ngIf="filter" [class]="cx('pcFilterContainer')">
                                 <input
                                     #filterInput
                                     pInputText
-                                    [pt]="ptm('pcFilter')"
                                     [variant]="$variant()"
                                     type="text"
                                     [attr.autocomplete]="autocomplete"
@@ -3374,16 +3272,16 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
                                     [attr.placeholder]="filterPlaceHolder"
                                     [attr.aria-label]="ariaFilterLabel"
                                 />
-                                <p-inputicon [pt]="ptm('pcFilterIconContainer')">
-                                    <svg data-p-icon="search" *ngIf="!filterIconTemplate && !_filterIconTemplate" [pBind]="ptm('filterIcon')" />
-                                    <span *ngIf="filterIconTemplate || _filterIconTemplate" [pBind]="ptm('filterIcon')" class="p-multiselect-filter-icon">
+                                <p-inputicon>
+                                    <svg data-p-icon="search" *ngIf="!filterIconTemplate && !_filterIconTemplate" />
+                                    <span *ngIf="filterIconTemplate || _filterIconTemplate" class="p-multiselect-filter-icon">
                                         <ng-template *ngTemplateOutlet="filterIconTemplate || _filterIconTemplate"></ng-template>
                                     </span>
                                 </p-inputicon>
                             </p-iconfield>
                         </ng-template>
                     </div>
-                    <div [pBind]="ptm('listContainer')" [class]="cx('listContainer')" [style.max-height]="virtualScroll ? 'auto' : scrollHeight || 'auto'">
+                    <div [class]="cx('listContainer')" [style.max-height]="virtualScroll ? 'auto' : scrollHeight || 'auto'">
                         <p-scroller
                             *ngIf="virtualScroll"
                             #scroller
@@ -3410,19 +3308,16 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
                         </ng-container>
 
                         <ng-template #buildInItems let-items let-scrollerOptions="options">
-                            <ul #items [pBind]="ptm('list')" [class]="cn(cx('list'), scrollerOptions.contentStyleClass)" [style]="scrollerOptions.contentStyle" role="listbox" aria-multiselectable="true" [attr.aria-label]="listLabel">
+                            <ul #items [class]="cn(cx('list'), scrollerOptions.contentStyleClass)" [style]="scrollerOptions.contentStyle" role="listbox" aria-multiselectable="true" [attr.aria-label]="listLabel">
                                 <ng-template ngFor let-option [ngForOf]="items" let-i="index">
                                     <ng-container *ngIf="isOptionGroup(option)">
-                                        <li [pBind]="ptm('optionGroup')" [attr.id]="id + '_' + getOptionIndex(i, scrollerOptions)" [class]="cx('optionGroup')" [ngStyle]="{ height: scrollerOptions.itemSize + 'px' }" role="option">
-                                            <span *ngIf="!groupTemplate && option.optionGroup">{{ getOptionGroupLabel(option.optionGroup) }}</span>
-                                            <ng-container *ngIf="option.optionGroup && groupTemplate" [ngTemplateOutlet]="groupTemplate" [ngTemplateOutletContext]="{ $implicit: option.optionGroup }"></ng-container>
+                                        <li [attr.id]="id + '_' + getOptionIndex(i, scrollerOptions)" [class]="cx('optionGroup')" [ngStyle]="{ height: scrollerOptions.itemSize + 'px' }" role="option">
+                                            <span *ngIf="!groupTemplate">{{ getOptionGroupLabel(option.optionGroup) }}</span>
+                                            <ng-container *ngTemplateOutlet="groupTemplate; context: { $implicit: option.optionGroup }"></ng-container>
                                         </li>
                                     </ng-container>
                                     <ng-container *ngIf="!isOptionGroup(option)">
-                                        <li
-                                            pMultiSelectItem
-                                            pRipple
-                                            [pBind]="getPTOptions(option, getItemOptions, i, 'option')"
+                                        <p-multiselect-item
                                             [id]="id + '_' + getOptionIndex(i, scrollerOptions)"
                                             [option]="option"
                                             [selected]="isSelected(option)"
@@ -3438,19 +3333,18 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
                                             [highlightOnSelect]="highlightOnSelect"
                                             (onClick)="onOptionSelect($event, false, getOptionIndex(i, scrollerOptions))"
                                             (onMouseEnter)="onOptionMouseEnter($event, getOptionIndex(i, scrollerOptions))"
-                                            [pt]="pt"
-                                        ></li>
+                                        ></p-multiselect-item>
                                     </ng-container>
                                 </ng-template>
 
-                                <li *ngIf="hasFilter() && isEmpty()" [pBind]="ptm('emptyMessage')" [class]="cx('emptyMessage')" [ngStyle]="{ height: scrollerOptions.itemSize + 'px' }" role="option">
+                                <li *ngIf="hasFilter() && isEmpty()" [class]="cx('emptyMessage')" [ngStyle]="{ height: scrollerOptions.itemSize + 'px' }" role="option">
                                     @if (!emptyFilterTemplate && !_emptyFilterTemplate && !emptyTemplate && !_emptyTemplate) {
                                         {{ emptyFilterMessageLabel }}
                                     } @else {
                                         <ng-container *ngTemplateOutlet="emptyFilterTemplate || _emptyFilterTemplate || emptyTemplate || _emptyFilterTemplate"></ng-container>
                                     }
                                 </li>
-                                <li *ngIf="!hasFilter() && isEmpty()" [pBind]="ptm('emptyMessage')" [class]="cx('emptyMessage')" [ngStyle]="{ height: scrollerOptions.itemSize + 'px' }" role="option">
+                                <li *ngIf="!hasFilter() && isEmpty()" [class]="cx('emptyMessage')" [ngStyle]="{ height: scrollerOptions.itemSize + 'px' }" role="option">
                                     @if (!emptyTemplate && !_emptyTemplate) {
                                         {{ emptyMessageLabel }}
                                     } @else {
@@ -3473,19 +3367,12 @@ var MultiSelect = class _MultiSelect extends BaseEditableHolder {
                         (focus)="onLastHiddenFocus($event)"
                         [attr.data-p-hidden-accessible]="true"
                         [attr.data-p-hidden-focusable]="true"
-                        [pBind]="ptm('lastHiddenFocusableEl')"
                     ></span>
                 </div>
             </ng-template>
         </p-overlay>
     `,
-      providers: [MULTISELECT_VALUE_ACCESSOR, MultiSelectStyle, {
-        provide: MULTISELECT_INSTANCE,
-        useExisting: MultiSelect
-      }, {
-        provide: PARENT_INSTANCE,
-        useExisting: MultiSelect
-      }],
+      providers: [MULTISELECT_VALUE_ACCESSOR, MultiSelectStyle],
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
       host: {

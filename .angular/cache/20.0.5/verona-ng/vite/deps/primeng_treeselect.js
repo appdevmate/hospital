@@ -1,63 +1,48 @@
 import {
   Tree
-} from "./chunk-5U5IE3VO.js";
-import "./chunk-FK5NSSRY.js";
-import "./chunk-NOMKJF35.js";
-import "./chunk-BFEG2ZPT.js";
-import {
-  Chip
-} from "./chunk-ZQAYUNRD.js";
+} from "./chunk-MS64IXHC.js";
+import "./chunk-TTXVI75E.js";
+import "./chunk-TBZ7QADV.js";
+import "./chunk-TZCSIOQB.js";
 import {
   Overlay
-} from "./chunk-EIBJYEJL.js";
-import "./chunk-K26YQORK.js";
-import "./chunk-IG3R3ILJ.js";
+} from "./chunk-ERBKXNZB.js";
+import "./chunk-MUYJFYGV.js";
+import "./chunk-35KXM4ZV.js";
 import {
   BaseEditableHolder
-} from "./chunk-343RM6UZ.js";
-import "./chunk-2R7VQYSP.js";
+} from "./chunk-67V7CIUT.js";
+import "./chunk-5OCKW6BF.js";
 import {
-  Fluid
-} from "./chunk-PJRMHEN5.js";
+  Chip
+} from "./chunk-F4YQVUUW.js";
+import "./chunk-BB55NINM.js";
 import {
   AutoFocus
-} from "./chunk-YNLAOK3J.js";
-import "./chunk-S73J4WE3.js";
-import "./chunk-OC77X5LN.js";
+} from "./chunk-KOXUNDHI.js";
+import {
+  Fluid
+} from "./chunk-AXS7T3GQ.js";
+import "./chunk-6PBBDZZF.js";
+import "./chunk-QVUTNZUY.js";
+import "./chunk-VZLF74PJ.js";
 import {
   ChevronDownIcon,
   TimesIcon
-} from "./chunk-RHA7RL5K.js";
-import "./chunk-YXZQJBKH.js";
-import "./chunk-BB55NINM.js";
-import {
-  Bind
-} from "./chunk-MLQGRGGO.js";
-import {
-  PARENT_INSTANCE
-} from "./chunk-YNJ5GKCH.js";
-import {
-  BaseStyle
-} from "./chunk-4ATYD752.js";
-import {
-  PrimeTemplate,
-  SharedModule
-} from "./chunk-LMEEH3AJ.js";
-import "./chunk-6QGHQEN4.js";
-import "./chunk-53DGU4C2.js";
+} from "./chunk-BIL3W6KN.js";
 import {
   NG_VALUE_ACCESSOR
 } from "./chunk-RZEKJVYA.js";
-import "./chunk-GOP36Q47.js";
+import "./chunk-4YMQ5OOY.js";
 import {
-  Lt,
-  R,
-  b,
-  bt,
-  s,
-  s3 as s2,
-  vt
-} from "./chunk-UCHM6OXG.js";
+  BaseStyle
+} from "./chunk-L2L2T6ID.js";
+import {
+  PrimeTemplate,
+  SharedModule
+} from "./chunk-ZKOTJBQ6.js";
+import "./chunk-6QGHQEN4.js";
+import "./chunk-53DGU4C2.js";
 import {
   CommonModule,
   NgForOf,
@@ -82,7 +67,6 @@ import {
   booleanAttribute,
   input,
   setClassMetadata,
-  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -119,7 +103,6 @@ import {
   ɵɵviewQuery
 } from "./chunk-EIF6IUR4.js";
 import {
-  InjectionToken,
   computed,
   forwardRef,
   inject,
@@ -132,12 +115,22 @@ import {
 import "./chunk-YVXMBCE5.js";
 import "./chunk-G6ECYYJH.js";
 import "./chunk-RTGP7ALM.js";
+import "./chunk-BMDSN43F.js";
+import {
+  Lt,
+  R,
+  b2 as b,
+  bt,
+  s,
+  s3 as s2,
+  vt
+} from "./chunk-RK2DVQNP.js";
 import {
   __spreadValues
 } from "./chunk-4MWRP73S.js";
 
 // node_modules/@primeuix/styles/dist/treeselect/index.mjs
-var style = "\n    .p-treeselect {\n        display: inline-flex;\n        cursor: pointer;\n        position: relative;\n        user-select: none;\n        background: dt('treeselect.background');\n        border: 1px solid dt('treeselect.border.color');\n        transition:\n            background dt('treeselect.transition.duration'),\n            color dt('treeselect.transition.duration'),\n            border-color dt('treeselect.transition.duration'),\n            outline-color dt('treeselect.transition.duration'),\n            box-shadow dt('treeselect.transition.duration');\n        border-radius: dt('treeselect.border.radius');\n        outline-color: transparent;\n        box-shadow: dt('treeselect.shadow');\n    }\n\n    .p-treeselect:not(.p-disabled):hover {\n        border-color: dt('treeselect.hover.border.color');\n    }\n\n    .p-treeselect:not(.p-disabled).p-focus {\n        border-color: dt('treeselect.focus.border.color');\n        box-shadow: dt('treeselect.focus.ring.shadow');\n        outline: dt('treeselect.focus.ring.width') dt('treeselect.focus.ring.style') dt('treeselect.focus.ring.color');\n        outline-offset: dt('treeselect.focus.ring.offset');\n    }\n\n    .p-treeselect.p-variant-filled {\n        background: dt('treeselect.filled.background');\n    }\n\n    .p-treeselect.p-variant-filled:not(.p-disabled):hover {\n        background: dt('treeselect.filled.hover.background');\n    }\n\n    .p-treeselect.p-variant-filled.p-focus {\n        background: dt('treeselect.filled.focus.background');\n    }\n\n    .p-treeselect.p-invalid {\n        border-color: dt('treeselect.invalid.border.color');\n    }\n\n    .p-treeselect.p-disabled {\n        opacity: 1;\n        background: dt('treeselect.disabled.background');\n    }\n\n    .p-treeselect-clear-icon {\n        align-self: center;\n        color: dt('treeselect.clear.icon.color');\n        inset-inline-end: dt('treeselect.dropdown.width');\n    }\n\n    .p-treeselect-dropdown {\n        display: flex;\n        align-items: center;\n        justify-content: center;\n        flex-shrink: 0;\n        background: transparent;\n        color: dt('treeselect.dropdown.color');\n        width: dt('treeselect.dropdown.width');\n        border-start-end-radius: dt('border.radius.md');\n        border-end-end-radius: dt('border.radius.md');\n    }\n\n    .p-treeselect-label-container {\n        overflow: hidden;\n        flex: 1 1 auto;\n        cursor: pointer;\n    }\n\n    .p-treeselect-label {\n        display: flex;\n        align-items: center;\n        gap: calc(dt('treeselect.padding.y') / 2);\n        white-space: nowrap;\n        cursor: pointer;\n        overflow: hidden;\n        text-overflow: ellipsis;\n        padding: dt('treeselect.padding.y') dt('treeselect.padding.x');\n        color: dt('treeselect.color');\n    }\n\n    .p-treeselect-label.p-placeholder {\n        color: dt('treeselect.placeholder.color');\n    }\n\n    .p-treeselect.p-invalid .p-treeselect-label.p-placeholder {\n        color: dt('treeselect.invalid.placeholder.color');\n    }\n\n    .p-treeselect:has(.p-select-clear-icon) .p-treeselect-label {\n        padding-inline-end: dt('treeselect.padding.x');\n    }\n\n    .p-treeselect.p-disabled .p-treeselect-label {\n        color: dt('treeselect.disabled.color');\n    }\n\n    .p-treeselect-label-empty {\n        overflow: hidden;\n        visibility: hidden;\n    }\n\n    .p-treeselect-overlay {\n        position: absolute;\n        top: 0;\n        left: 0;\n        background: dt('treeselect.overlay.background');\n        color: dt('treeselect.overlay.color');\n        border: 1px solid dt('treeselect.overlay.border.color');\n        border-radius: dt('treeselect.overlay.border.radius');\n        box-shadow: dt('treeselect.overlay.shadow');\n        overflow: hidden;\n        min-width: 100%;\n    }\n\n    .p-treeselect-tree-container {\n        overflow: auto;\n    }\n\n    .p-treeselect-empty-message {\n        padding: dt('treeselect.empty.message.padding');\n        background: transparent;\n    }\n\n    .p-treeselect-fluid {\n        display: flex;\n    }\n\n    .p-treeselect-overlay .p-tree {\n        padding: dt('treeselect.tree.padding');\n    }\n\n    .p-treeselect-overlay .p-tree-loading {\n        min-height: 3rem;\n    }\n\n    .p-treeselect-label .p-chip {\n        padding-block-start: calc(dt('treeselect.padding.y') / 2);\n        padding-block-end: calc(dt('treeselect.padding.y') / 2);\n        border-radius: dt('treeselect.chip.border.radius');\n    }\n\n    .p-treeselect-label:has(.p-chip) {\n        padding: calc(dt('treeselect.padding.y') / 2) calc(dt('treeselect.padding.x') / 2);\n    }\n\n    .p-treeselect-sm .p-treeselect-label {\n        font-size: dt('treeselect.sm.font.size');\n        padding-block: dt('treeselect.sm.padding.y');\n        padding-inline: dt('treeselect.sm.padding.x');\n    }\n\n    .p-treeselect-sm .p-treeselect-dropdown .p-icon {\n        font-size: dt('treeselect.sm.font.size');\n        width: dt('treeselect.sm.font.size');\n        height: dt('treeselect.sm.font.size');\n    }\n\n    .p-treeselect-lg .p-treeselect-label {\n        font-size: dt('treeselect.lg.font.size');\n        padding-block: dt('treeselect.lg.padding.y');\n        padding-inline: dt('treeselect.lg.padding.x');\n    }\n\n    .p-treeselect-lg .p-treeselect-dropdown .p-icon {\n        font-size: dt('treeselect.lg.font.size');\n        width: dt('treeselect.lg.font.size');\n        height: dt('treeselect.lg.font.size');\n    }\n";
+var style = "\n    .p-treeselect {\n        display: inline-flex;\n        cursor: pointer;\n        position: relative;\n        user-select: none;\n        background: dt('treeselect.background');\n        border: 1px solid dt('treeselect.border.color');\n        transition:\n            background dt('treeselect.transition.duration'),\n            color dt('treeselect.transition.duration'),\n            border-color dt('treeselect.transition.duration'),\n            outline-color dt('treeselect.transition.duration'),\n            box-shadow dt('treeselect.transition.duration');\n        border-radius: dt('treeselect.border.radius');\n        outline-color: transparent;\n        box-shadow: dt('treeselect.shadow');\n    }\n\n    .p-treeselect:not(.p-disabled):hover {\n        border-color: dt('treeselect.hover.border.color');\n    }\n\n    .p-treeselect:not(.p-disabled).p-focus {\n        border-color: dt('treeselect.focus.border.color');\n        box-shadow: dt('treeselect.focus.ring.shadow');\n        outline: dt('treeselect.focus.ring.width') dt('treeselect.focus.ring.style') dt('treeselect.focus.ring.color');\n        outline-offset: dt('treeselect.focus.ring.offset');\n    }\n\n    .p-treeselect.p-variant-filled {\n        background: dt('treeselect.filled.background');\n    }\n\n    .p-treeselect.p-variant-filled:not(.p-disabled):hover {\n        background: dt('treeselect.filled.hover.background');\n    }\n\n    .p-treeselect.p-variant-filled.p-focus {\n        background: dt('treeselect.filled.focus.background');\n    }\n\n    .p-treeselect.p-invalid {\n        border-color: dt('treeselect.invalid.border.color');\n    }\n\n    .p-treeselect.p-disabled {\n        opacity: 1;\n        background: dt('treeselect.disabled.background');\n    }\n\n    .p-treeselect-clear-icon {\n        position: absolute;\n        top: 50%;\n        margin-top: -0.5rem;\n        color: dt('treeselect.clear.icon.color');\n        inset-inline-end: dt('treeselect.dropdown.width');\n    }\n\n    .p-treeselect-dropdown {\n        display: flex;\n        align-items: center;\n        justify-content: center;\n        flex-shrink: 0;\n        background: transparent;\n        color: dt('treeselect.dropdown.color');\n        width: dt('treeselect.dropdown.width');\n        border-start-end-radius: dt('border.radius.md');\n        border-end-end-radius: dt('border.radius.md');\n    }\n\n    .p-treeselect-label-container {\n        overflow: hidden;\n        flex: 1 1 auto;\n        cursor: pointer;\n    }\n\n    .p-treeselect-label {\n        display: flex;\n        align-items: center;\n        gap: calc(dt('treeselect.padding.y') / 2);\n        white-space: nowrap;\n        cursor: pointer;\n        overflow: hidden;\n        text-overflow: ellipsis;\n        padding: dt('treeselect.padding.y') dt('treeselect.padding.x');\n        color: dt('treeselect.color');\n    }\n\n    .p-treeselect-label.p-placeholder {\n        color: dt('treeselect.placeholder.color');\n    }\n\n    .p-treeselect.p-invalid .p-treeselect-label.p-placeholder {\n        color: dt('treeselect.invalid.placeholder.color');\n    }\n\n    .p-treeselect.p-disabled .p-treeselect-label {\n        color: dt('treeselect.disabled.color');\n    }\n\n    .p-treeselect-label-empty {\n        overflow: hidden;\n        visibility: hidden;\n    }\n\n    .p-treeselect-overlay {\n        position: absolute;\n        top: 0;\n        left: 0;\n        background: dt('treeselect.overlay.background');\n        color: dt('treeselect.overlay.color');\n        border: 1px solid dt('treeselect.overlay.border.color');\n        border-radius: dt('treeselect.overlay.border.radius');\n        box-shadow: dt('treeselect.overlay.shadow');\n        overflow: hidden;\n        min-width: 100%;\n    }\n\n    .p-treeselect-tree-container {\n        overflow: auto;\n    }\n\n    .p-treeselect-empty-message {\n        padding: dt('treeselect.empty.message.padding');\n        background: transparent;\n    }\n\n    .p-treeselect-fluid {\n        display: flex;\n    }\n\n    .p-treeselect-overlay .p-tree {\n        padding: dt('treeselect.tree.padding');\n    }\n\n    .p-treeselect-overlay .p-tree-loading {\n        min-height: 3rem;\n    }\n\n    .p-treeselect-label .p-chip {\n        padding-block-start: calc(dt('treeselect.padding.y') / 2);\n        padding-block-end: calc(dt('treeselect.padding.y') / 2);\n        border-radius: dt('treeselect.chip.border.radius');\n    }\n\n    .p-treeselect-label:has(.p-chip) {\n        padding: calc(dt('treeselect.padding.y') / 2) calc(dt('treeselect.padding.x') / 2);\n    }\n\n    .p-treeselect-sm .p-treeselect-label {\n        font-size: dt('treeselect.sm.font.size');\n        padding-block: dt('treeselect.sm.padding.y');\n        padding-inline: dt('treeselect.sm.padding.x');\n    }\n\n    .p-treeselect-sm .p-treeselect-dropdown .p-icon {\n        font-size: dt('treeselect.sm.font.size');\n        width: dt('treeselect.sm.font.size');\n        height: dt('treeselect.sm.font.size');\n    }\n\n    .p-treeselect-lg .p-treeselect-label {\n        font-size: dt('treeselect.lg.font.size');\n        padding-block: dt('treeselect.lg.padding.y');\n        padding-inline: dt('treeselect.lg.padding.x');\n    }\n\n    .p-treeselect-lg .p-treeselect-dropdown .p-icon {\n        font-size: dt('treeselect.lg.font.size');\n        width: dt('treeselect.lg.font.size');\n        height: dt('treeselect.lg.font.size');\n    }\n";
 
 // node_modules/primeng/fesm2022/primeng-treeselect.mjs
 var _c0 = ["value"];
@@ -185,7 +178,7 @@ function TreeSelect_ng_container_5_ng_container_1_Template(rf, ctx) {
 function TreeSelect_ng_container_5_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, TreeSelect_ng_container_5_ng_container_1_Template, 1, 0, "ng-container", 23);
+    ɵɵtemplate(1, TreeSelect_ng_container_5_ng_container_1_Template, 1, 0, "ng-container", 22);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -208,18 +201,17 @@ function TreeSelect_ng_template_6_ng_container_0_Template(rf, ctx) {
 }
 function TreeSelect_ng_template_6_ng_template_1_div_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div", 15);
-    ɵɵelement(1, "p-chip", 25);
+    ɵɵelementStart(0, "div");
+    ɵɵelement(1, "p-chip", 24);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const node_r3 = ctx.$implicit;
     const ctx_r1 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r1.cx("chipItem"));
-    ɵɵproperty("pBind", ctx_r1.ptm("chipItem"));
     ɵɵadvance();
     ɵɵclassMap(ctx_r1.cx("pcChip"));
-    ɵɵproperty("label", node_r3.label)("pt", ctx_r1.ptm("pcChip"));
+    ɵɵproperty("label", node_r3.label);
   }
 }
 function TreeSelect_ng_template_6_ng_template_1_ng_container_1_Template(rf, ctx) {
@@ -236,7 +228,7 @@ function TreeSelect_ng_template_6_ng_template_1_ng_container_1_Template(rf, ctx)
 }
 function TreeSelect_ng_template_6_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, TreeSelect_ng_template_6_ng_template_1_div_0_Template, 2, 7, "div", 24)(1, TreeSelect_ng_template_6_ng_template_1_ng_container_1_Template, 2, 1, "ng-container", 18);
+    ɵɵtemplate(0, TreeSelect_ng_template_6_ng_template_1_div_0_Template, 2, 5, "div", 23)(1, TreeSelect_ng_template_6_ng_template_1_ng_container_1_Template, 2, 1, "ng-container", 17);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
@@ -247,7 +239,7 @@ function TreeSelect_ng_template_6_ng_template_1_Template(rf, ctx) {
 }
 function TreeSelect_ng_template_6_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, TreeSelect_ng_template_6_ng_container_0_Template, 2, 1, "ng-container", 17)(1, TreeSelect_ng_template_6_ng_template_1_Template, 2, 2, "ng-template", null, 4, ɵɵtemplateRefExtractor);
+    ɵɵtemplate(0, TreeSelect_ng_template_6_ng_container_0_Template, 2, 1, "ng-container", 16)(1, TreeSelect_ng_template_6_ng_template_1_Template, 2, 2, "ng-template", null, 4, ɵɵtemplateRefExtractor);
   }
   if (rf & 2) {
     const chipsValueTemplate_r4 = ɵɵreference(2);
@@ -259,7 +251,7 @@ function TreeSelect_ng_container_8__svg_svg_1_Template(rf, ctx) {
   if (rf & 1) {
     const _r5 = ɵɵgetCurrentView();
     ɵɵnamespaceSVG();
-    ɵɵelementStart(0, "svg", 28);
+    ɵɵelementStart(0, "svg", 27);
     ɵɵlistener("click", function TreeSelect_ng_container_8__svg_svg_1_Template_svg_click_0_listener($event) {
       ɵɵrestoreView(_r5);
       const ctx_r1 = ɵɵnextContext(2);
@@ -270,7 +262,6 @@ function TreeSelect_ng_container_8__svg_svg_1_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r1.cx("clearIcon"));
-    ɵɵproperty("pBind", ctx_r1.ptm("clearIcon"));
   }
 }
 function TreeSelect_ng_container_8_span_2_1_ng_template_0_Template(rf, ctx) {
@@ -283,19 +274,18 @@ function TreeSelect_ng_container_8_span_2_1_Template(rf, ctx) {
 function TreeSelect_ng_container_8_span_2_Template(rf, ctx) {
   if (rf & 1) {
     const _r6 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "span", 29);
+    ɵɵelementStart(0, "span", 28);
     ɵɵlistener("click", function TreeSelect_ng_container_8_span_2_Template_span_click_0_listener($event) {
       ɵɵrestoreView(_r6);
       const ctx_r1 = ɵɵnextContext(2);
       return ɵɵresetView(ctx_r1.clear($event));
     });
-    ɵɵtemplate(1, TreeSelect_ng_container_8_span_2_1_Template, 1, 0, null, 30);
+    ɵɵtemplate(1, TreeSelect_ng_container_8_span_2_1_Template, 1, 0, null, 29);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r1.cx("clearIcon"));
-    ɵɵproperty("pBind", ctx_r1.ptm("clearIcon"));
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r1.clearIconTemplate || ctx_r1._clearIconTemplate);
   }
@@ -303,7 +293,7 @@ function TreeSelect_ng_container_8_span_2_Template(rf, ctx) {
 function TreeSelect_ng_container_8_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, TreeSelect_ng_container_8__svg_svg_1_Template, 1, 3, "svg", 26)(2, TreeSelect_ng_container_8_span_2_Template, 2, 4, "span", 27);
+    ɵɵtemplate(1, TreeSelect_ng_container_8__svg_svg_1_Template, 1, 2, "svg", 25)(2, TreeSelect_ng_container_8_span_2_Template, 2, 3, "span", 26);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -317,12 +307,11 @@ function TreeSelect_ng_container_8_Template(rf, ctx) {
 function TreeSelect__svg_svg_10_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 31);
+    ɵɵelement(0, "svg", 30);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cx("dropdownIcon"));
-    ɵɵproperty("pBind", ctx_r1.ptm("dropdownIcon"));
   }
 }
 function TreeSelect_span_11_1_ng_template_0_Template(rf, ctx) {
@@ -334,14 +323,13 @@ function TreeSelect_span_11_1_Template(rf, ctx) {
 }
 function TreeSelect_span_11_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "span", 15);
-    ɵɵtemplate(1, TreeSelect_span_11_1_Template, 1, 0, null, 30);
+    ɵɵelementStart(0, "span");
+    ɵɵtemplate(1, TreeSelect_span_11_1_Template, 1, 0, null, 29);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cx("dropdownIcon"));
-    ɵɵproperty("pBind", ctx_r1.ptm("dropdownIcon"));
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r1.triggerIconTemplate || ctx_r1._triggerIconTemplate || ctx_r1.dropdownIconTemplate || ctx_r1._dropdownIconTemplate);
   }
@@ -358,7 +346,7 @@ function TreeSelect_ng_template_14_ng_container_8_ng_template_1_ng_container_0_T
 }
 function TreeSelect_ng_template_14_ng_container_8_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, TreeSelect_ng_template_14_ng_container_8_ng_template_1_ng_container_0_Template, 1, 0, "ng-container", 30);
+    ɵɵtemplate(0, TreeSelect_ng_template_14_ng_container_8_ng_template_1_ng_container_0_Template, 1, 0, "ng-container", 29);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
@@ -379,7 +367,7 @@ function TreeSelect_ng_template_14_9_ng_template_0_ng_container_0_Template(rf, c
 }
 function TreeSelect_ng_template_14_9_ng_template_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, TreeSelect_ng_template_14_9_ng_template_0_ng_container_0_Template, 1, 0, "ng-container", 23);
+    ɵɵtemplate(0, TreeSelect_ng_template_14_9_ng_template_0_ng_container_0_Template, 1, 0, "ng-container", 22);
   }
   if (rf & 2) {
     const expanded_r8 = ctx.$implicit;
@@ -399,7 +387,7 @@ function TreeSelect_ng_template_14_10_ng_template_0_ng_container_0_Template(rf, 
 }
 function TreeSelect_ng_template_14_10_ng_template_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, TreeSelect_ng_template_14_10_ng_template_0_ng_container_0_Template, 1, 0, "ng-container", 23);
+    ɵɵtemplate(0, TreeSelect_ng_template_14_10_ng_template_0_ng_container_0_Template, 1, 0, "ng-container", 22);
   }
   if (rf & 2) {
     const selected_r9 = ctx.$implicit;
@@ -420,7 +408,7 @@ function TreeSelect_ng_template_14_11_ng_template_0_ng_container_0_Template(rf, 
 }
 function TreeSelect_ng_template_14_11_ng_template_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, TreeSelect_ng_template_14_11_ng_template_0_ng_container_0_Template, 1, 0, "ng-container", 30);
+    ɵɵtemplate(0, TreeSelect_ng_template_14_11_ng_template_0_ng_container_0_Template, 1, 0, "ng-container", 29);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
@@ -440,15 +428,15 @@ function TreeSelect_ng_template_14_ng_container_12_Template(rf, ctx) {
 function TreeSelect_ng_template_14_Template(rf, ctx) {
   if (rf & 1) {
     const _r7 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "div", 16, 5)(2, "span", 32, 6);
+    ɵɵelementStart(0, "div", 15, 5)(2, "span", 31, 6);
     ɵɵlistener("focus", function TreeSelect_ng_template_14_Template_span_focus_2_listener($event) {
       ɵɵrestoreView(_r7);
       const ctx_r1 = ɵɵnextContext();
       return ɵɵresetView(ctx_r1.onFirstHiddenFocus($event));
     });
     ɵɵelementEnd();
-    ɵɵtemplate(4, TreeSelect_ng_template_14_ng_container_4_Template, 1, 0, "ng-container", 23);
-    ɵɵelementStart(5, "div", 16)(6, "p-tree", 33, 7);
+    ɵɵtemplate(4, TreeSelect_ng_template_14_ng_container_4_Template, 1, 0, "ng-container", 22);
+    ɵɵelementStart(5, "div", 15)(6, "p-tree", 32, 7);
     ɵɵlistener("selectionChange", function TreeSelect_ng_template_14_Template_p_tree_selectionChange_6_listener($event) {
       ɵɵrestoreView(_r7);
       const ctx_r1 = ɵɵnextContext();
@@ -470,10 +458,10 @@ function TreeSelect_ng_template_14_Template(rf, ctx) {
       const ctx_r1 = ɵɵnextContext();
       return ɵɵresetView(ctx_r1.onUnselect($event));
     });
-    ɵɵtemplate(8, TreeSelect_ng_template_14_ng_container_8_Template, 3, 0, "ng-container", 18)(9, TreeSelect_ng_template_14_9_Template, 2, 0, null, 18)(10, TreeSelect_ng_template_14_10_Template, 2, 0, null, 18)(11, TreeSelect_ng_template_14_11_Template, 2, 0, null, 18);
+    ɵɵtemplate(8, TreeSelect_ng_template_14_ng_container_8_Template, 3, 0, "ng-container", 17)(9, TreeSelect_ng_template_14_9_Template, 2, 0, null, 17)(10, TreeSelect_ng_template_14_10_Template, 2, 0, null, 17)(11, TreeSelect_ng_template_14_11_Template, 2, 0, null, 17);
     ɵɵelementEnd()();
-    ɵɵtemplate(12, TreeSelect_ng_template_14_ng_container_12_Template, 1, 0, "ng-container", 23);
-    ɵɵelementStart(13, "span", 32, 8);
+    ɵɵtemplate(12, TreeSelect_ng_template_14_ng_container_12_Template, 1, 0, "ng-container", 22);
+    ɵɵelementStart(13, "span", 31, 8);
     ɵɵlistener("focus", function TreeSelect_ng_template_14_Template_span_focus_13_listener($event) {
       ɵɵrestoreView(_r7);
       const ctx_r1 = ɵɵnextContext();
@@ -484,18 +472,17 @@ function TreeSelect_ng_template_14_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cn(ctx_r1.cx("panel"), ctx_r1.panelStyleClass, ctx_r1.panelClass));
-    ɵɵproperty("ngStyle", ctx_r1.panelStyle)("pBind", ctx_r1.ptm("panel"));
+    ɵɵproperty("ngStyle", ctx_r1.panelStyle);
     ɵɵattribute("id", ctx_r1.listId);
     ɵɵadvance(2);
-    ɵɵproperty("pBind", ctx_r1.ptm("hiddenFirstFocusableEl"));
     ɵɵattribute("tabindex", 0)("data-p-hidden-accessible", true)("data-p-hidden-focusable", true);
     ɵɵadvance(2);
-    ɵɵproperty("ngTemplateOutlet", ctx_r1.headerTemplate || ctx_r1._headerTemplate)("ngTemplateOutletContext", ɵɵpureFunction2(45, _c20, ctx_r1.value, ctx_r1.options));
+    ɵɵproperty("ngTemplateOutlet", ctx_r1.headerTemplate || ctx_r1._headerTemplate)("ngTemplateOutletContext", ɵɵpureFunction2(40, _c20, ctx_r1.value, ctx_r1.options));
     ɵɵadvance();
     ɵɵclassMap(ctx_r1.cx("treeContainer"));
-    ɵɵproperty("ngStyle", ɵɵpureFunction1(48, _c21, ctx_r1.scrollHeight))("pBind", ctx_r1.ptm("treeContainer"));
+    ɵɵproperty("ngStyle", ɵɵpureFunction1(43, _c21, ctx_r1.scrollHeight));
     ɵɵadvance();
-    ɵɵproperty("value", ctx_r1.options)("propagateSelectionDown", ctx_r1.propagateSelectionDown)("propagateSelectionUp", ctx_r1.propagateSelectionUp)("selectionMode", ctx_r1.selectionMode)("selection", ctx_r1.value)("metaKeySelection", ctx_r1.metaKeySelection)("emptyMessage", ctx_r1.emptyMessage)("filter", ctx_r1.filter)("filterBy", ctx_r1.filterBy)("filterMode", ctx_r1.filterMode)("filterPlaceholder", ctx_r1.filterPlaceholder)("filterLocale", ctx_r1.filterLocale)("filteredNodes", ctx_r1.filteredNodes)("virtualScroll", ctx_r1.virtualScroll)("virtualScrollItemSize", ctx_r1.virtualScrollItemSize)("virtualScrollOptions", ctx_r1.virtualScrollOptions)("_templateMap", ctx_r1.templateMap)("loading", ctx_r1.loading)("filterInputAutoFocus", ctx_r1.filterInputAutoFocus)("pt", ctx_r1.ptm("pcTree"));
+    ɵɵproperty("value", ctx_r1.options)("propagateSelectionDown", ctx_r1.propagateSelectionDown)("propagateSelectionUp", ctx_r1.propagateSelectionUp)("selectionMode", ctx_r1.selectionMode)("selection", ctx_r1.value)("metaKeySelection", ctx_r1.metaKeySelection)("emptyMessage", ctx_r1.emptyMessage)("filter", ctx_r1.filter)("filterBy", ctx_r1.filterBy)("filterMode", ctx_r1.filterMode)("filterPlaceholder", ctx_r1.filterPlaceholder)("filterLocale", ctx_r1.filterLocale)("filteredNodes", ctx_r1.filteredNodes)("virtualScroll", ctx_r1.virtualScroll)("virtualScrollItemSize", ctx_r1.virtualScrollItemSize)("virtualScrollOptions", ctx_r1.virtualScrollOptions)("_templateMap", ctx_r1.templateMap)("loading", ctx_r1.loading)("filterInputAutoFocus", ctx_r1.filterInputAutoFocus);
     ɵɵadvance(2);
     ɵɵproperty("ngIf", ctx_r1.emptyTemplate || ctx_r1._emptyTemplate);
     ɵɵadvance();
@@ -505,13 +492,12 @@ function TreeSelect_ng_template_14_Template(rf, ctx) {
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r1.itemLoadingIconTemplate || ctx_r1._itemLoadingIconTemplate);
     ɵɵadvance();
-    ɵɵproperty("ngTemplateOutlet", ctx_r1.footerTemplate)("ngTemplateOutletContext", ɵɵpureFunction2(50, _c20, ctx_r1.value, ctx_r1.options));
+    ɵɵproperty("ngTemplateOutlet", ctx_r1.footerTemplate)("ngTemplateOutletContext", ɵɵpureFunction2(45, _c20, ctx_r1.value, ctx_r1.options));
     ɵɵadvance();
-    ɵɵproperty("pBind", ctx_r1.ptm("hiddenLastFocusableEl"));
     ɵɵattribute("tabindex", 0)("data-p-hidden-accessible", true)("data-p-hidden-focusable", true);
   }
 }
-var style2 = (
+var theme = (
   /*css*/
   `
     ${style}
@@ -528,10 +514,6 @@ var style2 = (
 
     p-treeselect.ng-invalid.ng-dirty .p-treeselect-label.p-placeholder {
         color: dt('treeselect.invalid.placeholder.color');
-    }
-
-    .p-treeselect-clear-icon.p-icon {
-        flex-shrink: 0;
     }
 `
 );
@@ -566,7 +548,6 @@ var classes = {
     "p-placeholder": instance.label === instance.placeholder,
     "p-treeselect-label-empty": !instance.placeholder && instance.emptyValue
   }],
-  clearIcon: "p-treeselect-clear-icon",
   chip: "p-treeselect-chip-item",
   pcChip: "p-treeselect-chip",
   dropdown: "p-treeselect-dropdown",
@@ -577,7 +558,7 @@ var classes = {
 };
 var TreeSelectStyle = class _TreeSelectStyle extends BaseStyle {
   name = "treeselect";
-  style = style2;
+  theme = theme;
   classes = classes;
   inlineStyles = inlineStyles;
   static ɵfac = /* @__PURE__ */ (() => {
@@ -602,7 +583,6 @@ var TreeSelectClasses;
   TreeSelectClasses2["labelContainer"] = "p-treeselect-label-container";
   TreeSelectClasses2["label"] = "p-treeselect-label";
   TreeSelectClasses2["chipItem"] = "p-treeselect-chip-item";
-  TreeSelectClasses2["clearIcon"] = "p-treeselect-clear-icon";
   TreeSelectClasses2["pcChip"] = "p-treeselect-chip";
   TreeSelectClasses2["dropdown"] = "p-treeselect-dropdown";
   TreeSelectClasses2["dropdownIcon"] = "p-treeselect-dropdown-icon";
@@ -615,19 +595,7 @@ var TREESELECT_VALUE_ACCESSOR = {
   useExisting: forwardRef(() => TreeSelect),
   multi: true
 };
-var TREESELECT_INSTANCE = new InjectionToken("TREESELECT_INSTANCE");
 var TreeSelect = class _TreeSelect extends BaseEditableHolder {
-  $pcTreeSelect = inject(TREESELECT_INSTANCE, {
-    optional: true,
-    skipSelf: true
-  }) ?? void 0;
-  bindDirectiveInstance = inject(Bind, {
-    self: true
-  });
-  _componentStyle = inject(TreeSelectStyle);
-  onAfterViewChecked() {
-    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
-  }
   /**
    * Identifier of the underlying input element.
    * @group Props
@@ -1004,14 +972,16 @@ var TreeSelect = class _TreeSelect extends BaseEditableHolder {
   _options;
   templateMap;
   listId = "";
+  _componentStyle = inject(TreeSelectStyle);
   onHostClick(event) {
     this.onClick(event);
   }
-  onInit() {
+  ngOnInit() {
+    super.ngOnInit();
     this.listId = s2("pn_id_") + "_list";
     this.updateTreeState();
   }
-  onAfterContentInit() {
+  ngAfterContentInit() {
     if (this.templates.length) {
       this.templateMap = {};
     }
@@ -1067,7 +1037,7 @@ var TreeSelect = class _TreeSelect extends BaseEditableHolder {
           s(this.filterValue) && this.treeViewChild?._filter(this.filterValue);
           this.filterInputAutoFocus && this.filterViewChild?.nativeElement.focus();
         } else {
-          let focusableElements = b(this.panelEl?.nativeElement);
+          let focusableElements = b(this.panelEl.nativeElement);
           if (focusableElements && focusableElements.length > 0) {
             focusableElements[0].focus();
           }
@@ -1142,7 +1112,7 @@ var TreeSelect = class _TreeSelect extends BaseEditableHolder {
       filteredValue: this.treeViewChild?.filteredNodes
     });
     setTimeout(() => {
-      this.overlayViewChild?.alignOverlay();
+      this.overlayViewChild.alignOverlay();
     });
   }
   onArrowDown(event) {
@@ -1185,7 +1155,7 @@ var TreeSelect = class _TreeSelect extends BaseEditableHolder {
   onTabKey(event, pressedInInputText = false) {
     if (!pressedInInputText) {
       if (this.overlayVisible && this.hasFocusableElements()) {
-        bt(event.shiftKey ? this.lastHiddenFocusableElementOnOverlay?.nativeElement : this.firstHiddenFocusableElementOnOverlay?.nativeElement);
+        bt(event.shiftKey ? this.lastHiddenFocusableElementOnOverlay.nativeElement : this.firstHiddenFocusableElementOnOverlay.nativeElement);
         event.preventDefault();
       } else {
         this.overlayVisible && this.hide(this.filter);
@@ -1193,7 +1163,7 @@ var TreeSelect = class _TreeSelect extends BaseEditableHolder {
     }
   }
   hasFocusableElements() {
-    return b(this.overlayViewChild?.overlayViewChild?.nativeElement, ':not([data-p-hidden-focusable="true"])').length > 0;
+    return b(this.overlayViewChild.overlayViewChild.nativeElement, ':not([data-p-hidden-focusable="true"])').length > 0;
   }
   resetFilter() {
     if (this.filter && !this.resetFilterOnHide) {
@@ -1240,14 +1210,14 @@ var TreeSelect = class _TreeSelect extends BaseEditableHolder {
     this.onNodeExpand.emit(event);
     this.expandedNodes.push(event.node);
     setTimeout(() => {
-      this.overlayViewChild?.alignOverlay();
+      this.overlayViewChild.alignOverlay();
     });
   }
   nodeCollapse(event) {
     this.onNodeCollapse.emit(event);
     this.expandedNodes.splice(this.expandedNodes.indexOf(event.node), 1);
     setTimeout(() => {
-      this.overlayViewChild?.alignOverlay();
+      this.overlayViewChild.alignOverlay();
     });
   }
   resetExpandedNodes() {
@@ -1476,16 +1446,10 @@ var TreeSelect = class _TreeSelect extends BaseEditableHolder {
       onNodeUnselect: "onNodeUnselect",
       onNodeSelect: "onNodeSelect"
     },
-    features: [ɵɵProvidersFeature([TREESELECT_VALUE_ACCESSOR, TreeSelectStyle, {
-      provide: TREESELECT_INSTANCE,
-      useExisting: _TreeSelect
-    }, {
-      provide: PARENT_INSTANCE,
-      useExisting: _TreeSelect
-    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([TREESELECT_VALUE_ACCESSOR, TreeSelectStyle]), ɵɵInheritDefinitionFeature],
     decls: 16,
-    vars: 35,
-    consts: [["focusInput", ""], ["defaultValueTemplate", ""], ["overlay", ""], ["content", ""], ["chipsValueTemplate", ""], ["panel", ""], ["firstHiddenFocusableEl", ""], ["tree", ""], ["lastHiddenFocusableEl", ""], ["empty", ""], ["togglericon", ""], ["checkboxicon", ""], ["loadingicon", ""], [1, "p-hidden-accessible", 3, "pBind"], ["type", "text", "role", "combobox", "readonly", "", 3, "focus", "blur", "keydown", "pAutoFocus", "pBind"], [3, "pBind"], [3, "ngStyle", "pBind"], [4, "ngIf", "ngIfElse"], [4, "ngIf"], ["role", "button", "aria-haspopup", "tree", 3, "pBind"], ["data-p-icon", "chevron-down", 3, "class", "pBind", 4, "ngIf"], [3, "class", "pBind", 4, "ngIf"], [3, "visibleChange", "onAnimationStart", "onBeforeHide", "onShow", "onHide", "hostAttrSelector", "visible", "options", "target", "appendTo", "pt"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], [3, "class", "pBind", 4, "ngFor", "ngForOf"], [3, "label", "pt"], ["data-p-icon", "times", 3, "class", "pBind", "click", 4, "ngIf"], [3, "class", "pBind", "click", 4, "ngIf"], ["data-p-icon", "times", 3, "click", "pBind"], [3, "click", "pBind"], [4, "ngTemplateOutlet"], ["data-p-icon", "chevron-down", 3, "pBind"], ["role", "presentation", 1, "p-hidden-accessible", "p-hidden-focusable", 3, "focus", "pBind"], [3, "selectionChange", "onNodeExpand", "onNodeCollapse", "onNodeSelect", "onNodeUnselect", "value", "propagateSelectionDown", "propagateSelectionUp", "selectionMode", "selection", "metaKeySelection", "emptyMessage", "filter", "filterBy", "filterMode", "filterPlaceholder", "filterLocale", "filteredNodes", "virtualScroll", "virtualScrollItemSize", "virtualScrollOptions", "_templateMap", "loading", "filterInputAutoFocus", "pt"]],
+    vars: 28,
+    consts: [["focusInput", ""], ["defaultValueTemplate", ""], ["overlay", ""], ["content", ""], ["chipsValueTemplate", ""], ["panel", ""], ["firstHiddenFocusableEl", ""], ["tree", ""], ["lastHiddenFocusableEl", ""], ["empty", ""], ["togglericon", ""], ["checkboxicon", ""], ["loadingicon", ""], [1, "p-hidden-accessible"], ["type", "text", "role", "combobox", "readonly", "", 3, "focus", "blur", "keydown", "pAutoFocus"], [3, "ngStyle"], [4, "ngIf", "ngIfElse"], [4, "ngIf"], ["role", "button", "aria-haspopup", "tree"], ["data-p-icon", "chevron-down", 3, "class", 4, "ngIf"], [3, "class", 4, "ngIf"], [3, "visibleChange", "onAnimationStart", "onBeforeHide", "onShow", "onHide", "hostAttrSelector", "visible", "options", "target", "appendTo"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], [3, "class", 4, "ngFor", "ngForOf"], [3, "label"], ["data-p-icon", "times", 3, "class", "click", 4, "ngIf"], [3, "class", "click", 4, "ngIf"], ["data-p-icon", "times", 3, "click"], [3, "click"], [4, "ngTemplateOutlet"], ["data-p-icon", "chevron-down"], ["role", "presentation", 1, "p-hidden-accessible", "p-hidden-focusable", 3, "focus"], [3, "selectionChange", "onNodeExpand", "onNodeCollapse", "onNodeSelect", "onNodeUnselect", "value", "propagateSelectionDown", "propagateSelectionUp", "selectionMode", "selection", "metaKeySelection", "emptyMessage", "filter", "filterBy", "filterMode", "filterPlaceholder", "filterLocale", "filteredNodes", "virtualScroll", "virtualScrollItemSize", "virtualScrollOptions", "_templateMap", "loading", "filterInputAutoFocus"]],
     template: function TreeSelect_Template(rf, ctx) {
       if (rf & 1) {
         const _r1 = ɵɵgetCurrentView();
@@ -1501,14 +1465,14 @@ var TreeSelect = class _TreeSelect extends BaseEditableHolder {
           return ɵɵresetView(ctx.onKeyDown($event));
         });
         ɵɵelementEnd()();
-        ɵɵelementStart(3, "div", 15)(4, "div", 16);
-        ɵɵtemplate(5, TreeSelect_ng_container_5_Template, 2, 5, "ng-container", 17)(6, TreeSelect_ng_template_6_Template, 3, 2, "ng-template", null, 1, ɵɵtemplateRefExtractor);
+        ɵɵelementStart(3, "div")(4, "div", 15);
+        ɵɵtemplate(5, TreeSelect_ng_container_5_Template, 2, 5, "ng-container", 16)(6, TreeSelect_ng_template_6_Template, 3, 2, "ng-template", null, 1, ɵɵtemplateRefExtractor);
         ɵɵelementEnd()();
-        ɵɵtemplate(8, TreeSelect_ng_container_8_Template, 3, 2, "ng-container", 18);
-        ɵɵelementStart(9, "div", 19);
-        ɵɵtemplate(10, TreeSelect__svg_svg_10_Template, 1, 3, "svg", 20)(11, TreeSelect_span_11_Template, 2, 4, "span", 21);
+        ɵɵtemplate(8, TreeSelect_ng_container_8_Template, 3, 2, "ng-container", 17);
+        ɵɵelementStart(9, "div", 18);
+        ɵɵtemplate(10, TreeSelect__svg_svg_10_Template, 1, 2, "svg", 19)(11, TreeSelect_span_11_Template, 2, 3, "span", 20);
         ɵɵelementEnd();
-        ɵɵelementStart(12, "p-overlay", 22, 2);
+        ɵɵelementStart(12, "p-overlay", 21, 2);
         ɵɵtwoWayListener("visibleChange", function TreeSelect_Template_p_overlay_visibleChange_12_listener($event) {
           ɵɵrestoreView(_r1);
           ɵɵtwoWayBindingSet(ctx.overlayVisible, $event) || (ctx.overlayVisible = $event);
@@ -1527,41 +1491,37 @@ var TreeSelect = class _TreeSelect extends BaseEditableHolder {
           ɵɵrestoreView(_r1);
           return ɵɵresetView(ctx.hide($event));
         });
-        ɵɵtemplate(14, TreeSelect_ng_template_14_Template, 15, 53, "ng-template", null, 3, ɵɵtemplateRefExtractor);
+        ɵɵtemplate(14, TreeSelect_ng_template_14_Template, 15, 48, "ng-template", null, 3, ɵɵtemplateRefExtractor);
         ɵɵelementEnd();
       }
       if (rf & 2) {
         const defaultValueTemplate_r11 = ɵɵreference(7);
-        ɵɵproperty("pBind", ctx.ptm("hiddenInputContainer"));
-        ɵɵattribute("data-p-hidden-accessible", true);
         ɵɵadvance();
-        ɵɵproperty("pAutoFocus", ctx.autofocus)("pBind", ctx.ptm("hiddenInput"));
+        ɵɵproperty("pAutoFocus", ctx.autofocus);
         ɵɵattribute("id", ctx.inputId)("disabled", ctx.$disabled() ? "" : void 0)("tabindex", !ctx.$disabled() ? ctx.tabindex : -1)("aria-controls", ctx.overlayVisible ? ctx.listId : null)("aria-haspopup", "tree")("aria-expanded", ctx.overlayVisible ?? false)("aria-labelledby", ctx.ariaLabelledBy)("aria-label", ctx.ariaLabel || (ctx.label === "p-emptylabel" ? void 0 : ctx.label));
         ɵɵadvance(2);
         ɵɵclassMap(ctx.cx("labelContainer"));
-        ɵɵproperty("pBind", ctx.ptm("labelContainer"));
         ɵɵadvance();
         ɵɵclassMap(ctx.cn(ctx.cx("label"), ctx.labelStyleClass));
-        ɵɵproperty("ngStyle", ctx.labelStyle)("pBind", ctx.ptm("label"));
+        ɵɵproperty("ngStyle", ctx.labelStyle);
         ɵɵadvance();
         ɵɵproperty("ngIf", ctx.valueTemplate || ctx._valueTemplate)("ngIfElse", defaultValueTemplate_r11);
         ɵɵadvance(3);
         ɵɵproperty("ngIf", ctx.checkValue() && !ctx.$disabled() && ctx.showClear);
         ɵɵadvance();
         ɵɵclassMap(ctx.cx("dropdown"));
-        ɵɵproperty("pBind", ctx.ptm("dropdown"));
         ɵɵattribute("aria-expanded", ctx.overlayVisible ?? false)("aria-label", "treeselect trigger");
         ɵɵadvance();
         ɵɵproperty("ngIf", !ctx.triggerIconTemplate && !ctx._triggerIconTemplate && !ctx.dropdownIconTemplate && !ctx._dropdownIconTemplate);
         ɵɵadvance();
         ɵɵproperty("ngIf", ctx.triggerIconTemplate || ctx._triggerIconTemplate || ctx.dropdownIconTemplate || ctx._dropdownIconTemplate);
         ɵɵadvance();
-        ɵɵproperty("hostAttrSelector", ctx.$attrSelector);
+        ɵɵproperty("hostAttrSelector", ctx.attrSelector);
         ɵɵtwoWayProperty("visible", ctx.overlayVisible);
-        ɵɵproperty("options", ctx.overlayOptions)("target", "@parent")("appendTo", ctx.$appendTo())("pt", ctx.ptm("pcOverlay"));
+        ɵɵproperty("options", ctx.overlayOptions)("target", "@parent")("appendTo", ctx.$appendTo());
       }
     },
-    dependencies: [CommonModule, NgForOf, NgIf, NgTemplateOutlet, NgStyle, Overlay, SharedModule, Tree, AutoFocus, TimesIcon, ChevronDownIcon, Chip, Bind],
+    dependencies: [CommonModule, NgForOf, NgIf, NgTemplateOutlet, NgStyle, Overlay, SharedModule, Tree, AutoFocus, TimesIcon, ChevronDownIcon, Chip],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -1572,10 +1532,9 @@ var TreeSelect = class _TreeSelect extends BaseEditableHolder {
     args: [{
       selector: "p-treeSelect, p-treeselect, p-tree-select",
       standalone: true,
-      imports: [CommonModule, Overlay, SharedModule, Tree, AutoFocus, TimesIcon, ChevronDownIcon, Chip, Bind],
-      hostDirectives: [Bind],
+      imports: [CommonModule, Overlay, SharedModule, Tree, AutoFocus, TimesIcon, ChevronDownIcon, Chip],
       template: `
-        <div class="p-hidden-accessible" [pBind]="ptm('hiddenInputContainer')" [attr.data-p-hidden-accessible]="true">
+        <div class="p-hidden-accessible">
             <input
                 #focusInput
                 type="text"
@@ -1593,11 +1552,10 @@ var TreeSelect = class _TreeSelect extends BaseEditableHolder {
                 [attr.aria-labelledby]="ariaLabelledBy"
                 [attr.aria-label]="ariaLabel || (label === 'p-emptylabel' ? undefined : label)"
                 [pAutoFocus]="autofocus"
-                [pBind]="ptm('hiddenInput')"
             />
         </div>
-        <div [class]="cx('labelContainer')" [pBind]="ptm('labelContainer')">
-            <div [class]="cn(cx('label'), labelStyleClass)" [ngStyle]="labelStyle" [pBind]="ptm('label')">
+        <div [class]="cx('labelContainer')">
+            <div [class]="cn(cx('label'), labelStyleClass)" [ngStyle]="labelStyle">
                 <ng-container *ngIf="valueTemplate || _valueTemplate; else defaultValueTemplate">
                     <ng-container *ngTemplateOutlet="valueTemplate || _valueTemplate; context: { $implicit: value, placeholder: placeholder }"></ng-container>
                 </ng-container>
@@ -1606,8 +1564,8 @@ var TreeSelect = class _TreeSelect extends BaseEditableHolder {
                         {{ label || 'empty' }}
                     </ng-container>
                     <ng-template #chipsValueTemplate>
-                        <div *ngFor="let node of value" [class]="cx('chipItem')" [pBind]="ptm('chipItem')">
-                            <p-chip [label]="node.label" [class]="cx('pcChip')" [pt]="ptm('pcChip')" />
+                        <div *ngFor="let node of value" [class]="cx('chipItem')">
+                            <p-chip [label]="node.label" [class]="cx('pcChip')" />
                         </div>
                         <ng-container *ngIf="emptyValue">{{ placeholder || 'empty' }}</ng-container>
                     </ng-template>
@@ -1615,32 +1573,31 @@ var TreeSelect = class _TreeSelect extends BaseEditableHolder {
             </div>
         </div>
         <ng-container *ngIf="checkValue() && !$disabled() && showClear">
-            <svg data-p-icon="times" *ngIf="!clearIconTemplate && !_clearIconTemplate" [class]="cx('clearIcon')" (click)="clear($event)" [pBind]="ptm('clearIcon')" />
-            <span *ngIf="clearIconTemplate || clearIconTemplate" [class]="cx('clearIcon')" (click)="clear($event)" [pBind]="ptm('clearIcon')">
+            <svg data-p-icon="times" *ngIf="!clearIconTemplate && !_clearIconTemplate" [class]="cx('clearIcon')" (click)="clear($event)" />
+            <span *ngIf="clearIconTemplate || clearIconTemplate" [class]="cx('clearIcon')" (click)="clear($event)">
                 <ng-template *ngTemplateOutlet="clearIconTemplate || _clearIconTemplate"></ng-template>
             </span>
         </ng-container>
-        <div [class]="cx('dropdown')" role="button" aria-haspopup="tree" [attr.aria-expanded]="overlayVisible ?? false" [attr.aria-label]="'treeselect trigger'" [pBind]="ptm('dropdown')">
-            <svg data-p-icon="chevron-down" *ngIf="!triggerIconTemplate && !_triggerIconTemplate && !dropdownIconTemplate && !_dropdownIconTemplate" [class]="cx('dropdownIcon')" [pBind]="ptm('dropdownIcon')" />
-            <span *ngIf="triggerIconTemplate || _triggerIconTemplate || dropdownIconTemplate || _dropdownIconTemplate" [class]="cx('dropdownIcon')" [pBind]="ptm('dropdownIcon')">
+        <div [class]="cx('dropdown')" role="button" aria-haspopup="tree" [attr.aria-expanded]="overlayVisible ?? false" [attr.aria-label]="'treeselect trigger'">
+            <svg data-p-icon="chevron-down" *ngIf="!triggerIconTemplate && !_triggerIconTemplate && !dropdownIconTemplate && !_dropdownIconTemplate" [class]="cx('dropdownIcon')" />
+            <span *ngIf="triggerIconTemplate || _triggerIconTemplate || dropdownIconTemplate || _dropdownIconTemplate" [class]="cx('dropdownIcon')">
                 <ng-template *ngTemplateOutlet="triggerIconTemplate || _triggerIconTemplate || dropdownIconTemplate || _dropdownIconTemplate"></ng-template>
             </span>
         </div>
         <p-overlay
             #overlay
-            [hostAttrSelector]="$attrSelector"
+            [hostAttrSelector]="attrSelector"
             [(visible)]="overlayVisible"
             [options]="overlayOptions"
             [target]="'@parent'"
             [appendTo]="$appendTo()"
-            [pt]="ptm('pcOverlay')"
             (onAnimationStart)="onOverlayAnimationStart($event)"
             (onBeforeHide)="onOverlayBeforeHide($event)"
             (onShow)="onShow.emit($event)"
             (onHide)="hide($event)"
         >
             <ng-template #content>
-                <div #panel [attr.id]="listId" [class]="cn(cx('panel'), panelStyleClass, panelClass)" [ngStyle]="panelStyle" [pBind]="ptm('panel')">
+                <div #panel [attr.id]="listId" [class]="cn(cx('panel'), panelStyleClass, panelClass)" [ngStyle]="panelStyle">
                     <span
                         #firstHiddenFocusableEl
                         role="presentation"
@@ -1649,11 +1606,10 @@ var TreeSelect = class _TreeSelect extends BaseEditableHolder {
                         (focus)="onFirstHiddenFocus($event)"
                         [attr.data-p-hidden-accessible]="true"
                         [attr.data-p-hidden-focusable]="true"
-                        [pBind]="ptm('hiddenFirstFocusableEl')"
                     >
                     </span>
                     <ng-container *ngTemplateOutlet="headerTemplate || _headerTemplate; context: { $implicit: value, options: options }"></ng-container>
-                    <div [class]="cx('treeContainer')" [ngStyle]="{ 'max-height': scrollHeight }" [pBind]="ptm('treeContainer')">
+                    <div [class]="cx('treeContainer')" [ngStyle]="{ 'max-height': scrollHeight }">
                         <p-tree
                             #tree
                             [value]="options"
@@ -1680,7 +1636,6 @@ var TreeSelect = class _TreeSelect extends BaseEditableHolder {
                             [_templateMap]="templateMap"
                             [loading]="loading"
                             [filterInputAutoFocus]="filterInputAutoFocus"
-                            [pt]="ptm('pcTree')"
                         >
                             <ng-container *ngIf="emptyTemplate || _emptyTemplate">
                                 <ng-template #empty>
@@ -1707,20 +1662,13 @@ var TreeSelect = class _TreeSelect extends BaseEditableHolder {
                         (focus)="onLastHiddenFocus($event)"
                         [attr.data-p-hidden-accessible]="true"
                         [attr.data-p-hidden-focusable]="true"
-                        [pBind]="ptm('hiddenLastFocusableEl')"
                     ></span>
                 </div>
             </ng-template>
         </p-overlay>
     `,
       changeDetection: ChangeDetectionStrategy.OnPush,
-      providers: [TREESELECT_VALUE_ACCESSOR, TreeSelectStyle, {
-        provide: TREESELECT_INSTANCE,
-        useExisting: TreeSelect
-      }, {
-        provide: PARENT_INSTANCE,
-        useExisting: TreeSelect
-      }],
+      providers: [TREESELECT_VALUE_ACCESSOR, TreeSelectStyle],
       encapsulation: ViewEncapsulation.None,
       host: {
         "[class]": "cn(cx('root'), containerStyleClass)",

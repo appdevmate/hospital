@@ -1,34 +1,28 @@
 import {
   Button,
   ButtonModule
-} from "./chunk-NKFNXLXI.js";
-import "./chunk-PJRMHEN5.js";
-import "./chunk-YNLAOK3J.js";
-import "./chunk-TENFQJBN.js";
-import "./chunk-S73J4WE3.js";
+} from "./chunk-6SV3UMTU.js";
+import "./chunk-KOXUNDHI.js";
+import "./chunk-AXS7T3GQ.js";
+import "./chunk-6PBBDZZF.js";
+import "./chunk-QVUTNZUY.js";
 import {
   Ripple
-} from "./chunk-OC77X5LN.js";
+} from "./chunk-VZLF74PJ.js";
 import {
   TimesIcon
-} from "./chunk-RHA7RL5K.js";
-import "./chunk-YXZQJBKH.js";
+} from "./chunk-BIL3W6KN.js";
+import "./chunk-EGVFVLQK.js";
 import {
-  Bind
-} from "./chunk-MLQGRGGO.js";
-import {
-  BaseComponent,
-  PARENT_INSTANCE
-} from "./chunk-YNJ5GKCH.js";
+  BaseComponent
+} from "./chunk-4YMQ5OOY.js";
 import {
   BaseStyle
-} from "./chunk-4ATYD752.js";
+} from "./chunk-L2L2T6ID.js";
 import {
   PrimeTemplate,
   SharedModule
-} from "./chunk-LMEEH3AJ.js";
-import "./chunk-GOP36Q47.js";
-import "./chunk-UCHM6OXG.js";
+} from "./chunk-ZKOTJBQ6.js";
 import {
   CommonModule,
   NgClass,
@@ -49,7 +43,6 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   setClassMetadata,
-  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -78,7 +71,6 @@ import {
   ɵɵtemplateRefExtractor
 } from "./chunk-EIF6IUR4.js";
 import {
-  InjectionToken,
   inject,
   ɵɵdefineInjectable,
   ɵɵdefineInjector,
@@ -89,6 +81,8 @@ import {
 import "./chunk-YVXMBCE5.js";
 import "./chunk-G6ECYYJH.js";
 import "./chunk-RTGP7ALM.js";
+import "./chunk-BMDSN43F.js";
+import "./chunk-RK2DVQNP.js";
 import "./chunk-4MWRP73S.js";
 
 // node_modules/@primeuix/styles/dist/inplace/index.mjs
@@ -132,7 +126,7 @@ function Inplace_div_0_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cx("display"));
-    ɵɵproperty("pBind", ctx_r1.ptm("display"))("ngClass", ɵɵpureFunction1(5, _c6, ctx_r1.disabled));
+    ɵɵproperty("ngClass", ɵɵpureFunction1(4, _c6, ctx_r1.disabled));
     ɵɵadvance(2);
     ɵɵproperty("ngTemplateOutlet", ctx_r1.displayTemplate || ctx_r1._displayTemplate);
   }
@@ -145,7 +139,7 @@ function Inplace_div_1_ng_container_2_Template(rf, ctx) {
 function Inplace_div_1_ng_container_3_p_button_1_Template(rf, ctx) {
   if (rf & 1) {
     const _r3 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "p-button", 10);
+    ɵɵelementStart(0, "p-button", 9);
     ɵɵlistener("click", function Inplace_div_1_ng_container_3_p_button_1_Template_p_button_click_0_listener($event) {
       ɵɵrestoreView(_r3);
       const ctx_r1 = ɵɵnextContext(3);
@@ -155,19 +149,19 @@ function Inplace_div_1_ng_container_3_p_button_1_Template(rf, ctx) {
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
-    ɵɵproperty("pt", ctx_r1.ptm("pcButton"))("icon", ctx_r1.closeIcon);
+    ɵɵproperty("icon", ctx_r1.closeIcon);
     ɵɵattribute("aria-label", ctx_r1.closeAriaLabel);
   }
 }
 function Inplace_div_1_ng_container_3_p_button_2_ng_template_1__svg_svg_0_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 13);
+    ɵɵelement(0, "svg", 12);
   }
 }
 function Inplace_div_1_ng_container_3_p_button_2_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, Inplace_div_1_ng_container_3_p_button_2_ng_template_1__svg_svg_0_Template, 1, 0, "svg", 12);
+    ɵɵtemplate(0, Inplace_div_1_ng_container_3_p_button_2_ng_template_1__svg_svg_0_Template, 1, 0, "svg", 11);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(4);
@@ -184,7 +178,7 @@ function Inplace_div_1_ng_container_3_p_button_2_3_Template(rf, ctx) {
 function Inplace_div_1_ng_container_3_p_button_2_Template(rf, ctx) {
   if (rf & 1) {
     const _r4 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "p-button", 11);
+    ɵɵelementStart(0, "p-button", 10);
     ɵɵlistener("click", function Inplace_div_1_ng_container_3_p_button_2_Template_p_button_click_0_listener($event) {
       ɵɵrestoreView(_r4);
       const ctx_r1 = ɵɵnextContext(3);
@@ -195,7 +189,6 @@ function Inplace_div_1_ng_container_3_p_button_2_Template(rf, ctx) {
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
-    ɵɵproperty("pt", ctx_r1.ptm("pcButton"));
     ɵɵattribute("aria-label", ctx_r1.closeAriaLabel);
     ɵɵadvance(3);
     ɵɵproperty("ngTemplateOutlet", ctx_r1.closeIconTemplate || ctx_r1._closeIconTemplate);
@@ -204,7 +197,7 @@ function Inplace_div_1_ng_container_3_p_button_2_Template(rf, ctx) {
 function Inplace_div_1_ng_container_3_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, Inplace_div_1_ng_container_3_p_button_1_Template, 1, 3, "p-button", 8)(2, Inplace_div_1_ng_container_3_p_button_2_Template, 4, 3, "p-button", 9);
+    ɵɵtemplate(1, Inplace_div_1_ng_container_3_p_button_1_Template, 1, 2, "p-button", 7)(2, Inplace_div_1_ng_container_3_p_button_2_Template, 4, 2, "p-button", 8);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -217,17 +210,16 @@ function Inplace_div_1_ng_container_3_Template(rf, ctx) {
 }
 function Inplace_div_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div", 5);
+    ɵɵelementStart(0, "div");
     ɵɵprojection(1, 1);
-    ɵɵtemplate(2, Inplace_div_1_ng_container_2_Template, 1, 0, "ng-container", 6)(3, Inplace_div_1_ng_container_3_Template, 3, 2, "ng-container", 7);
+    ɵɵtemplate(2, Inplace_div_1_ng_container_2_Template, 1, 0, "ng-container", 5)(3, Inplace_div_1_ng_container_3_Template, 3, 2, "ng-container", 6);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cx("content"));
-    ɵɵproperty("pBind", ctx_r1.ptm("content"));
     ɵɵadvance(2);
-    ɵɵproperty("ngTemplateOutlet", ctx_r1.contentTemplate || ctx_r1._contentTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(6, _c7, ctx_r1.onDeactivateClick.bind(ctx_r1)));
+    ɵɵproperty("ngTemplateOutlet", ctx_r1.contentTemplate || ctx_r1._contentTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(5, _c7, ctx_r1.onDeactivateClick.bind(ctx_r1)));
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r1.closable);
   }
@@ -243,7 +235,7 @@ var classes = {
 };
 var InplaceStyle = class _InplaceStyle extends BaseStyle {
   name = "inplace";
-  style = style;
+  theme = style;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵInplaceStyle_BaseFactory;
@@ -267,18 +259,13 @@ var InplaceClasses;
   InplaceClasses2["display"] = "p-inplace-display";
   InplaceClasses2["content"] = "p-inplace-content";
 })(InplaceClasses || (InplaceClasses = {}));
-var INPLACE_INSTANCE = new InjectionToken("INPLACE_INSTANCE");
-var InplaceDisplay = class _InplaceDisplay extends BaseComponent {
-  static ɵfac = /* @__PURE__ */ (() => {
-    let ɵInplaceDisplay_BaseFactory;
-    return function InplaceDisplay_Factory(__ngFactoryType__) {
-      return (ɵInplaceDisplay_BaseFactory || (ɵInplaceDisplay_BaseFactory = ɵɵgetInheritedFactory(_InplaceDisplay)))(__ngFactoryType__ || _InplaceDisplay);
-    };
-  })();
+var InplaceDisplay = class _InplaceDisplay {
+  static ɵfac = function InplaceDisplay_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _InplaceDisplay)();
+  };
   static ɵcmp = ɵɵdefineComponent({
     type: _InplaceDisplay,
     selectors: [["p-inplacedisplay"], ["p-inplaceDisplay"]],
-    features: [ɵɵInheritDefinitionFeature],
     ngContentSelectors: _c0,
     decls: 1,
     vars: 0,
@@ -303,17 +290,13 @@ var InplaceDisplay = class _InplaceDisplay extends BaseComponent {
     }]
   }], null, null);
 })();
-var InplaceContent = class _InplaceContent extends BaseComponent {
-  static ɵfac = /* @__PURE__ */ (() => {
-    let ɵInplaceContent_BaseFactory;
-    return function InplaceContent_Factory(__ngFactoryType__) {
-      return (ɵInplaceContent_BaseFactory || (ɵInplaceContent_BaseFactory = ɵɵgetInheritedFactory(_InplaceContent)))(__ngFactoryType__ || _InplaceContent);
-    };
-  })();
+var InplaceContent = class _InplaceContent {
+  static ɵfac = function InplaceContent_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _InplaceContent)();
+  };
   static ɵcmp = ɵɵdefineComponent({
     type: _InplaceContent,
     selectors: [["p-inplacecontent"], ["p-inplaceContent"]],
-    features: [ɵɵInheritDefinitionFeature],
     ngContentSelectors: _c0,
     decls: 1,
     vars: 0,
@@ -339,16 +322,6 @@ var InplaceContent = class _InplaceContent extends BaseComponent {
   }], null, null);
 })();
 var Inplace = class _Inplace extends BaseComponent {
-  $pcInplace = inject(INPLACE_INSTANCE, {
-    optional: true,
-    skipSelf: true
-  }) ?? void 0;
-  bindDirectiveInstance = inject(Bind, {
-    self: true
-  });
-  onAfterViewChecked() {
-    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
-  }
   /**
    * Whether the content is displayed or not.
    * @group Props
@@ -457,7 +430,7 @@ var Inplace = class _Inplace extends BaseComponent {
   _displayTemplate;
   _closeIconTemplate;
   _contentTemplate;
-  onAfterContentInit() {
+  ngAfterContentInit() {
     this.templates?.forEach((item) => {
       switch (item.getType()) {
         case "display":
@@ -516,21 +489,15 @@ var Inplace = class _Inplace extends BaseComponent {
       onActivate: "onActivate",
       onDeactivate: "onDeactivate"
     },
-    features: [ɵɵProvidersFeature([InplaceStyle, {
-      provide: INPLACE_INSTANCE,
-      useExisting: _Inplace
-    }, {
-      provide: PARENT_INSTANCE,
-      useExisting: _Inplace
-    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([InplaceStyle]), ɵɵInheritDefinitionFeature],
     ngContentSelectors: _c5,
     decls: 2,
     vars: 2,
-    consts: [["icon", ""], ["tabindex", "0", "role", "button", 3, "class", "pBind", "ngClass", "click", "keydown", 4, "ngIf"], [3, "class", "pBind", 4, "ngIf"], ["tabindex", "0", "role", "button", 3, "click", "keydown", "pBind", "ngClass"], [4, "ngTemplateOutlet"], [3, "pBind"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], [4, "ngIf"], ["type", "button", "pRipple", "", 3, "pt", "icon", "click", 4, "ngIf"], ["type", "button", "pRipple", "", 3, "pt", "click", 4, "ngIf"], ["type", "button", "pRipple", "", 3, "click", "pt", "icon"], ["type", "button", "pRipple", "", 3, "click", "pt"], ["data-p-icon", "times", 4, "ngIf"], ["data-p-icon", "times"]],
+    consts: [["icon", ""], ["tabindex", "0", "role", "button", 3, "class", "ngClass", "click", "keydown", 4, "ngIf"], [3, "class", 4, "ngIf"], ["tabindex", "0", "role", "button", 3, "click", "keydown", "ngClass"], [4, "ngTemplateOutlet"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], [4, "ngIf"], ["type", "button", "pRipple", "", 3, "icon", "click", 4, "ngIf"], ["type", "button", "pRipple", "", 3, "click", 4, "ngIf"], ["type", "button", "pRipple", "", 3, "click", "icon"], ["type", "button", "pRipple", "", 3, "click"], ["data-p-icon", "times", 4, "ngIf"], ["data-p-icon", "times"]],
     template: function Inplace_Template(rf, ctx) {
       if (rf & 1) {
         ɵɵprojectionDef(_c4);
-        ɵɵtemplate(0, Inplace_div_0_Template, 3, 7, "div", 1)(1, Inplace_div_1_Template, 4, 8, "div", 2);
+        ɵɵtemplate(0, Inplace_div_0_Template, 3, 6, "div", 1)(1, Inplace_div_1_Template, 4, 7, "div", 2);
       }
       if (rf & 2) {
         ɵɵproperty("ngIf", !ctx.active);
@@ -538,7 +505,7 @@ var Inplace = class _Inplace extends BaseComponent {
         ɵɵproperty("ngIf", ctx.active);
       }
     },
-    dependencies: [CommonModule, NgClass, NgIf, NgTemplateOutlet, ButtonModule, Button, TimesIcon, SharedModule, Ripple, Bind],
+    dependencies: [CommonModule, NgClass, NgIf, NgTemplateOutlet, ButtonModule, Button, TimesIcon, SharedModule, Ripple],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -549,19 +516,19 @@ var Inplace = class _Inplace extends BaseComponent {
     args: [{
       selector: "p-inplace",
       standalone: true,
-      imports: [CommonModule, ButtonModule, TimesIcon, SharedModule, Ripple, Bind],
+      imports: [CommonModule, ButtonModule, TimesIcon, SharedModule, Ripple],
       template: `
-        <div [class]="cx('display')" [pBind]="ptm('display')" (click)="onActivateClick($event)" tabindex="0" role="button" (keydown)="onKeydown($event)" [ngClass]="{ 'p-disabled': disabled }" *ngIf="!active">
+        <div [class]="cx('display')" (click)="onActivateClick($event)" tabindex="0" role="button" (keydown)="onKeydown($event)" [ngClass]="{ 'p-disabled': disabled }" *ngIf="!active">
             <ng-content select="[pInplaceDisplay]"></ng-content>
             <ng-container *ngTemplateOutlet="displayTemplate || _displayTemplate"></ng-container>
         </div>
-        <div [class]="cx('content')" [pBind]="ptm('content')" *ngIf="active">
+        <div [class]="cx('content')" *ngIf="active">
             <ng-content select="[pInplaceContent]"></ng-content>
             <ng-container *ngTemplateOutlet="contentTemplate || _contentTemplate; context: { closeCallback: onDeactivateClick.bind(this) }"></ng-container>
 
             <ng-container *ngIf="closable">
-                <p-button *ngIf="closeIcon" [pt]="ptm('pcButton')" type="button" [icon]="closeIcon" pRipple (click)="onDeactivateClick($event)" [attr.aria-label]="closeAriaLabel"></p-button>
-                <p-button *ngIf="!closeIcon" [pt]="ptm('pcButton')" type="button" pRipple (click)="onDeactivateClick($event)" [attr.aria-label]="closeAriaLabel">
+                <p-button *ngIf="closeIcon" type="button" [icon]="closeIcon" pRipple (click)="onDeactivateClick($event)" [attr.aria-label]="closeAriaLabel"></p-button>
+                <p-button *ngIf="!closeIcon" type="button" pRipple (click)="onDeactivateClick($event)" [attr.aria-label]="closeAriaLabel">
                     <ng-template #icon>
                         <svg data-p-icon="times" *ngIf="!closeIconTemplate && !_closeIconTemplate" />
                     </ng-template>
@@ -572,18 +539,11 @@ var Inplace = class _Inplace extends BaseComponent {
     `,
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
-      providers: [InplaceStyle, {
-        provide: INPLACE_INSTANCE,
-        useExisting: Inplace
-      }, {
-        provide: PARENT_INSTANCE,
-        useExisting: Inplace
-      }],
+      providers: [InplaceStyle],
       host: {
         "[attr.aria-live]": "'polite'",
         "[class]": "cn(cx('root'), styleClass)"
-      },
-      hostDirectives: [Bind]
+      }
     }]
   }], null, {
     active: [{

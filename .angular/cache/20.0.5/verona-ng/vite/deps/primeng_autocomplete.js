@@ -1,68 +1,52 @@
 import {
-  Chip
-} from "./chunk-ZQAYUNRD.js";
-import {
   Overlay
-} from "./chunk-EIBJYEJL.js";
-import {
-  Scroller
-} from "./chunk-K26YQORK.js";
+} from "./chunk-ERBKXNZB.js";
 import {
   BaseInput
-} from "./chunk-HYKQO3OA.js";
+} from "./chunk-QCZLNNKR.js";
+import {
+  Scroller
+} from "./chunk-MUYJFYGV.js";
 import {
   InputText
-} from "./chunk-IG3R3ILJ.js";
-import "./chunk-343RM6UZ.js";
-import "./chunk-2R7VQYSP.js";
-import "./chunk-PJRMHEN5.js";
+} from "./chunk-35KXM4ZV.js";
+import "./chunk-67V7CIUT.js";
+import "./chunk-5OCKW6BF.js";
+import {
+  Chip
+} from "./chunk-F4YQVUUW.js";
+import "./chunk-BB55NINM.js";
 import {
   AutoFocus
-} from "./chunk-YNLAOK3J.js";
-import "./chunk-S73J4WE3.js";
+} from "./chunk-KOXUNDHI.js";
+import "./chunk-AXS7T3GQ.js";
+import "./chunk-6PBBDZZF.js";
+import "./chunk-QVUTNZUY.js";
 import {
   Ripple
-} from "./chunk-OC77X5LN.js";
+} from "./chunk-VZLF74PJ.js";
 import {
   ChevronDownIcon,
   SpinnerIcon,
   TimesCircleIcon,
   TimesIcon
-} from "./chunk-RHA7RL5K.js";
-import "./chunk-YXZQJBKH.js";
-import "./chunk-BB55NINM.js";
+} from "./chunk-BIL3W6KN.js";
 import {
-  Bind,
-  BindModule
-} from "./chunk-MLQGRGGO.js";
+  NG_VALUE_ACCESSOR
+} from "./chunk-RZEKJVYA.js";
+import "./chunk-4YMQ5OOY.js";
 import {
-  PARENT_INSTANCE
-} from "./chunk-YNJ5GKCH.js";
-import {
-  BaseStyle
-} from "./chunk-4ATYD752.js";
+  BaseStyle,
+  PrimeNG
+} from "./chunk-L2L2T6ID.js";
 import {
   OverlayService,
   PrimeTemplate,
   SharedModule,
   TranslationKeys
-} from "./chunk-LMEEH3AJ.js";
+} from "./chunk-ZKOTJBQ6.js";
 import "./chunk-6QGHQEN4.js";
 import "./chunk-53DGU4C2.js";
-import {
-  NG_VALUE_ACCESSOR
-} from "./chunk-RZEKJVYA.js";
-import "./chunk-GOP36Q47.js";
-import {
-  M,
-  bt,
-  k,
-  l,
-  p,
-  s,
-  s3 as s2,
-  z2 as z
-} from "./chunk-UCHM6OXG.js";
 import {
   CommonModule,
   NgClass,
@@ -90,7 +74,6 @@ import {
   input,
   numberAttribute,
   setClassMetadata,
-  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -131,7 +114,6 @@ import {
   ɵɵviewQuery
 } from "./chunk-EIF6IUR4.js";
 import {
-  InjectionToken,
   computed,
   forwardRef,
   inject,
@@ -145,10 +127,21 @@ import {
 import "./chunk-YVXMBCE5.js";
 import "./chunk-G6ECYYJH.js";
 import "./chunk-RTGP7ALM.js";
+import "./chunk-BMDSN43F.js";
+import {
+  M,
+  a,
+  bt,
+  c,
+  k,
+  s,
+  s3 as s2,
+  z2 as z
+} from "./chunk-RK2DVQNP.js";
 import "./chunk-4MWRP73S.js";
 
 // node_modules/@primeuix/styles/dist/autocomplete/index.mjs
-var style = "\n    .p-autocomplete {\n        display: inline-flex;\n    }\n\n    .p-autocomplete-loader {\n        position: absolute;\n        top: 50%;\n        margin-top: -0.5rem;\n        inset-inline-end: dt('autocomplete.padding.x');\n    }\n\n    .p-autocomplete:has(.p-autocomplete-dropdown) .p-autocomplete-loader {\n        inset-inline-end: calc(dt('autocomplete.dropdown.width') + dt('autocomplete.padding.x'));\n    }\n\n    .p-autocomplete:has(.p-autocomplete-dropdown) .p-autocomplete-input {\n        flex: 1 1 auto;\n        width: 1%;\n    }\n\n    .p-autocomplete:has(.p-autocomplete-dropdown) .p-autocomplete-input,\n    .p-autocomplete:has(.p-autocomplete-dropdown) .p-autocomplete-input-multiple {\n        border-start-end-radius: 0;\n        border-end-end-radius: 0;\n    }\n\n    .p-autocomplete-dropdown {\n        cursor: pointer;\n        display: inline-flex;\n        user-select: none;\n        align-items: center;\n        justify-content: center;\n        overflow: hidden;\n        position: relative;\n        width: dt('autocomplete.dropdown.width');\n        border-start-end-radius: dt('autocomplete.dropdown.border.radius');\n        border-end-end-radius: dt('autocomplete.dropdown.border.radius');\n        background: dt('autocomplete.dropdown.background');\n        border: 1px solid dt('autocomplete.dropdown.border.color');\n        border-inline-start: 0 none;\n        color: dt('autocomplete.dropdown.color');\n        transition:\n            background dt('autocomplete.transition.duration'),\n            color dt('autocomplete.transition.duration'),\n            border-color dt('autocomplete.transition.duration'),\n            outline-color dt('autocomplete.transition.duration'),\n            box-shadow dt('autocomplete.transition.duration');\n        outline-color: transparent;\n    }\n\n    .p-autocomplete-dropdown:not(:disabled):hover {\n        background: dt('autocomplete.dropdown.hover.background');\n        border-color: dt('autocomplete.dropdown.hover.border.color');\n        color: dt('autocomplete.dropdown.hover.color');\n    }\n\n    .p-autocomplete-dropdown:not(:disabled):active {\n        background: dt('autocomplete.dropdown.active.background');\n        border-color: dt('autocomplete.dropdown.active.border.color');\n        color: dt('autocomplete.dropdown.active.color');\n    }\n\n    .p-autocomplete-dropdown:focus-visible {\n        box-shadow: dt('autocomplete.dropdown.focus.ring.shadow');\n        outline: dt('autocomplete.dropdown.focus.ring.width') dt('autocomplete.dropdown.focus.ring.style') dt('autocomplete.dropdown.focus.ring.color');\n        outline-offset: dt('autocomplete.dropdown.focus.ring.offset');\n    }\n\n    .p-autocomplete-overlay {\n        position: absolute;\n        top: 0;\n        left: 0;\n        background: dt('autocomplete.overlay.background');\n        color: dt('autocomplete.overlay.color');\n        border: 1px solid dt('autocomplete.overlay.border.color');\n        border-radius: dt('autocomplete.overlay.border.radius');\n        box-shadow: dt('autocomplete.overlay.shadow');\n        min-width: 100%;\n    }\n\n    .p-autocomplete-list-container {\n        overflow: auto;\n    }\n\n    .p-autocomplete-list {\n        margin: 0;\n        list-style-type: none;\n        display: flex;\n        flex-direction: column;\n        gap: dt('autocomplete.list.gap');\n        padding: dt('autocomplete.list.padding');\n    }\n\n    .p-autocomplete-option {\n        cursor: pointer;\n        white-space: nowrap;\n        position: relative;\n        overflow: hidden;\n        display: flex;\n        align-items: center;\n        padding: dt('autocomplete.option.padding');\n        border: 0 none;\n        color: dt('autocomplete.option.color');\n        background: transparent;\n        transition:\n            background dt('autocomplete.transition.duration'),\n            color dt('autocomplete.transition.duration'),\n            border-color dt('autocomplete.transition.duration');\n        border-radius: dt('autocomplete.option.border.radius');\n    }\n\n    .p-autocomplete-option:not(.p-autocomplete-option-selected):not(.p-disabled).p-focus {\n        background: dt('autocomplete.option.focus.background');\n        color: dt('autocomplete.option.focus.color');\n    }\n\n    .p-autocomplete-option-selected {\n        background: dt('autocomplete.option.selected.background');\n        color: dt('autocomplete.option.selected.color');\n    }\n\n    .p-autocomplete-option-selected.p-focus {\n        background: dt('autocomplete.option.selected.focus.background');\n        color: dt('autocomplete.option.selected.focus.color');\n    }\n\n    .p-autocomplete-option-group {\n        margin: 0;\n        padding: dt('autocomplete.option.group.padding');\n        color: dt('autocomplete.option.group.color');\n        background: dt('autocomplete.option.group.background');\n        font-weight: dt('autocomplete.option.group.font.weight');\n    }\n\n    .p-autocomplete-input-multiple {\n        margin: 0;\n        list-style-type: none;\n        cursor: text;\n        overflow: hidden;\n        display: flex;\n        align-items: center;\n        flex-wrap: wrap;\n        padding: calc(dt('autocomplete.padding.y') / 2) dt('autocomplete.padding.x');\n        gap: calc(dt('autocomplete.padding.y') / 2);\n        color: dt('autocomplete.color');\n        background: dt('autocomplete.background');\n        border: 1px solid dt('autocomplete.border.color');\n        border-radius: dt('autocomplete.border.radius');\n        width: 100%;\n        transition:\n            background dt('autocomplete.transition.duration'),\n            color dt('autocomplete.transition.duration'),\n            border-color dt('autocomplete.transition.duration'),\n            outline-color dt('autocomplete.transition.duration'),\n            box-shadow dt('autocomplete.transition.duration');\n        outline-color: transparent;\n        box-shadow: dt('autocomplete.shadow');\n    }\n\n    .p-autocomplete-input-multiple.p-disabled {\n        opacity: 1;\n        background: dt('inputtext.disabled.background');\n        color: dt('inputtext.disabled.color');\n    }\n\n    .p-autocomplete-input-multiple:not(.p-disabled):hover {\n        border-color: dt('autocomplete.hover.border.color');\n    }\n\n    .p-autocomplete.p-focus .p-autocomplete-input-multiple:not(.p-disabled) {\n        border-color: dt('autocomplete.focus.border.color');\n        box-shadow: dt('autocomplete.focus.ring.shadow');\n        outline: dt('autocomplete.focus.ring.width') dt('autocomplete.focus.ring.style') dt('autocomplete.focus.ring.color');\n        outline-offset: dt('autocomplete.focus.ring.offset');\n    }\n\n    .p-autocomplete.p-invalid .p-autocomplete-input-multiple {\n        border-color: dt('autocomplete.invalid.border.color');\n    }\n\n    .p-variant-filled.p-autocomplete-input-multiple {\n        background: dt('autocomplete.filled.background');\n    }\n\n    .p-autocomplete-input-multiple.p-variant-filled:not(.p-disabled):hover {\n        background: dt('autocomplete.filled.hover.background');\n    }\n\n    .p-autocomplete.p-focus .p-autocomplete-input-multiple.p-variant-filled:not(.p-disabled) {\n        background: dt('autocomplete.filled.focus.background');\n    }\n\n    .p-autocomplete-chip.p-chip {\n        padding-block-start: calc(dt('autocomplete.padding.y') / 2);\n        padding-block-end: calc(dt('autocomplete.padding.y') / 2);\n        border-radius: dt('autocomplete.chip.border.radius');\n    }\n\n    .p-autocomplete-input-multiple:has(.p-autocomplete-chip) {\n        padding-inline-start: calc(dt('autocomplete.padding.y') / 2);\n        padding-inline-end: calc(dt('autocomplete.padding.y') / 2);\n    }\n\n    .p-autocomplete-chip-item.p-focus .p-autocomplete-chip {\n        background: dt('autocomplete.chip.focus.background');\n        color: dt('autocomplete.chip.focus.color');\n    }\n\n    .p-autocomplete-input-chip {\n        flex: 1 1 auto;\n        display: inline-flex;\n        padding-block-start: calc(dt('autocomplete.padding.y') / 2);\n        padding-block-end: calc(dt('autocomplete.padding.y') / 2);\n    }\n\n    .p-autocomplete-input-chip input {\n        border: 0 none;\n        outline: 0 none;\n        background: transparent;\n        margin: 0;\n        padding: 0;\n        box-shadow: none;\n        border-radius: 0;\n        width: 100%;\n        font-family: inherit;\n        font-feature-settings: inherit;\n        font-size: 1rem;\n        color: inherit;\n    }\n\n    .p-autocomplete-input-chip input::placeholder {\n        color: dt('autocomplete.placeholder.color');\n    }\n\n    .p-autocomplete.p-invalid .p-autocomplete-input-chip input::placeholder {\n        color: dt('autocomplete.invalid.placeholder.color');\n    }\n\n    .p-autocomplete-empty-message {\n        padding: dt('autocomplete.empty.message.padding');\n    }\n\n    .p-autocomplete-fluid {\n        display: flex;\n    }\n\n    .p-autocomplete-fluid:has(.p-autocomplete-dropdown) .p-autocomplete-input {\n        width: 1%;\n    }\n\n    .p-autocomplete:has(.p-inputtext-sm) .p-autocomplete-dropdown {\n        width: dt('autocomplete.dropdown.sm.width');\n    }\n\n    .p-autocomplete:has(.p-inputtext-sm) .p-autocomplete-dropdown .p-icon {\n        font-size: dt('form.field.sm.font.size');\n        width: dt('form.field.sm.font.size');\n        height: dt('form.field.sm.font.size');\n    }\n\n    .p-autocomplete:has(.p-inputtext-lg) .p-autocomplete-dropdown {\n        width: dt('autocomplete.dropdown.lg.width');\n    }\n\n    .p-autocomplete:has(.p-inputtext-lg) .p-autocomplete-dropdown .p-icon {\n        font-size: dt('form.field.lg.font.size');\n        width: dt('form.field.lg.font.size');\n        height: dt('form.field.lg.font.size');\n    }\n\n    .p-autocomplete-clear-icon {\n        position: absolute;\n        top: 50%;\n        margin-top: -0.5rem;\n        cursor: pointer;\n        color: dt('form.field.icon.color');\n        inset-inline-end: dt('autocomplete.padding.x');\n    }\n\n    .p-autocomplete:has(.p-autocomplete-dropdown) .p-autocomplete-clear-icon {\n        inset-inline-end: calc(dt('autocomplete.padding.x') + dt('autocomplete.dropdown.width'));\n    }\n\n    .p-autocomplete:has(.p-autocomplete-clear-icon) .p-autocomplete-input {\n        padding-inline-end: calc((dt('form.field.padding.x') * 2) + dt('icon.size'));\n    }\n\n    .p-inputgroup .p-autocomplete-dropdown {\n        border-radius: 0;\n    }\n\n    .p-inputgroup > .p-autocomplete:last-child:has(.p-autocomplete-dropdown) > .p-autocomplete-input {\n        border-start-end-radius: 0;\n        border-end-end-radius: 0;\n    }\n\n    .p-inputgroup > .p-autocomplete:last-child .p-autocomplete-dropdown {\n        border-start-end-radius: dt('autocomplete.dropdown.border.radius');\n        border-end-end-radius: dt('autocomplete.dropdown.border.radius');\n    }\n";
+var style = "\n    .p-autocomplete {\n        display: inline-flex;\n    }\n\n    .p-autocomplete-loader {\n        position: absolute;\n        top: 50%;\n        margin-top: -0.5rem;\n        inset-inline-end: dt('autocomplete.padding.x');\n    }\n\n    .p-autocomplete:has(.p-autocomplete-dropdown) .p-autocomplete-loader {\n        inset-inline-end: calc(dt('autocomplete.dropdown.width') + dt('autocomplete.padding.x'));\n    }\n\n    .p-autocomplete:has(.p-autocomplete-dropdown) .p-autocomplete-input {\n        flex: 1 1 auto;\n        width: 1%;\n    }\n\n    .p-autocomplete:has(.p-autocomplete-dropdown) .p-autocomplete-input,\n    .p-autocomplete:has(.p-autocomplete-dropdown) .p-autocomplete-input-multiple {\n        border-start-end-radius: 0;\n        border-end-end-radius: 0;\n    }\n\n    .p-autocomplete-dropdown {\n        cursor: pointer;\n        display: inline-flex;\n        user-select: none;\n        align-items: center;\n        justify-content: center;\n        overflow: hidden;\n        position: relative;\n        width: dt('autocomplete.dropdown.width');\n        border-start-end-radius: dt('autocomplete.dropdown.border.radius');\n        border-end-end-radius: dt('autocomplete.dropdown.border.radius');\n        background: dt('autocomplete.dropdown.background');\n        border: 1px solid dt('autocomplete.dropdown.border.color');\n        border-inline-start: 0 none;\n        color: dt('autocomplete.dropdown.color');\n        transition:\n            background dt('autocomplete.transition.duration'),\n            color dt('autocomplete.transition.duration'),\n            border-color dt('autocomplete.transition.duration'),\n            outline-color dt('autocomplete.transition.duration'),\n            box-shadow dt('autocomplete.transition.duration');\n        outline-color: transparent;\n    }\n\n    .p-autocomplete-dropdown:not(:disabled):hover {\n        background: dt('autocomplete.dropdown.hover.background');\n        border-color: dt('autocomplete.dropdown.hover.border.color');\n        color: dt('autocomplete.dropdown.hover.color');\n    }\n\n    .p-autocomplete-dropdown:not(:disabled):active {\n        background: dt('autocomplete.dropdown.active.background');\n        border-color: dt('autocomplete.dropdown.active.border.color');\n        color: dt('autocomplete.dropdown.active.color');\n    }\n\n    .p-autocomplete-dropdown:focus-visible {\n        box-shadow: dt('autocomplete.dropdown.focus.ring.shadow');\n        outline: dt('autocomplete.dropdown.focus.ring.width') dt('autocomplete.dropdown.focus.ring.style') dt('autocomplete.dropdown.focus.ring.color');\n        outline-offset: dt('autocomplete.dropdown.focus.ring.offset');\n    }\n\n    .p-autocomplete-overlay {\n        position: absolute;\n        top: 0;\n        left: 0;\n        background: dt('autocomplete.overlay.background');\n        color: dt('autocomplete.overlay.color');\n        border: 1px solid dt('autocomplete.overlay.border.color');\n        border-radius: dt('autocomplete.overlay.border.radius');\n        box-shadow: dt('autocomplete.overlay.shadow');\n        min-width: 100%;\n    }\n\n    .p-autocomplete-list-container {\n        overflow: auto;\n    }\n\n    .p-autocomplete-list {\n        margin: 0;\n        list-style-type: none;\n        display: flex;\n        flex-direction: column;\n        gap: dt('autocomplete.list.gap');\n        padding: dt('autocomplete.list.padding');\n    }\n\n    .p-autocomplete-option {\n        cursor: pointer;\n        white-space: nowrap;\n        position: relative;\n        overflow: hidden;\n        display: flex;\n        align-items: center;\n        padding: dt('autocomplete.option.padding');\n        border: 0 none;\n        color: dt('autocomplete.option.color');\n        background: transparent;\n        transition:\n            background dt('autocomplete.transition.duration'),\n            color dt('autocomplete.transition.duration'),\n            border-color dt('autocomplete.transition.duration');\n        border-radius: dt('autocomplete.option.border.radius');\n    }\n\n    .p-autocomplete-option:not(.p-autocomplete-option-selected):not(.p-disabled).p-focus {\n        background: dt('autocomplete.option.focus.background');\n        color: dt('autocomplete.option.focus.color');\n    }\n\n    .p-autocomplete-option-selected {\n        background: dt('autocomplete.option.selected.background');\n        color: dt('autocomplete.option.selected.color');\n    }\n\n    .p-autocomplete-option-selected.p-focus {\n        background: dt('autocomplete.option.selected.focus.background');\n        color: dt('autocomplete.option.selected.focus.color');\n    }\n\n    .p-autocomplete-option-group {\n        margin: 0;\n        padding: dt('autocomplete.option.group.padding');\n        color: dt('autocomplete.option.group.color');\n        background: dt('autocomplete.option.group.background');\n        font-weight: dt('autocomplete.option.group.font.weight');\n    }\n\n    .p-autocomplete-input-multiple {\n        margin: 0;\n        list-style-type: none;\n        cursor: text;\n        overflow: hidden;\n        display: flex;\n        align-items: center;\n        flex-wrap: wrap;\n        padding: calc(dt('autocomplete.padding.y') / 2) dt('autocomplete.padding.x');\n        gap: calc(dt('autocomplete.padding.y') / 2);\n        color: dt('autocomplete.color');\n        background: dt('autocomplete.background');\n        border: 1px solid dt('autocomplete.border.color');\n        border-radius: dt('autocomplete.border.radius');\n        width: 100%;\n        transition:\n            background dt('autocomplete.transition.duration'),\n            color dt('autocomplete.transition.duration'),\n            border-color dt('autocomplete.transition.duration'),\n            outline-color dt('autocomplete.transition.duration'),\n            box-shadow dt('autocomplete.transition.duration');\n        outline-color: transparent;\n        box-shadow: dt('autocomplete.shadow');\n    }\n\n    .p-autocomplete-input-multiple.p-disabled {\n        opacity: 1;\n        background: dt('inputtext.disabled.background');\n        color: dt('inputtext.disabled.color');\n    }\n\n    .p-autocomplete:not(.p-disabled):hover .p-autocomplete-input-multiple {\n        border-color: dt('autocomplete.hover.border.color');\n    }\n\n    .p-autocomplete:not(.p-disabled).p-focus .p-autocomplete-input-multiple {\n        border-color: dt('autocomplete.focus.border.color');\n        box-shadow: dt('autocomplete.focus.ring.shadow');\n        outline: dt('autocomplete.focus.ring.width') dt('autocomplete.focus.ring.style') dt('autocomplete.focus.ring.color');\n        outline-offset: dt('autocomplete.focus.ring.offset');\n    }\n\n    .p-autocomplete.p-invalid .p-autocomplete-input-multiple {\n        border-color: dt('autocomplete.invalid.border.color');\n    }\n\n    .p-variant-filled.p-autocomplete-input-multiple {\n        background: dt('autocomplete.filled.background');\n    }\n\n    .p-autocomplete:not(.p-disabled):hover .p-variant-filled.p-autocomplete-input-multiple {\n        background: dt('autocomplete.filled.hover.background');\n    }\n\n    .p-autocomplete:not(.p-disabled).p-focus .p-variant-filled.p-autocomplete-input-multiple {\n        background: dt('autocomplete.filled.focus.background');\n    }\n\n    .p-autocomplete.p-disabled .p-autocomplete-input-multiple {\n        opacity: 1;\n        background: dt('autocomplete.disabled.background');\n        color: dt('autocomplete.disabled.color');\n    }\n\n    .p-autocomplete-chip.p-chip {\n        padding-block-start: calc(dt('autocomplete.padding.y') / 2);\n        padding-block-end: calc(dt('autocomplete.padding.y') / 2);\n        border-radius: dt('autocomplete.chip.border.radius');\n    }\n\n    .p-autocomplete-input-multiple:has(.p-autocomplete-chip) {\n        padding-inline-start: calc(dt('autocomplete.padding.y') / 2);\n        padding-inline-end: calc(dt('autocomplete.padding.y') / 2);\n    }\n\n    .p-autocomplete-chip-item.p-focus .p-autocomplete-chip {\n        background: dt('autocomplete.chip.focus.background');\n        color: dt('autocomplete.chip.focus.color');\n    }\n\n    .p-autocomplete-input-chip {\n        flex: 1 1 auto;\n        display: inline-flex;\n        padding-block-start: calc(dt('autocomplete.padding.y') / 2);\n        padding-block-end: calc(dt('autocomplete.padding.y') / 2);\n    }\n\n    .p-autocomplete-input-chip input {\n        border: 0 none;\n        outline: 0 none;\n        background: transparent;\n        margin: 0;\n        padding: 0;\n        box-shadow: none;\n        border-radius: 0;\n        width: 100%;\n        font-family: inherit;\n        font-feature-settings: inherit;\n        font-size: 1rem;\n        color: inherit;\n    }\n\n    .p-autocomplete-input-chip input::placeholder {\n        color: dt('autocomplete.placeholder.color');\n    }\n\n    .p-autocomplete.p-invalid .p-autocomplete-input-chip input::placeholder {\n        color: dt('autocomplete.invalid.placeholder.color');\n    }\n\n    .p-autocomplete-empty-message {\n        padding: dt('autocomplete.empty.message.padding');\n    }\n\n    .p-autocomplete-fluid {\n        display: flex;\n    }\n\n    .p-autocomplete-fluid:has(.p-autocomplete-dropdown) .p-autocomplete-input {\n        width: 1%;\n    }\n\n    .p-autocomplete:has(.p-inputtext-sm) .p-autocomplete-dropdown {\n        width: dt('autocomplete.dropdown.sm.width');\n    }\n\n    .p-autocomplete:has(.p-inputtext-sm) .p-autocomplete-dropdown .p-icon {\n        font-size: dt('form.field.sm.font.size');\n        width: dt('form.field.sm.font.size');\n        height: dt('form.field.sm.font.size');\n    }\n\n    .p-autocomplete:has(.p-inputtext-lg) .p-autocomplete-dropdown {\n        width: dt('autocomplete.dropdown.lg.width');\n    }\n\n    .p-autocomplete:has(.p-inputtext-lg) .p-autocomplete-dropdown .p-icon {\n        font-size: dt('form.field.lg.font.size');\n        width: dt('form.field.lg.font.size');\n        height: dt('form.field.lg.font.size');\n    }\n\n    .p-autocomplete-clear-icon {\n        position: absolute;\n        top: 50%;\n        margin-top: -0.5rem;\n        cursor: pointer;\n        color: dt('autocomplete.dropdown.color');\n        inset-inline-end: dt('autocomplete.padding.x');\n    }\n\n    .p-autocomplete:has(.p-autocomplete-dropdown) .p-autocomplete-clear-icon {\n        inset-inline-end: calc(dt('autocomplete.padding.x') + dt('autocomplete.dropdown.width'));\n    }\n";
 
 // node_modules/primeng/fesm2022/primeng-autocomplete.mjs
 var _c0 = ["item"];
@@ -203,7 +196,7 @@ var _c26 = (a0, a1) => ({
 function AutoComplete_input_0_Template(rf, ctx) {
   if (rf & 1) {
     const _r2 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "input", 18, 2);
+    ɵɵelementStart(0, "input", 17, 2);
     ɵɵlistener("input", function AutoComplete_input_0_Template_input_input_0_listener($event) {
       ɵɵrestoreView(_r2);
       const ctx_r2 = ɵɵnextContext();
@@ -238,7 +231,7 @@ function AutoComplete_input_0_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext();
     ɵɵclassMap(ctx_r2.cn(ctx_r2.cx("pcInputText"), ctx_r2.inputStyleClass));
-    ɵɵproperty("pAutoFocus", ctx_r2.autofocus)("pt", ctx_r2.ptm("pcInputText"))("ngStyle", ctx_r2.inputStyle)("variant", ctx_r2.$variant())("invalid", ctx_r2.invalid())("pSize", ctx_r2.size())("fluid", ctx_r2.hasFluid);
+    ɵɵproperty("pAutoFocus", ctx_r2.autofocus)("ngStyle", ctx_r2.inputStyle)("variant", ctx_r2.$variant())("invalid", ctx_r2.invalid())("pSize", ctx_r2.size())("fluid", ctx_r2.hasFluid);
     ɵɵattribute("type", ctx_r2.type)("value", ctx_r2.inputValue())("id", ctx_r2.inputId)("autocomplete", ctx_r2.autocomplete)("placeholder", ctx_r2.placeholder)("name", ctx_r2.name())("minlength", ctx_r2.minlength())("min", ctx_r2.min())("max", ctx_r2.max())("pattern", ctx_r2.pattern())("size", ctx_r2.inputSize())("maxlength", ctx_r2.maxlength())("tabindex", !ctx_r2.$disabled() ? ctx_r2.tabindex : -1)("required", ctx_r2.required() ? "" : void 0)("readonly", ctx_r2.readonly ? "" : void 0)("disabled", ctx_r2.$disabled() ? "" : void 0)("aria-label", ctx_r2.ariaLabel)("aria-labelledby", ctx_r2.ariaLabelledBy)("aria-required", ctx_r2.required())("aria-expanded", ctx_r2.overlayVisible ?? false)("aria-controls", ctx_r2.overlayVisible ? ctx_r2.id + "_list" : null)("aria-activedescendant", ctx_r2.focused ? ctx_r2.focusedOptionId : void 0);
   }
 }
@@ -246,7 +239,7 @@ function AutoComplete_ng_container_1__svg_svg_1_Template(rf, ctx) {
   if (rf & 1) {
     const _r4 = ɵɵgetCurrentView();
     ɵɵnamespaceSVG();
-    ɵɵelementStart(0, "svg", 21);
+    ɵɵelementStart(0, "svg", 20);
     ɵɵlistener("click", function AutoComplete_ng_container_1__svg_svg_1_Template_svg_click_0_listener() {
       ɵɵrestoreView(_r4);
       const ctx_r2 = ɵɵnextContext(2);
@@ -257,7 +250,6 @@ function AutoComplete_ng_container_1__svg_svg_1_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r2.cx("clearIcon"));
-    ɵɵproperty("pBind", ctx_r2.ptm("clearIcon"));
     ɵɵattribute("aria-hidden", true);
   }
 }
@@ -271,19 +263,18 @@ function AutoComplete_ng_container_1_span_2_1_Template(rf, ctx) {
 function AutoComplete_ng_container_1_span_2_Template(rf, ctx) {
   if (rf & 1) {
     const _r5 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "span", 22);
+    ɵɵelementStart(0, "span", 21);
     ɵɵlistener("click", function AutoComplete_ng_container_1_span_2_Template_span_click_0_listener() {
       ɵɵrestoreView(_r5);
       const ctx_r2 = ɵɵnextContext(2);
       return ɵɵresetView(ctx_r2.clear());
     });
-    ɵɵtemplate(1, AutoComplete_ng_container_1_span_2_1_Template, 1, 0, null, 23);
+    ɵɵtemplate(1, AutoComplete_ng_container_1_span_2_1_Template, 1, 0, null, 22);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r2.cx("clearIcon"));
-    ɵɵproperty("pBind", ctx_r2.ptm("clearIcon"));
     ɵɵattribute("aria-hidden", true);
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r2.clearIconTemplate || ctx_r2._clearIconTemplate);
@@ -292,7 +283,7 @@ function AutoComplete_ng_container_1_span_2_Template(rf, ctx) {
 function AutoComplete_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, AutoComplete_ng_container_1__svg_svg_1_Template, 1, 4, "svg", 19)(2, AutoComplete_ng_container_1_span_2_Template, 2, 5, "span", 20);
+    ɵɵtemplate(1, AutoComplete_ng_container_1__svg_svg_1_Template, 1, 3, "svg", 18)(2, AutoComplete_ng_container_1_span_2_Template, 2, 4, "span", 19);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -311,21 +302,20 @@ function AutoComplete_ul_2_li_2_ng_container_3_Template(rf, ctx) {
 function AutoComplete_ul_2_li_2_ng_template_4_span_0_Template(rf, ctx) {
   if (rf & 1) {
     const _r9 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "span", 22);
+    ɵɵelementStart(0, "span", 21);
     ɵɵlistener("click", function AutoComplete_ul_2_li_2_ng_template_4_span_0_Template_span_click_0_listener($event) {
       ɵɵrestoreView(_r9);
       const i_r8 = ɵɵnextContext(2).index;
       const ctx_r2 = ɵɵnextContext(2);
-      return ɵɵresetView(!ctx_r2.readonly && !ctx_r2.$disabled() ? ctx_r2.removeOption($event, i_r8) : "");
+      return ɵɵresetView(!ctx_r2.readonly ? ctx_r2.removeOption($event, i_r8) : "");
     });
     ɵɵnamespaceSVG();
-    ɵɵelement(1, "svg", 31);
+    ɵɵelement(1, "svg", 29);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(4);
     ɵɵclassMap(ctx_r2.cx("chipIcon"));
-    ɵɵproperty("pBind", ctx_r2.ptm("chipIcon"));
     ɵɵadvance();
     ɵɵclassMap(ctx_r2.cx("chipIcon"));
     ɵɵattribute("aria-hidden", true);
@@ -340,22 +330,21 @@ function AutoComplete_ul_2_li_2_ng_template_4_span_1_1_Template(rf, ctx) {
 }
 function AutoComplete_ul_2_li_2_ng_template_4_span_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "span", 32);
-    ɵɵtemplate(1, AutoComplete_ul_2_li_2_ng_template_4_span_1_1_Template, 1, 0, null, 29);
+    ɵɵelementStart(0, "span");
+    ɵɵtemplate(1, AutoComplete_ul_2_li_2_ng_template_4_span_1_1_Template, 1, 0, null, 28);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const i_r8 = ɵɵnextContext(2).index;
     const ctx_r2 = ɵɵnextContext(2);
-    ɵɵproperty("pBind", ctx_r2.ptm("chipIcon"));
     ɵɵattribute("aria-hidden", true);
     ɵɵadvance();
-    ɵɵproperty("ngTemplateOutlet", ctx_r2.removeIconTemplate || ctx_r2._removeIconTemplate)("ngTemplateOutletContext", ɵɵpureFunction3(4, _c20, ctx_r2.removeOption.bind(ctx_r2), i_r8, ctx_r2.cx("chipIcon")));
+    ɵɵproperty("ngTemplateOutlet", ctx_r2.removeIconTemplate || ctx_r2._removeIconTemplate)("ngTemplateOutletContext", ɵɵpureFunction3(3, _c20, ctx_r2.removeOption.bind(ctx_r2), i_r8, ctx_r2.cx("chipIcon")));
   }
 }
 function AutoComplete_ul_2_li_2_ng_template_4_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, AutoComplete_ul_2_li_2_ng_template_4_span_0_Template, 2, 6, "span", 20)(1, AutoComplete_ul_2_li_2_ng_template_4_span_1_Template, 2, 8, "span", 30);
+    ɵɵtemplate(0, AutoComplete_ul_2_li_2_ng_template_4_span_0_Template, 2, 5, "span", 19)(1, AutoComplete_ul_2_li_2_ng_template_4_span_1_Template, 2, 7, "span", 13);
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(3);
@@ -367,33 +356,32 @@ function AutoComplete_ul_2_li_2_ng_template_4_Template(rf, ctx) {
 function AutoComplete_ul_2_li_2_Template(rf, ctx) {
   if (rf & 1) {
     const _r7 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "li", 26, 5)(2, "p-chip", 28);
+    ɵɵelementStart(0, "li", 25, 4)(2, "p-chip", 27);
     ɵɵlistener("onRemove", function AutoComplete_ul_2_li_2_Template_p_chip_onRemove_2_listener($event) {
       const i_r8 = ɵɵrestoreView(_r7).index;
       const ctx_r2 = ɵɵnextContext(2);
       return ɵɵresetView(!ctx_r2.readonly ? ctx_r2.removeOption($event, i_r8) : "");
     });
-    ɵɵtemplate(3, AutoComplete_ul_2_li_2_ng_container_3_Template, 1, 0, "ng-container", 29)(4, AutoComplete_ul_2_li_2_ng_template_4_Template, 2, 2, "ng-template", null, 6, ɵɵtemplateRefExtractor);
+    ɵɵtemplate(3, AutoComplete_ul_2_li_2_ng_container_3_Template, 1, 0, "ng-container", 28)(4, AutoComplete_ul_2_li_2_ng_template_4_Template, 2, 2, "ng-template", null, 5, ɵɵtemplateRefExtractor);
     ɵɵelementEnd()();
   }
   if (rf & 2) {
     const option_r10 = ctx.$implicit;
     const i_r8 = ctx.index;
     const ctx_r2 = ɵɵnextContext(2);
-    ɵɵclassMap(ctx_r2.cx("chipItem", ɵɵpureFunction1(16, _c18, i_r8)));
-    ɵɵproperty("pBind", ctx_r2.ptm("chipItem"));
+    ɵɵclassMap(ctx_r2.cx("chipItem", ɵɵpureFunction1(13, _c18, i_r8)));
     ɵɵattribute("id", ctx_r2.id + "_multiple_option_" + i_r8)("aria-label", ctx_r2.getOptionLabel(option_r10))("aria-setsize", ctx_r2.modelValue().length)("aria-posinset", i_r8 + 1)("aria-selected", true);
     ɵɵadvance(2);
     ɵɵclassMap(ctx_r2.cx("pcChip"));
-    ɵɵproperty("pt", ctx_r2.ptm("pcChip"))("label", !ctx_r2.selectedItemTemplate && !ctx_r2._selectedItemTemplate && ctx_r2.getOptionLabel(option_r10))("disabled", ctx_r2.$disabled())("removable", true);
+    ɵɵproperty("label", !ctx_r2.selectedItemTemplate && !ctx_r2._selectedItemTemplate && ctx_r2.getOptionLabel(option_r10))("removable", true);
     ɵɵadvance();
-    ɵɵproperty("ngTemplateOutlet", ctx_r2.selectedItemTemplate || ctx_r2._selectedItemTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(18, _c19, option_r10));
+    ɵɵproperty("ngTemplateOutlet", ctx_r2.selectedItemTemplate || ctx_r2._selectedItemTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(15, _c19, option_r10));
   }
 }
 function AutoComplete_ul_2_Template(rf, ctx) {
   if (rf & 1) {
     const _r6 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "ul", 24, 3);
+    ɵɵelementStart(0, "ul", 23, 3);
     ɵɵlistener("focus", function AutoComplete_ul_2_Template_ul_focus_0_listener($event) {
       ɵɵrestoreView(_r6);
       const ctx_r2 = ɵɵnextContext();
@@ -407,8 +395,8 @@ function AutoComplete_ul_2_Template(rf, ctx) {
       const ctx_r2 = ɵɵnextContext();
       return ɵɵresetView(ctx_r2.onMultipleContainerKeyDown($event));
     });
-    ɵɵtemplate(2, AutoComplete_ul_2_li_2_Template, 6, 20, "li", 25);
-    ɵɵelementStart(3, "li", 26)(4, "input", 27, 4);
+    ɵɵtemplate(2, AutoComplete_ul_2_li_2_Template, 6, 17, "li", 24);
+    ɵɵelementStart(3, "li", 25)(4, "input", 26, 2);
     ɵɵlistener("input", function AutoComplete_ul_2_Template_input_input_4_listener($event) {
       ɵɵrestoreView(_r6);
       const ctx_r2 = ɵɵnextContext();
@@ -443,28 +431,27 @@ function AutoComplete_ul_2_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext();
     ɵɵclassMap(ctx_r2.cx("inputMultiple"));
-    ɵɵproperty("pBind", ctx_r2.ptm("inputMultiple"))("tabindex", -1);
+    ɵɵproperty("tabindex", -1);
     ɵɵattribute("aria-orientation", "horizontal")("aria-activedescendant", ctx_r2.focused ? ctx_r2.focusedMultipleOptionId : void 0);
     ɵɵadvance(2);
     ɵɵproperty("ngForOf", ctx_r2.modelValue());
     ɵɵadvance();
     ɵɵclassMap(ctx_r2.cx("inputChip"));
-    ɵɵproperty("pBind", ctx_r2.ptm("inputChip"));
     ɵɵadvance();
     ɵɵclassMap(ctx_r2.cx("pcInputText"));
-    ɵɵproperty("pAutoFocus", ctx_r2.autofocus)("pBind", ctx_r2.ptm("input"))("ngStyle", ctx_r2.inputStyle);
+    ɵɵproperty("pAutoFocus", ctx_r2.autofocus)("ngStyle", ctx_r2.inputStyle);
     ɵɵattribute("type", ctx_r2.type)("id", ctx_r2.inputId)("autocomplete", ctx_r2.autocomplete)("name", ctx_r2.name())("minlength", ctx_r2.minlength())("maxlength", ctx_r2.maxlength())("size", ctx_r2.size())("min", ctx_r2.min())("max", ctx_r2.max())("pattern", ctx_r2.pattern())("placeholder", !ctx_r2.$filled() ? ctx_r2.placeholder : null)("tabindex", !ctx_r2.$disabled() ? ctx_r2.tabindex : -1)("required", ctx_r2.required() ? "" : void 0)("readonly", ctx_r2.readonly ? "" : void 0)("disabled", ctx_r2.$disabled() ? "" : void 0)("aria-label", ctx_r2.ariaLabel)("aria-labelledby", ctx_r2.ariaLabelledBy)("aria-required", ctx_r2.required())("aria-expanded", ctx_r2.overlayVisible ?? false)("aria-controls", ctx_r2.overlayVisible ? ctx_r2.id + "_list" : null)("aria-activedescendant", ctx_r2.focused ? ctx_r2.focusedOptionId : void 0);
   }
 }
 function AutoComplete_ng_container_3__svg_svg_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 35);
+    ɵɵelement(0, "svg", 32);
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r2.cx("loader"));
-    ɵɵproperty("pBind", ctx_r2.ptm("loader"))("spin", true);
+    ɵɵproperty("spin", true);
     ɵɵattribute("aria-hidden", true);
   }
 }
@@ -477,14 +464,13 @@ function AutoComplete_ng_container_3_span_2_1_Template(rf, ctx) {
 }
 function AutoComplete_ng_container_3_span_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "span", 32);
-    ɵɵtemplate(1, AutoComplete_ng_container_3_span_2_1_Template, 1, 0, null, 23);
+    ɵɵelementStart(0, "span");
+    ɵɵtemplate(1, AutoComplete_ng_container_3_span_2_1_Template, 1, 0, null, 22);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r2.cx("loader"));
-    ɵɵproperty("pBind", ctx_r2.ptm("loader"));
     ɵɵattribute("aria-hidden", true);
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r2.loadingIconTemplate || ctx_r2._loadingIconTemplate);
@@ -493,7 +479,7 @@ function AutoComplete_ng_container_3_span_2_Template(rf, ctx) {
 function AutoComplete_ng_container_3_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, AutoComplete_ng_container_3__svg_svg_1_Template, 1, 5, "svg", 33)(2, AutoComplete_ng_container_3_span_2_Template, 2, 5, "span", 34);
+    ɵɵtemplate(1, AutoComplete_ng_container_3__svg_svg_1_Template, 1, 4, "svg", 30)(2, AutoComplete_ng_container_3_span_2_Template, 2, 4, "span", 31);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -506,7 +492,7 @@ function AutoComplete_ng_container_3_Template(rf, ctx) {
 }
 function AutoComplete_button_4_span_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "span", 38);
+    ɵɵelement(0, "span", 35);
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(2);
@@ -517,11 +503,7 @@ function AutoComplete_button_4_span_2_Template(rf, ctx) {
 function AutoComplete_button_4_ng_container_3__svg_svg_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 40);
-  }
-  if (rf & 2) {
-    const ctx_r2 = ɵɵnextContext(3);
-    ɵɵproperty("pBind", ctx_r2.ptm("dropdown"));
+    ɵɵelement(0, "svg", 37);
   }
 }
 function AutoComplete_button_4_ng_container_3_2_ng_template_0_Template(rf, ctx) {
@@ -534,7 +516,7 @@ function AutoComplete_button_4_ng_container_3_2_Template(rf, ctx) {
 function AutoComplete_button_4_ng_container_3_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, AutoComplete_button_4_ng_container_3__svg_svg_1_Template, 1, 1, "svg", 39)(2, AutoComplete_button_4_ng_container_3_2_Template, 1, 0, null, 23);
+    ɵɵtemplate(1, AutoComplete_button_4_ng_container_3__svg_svg_1_Template, 1, 0, "svg", 36)(2, AutoComplete_button_4_ng_container_3_2_Template, 1, 0, null, 22);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -548,19 +530,19 @@ function AutoComplete_button_4_ng_container_3_Template(rf, ctx) {
 function AutoComplete_button_4_Template(rf, ctx) {
   if (rf & 1) {
     const _r11 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "button", 36, 7);
+    ɵɵelementStart(0, "button", 33, 6);
     ɵɵlistener("click", function AutoComplete_button_4_Template_button_click_0_listener($event) {
       ɵɵrestoreView(_r11);
       const ctx_r2 = ɵɵnextContext();
       return ɵɵresetView(ctx_r2.handleDropdownClick($event));
     });
-    ɵɵtemplate(2, AutoComplete_button_4_span_2_Template, 1, 2, "span", 37)(3, AutoComplete_button_4_ng_container_3_Template, 3, 2, "ng-container", 14);
+    ɵɵtemplate(2, AutoComplete_button_4_span_2_Template, 1, 2, "span", 34)(3, AutoComplete_button_4_ng_container_3_Template, 3, 2, "ng-container", 13);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext();
     ɵɵclassMap(ctx_r2.cx("dropdown"));
-    ɵɵproperty("pBind", ctx_r2.ptm("dropdown"))("disabled", ctx_r2.$disabled());
+    ɵɵproperty("disabled", ctx_r2.$disabled());
     ɵɵattribute("aria-label", ctx_r2.dropdownAriaLabel)("tabindex", ctx_r2.tabindex);
     ɵɵadvance(2);
     ɵɵproperty("ngIf", ctx_r2.dropdownIcon);
@@ -580,7 +562,7 @@ function AutoComplete_ng_template_7_p_scroller_3_ng_template_2_ng_container_0_Te
 }
 function AutoComplete_ng_template_7_p_scroller_3_ng_template_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, AutoComplete_ng_template_7_p_scroller_3_ng_template_2_ng_container_0_Template, 1, 0, "ng-container", 29);
+    ɵɵtemplate(0, AutoComplete_ng_template_7_p_scroller_3_ng_template_2_ng_container_0_Template, 1, 0, "ng-container", 28);
   }
   if (rf & 2) {
     const items_r13 = ctx.$implicit;
@@ -597,7 +579,7 @@ function AutoComplete_ng_template_7_p_scroller_3_ng_container_4_ng_template_1_ng
 }
 function AutoComplete_ng_template_7_p_scroller_3_ng_container_4_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, AutoComplete_ng_template_7_p_scroller_3_ng_container_4_ng_template_1_ng_container_0_Template, 1, 0, "ng-container", 29);
+    ɵɵtemplate(0, AutoComplete_ng_template_7_p_scroller_3_ng_container_4_ng_template_1_ng_container_0_Template, 1, 0, "ng-container", 28);
   }
   if (rf & 2) {
     const scrollerOptions_r16 = ctx.options;
@@ -608,26 +590,26 @@ function AutoComplete_ng_template_7_p_scroller_3_ng_container_4_ng_template_1_Te
 function AutoComplete_ng_template_7_p_scroller_3_ng_container_4_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, AutoComplete_ng_template_7_p_scroller_3_ng_container_4_ng_template_1_Template, 1, 4, "ng-template", null, 10, ɵɵtemplateRefExtractor);
+    ɵɵtemplate(1, AutoComplete_ng_template_7_p_scroller_3_ng_container_4_ng_template_1_Template, 1, 4, "ng-template", null, 9, ɵɵtemplateRefExtractor);
     ɵɵelementContainerEnd();
   }
 }
 function AutoComplete_ng_template_7_p_scroller_3_Template(rf, ctx) {
   if (rf & 1) {
     const _r12 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "p-scroller", 44, 9);
+    ɵɵelementStart(0, "p-scroller", 41, 8);
     ɵɵlistener("onLazyLoad", function AutoComplete_ng_template_7_p_scroller_3_Template_p_scroller_onLazyLoad_0_listener($event) {
       ɵɵrestoreView(_r12);
       const ctx_r2 = ɵɵnextContext(2);
       return ɵɵresetView(ctx_r2.onLazyLoad.emit($event));
     });
-    ɵɵtemplate(2, AutoComplete_ng_template_7_p_scroller_3_ng_template_2_Template, 1, 5, "ng-template", null, 1, ɵɵtemplateRefExtractor)(4, AutoComplete_ng_template_7_p_scroller_3_ng_container_4_Template, 3, 0, "ng-container", 14);
+    ɵɵtemplate(2, AutoComplete_ng_template_7_p_scroller_3_ng_template_2_Template, 1, 5, "ng-template", null, 1, ɵɵtemplateRefExtractor)(4, AutoComplete_ng_template_7_p_scroller_3_ng_container_4_Template, 3, 0, "ng-container", 13);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(2);
-    ɵɵstyleMap(ɵɵpureFunction1(9, _c21, ctx_r2.scrollHeight));
-    ɵɵproperty("pt", ctx_r2.ptm("virtualScroller"))("items", ctx_r2.visibleOptions())("itemSize", ctx_r2.virtualScrollItemSize)("autoSize", true)("lazy", ctx_r2.lazy)("options", ctx_r2.virtualScrollOptions);
+    ɵɵstyleMap(ɵɵpureFunction1(8, _c21, ctx_r2.scrollHeight));
+    ɵɵproperty("items", ctx_r2.visibleOptions())("itemSize", ctx_r2.virtualScrollItemSize)("autoSize", true)("lazy", ctx_r2.lazy)("options", ctx_r2.virtualScrollOptions);
     ɵɵadvance(4);
     ɵɵproperty("ngIf", ctx_r2.loaderTemplate || ctx_r2._loaderTemplate);
   }
@@ -640,7 +622,7 @@ function AutoComplete_ng_template_7_ng_container_4_ng_container_1_Template(rf, c
 function AutoComplete_ng_template_7_ng_container_4_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, AutoComplete_ng_template_7_ng_container_4_ng_container_1_Template, 1, 0, "ng-container", 29);
+    ɵɵtemplate(1, AutoComplete_ng_template_7_ng_container_4_ng_container_1_Template, 1, 0, "ng-container", 28);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -672,8 +654,8 @@ function AutoComplete_ng_template_7_ng_template_5_ng_template_2_ng_container_0_n
 function AutoComplete_ng_template_7_ng_template_5_ng_template_2_ng_container_0_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵelementStart(1, "li", 48);
-    ɵɵtemplate(2, AutoComplete_ng_template_7_ng_template_5_ng_template_2_ng_container_0_span_2_Template, 2, 1, "span", 14)(3, AutoComplete_ng_template_7_ng_template_5_ng_template_2_ng_container_0_ng_container_3_Template, 1, 0, "ng-container", 29);
+    ɵɵelementStart(1, "li", 45);
+    ɵɵtemplate(2, AutoComplete_ng_template_7_ng_template_5_ng_template_2_ng_container_0_span_2_Template, 2, 1, "span", 13)(3, AutoComplete_ng_template_7_ng_template_5_ng_template_2_ng_container_0_ng_container_3_Template, 1, 0, "ng-container", 28);
     ɵɵelementEnd();
     ɵɵelementContainerEnd();
   }
@@ -685,12 +667,12 @@ function AutoComplete_ng_template_7_ng_template_5_ng_template_2_ng_container_0_T
     const ctx_r2 = ɵɵnextContext(2);
     ɵɵadvance();
     ɵɵclassMap(ctx_r2.cx("optionGroup"));
-    ɵɵproperty("pBind", ctx_r2.ptm("optionGroup"))("ngStyle", ɵɵpureFunction1(8, _c21, scrollerOptions_r20.itemSize + "px"));
+    ɵɵproperty("ngStyle", ɵɵpureFunction1(7, _c21, scrollerOptions_r20.itemSize + "px"));
     ɵɵattribute("id", ctx_r2.id + "_" + ctx_r2.getOptionIndex(i_r19, scrollerOptions_r20));
     ɵɵadvance();
     ɵɵproperty("ngIf", !ctx_r2.groupTemplate);
     ɵɵadvance();
-    ɵɵproperty("ngTemplateOutlet", ctx_r2.groupTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(10, _c19, option_r17.optionGroup));
+    ɵɵproperty("ngTemplateOutlet", ctx_r2.groupTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(9, _c19, option_r17.optionGroup));
   }
 }
 function AutoComplete_ng_template_7_ng_template_5_ng_template_2_ng_container_1_span_2_Template(rf, ctx) {
@@ -715,7 +697,7 @@ function AutoComplete_ng_template_7_ng_template_5_ng_template_2_ng_container_1_T
   if (rf & 1) {
     const _r21 = ɵɵgetCurrentView();
     ɵɵelementContainerStart(0);
-    ɵɵelementStart(1, "li", 49);
+    ɵɵelementStart(1, "li", 46);
     ɵɵlistener("click", function AutoComplete_ng_template_7_ng_template_5_ng_template_2_ng_container_1_Template_li_click_1_listener($event) {
       ɵɵrestoreView(_r21);
       const option_r17 = ɵɵnextContext().$implicit;
@@ -728,7 +710,7 @@ function AutoComplete_ng_template_7_ng_template_5_ng_template_2_ng_container_1_T
       const ctx_r2 = ɵɵnextContext(2);
       return ɵɵresetView(ctx_r2.onOptionMouseEnter($event, ctx_r2.getOptionIndex(i_r19, scrollerOptions_r20)));
     });
-    ɵɵtemplate(2, AutoComplete_ng_template_7_ng_template_5_ng_template_2_ng_container_1_span_2_Template, 2, 1, "span", 14)(3, AutoComplete_ng_template_7_ng_template_5_ng_template_2_ng_container_1_ng_container_3_Template, 1, 0, "ng-container", 29);
+    ɵɵtemplate(2, AutoComplete_ng_template_7_ng_template_5_ng_template_2_ng_container_1_span_2_Template, 2, 1, "span", 13)(3, AutoComplete_ng_template_7_ng_template_5_ng_template_2_ng_container_1_ng_container_3_Template, 1, 0, "ng-container", 28);
     ɵɵelementEnd();
     ɵɵelementContainerEnd();
   }
@@ -739,18 +721,18 @@ function AutoComplete_ng_template_7_ng_template_5_ng_template_2_ng_container_1_T
     const scrollerOptions_r20 = ɵɵnextContext().options;
     const ctx_r2 = ɵɵnextContext(2);
     ɵɵadvance();
-    ɵɵclassMap(ctx_r2.cx("option", ɵɵpureFunction3(14, _c25, option_r17, i_r19, scrollerOptions_r20)));
-    ɵɵproperty("pBind", ctx_r2.getPTOptions(option_r17, scrollerOptions_r20, i_r19, "option"))("ngStyle", ɵɵpureFunction1(18, _c21, scrollerOptions_r20.itemSize + "px"));
+    ɵɵclassMap(ctx_r2.cx("option", ɵɵpureFunction3(13, _c25, option_r17, i_r19, scrollerOptions_r20)));
+    ɵɵproperty("ngStyle", ɵɵpureFunction1(17, _c21, scrollerOptions_r20.itemSize + "px"));
     ɵɵattribute("id", ctx_r2.id + "_" + ctx_r2.getOptionIndex(i_r19, scrollerOptions_r20))("aria-label", ctx_r2.getOptionLabel(option_r17))("aria-selected", ctx_r2.isSelected(option_r17))("aria-disabled", ctx_r2.isOptionDisabled(option_r17))("data-p-focused", ctx_r2.focusedOptionIndex() === ctx_r2.getOptionIndex(i_r19, scrollerOptions_r20))("aria-setsize", ctx_r2.ariaSetSize)("aria-posinset", ctx_r2.getAriaPosInset(ctx_r2.getOptionIndex(i_r19, scrollerOptions_r20)));
     ɵɵadvance();
     ɵɵproperty("ngIf", !ctx_r2.itemTemplate && !ctx_r2._itemTemplate);
     ɵɵadvance();
-    ɵɵproperty("ngTemplateOutlet", ctx_r2.itemTemplate || ctx_r2._itemTemplate)("ngTemplateOutletContext", ɵɵpureFunction2(20, _c26, option_r17, scrollerOptions_r20.getOptions ? scrollerOptions_r20.getOptions(i_r19) : i_r19));
+    ɵɵproperty("ngTemplateOutlet", ctx_r2.itemTemplate || ctx_r2._itemTemplate)("ngTemplateOutletContext", ɵɵpureFunction2(19, _c26, option_r17, scrollerOptions_r20.getOptions ? scrollerOptions_r20.getOptions(i_r19) : i_r19));
   }
 }
 function AutoComplete_ng_template_7_ng_template_5_ng_template_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, AutoComplete_ng_template_7_ng_template_5_ng_template_2_ng_container_0_Template, 4, 12, "ng-container", 14)(1, AutoComplete_ng_template_7_ng_template_5_ng_template_2_ng_container_1_Template, 4, 23, "ng-container", 14);
+    ɵɵtemplate(0, AutoComplete_ng_template_7_ng_template_5_ng_template_2_ng_container_0_Template, 4, 11, "ng-container", 13)(1, AutoComplete_ng_template_7_ng_template_5_ng_template_2_ng_container_1_Template, 4, 22, "ng-container", 13);
   }
   if (rf & 2) {
     const option_r17 = ctx.$implicit;
@@ -774,20 +756,20 @@ function AutoComplete_ng_template_7_ng_template_5_li_3_ng_container_1_Template(r
 }
 function AutoComplete_ng_template_7_ng_template_5_li_3_ng_container_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementContainer(0, null, 12);
+    ɵɵelementContainer(0, null, 11);
   }
 }
 function AutoComplete_ng_template_7_ng_template_5_li_3_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "li", 48);
-    ɵɵtemplate(1, AutoComplete_ng_template_7_ng_template_5_li_3_ng_container_1_Template, 2, 1, "ng-container", 50)(2, AutoComplete_ng_template_7_ng_template_5_li_3_ng_container_2_Template, 2, 0, "ng-container", 23);
+    ɵɵelementStart(0, "li", 45);
+    ɵɵtemplate(1, AutoComplete_ng_template_7_ng_template_5_li_3_ng_container_1_Template, 2, 1, "ng-container", 47)(2, AutoComplete_ng_template_7_ng_template_5_li_3_ng_container_2_Template, 2, 0, "ng-container", 22);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const scrollerOptions_r20 = ɵɵnextContext().options;
     const ctx_r2 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r2.cx("emptyMessage"));
-    ɵɵproperty("pBind", ctx_r2.ptm("emptyMessage"))("ngStyle", ɵɵpureFunction1(7, _c21, scrollerOptions_r20.itemSize + "px"));
+    ɵɵproperty("ngStyle", ɵɵpureFunction1(6, _c21, scrollerOptions_r20.itemSize + "px"));
     ɵɵadvance();
     ɵɵproperty("ngIf", !ctx_r2.emptyTemplate && !ctx_r2._emptyTemplate)("ngIfElse", ctx_r2.empty);
     ɵɵadvance();
@@ -796,8 +778,8 @@ function AutoComplete_ng_template_7_ng_template_5_li_3_Template(rf, ctx) {
 }
 function AutoComplete_ng_template_7_ng_template_5_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "ul", 45, 11);
-    ɵɵtemplate(2, AutoComplete_ng_template_7_ng_template_5_ng_template_2_Template, 2, 2, "ng-template", 46)(3, AutoComplete_ng_template_7_ng_template_5_li_3_Template, 3, 9, "li", 47);
+    ɵɵelementStart(0, "ul", 42, 10);
+    ɵɵtemplate(2, AutoComplete_ng_template_7_ng_template_5_ng_template_2_Template, 2, 2, "ng-template", 43)(3, AutoComplete_ng_template_7_ng_template_5_li_3_Template, 3, 8, "li", 44);
     ɵɵelementEnd();
   }
   if (rf & 2) {
@@ -806,7 +788,6 @@ function AutoComplete_ng_template_7_ng_template_5_Template(rf, ctx) {
     const ctx_r2 = ɵɵnextContext(2);
     ɵɵstyleMap(scrollerOptions_r20.contentStyle);
     ɵɵclassMap(ctx_r2.cn(ctx_r2.cx("list"), scrollerOptions_r20.contentStyleClass));
-    ɵɵproperty("pBind", ctx_r2.ptm("list"));
     ɵɵattribute("id", ctx_r2.id + "_list")("aria-label", ctx_r2.listLabel);
     ɵɵadvance(2);
     ɵɵproperty("ngForOf", items_r22);
@@ -821,27 +802,26 @@ function AutoComplete_ng_template_7_ng_container_7_Template(rf, ctx) {
 }
 function AutoComplete_ng_template_7_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div", 41);
-    ɵɵtemplate(1, AutoComplete_ng_template_7_ng_container_1_Template, 1, 0, "ng-container", 23);
-    ɵɵelementStart(2, "div", 32);
-    ɵɵtemplate(3, AutoComplete_ng_template_7_p_scroller_3_Template, 5, 11, "p-scroller", 42)(4, AutoComplete_ng_template_7_ng_container_4_Template, 2, 6, "ng-container", 14);
+    ɵɵelementStart(0, "div", 38);
+    ɵɵtemplate(1, AutoComplete_ng_template_7_ng_container_1_Template, 1, 0, "ng-container", 22);
+    ɵɵelementStart(2, "div");
+    ɵɵtemplate(3, AutoComplete_ng_template_7_p_scroller_3_Template, 5, 10, "p-scroller", 39)(4, AutoComplete_ng_template_7_ng_container_4_Template, 2, 6, "ng-container", 13);
     ɵɵelementEnd();
-    ɵɵtemplate(5, AutoComplete_ng_template_7_ng_template_5_Template, 4, 9, "ng-template", null, 8, ɵɵtemplateRefExtractor)(7, AutoComplete_ng_template_7_ng_container_7_Template, 1, 0, "ng-container", 23);
+    ɵɵtemplate(5, AutoComplete_ng_template_7_ng_template_5_Template, 4, 8, "ng-template", null, 7, ɵɵtemplateRefExtractor)(7, AutoComplete_ng_template_7_ng_container_7_Template, 1, 0, "ng-container", 22);
     ɵɵelementEnd();
-    ɵɵelementStart(8, "span", 43);
+    ɵɵelementStart(8, "span", 40);
     ɵɵtext(9);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext();
     ɵɵclassMap(ctx_r2.cn(ctx_r2.cx("overlay"), ctx_r2.panelStyleClass));
-    ɵɵproperty("pBind", ctx_r2.ptm("overlay"))("ngStyle", ctx_r2.panelStyle);
+    ɵɵproperty("ngStyle", ctx_r2.panelStyle);
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r2.headerTemplate || ctx_r2._headerTemplate);
     ɵɵadvance();
     ɵɵclassMap(ctx_r2.cx("listContainer"));
     ɵɵstyleProp("max-height", ctx_r2.virtualScroll ? "auto" : ctx_r2.scrollHeight);
-    ɵɵproperty("pBind", ctx_r2.ptm("listContainer"));
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r2.virtualScroll);
     ɵɵadvance();
@@ -852,7 +832,7 @@ function AutoComplete_ng_template_7_Template(rf, ctx) {
     ɵɵtextInterpolate1(" ", ctx_r2.selectedMessageText, " ");
   }
 }
-var style2 = (
+var theme = (
   /*css*/
   `
     ${style}
@@ -948,7 +928,7 @@ var classes = {
 };
 var AutoCompleteStyle = class _AutoCompleteStyle extends BaseStyle {
   name = "autocomplete";
-  style = style2;
+  theme = theme;
   classes = classes;
   inlineStyles = inlineStyles;
   static ɵfac = /* @__PURE__ */ (() => {
@@ -985,7 +965,6 @@ var AutoCompleteClasses;
   AutoCompleteClasses2["emptyMessage"] = "p-autocomplete-empty-message";
   AutoCompleteClasses2["clearIcon"] = "p-autocomplete-clear-icon";
 })(AutoCompleteClasses || (AutoCompleteClasses = {}));
-var AUTOCOMPLETE_INSTANCE = new InjectionToken("AUTOCOMPLETE_INSTANCE");
 var AUTOCOMPLETE_VALUE_ACCESSOR = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => AutoComplete),
@@ -994,13 +973,6 @@ var AUTOCOMPLETE_VALUE_ACCESSOR = {
 var AutoComplete = class _AutoComplete extends BaseInput {
   overlayService;
   zone;
-  $pcAutoComplete = inject(AUTOCOMPLETE_INSTANCE, {
-    optional: true,
-    skipSelf: true
-  }) ?? void 0;
-  bindDirectiveInstance = inject(Bind, {
-    self: true
-  });
   /**
    * Minimum number of characters to initiate a search.
    * @deprecated since v20.0.0, use `minQueryLength` instead.
@@ -1169,11 +1141,6 @@ var AutoComplete = class _AutoComplete extends BaseInput {
    */
   multiple;
   /**
-   * When enabled, the input value is added to the selected items on tab key press when multiple is true and typeahead is false.
-   * @group Props
-   */
-  addOnTab = false;
-  /**
    * Index of the element in tabbing order.
    * @group Props
    */
@@ -1299,17 +1266,6 @@ var AutoComplete = class _AutoComplete extends BaseInput {
    */
   typeahead = true;
   /**
-   * Whether to add an item on blur event if the input has value and typeahead is false with multiple mode.
-   * @defaultValue false
-   * @group Props
-   */
-  addOnBlur = false;
-  /**
-   * Separator char to add item when typeahead is false and multiple mode is enabled.
-   * @group Props
-   */
-  separator;
-  /**
    * Target element to attach the overlay, valid values are "body" or a local ng-template variable of another element (note: use binding with brackets for template variables, e.g. [appendTo]="mydiv" for a div element having #mydiv as variable name).
    * @defaultValue 'self'
    * @group Props
@@ -1336,12 +1292,6 @@ var AutoComplete = class _AutoComplete extends BaseInput {
    */
   onUnselect = new EventEmitter();
   /**
-   * Callback to invoke when an item is added via addOnBlur or separator features.
-   * @param {AutoCompleteAddEvent} event - Custom add event.
-   * @group Emits
-   */
-  onAdd = new EventEmitter();
-  /**
    * Callback to invoke when the component receives focus.
    * @param {Event} event - Browser event.
    * @group Emits
@@ -1365,12 +1315,6 @@ var AutoComplete = class _AutoComplete extends BaseInput {
    * @group Emits
    */
   onClear = new EventEmitter();
-  /**
-   * Callback to invoke on input key down.
-   * @param {KeyboardEvent} event - Keyboard event.
-   * @group Emits
-   */
-  onInputKeydown = new EventEmitter();
   /**
    * Callback to invoke on input key up.
    * @param {KeyboardEvent} event - Keyboard event.
@@ -1461,6 +1405,7 @@ var AutoComplete = class _AutoComplete extends BaseInput {
   onHostClick(event) {
     this.onContainerClick(event);
   }
+  primeng = inject(PrimeNG);
   value;
   _suggestions = signal(null, ...ngDevMode ? [{
     debugName: "_suggestions"
@@ -1504,7 +1449,7 @@ var AutoComplete = class _AutoComplete extends BaseInput {
   }] : []);
   inputValue = computed(() => {
     const modelValue = this.modelValue();
-    const selectedOption = this.optionValueSelected ? (this.suggestions || []).find((option) => k(option, modelValue, this.equalityKey())) : modelValue;
+    const selectedOption = this.optionValueSelected ? (this.suggestions || []).find((item) => c(item, this.optionValue) === modelValue) : modelValue;
     if (s(modelValue)) {
       if (typeof modelValue === "object" || this.optionValueSelected) {
         const label = this.getOptionLabel(selectedOption);
@@ -1565,12 +1510,13 @@ var AutoComplete = class _AutoComplete extends BaseInput {
     this.overlayService = overlayService;
     this.zone = zone;
   }
-  onInit() {
+  ngOnInit() {
+    super.ngOnInit();
     this.id = this.id || s2("pn_id_");
     this.cd.detectChanges();
   }
   templates;
-  onAfterContentInit() {
+  ngAfterContentInit() {
     this.templates.forEach((item) => {
       switch (item.getType()) {
         case "item":
@@ -1615,8 +1561,7 @@ var AutoComplete = class _AutoComplete extends BaseInput {
       }
     });
   }
-  onAfterViewChecked() {
-    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
+  ngAfterViewChecked() {
     if (this.suggestionsUpdated && this.overlayViewChild) {
       this.zone.runOutsideAngular(() => {
         setTimeout(() => {
@@ -1685,32 +1630,32 @@ var AutoComplete = class _AutoComplete extends BaseInput {
     return option && !(this.isOptionDisabled(option) || this.isOptionGroup(option));
   }
   isOptionDisabled(option) {
-    return this.optionDisabled ? p(option, this.optionDisabled) : false;
+    return this.optionDisabled ? c(option, this.optionDisabled) : false;
   }
   isSelected(option) {
     if (this.multiple) {
-      return this.unique ? this.modelValue()?.some((model) => k(model, option, this.equalityKey())) : false;
+      return this.unique ? this.modelValue()?.find((model) => k(model, this.getOptionValue(option), this.equalityKey())) : false;
     }
-    return k(this.modelValue(), option, this.equalityKey());
+    return k(this.modelValue(), this.getOptionValue(option), this.equalityKey());
   }
   isOptionMatched(option, value) {
     return this.isValidOption(option) && this.getOptionLabel(option).toLocaleLowerCase(this.searchLocale) === value.toLocaleLowerCase(this.searchLocale);
   }
   isInputClicked(event) {
-    return event.target === this.inputEL?.nativeElement;
+    return event.target === this.inputEL.nativeElement;
   }
   isDropdownClicked(event) {
     return this.dropdownButton?.nativeElement ? event.target === this.dropdownButton.nativeElement || this.dropdownButton.nativeElement.contains(event.target) : false;
   }
   equalityKey() {
-    return this.optionValue ? void 0 : this.dataKey;
+    return this.dataKey;
   }
   onContainerClick(event) {
     if (this.$disabled() || this.loading || this.isInputClicked(event) || this.isDropdownClicked(event)) {
       return;
     }
     if (!this.overlayViewChild || !this.overlayViewChild.overlayViewChild?.nativeElement.contains(event.target)) {
-      bt(this.inputEL?.nativeElement);
+      bt(this.inputEL.nativeElement);
     }
   }
   handleDropdownClick(event) {
@@ -1718,8 +1663,8 @@ var AutoComplete = class _AutoComplete extends BaseInput {
     if (this.overlayVisible) {
       this.hide(true);
     } else {
-      bt(this.inputEL?.nativeElement);
-      query = this.inputEL?.nativeElement?.value;
+      bt(this.inputEL.nativeElement);
+      query = this.inputEL.nativeElement.value;
       if (this.dropdownMode === "blank") this.search(event, "", "dropdown");
       else if (this.dropdownMode === "current") this.search(event, query, "dropdown");
     }
@@ -1762,14 +1707,14 @@ var AutoComplete = class _AutoComplete extends BaseInput {
     if (this.forceSelection) {
       let valid = false;
       if (this.visibleOptions()) {
-        const matchedValue = this.visibleOptions().find((option) => this.isOptionMatched(option, this.inputEL?.nativeElement?.value || ""));
+        const matchedValue = this.visibleOptions().find((option) => this.isOptionMatched(option, this.inputEL.nativeElement.value || ""));
         if (matchedValue !== void 0) {
           valid = true;
           !this.isSelected(matchedValue) && this.onOptionSelect(event, matchedValue);
         }
       }
       if (!valid) {
-        this.inputEL?.nativeElement && (this.inputEL.nativeElement.value = "");
+        this.inputEL.nativeElement.value = "";
         !this.multiple && this.updateModel(null);
       }
     }
@@ -1821,56 +1766,11 @@ var AutoComplete = class _AutoComplete extends BaseInput {
     this.dirty = false;
     this.focused = false;
     this.focusedOptionIndex.set(-1);
-    if (this.addOnBlur && this.multiple && !this.typeahead) {
-      const inputValue = (this.multiInputEl?.nativeElement?.value || event.target.value || "").trim();
-      if (inputValue && !this.isSelected(inputValue)) {
-        this.updateModel([...this.modelValue() || [], inputValue]);
-        this.onAdd.emit({
-          originalEvent: event,
-          value: inputValue
-        });
-        if (this.multiInputEl?.nativeElement) {
-          this.multiInputEl.nativeElement.value = "";
-        } else {
-          event.target.value = "";
-        }
-      }
-    }
     this.onModelTouched();
     this.onBlur.emit(event);
   }
   onInputPaste(event) {
-    if (this.separator && this.multiple && !this.typeahead) {
-      const pastedData = (event.clipboardData || window["clipboardData"])?.getData("Text");
-      if (pastedData) {
-        const values = pastedData.split(this.separator);
-        const newValues = [...this.modelValue() || []];
-        values.forEach((value) => {
-          const trimmedValue = value.trim();
-          if (trimmedValue && !this.isSelected(trimmedValue)) {
-            newValues.push(trimmedValue);
-          }
-        });
-        if (newValues.length > (this.modelValue() || []).length) {
-          const addedValues = newValues.slice((this.modelValue() || []).length);
-          this.updateModel(newValues);
-          addedValues.forEach((addedValue) => {
-            this.onAdd.emit({
-              originalEvent: event,
-              value: addedValue
-            });
-          });
-          if (this.multiInputEl?.nativeElement) {
-            this.multiInputEl.nativeElement.value = "";
-          } else {
-            event.target.value = "";
-          }
-          event.preventDefault();
-        }
-      }
-    } else {
-      this.onKeyDown(event);
-    }
+    this.onKeyDown(event);
   }
   onInputKeyUp(event) {
     this.onKeyUp.emit(event);
@@ -1880,7 +1780,6 @@ var AutoComplete = class _AutoComplete extends BaseInput {
       event.preventDefault();
       return;
     }
-    this.onInputKeydown.emit(event);
     switch (event.code) {
       case "ArrowDown":
         this.onArrowDownKey(event);
@@ -1923,28 +1822,7 @@ var AutoComplete = class _AutoComplete extends BaseInput {
       case "ShiftRight":
         break;
       default:
-        this.handleSeparatorKey(event);
         break;
-    }
-  }
-  handleSeparatorKey(event) {
-    if (this.separator && this.multiple && !this.typeahead) {
-      if (this.separator === event.key || typeof this.separator === "string" && event.key === this.separator || this.separator instanceof RegExp && event.key.match(this.separator)) {
-        const inputValue = (this.multiInputEl?.nativeElement?.value || event.target.value || "").trim();
-        if (inputValue && !this.isSelected(inputValue)) {
-          this.updateModel([...this.modelValue() || [], inputValue]);
-          this.onAdd.emit({
-            originalEvent: event,
-            value: inputValue
-          });
-          if (this.multiInputEl?.nativeElement) {
-            this.multiInputEl.nativeElement.value = "";
-          } else {
-            event.target.value = "";
-          }
-          event.preventDefault();
-        }
-      }
     }
   }
   onArrowDownKey(event) {
@@ -1977,8 +1855,8 @@ var AutoComplete = class _AutoComplete extends BaseInput {
     const target = event.currentTarget;
     this.focusedOptionIndex.set(-1);
     if (this.multiple) {
-      if (l(target.value) && this.hasSelectedOption()) {
-        bt(this.multiContainerEL?.nativeElement);
+      if (a(target.value) && this.hasSelectedOption()) {
+        bt(this.multiContainerEL.nativeElement);
         this.focusedMultipleOptionIndex.set(this.modelValue().length);
       } else {
         event.stopPropagation();
@@ -2016,13 +1894,10 @@ var AutoComplete = class _AutoComplete extends BaseInput {
     event.preventDefault();
   }
   onEnterKey(event) {
-    if (!this.typeahead && !this.forceSelection) {
+    if (!this.typeahead) {
       if (this.multiple) {
-        const inputValue = event.target.value?.trim();
-        if (inputValue && !this.isSelected(inputValue)) {
-          this.updateModel([...this.modelValue() || [], inputValue]);
-          this.inputEL?.nativeElement && (this.inputEL.nativeElement.value = "");
-        }
+        this.updateModel([...this.modelValue() || [], event.target.value]);
+        this.inputEL.nativeElement.value = "";
       }
     }
     if (!this.overlayVisible) {
@@ -2042,34 +1917,12 @@ var AutoComplete = class _AutoComplete extends BaseInput {
   onTabKey(event) {
     if (this.focusedOptionIndex() !== -1) {
       this.onOptionSelect(event, this.visibleOptions()[this.focusedOptionIndex()]);
-      return;
-    }
-    if (this.multiple && !this.typeahead) {
-      const inputValue = (this.multiInputEl?.nativeElement?.value || this.inputEL?.nativeElement?.value || "").trim();
-      if (this.addOnTab) {
-        if (inputValue && !this.isSelected(inputValue)) {
-          this.updateModel([...this.modelValue() || [], inputValue]);
-          this.onAdd.emit({
-            originalEvent: event,
-            value: inputValue
-          });
-          if (this.multiInputEl?.nativeElement) {
-            this.multiInputEl.nativeElement.value = "";
-          } else if (this.inputEL?.nativeElement) {
-            this.inputEL.nativeElement.value = "";
-          }
-          this.updateInputValue();
-          event.preventDefault();
-          this.overlayVisible && this.hide();
-          return;
-        }
-      }
     }
     this.overlayVisible && this.hide();
   }
   onBackspaceKey(event) {
     if (this.multiple) {
-      if (s(this.modelValue()) && !this.inputEL?.nativeElement?.value) {
+      if (s(this.modelValue()) && !this.inputEL.nativeElement.value) {
         const removedValue = this.modelValue()[this.modelValue().length - 1];
         const newValue = this.modelValue().slice(0, -1);
         this.updateModel(newValue);
@@ -2079,6 +1932,9 @@ var AutoComplete = class _AutoComplete extends BaseInput {
         });
       }
       event.stopPropagation();
+    }
+    if (!this.multiple && this.showClear && this.findSelectedOptionIndex() != -1) {
+      this.clear();
     }
   }
   onArrowLeftKeyOnMultiple(event) {
@@ -2091,7 +1947,7 @@ var AutoComplete = class _AutoComplete extends BaseInput {
     this.focusedMultipleOptionIndex.set(optionIndex);
     if (optionIndex > this.modelValue().length - 1) {
       this.focusedMultipleOptionIndex.set(-1);
-      bt(this.inputEL?.nativeElement);
+      bt(this.inputEL.nativeElement);
     }
   }
   onBackspaceKeyOnMultiple(event) {
@@ -2100,13 +1956,14 @@ var AutoComplete = class _AutoComplete extends BaseInput {
     }
   }
   onOptionSelect(event, option, isHide = true) {
+    const value = this.getOptionValue(option);
     if (this.multiple) {
-      this.inputEL?.nativeElement && (this.inputEL.nativeElement.value = "");
+      this.inputEL.nativeElement.value = "";
       if (!this.isSelected(option)) {
-        this.updateModel([...this.modelValue() || [], option]);
+        this.updateModel([...this.modelValue() || [], value]);
       }
     } else {
-      this.updateModel(option);
+      this.updateModel(value);
     }
     this.onSelect.emit({
       originalEvent: event,
@@ -2141,12 +1998,11 @@ var AutoComplete = class _AutoComplete extends BaseInput {
       originalEvent: event,
       value: removedOption
     });
-    bt(this.inputEL?.nativeElement);
+    bt(this.inputEL.nativeElement);
   }
-  updateModel(options) {
-    const value = this.multiple ? options.map((option) => this.getOptionValue(option)) : this.getOptionValue(options);
+  updateModel(value) {
     this.value = value;
-    this.writeModelValue(options);
+    this.writeModelValue(value);
     this.onModelChange(value);
     this.updateInputValue();
     this.cd.markForCheck();
@@ -2197,9 +2053,9 @@ var AutoComplete = class _AutoComplete extends BaseInput {
     this.overlayVisible = true;
     const focusedOptionIndex = this.focusedOptionIndex() !== -1 ? this.focusedOptionIndex() : this.autoOptionFocus ? this.findFirstFocusedOptionIndex() : -1;
     this.focusedOptionIndex.set(focusedOptionIndex);
-    isFocus && bt(this.inputEL?.nativeElement);
+    isFocus && bt(this.inputEL.nativeElement);
     if (isFocus) {
-      bt(this.inputEL?.nativeElement);
+      bt(this.inputEL.nativeElement);
     }
     this.onShow.emit();
     this.cd.markForCheck();
@@ -2209,7 +2065,7 @@ var AutoComplete = class _AutoComplete extends BaseInput {
       this.dirty = isFocus;
       this.overlayVisible = false;
       this.focusedOptionIndex.set(-1);
-      isFocus && bt(this.inputEL?.nativeElement);
+      isFocus && bt(this.inputEL.nativeElement);
       this.onHide.emit();
       this.cd.markForCheck();
     };
@@ -2219,7 +2075,7 @@ var AutoComplete = class _AutoComplete extends BaseInput {
   }
   clear() {
     this.updateModel(null);
-    this.inputEL?.nativeElement && (this.inputEL.nativeElement.value = "");
+    this.inputEL.nativeElement.value = "";
     this.onClear.emit();
   }
   hasSelectedOption() {
@@ -2229,37 +2085,26 @@ var AutoComplete = class _AutoComplete extends BaseInput {
     return (this.optionGroupLabel ? index - this.visibleOptions().slice(0, index).filter((option) => this.isOptionGroup(option)).length : index) + 1;
   }
   getOptionLabel(option) {
-    return this.optionLabel ? p(option, this.optionLabel) : option && option.label != void 0 ? option.label : option;
+    return this.optionLabel ? c(option, this.optionLabel) : option && option.label != void 0 ? option.label : option;
   }
   getOptionValue(option) {
-    return this.optionValue ? p(option, this.optionValue) : option && option.value != void 0 ? option.value : option;
+    return this.optionValue ? c(option, this.optionValue) : option && option.value != void 0 ? option.value : option;
   }
   getOptionIndex(index, scrollerOptions) {
     return this.virtualScrollerDisabled ? index : scrollerOptions && scrollerOptions.getItemOptions(index)["index"];
   }
   getOptionGroupLabel(optionGroup) {
-    return this.optionGroupLabel ? p(optionGroup, this.optionGroupLabel) : optionGroup && optionGroup.label != void 0 ? optionGroup.label : optionGroup;
+    return this.optionGroupLabel ? c(optionGroup, this.optionGroupLabel) : optionGroup && optionGroup.label != void 0 ? optionGroup.label : optionGroup;
   }
   getOptionGroupChildren(optionGroup) {
-    return this.optionGroupChildren ? p(optionGroup, this.optionGroupChildren) : optionGroup.items;
-  }
-  getPTOptions(option, scrollerOptions, index, key) {
-    return this.ptm(key, {
-      context: {
-        option,
-        index: this.getOptionIndex(index, scrollerOptions),
-        selected: this.isSelected(option),
-        focused: this.focusedOptionIndex() === this.getOptionIndex(index, scrollerOptions),
-        disabled: this.isOptionDisabled(option)
-      }
-    });
+    return this.optionGroupChildren ? c(optionGroup, this.optionGroupChildren) : optionGroup.items;
   }
   onOverlayAnimationStart(event) {
     if (event.toState === "visible") {
       this.itemsWrapper = z(this.overlayViewChild.overlayViewChild?.nativeElement, this.virtualScroll ? ".p-scroller" : ".p-autocomplete-panel");
       if (this.virtualScroll) {
         this.scroller?.setContentEl(this.itemsViewChild?.nativeElement);
-        this.scroller?.viewInit();
+        this.scroller.viewInit();
       }
       if (this.visibleOptions() && this.visibleOptions().length) {
         if (this.virtualScroll) {
@@ -2286,17 +2131,17 @@ var AutoComplete = class _AutoComplete extends BaseInput {
    * Writes the value to the control.
    */
   writeControlValue(value, setModelValue) {
-    const options = this.multiple ? this.visibleOptions().filter((option) => value?.some((val) => k(val, option, this.equalityKey()))) : this.visibleOptions().find((option) => k(value, option, this.equalityKey()));
     this.value = value;
-    setModelValue(l(options) ? value : options);
+    setModelValue(value);
     this.updateInputValue();
     this.cd.markForCheck();
   }
-  onDestroy() {
+  ngOnDestroy() {
     if (this.scrollHandler) {
       this.scrollHandler.destroy();
       this.scrollHandler = null;
     }
+    super.ngOnDestroy();
   }
   static ɵfac = function AutoComplete_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _AutoComplete)(ɵɵdirectiveInject(OverlayService), ɵɵdirectiveInject(NgZone));
@@ -2402,7 +2247,6 @@ var AutoComplete = class _AutoComplete extends BaseInput {
       showEmptyMessage: [2, "showEmptyMessage", "showEmptyMessage", booleanAttribute],
       dropdownMode: "dropdownMode",
       multiple: [2, "multiple", "multiple", booleanAttribute],
-      addOnTab: [2, "addOnTab", "addOnTab", booleanAttribute],
       tabindex: [2, "tabindex", "tabindex", numberAttribute],
       dataKey: "dataKey",
       emptyMessage: "emptyMessage",
@@ -2426,40 +2270,30 @@ var AutoComplete = class _AutoComplete extends BaseInput {
       optionDisabled: "optionDisabled",
       focusOnHover: [2, "focusOnHover", "focusOnHover", booleanAttribute],
       typeahead: [2, "typeahead", "typeahead", booleanAttribute],
-      addOnBlur: [2, "addOnBlur", "addOnBlur", booleanAttribute],
-      separator: "separator",
       appendTo: [1, "appendTo"]
     },
     outputs: {
       completeMethod: "completeMethod",
       onSelect: "onSelect",
       onUnselect: "onUnselect",
-      onAdd: "onAdd",
       onFocus: "onFocus",
       onBlur: "onBlur",
       onDropdownClick: "onDropdownClick",
       onClear: "onClear",
-      onInputKeydown: "onInputKeydown",
       onKeyUp: "onKeyUp",
       onShow: "onShow",
       onHide: "onHide",
       onLazyLoad: "onLazyLoad"
     },
-    features: [ɵɵProvidersFeature([AUTOCOMPLETE_VALUE_ACCESSOR, AutoCompleteStyle, {
-      provide: AUTOCOMPLETE_INSTANCE,
-      useExisting: _AutoComplete
-    }, {
-      provide: PARENT_INSTANCE,
-      useExisting: _AutoComplete
-    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([AUTOCOMPLETE_VALUE_ACCESSOR, AutoCompleteStyle]), ɵɵInheritDefinitionFeature],
     decls: 9,
-    vars: 13,
-    consts: [["overlay", ""], ["content", ""], ["focusInput", ""], ["multiContainer", ""], ["focusInput", "", "multiIn", ""], ["token", ""], ["removeicon", ""], ["ddBtn", ""], ["buildInItems", ""], ["scroller", ""], ["loader", ""], ["items", ""], ["empty", ""], ["pInputText", "", "aria-autocomplete", "list", "role", "combobox", 3, "pAutoFocus", "pt", "class", "ngStyle", "variant", "invalid", "pSize", "fluid", "input", "keydown", "change", "focus", "blur", "paste", "keyup", 4, "ngIf"], [4, "ngIf"], ["role", "listbox", 3, "pBind", "class", "tabindex", "focus", "blur", "keydown", 4, "ngIf"], ["type", "button", "pRipple", "", 3, "pBind", "class", "disabled", "click", 4, "ngIf"], [3, "visibleChange", "onAnimationStart", "onHide", "pt", "hostAttrSelector", "visible", "options", "target", "appendTo", "showTransitionOptions", "hideTransitionOptions"], ["pInputText", "", "aria-autocomplete", "list", "role", "combobox", 3, "input", "keydown", "change", "focus", "blur", "paste", "keyup", "pAutoFocus", "pt", "ngStyle", "variant", "invalid", "pSize", "fluid"], ["data-p-icon", "times", 3, "pBind", "class", "click", 4, "ngIf"], [3, "pBind", "class", "click", 4, "ngIf"], ["data-p-icon", "times", 3, "click", "pBind"], [3, "click", "pBind"], [4, "ngTemplateOutlet"], ["role", "listbox", 3, "focus", "blur", "keydown", "pBind", "tabindex"], ["role", "option", 3, "pBind", "class", 4, "ngFor", "ngForOf"], ["role", "option", 3, "pBind"], ["role", "combobox", "aria-autocomplete", "list", 3, "input", "keydown", "change", "focus", "blur", "paste", "keyup", "pAutoFocus", "pBind", "ngStyle"], [3, "onRemove", "pt", "label", "disabled", "removable"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], [3, "pBind", 4, "ngIf"], ["data-p-icon", "times-circle"], [3, "pBind"], ["data-p-icon", "spinner", 3, "pBind", "class", "spin", 4, "ngIf"], [3, "pBind", "class", 4, "ngIf"], ["data-p-icon", "spinner", 3, "pBind", "spin"], ["type", "button", "pRipple", "", 3, "click", "pBind", "disabled"], [3, "ngClass", 4, "ngIf"], [3, "ngClass"], ["data-p-icon", "chevron-down", 3, "pBind", 4, "ngIf"], ["data-p-icon", "chevron-down", 3, "pBind"], [3, "pBind", "ngStyle"], [3, "pt", "items", "style", "itemSize", "autoSize", "lazy", "options", "onLazyLoad", 4, "ngIf"], ["role", "status", "aria-live", "polite", 1, "p-hidden-accessible"], [3, "onLazyLoad", "pt", "items", "itemSize", "autoSize", "lazy", "options"], ["role", "listbox", 3, "pBind"], ["ngFor", "", 3, "ngForOf"], ["role", "option", 3, "pBind", "class", "ngStyle", 4, "ngIf"], ["role", "option", 3, "pBind", "ngStyle"], ["pRipple", "", "role", "option", 3, "click", "mouseenter", "pBind", "ngStyle"], [4, "ngIf", "ngIfElse"]],
+    vars: 12,
+    consts: [["overlay", ""], ["content", ""], ["focusInput", ""], ["multiContainer", ""], ["token", ""], ["removeicon", ""], ["ddBtn", ""], ["buildInItems", ""], ["scroller", ""], ["loader", ""], ["items", ""], ["empty", ""], ["pInputText", "", "aria-autocomplete", "list", "role", "combobox", 3, "pAutoFocus", "class", "ngStyle", "variant", "invalid", "pSize", "fluid", "input", "keydown", "change", "focus", "blur", "paste", "keyup", 4, "ngIf"], [4, "ngIf"], ["role", "listbox", 3, "class", "tabindex", "focus", "blur", "keydown", 4, "ngIf"], ["type", "button", "pRipple", "", 3, "class", "disabled", "click", 4, "ngIf"], [3, "visibleChange", "onAnimationStart", "onHide", "hostAttrSelector", "visible", "options", "target", "appendTo", "showTransitionOptions", "hideTransitionOptions"], ["pInputText", "", "aria-autocomplete", "list", "role", "combobox", 3, "input", "keydown", "change", "focus", "blur", "paste", "keyup", "pAutoFocus", "ngStyle", "variant", "invalid", "pSize", "fluid"], ["data-p-icon", "times", 3, "class", "click", 4, "ngIf"], [3, "class", "click", 4, "ngIf"], ["data-p-icon", "times", 3, "click"], [3, "click"], [4, "ngTemplateOutlet"], ["role", "listbox", 3, "focus", "blur", "keydown", "tabindex"], ["role", "option", 3, "class", 4, "ngFor", "ngForOf"], ["role", "option"], ["role", "combobox", "aria-autocomplete", "list", 3, "input", "keydown", "change", "focus", "blur", "paste", "keyup", "pAutoFocus", "ngStyle"], [3, "onRemove", "label", "removable"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], ["data-p-icon", "times-circle"], ["data-p-icon", "spinner", 3, "class", "spin", 4, "ngIf"], [3, "class", 4, "ngIf"], ["data-p-icon", "spinner", 3, "spin"], ["type", "button", "pRipple", "", 3, "click", "disabled"], [3, "ngClass", 4, "ngIf"], [3, "ngClass"], ["data-p-icon", "chevron-down", 4, "ngIf"], ["data-p-icon", "chevron-down"], [3, "ngStyle"], [3, "items", "style", "itemSize", "autoSize", "lazy", "options", "onLazyLoad", 4, "ngIf"], ["role", "status", "aria-live", "polite", 1, "p-hidden-accessible"], [3, "onLazyLoad", "items", "itemSize", "autoSize", "lazy", "options"], ["role", "listbox"], ["ngFor", "", 3, "ngForOf"], ["role", "option", 3, "class", "ngStyle", 4, "ngIf"], ["role", "option", 3, "ngStyle"], ["pRipple", "", "role", "option", 3, "click", "mouseenter", "ngStyle"], [4, "ngIf", "ngIfElse"]],
     template: function AutoComplete_Template(rf, ctx) {
       if (rf & 1) {
         const _r1 = ɵɵgetCurrentView();
-        ɵɵtemplate(0, AutoComplete_input_0_Template, 2, 31, "input", 13)(1, AutoComplete_ng_container_1_Template, 3, 2, "ng-container", 14)(2, AutoComplete_ul_2_Template, 7, 36, "ul", 15)(3, AutoComplete_ng_container_3_Template, 3, 2, "ng-container", 14)(4, AutoComplete_button_4_Template, 4, 8, "button", 16);
-        ɵɵelementStart(5, "p-overlay", 17, 0);
+        ɵɵtemplate(0, AutoComplete_input_0_Template, 2, 30, "input", 12)(1, AutoComplete_ng_container_1_Template, 3, 2, "ng-container", 13)(2, AutoComplete_ul_2_Template, 6, 33, "ul", 14)(3, AutoComplete_ng_container_3_Template, 3, 2, "ng-container", 13)(4, AutoComplete_button_4_Template, 4, 7, "button", 15);
+        ɵɵelementStart(5, "p-overlay", 16, 0);
         ɵɵtwoWayListener("visibleChange", function AutoComplete_Template_p_overlay_visibleChange_5_listener($event) {
           ɵɵrestoreView(_r1);
           ɵɵtwoWayBindingSet(ctx.overlayVisible, $event) || (ctx.overlayVisible = $event);
@@ -2472,7 +2306,7 @@ var AutoComplete = class _AutoComplete extends BaseInput {
           ɵɵrestoreView(_r1);
           return ɵɵresetView(ctx.hide());
         });
-        ɵɵtemplate(7, AutoComplete_ng_template_7_Template, 10, 14, "ng-template", null, 1, ɵɵtemplateRefExtractor);
+        ɵɵtemplate(7, AutoComplete_ng_template_7_Template, 10, 12, "ng-template", null, 1, ɵɵtemplateRefExtractor);
         ɵɵelementEnd();
       }
       if (rf & 2) {
@@ -2486,12 +2320,12 @@ var AutoComplete = class _AutoComplete extends BaseInput {
         ɵɵadvance();
         ɵɵproperty("ngIf", ctx.dropdown);
         ɵɵadvance();
-        ɵɵproperty("pt", ctx.ptm("pcOverlay"))("hostAttrSelector", ctx.$attrSelector);
+        ɵɵproperty("hostAttrSelector", ctx.attrSelector);
         ɵɵtwoWayProperty("visible", ctx.overlayVisible);
         ɵɵproperty("options", ctx.overlayOptions)("target", "@parent")("appendTo", ctx.$appendTo())("showTransitionOptions", ctx.showTransitionOptions)("hideTransitionOptions", ctx.hideTransitionOptions);
       }
     },
-    dependencies: [CommonModule, NgClass, NgForOf, NgIf, NgTemplateOutlet, NgStyle, Overlay, InputText, Ripple, Scroller, AutoFocus, TimesCircleIcon, SpinnerIcon, ChevronDownIcon, Chip, SharedModule, TimesIcon, BindModule, Bind],
+    dependencies: [CommonModule, NgClass, NgForOf, NgIf, NgTemplateOutlet, NgStyle, Overlay, InputText, Ripple, Scroller, AutoFocus, TimesCircleIcon, SpinnerIcon, ChevronDownIcon, Chip, SharedModule, TimesIcon],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -2502,14 +2336,13 @@ var AutoComplete = class _AutoComplete extends BaseInput {
     args: [{
       selector: "p-autoComplete, p-autocomplete, p-auto-complete",
       standalone: true,
-      imports: [CommonModule, Overlay, InputText, Ripple, Scroller, AutoFocus, TimesCircleIcon, SpinnerIcon, ChevronDownIcon, Chip, SharedModule, TimesIcon, BindModule],
+      imports: [CommonModule, Overlay, InputText, Ripple, Scroller, AutoFocus, TimesCircleIcon, SpinnerIcon, ChevronDownIcon, Chip, SharedModule, TimesIcon],
       template: `
         <input
             *ngIf="!multiple"
             #focusInput
             [pAutoFocus]="autofocus"
             pInputText
-            [pt]="ptm('pcInputText')"
             [class]="cn(cx('pcInputText'), inputStyleClass)"
             [ngStyle]="inputStyle"
             [attr.type]="type"
@@ -2549,8 +2382,8 @@ var AutoComplete = class _AutoComplete extends BaseInput {
             [fluid]="hasFluid"
         />
         <ng-container *ngIf="$filled() && !$disabled() && showClear && !loading">
-            <svg data-p-icon="times" *ngIf="!clearIconTemplate && !_clearIconTemplate" [pBind]="ptm('clearIcon')" [class]="cx('clearIcon')" (click)="clear()" [attr.aria-hidden]="true" />
-            <span *ngIf="clearIconTemplate || _clearIconTemplate" [pBind]="ptm('clearIcon')" [class]="cx('clearIcon')" (click)="clear()" [attr.aria-hidden]="true">
+            <svg data-p-icon="times" *ngIf="!clearIconTemplate && !_clearIconTemplate" [class]="cx('clearIcon')" (click)="clear()" [attr.aria-hidden]="true" />
+            <span *ngIf="clearIconTemplate || _clearIconTemplate" [class]="cx('clearIcon')" (click)="clear()" [attr.aria-hidden]="true">
                 <ng-template *ngTemplateOutlet="clearIconTemplate || _clearIconTemplate"></ng-template>
             </span>
         </ng-container>
@@ -2558,7 +2391,6 @@ var AutoComplete = class _AutoComplete extends BaseInput {
         <ul
             *ngIf="multiple"
             #multiContainer
-            [pBind]="ptm('inputMultiple')"
             [class]="cx('inputMultiple')"
             [tabindex]="-1"
             role="listbox"
@@ -2571,7 +2403,6 @@ var AutoComplete = class _AutoComplete extends BaseInput {
             <li
                 #token
                 *ngFor="let option of modelValue(); let i = index"
-                [pBind]="ptm('chipItem')"
                 [class]="cx('chipItem', { i })"
                 [attr.id]="id + '_multiple_option_' + i"
                 role="option"
@@ -2580,24 +2411,22 @@ var AutoComplete = class _AutoComplete extends BaseInput {
                 [attr.aria-posinset]="i + 1"
                 [attr.aria-selected]="true"
             >
-                <p-chip [pt]="ptm('pcChip')" [class]="cx('pcChip')" [label]="!selectedItemTemplate && !_selectedItemTemplate && getOptionLabel(option)" [disabled]="$disabled()" [removable]="true" (onRemove)="!readonly ? removeOption($event, i) : ''">
+                <p-chip [class]="cx('pcChip')" [label]="!selectedItemTemplate && !_selectedItemTemplate && getOptionLabel(option)" [removable]="true" (onRemove)="!readonly ? removeOption($event, i) : ''">
                     <ng-container *ngTemplateOutlet="selectedItemTemplate || _selectedItemTemplate; context: { $implicit: option }"></ng-container>
                     <ng-template #removeicon>
-                        <span *ngIf="!removeIconTemplate && !_removeIconTemplate" [pBind]="ptm('chipIcon')" [class]="cx('chipIcon')" (click)="!readonly && !$disabled() ? removeOption($event, i) : ''">
+                        <span *ngIf="!removeIconTemplate && !_removeIconTemplate" [class]="cx('chipIcon')" (click)="!readonly ? removeOption($event, i) : ''">
                             <svg data-p-icon="times-circle" [class]="cx('chipIcon')" [attr.aria-hidden]="true" />
                         </span>
-                        <span *ngIf="removeIconTemplate || _removeIconTemplate" [pBind]="ptm('chipIcon')" [attr.aria-hidden]="true">
+                        <span *ngIf="removeIconTemplate || _removeIconTemplate" [attr.aria-hidden]="true">
                             <ng-template *ngTemplateOutlet="removeIconTemplate || _removeIconTemplate; context: { removeCallback: removeOption.bind(this), index: i, class: cx('chipIcon') }"></ng-template>
                         </span>
                     </ng-template>
                 </p-chip>
             </li>
-            <li [pBind]="ptm('inputChip')" [class]="cx('inputChip')" role="option">
+            <li [class]="cx('inputChip')" role="option">
                 <input
                     #focusInput
-                    #multiIn
                     [pAutoFocus]="autofocus"
-                    [pBind]="ptm('input')"
                     [class]="cx('pcInputText')"
                     [ngStyle]="inputStyle"
                     [attr.type]="type"
@@ -2634,22 +2463,21 @@ var AutoComplete = class _AutoComplete extends BaseInput {
             </li>
         </ul>
         <ng-container *ngIf="loading">
-            <svg data-p-icon="spinner" *ngIf="!loadingIconTemplate && !_loadingIconTemplate" [pBind]="ptm('loader')" [class]="cx('loader')" [spin]="true" [attr.aria-hidden]="true" />
-            <span *ngIf="loadingIconTemplate || _loadingIconTemplate" [pBind]="ptm('loader')" [class]="cx('loader')" [attr.aria-hidden]="true">
+            <svg data-p-icon="spinner" *ngIf="!loadingIconTemplate && !_loadingIconTemplate" [class]="cx('loader')" [spin]="true" [attr.aria-hidden]="true" />
+            <span *ngIf="loadingIconTemplate || _loadingIconTemplate" [class]="cx('loader')" [attr.aria-hidden]="true">
                 <ng-template *ngTemplateOutlet="loadingIconTemplate || _loadingIconTemplate"></ng-template>
             </span>
         </ng-container>
-        <button #ddBtn type="button" [pBind]="ptm('dropdown')" [attr.aria-label]="dropdownAriaLabel" [class]="cx('dropdown')" [disabled]="$disabled()" pRipple (click)="handleDropdownClick($event)" *ngIf="dropdown" [attr.tabindex]="tabindex">
+        <button #ddBtn type="button" [attr.aria-label]="dropdownAriaLabel" [class]="cx('dropdown')" [disabled]="$disabled()" pRipple (click)="handleDropdownClick($event)" *ngIf="dropdown" [attr.tabindex]="tabindex">
             <span *ngIf="dropdownIcon" [ngClass]="dropdownIcon" [attr.aria-hidden]="true"></span>
             <ng-container *ngIf="!dropdownIcon">
-                <svg data-p-icon="chevron-down" [pBind]="ptm('dropdown')" *ngIf="!dropdownIconTemplate && !_dropdownIconTemplate" />
+                <svg data-p-icon="chevron-down" *ngIf="!dropdownIconTemplate && !_dropdownIconTemplate" />
                 <ng-template *ngTemplateOutlet="dropdownIconTemplate || _dropdownIconTemplate"></ng-template>
             </ng-container>
         </button>
         <p-overlay
             #overlay
-            [pt]="ptm('pcOverlay')"
-            [hostAttrSelector]="$attrSelector"
+            [hostAttrSelector]="attrSelector"
             [(visible)]="overlayVisible"
             [options]="overlayOptions"
             [target]="'@parent'"
@@ -2660,13 +2488,12 @@ var AutoComplete = class _AutoComplete extends BaseInput {
             (onHide)="hide()"
         >
             <ng-template #content>
-                <div [pBind]="ptm('overlay')" [class]="cn(cx('overlay'), panelStyleClass)" [ngStyle]="panelStyle">
+                <div [class]="cn(cx('overlay'), panelStyleClass)" [ngStyle]="panelStyle">
                     <ng-container *ngTemplateOutlet="headerTemplate || _headerTemplate"></ng-container>
-                    <div [pBind]="ptm('listContainer')" [class]="cx('listContainer')" [style.max-height]="virtualScroll ? 'auto' : scrollHeight">
+                    <div [class]="cx('listContainer')" [style.max-height]="virtualScroll ? 'auto' : scrollHeight">
                         <p-scroller
                             *ngIf="virtualScroll"
                             #scroller
-                            [pt]="ptm('virtualScroller')"
                             [items]="visibleOptions()"
                             [style]="{ height: scrollHeight }"
                             [itemSize]="virtualScrollItemSize"
@@ -2690,10 +2517,10 @@ var AutoComplete = class _AutoComplete extends BaseInput {
                     </div>
 
                     <ng-template #buildInItems let-items let-scrollerOptions="options">
-                        <ul #items [pBind]="ptm('list')" [class]="cn(cx('list'), scrollerOptions.contentStyleClass)" [style]="scrollerOptions.contentStyle" role="listbox" [attr.id]="id + '_list'" [attr.aria-label]="listLabel">
+                        <ul #items [class]="cn(cx('list'), scrollerOptions.contentStyleClass)" [style]="scrollerOptions.contentStyle" role="listbox" [attr.id]="id + '_list'" [attr.aria-label]="listLabel">
                             <ng-template ngFor let-option [ngForOf]="items" let-i="index">
                                 <ng-container *ngIf="isOptionGroup(option)">
-                                    <li [pBind]="ptm('optionGroup')" [attr.id]="id + '_' + getOptionIndex(i, scrollerOptions)" [class]="cx('optionGroup')" [ngStyle]="{ height: scrollerOptions.itemSize + 'px' }" role="option">
+                                    <li [attr.id]="id + '_' + getOptionIndex(i, scrollerOptions)" [class]="cx('optionGroup')" [ngStyle]="{ height: scrollerOptions.itemSize + 'px' }" role="option">
                                         <span *ngIf="!groupTemplate">{{ getOptionGroupLabel(option.optionGroup) }}</span>
                                         <ng-container *ngTemplateOutlet="groupTemplate; context: { $implicit: option.optionGroup }"></ng-container>
                                     </li>
@@ -2701,7 +2528,6 @@ var AutoComplete = class _AutoComplete extends BaseInput {
                                 <ng-container *ngIf="!isOptionGroup(option)">
                                     <li
                                         pRipple
-                                        [pBind]="getPTOptions(option, scrollerOptions, i, 'option')"
                                         [ngStyle]="{ height: scrollerOptions.itemSize + 'px' }"
                                         [class]="cx('option', { option, i, scrollerOptions })"
                                         [attr.id]="id + '_' + getOptionIndex(i, scrollerOptions)"
@@ -2728,7 +2554,7 @@ var AutoComplete = class _AutoComplete extends BaseInput {
                                     </li>
                                 </ng-container>
                             </ng-template>
-                            <li *ngIf="!items || (items && items.length === 0 && showEmptyMessage)" [pBind]="ptm('emptyMessage')" [class]="cx('emptyMessage')" [ngStyle]="{ height: scrollerOptions.itemSize + 'px' }" role="option">
+                            <li *ngIf="!items || (items && items.length === 0 && showEmptyMessage)" [class]="cx('emptyMessage')" [ngStyle]="{ height: scrollerOptions.itemSize + 'px' }" role="option">
                                 <ng-container *ngIf="!emptyTemplate && !_emptyTemplate; else empty">
                                     {{ searchResultMessageText }}
                                 </ng-container>
@@ -2744,20 +2570,13 @@ var AutoComplete = class _AutoComplete extends BaseInput {
             </ng-template>
         </p-overlay>
     `,
-      providers: [AUTOCOMPLETE_VALUE_ACCESSOR, AutoCompleteStyle, {
-        provide: AUTOCOMPLETE_INSTANCE,
-        useExisting: AutoComplete
-      }, {
-        provide: PARENT_INSTANCE,
-        useExisting: AutoComplete
-      }],
+      providers: [AUTOCOMPLETE_VALUE_ACCESSOR, AutoCompleteStyle],
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
       host: {
         "[class]": "cn(cx('root'), styleClass)",
         "[style]": "sx('root')"
-      },
-      hostDirectives: [Bind]
+      }
     }]
   }], () => [{
     type: OverlayService
@@ -2917,12 +2736,6 @@ var AutoComplete = class _AutoComplete extends BaseInput {
         transform: booleanAttribute
       }]
     }],
-    addOnTab: [{
-      type: Input,
-      args: [{
-        transform: booleanAttribute
-      }]
-    }],
     tabindex: [{
       type: Input,
       args: [{
@@ -3013,15 +2826,6 @@ var AutoComplete = class _AutoComplete extends BaseInput {
         transform: booleanAttribute
       }]
     }],
-    addOnBlur: [{
-      type: Input,
-      args: [{
-        transform: booleanAttribute
-      }]
-    }],
-    separator: [{
-      type: Input
-    }],
     completeMethod: [{
       type: Output
     }],
@@ -3029,9 +2833,6 @@ var AutoComplete = class _AutoComplete extends BaseInput {
       type: Output
     }],
     onUnselect: [{
-      type: Output
-    }],
-    onAdd: [{
       type: Output
     }],
     onFocus: [{
@@ -3044,9 +2845,6 @@ var AutoComplete = class _AutoComplete extends BaseInput {
       type: Output
     }],
     onClear: [{
-      type: Output
-    }],
-    onInputKeydown: [{
       type: Output
     }],
     onKeyUp: [{
@@ -3149,18 +2947,18 @@ var AutoCompleteModule = class _AutoCompleteModule {
   };
   static ɵmod = ɵɵdefineNgModule({
     type: _AutoCompleteModule,
-    imports: [AutoComplete, SharedModule],
+    imports: [AutoComplete],
     exports: [AutoComplete, SharedModule]
   });
   static ɵinj = ɵɵdefineInjector({
-    imports: [AutoComplete, SharedModule, SharedModule]
+    imports: [AutoComplete, SharedModule]
   });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(AutoCompleteModule, [{
     type: NgModule,
     args: [{
-      imports: [AutoComplete, SharedModule],
+      imports: [AutoComplete],
       exports: [AutoComplete, SharedModule]
     }]
   }], null, null);

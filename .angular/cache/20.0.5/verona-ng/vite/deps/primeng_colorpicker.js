@@ -1,32 +1,30 @@
 import {
   BaseEditableHolder
-} from "./chunk-343RM6UZ.js";
-import "./chunk-2R7VQYSP.js";
-import {
-  AutoFocus,
-  AutoFocusModule
-} from "./chunk-YNLAOK3J.js";
-import {
-  ConnectedOverlayScrollHandler,
-  DomHandler
-} from "./chunk-S73J4WE3.js";
+} from "./chunk-67V7CIUT.js";
+import "./chunk-5OCKW6BF.js";
 import {
   zindexutils
 } from "./chunk-BB55NINM.js";
 import {
-  Bind
-} from "./chunk-MLQGRGGO.js";
+  AutoFocus,
+  AutoFocusModule
+} from "./chunk-KOXUNDHI.js";
 import {
-  PARENT_INSTANCE
-} from "./chunk-YNJ5GKCH.js";
+  ConnectedOverlayScrollHandler,
+  DomHandler
+} from "./chunk-QVUTNZUY.js";
+import {
+  NG_VALUE_ACCESSOR
+} from "./chunk-RZEKJVYA.js";
+import "./chunk-4YMQ5OOY.js";
 import {
   BaseStyle
-} from "./chunk-4ATYD752.js";
+} from "./chunk-L2L2T6ID.js";
 import {
   OverlayService,
   SharedModule,
   TranslationKeys
-} from "./chunk-LMEEH3AJ.js";
+} from "./chunk-ZKOTJBQ6.js";
 import "./chunk-6QGHQEN4.js";
 import {
   animate,
@@ -34,15 +32,6 @@ import {
   transition,
   trigger
 } from "./chunk-53DGU4C2.js";
-import {
-  NG_VALUE_ACCESSOR
-} from "./chunk-RZEKJVYA.js";
-import "./chunk-GOP36Q47.js";
-import {
-  D,
-  I,
-  Yt
-} from "./chunk-UCHM6OXG.js";
 import {
   CommonModule,
   NgIf,
@@ -62,7 +51,6 @@ import {
   booleanAttribute,
   input,
   setClassMetadata,
-  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -88,7 +76,6 @@ import {
   ɵɵviewQuery
 } from "./chunk-EIF6IUR4.js";
 import {
-  InjectionToken,
   computed,
   forwardRef,
   inject,
@@ -100,6 +87,13 @@ import {
 import "./chunk-YVXMBCE5.js";
 import "./chunk-G6ECYYJH.js";
 import "./chunk-RTGP7ALM.js";
+import "./chunk-BMDSN43F.js";
+import {
+  D,
+  I,
+  Yt,
+  f
+} from "./chunk-RK2DVQNP.js";
 import "./chunk-4MWRP73S.js";
 
 // node_modules/@primeuix/styles/dist/colorpicker/index.mjs
@@ -142,8 +136,8 @@ function ColorPicker_input_0_Template(rf, ctx) {
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cx("preview"));
     ɵɵstyleProp("background-color", ctx_r1.inputBgColor);
-    ɵɵproperty("pAutoFocus", ctx_r1.autofocus)("pBind", ctx_r1.ptm("preview"));
-    ɵɵattribute("tabindex", ctx_r1.tabindex)("disabled", ctx_r1.$disabled() ? "" : void 0)("id", ctx_r1.inputId)("aria-label", ctx_r1.ariaLabel);
+    ɵɵproperty("pAutoFocus", ctx_r1.autofocus);
+    ɵɵattribute("tabindex", ctx_r1.tabindex)("disabled", ctx_r1.$disabled() ? "" : void 0)("id", ctx_r1.inputId)("data-pc-section", "input")("aria-label", ctx_r1.ariaLabel);
   }
 }
 function ColorPicker_div_1_Template(rf, ctx) {
@@ -163,7 +157,7 @@ function ColorPicker_div_1_Template(rf, ctx) {
       const ctx_r1 = ɵɵnextContext();
       return ɵɵresetView(ctx_r1.onOverlayAnimationEnd($event));
     });
-    ɵɵelementStart(1, "div", 9)(2, "div", 10, 1);
+    ɵɵelementStart(1, "div")(2, "div", 9, 1);
     ɵɵlistener("touchstart", function ColorPicker_div_1_Template_div_touchstart_2_listener($event) {
       ɵɵrestoreView(_r3);
       const ctx_r1 = ɵɵnextContext();
@@ -181,10 +175,10 @@ function ColorPicker_div_1_Template(rf, ctx) {
       const ctx_r1 = ɵɵnextContext();
       return ɵɵresetView(ctx_r1.onColorMousedown($event));
     });
-    ɵɵelementStart(4, "div", 9);
-    ɵɵelement(5, "div", 9, 2);
+    ɵɵelementStart(4, "div");
+    ɵɵelement(5, "div", null, 2);
     ɵɵelementEnd()();
-    ɵɵelementStart(7, "div", 11, 3);
+    ɵɵelementStart(7, "div", 10, 3);
     ɵɵlistener("mousedown", function ColorPicker_div_1_Template_div_mousedown_7_listener($event) {
       ɵɵrestoreView(_r3);
       const ctx_r1 = ɵɵnextContext();
@@ -202,31 +196,32 @@ function ColorPicker_div_1_Template(rf, ctx) {
       const ctx_r1 = ɵɵnextContext();
       return ɵɵresetView(ctx_r1.onDragEnd());
     });
-    ɵɵelement(9, "div", 9, 4);
+    ɵɵelement(9, "div", null, 4);
     ɵɵelementEnd()()();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cx("panel"));
-    ɵɵproperty("@overlayAnimation", ɵɵpureFunction1(26, _c6, ɵɵpureFunction2(23, _c5, ctx_r1.showTransitionOptions, ctx_r1.hideTransitionOptions)))("@.disabled", ctx_r1.inline === true)("pBind", ctx_r1.ptm("panel"));
+    ɵɵproperty("@overlayAnimation", ɵɵpureFunction1(26, _c6, ɵɵpureFunction2(23, _c5, ctx_r1.showTransitionOptions, ctx_r1.hideTransitionOptions)))("@.disabled", ctx_r1.inline === true);
+    ɵɵattribute("data-pc-section", "panel");
     ɵɵadvance();
     ɵɵclassMap(ctx_r1.cx("content"));
-    ɵɵproperty("pBind", ctx_r1.ptm("content"));
+    ɵɵattribute("data-pc-section", "content");
     ɵɵadvance();
     ɵɵclassMap(ctx_r1.cx("colorSelector"));
-    ɵɵproperty("pBind", ctx_r1.ptm("colorSelector"));
+    ɵɵattribute("data-pc-section", "selector");
     ɵɵadvance(2);
     ɵɵclassMap(ctx_r1.cx("colorBackground"));
-    ɵɵproperty("pBind", ctx_r1.ptm("colorBackground"));
+    ɵɵattribute("data-pc-section", "color");
     ɵɵadvance();
     ɵɵclassMap(ctx_r1.cx("colorHandle"));
-    ɵɵproperty("pBind", ctx_r1.ptm("colorHandle"));
+    ɵɵattribute("data-pc-section", "colorHandle");
     ɵɵadvance(2);
     ɵɵclassMap(ctx_r1.cx("hue"));
-    ɵɵproperty("pBind", ctx_r1.ptm("hue"));
+    ɵɵattribute("data-pc-section", "hue");
     ɵɵadvance(2);
     ɵɵclassMap(ctx_r1.cx("hueHandle"));
-    ɵɵproperty("pBind", ctx_r1.ptm("hueHandle"));
+    ɵɵattribute("data-pc-section", "hueHandle");
   }
 }
 var classes = {
@@ -256,7 +251,7 @@ var classes = {
 };
 var ColorPickerStyle = class _ColorPickerStyle extends BaseStyle {
   name = "colorpicker";
-  style = style2;
+  theme = style2;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵColorPickerStyle_BaseFactory;
@@ -290,19 +285,8 @@ var COLORPICKER_VALUE_ACCESSOR = {
   useExisting: forwardRef(() => ColorPicker),
   multi: true
 };
-var COLORPICKER_INSTANCE = new InjectionToken("COLORPICKER_INSTANCE");
 var ColorPicker = class _ColorPicker extends BaseEditableHolder {
   overlayService;
-  $pcColorPicker = inject(COLORPICKER_INSTANCE, {
-    optional: true,
-    skipSelf: true
-  }) ?? void 0;
-  bindDirectiveInstance = inject(Bind, {
-    self: true
-  });
-  onAfterViewChecked() {
-    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
-  }
   /**
    * Style class of the component.
    * @deprecated since v20.0.0, use `class` instead.
@@ -556,7 +540,7 @@ var ColorPicker = class _ColorPicker extends BaseEditableHolder {
       case "visible":
         if (!this.inline) {
           this.overlay = event.element;
-          this.$attrSelector && this.overlay?.setAttribute(this.$attrSelector, "");
+          this.attrSelector && this.overlay.setAttribute(this.attrSelector, "");
           this.appendOverlay();
           if (this.autoZIndex) {
             zindexutils.set("overlay", this.overlay, this.config.zIndex.overlay);
@@ -861,7 +845,7 @@ var ColorPicker = class _ColorPicker extends BaseEditableHolder {
     this.unbindDocumentClickListener();
     this.overlay = null;
   }
-  onAfterViewInit() {
+  ngAfterViewInit() {
     if (this.inline) {
       this.updateColorSelector();
       this.updateUI();
@@ -893,7 +877,7 @@ var ColorPicker = class _ColorPicker extends BaseEditableHolder {
     this.updateUI();
     this.cd.markForCheck();
   }
-  onDestroy() {
+  ngOnDestroy() {
     if (this.scrollHandler) {
       this.scrollHandler.destroy();
       this.scrollHandler = null;
@@ -904,6 +888,7 @@ var ColorPicker = class _ColorPicker extends BaseEditableHolder {
     this.restoreOverlayAppend();
     this.onOverlayHide();
   }
+  cn = f;
   static ɵfac = function ColorPicker_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _ColorPicker)(ɵɵdirectiveInject(OverlayService));
   };
@@ -927,9 +912,10 @@ var ColorPicker = class _ColorPicker extends BaseEditableHolder {
         ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.hueHandle = _t.first);
       }
     },
-    hostVars: 2,
+    hostVars: 4,
     hostBindings: function ColorPicker_HostBindings(rf, ctx) {
       if (rf & 2) {
+        ɵɵattribute("data-pc-name", "colorpicker")("data-pc-section", "root");
         ɵɵclassMap(ctx.cn(ctx.cx("root"), ctx.styleClass));
       }
     },
@@ -951,16 +937,10 @@ var ColorPicker = class _ColorPicker extends BaseEditableHolder {
       onShow: "onShow",
       onHide: "onHide"
     },
-    features: [ɵɵProvidersFeature([COLORPICKER_VALUE_ACCESSOR, ColorPickerStyle, {
-      provide: COLORPICKER_INSTANCE,
-      useExisting: _ColorPicker
-    }, {
-      provide: PARENT_INSTANCE,
-      useExisting: _ColorPicker
-    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([COLORPICKER_VALUE_ACCESSOR, ColorPickerStyle]), ɵɵInheritDefinitionFeature],
     decls: 2,
     vars: 2,
-    consts: [["input", ""], ["colorSelector", ""], ["colorHandle", ""], ["hue", ""], ["hueHandle", ""], ["type", "text", "readonly", "", 3, "class", "backgroundColor", "pAutoFocus", "pBind", "click", "keydown", "focus", 4, "ngIf"], [3, "class", "pBind", "click", 4, "ngIf"], ["type", "text", "readonly", "", 3, "click", "keydown", "focus", "pAutoFocus", "pBind"], [3, "click", "pBind"], [3, "pBind"], [3, "touchstart", "touchmove", "touchend", "mousedown", "pBind"], [3, "mousedown", "touchstart", "touchmove", "touchend", "pBind"]],
+    consts: [["input", ""], ["colorSelector", ""], ["colorHandle", ""], ["hue", ""], ["hueHandle", ""], ["type", "text", "readonly", "", 3, "class", "backgroundColor", "pAutoFocus", "click", "keydown", "focus", 4, "ngIf"], [3, "class", "click", 4, "ngIf"], ["type", "text", "readonly", "", 3, "click", "keydown", "focus", "pAutoFocus"], [3, "click"], [3, "touchstart", "touchmove", "touchend", "mousedown"], [3, "mousedown", "touchstart", "touchmove", "touchend"]],
     template: function ColorPicker_Template(rf, ctx) {
       if (rf & 1) {
         ɵɵtemplate(0, ColorPicker_input_0_Template, 2, 10, "input", 5)(1, ColorPicker_div_1_Template, 11, 28, "div", 6);
@@ -971,7 +951,7 @@ var ColorPicker = class _ColorPicker extends BaseEditableHolder {
         ɵɵproperty("ngIf", ctx.inline || ctx.overlayVisible);
       }
     },
-    dependencies: [CommonModule, NgIf, AutoFocusModule, AutoFocus, SharedModule, Bind],
+    dependencies: [CommonModule, NgIf, AutoFocusModule, AutoFocus, SharedModule],
     encapsulation: 2,
     data: {
       animation: [trigger("overlayAnimation", [transition(":enter", [style({
@@ -990,8 +970,7 @@ var ColorPicker = class _ColorPicker extends BaseEditableHolder {
     args: [{
       selector: "p-colorPicker, p-colorpicker, p-color-picker",
       standalone: true,
-      imports: [CommonModule, AutoFocusModule, SharedModule, Bind],
-      hostDirectives: [Bind],
+      imports: [CommonModule, AutoFocusModule, SharedModule],
       template: `
         <input
             *ngIf="!inline"
@@ -1006,9 +985,9 @@ var ColorPicker = class _ColorPicker extends BaseEditableHolder {
             (focus)="onInputFocus()"
             [attr.id]="inputId"
             [style.backgroundColor]="inputBgColor"
+            [attr.data-pc-section]="'input'"
             [attr.aria-label]="ariaLabel"
             [pAutoFocus]="autofocus"
-            [pBind]="ptm('preview')"
         />
         <div
             *ngIf="inline || overlayVisible"
@@ -1021,16 +1000,16 @@ var ColorPicker = class _ColorPicker extends BaseEditableHolder {
             [@.disabled]="inline === true"
             (@overlayAnimation.start)="onOverlayAnimationStart($event)"
             (@overlayAnimation.done)="onOverlayAnimationEnd($event)"
-            [pBind]="ptm('panel')"
+            [attr.data-pc-section]="'panel'"
         >
-            <div [class]="cx('content')" [pBind]="ptm('content')">
-                <div #colorSelector [class]="cx('colorSelector')" (touchstart)="onColorDragStart($event)" (touchmove)="onDrag($event)" (touchend)="onDragEnd()" (mousedown)="onColorMousedown($event)" [pBind]="ptm('colorSelector')">
-                    <div [class]="cx('colorBackground')" [pBind]="ptm('colorBackground')">
-                        <div #colorHandle [class]="cx('colorHandle')" [pBind]="ptm('colorHandle')"></div>
+            <div [class]="cx('content')" [attr.data-pc-section]="'content'">
+                <div #colorSelector [class]="cx('colorSelector')" (touchstart)="onColorDragStart($event)" (touchmove)="onDrag($event)" (touchend)="onDragEnd()" (mousedown)="onColorMousedown($event)" [attr.data-pc-section]="'selector'">
+                    <div [class]="cx('colorBackground')" [attr.data-pc-section]="'color'">
+                        <div #colorHandle [class]="cx('colorHandle')" [attr.data-pc-section]="'colorHandle'"></div>
                     </div>
                 </div>
-                <div #hue [class]="cx('hue')" (mousedown)="onHueMousedown($event)" (touchstart)="onHueDragStart($event)" (touchmove)="onDrag($event)" (touchend)="onDragEnd()" [pBind]="ptm('hue')">
-                    <div #hueHandle [class]="cx('hueHandle')" [pBind]="ptm('hueHandle')"></div>
+                <div #hue [class]="cx('hue')" (mousedown)="onHueMousedown($event)" (touchstart)="onHueDragStart($event)" (touchmove)="onDrag($event)" (touchend)="onDragEnd()" [attr.data-pc-section]="'hue'">
+                    <div #hueHandle [class]="cx('hueHandle')" [attr.data-pc-section]="'hueHandle'"></div>
                 </div>
             </div>
         </div>
@@ -1041,17 +1020,13 @@ var ColorPicker = class _ColorPicker extends BaseEditableHolder {
       }), animate("{{showTransitionParams}}")]), transition(":leave", [animate("{{hideTransitionParams}}", style({
         opacity: 0
       }))])])],
-      providers: [COLORPICKER_VALUE_ACCESSOR, ColorPickerStyle, {
-        provide: COLORPICKER_INSTANCE,
-        useExisting: ColorPicker
-      }, {
-        provide: PARENT_INSTANCE,
-        useExisting: ColorPicker
-      }],
+      providers: [COLORPICKER_VALUE_ACCESSOR, ColorPickerStyle],
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
       host: {
-        "[class]": "cn(cx('root'), styleClass)"
+        "[class]": "cn(cx('root'), styleClass)",
+        "[attr.data-pc-name]": '"colorpicker"',
+        "[attr.data-pc-section]": '"root"'
       }
     }]
   }], () => [{
