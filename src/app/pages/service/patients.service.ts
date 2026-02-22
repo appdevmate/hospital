@@ -46,6 +46,7 @@ export interface CreateUpdatePatientRequest {
     medications?: string | null;
     notes?: string | null;
     job?: string;
+    bloodGroup?: string | null;
 }
 
 export interface GetPatientsPageOpts {

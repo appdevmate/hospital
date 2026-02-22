@@ -1,34 +1,40 @@
 import {
   Tooltip,
   TooltipModule
-} from "./chunk-IRWYTOKA.js";
+} from "./chunk-OLS4C5IP.js";
+import {
+  Badge,
+  BadgeModule
+} from "./chunk-B6BBOHQM.js";
+import {
+  DomHandler
+} from "./chunk-S73J4WE3.js";
 import {
   zindexutils
 } from "./chunk-BB55NINM.js";
 import {
-  DomHandler
-} from "./chunk-QVUTNZUY.js";
-import {
   Ripple
-} from "./chunk-VZLF74PJ.js";
+} from "./chunk-OC77X5LN.js";
 import {
   AngleRightIcon
-} from "./chunk-BIL3W6KN.js";
+} from "./chunk-RHA7RL5K.js";
+import "./chunk-YXZQJBKH.js";
 import {
-  Badge,
-  BadgeModule
-} from "./chunk-EGVFVLQK.js";
-import {
-  BaseComponent
-} from "./chunk-4YMQ5OOY.js";
+  BaseComponent,
+  PARENT_INSTANCE
+} from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
-} from "./chunk-L2L2T6ID.js";
+} from "./chunk-4ATYD752.js";
+import {
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
 import {
   OverlayService,
   PrimeTemplate,
   SharedModule
-} from "./chunk-ZKOTJBQ6.js";
+} from "./chunk-LMEEH3AJ.js";
 import "./chunk-6QGHQEN4.js";
 import {
   animate,
@@ -36,6 +42,25 @@ import {
   transition,
   trigger
 } from "./chunk-53DGU4C2.js";
+import "./chunk-GOP36Q47.js";
+import {
+  $t,
+  G2 as G,
+  J,
+  J2,
+  K,
+  M,
+  O2 as O,
+  Ut,
+  bt,
+  h2 as h,
+  l,
+  m,
+  s,
+  s3 as s2,
+  v,
+  z2 as z
+} from "./chunk-UCHM6OXG.js";
 import {
   RouterLink,
   RouterModule
@@ -57,12 +82,14 @@ import {
   Component,
   ContentChild,
   ContentChildren,
+  ElementRef,
   EventEmitter,
   Inject,
   Injectable,
   Input,
   NgModule,
   Output,
+  Renderer2,
   ViewChild,
   ViewEncapsulation,
   booleanAttribute,
@@ -104,6 +131,7 @@ import {
   ɵɵviewQuery
 } from "./chunk-EIF6IUR4.js";
 import {
+  InjectionToken,
   computed,
   effect,
   forwardRef,
@@ -115,28 +143,9 @@ import {
   ɵɵresetView,
   ɵɵrestoreView
 } from "./chunk-LW34VNAR.js";
-import "./chunk-YVXMBCE5.js";
 import "./chunk-G6ECYYJH.js";
+import "./chunk-YVXMBCE5.js";
 import "./chunk-RTGP7ALM.js";
-import "./chunk-BMDSN43F.js";
-import {
-  $t,
-  G2 as G,
-  J,
-  K,
-  M,
-  P,
-  Ut,
-  a,
-  bt,
-  h,
-  j,
-  m,
-  s,
-  s3 as s2,
-  v,
-  z2 as z
-} from "./chunk-RK2DVQNP.js";
 import {
   __spreadProps,
   __spreadValues
@@ -169,7 +178,8 @@ function ContextMenuSub_ul_0_ng_template_2_li_0_Template(rf, ctx) {
     const ctx_r2 = ɵɵnextContext(2);
     ɵɵstyleMap(ctx_r2.getItemProp(processedItem_r4, "style"));
     ɵɵclassMap(ctx_r2.cn(ctx_r2.cx("separator"), ctx_r2.getItemProp(processedItem_r4, "styleClass")));
-    ɵɵattribute("id", ctx_r2.getItemId(processedItem_r4))("data-pc-section", "separator");
+    ɵɵproperty("pBind", ctx_r2._ptm("separator"));
+    ɵɵattribute("id", ctx_r2.getItemId(processedItem_r4));
   }
 }
 function ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_1_span_1_Template(rf, ctx) {
@@ -177,43 +187,48 @@ function ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_1_span_1_Templa
     ɵɵelement(0, "span", 19);
   }
   if (rf & 2) {
-    const processedItem_r4 = ɵɵnextContext(4).$implicit;
+    const ctx_r5 = ɵɵnextContext(4);
+    const processedItem_r4 = ctx_r5.$implicit;
+    const index_r7 = ctx_r5.index;
     const ctx_r2 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r2.cn(ctx_r2.cx("itemIcon"), ctx_r2.getItemProp(processedItem_r4, "icon")));
-    ɵɵproperty("ngStyle", ctx_r2.getItemProp(processedItem_r4, "iconStyle"));
-    ɵɵattribute("data-pc-section", "icon")("aria-hidden", true)("tabindex", -1);
+    ɵɵproperty("ngStyle", ctx_r2.getItemProp(processedItem_r4, "iconStyle"))("pBind", ctx_r2.getPTOptions(processedItem_r4, index_r7, "itemIcon"));
+    ɵɵattribute("aria-hidden", true)("tabindex", -1);
   }
 }
 function ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_1_span_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "span");
+    ɵɵelementStart(0, "span", 20);
     ɵɵtext(1);
     ɵɵelementEnd();
   }
   if (rf & 2) {
-    const processedItem_r4 = ɵɵnextContext(4).$implicit;
+    const ctx_r5 = ɵɵnextContext(4);
+    const processedItem_r4 = ctx_r5.$implicit;
+    const index_r7 = ctx_r5.index;
     const ctx_r2 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r2.cx("itemLabel"));
-    ɵɵattribute("data-pc-section", "label");
+    ɵɵproperty("pBind", ctx_r2.getPTOptions(processedItem_r4, index_r7, "itemLabel"));
     ɵɵadvance();
     ɵɵtextInterpolate1(" ", ctx_r2.getItemLabel(processedItem_r4), " ");
   }
 }
 function ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_1_ng_template_3_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "span", 20);
+    ɵɵelement(0, "span", 21);
   }
   if (rf & 2) {
-    const processedItem_r4 = ɵɵnextContext(4).$implicit;
+    const ctx_r5 = ɵɵnextContext(4);
+    const processedItem_r4 = ctx_r5.$implicit;
+    const index_r7 = ctx_r5.index;
     const ctx_r2 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r2.cx("itemLabel"));
-    ɵɵproperty("innerHTML", ctx_r2.getItemLabel(processedItem_r4), ɵɵsanitizeHtml);
-    ɵɵattribute("data-pc-section", "label");
+    ɵɵproperty("innerHTML", ctx_r2.getItemLabel(processedItem_r4), ɵɵsanitizeHtml)("pBind", ctx_r2.getPTOptions(processedItem_r4, index_r7, "itemLabel"));
   }
 }
 function ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_1_p_badge_5_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "p-badge", 21);
+    ɵɵelement(0, "p-badge", 22);
   }
   if (rf & 2) {
     const processedItem_r4 = ɵɵnextContext(4).$implicit;
@@ -225,28 +240,32 @@ function ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_1_p_badge_5_Tem
 function ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_1_ng_container_6__svg_svg_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 24);
+    ɵɵelement(0, "svg", 25);
   }
   if (rf & 2) {
-    const ctx_r2 = ɵɵnextContext(7);
+    const ctx_r5 = ɵɵnextContext(5);
+    const processedItem_r4 = ctx_r5.$implicit;
+    const index_r7 = ctx_r5.index;
+    const ctx_r2 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r2.cx("submenuIcon"));
-    ɵɵattribute("data-pc-section", "submenuicon")("aria-hidden", true);
+    ɵɵproperty("pBind", ctx_r2.getPTOptions(processedItem_r4, index_r7, "submenuIcon"));
+    ɵɵattribute("aria-hidden", true);
   }
 }
 function ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_1_ng_container_6_2_ng_template_0_Template(rf, ctx) {
 }
 function ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_1_ng_container_6_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_1_ng_container_6_2_ng_template_0_Template, 0, 0, "ng-template", 25);
+    ɵɵtemplate(0, ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_1_ng_container_6_2_ng_template_0_Template, 0, 0, "ng-template", 26);
   }
   if (rf & 2) {
-    ɵɵproperty("data-pc-section", "submenuicon")("aria-hidden", true);
+    ɵɵproperty("aria-hidden", true);
   }
 }
 function ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_1_ng_container_6_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_1_ng_container_6__svg_svg_1_Template, 1, 4, "svg", 22)(2, ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_1_ng_container_6_2_Template, 1, 2, null, 23);
+    ɵɵtemplate(1, ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_1_ng_container_6__svg_svg_1_Template, 1, 4, "svg", 23)(2, ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_1_ng_container_6_2_Template, 1, 1, null, 24);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -264,16 +283,18 @@ function ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_1_Template(rf, 
     ɵɵelementEnd();
   }
   if (rf & 2) {
-    const htmlLabel_r6 = ɵɵreference(4);
-    const processedItem_r4 = ɵɵnextContext(3).$implicit;
+    const htmlLabel_r8 = ɵɵreference(4);
+    const ctx_r5 = ɵɵnextContext(3);
+    const processedItem_r4 = ctx_r5.$implicit;
+    const index_r7 = ctx_r5.index;
     const ctx_r2 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r2.cx("itemLink"));
-    ɵɵproperty("target", ctx_r2.getItemProp(processedItem_r4, "target"));
-    ɵɵattribute("href", ctx_r2.getItemProp(processedItem_r4, "url"), ɵɵsanitizeUrl)("data-automationid", ctx_r2.getItemProp(processedItem_r4, "automationId"))("data-pc-section", "action")("tabindex", -1);
+    ɵɵproperty("target", ctx_r2.getItemProp(processedItem_r4, "target"))("pBind", ctx_r2.getPTOptions(processedItem_r4, index_r7, "itemLink"));
+    ɵɵattribute("href", ctx_r2.getItemProp(processedItem_r4, "url"), ɵɵsanitizeUrl)("data-automationid", ctx_r2.getItemProp(processedItem_r4, "automationId"))("tabindex", -1);
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r2.getItemProp(processedItem_r4, "icon"));
     ɵɵadvance();
-    ɵɵproperty("ngIf", ctx_r2.getItemProp(processedItem_r4, "escape"))("ngIfElse", htmlLabel_r6);
+    ɵɵproperty("ngIf", ctx_r2.getItemProp(processedItem_r4, "escape"))("ngIfElse", htmlLabel_r8);
     ɵɵadvance(3);
     ɵɵproperty("ngIf", ctx_r2.getItemProp(processedItem_r4, "badge"));
     ɵɵadvance();
@@ -285,43 +306,48 @@ function ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_2_span_1_Templa
     ɵɵelement(0, "span", 19);
   }
   if (rf & 2) {
-    const processedItem_r4 = ɵɵnextContext(4).$implicit;
+    const ctx_r5 = ɵɵnextContext(4);
+    const processedItem_r4 = ctx_r5.$implicit;
+    const index_r7 = ctx_r5.index;
     const ctx_r2 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r2.cn(ctx_r2.cx("itemIcon"), ctx_r2.getItemProp(processedItem_r4, "icon")));
-    ɵɵproperty("ngStyle", ctx_r2.getItemProp(processedItem_r4, "iconStyle"));
-    ɵɵattribute("data-pc-section", "icon")("aria-hidden", true)("tabindex", -1);
+    ɵɵproperty("ngStyle", ctx_r2.getItemProp(processedItem_r4, "iconStyle"))("pBind", ctx_r2.getPTOptions(processedItem_r4, index_r7, "itemIcon"));
+    ɵɵattribute("aria-hidden", true)("tabindex", -1);
   }
 }
 function ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_2_span_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "span");
+    ɵɵelementStart(0, "span", 20);
     ɵɵtext(1);
     ɵɵelementEnd();
   }
   if (rf & 2) {
-    const processedItem_r4 = ɵɵnextContext(4).$implicit;
+    const ctx_r5 = ɵɵnextContext(4);
+    const processedItem_r4 = ctx_r5.$implicit;
+    const index_r7 = ctx_r5.index;
     const ctx_r2 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r2.cx("itemLabel"));
-    ɵɵattribute("data-pc-section", "label");
+    ɵɵproperty("pBind", ctx_r2.getPTOptions(processedItem_r4, index_r7, "itemLabel"));
     ɵɵadvance();
     ɵɵtextInterpolate1(" ", ctx_r2.getItemLabel(processedItem_r4), " ");
   }
 }
 function ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_2_ng_template_3_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "span", 20);
+    ɵɵelement(0, "span", 21);
   }
   if (rf & 2) {
-    const processedItem_r4 = ɵɵnextContext(4).$implicit;
+    const ctx_r5 = ɵɵnextContext(4);
+    const processedItem_r4 = ctx_r5.$implicit;
+    const index_r7 = ctx_r5.index;
     const ctx_r2 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r2.cx("itemLabel"));
-    ɵɵproperty("innerHTML", ctx_r2.getItemLabel(processedItem_r4), ɵɵsanitizeHtml);
-    ɵɵattribute("data-pc-section", "label");
+    ɵɵproperty("innerHTML", ctx_r2.getItemLabel(processedItem_r4), ɵɵsanitizeHtml)("pBind", ctx_r2.getPTOptions(processedItem_r4, index_r7, "itemLabel"));
   }
 }
 function ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_2_p_badge_5_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "p-badge", 21);
+    ɵɵelement(0, "p-badge", 22);
   }
   if (rf & 2) {
     const processedItem_r4 = ɵɵnextContext(4).$implicit;
@@ -333,28 +359,32 @@ function ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_2_p_badge_5_Tem
 function ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_2_ng_container_6__svg_svg_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 24);
+    ɵɵelement(0, "svg", 25);
   }
   if (rf & 2) {
-    const ctx_r2 = ɵɵnextContext(7);
+    const ctx_r5 = ɵɵnextContext(5);
+    const processedItem_r4 = ctx_r5.$implicit;
+    const index_r7 = ctx_r5.index;
+    const ctx_r2 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r2.cx("submenuIcon"));
-    ɵɵattribute("data-pc-section", "submenuicon")("aria-hidden", true);
+    ɵɵproperty("pBind", ctx_r2.getPTOptions(processedItem_r4, index_r7, "submenuIcon"));
+    ɵɵattribute("aria-hidden", true);
   }
 }
 function ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_2_ng_container_6_2_ng_template_0_Template(rf, ctx) {
 }
 function ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_2_ng_container_6_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_2_ng_container_6_2_ng_template_0_Template, 0, 0, "ng-template", 25);
+    ɵɵtemplate(0, ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_2_ng_container_6_2_ng_template_0_Template, 0, 0, "ng-template", 26);
   }
   if (rf & 2) {
-    ɵɵproperty("data-pc-section", "submenuicon")("aria-hidden", true);
+    ɵɵproperty("aria-hidden", true);
   }
 }
 function ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_2_ng_container_6_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_2_ng_container_6__svg_svg_1_Template, 1, 4, "svg", 22)(2, ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_2_ng_container_6_2_Template, 1, 2, null, 23);
+    ɵɵtemplate(1, ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_2_ng_container_6__svg_svg_1_Template, 1, 4, "svg", 23)(2, ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_2_ng_container_6_2_Template, 1, 1, null, 24);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -367,21 +397,23 @@ function ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_2_ng_container_
 }
 function ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "a", 26);
+    ɵɵelementStart(0, "a", 27);
     ɵɵtemplate(1, ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_2_span_1_Template, 1, 6, "span", 16)(2, ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_2_span_2_Template, 2, 4, "span", 17)(3, ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_2_ng_template_3_Template, 1, 4, "ng-template", null, 2, ɵɵtemplateRefExtractor)(5, ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_2_p_badge_5_Template, 1, 3, "p-badge", 18)(6, ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_a_2_ng_container_6_Template, 3, 4, "ng-container", 11);
     ɵɵelementEnd();
   }
   if (rf & 2) {
-    const htmlLabel_r7 = ɵɵreference(4);
-    const processedItem_r4 = ɵɵnextContext(3).$implicit;
+    const htmlLabel_r9 = ɵɵreference(4);
+    const ctx_r5 = ɵɵnextContext(3);
+    const processedItem_r4 = ctx_r5.$implicit;
+    const index_r7 = ctx_r5.index;
     const ctx_r2 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r2.cx("itemLink"));
-    ɵɵproperty("routerLink", ctx_r2.getItemProp(processedItem_r4, "routerLink"))("queryParams", ctx_r2.getItemProp(processedItem_r4, "queryParams"))("routerLinkActiveOptions", ctx_r2.getItemProp(processedItem_r4, "routerLinActiveOptions") || ɵɵpureFunction0(20, _c3))("target", ctx_r2.getItemProp(processedItem_r4, "target"))("fragment", ctx_r2.getItemProp(processedItem_r4, "fragment"))("queryParamsHandling", ctx_r2.getItemProp(processedItem_r4, "queryParamsHandling"))("preserveFragment", ctx_r2.getItemProp(processedItem_r4, "preserveFragment"))("skipLocationChange", ctx_r2.getItemProp(processedItem_r4, "skipLocationChange"))("replaceUrl", ctx_r2.getItemProp(processedItem_r4, "replaceUrl"))("state", ctx_r2.getItemProp(processedItem_r4, "state"));
-    ɵɵattribute("data-automationid", ctx_r2.getItemProp(processedItem_r4, "automationId"))("tabindex", -1)("data-pc-section", "action");
+    ɵɵproperty("routerLink", ctx_r2.getItemProp(processedItem_r4, "routerLink"))("queryParams", ctx_r2.getItemProp(processedItem_r4, "queryParams"))("routerLinkActiveOptions", ctx_r2.getItemProp(processedItem_r4, "routerLinActiveOptions") || ɵɵpureFunction0(20, _c3))("target", ctx_r2.getItemProp(processedItem_r4, "target"))("fragment", ctx_r2.getItemProp(processedItem_r4, "fragment"))("queryParamsHandling", ctx_r2.getItemProp(processedItem_r4, "queryParamsHandling"))("preserveFragment", ctx_r2.getItemProp(processedItem_r4, "preserveFragment"))("skipLocationChange", ctx_r2.getItemProp(processedItem_r4, "skipLocationChange"))("replaceUrl", ctx_r2.getItemProp(processedItem_r4, "replaceUrl"))("state", ctx_r2.getItemProp(processedItem_r4, "state"))("pBind", ctx_r2.getPTOptions(processedItem_r4, index_r7, "itemLink"));
+    ɵɵattribute("data-automationid", ctx_r2.getItemProp(processedItem_r4, "automationId"))("tabindex", -1);
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r2.getItemProp(processedItem_r4, "icon"));
     ɵɵadvance();
-    ɵɵproperty("ngIf", ctx_r2.getItemProp(processedItem_r4, "escape"))("ngIfElse", htmlLabel_r7);
+    ɵɵproperty("ngIf", ctx_r2.getItemProp(processedItem_r4, "escape"))("ngIfElse", htmlLabel_r9);
     ɵɵadvance(3);
     ɵɵproperty("ngIf", ctx_r2.getItemProp(processedItem_r4, "badge"));
     ɵɵadvance();
@@ -413,7 +445,7 @@ function ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_4_1_Template(rf, ct
 function ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_4_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_4_1_Template, 1, 0, null, 23);
+    ɵɵtemplate(1, ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_4_1_Template, 1, 0, null, 24);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -425,14 +457,14 @@ function ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_4_Template(rf, ctx)
 }
 function ContextMenuSub_ul_0_ng_template_2_li_1_p_contextmenu_sub_5_Template(rf, ctx) {
   if (rf & 1) {
-    const _r8 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "p-contextmenu-sub", 27);
+    const _r10 = ɵɵgetCurrentView();
+    ɵɵelementStart(0, "p-contextmenu-sub", 28);
     ɵɵlistener("itemClick", function ContextMenuSub_ul_0_ng_template_2_li_1_p_contextmenu_sub_5_Template_p_contextmenu_sub_itemClick_0_listener($event) {
-      ɵɵrestoreView(_r8);
+      ɵɵrestoreView(_r10);
       const ctx_r2 = ɵɵnextContext(4);
       return ɵɵresetView(ctx_r2.itemClick.emit($event));
     })("itemMouseEnter", function ContextMenuSub_ul_0_ng_template_2_li_1_p_contextmenu_sub_5_Template_p_contextmenu_sub_itemMouseEnter_0_listener($event) {
-      ɵɵrestoreView(_r8);
+      ɵɵrestoreView(_r10);
       const ctx_r2 = ɵɵnextContext(4);
       return ɵɵresetView(ctx_r2.onItemMouseEnter($event));
     });
@@ -441,7 +473,7 @@ function ContextMenuSub_ul_0_ng_template_2_li_1_p_contextmenu_sub_5_Template(rf,
   if (rf & 2) {
     const processedItem_r4 = ɵɵnextContext(2).$implicit;
     const ctx_r2 = ɵɵnextContext(2);
-    ɵɵproperty("items", processedItem_r4.items)("itemTemplate", ctx_r2.itemTemplate)("menuId", ctx_r2.menuId)("visible", ctx_r2.isItemActive(processedItem_r4) && ctx_r2.isItemGroup(processedItem_r4))("activeItemPath", ctx_r2.activeItemPath)("focusedItemId", ctx_r2.focusedItemId)("level", ctx_r2.level + 1);
+    ɵɵproperty("items", processedItem_r4.items)("itemTemplate", ctx_r2.itemTemplate)("menuId", ctx_r2.menuId)("visible", ctx_r2.isItemActive(processedItem_r4) && ctx_r2.isItemGroup(processedItem_r4))("activeItemPath", ctx_r2.activeItemPath)("focusedItemId", ctx_r2.focusedItemId)("level", ctx_r2.level + 1)("pt", ctx_r2.pt());
   }
 }
 function ContextMenuSub_ul_0_ng_template_2_li_1_Template(rf, ctx) {
@@ -464,21 +496,21 @@ function ContextMenuSub_ul_0_ng_template_2_li_1_Template(rf, ctx) {
     });
     ɵɵtemplate(3, ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_3_Template, 3, 2, "ng-container", 11)(4, ContextMenuSub_ul_0_ng_template_2_li_1_ng_container_4_Template, 2, 4, "ng-container", 11);
     ɵɵelementEnd();
-    ɵɵtemplate(5, ContextMenuSub_ul_0_ng_template_2_li_1_p_contextmenu_sub_5_Template, 1, 7, "p-contextmenu-sub", 12);
+    ɵɵtemplate(5, ContextMenuSub_ul_0_ng_template_2_li_1_p_contextmenu_sub_5_Template, 1, 8, "p-contextmenu-sub", 12);
     ɵɵelementEnd();
   }
   if (rf & 2) {
-    const ctx_r8 = ɵɵnextContext();
-    const processedItem_r4 = ctx_r8.$implicit;
-    const index_r10 = ctx_r8.index;
+    const ctx_r5 = ɵɵnextContext();
+    const processedItem_r4 = ctx_r5.$implicit;
+    const index_r7 = ctx_r5.index;
     const ctx_r2 = ɵɵnextContext(2);
     ɵɵstyleMap(ctx_r2.getItemProp(processedItem_r4, "style"));
     ɵɵclassMap(ctx_r2.cn(ctx_r2.cx("item", ɵɵpureFunction2(23, _c1, ctx_r2, processedItem_r4)), ctx_r2.getItemProp(processedItem_r4, "styleClass")));
-    ɵɵproperty("tooltipOptions", ctx_r2.getItemProp(processedItem_r4, "tooltipOptions"));
-    ɵɵattribute("id", ctx_r2.getItemId(processedItem_r4))("data-pc-section", "menuitem")("data-p-highlight", ctx_r2.isItemActive(processedItem_r4))("data-p-focused", ctx_r2.isItemFocused(processedItem_r4))("data-p-disabled", ctx_r2.isItemDisabled(processedItem_r4))("aria-label", ctx_r2.getItemLabel(processedItem_r4))("aria-disabled", ctx_r2.isItemDisabled(processedItem_r4) || void 0)("aria-haspopup", ctx_r2.isItemGroup(processedItem_r4) && !ctx_r2.getItemProp(processedItem_r4, "to") ? "menu" : void 0)("aria-expanded", ctx_r2.isItemGroup(processedItem_r4) ? ctx_r2.isItemActive(processedItem_r4) : void 0)("aria-level", ctx_r2.level + 1)("aria-setsize", ctx_r2.getAriaSetSize())("aria-posinset", ctx_r2.getAriaPosInset(index_r10));
+    ɵɵproperty("pBind", ctx_r2.getPTOptions(processedItem_r4, index_r7, "item"))("tooltipOptions", ctx_r2.getItemProp(processedItem_r4, "tooltipOptions"));
+    ɵɵattribute("id", ctx_r2.getItemId(processedItem_r4))("data-p-highlight", ctx_r2.isItemActive(processedItem_r4))("data-p-focused", ctx_r2.isItemFocused(processedItem_r4))("data-p-disabled", ctx_r2.isItemDisabled(processedItem_r4))("aria-label", ctx_r2.getItemLabel(processedItem_r4))("aria-disabled", ctx_r2.isItemDisabled(processedItem_r4) || void 0)("aria-haspopup", ctx_r2.isItemGroup(processedItem_r4) && !ctx_r2.getItemProp(processedItem_r4, "to") ? "menu" : void 0)("aria-expanded", ctx_r2.isItemGroup(processedItem_r4) ? ctx_r2.isItemActive(processedItem_r4) : void 0)("aria-level", ctx_r2.level + 1)("aria-setsize", ctx_r2.getAriaSetSize())("aria-posinset", ctx_r2.getAriaPosInset(index_r7));
     ɵɵadvance(2);
     ɵɵclassMap(ctx_r2.cx("itemContent"));
-    ɵɵattribute("data-pc-section", "content");
+    ɵɵproperty("pBind", ctx_r2.getPTOptions(processedItem_r4, index_r7, "itemContent"));
     ɵɵadvance();
     ɵɵproperty("ngIf", !ctx_r2.itemTemplate);
     ɵɵadvance();
@@ -527,8 +559,8 @@ function ContextMenuSub_ul_0_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext();
     ɵɵclassMap(ctx_r2.root ? ctx_r2.cx("rootList") : ctx_r2.cx("submenu"));
-    ɵɵproperty("@overlayAnimation", ctx_r2.visible)("tabindex", ctx_r2.tabindex);
-    ɵɵattribute("id", ctx_r2.menuId + "_list")("aria-label", ctx_r2.ariaLabel)("aria-labelledBy", ctx_r2.ariaLabelledBy)("aria-activedescendant", ctx_r2.focusedItemId)("aria-orientation", "vertical")("data-pc-section", "menu");
+    ɵɵproperty("pBind", ctx_r2._ptm(ctx_r2.root ? "rootList" : "submenu"))("@overlayAnimation", ctx_r2.visible)("tabindex", ctx_r2.tabindex);
+    ɵɵattribute("id", ctx_r2.menuId + "_list")("aria-label", ctx_r2.ariaLabel)("aria-labelledBy", ctx_r2.ariaLabelledBy)("aria-activedescendant", ctx_r2.focusedItemId)("aria-orientation", "vertical");
     ɵɵadvance(2);
     ɵɵproperty("ngForOf", ctx_r2.items);
   }
@@ -581,10 +613,10 @@ function ContextMenu_div_0_Template(rf, ctx) {
     const ctx_r1 = ɵɵnextContext();
     ɵɵstyleMap(ctx_r1.sx("root"));
     ɵɵclassMap(ctx_r1.cn(ctx_r1.cx("root"), ctx_r1.styleClass));
-    ɵɵproperty("ngStyle", ctx_r1.style)("@overlayAnimation", ɵɵpureFunction0(21, _c9));
-    ɵɵattribute("data-pc-section", "root")("data-pc-name", "contextmenu")("id", ctx_r1.id);
+    ɵɵproperty("ngStyle", ctx_r1.style)("pBind", ctx_r1.ptm("root"))("@overlayAnimation", ɵɵpureFunction0(21, _c9));
+    ɵɵattribute("id", ctx_r1.id);
     ɵɵadvance(2);
-    ɵɵproperty("root", true)("items", ctx_r1.processedItems)("itemTemplate", ctx_r1.itemTemplate || ctx_r1._itemTemplate)("menuId", ctx_r1.id)("tabindex", !ctx_r1.disabled ? ctx_r1.tabindex : -1)("ariaLabel", ctx_r1.ariaLabel)("ariaLabelledBy", ctx_r1.ariaLabelledBy)("baseZIndex", ctx_r1.baseZIndex)("autoZIndex", ctx_r1.autoZIndex)("visible", ctx_r1.submenuVisible())("focusedItemId", ctx_r1.focused ? ctx_r1.focusedItemId : void 0)("activeItemPath", ctx_r1.activeItemPath());
+    ɵɵproperty("root", true)("items", ctx_r1.processedItems)("itemTemplate", ctx_r1.itemTemplate || ctx_r1._itemTemplate)("menuId", ctx_r1.id)("tabindex", !ctx_r1.disabled ? ctx_r1.tabindex : -1)("ariaLabel", ctx_r1.ariaLabel)("ariaLabelledBy", ctx_r1.ariaLabelledBy)("baseZIndex", ctx_r1.baseZIndex)("autoZIndex", ctx_r1.autoZIndex)("visible", ctx_r1.submenuVisible())("focusedItemId", ctx_r1.focused ? ctx_r1.focusedItemId : void 0)("activeItemPath", ctx_r1.activeItemPath())("pt", ctx_r1.pt());
   }
 }
 var inlineStyles = {
@@ -614,7 +646,7 @@ var classes = {
 };
 var ContextMenuStyle = class _ContextMenuStyle extends BaseStyle {
   name = "contextmenu";
-  theme = style2;
+  style = style2;
   classes = classes;
   inlineStyles = inlineStyles;
   static ɵfac = /* @__PURE__ */ (() => {
@@ -646,7 +678,11 @@ var ContextMenuClasses;
   ContextMenuClasses2["submenu"] = "p-contextmenu-submenu";
   ContextMenuClasses2["separator"] = "p-contextmenu-separator";
 })(ContextMenuClasses || (ContextMenuClasses = {}));
+var CONTEXTMENU_INSTANCE = new InjectionToken("CONTEXTMENU_INSTANCE");
+var CONTEXTMENUSUB_INSTANCE = new InjectionToken("CONTEXTMENUSUB_INSTANCE");
 var ContextMenuSub = class _ContextMenuSub extends BaseComponent {
+  el;
+  renderer;
   contextMenu;
   visible = false;
   items;
@@ -668,9 +704,20 @@ var ContextMenuSub = class _ContextMenuSub extends BaseComponent {
   menuBlur = new EventEmitter();
   menuKeydown = new EventEmitter();
   sublistViewChild;
+  hostName = "ContextMenu";
   _componentStyle = inject(ContextMenuStyle);
-  constructor(contextMenu) {
+  $pcContextMenu = inject(CONTEXTMENU_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  $pcContextMenuSub = inject(CONTEXTMENUSUB_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  constructor(el, renderer, contextMenu) {
     super();
+    this.el = el;
+    this.renderer = renderer;
     this.contextMenu = contextMenu;
   }
   getItemProp(processedItem, name, params = null) {
@@ -735,21 +782,36 @@ var ContextMenuSub = class _ContextMenuSub extends BaseComponent {
       this.position(sublist2);
     }
   }
+  // TODO: will be removed later. Helper method to get PT from parent ContextMenu if available, otherwise use own PT
+  _ptm(section, options) {
+    return this.$pcContextMenu ? this.$pcContextMenu.ptm(section, options) : this.ptm(section, options);
+  }
+  getPTOptions(processedItem, index, key) {
+    return this._ptm(key, {
+      context: {
+        item: processedItem.item,
+        index,
+        active: this.isItemActive(processedItem),
+        focused: this.isItemFocused(processedItem),
+        disabled: this.isItemDisabled(processedItem)
+      }
+    });
+  }
   position(sublist) {
     const parentItem = sublist.parentElement.parentElement;
     const containerOffset = K(sublist.parentElement.parentElement);
     const viewport = h();
-    const sublistWidth = sublist.offsetParent ? sublist.offsetWidth : J(sublist);
+    const sublistWidth = sublist.offsetParent ? sublist.offsetWidth : J2(sublist);
     const itemOuterWidth = v(parentItem.children[0]);
     sublist.style.top = "0px";
-    if (parseInt(containerOffset.left, 10) + itemOuterWidth + sublistWidth > viewport.width - P()) {
+    if (parseInt(containerOffset.left, 10) + itemOuterWidth + sublistWidth > viewport.width - O()) {
       sublist.style.left = -1 * sublistWidth + "px";
     } else {
       sublist.style.left = itemOuterWidth + "px";
     }
   }
   static ɵfac = function ContextMenuSub_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _ContextMenuSub)(ɵɵdirectiveInject(forwardRef(() => ContextMenu)));
+    return new (__ngFactoryType__ || _ContextMenuSub)(ɵɵdirectiveInject(ElementRef), ɵɵdirectiveInject(Renderer2), ɵɵdirectiveInject(forwardRef(() => ContextMenu)));
   };
   static ɵcmp = ɵɵdefineComponent({
     type: _ContextMenuSub,
@@ -786,10 +848,16 @@ var ContextMenuSub = class _ContextMenuSub extends BaseComponent {
       menuBlur: "menuBlur",
       menuKeydown: "menuKeydown"
     },
-    features: [ɵɵProvidersFeature([ContextMenuStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([ContextMenuStyle, {
+      provide: CONTEXTMENUSUB_INSTANCE,
+      useExisting: _ContextMenuSub
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _ContextMenuSub
+    }]), ɵɵInheritDefinitionFeature],
     decls: 1,
     vars: 1,
-    consts: [["sublist", ""], ["listItem", ""], ["htmlLabel", ""], ["role", "menu", 3, "class", "tabindex", "keydown", "focus", "blur", 4, "ngIf"], ["role", "menu", 3, "keydown", "focus", "blur", "tabindex"], ["ngFor", "", 3, "ngForOf"], ["role", "separator", 3, "style", "class", 4, "ngIf"], ["role", "menuitem", "pTooltip", "", 3, "style", "class", "tooltipOptions", 4, "ngIf"], ["role", "separator"], ["role", "menuitem", "pTooltip", "", 3, "tooltipOptions"], [3, "click", "mouseenter"], [4, "ngIf"], [3, "items", "itemTemplate", "menuId", "visible", "activeItemPath", "focusedItemId", "level", "itemClick", "itemMouseEnter", 4, "ngIf"], ["pRipple", "", 3, "target", "class", 4, "ngIf"], ["pRipple", "", 3, "routerLink", "queryParams", "routerLinkActiveOptions", "target", "class", "fragment", "queryParamsHandling", "preserveFragment", "skipLocationChange", "replaceUrl", "state", 4, "ngIf"], ["pRipple", "", 3, "target"], [3, "class", "ngStyle", 4, "ngIf"], [3, "class", 4, "ngIf", "ngIfElse"], [3, "class", "value", 4, "ngIf"], [3, "ngStyle"], [3, "innerHTML"], [3, "value"], ["data-p-icon", "angle-right", 3, "class", 4, "ngIf"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], ["data-p-icon", "angle-right"], [3, "data-pc-section", "aria-hidden"], ["pRipple", "", 3, "routerLink", "queryParams", "routerLinkActiveOptions", "target", "fragment", "queryParamsHandling", "preserveFragment", "skipLocationChange", "replaceUrl", "state"], [3, "itemClick", "itemMouseEnter", "items", "itemTemplate", "menuId", "visible", "activeItemPath", "focusedItemId", "level"]],
+    consts: [["sublist", ""], ["listItem", ""], ["htmlLabel", ""], ["role", "menu", 3, "class", "pBind", "tabindex", "keydown", "focus", "blur", 4, "ngIf"], ["role", "menu", 3, "keydown", "focus", "blur", "pBind", "tabindex"], ["ngFor", "", 3, "ngForOf"], ["role", "separator", 3, "style", "class", "pBind", 4, "ngIf"], ["role", "menuitem", "pTooltip", "", 3, "style", "class", "pBind", "tooltipOptions", 4, "ngIf"], ["role", "separator", 3, "pBind"], ["role", "menuitem", "pTooltip", "", 3, "pBind", "tooltipOptions"], [3, "click", "mouseenter", "pBind"], [4, "ngIf"], [3, "items", "itemTemplate", "menuId", "visible", "activeItemPath", "focusedItemId", "level", "pt", "itemClick", "itemMouseEnter", 4, "ngIf"], ["pRipple", "", 3, "target", "class", "pBind", 4, "ngIf"], ["pRipple", "", 3, "routerLink", "queryParams", "routerLinkActiveOptions", "target", "class", "fragment", "queryParamsHandling", "preserveFragment", "skipLocationChange", "replaceUrl", "state", "pBind", 4, "ngIf"], ["pRipple", "", 3, "target", "pBind"], [3, "class", "ngStyle", "pBind", 4, "ngIf"], [3, "class", "pBind", 4, "ngIf", "ngIfElse"], [3, "class", "value", 4, "ngIf"], [3, "ngStyle", "pBind"], [3, "pBind"], [3, "innerHTML", "pBind"], [3, "value"], ["data-p-icon", "angle-right", 3, "class", "pBind", 4, "ngIf"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], ["data-p-icon", "angle-right", 3, "pBind"], [3, "aria-hidden"], ["pRipple", "", 3, "routerLink", "queryParams", "routerLinkActiveOptions", "target", "fragment", "queryParamsHandling", "preserveFragment", "skipLocationChange", "replaceUrl", "state", "pBind"], [3, "itemClick", "itemMouseEnter", "items", "itemTemplate", "menuId", "visible", "activeItemPath", "focusedItemId", "level", "pt"]],
     template: function ContextMenuSub_Template(rf, ctx) {
       if (rf & 1) {
         ɵɵtemplate(0, ContextMenuSub_ul_0_Template, 3, 11, "ul", 3);
@@ -798,7 +866,7 @@ var ContextMenuSub = class _ContextMenuSub extends BaseComponent {
         ɵɵproperty("ngIf", ctx.root ? true : ctx.visible);
       }
     },
-    dependencies: [_ContextMenuSub, CommonModule, NgForOf, NgIf, NgTemplateOutlet, NgStyle, RouterModule, RouterLink, Ripple, TooltipModule, Tooltip, AngleRightIcon, BadgeModule, Badge, SharedModule],
+    dependencies: [_ContextMenuSub, CommonModule, NgForOf, NgIf, NgTemplateOutlet, NgStyle, RouterModule, RouterLink, Ripple, TooltipModule, Tooltip, Bind, AngleRightIcon, BadgeModule, Badge, SharedModule, BindModule],
     encapsulation: 2,
     data: {
       animation: [trigger("overlayAnimation", [transition(":enter", [style({
@@ -815,13 +883,14 @@ var ContextMenuSub = class _ContextMenuSub extends BaseComponent {
     args: [{
       selector: "p-contextMenuSub, p-contextmenu-sub",
       standalone: true,
-      imports: [CommonModule, RouterModule, Ripple, TooltipModule, AngleRightIcon, BadgeModule, SharedModule],
+      imports: [CommonModule, RouterModule, Ripple, TooltipModule, AngleRightIcon, BadgeModule, SharedModule, BindModule],
       template: `
         <ul
             *ngIf="root ? true : visible"
             #sublist
             role="menu"
             [class]="root ? cx('rootList') : cx('submenu')"
+            [pBind]="_ptm(root ? 'rootList' : 'submenu')"
             [@overlayAnimation]="visible"
             (@overlayAnimation.start)="onEnter($event, sublist)"
             [attr.id]="menuId + '_list'"
@@ -830,7 +899,6 @@ var ContextMenuSub = class _ContextMenuSub extends BaseComponent {
             [attr.aria-labelledBy]="ariaLabelledBy"
             [attr.aria-activedescendant]="focusedItemId"
             [attr.aria-orientation]="'vertical'"
-            [attr.data-pc-section]="'menu'"
             (keydown)="menuKeydown.emit($event)"
             (focus)="menuFocus.emit($event)"
             (blur)="menuBlur.emit($event)"
@@ -842,14 +910,13 @@ var ContextMenuSub = class _ContextMenuSub extends BaseComponent {
                     [style]="getItemProp(processedItem, 'style')"
                     [class]="cn(cx('separator'), getItemProp(processedItem, 'styleClass'))"
                     role="separator"
-                    [attr.data-pc-section]="'separator'"
+                    [pBind]="_ptm('separator')"
                 ></li>
                 <li
                     #listItem
                     *ngIf="isItemVisible(processedItem) && !getItemProp(processedItem, 'separator')"
                     role="menuitem"
                     [attr.id]="getItemId(processedItem)"
-                    [attr.data-pc-section]="'menuitem'"
                     [attr.data-p-highlight]="isItemActive(processedItem)"
                     [attr.data-p-focused]="isItemFocused(processedItem)"
                     [attr.data-p-disabled]="isItemDisabled(processedItem)"
@@ -862,42 +929,45 @@ var ContextMenuSub = class _ContextMenuSub extends BaseComponent {
                     [attr.aria-posinset]="getAriaPosInset(index)"
                     [style]="getItemProp(processedItem, 'style')"
                     [class]="cn(cx('item', { instance: this, processedItem }), getItemProp(processedItem, 'styleClass'))"
+                    [pBind]="getPTOptions(processedItem, index, 'item')"
                     pTooltip
                     [tooltipOptions]="getItemProp(processedItem, 'tooltipOptions')"
                 >
-                    <div [attr.data-pc-section]="'content'" [class]="cx('itemContent')" (click)="onItemClick($event, processedItem)" (mouseenter)="onItemMouseEnter({ $event, processedItem })">
+                    <div [class]="cx('itemContent')" [pBind]="getPTOptions(processedItem, index, 'itemContent')" (click)="onItemClick($event, processedItem)" (mouseenter)="onItemMouseEnter({ $event, processedItem })">
                         <ng-container *ngIf="!itemTemplate">
                             <a
                                 *ngIf="!getItemProp(processedItem, 'routerLink')"
                                 [attr.href]="getItemProp(processedItem, 'url')"
                                 [attr.data-automationid]="getItemProp(processedItem, 'automationId')"
-                                [attr.data-pc-section]="'action'"
                                 [target]="getItemProp(processedItem, 'target')"
                                 [class]="cx('itemLink')"
                                 [attr.tabindex]="-1"
+                                [pBind]="getPTOptions(processedItem, index, 'itemLink')"
                                 pRipple
                             >
                                 <span
                                     *ngIf="getItemProp(processedItem, 'icon')"
                                     [class]="cn(cx('itemIcon'), getItemProp(processedItem, 'icon'))"
                                     [ngStyle]="getItemProp(processedItem, 'iconStyle')"
-                                    [attr.data-pc-section]="'icon'"
+                                    [pBind]="getPTOptions(processedItem, index, 'itemIcon')"
                                     [attr.aria-hidden]="true"
                                     [attr.tabindex]="-1"
                                 >
                                 </span>
-                                <span *ngIf="getItemProp(processedItem, 'escape'); else htmlLabel" [class]="cx('itemLabel')" [attr.data-pc-section]="'label'">
+                                <span *ngIf="getItemProp(processedItem, 'escape'); else htmlLabel" [class]="cx('itemLabel')" [pBind]="getPTOptions(processedItem, index, 'itemLabel')">
                                     {{ getItemLabel(processedItem) }}
                                 </span>
-                                <ng-template #htmlLabel> <span [class]="cx('itemLabel')" [innerHTML]="getItemLabel(processedItem)" [attr.data-pc-section]="'label'"></span> </ng-template>
+                                <ng-template #htmlLabel> <span [class]="cx('itemLabel')" [innerHTML]="getItemLabel(processedItem)" [pBind]="getPTOptions(processedItem, index, 'itemLabel')"></span> </ng-template>
                                 <p-badge *ngIf="getItemProp(processedItem, 'badge')" [class]="getItemProp(processedItem, 'badgeStyleClass')" [value]="getItemProp(processedItem, 'badge')" />
                                 <ng-container *ngIf="isItemGroup(processedItem)">
-                                    <svg data-p-icon="angle-right" *ngIf="!contextMenu.submenuIconTemplate && !contextMenu._submenuIconTemplate" [class]="cx('submenuIcon')" [attr.data-pc-section]="'submenuicon'" [attr.aria-hidden]="true" />
-                                    <ng-template
-                                        *ngTemplateOutlet="contextMenu.submenuIconTemplate || contextMenu._submenuIconTemplate; context: { class: 'p-contextmenu-submenu-icon' }"
-                                        [attr.data-pc-section]="'submenuicon'"
+                                    <svg
+                                        data-p-icon="angle-right"
+                                        *ngIf="!contextMenu.submenuIconTemplate && !contextMenu._submenuIconTemplate"
+                                        [class]="cx('submenuIcon')"
+                                        [pBind]="getPTOptions(processedItem, index, 'submenuIcon')"
                                         [attr.aria-hidden]="true"
-                                    ></ng-template>
+                                    />
+                                    <ng-template *ngTemplateOutlet="contextMenu.submenuIconTemplate || contextMenu._submenuIconTemplate; context: { class: 'p-contextmenu-submenu-icon' }" [attr.aria-hidden]="true"></ng-template>
                                 </ng-container>
                             </a>
                             <a
@@ -905,7 +975,6 @@ var ContextMenuSub = class _ContextMenuSub extends BaseComponent {
                                 [routerLink]="getItemProp(processedItem, 'routerLink')"
                                 [attr.data-automationid]="getItemProp(processedItem, 'automationId')"
                                 [attr.tabindex]="-1"
-                                [attr.data-pc-section]="'action'"
                                 [queryParams]="getItemProp(processedItem, 'queryParams')"
                                 [routerLinkActiveOptions]="getItemProp(processedItem, 'routerLinActiveOptions') || { exact: false }"
                                 [target]="getItemProp(processedItem, 'target')"
@@ -916,31 +985,34 @@ var ContextMenuSub = class _ContextMenuSub extends BaseComponent {
                                 [skipLocationChange]="getItemProp(processedItem, 'skipLocationChange')"
                                 [replaceUrl]="getItemProp(processedItem, 'replaceUrl')"
                                 [state]="getItemProp(processedItem, 'state')"
+                                [pBind]="getPTOptions(processedItem, index, 'itemLink')"
                                 pRipple
                             >
                                 <span
                                     *ngIf="getItemProp(processedItem, 'icon')"
                                     [class]="cn(cx('itemIcon'), getItemProp(processedItem, 'icon'))"
                                     [ngStyle]="getItemProp(processedItem, 'iconStyle')"
-                                    [attr.data-pc-section]="'icon'"
+                                    [pBind]="getPTOptions(processedItem, index, 'itemIcon')"
                                     [attr.aria-hidden]="true"
                                     [attr.tabindex]="-1"
                                 >
                                 </span>
-                                <span *ngIf="getItemProp(processedItem, 'escape'); else htmlLabel" [class]="cx('itemLabel')" [attr.data-pc-section]="'label'">
+                                <span *ngIf="getItemProp(processedItem, 'escape'); else htmlLabel" [class]="cx('itemLabel')" [pBind]="getPTOptions(processedItem, index, 'itemLabel')">
                                     {{ getItemLabel(processedItem) }}
                                 </span>
                                 <ng-template #htmlLabel>
-                                    <span [class]="cx('itemLabel')" [innerHTML]="getItemLabel(processedItem)" [attr.data-pc-section]="'label'"></span>
+                                    <span [class]="cx('itemLabel')" [innerHTML]="getItemLabel(processedItem)" [pBind]="getPTOptions(processedItem, index, 'itemLabel')"></span>
                                 </ng-template>
                                 <p-badge *ngIf="getItemProp(processedItem, 'badge')" [class]="getItemProp(processedItem, 'badgeStyleClass')" [value]="getItemProp(processedItem, 'badge')" />
                                 <ng-container *ngIf="isItemGroup(processedItem)">
-                                    <svg data-p-icon="angle-right" *ngIf="!contextMenu.submenuIconTemplate && !contextMenu._submenuIconTemplate" [class]="cx('submenuIcon')" [attr.data-pc-section]="'submenuicon'" [attr.aria-hidden]="true" />
-                                    <ng-template
-                                        *ngTemplateOutlet="!contextMenu.submenuIconTemplate || !contextMenu._submenuIconTemplate; context: { class: 'p-contextmenu-submenu-icon' }"
-                                        [attr.data-pc-section]="'submenuicon'"
+                                    <svg
+                                        data-p-icon="angle-right"
+                                        *ngIf="!contextMenu.submenuIconTemplate && !contextMenu._submenuIconTemplate"
+                                        [class]="cx('submenuIcon')"
+                                        [pBind]="getPTOptions(processedItem, index, 'submenuIcon')"
                                         [attr.aria-hidden]="true"
-                                    ></ng-template>
+                                    />
+                                    <ng-template *ngTemplateOutlet="!contextMenu.submenuIconTemplate || !contextMenu._submenuIconTemplate; context: { class: 'p-contextmenu-submenu-icon' }" [attr.aria-hidden]="true"></ng-template>
                                 </ng-container>
                             </a>
                         </ng-container>
@@ -960,6 +1032,7 @@ var ContextMenuSub = class _ContextMenuSub extends BaseComponent {
                         [level]="level + 1"
                         (itemClick)="itemClick.emit($event)"
                         (itemMouseEnter)="onItemMouseEnter($event)"
+                        [pt]="pt()"
                     />
                 </li>
             </ng-template>
@@ -971,9 +1044,19 @@ var ContextMenuSub = class _ContextMenuSub extends BaseComponent {
         opacity: 0
       })])])],
       encapsulation: ViewEncapsulation.None,
-      providers: [ContextMenuStyle]
+      providers: [ContextMenuStyle, {
+        provide: CONTEXTMENUSUB_INSTANCE,
+        useExisting: ContextMenuSub
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: ContextMenuSub
+      }]
     }]
   }], () => [{
+    type: ElementRef
+  }, {
+    type: Renderer2
+  }, {
     type: ContextMenu,
     decorators: [{
       type: Inject,
@@ -1222,8 +1305,7 @@ var ContextMenu = class _ContextMenu extends BaseComponent {
       }
     });
   }
-  ngOnInit() {
-    super.ngOnInit();
+  onInit() {
     this.id = this.id || s2("pn_id_");
     this.bindMatchMediaListener();
     this.bindTriggerEventListener();
@@ -1261,7 +1343,7 @@ var ContextMenu = class _ContextMenu extends BaseComponent {
       if (!this.documentClickListener) {
         const documentTarget = this.el ? this.el.nativeElement.ownerDocument : "document";
         this.documentClickListener = this.renderer.listen(documentTarget, "click", (event) => {
-          if (this.containerViewChild.nativeElement.offsetParent && this.isOutsideClicked(event) && !event.ctrlKey && event.button !== 2 && this.triggerEvent !== "click") {
+          if (this.containerViewChild?.nativeElement?.offsetParent && this.isOutsideClicked(event) && !event.ctrlKey && event.button !== 2) {
             this.hide();
           }
         });
@@ -1286,7 +1368,7 @@ var ContextMenu = class _ContextMenu extends BaseComponent {
   templates;
   _submenuIconTemplate;
   _itemTemplate;
-  ngAfterContentInit() {
+  onAfterContentInit() {
     this.templates?.forEach((item) => {
       switch (item.getType()) {
         case "submenuicon":
@@ -1300,6 +1382,22 @@ var ContextMenu = class _ContextMenu extends BaseComponent {
           break;
       }
     });
+  }
+  getPTOptions(key, item, index, id) {
+    return this.ptm(key, {
+      context: {
+        item,
+        index,
+        focused: this.isItemFocused({
+          index,
+          item
+        }),
+        disabled: this.isItemDisabled(item)
+      }
+    });
+  }
+  isItemFocused(itemInfo) {
+    return this.focusedItemInfo().index === itemInfo.index;
   }
   createProcessedItems(items, level = 0, parent = {}, parentKey = "") {
     const processedItems = [];
@@ -1391,7 +1489,7 @@ var ContextMenu = class _ContextMenu extends BaseComponent {
         parentKey,
         item
       });
-      bt(this.rootmenu.sublistViewChild.nativeElement);
+      bt(this.rootmenu?.sublistViewChild?.nativeElement);
     } else {
       grouped ? this.onItemChange(event) : this.hide();
     }
@@ -1439,7 +1537,7 @@ var ContextMenu = class _ContextMenu extends BaseComponent {
       case "ShiftRight":
         break;
       default:
-        if (!metaKey && j(event.key)) {
+        if (!metaKey && J(event.key)) {
           this.searchItems(event, event.key);
         }
         break;
@@ -1489,7 +1587,7 @@ var ContextMenu = class _ContextMenu extends BaseComponent {
   onArrowLeftKey(event) {
     const processedItem = this.visibleItems[this.focusedItemInfo().index];
     const parentItem = this.activeItemPath().find((p) => p.key === processedItem.parentKey);
-    const root = a(processedItem.parent);
+    const root = l(processedItem.parent);
     if (!root) {
       this.focusedItemInfo.set({
         index: -1,
@@ -1537,8 +1635,8 @@ var ContextMenu = class _ContextMenu extends BaseComponent {
   }
   onEnterKey(event) {
     if (this.focusedItemInfo().index !== -1) {
-      const element = z(this.rootmenu.el.nativeElement, `li[id="${`${this.focusedItemId}`}"]`);
-      const anchorElement = element && z(element, 'a[data-pc-section="action"]');
+      const element = z(this.rootmenu?.el?.nativeElement, `li[id="${`${this.focusedItemId}`}"]`);
+      const anchorElement = element && (z(element, '[data-pc-section="itemlink"]') || z(element, "a,button"));
       anchorElement ? anchorElement.click() : element && element.click();
       const processedItem = this.visibleItems[this.focusedItemInfo().index];
       const grouped = this.isProccessedItemGroup(processedItem);
@@ -1556,7 +1654,7 @@ var ContextMenu = class _ContextMenu extends BaseComponent {
       processedItem,
       isFocus
     } = event;
-    if (a(processedItem)) return;
+    if (l(processedItem)) return;
     const {
       index,
       key,
@@ -1576,7 +1674,7 @@ var ContextMenu = class _ContextMenu extends BaseComponent {
       parentKey,
       item: processedItem.item
     });
-    isFocus && bt(this.rootmenu.sublistViewChild.nativeElement);
+    isFocus && bt(this.rootmenu?.sublistViewChild?.nativeElement);
     if (type === "hover" && this.queryMatches) {
       return;
     }
@@ -1608,10 +1706,10 @@ var ContextMenu = class _ContextMenu extends BaseComponent {
         this.container = event.element;
         this.position();
         this.moveOnTop();
-        this.attrSelector && this.container.setAttribute(this.attrSelector, "");
+        this.$attrSelector && this.container?.setAttribute(this.$attrSelector, "");
         this.appendOverlay();
         this.bindGlobalListeners();
-        bt(this.rootmenu.sublistViewChild.nativeElement);
+        bt(this.rootmenu?.sublistViewChild?.nativeElement);
         break;
     }
   }
@@ -1679,9 +1777,10 @@ var ContextMenu = class _ContextMenu extends BaseComponent {
     event.preventDefault();
   }
   position() {
+    if (!this.document.scrollingElement || !this.containerViewChild?.nativeElement) return;
     let left = this.pageX + 1;
     let top = this.pageY + 1;
-    let width = this.containerViewChild.nativeElement.offsetParent ? this.containerViewChild.nativeElement.offsetWidth : J(this.containerViewChild.nativeElement);
+    let width = this.containerViewChild.nativeElement.offsetParent ? this.containerViewChild.nativeElement.offsetWidth : J2(this.containerViewChild.nativeElement);
     let height = this.containerViewChild.nativeElement.offsetParent ? this.containerViewChild.nativeElement.offsetHeight : G(this.containerViewChild.nativeElement);
     let viewport = h();
     if (left + width - this.document.scrollingElement.scrollLeft > viewport.width) {
@@ -1768,7 +1867,7 @@ var ContextMenu = class _ContextMenu extends BaseComponent {
   }
   scrollInView(index = -1) {
     const id = index !== -1 ? `${this.id}_${index}` : this.focusedItemId;
-    const element = z(this.rootmenu.el.nativeElement, `li[id="${id}"]`);
+    const element = z(this.rootmenu?.el?.nativeElement, `li[id="${id}"]`);
     if (element) {
       element.scrollIntoView && element.scrollIntoView({
         block: "nearest",
@@ -1786,7 +1885,7 @@ var ContextMenu = class _ContextMenu extends BaseComponent {
     }
   }
   isOutsideClicked(event) {
-    return !(this.containerViewChild.nativeElement.isSameNode(event.target) || this.containerViewChild.nativeElement.contains(event.target));
+    return !(this.containerViewChild?.nativeElement?.isSameNode(event.target) || this.containerViewChild?.nativeElement?.contains(event.target));
   }
   unbindResizeListener() {
     if (this.resizeListener) {
@@ -1825,12 +1924,11 @@ var ContextMenu = class _ContextMenu extends BaseComponent {
       }
     }
   }
-  ngOnDestroy() {
+  onDestroy() {
     this.unbindGlobalListeners();
     this.unbindTriggerEventListener();
     this.unbindMatchMediaListener();
     this.removeAppendedElements();
-    super.ngOnDestroy();
   }
   static ɵfac = function ContextMenu_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _ContextMenu)(ɵɵdirectiveInject(OverlayService));
@@ -1882,10 +1980,13 @@ var ContextMenu = class _ContextMenu extends BaseComponent {
       onShow: "onShow",
       onHide: "onHide"
     },
-    features: [ɵɵProvidersFeature([ContextMenuStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([ContextMenuStyle, {
+      provide: CONTEXTMENU_INSTANCE,
+      useExisting: _ContextMenu
+    }]), ɵɵInheritDefinitionFeature],
     decls: 1,
     vars: 1,
-    consts: [["container", ""], ["rootmenu", ""], [3, "class", "style", "ngStyle", 4, "ngIf"], [3, "ngStyle"], [3, "itemClick", "menuFocus", "menuBlur", "menuKeydown", "itemMouseEnter", "root", "items", "itemTemplate", "menuId", "tabindex", "ariaLabel", "ariaLabelledBy", "baseZIndex", "autoZIndex", "visible", "focusedItemId", "activeItemPath"]],
+    consts: [["container", ""], ["rootmenu", ""], [3, "class", "style", "ngStyle", "pBind", 4, "ngIf"], [3, "ngStyle", "pBind"], [3, "itemClick", "menuFocus", "menuBlur", "menuKeydown", "itemMouseEnter", "root", "items", "itemTemplate", "menuId", "tabindex", "ariaLabel", "ariaLabelledBy", "baseZIndex", "autoZIndex", "visible", "focusedItemId", "activeItemPath", "pt"]],
     template: function ContextMenu_Template(rf, ctx) {
       if (rf & 1) {
         ɵɵtemplate(0, ContextMenu_div_0_Template, 4, 22, "div", 2);
@@ -1894,7 +1995,7 @@ var ContextMenu = class _ContextMenu extends BaseComponent {
         ɵɵproperty("ngIf", ctx.visible());
       }
     },
-    dependencies: [CommonModule, NgIf, NgStyle, ContextMenuSub, RouterModule, TooltipModule, BadgeModule, SharedModule],
+    dependencies: [CommonModule, NgIf, NgStyle, ContextMenuSub, RouterModule, TooltipModule, Bind, BadgeModule, SharedModule, BindModule],
     encapsulation: 2,
     data: {
       animation: [trigger("overlayAnimation", [transition(":enter", [style({
@@ -1912,16 +2013,15 @@ var ContextMenu = class _ContextMenu extends BaseComponent {
     args: [{
       selector: "p-contextMenu, p-contextmenu, p-context-menu",
       standalone: true,
-      imports: [CommonModule, ContextMenuSub, RouterModule, TooltipModule, BadgeModule, SharedModule],
+      imports: [CommonModule, ContextMenuSub, RouterModule, TooltipModule, BadgeModule, SharedModule, BindModule],
       template: `
         <div
             #container
-            [attr.data-pc-section]="'root'"
-            [attr.data-pc-name]="'contextmenu'"
             [attr.id]="id"
             [class]="cn(cx('root'), styleClass)"
             [style]="sx('root')"
             [ngStyle]="style"
+            [pBind]="ptm('root')"
             [@overlayAnimation]="{ value: 'visible' }"
             (@overlayAnimation.start)="onOverlayAnimationStart($event)"
             (@overlayAnimation.done)="onOverlayAnimationEnd($event)"
@@ -1946,6 +2046,7 @@ var ContextMenu = class _ContextMenu extends BaseComponent {
                 (menuBlur)="onMenuBlur($event)"
                 (menuKeydown)="onKeyDown($event)"
                 (itemMouseEnter)="onItemMouseEnter($event)"
+                [pt]="pt()"
             />
         </div>
     `,
@@ -1956,7 +2057,10 @@ var ContextMenu = class _ContextMenu extends BaseComponent {
       }))])])],
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
-      providers: [ContextMenuStyle]
+      providers: [ContextMenuStyle, {
+        provide: CONTEXTMENU_INSTANCE,
+        useExisting: ContextMenu
+      }]
     }]
   }], () => [{
     type: OverlayService

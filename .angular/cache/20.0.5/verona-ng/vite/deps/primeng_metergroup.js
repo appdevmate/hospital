@@ -1,13 +1,21 @@
 import {
-  BaseComponent
-} from "./chunk-4YMQ5OOY.js";
+  BaseComponent,
+  PARENT_INSTANCE
+} from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
-} from "./chunk-L2L2T6ID.js";
+} from "./chunk-4ATYD752.js";
+import {
+  Bind
+} from "./chunk-MLQGRGGO.js";
 import {
   PrimeTemplate,
   SharedModule
-} from "./chunk-ZKOTJBQ6.js";
+} from "./chunk-LMEEH3AJ.js";
+import "./chunk-GOP36Q47.js";
+import {
+  C2 as C
+} from "./chunk-UCHM6OXG.js";
 import {
   CommonModule,
   NgClass,
@@ -27,6 +35,7 @@ import {
   NgModule,
   ViewEncapsulation,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -57,18 +66,15 @@ import {
   ɵɵtextInterpolate2
 } from "./chunk-EIF6IUR4.js";
 import {
+  InjectionToken,
   forwardRef,
   inject,
   ɵɵdefineInjectable,
   ɵɵdefineInjector
 } from "./chunk-LW34VNAR.js";
-import "./chunk-YVXMBCE5.js";
 import "./chunk-G6ECYYJH.js";
+import "./chunk-YVXMBCE5.js";
 import "./chunk-RTGP7ALM.js";
-import "./chunk-BMDSN43F.js";
-import {
-  C2 as C
-} from "./chunk-RK2DVQNP.js";
 import "./chunk-4MWRP73S.js";
 
 // node_modules/@primeuix/styles/dist/metergroup/index.mjs
@@ -87,30 +93,30 @@ var _c2 = (a0) => ({
 });
 function MeterGroupLabel_li_1_ng_container_1_i_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "i", 5);
+    ɵɵelement(0, "i", 6);
   }
   if (rf & 2) {
     const labelItem_r1 = ɵɵnextContext(2).$implicit;
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(labelItem_r1.icon);
-    ɵɵproperty("ngClass", ctx_r1.cx("labelIcon"))("ngStyle", ɵɵpureFunction1(4, _c1, labelItem_r1.color));
+    ɵɵproperty("ngClass", ctx_r1.cx("labelIcon"))("pBind", ctx_r1.ptm("labelIcon"))("ngStyle", ɵɵpureFunction1(5, _c1, labelItem_r1.color));
   }
 }
 function MeterGroupLabel_li_1_ng_container_1_span_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "span", 6);
+    ɵɵelement(0, "span", 7);
   }
   if (rf & 2) {
     const labelItem_r1 = ɵɵnextContext(2).$implicit;
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cx("labelMarker"));
-    ɵɵproperty("ngStyle", ɵɵpureFunction1(3, _c2, labelItem_r1.color));
+    ɵɵproperty("pBind", ctx_r1.ptm("labelMarker"))("ngStyle", ɵɵpureFunction1(4, _c2, labelItem_r1.color));
   }
 }
 function MeterGroupLabel_li_1_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, MeterGroupLabel_li_1_ng_container_1_i_1_Template, 1, 6, "i", 3)(2, MeterGroupLabel_li_1_ng_container_1_span_2_Template, 1, 5, "span", 4);
+    ɵɵtemplate(1, MeterGroupLabel_li_1_ng_container_1_i_1_Template, 1, 7, "i", 4)(2, MeterGroupLabel_li_1_ng_container_1_span_2_Template, 1, 6, "span", 5);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -128,9 +134,9 @@ function MeterGroupLabel_li_1_ng_container_2_Template(rf, ctx) {
 }
 function MeterGroupLabel_li_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "li");
-    ɵɵtemplate(1, MeterGroupLabel_li_1_ng_container_1_Template, 3, 2, "ng-container", 1)(2, MeterGroupLabel_li_1_ng_container_2_Template, 1, 0, "ng-container", 2);
-    ɵɵelementStart(3, "span");
+    ɵɵelementStart(0, "li", 0);
+    ɵɵtemplate(1, MeterGroupLabel_li_1_ng_container_1_Template, 3, 2, "ng-container", 2)(2, MeterGroupLabel_li_1_ng_container_2_Template, 1, 0, "ng-container", 3);
+    ɵɵelementStart(3, "span", 0);
     ɵɵtext(4);
     ɵɵelementEnd()();
   }
@@ -138,12 +144,14 @@ function MeterGroupLabel_li_1_Template(rf, ctx) {
     const labelItem_r1 = ctx.$implicit;
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cx("label"));
+    ɵɵproperty("pBind", ctx_r1.ptm("label"));
     ɵɵadvance();
     ɵɵproperty("ngIf", !ctx_r1.iconTemplate);
     ɵɵadvance();
-    ɵɵproperty("ngTemplateOutlet", ctx_r1.iconTemplate)("ngTemplateOutletContext", ɵɵpureFunction2(9, _c0, labelItem_r1, labelItem_r1.icon));
+    ɵɵproperty("ngTemplateOutlet", ctx_r1.iconTemplate)("ngTemplateOutletContext", ɵɵpureFunction2(11, _c0, labelItem_r1, labelItem_r1.icon));
     ɵɵadvance();
     ɵɵclassMap(ctx_r1.cx("labelText"));
+    ɵɵproperty("pBind", ctx_r1.ptm("labelText"));
     ɵɵadvance();
     ɵɵtextInterpolate2("", labelItem_r1.label, " (", ctx_r1.parentInstance.percentValue(labelItem_r1.value), ")");
   }
@@ -168,11 +176,11 @@ var _c9 = (a0, a1, a2, a3, a4, a5) => ({
 });
 function MeterGroup_Conditional_0_p_meterGroupLabel_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "p-meterGroupLabel", 3);
+    ɵɵelement(0, "p-meterGroupLabel", 4);
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext(2);
-    ɵɵproperty("value", ctx_r0.value)("labelPosition", ctx_r0.labelPosition)("labelOrientation", ctx_r0.labelOrientation)("min", ctx_r0.min)("max", ctx_r0.max)("iconTemplate", ctx_r0.iconTemplate || ctx_r0._iconTemplate);
+    ɵɵproperty("value", ctx_r0.value)("labelPosition", ctx_r0.labelPosition)("labelOrientation", ctx_r0.labelOrientation)("min", ctx_r0.min)("max", ctx_r0.max)("iconTemplate", ctx_r0.iconTemplate || ctx_r0._iconTemplate)("pt", ctx_r0.pt);
   }
 }
 function MeterGroup_Conditional_0_ng_container_1_Template(rf, ctx) {
@@ -182,7 +190,7 @@ function MeterGroup_Conditional_0_ng_container_1_Template(rf, ctx) {
 }
 function MeterGroup_Conditional_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, MeterGroup_Conditional_0_p_meterGroupLabel_0_Template, 1, 6, "p-meterGroupLabel", 2)(1, MeterGroup_Conditional_0_ng_container_1_Template, 1, 0, "ng-container", 0);
+    ɵɵtemplate(0, MeterGroup_Conditional_0_p_meterGroupLabel_0_Template, 1, 7, "p-meterGroupLabel", 3)(1, MeterGroup_Conditional_0_ng_container_1_Template, 1, 0, "ng-container", 0);
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext();
@@ -204,7 +212,7 @@ function MeterGroup_ng_container_3_ng_container_1_Template(rf, ctx) {
 function MeterGroup_ng_container_3_ng_container_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵelement(1, "span", 5);
+    ɵɵelement(1, "span", 6);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -212,13 +220,13 @@ function MeterGroup_ng_container_3_ng_container_2_Template(rf, ctx) {
     const ctx_r0 = ɵɵnextContext();
     ɵɵadvance();
     ɵɵclassMap(ctx_r0.cx("meter"));
-    ɵɵproperty("ngStyle", ctx_r0.meterStyle(meterItem_r2));
+    ɵɵproperty("pBind", ctx_r0.ptm("meter"))("ngStyle", ctx_r0.meterStyle(meterItem_r2));
   }
 }
 function MeterGroup_ng_container_3_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, MeterGroup_ng_container_3_ng_container_1_Template, 1, 0, "ng-container", 0)(2, MeterGroup_ng_container_3_ng_container_2_Template, 2, 3, "ng-container", 4);
+    ɵɵtemplate(1, MeterGroup_ng_container_3_ng_container_1_Template, 1, 0, "ng-container", 0)(2, MeterGroup_ng_container_3_ng_container_2_Template, 2, 4, "ng-container", 5);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -238,11 +246,11 @@ function MeterGroup_ng_container_4_Template(rf, ctx) {
 }
 function MeterGroup_Conditional_5_p_meterGroupLabel_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "p-meterGroupLabel", 3);
+    ɵɵelement(0, "p-meterGroupLabel", 4);
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext(2);
-    ɵɵproperty("value", ctx_r0.value)("labelPosition", ctx_r0.labelPosition)("labelOrientation", ctx_r0.labelOrientation)("min", ctx_r0.min)("max", ctx_r0.max)("iconTemplate", ctx_r0.iconTemplate || ctx_r0._iconTemplate);
+    ɵɵproperty("value", ctx_r0.value)("labelPosition", ctx_r0.labelPosition)("labelOrientation", ctx_r0.labelOrientation)("min", ctx_r0.min)("max", ctx_r0.max)("iconTemplate", ctx_r0.iconTemplate || ctx_r0._iconTemplate)("pt", ctx_r0.pt);
   }
 }
 function MeterGroup_Conditional_5_ng_container_1_Template(rf, ctx) {
@@ -252,7 +260,7 @@ function MeterGroup_Conditional_5_ng_container_1_Template(rf, ctx) {
 }
 function MeterGroup_Conditional_5_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, MeterGroup_Conditional_5_p_meterGroupLabel_0_Template, 1, 6, "p-meterGroupLabel", 2)(1, MeterGroup_Conditional_5_ng_container_1_Template, 1, 0, "ng-container", 0);
+    ɵɵtemplate(0, MeterGroup_Conditional_5_p_meterGroupLabel_0_Template, 1, 7, "p-meterGroupLabel", 3)(1, MeterGroup_Conditional_5_ng_container_1_Template, 1, 0, "ng-container", 0);
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext();
@@ -283,7 +291,7 @@ var classes = {
 };
 var MeterGroupStyle = class _MeterGroupStyle extends BaseStyle {
   name = "metergroup";
-  theme = style;
+  style = style;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵMeterGroupStyle_BaseFactory;
@@ -312,14 +320,16 @@ var MeterGroupClasses;
   MeterGroupClasses2["labelMarker"] = "p-metergroup-label-marker";
   MeterGroupClasses2["labelText"] = "p-metergroup-label-text";
 })(MeterGroupClasses || (MeterGroupClasses = {}));
+var METERGROUP_INSTANCE = new InjectionToken("METERGROUP_INSTANCE");
 var MeterGroupLabel = class _MeterGroupLabel extends BaseComponent {
-  value = null;
+  value = [];
   labelPosition = "end";
   labelOrientation = "horizontal";
   min;
   max;
   iconTemplate;
   parentInstance = inject(forwardRef(() => MeterGroup));
+  _componentStyle = inject(MeterGroupStyle);
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵMeterGroupLabel_BaseFactory;
     return function MeterGroupLabel_Factory(__ngFactoryType__) {
@@ -339,21 +349,22 @@ var MeterGroupLabel = class _MeterGroupLabel extends BaseComponent {
     },
     features: [ɵɵInheritDefinitionFeature],
     decls: 2,
-    vars: 4,
-    consts: [[3, "class", 4, "ngFor", "ngForOf", "ngForTrackBy"], [4, "ngIf"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], [3, "class", "ngClass", "ngStyle", 4, "ngIf"], [3, "class", "ngStyle", 4, "ngIf"], [3, "ngClass", "ngStyle"], [3, "ngStyle"]],
+    vars: 5,
+    consts: [[3, "pBind"], [3, "class", "pBind", 4, "ngFor", "ngForOf", "ngForTrackBy"], [4, "ngIf"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], [3, "class", "ngClass", "pBind", "ngStyle", 4, "ngIf"], [3, "class", "pBind", "ngStyle", 4, "ngIf"], [3, "ngClass", "pBind", "ngStyle"], [3, "pBind", "ngStyle"]],
     template: function MeterGroupLabel_Template(rf, ctx) {
       if (rf & 1) {
-        ɵɵelementStart(0, "ol");
-        ɵɵtemplate(1, MeterGroupLabel_li_1_Template, 5, 12, "li", 0);
+        ɵɵelementStart(0, "ol", 0);
+        ɵɵtemplate(1, MeterGroupLabel_li_1_Template, 5, 14, "li", 1);
         ɵɵelementEnd();
       }
       if (rf & 2) {
         ɵɵclassMap(ctx.cx("labelList"));
+        ɵɵproperty("pBind", ctx.ptm("labelList"));
         ɵɵadvance();
         ɵɵproperty("ngForOf", ctx.value)("ngForTrackBy", ctx.parentInstance.trackByFn);
       }
     },
-    dependencies: [CommonModule, NgClass, NgForOf, NgIf, NgTemplateOutlet, NgStyle, SharedModule],
+    dependencies: [CommonModule, NgClass, NgForOf, NgIf, NgTemplateOutlet, NgStyle, SharedModule, Bind],
     encapsulation: 2
   });
 };
@@ -363,16 +374,16 @@ var MeterGroupLabel = class _MeterGroupLabel extends BaseComponent {
     args: [{
       selector: "p-meterGroupLabel, p-metergrouplabel",
       standalone: true,
-      imports: [CommonModule, SharedModule],
+      imports: [CommonModule, SharedModule, Bind],
       template: `
-        <ol [class]="cx('labelList')">
-            <li *ngFor="let labelItem of value; let index = index; trackBy: parentInstance.trackByFn" [class]="cx('label')">
+        <ol [class]="cx('labelList')" [pBind]="ptm('labelList')">
+            <li *ngFor="let labelItem of value; let index = index; trackBy: parentInstance.trackByFn" [class]="cx('label')" [pBind]="ptm('label')">
                 <ng-container *ngIf="!iconTemplate">
-                    <i *ngIf="labelItem.icon" [class]="labelItem.icon" [ngClass]="cx('labelIcon')" [ngStyle]="{ color: labelItem.color }"></i>
-                    <span *ngIf="!labelItem.icon" [class]="cx('labelMarker')" [ngStyle]="{ backgroundColor: labelItem.color }"></span>
+                    <i *ngIf="labelItem.icon" [class]="labelItem.icon" [ngClass]="cx('labelIcon')" [pBind]="ptm('labelIcon')" [ngStyle]="{ color: labelItem.color }"></i>
+                    <span *ngIf="!labelItem.icon" [class]="cx('labelMarker')" [pBind]="ptm('labelMarker')" [ngStyle]="{ backgroundColor: labelItem.color }"></span>
                 </ng-container>
                 <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit: labelItem, icon: labelItem.icon }"></ng-container>
-                <span [class]="cx('labelText')">{{ labelItem.label }} ({{ parentInstance.percentValue(labelItem.value) }})</span>
+                <span [class]="cx('labelText')" [pBind]="ptm('labelText')">{{ labelItem.label }} ({{ parentInstance.percentValue(labelItem.value) }})</span>
             </li>
         </ol>
     `
@@ -399,6 +410,13 @@ var MeterGroupLabel = class _MeterGroupLabel extends BaseComponent {
   });
 })();
 var MeterGroup = class _MeterGroup extends BaseComponent {
+  $pcMeterGroup = inject(METERGROUP_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
   /**
    * Current value of the metergroup.
    * @group Props
@@ -449,17 +467,19 @@ var MeterGroup = class _MeterGroup extends BaseComponent {
   _endTemplate;
   _startTemplate;
   _iconTemplate;
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
+  }
   _componentStyle = inject(MeterGroupStyle);
   constructor() {
     super();
   }
-  ngAfterViewInit() {
-    super.ngAfterViewInit();
+  onAfterViewInit() {
     const _container = this.el.nativeElement;
     const height = C(_container);
     this.vertical && (_container.style.height = height + "px");
   }
-  ngAfterContentInit() {
+  onAfterContentInit() {
     this.templates?.forEach((item) => {
       switch (item.getType()) {
         case "label":
@@ -481,6 +501,9 @@ var MeterGroup = class _MeterGroup extends BaseComponent {
     });
   }
   percent(meter = 0) {
+    if (this.max === this.min) {
+      return 100;
+    }
     const percentOfItem = (meter - this.min) / (this.max - this.min) * 100;
     return Math.round(Math.max(0, Math.min(100, percentOfItem)));
   }
@@ -490,18 +513,24 @@ var MeterGroup = class _MeterGroup extends BaseComponent {
   meterStyle(val) {
     return {
       backgroundColor: val.color,
-      width: this.orientation === "horizontal" && this.percentValue(val.value),
-      height: this.orientation === "vertical" && this.percentValue(val.value)
+      width: this.orientation === "horizontal" && this.percentValue(val.value || 0),
+      height: this.orientation === "vertical" && this.percentValue(val.value || 0)
     };
   }
   totalPercent() {
-    return this.percent(this.value.reduce((total, val) => total + val.value, 0));
+    if (!this.value) {
+      return 0;
+    }
+    return this.percent(this.value.reduce((total, val) => total + (val.value || 0), 0));
   }
   percentages() {
+    if (!this.value) {
+      return [];
+    }
     let sum = 0;
     const sumsArray = [];
     this.value.forEach((item) => {
-      sum += item.value;
+      sum += item.value || 0;
       sumsArray.push(sum);
     });
     return sumsArray;
@@ -550,16 +579,22 @@ var MeterGroup = class _MeterGroup extends BaseComponent {
       labelOrientation: "labelOrientation",
       styleClass: "styleClass"
     },
-    features: [ɵɵProvidersFeature([MeterGroupStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([MeterGroupStyle, {
+      provide: METERGROUP_INSTANCE,
+      useExisting: _MeterGroup
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _MeterGroup
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     decls: 6,
-    vars: 18,
-    consts: [[4, "ngTemplateOutlet", "ngTemplateOutletContext"], [4, "ngFor", "ngForOf", "ngForTrackBy"], [3, "value", "labelPosition", "labelOrientation", "min", "max", "iconTemplate", 4, "ngIf"], [3, "value", "labelPosition", "labelOrientation", "min", "max", "iconTemplate"], [4, "ngIf"], [3, "ngStyle"]],
+    vars: 19,
+    consts: [[4, "ngTemplateOutlet", "ngTemplateOutletContext"], [3, "pBind"], [4, "ngFor", "ngForOf", "ngForTrackBy"], [3, "value", "labelPosition", "labelOrientation", "min", "max", "iconTemplate", "pt", 4, "ngIf"], [3, "value", "labelPosition", "labelOrientation", "min", "max", "iconTemplate", "pt"], [4, "ngIf"], [3, "pBind", "ngStyle"]],
     template: function MeterGroup_Template(rf, ctx) {
       if (rf & 1) {
         ɵɵconditionalCreate(0, MeterGroup_Conditional_0_Template, 2, 7);
         ɵɵtemplate(1, MeterGroup_ng_container_1_Template, 1, 0, "ng-container", 0);
-        ɵɵelementStart(2, "div");
-        ɵɵtemplate(3, MeterGroup_ng_container_3_Template, 3, 10, "ng-container", 1);
+        ɵɵelementStart(2, "div", 1);
+        ɵɵtemplate(3, MeterGroup_ng_container_3_Template, 3, 10, "ng-container", 2);
         ɵɵelementEnd();
         ɵɵtemplate(4, MeterGroup_ng_container_4_Template, 1, 0, "ng-container", 0);
         ɵɵconditionalCreate(5, MeterGroup_Conditional_5_Template, 2, 7);
@@ -567,18 +602,19 @@ var MeterGroup = class _MeterGroup extends BaseComponent {
       if (rf & 2) {
         ɵɵconditional(ctx.labelPosition === "start" ? 0 : -1);
         ɵɵadvance();
-        ɵɵproperty("ngTemplateOutlet", ctx.startTemplate || ctx._startTemplate)("ngTemplateOutletContext", ɵɵpureFunction3(10, _c8, ctx.value, ctx.totalPercent(), ctx.percentages()));
+        ɵɵproperty("ngTemplateOutlet", ctx.startTemplate || ctx._startTemplate)("ngTemplateOutletContext", ɵɵpureFunction3(11, _c8, ctx.value, ctx.totalPercent(), ctx.percentages()));
         ɵɵadvance();
         ɵɵclassMap(ctx.cx("meters"));
+        ɵɵproperty("pBind", ctx.ptm("meters"));
         ɵɵadvance();
         ɵɵproperty("ngForOf", ctx.value)("ngForTrackBy", ctx.trackByFn);
         ɵɵadvance();
-        ɵɵproperty("ngTemplateOutlet", ctx.endTemplate || ctx._endTemplate)("ngTemplateOutletContext", ɵɵpureFunction3(14, _c8, ctx.value, ctx.totalPercent(), ctx.percentages()));
+        ɵɵproperty("ngTemplateOutlet", ctx.endTemplate || ctx._endTemplate)("ngTemplateOutletContext", ɵɵpureFunction3(15, _c8, ctx.value, ctx.totalPercent(), ctx.percentages()));
         ɵɵadvance();
         ɵɵconditional(ctx.labelPosition === "end" ? 5 : -1);
       }
     },
-    dependencies: [CommonModule, NgForOf, NgIf, NgTemplateOutlet, NgStyle, MeterGroupLabel, SharedModule],
+    dependencies: [CommonModule, NgForOf, NgIf, NgTemplateOutlet, NgStyle, MeterGroupLabel, SharedModule, Bind],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -589,14 +625,14 @@ var MeterGroup = class _MeterGroup extends BaseComponent {
     args: [{
       selector: "p-meterGroup, p-metergroup, p-meter-group",
       standalone: true,
-      imports: [CommonModule, MeterGroupLabel, SharedModule],
+      imports: [CommonModule, MeterGroupLabel, SharedModule, Bind],
       template: `
         @if (labelPosition === 'start') {
-            <p-meterGroupLabel *ngIf="!labelTemplate && !_labelTemplate" [value]="value" [labelPosition]="labelPosition" [labelOrientation]="labelOrientation" [min]="min" [max]="max" [iconTemplate]="iconTemplate || _iconTemplate" />
+            <p-meterGroupLabel *ngIf="!labelTemplate && !_labelTemplate" [value]="value" [labelPosition]="labelPosition" [labelOrientation]="labelOrientation" [min]="min" [max]="max" [iconTemplate]="iconTemplate || _iconTemplate" [pt]="pt" />
             <ng-container *ngTemplateOutlet="labelTemplate || labelTemplate; context: { $implicit: value, totalPercent: totalPercent(), percentages: percentages() }"></ng-container>
         }
         <ng-container *ngTemplateOutlet="startTemplate || _startTemplate; context: { $implicit: value, totalPercent: totalPercent(), percentages: percentages() }"></ng-container>
-        <div [class]="cx('meters')">
+        <div [class]="cx('meters')" [pBind]="ptm('meters')">
             <ng-container *ngFor="let meterItem of value; let index = index; trackBy: trackByFn">
                 <ng-container
                     *ngTemplateOutlet="
@@ -613,26 +649,33 @@ var MeterGroup = class _MeterGroup extends BaseComponent {
                 >
                 </ng-container>
                 <ng-container *ngIf="!meterTemplate && !_meterTemplate && meterItem.value > 0">
-                    <span [class]="cx('meter')" [ngStyle]="meterStyle(meterItem)"></span>
+                    <span [class]="cx('meter')" [pBind]="ptm('meter')" [ngStyle]="meterStyle(meterItem)"></span>
                 </ng-container>
             </ng-container>
         </div>
         <ng-container *ngTemplateOutlet="endTemplate || _endTemplate; context: { $implicit: value, totalPercent: totalPercent(), percentages: percentages() }"></ng-container>
         @if (labelPosition === 'end') {
-            <p-meterGroupLabel *ngIf="!labelTemplate && !_labelTemplate" [value]="value" [labelPosition]="labelPosition" [labelOrientation]="labelOrientation" [min]="min" [max]="max" [iconTemplate]="iconTemplate || _iconTemplate" />
+            <p-meterGroupLabel *ngIf="!labelTemplate && !_labelTemplate" [value]="value" [labelPosition]="labelPosition" [labelOrientation]="labelOrientation" [min]="min" [max]="max" [iconTemplate]="iconTemplate || _iconTemplate" [pt]="pt" />
             <ng-container *ngTemplateOutlet="labelTemplate || _labelTemplate; context: { $implicit: value, totalPercent: totalPercent(), percentages: percentages() }"></ng-container>
         }
     `,
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
-      providers: [MeterGroupStyle],
+      providers: [MeterGroupStyle, {
+        provide: METERGROUP_INSTANCE,
+        useExisting: MeterGroup
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: MeterGroup
+      }],
       host: {
         "[attr.aria-valuemin]": "min",
         "[attr.role]": '"meter"',
         "[attr.aria-valuemax]": "max",
         "[attr.aria-valuenow]": "totalPercent()",
         "[class]": "cn(cx('root'), styleClass)"
-      }
+      },
+      hostDirectives: [Bind]
     }]
   }], () => [], {
     value: [{

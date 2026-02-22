@@ -1,21 +1,35 @@
 import {
   BaseEditableHolder
-} from "./chunk-67V7CIUT.js";
-import "./chunk-5OCKW6BF.js";
+} from "./chunk-343RM6UZ.js";
+import "./chunk-2R7VQYSP.js";
 import {
   AutoFocus
-} from "./chunk-KOXUNDHI.js";
-import "./chunk-QVUTNZUY.js";
+} from "./chunk-YNLAOK3J.js";
+import "./chunk-S73J4WE3.js";
+import {
+  PARENT_INSTANCE
+} from "./chunk-YNJ5GKCH.js";
+import {
+  BaseStyle
+} from "./chunk-4ATYD752.js";
+import {
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
+import {
+  SharedModule
+} from "./chunk-LMEEH3AJ.js";
 import {
   NG_VALUE_ACCESSOR
 } from "./chunk-RZEKJVYA.js";
-import "./chunk-4YMQ5OOY.js";
+import "./chunk-GOP36Q47.js";
 import {
-  BaseStyle
-} from "./chunk-L2L2T6ID.js";
-import {
-  SharedModule
-} from "./chunk-ZKOTJBQ6.js";
+  $,
+  P,
+  V2 as V,
+  W,
+  k2 as k
+} from "./chunk-UCHM6OXG.js";
 import {
   CommonModule,
   NgIf,
@@ -38,6 +52,7 @@ import {
   booleanAttribute,
   numberAttribute,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -62,6 +77,7 @@ import {
   ɵɵviewQuery
 } from "./chunk-EIF6IUR4.js";
 import {
+  InjectionToken,
   forwardRef,
   inject,
   ɵɵdefineInjectable,
@@ -69,17 +85,9 @@ import {
   ɵɵresetView,
   ɵɵrestoreView
 } from "./chunk-LW34VNAR.js";
-import "./chunk-YVXMBCE5.js";
 import "./chunk-G6ECYYJH.js";
+import "./chunk-YVXMBCE5.js";
 import "./chunk-RTGP7ALM.js";
-import "./chunk-BMDSN43F.js";
-import {
-  $,
-  O,
-  V,
-  W,
-  k2 as k
-} from "./chunk-RK2DVQNP.js";
 import "./chunk-4MWRP73S.js";
 
 // node_modules/@primeuix/styles/dist/slider/index.mjs
@@ -119,7 +127,7 @@ function Slider_span_0_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext();
     ɵɵclassMap(ctx_r0.cx("range"));
-    ɵɵproperty("ngStyle", ɵɵpureFunction2(4, _c3, ctx_r0.offset !== null && ctx_r0.offset !== void 0 ? ctx_r0.offset + "%" : ctx_r0.handleValues[0] + "%", ctx_r0.diff ? ctx_r0.diff + "%" : ctx_r0.handleValues[1] - ctx_r0.handleValues[0] + "%"));
+    ɵɵproperty("ngStyle", ɵɵpureFunction2(5, _c3, ctx_r0.offset !== null && ctx_r0.offset !== void 0 ? ctx_r0.offset + "%" : ctx_r0.handleValues[0] + "%", ctx_r0.diff ? ctx_r0.diff + "%" : ctx_r0.handleValues[1] - ctx_r0.handleValues[0] + "%"))("pBind", ctx_r0.ptm("range"));
     ɵɵattribute("data-pc-section", "range");
   }
 }
@@ -130,7 +138,7 @@ function Slider_span_1_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext();
     ɵɵclassMap(ctx_r0.cx("range"));
-    ɵɵproperty("ngStyle", ɵɵpureFunction2(4, _c4, ctx_r0.offset !== null && ctx_r0.offset !== void 0 ? ctx_r0.offset + "%" : ctx_r0.handleValues[0] + "%", ctx_r0.diff ? ctx_r0.diff + "%" : ctx_r0.handleValues[1] - ctx_r0.handleValues[0] + "%"));
+    ɵɵproperty("ngStyle", ɵɵpureFunction2(5, _c4, ctx_r0.offset !== null && ctx_r0.offset !== void 0 ? ctx_r0.offset + "%" : ctx_r0.handleValues[0] + "%", ctx_r0.diff ? ctx_r0.diff + "%" : ctx_r0.handleValues[1] - ctx_r0.handleValues[0] + "%"))("pBind", ctx_r0.ptm("range"));
     ɵɵattribute("data-pc-section", "range");
   }
 }
@@ -141,7 +149,7 @@ function Slider_span_2_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext();
     ɵɵclassMap(ctx_r0.cx("range"));
-    ɵɵproperty("ngStyle", ɵɵpureFunction1(4, _c5, ctx_r0.handleValue + "%"));
+    ɵɵproperty("ngStyle", ɵɵpureFunction1(5, _c5, ctx_r0.handleValue + "%"))("pBind", ctx_r0.ptm("range"));
     ɵɵattribute("data-pc-section", "range");
   }
 }
@@ -152,7 +160,7 @@ function Slider_span_3_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext();
     ɵɵclassMap(ctx_r0.cx("range"));
-    ɵɵproperty("ngStyle", ɵɵpureFunction1(4, _c6, ctx_r0.handleValue + "%"));
+    ɵɵproperty("ngStyle", ɵɵpureFunction1(5, _c6, ctx_r0.handleValue + "%"))("pBind", ctx_r0.ptm("range"));
     ɵɵattribute("data-pc-section", "range");
   }
 }
@@ -187,7 +195,7 @@ function Slider_span_4_Template(rf, ctx) {
     const ctx_r0 = ɵɵnextContext();
     ɵɵclassMap(ctx_r0.cx("handle"));
     ɵɵstyleProp("transition", ctx_r0.dragging ? "none" : null);
-    ɵɵproperty("ngStyle", ɵɵpureFunction2(14, _c7, ctx_r0.orientation == "horizontal" ? ctx_r0.handleValue + "%" : null, ctx_r0.orientation == "vertical" ? ctx_r0.handleValue + "%" : null))("pAutoFocus", ctx_r0.autofocus);
+    ɵɵproperty("ngStyle", ɵɵpureFunction2(15, _c7, ctx_r0.orientation == "horizontal" ? ctx_r0.handleValue + "%" : null, ctx_r0.orientation == "vertical" ? ctx_r0.handleValue + "%" : null))("pAutoFocus", ctx_r0.autofocus)("pBind", ctx_r0.ptm("handle"));
     ɵɵattribute("tabindex", ctx_r0.$disabled() ? null : ctx_r0.tabindex)("aria-valuemin", ctx_r0.min)("aria-valuenow", ctx_r0.value)("aria-valuemax", ctx_r0.max)("aria-labelledby", ctx_r0.ariaLabelledBy)("aria-label", ctx_r0.ariaLabel)("aria-orientation", ctx_r0.orientation)("data-pc-section", "handle");
   }
 }
@@ -222,7 +230,7 @@ function Slider_span_5_Template(rf, ctx) {
     const ctx_r0 = ɵɵnextContext();
     ɵɵclassMap(ctx_r0.cn(ctx_r0.cx("handle"), ctx_r0.handleIndex == 0 && "p-slider-handle-active"));
     ɵɵstyleProp("transition", ctx_r0.dragging ? "none" : null);
-    ɵɵproperty("ngStyle", ɵɵpureFunction2(14, _c7, ctx_r0.rangeStartLeft, ctx_r0.rangeStartBottom))("pAutoFocus", ctx_r0.autofocus);
+    ɵɵproperty("ngStyle", ɵɵpureFunction2(15, _c7, ctx_r0.rangeStartLeft, ctx_r0.rangeStartBottom))("pAutoFocus", ctx_r0.autofocus)("pBind", ctx_r0.ptm("startHandler"));
     ɵɵattribute("tabindex", ctx_r0.$disabled() ? null : ctx_r0.tabindex)("aria-valuemin", ctx_r0.min)("aria-valuenow", ctx_r0.value ? ctx_r0.value[0] : null)("aria-valuemax", ctx_r0.max)("aria-labelledby", ctx_r0.ariaLabelledBy)("aria-label", ctx_r0.ariaLabel)("aria-orientation", ctx_r0.orientation)("data-pc-section", "startHandler");
   }
 }
@@ -257,7 +265,7 @@ function Slider_span_6_Template(rf, ctx) {
     const ctx_r0 = ɵɵnextContext();
     ɵɵclassMap(ctx_r0.cn(ctx_r0.cx("handle"), ctx_r0.handleIndex == 1 && "p-slider-handle-active"));
     ɵɵstyleProp("transition", ctx_r0.dragging ? "none" : null);
-    ɵɵproperty("ngStyle", ɵɵpureFunction2(13, _c7, ctx_r0.rangeEndLeft, ctx_r0.rangeEndBottom));
+    ɵɵproperty("ngStyle", ɵɵpureFunction2(14, _c7, ctx_r0.rangeEndLeft, ctx_r0.rangeEndBottom))("pBind", ctx_r0.ptm("endHandler"));
     ɵɵattribute("tabindex", ctx_r0.$disabled() ? null : ctx_r0.tabindex)("aria-valuemin", ctx_r0.min)("aria-valuenow", ctx_r0.value ? ctx_r0.value[1] : null)("aria-valuemax", ctx_r0.max)("aria-labelledby", ctx_r0.ariaLabelledBy)("aria-label", ctx_r0.ariaLabel)("aria-orientation", ctx_r0.orientation)("data-pc-section", "endHandler");
   }
 }
@@ -284,7 +292,7 @@ var classes = {
 };
 var SliderStyle = class _SliderStyle extends BaseStyle {
   name = "slider";
-  theme = style;
+  style = style;
   classes = classes;
   inlineStyles = inlineStyles;
   static ɵfac = /* @__PURE__ */ (() => {
@@ -309,12 +317,23 @@ var SliderClasses;
   SliderClasses2["range"] = "p-slider-range";
   SliderClasses2["handle"] = "p-slider-handle";
 })(SliderClasses || (SliderClasses = {}));
+var SLIDER_INSTANCE = new InjectionToken("SLIDER_INSTANCE");
 var SLIDER_VALUE_ACCESSOR = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => Slider),
   multi: true
 };
 var Slider = class _Slider extends BaseEditableHolder {
+  $pcSlider = inject(SLIDER_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
+  }
   /**
    * When enabled, displays an animation on click of the slider bar.
    * @group Props
@@ -426,7 +445,7 @@ var Slider = class _Slider extends BaseEditableHolder {
     event.target.focus();
     event.preventDefault();
     if (this.animate) {
-      O(this.el.nativeElement, "p-slider-animate");
+      P(this.el.nativeElement, "p-slider-animate");
     }
   }
   onDragStart(event, index) {
@@ -449,7 +468,7 @@ var Slider = class _Slider extends BaseEditableHolder {
       this.barHeight = this.el.nativeElement.offsetHeight;
     }
     if (this.animate) {
-      O(this.el.nativeElement, "p-slider-animate");
+      P(this.el.nativeElement, "p-slider-animate");
     }
     event.preventDefault();
   }
@@ -538,8 +557,8 @@ var Slider = class _Slider extends BaseEditableHolder {
   decrementValue(event, index, pageKey = false) {
     let newValue;
     if (this.range) {
-      if (this.step) newValue = this.values[index] - this.step;
-      else newValue = this.values[index] - 1;
+      if (this.step) newValue = (this.values?.[index] ?? 0) - this.step;
+      else newValue = (this.values?.[index] ?? 0) - 1;
     } else {
       if (this.step) newValue = this.value - this.step;
       else if (!this.step && pageKey) newValue = this.value - 10;
@@ -551,8 +570,8 @@ var Slider = class _Slider extends BaseEditableHolder {
   incrementValue(event, index, pageKey = false) {
     let newValue;
     if (this.range) {
-      if (this.step) newValue = this.values[index] + this.step;
-      else newValue = this.values[index] + 1;
+      if (this.step) newValue = (this.values?.[index] ?? 0) + this.step;
+      else newValue = (this.values?.[index] ?? 0) + 1;
     } else {
       if (this.step) newValue = this.value + this.step;
       else if (!this.step && pageKey) newValue = this.value + 10;
@@ -771,9 +790,8 @@ var Slider = class _Slider extends BaseEditableHolder {
       return Math.floor(val);
     }
   }
-  ngOnDestroy() {
+  onDestroy() {
     this.unbindDragListeners();
-    super.ngOnDestroy();
   }
   get minVal() {
     return Math.min(this.values[1], this.values[0]);
@@ -845,13 +863,19 @@ var Slider = class _Slider extends BaseEditableHolder {
       onChange: "onChange",
       onSlideEnd: "onSlideEnd"
     },
-    features: [ɵɵProvidersFeature([SLIDER_VALUE_ACCESSOR, SliderStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([SLIDER_VALUE_ACCESSOR, SliderStyle, {
+      provide: SLIDER_INSTANCE,
+      useExisting: _Slider
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _Slider
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     decls: 7,
     vars: 7,
-    consts: [["sliderHandle", ""], ["sliderHandleStart", ""], ["sliderHandleEnd", ""], [3, "class", "ngStyle", 4, "ngIf"], ["role", "slider", 3, "class", "transition", "ngStyle", "pAutoFocus", "touchstart", "touchmove", "touchend", "mousedown", "keydown", 4, "ngIf"], ["role", "slider", 3, "transition", "class", "ngStyle", "pAutoFocus", "keydown", "mousedown", "touchstart", "touchmove", "touchend", 4, "ngIf"], ["role", "slider", 3, "transition", "class", "ngStyle", "keydown", "mousedown", "touchstart", "touchmove", "touchend", 4, "ngIf"], [3, "ngStyle"], ["role", "slider", 3, "touchstart", "touchmove", "touchend", "mousedown", "keydown", "ngStyle", "pAutoFocus"], ["role", "slider", 3, "keydown", "mousedown", "touchstart", "touchmove", "touchend", "ngStyle", "pAutoFocus"], ["role", "slider", 3, "keydown", "mousedown", "touchstart", "touchmove", "touchend", "ngStyle"]],
+    consts: [["sliderHandle", ""], ["sliderHandleStart", ""], ["sliderHandleEnd", ""], [3, "class", "ngStyle", "pBind", 4, "ngIf"], ["role", "slider", 3, "class", "transition", "ngStyle", "pAutoFocus", "pBind", "touchstart", "touchmove", "touchend", "mousedown", "keydown", 4, "ngIf"], ["role", "slider", 3, "transition", "class", "ngStyle", "pAutoFocus", "pBind", "keydown", "mousedown", "touchstart", "touchmove", "touchend", 4, "ngIf"], ["role", "slider", 3, "transition", "class", "ngStyle", "pBind", "keydown", "mousedown", "touchstart", "touchmove", "touchend", 4, "ngIf"], [3, "ngStyle", "pBind"], ["role", "slider", 3, "touchstart", "touchmove", "touchend", "mousedown", "keydown", "ngStyle", "pAutoFocus", "pBind"], ["role", "slider", 3, "keydown", "mousedown", "touchstart", "touchmove", "touchend", "ngStyle", "pAutoFocus", "pBind"], ["role", "slider", 3, "keydown", "mousedown", "touchstart", "touchmove", "touchend", "ngStyle", "pBind"]],
     template: function Slider_Template(rf, ctx) {
       if (rf & 1) {
-        ɵɵtemplate(0, Slider_span_0_Template, 1, 7, "span", 3)(1, Slider_span_1_Template, 1, 7, "span", 3)(2, Slider_span_2_Template, 1, 6, "span", 3)(3, Slider_span_3_Template, 1, 6, "span", 3)(4, Slider_span_4_Template, 2, 17, "span", 4)(5, Slider_span_5_Template, 2, 17, "span", 5)(6, Slider_span_6_Template, 2, 16, "span", 6);
+        ɵɵtemplate(0, Slider_span_0_Template, 1, 8, "span", 3)(1, Slider_span_1_Template, 1, 8, "span", 3)(2, Slider_span_2_Template, 1, 7, "span", 3)(3, Slider_span_3_Template, 1, 7, "span", 3)(4, Slider_span_4_Template, 2, 18, "span", 4)(5, Slider_span_5_Template, 2, 18, "span", 5)(6, Slider_span_6_Template, 2, 17, "span", 6);
       }
       if (rf & 2) {
         ɵɵproperty("ngIf", ctx.range && ctx.orientation == "horizontal");
@@ -869,7 +893,7 @@ var Slider = class _Slider extends BaseEditableHolder {
         ɵɵproperty("ngIf", ctx.range);
       }
     },
-    dependencies: [CommonModule, NgIf, NgStyle, AutoFocus, SharedModule],
+    dependencies: [CommonModule, NgIf, NgStyle, AutoFocus, SharedModule, BindModule, Bind],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -880,7 +904,7 @@ var Slider = class _Slider extends BaseEditableHolder {
     args: [{
       selector: "p-slider",
       standalone: true,
-      imports: [CommonModule, AutoFocus, SharedModule],
+      imports: [CommonModule, AutoFocus, SharedModule, BindModule],
       template: `
         <span
             *ngIf="range && orientation == 'horizontal'"
@@ -891,6 +915,7 @@ var Slider = class _Slider extends BaseEditableHolder {
                 width: diff ? diff + '%' : handleValues[1] - handleValues[0] + '%'
             }"
             [attr.data-pc-section]="'range'"
+            [pBind]="ptm('range')"
         ></span>
         <span
             *ngIf="range && orientation == 'vertical'"
@@ -901,9 +926,10 @@ var Slider = class _Slider extends BaseEditableHolder {
                 height: diff ? diff + '%' : handleValues[1] - handleValues[0] + '%'
             }"
             [attr.data-pc-section]="'range'"
+            [pBind]="ptm('range')"
         ></span>
-        <span *ngIf="!range && orientation == 'vertical'" [class]="cx('range')" [attr.data-pc-section]="'range'" [ngStyle]="{ position: 'absolute', height: handleValue + '%' }"></span>
-        <span *ngIf="!range && orientation == 'horizontal'" [class]="cx('range')" [attr.data-pc-section]="'range'" [ngStyle]="{ position: 'absolute', width: handleValue + '%' }"></span>
+        <span *ngIf="!range && orientation == 'vertical'" [class]="cx('range')" [attr.data-pc-section]="'range'" [ngStyle]="{ position: 'absolute', height: handleValue + '%' }" [pBind]="ptm('range')"></span>
+        <span *ngIf="!range && orientation == 'horizontal'" [class]="cx('range')" [attr.data-pc-section]="'range'" [ngStyle]="{ position: 'absolute', width: handleValue + '%' }" [pBind]="ptm('range')"></span>
         <span
             *ngIf="!range"
             #sliderHandle
@@ -929,6 +955,7 @@ var Slider = class _Slider extends BaseEditableHolder {
             [attr.aria-orientation]="orientation"
             [attr.data-pc-section]="'handle'"
             [pAutoFocus]="autofocus"
+            [pBind]="ptm('handle')"
         ></span>
         <span
             *ngIf="range"
@@ -951,6 +978,7 @@ var Slider = class _Slider extends BaseEditableHolder {
             [attr.aria-orientation]="orientation"
             [attr.data-pc-section]="'startHandler'"
             [pAutoFocus]="autofocus"
+            [pBind]="ptm('startHandler')"
         ></span>
         <span
             *ngIf="range"
@@ -972,16 +1000,24 @@ var Slider = class _Slider extends BaseEditableHolder {
             [attr.aria-label]="ariaLabel"
             [attr.aria-orientation]="orientation"
             [attr.data-pc-section]="'endHandler'"
+            [pBind]="ptm('endHandler')"
         ></span>
     `,
-      providers: [SLIDER_VALUE_ACCESSOR, SliderStyle],
+      providers: [SLIDER_VALUE_ACCESSOR, SliderStyle, {
+        provide: SLIDER_INSTANCE,
+        useExisting: Slider
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: Slider
+      }],
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
       host: {
         "[attr.data-pc-name]": "'slider'",
         "[attr.data-pc-section]": "'root'",
         "[class]": "cn(cx('root'), styleClass)"
-      }
+      },
+      hostDirectives: [Bind]
     }]
   }], null, {
     animate: [{

@@ -87,7 +87,7 @@ import { HelpersService } from '@/services/helpers-service';
                                     <p-button label="Choose Files" icon="pi pi-plus" [outlined]="true" (onClick)="chooseCallback()" [disabled]="uploading" />
                                     <p-button label="Upload All" icon="pi pi-cloud-upload" severity="success" (onClick)="uploadCallback()" [disabled]="!files || files.length === 0 || uploading" />
                                     <p-button label="Clear" icon="pi pi-times" severity="danger" [outlined]="true" (onClick)="clearCallback()" [disabled]="!files || files.length === 0 || uploading" />
-                                    <span class="text-muted-color text-sm ml-auto hidden sm:block"> Allowed: PDF, Images, Word, Excel </span>
+                                    <span class="text-muted-color text-sm ml-auto hidden sm:block"> Allowed: PDF, Images, Word, Excel, Markdown </span>
                                 </div>
                             </ng-template>
 
@@ -214,7 +214,7 @@ export class DocumentManagerComponent implements OnInit, AfterViewInit {
     selectedFiles: DocumentFile[] = [];
     isDeveloper = false;
 
-    acceptedTypes = '.pdf,.jpg,.jpeg,.png,.gif,.webp,.doc,.docx,.xls,.xlsx,.txt,.dcm';
+    acceptedTypes = '.pdf,.jpg,.jpeg,.png,.gif,.webp,.doc,.docx,.xls,.xlsx,.txt,.dcm,.md';
 
     customTemplates: { [field: string]: TemplateRef<any> } = {};
 
@@ -246,7 +246,7 @@ export class DocumentManagerComponent implements OnInit, AfterViewInit {
     constructor(
         public documentService: DocumentService,
         private helpers: HelpersService,
-        private confirmationService: ConfirmationService
+        private confirmationService: ConfirmationService,
     ) {
         const token = sessionStorage.getItem('accessToken') || '';
         if (this.isJwt(token)) {
@@ -304,10 +304,10 @@ export class DocumentManagerComponent implements OnInit, AfterViewInit {
             },
             error: (err) => {
                 if (err.error.message == 'Unauthorized') {
-                    this.helpers.notifyError('Unauthorized', 'Please login again');
-                    this.loadingFiles = false;
+                    this.helpers.redirectToLogin();
+                    return;
                 } else {
-                    this.helpers.notifyError(err.error.message, 'Pleae try again later');
+                    this.helpers.notifyError(err.error.message, 'Please try again later');
                     this.loadingFiles = false;
                 }
             }
@@ -350,6 +350,10 @@ export class DocumentManagerComponent implements OnInit, AfterViewInit {
                 }
             },
             error: (err) => {
+                if (err?.error?.message == 'Unauthorized') {
+                    this.helpers.redirectToLogin();
+                    return;
+                }
                 this.helpers.notifyError('Upload Failed', `Failed to upload ${file.name}: ${err.message}`);
                 this.uploadFiles(files, index + 1, fileUploader);
             }
@@ -376,7 +380,11 @@ export class DocumentManagerComponent implements OnInit, AfterViewInit {
                         this.helpers.notifyError('Download Failed', 'Failed to download file');
                     });
             },
-            error: () => {
+            error: (err) => {
+                if (err?.error?.message == 'Unauthorized') {
+                    this.helpers.redirectToLogin();
+                    return;
+                }
                 this.downloadingKeys.delete(file.key);
                 this.helpers.notifyError('Download Failed', 'Failed to generate download link');
             }
@@ -399,7 +407,11 @@ export class DocumentManagerComponent implements OnInit, AfterViewInit {
                         this.deletingAll = false;
                         this.loadFiles();
                     },
-                    error: () => {
+                    error: (err) => {
+                        if (err?.error?.message == 'Unauthorized') {
+                            this.helpers.redirectToLogin();
+                            return;
+                        }
                         this.helpers.notifyError('Error', 'Some files could not be deleted');
                         this.selectedFiles = [];
                         this.deletingAll = false;
@@ -424,7 +436,11 @@ export class DocumentManagerComponent implements OnInit, AfterViewInit {
                         this.deletingAll = false;
                         this.loadFiles();
                     },
-                    error: () => {
+                    error: (err) => {
+                        if (err?.error?.message == 'Unauthorized') {
+                            this.helpers.redirectToLogin();
+                            return;
+                        }
                         this.helpers.notifyError('Error', 'Some files could not be deleted');
                         this.deletingAll = false;
                         this.loadFiles();
@@ -446,7 +462,11 @@ export class DocumentManagerComponent implements OnInit, AfterViewInit {
                         this.helpers.notifySuccess('File deleted successfully');
                         this.loadFiles();
                     },
-                    error: () => {
+                    error: (err) => {
+                        if (err?.error?.message == 'Unauthorized') {
+                            this.helpers.redirectToLogin();
+                            return;
+                        }
                         this.helpers.notifyError('Error', 'Failed to delete file');
                     }
                 });
@@ -490,7 +510,8 @@ export class DocumentManagerComponent implements OnInit, AfterViewInit {
             gif: 'pi pi-image text-orange-500',
             webp: 'pi pi-image text-orange-500',
             txt: 'pi pi-file text-gray-500',
-            dcm: 'pi pi-image text-purple-500'
+            dcm: 'pi pi-image text-purple-500',
+            md: 'pi pi-file-edit text-teal-500'
         };
         return iconMap[ext] || 'pi pi-file text-gray-500';
     }

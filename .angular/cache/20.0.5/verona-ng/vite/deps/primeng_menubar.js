@@ -1,33 +1,51 @@
 import {
   Tooltip,
   TooltipModule
-} from "./chunk-IRWYTOKA.js";
+} from "./chunk-OLS4C5IP.js";
+import {
+  Badge,
+  BadgeModule
+} from "./chunk-B6BBOHQM.js";
+import "./chunk-S73J4WE3.js";
 import {
   zindexutils
 } from "./chunk-BB55NINM.js";
-import "./chunk-QVUTNZUY.js";
 import {
   Ripple
-} from "./chunk-VZLF74PJ.js";
+} from "./chunk-OC77X5LN.js";
 import {
   AngleDownIcon,
   AngleRightIcon,
   BarsIcon
-} from "./chunk-BIL3W6KN.js";
+} from "./chunk-RHA7RL5K.js";
+import "./chunk-YXZQJBKH.js";
 import {
-  Badge,
-  BadgeModule
-} from "./chunk-EGVFVLQK.js";
-import {
-  BaseComponent
-} from "./chunk-4YMQ5OOY.js";
+  BaseComponent,
+  PARENT_INSTANCE
+} from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
-} from "./chunk-L2L2T6ID.js";
+} from "./chunk-4ATYD752.js";
+import {
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
 import {
   PrimeTemplate,
   SharedModule
-} from "./chunk-ZKOTJBQ6.js";
+} from "./chunk-LMEEH3AJ.js";
+import "./chunk-GOP36Q47.js";
+import {
+  J,
+  M,
+  Yt,
+  bt,
+  l,
+  m,
+  s,
+  s3 as s2,
+  z2 as z
+} from "./chunk-UCHM6OXG.js";
 import {
   RouterLink,
   RouterLinkActive,
@@ -65,6 +83,7 @@ import {
   booleanAttribute,
   numberAttribute,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -105,6 +124,7 @@ import {
 } from "./chunk-EIF6IUR4.js";
 import {
   DOCUMENT,
+  InjectionToken,
   effect,
   inject,
   signal,
@@ -114,26 +134,14 @@ import {
   ɵɵresetView,
   ɵɵrestoreView
 } from "./chunk-LW34VNAR.js";
-import "./chunk-YVXMBCE5.js";
 import "./chunk-G6ECYYJH.js";
+import "./chunk-YVXMBCE5.js";
 import {
   Subject,
   debounce,
   filter,
   interval
 } from "./chunk-RTGP7ALM.js";
-import "./chunk-BMDSN43F.js";
-import {
-  M,
-  Yt,
-  a,
-  bt,
-  j,
-  m,
-  s,
-  s3 as s2,
-  z2 as z
-} from "./chunk-RK2DVQNP.js";
 import {
   __spreadProps,
   __spreadValues
@@ -163,86 +171,100 @@ function MenubarSub_ng_template_0_li_0_Template(rf, ctx) {
     const ctx_r1 = ɵɵnextContext();
     ɵɵstyleMap(ctx_r1.getItemProp(processedItem_r1, "style"));
     ɵɵclassMap(ctx_r1.cn(ctx_r1.cx("separator"), processedItem_r1 == null ? null : processedItem_r1.styleClass));
-    ɵɵattribute("id", ctx_r1.getItemId(processedItem_r1))("data-pc-section", "separator");
+    ɵɵproperty("pBind", ctx_r1.ptm("separator"));
+    ɵɵattribute("id", ctx_r1.getItemId(processedItem_r1));
   }
 }
 function MenubarSub_ng_template_0_li_1_ng_container_3_a_1_span_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "span");
+    ɵɵelement(0, "span", 17);
   }
   if (rf & 2) {
-    const processedItem_r1 = ɵɵnextContext(4).$implicit;
+    const ctx_r3 = ɵɵnextContext(4);
+    const processedItem_r1 = ctx_r3.$implicit;
+    const index_r5 = ctx_r3.index;
     const ctx_r1 = ɵɵnextContext();
     ɵɵstyleMap(ctx_r1.getItemProp(processedItem_r1, "iconStyle"));
     ɵɵclassMap(ctx_r1.cn(ctx_r1.cx("itemIcon"), ctx_r1.getItemProp(processedItem_r1, "icon")));
-    ɵɵattribute("data-pc-section", "icon")("tabindex", -1);
+    ɵɵproperty("pBind", ctx_r1.getPTOptions(processedItem_r1, index_r5, "itemIcon"));
+    ɵɵattribute("tabindex", -1);
   }
 }
 function MenubarSub_ng_template_0_li_1_ng_container_3_a_1_span_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "span", 17);
+    ɵɵelementStart(0, "span", 18);
     ɵɵtext(1);
     ɵɵelementEnd();
   }
   if (rf & 2) {
-    const processedItem_r1 = ɵɵnextContext(4).$implicit;
+    const ctx_r3 = ɵɵnextContext(4);
+    const processedItem_r1 = ctx_r3.$implicit;
+    const index_r5 = ctx_r3.index;
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cx("itemLabel"));
-    ɵɵproperty("id", ctx_r1.getItemLabelId(processedItem_r1));
-    ɵɵattribute("data-pc-section", "label");
+    ɵɵproperty("id", ctx_r1.getItemLabelId(processedItem_r1))("pBind", ctx_r1.getPTOptions(processedItem_r1, index_r5, "itemLabel"));
     ɵɵadvance();
     ɵɵtextInterpolate1(" ", ctx_r1.getItemLabel(processedItem_r1), " ");
   }
 }
 function MenubarSub_ng_template_0_li_1_ng_container_3_a_1_ng_template_3_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "span", 18);
+    ɵɵelement(0, "span", 19);
   }
   if (rf & 2) {
-    const processedItem_r1 = ɵɵnextContext(4).$implicit;
+    const ctx_r3 = ɵɵnextContext(4);
+    const processedItem_r1 = ctx_r3.$implicit;
+    const index_r5 = ctx_r3.index;
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cx("itemLabel"));
-    ɵɵproperty("innerHTML", ctx_r1.getItemLabel(processedItem_r1), ɵɵsanitizeHtml)("id", ctx_r1.getItemLabelId(processedItem_r1));
-    ɵɵattribute("data-pc-section", "label");
+    ɵɵproperty("innerHTML", ctx_r1.getItemLabel(processedItem_r1), ɵɵsanitizeHtml)("id", ctx_r1.getItemLabelId(processedItem_r1))("pBind", ctx_r1.getPTOptions(processedItem_r1, index_r5, "itemLabel"));
   }
 }
 function MenubarSub_ng_template_0_li_1_ng_container_3_a_1_p_badge_5_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "p-badge", 19);
+    ɵɵelement(0, "p-badge", 20);
   }
   if (rf & 2) {
-    const processedItem_r1 = ɵɵnextContext(4).$implicit;
+    const ctx_r3 = ɵɵnextContext(4);
+    const processedItem_r1 = ctx_r3.$implicit;
+    const index_r5 = ctx_r3.index;
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.getItemProp(processedItem_r1, "badgeStyleClass"));
-    ɵɵproperty("value", ctx_r1.getItemProp(processedItem_r1, "badge"));
+    ɵɵproperty("value", ctx_r1.getItemProp(processedItem_r1, "badge"))("pt", ctx_r1.getPTOptions(processedItem_r1, index_r5, "pcBadge"));
   }
 }
 function MenubarSub_ng_template_0_li_1_ng_container_3_a_1_ng_container_6_ng_container_1__svg_svg_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 23);
+    ɵɵelement(0, "svg", 24);
   }
   if (rf & 2) {
-    const ctx_r1 = ɵɵnextContext(7);
+    const ctx_r3 = ɵɵnextContext(6);
+    const processedItem_r1 = ctx_r3.$implicit;
+    const index_r5 = ctx_r3.index;
+    const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cx("submenuIcon"));
-    ɵɵattribute("data-pc-section", "submenuicon");
+    ɵɵproperty("pBind", ctx_r1.getPTOptions(processedItem_r1, index_r5, "submenuIcon"));
   }
 }
 function MenubarSub_ng_template_0_li_1_ng_container_3_a_1_ng_container_6_ng_container_1__svg_svg_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 24);
+    ɵɵelement(0, "svg", 25);
   }
   if (rf & 2) {
-    const ctx_r1 = ɵɵnextContext(7);
+    const ctx_r3 = ɵɵnextContext(6);
+    const processedItem_r1 = ctx_r3.$implicit;
+    const index_r5 = ctx_r3.index;
+    const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cx("submenuIcon"));
-    ɵɵattribute("data-pc-section", "submenuicon");
+    ɵɵproperty("pBind", ctx_r1.getPTOptions(processedItem_r1, index_r5, "submenuIcon"));
   }
 }
 function MenubarSub_ng_template_0_li_1_ng_container_3_a_1_ng_container_6_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, MenubarSub_ng_template_0_li_1_ng_container_3_a_1_ng_container_6_ng_container_1__svg_svg_1_Template, 1, 3, "svg", 21)(2, MenubarSub_ng_template_0_li_1_ng_container_3_a_1_ng_container_6_ng_container_1__svg_svg_2_Template, 1, 3, "svg", 22);
+    ɵɵtemplate(1, MenubarSub_ng_template_0_li_1_ng_container_3_a_1_ng_container_6_ng_container_1__svg_svg_1_Template, 1, 3, "svg", 22)(2, MenubarSub_ng_template_0_li_1_ng_container_3_a_1_ng_container_6_ng_container_1__svg_svg_2_Template, 1, 3, "svg", 23);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -257,16 +279,13 @@ function MenubarSub_ng_template_0_li_1_ng_container_3_a_1_ng_container_6_2_ng_te
 }
 function MenubarSub_ng_template_0_li_1_ng_container_3_a_1_ng_container_6_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, MenubarSub_ng_template_0_li_1_ng_container_3_a_1_ng_container_6_2_ng_template_0_Template, 0, 0, "ng-template", 25);
-  }
-  if (rf & 2) {
-    ɵɵproperty("data-pc-section", "submenuicon");
+    ɵɵtemplate(0, MenubarSub_ng_template_0_li_1_ng_container_3_a_1_ng_container_6_2_ng_template_0_Template, 0, 0, "ng-template");
   }
 }
 function MenubarSub_ng_template_0_li_1_ng_container_3_a_1_ng_container_6_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, MenubarSub_ng_template_0_li_1_ng_container_3_a_1_ng_container_6_ng_container_1_Template, 3, 2, "ng-container", 9)(2, MenubarSub_ng_template_0_li_1_ng_container_3_a_1_ng_container_6_2_Template, 1, 1, null, 20);
+    ɵɵtemplate(1, MenubarSub_ng_template_0_li_1_ng_container_3_a_1_ng_container_6_ng_container_1_Template, 3, 2, "ng-container", 9)(2, MenubarSub_ng_template_0_li_1_ng_container_3_a_1_ng_container_6_2_Template, 1, 0, null, 21);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -280,19 +299,22 @@ function MenubarSub_ng_template_0_li_1_ng_container_3_a_1_ng_container_6_Templat
 function MenubarSub_ng_template_0_li_1_ng_container_3_a_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementStart(0, "a", 13);
-    ɵɵtemplate(1, MenubarSub_ng_template_0_li_1_ng_container_3_a_1_span_1_Template, 1, 6, "span", 14)(2, MenubarSub_ng_template_0_li_1_ng_container_3_a_1_span_2_Template, 2, 5, "span", 15)(3, MenubarSub_ng_template_0_li_1_ng_container_3_a_1_ng_template_3_Template, 1, 5, "ng-template", null, 1, ɵɵtemplateRefExtractor)(5, MenubarSub_ng_template_0_li_1_ng_container_3_a_1_p_badge_5_Template, 1, 3, "p-badge", 16)(6, MenubarSub_ng_template_0_li_1_ng_container_3_a_1_ng_container_6_Template, 3, 2, "ng-container", 9);
+    ɵɵtemplate(1, MenubarSub_ng_template_0_li_1_ng_container_3_a_1_span_1_Template, 1, 6, "span", 14)(2, MenubarSub_ng_template_0_li_1_ng_container_3_a_1_span_2_Template, 2, 5, "span", 15)(3, MenubarSub_ng_template_0_li_1_ng_container_3_a_1_ng_template_3_Template, 1, 5, "ng-template", null, 1, ɵɵtemplateRefExtractor)(5, MenubarSub_ng_template_0_li_1_ng_container_3_a_1_p_badge_5_Template, 1, 4, "p-badge", 16)(6, MenubarSub_ng_template_0_li_1_ng_container_3_a_1_ng_container_6_Template, 3, 2, "ng-container", 9);
     ɵɵelementEnd();
   }
   if (rf & 2) {
-    const htmlLabel_r4 = ɵɵreference(4);
-    const processedItem_r1 = ɵɵnextContext(3).$implicit;
+    const htmlLabel_r6 = ɵɵreference(4);
+    const ctx_r3 = ɵɵnextContext(3);
+    const processedItem_r1 = ctx_r3.$implicit;
+    const index_r5 = ctx_r3.index;
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cx("itemLink"));
-    ɵɵattribute("href", ctx_r1.getItemProp(processedItem_r1, "url"), ɵɵsanitizeUrl)("data-automationid", ctx_r1.getItemProp(processedItem_r1, "automationId"))("data-pc-section", "action")("target", ctx_r1.getItemProp(processedItem_r1, "target"))("tabindex", -1);
+    ɵɵproperty("pBind", ctx_r1.getPTOptions(processedItem_r1, index_r5, "itemLink"));
+    ɵɵattribute("href", ctx_r1.getItemProp(processedItem_r1, "url"), ɵɵsanitizeUrl)("data-automationid", ctx_r1.getItemProp(processedItem_r1, "automationId"))("target", ctx_r1.getItemProp(processedItem_r1, "target"))("tabindex", -1);
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r1.getItemProp(processedItem_r1, "icon"));
     ɵɵadvance();
-    ɵɵproperty("ngIf", ctx_r1.getItemProp(processedItem_r1, "escape"))("ngIfElse", htmlLabel_r4);
+    ɵɵproperty("ngIf", ctx_r1.getItemProp(processedItem_r1, "escape"))("ngIfElse", htmlLabel_r6);
     ɵɵadvance(3);
     ɵɵproperty("ngIf", ctx_r1.getItemProp(processedItem_r1, "badge"));
     ɵɵadvance();
@@ -304,23 +326,28 @@ function MenubarSub_ng_template_0_li_1_ng_container_3_a_2_span_1_Template(rf, ct
     ɵɵelement(0, "span", 29);
   }
   if (rf & 2) {
-    const processedItem_r1 = ɵɵnextContext(4).$implicit;
+    const ctx_r3 = ɵɵnextContext(4);
+    const processedItem_r1 = ctx_r3.$implicit;
+    const index_r5 = ctx_r3.index;
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cn(ctx_r1.cx("itemIcon"), ctx_r1.getItemProp(processedItem_r1, "icon")));
-    ɵɵproperty("ngStyle", ctx_r1.getItemProp(processedItem_r1, "iconStyle"));
-    ɵɵattribute("data-pc-section", "icon")("tabindex", -1);
+    ɵɵproperty("ngStyle", ctx_r1.getItemProp(processedItem_r1, "iconStyle"))("pBind", ctx_r1.getPTOptions(processedItem_r1, index_r5, "itemIcon"));
+    ɵɵattribute("tabindex", -1);
   }
 }
 function MenubarSub_ng_template_0_li_1_ng_container_3_a_2_span_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "span");
+    ɵɵelementStart(0, "span", 17);
     ɵɵtext(1);
     ɵɵelementEnd();
   }
   if (rf & 2) {
-    const processedItem_r1 = ɵɵnextContext(4).$implicit;
+    const ctx_r3 = ɵɵnextContext(4);
+    const processedItem_r1 = ctx_r3.$implicit;
+    const index_r5 = ctx_r3.index;
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cx("itemLabel"));
+    ɵɵproperty("pBind", ctx_r1.getPTOptions(processedItem_r1, index_r5, "itemLabel"));
     ɵɵadvance();
     ɵɵtextInterpolate(ctx_r1.getItemLabel(processedItem_r1));
   }
@@ -330,50 +357,59 @@ function MenubarSub_ng_template_0_li_1_ng_container_3_a_2_ng_template_3_Template
     ɵɵelement(0, "span", 30);
   }
   if (rf & 2) {
-    const processedItem_r1 = ɵɵnextContext(4).$implicit;
+    const ctx_r3 = ɵɵnextContext(4);
+    const processedItem_r1 = ctx_r3.$implicit;
+    const index_r5 = ctx_r3.index;
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cx("itemLabel"));
-    ɵɵproperty("innerHTML", ctx_r1.getItemLabel(processedItem_r1), ɵɵsanitizeHtml);
-    ɵɵattribute("data-pc-section", "label");
+    ɵɵproperty("innerHTML", ctx_r1.getItemLabel(processedItem_r1), ɵɵsanitizeHtml)("pBind", ctx_r1.getPTOptions(processedItem_r1, index_r5, "itemLabel"));
   }
 }
 function MenubarSub_ng_template_0_li_1_ng_container_3_a_2_p_badge_5_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "p-badge", 19);
+    ɵɵelement(0, "p-badge", 20);
   }
   if (rf & 2) {
-    const processedItem_r1 = ɵɵnextContext(4).$implicit;
+    const ctx_r3 = ɵɵnextContext(4);
+    const processedItem_r1 = ctx_r3.$implicit;
+    const index_r5 = ctx_r3.index;
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.getItemProp(processedItem_r1, "badgeStyleClass"));
-    ɵɵproperty("value", ctx_r1.getItemProp(processedItem_r1, "badge"));
+    ɵɵproperty("value", ctx_r1.getItemProp(processedItem_r1, "badge"))("pt", ctx_r1.getPTOptions(processedItem_r1, index_r5, "pcBadge"));
   }
 }
 function MenubarSub_ng_template_0_li_1_ng_container_3_a_2_ng_container_6_ng_container_1__svg_svg_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 23);
+    ɵɵelement(0, "svg", 24);
   }
   if (rf & 2) {
-    const ctx_r1 = ɵɵnextContext(7);
+    const ctx_r3 = ɵɵnextContext(6);
+    const processedItem_r1 = ctx_r3.$implicit;
+    const index_r5 = ctx_r3.index;
+    const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cx("submenuIcon"));
-    ɵɵattribute("data-pc-section", "submenuicon");
+    ɵɵproperty("pBind", ctx_r1.getPTOptions(processedItem_r1, index_r5, "submenuIcon"));
   }
 }
 function MenubarSub_ng_template_0_li_1_ng_container_3_a_2_ng_container_6_ng_container_1__svg_svg_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 24);
+    ɵɵelement(0, "svg", 25);
   }
   if (rf & 2) {
-    const ctx_r1 = ɵɵnextContext(7);
+    const ctx_r3 = ɵɵnextContext(6);
+    const processedItem_r1 = ctx_r3.$implicit;
+    const index_r5 = ctx_r3.index;
+    const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cx("submenuIcon"));
-    ɵɵattribute("data-pc-section", "submenuicon");
+    ɵɵproperty("pBind", ctx_r1.getPTOptions(processedItem_r1, index_r5, "submenuIcon"));
   }
 }
 function MenubarSub_ng_template_0_li_1_ng_container_3_a_2_ng_container_6_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, MenubarSub_ng_template_0_li_1_ng_container_3_a_2_ng_container_6_ng_container_1__svg_svg_1_Template, 1, 3, "svg", 21)(2, MenubarSub_ng_template_0_li_1_ng_container_3_a_2_ng_container_6_ng_container_1__svg_svg_2_Template, 1, 3, "svg", 22);
+    ɵɵtemplate(1, MenubarSub_ng_template_0_li_1_ng_container_3_a_2_ng_container_6_ng_container_1__svg_svg_1_Template, 1, 3, "svg", 22)(2, MenubarSub_ng_template_0_li_1_ng_container_3_a_2_ng_container_6_ng_container_1__svg_svg_2_Template, 1, 3, "svg", 23);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -388,16 +424,13 @@ function MenubarSub_ng_template_0_li_1_ng_container_3_a_2_ng_container_6_2_ng_te
 }
 function MenubarSub_ng_template_0_li_1_ng_container_3_a_2_ng_container_6_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, MenubarSub_ng_template_0_li_1_ng_container_3_a_2_ng_container_6_2_ng_template_0_Template, 0, 0, "ng-template", 25);
-  }
-  if (rf & 2) {
-    ɵɵproperty("data-pc-section", "submenuicon");
+    ɵɵtemplate(0, MenubarSub_ng_template_0_li_1_ng_container_3_a_2_ng_container_6_2_ng_template_0_Template, 0, 0, "ng-template");
   }
 }
 function MenubarSub_ng_template_0_li_1_ng_container_3_a_2_ng_container_6_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, MenubarSub_ng_template_0_li_1_ng_container_3_a_2_ng_container_6_ng_container_1_Template, 3, 2, "ng-container", 9)(2, MenubarSub_ng_template_0_li_1_ng_container_3_a_2_ng_container_6_2_Template, 1, 1, null, 20);
+    ɵɵtemplate(1, MenubarSub_ng_template_0_li_1_ng_container_3_a_2_ng_container_6_ng_container_1_Template, 3, 2, "ng-container", 9)(2, MenubarSub_ng_template_0_li_1_ng_container_3_a_2_ng_container_6_2_Template, 1, 0, null, 21);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -411,20 +444,22 @@ function MenubarSub_ng_template_0_li_1_ng_container_3_a_2_ng_container_6_Templat
 function MenubarSub_ng_template_0_li_1_ng_container_3_a_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementStart(0, "a", 26);
-    ɵɵtemplate(1, MenubarSub_ng_template_0_li_1_ng_container_3_a_2_span_1_Template, 1, 5, "span", 27)(2, MenubarSub_ng_template_0_li_1_ng_container_3_a_2_span_2_Template, 2, 3, "span", 28)(3, MenubarSub_ng_template_0_li_1_ng_container_3_a_2_ng_template_3_Template, 1, 4, "ng-template", null, 2, ɵɵtemplateRefExtractor)(5, MenubarSub_ng_template_0_li_1_ng_container_3_a_2_p_badge_5_Template, 1, 3, "p-badge", 16)(6, MenubarSub_ng_template_0_li_1_ng_container_3_a_2_ng_container_6_Template, 3, 2, "ng-container", 9);
+    ɵɵtemplate(1, MenubarSub_ng_template_0_li_1_ng_container_3_a_2_span_1_Template, 1, 5, "span", 27)(2, MenubarSub_ng_template_0_li_1_ng_container_3_a_2_span_2_Template, 2, 4, "span", 28)(3, MenubarSub_ng_template_0_li_1_ng_container_3_a_2_ng_template_3_Template, 1, 4, "ng-template", null, 2, ɵɵtemplateRefExtractor)(5, MenubarSub_ng_template_0_li_1_ng_container_3_a_2_p_badge_5_Template, 1, 4, "p-badge", 16)(6, MenubarSub_ng_template_0_li_1_ng_container_3_a_2_ng_container_6_Template, 3, 2, "ng-container", 9);
     ɵɵelementEnd();
   }
   if (rf & 2) {
-    const htmlRouteLabel_r5 = ɵɵreference(4);
-    const processedItem_r1 = ɵɵnextContext(3).$implicit;
+    const htmlRouteLabel_r7 = ɵɵreference(4);
+    const ctx_r3 = ɵɵnextContext(3);
+    const processedItem_r1 = ctx_r3.$implicit;
+    const index_r5 = ctx_r3.index;
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cx("itemLink"));
-    ɵɵproperty("routerLink", ctx_r1.getItemProp(processedItem_r1, "routerLink"))("queryParams", ctx_r1.getItemProp(processedItem_r1, "queryParams"))("routerLinkActive", "p-menubar-item-link-active")("routerLinkActiveOptions", ctx_r1.getItemProp(processedItem_r1, "routerLinkActiveOptions") || ɵɵpureFunction0(21, _c1))("target", ctx_r1.getItemProp(processedItem_r1, "target"))("fragment", ctx_r1.getItemProp(processedItem_r1, "fragment"))("queryParamsHandling", ctx_r1.getItemProp(processedItem_r1, "queryParamsHandling"))("preserveFragment", ctx_r1.getItemProp(processedItem_r1, "preserveFragment"))("skipLocationChange", ctx_r1.getItemProp(processedItem_r1, "skipLocationChange"))("replaceUrl", ctx_r1.getItemProp(processedItem_r1, "replaceUrl"))("state", ctx_r1.getItemProp(processedItem_r1, "state"));
-    ɵɵattribute("data-automationid", ctx_r1.getItemProp(processedItem_r1, "automationId"))("tabindex", -1)("data-pc-section", "action");
+    ɵɵproperty("routerLink", ctx_r1.getItemProp(processedItem_r1, "routerLink"))("queryParams", ctx_r1.getItemProp(processedItem_r1, "queryParams"))("routerLinkActive", "p-menubar-item-link-active")("routerLinkActiveOptions", ctx_r1.getItemProp(processedItem_r1, "routerLinkActiveOptions") || ɵɵpureFunction0(21, _c1))("target", ctx_r1.getItemProp(processedItem_r1, "target"))("fragment", ctx_r1.getItemProp(processedItem_r1, "fragment"))("queryParamsHandling", ctx_r1.getItemProp(processedItem_r1, "queryParamsHandling"))("preserveFragment", ctx_r1.getItemProp(processedItem_r1, "preserveFragment"))("skipLocationChange", ctx_r1.getItemProp(processedItem_r1, "skipLocationChange"))("replaceUrl", ctx_r1.getItemProp(processedItem_r1, "replaceUrl"))("state", ctx_r1.getItemProp(processedItem_r1, "state"))("pBind", ctx_r1.getPTOptions(processedItem_r1, index_r5, "itemLink"));
+    ɵɵattribute("data-automationid", ctx_r1.getItemProp(processedItem_r1, "automationId"))("tabindex", -1);
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r1.getItemProp(processedItem_r1, "icon"));
     ɵɵadvance();
-    ɵɵproperty("ngIf", ctx_r1.getItemProp(processedItem_r1, "escape"))("ngIfElse", htmlRouteLabel_r5);
+    ɵɵproperty("ngIf", ctx_r1.getItemProp(processedItem_r1, "escape"))("ngIfElse", htmlRouteLabel_r7);
     ɵɵadvance(3);
     ɵɵproperty("ngIf", ctx_r1.getItemProp(processedItem_r1, "badge"));
     ɵɵadvance();
@@ -468,14 +503,14 @@ function MenubarSub_ng_template_0_li_1_ng_container_4_Template(rf, ctx) {
 }
 function MenubarSub_ng_template_0_li_1_ul_5_Template(rf, ctx) {
   if (rf & 1) {
-    const _r6 = ɵɵgetCurrentView();
+    const _r8 = ɵɵgetCurrentView();
     ɵɵelementStart(0, "ul", 32);
     ɵɵlistener("itemClick", function MenubarSub_ng_template_0_li_1_ul_5_Template_ul_itemClick_0_listener($event) {
-      ɵɵrestoreView(_r6);
+      ɵɵrestoreView(_r8);
       const ctx_r1 = ɵɵnextContext(3);
       return ɵɵresetView(ctx_r1.itemClick.emit($event));
     })("itemMouseEnter", function MenubarSub_ng_template_0_li_1_ul_5_Template_ul_itemMouseEnter_0_listener($event) {
-      ɵɵrestoreView(_r6);
+      ɵɵrestoreView(_r8);
       const ctx_r1 = ɵɵnextContext(3);
       return ɵɵresetView(ctx_r1.onItemMouseEnter($event));
     });
@@ -484,7 +519,7 @@ function MenubarSub_ng_template_0_li_1_ul_5_Template(rf, ctx) {
   if (rf & 2) {
     const processedItem_r1 = ɵɵnextContext(2).$implicit;
     const ctx_r1 = ɵɵnextContext();
-    ɵɵproperty("itemTemplate", ctx_r1.itemTemplate)("items", processedItem_r1.items)("mobileActive", ctx_r1.mobileActive)("autoDisplay", ctx_r1.autoDisplay)("menuId", ctx_r1.menuId)("activeItemPath", ctx_r1.activeItemPath)("focusedItemId", ctx_r1.focusedItemId)("level", ctx_r1.level + 1)("inlineStyles", ctx_r1.sx("submenu", true, ɵɵpureFunction2(10, _c0, ctx_r1, processedItem_r1)));
+    ɵɵproperty("itemTemplate", ctx_r1.itemTemplate)("items", processedItem_r1.items)("mobileActive", ctx_r1.mobileActive)("autoDisplay", ctx_r1.autoDisplay)("menuId", ctx_r1.menuId)("activeItemPath", ctx_r1.activeItemPath)("focusedItemId", ctx_r1.focusedItemId)("level", ctx_r1.level + 1)("inlineStyles", ctx_r1.sx("submenu", true, ɵɵpureFunction2(12, _c0, ctx_r1, processedItem_r1)))("pt", ctx_r1.pt())("pBind", ctx_r1.ptm("submenu"));
     ɵɵattribute("aria-labelledby", ctx_r1.getItemLabelId(processedItem_r1));
   }
 }
@@ -508,21 +543,21 @@ function MenubarSub_ng_template_0_li_1_Template(rf, ctx) {
     });
     ɵɵtemplate(3, MenubarSub_ng_template_0_li_1_ng_container_3_Template, 3, 2, "ng-container", 9)(4, MenubarSub_ng_template_0_li_1_ng_container_4_Template, 2, 5, "ng-container", 9);
     ɵɵelementEnd();
-    ɵɵtemplate(5, MenubarSub_ng_template_0_li_1_ul_5_Template, 1, 13, "ul", 10);
+    ɵɵtemplate(5, MenubarSub_ng_template_0_li_1_ul_5_Template, 1, 15, "ul", 10);
     ɵɵelementEnd();
   }
   if (rf & 2) {
-    const ctx_r6 = ɵɵnextContext();
-    const processedItem_r1 = ctx_r6.$implicit;
-    const index_r8 = ctx_r6.index;
+    const ctx_r3 = ɵɵnextContext();
+    const processedItem_r1 = ctx_r3.$implicit;
+    const index_r5 = ctx_r3.index;
     const ctx_r1 = ɵɵnextContext();
     ɵɵstyleMap(ctx_r1.getItemProp(processedItem_r1, "style"));
     ɵɵclassMap(ctx_r1.cn(ctx_r1.cx("item", ɵɵpureFunction2(22, _c0, ctx_r1, processedItem_r1)), ctx_r1.getItemProp(processedItem_r1, "styleClass")));
-    ɵɵproperty("tooltipOptions", ctx_r1.getItemProp(processedItem_r1, "tooltipOptions"));
-    ɵɵattribute("id", ctx_r1.getItemId(processedItem_r1))("data-pc-section", "menuitem")("data-p-highlight", ctx_r1.isItemActive(processedItem_r1))("data-p-focused", ctx_r1.isItemFocused(processedItem_r1))("data-p-disabled", ctx_r1.isItemDisabled(processedItem_r1))("aria-label", ctx_r1.getItemLabel(processedItem_r1))("aria-disabled", ctx_r1.isItemDisabled(processedItem_r1) || void 0)("aria-haspopup", ctx_r1.isItemGroup(processedItem_r1) && !ctx_r1.getItemProp(processedItem_r1, "to") ? "menu" : void 0)("aria-expanded", ctx_r1.isItemGroup(processedItem_r1) ? ctx_r1.isItemActive(processedItem_r1) : void 0)("aria-setsize", ctx_r1.getAriaSetSize())("aria-posinset", ctx_r1.getAriaPosInset(index_r8));
+    ɵɵproperty("pBind", ctx_r1.getPTOptions(processedItem_r1, index_r5, "item"))("tooltipOptions", ctx_r1.getItemProp(processedItem_r1, "tooltipOptions"));
+    ɵɵattribute("id", ctx_r1.getItemId(processedItem_r1))("data-p-highlight", ctx_r1.isItemActive(processedItem_r1))("data-p-focused", ctx_r1.isItemFocused(processedItem_r1))("data-p-disabled", ctx_r1.isItemDisabled(processedItem_r1))("aria-label", ctx_r1.getItemLabel(processedItem_r1))("aria-disabled", ctx_r1.isItemDisabled(processedItem_r1) || void 0)("aria-haspopup", ctx_r1.isItemGroup(processedItem_r1) && !ctx_r1.getItemProp(processedItem_r1, "to") ? "menu" : void 0)("aria-expanded", ctx_r1.isItemGroup(processedItem_r1) ? ctx_r1.isItemActive(processedItem_r1) : void 0)("aria-setsize", ctx_r1.getAriaSetSize())("aria-posinset", ctx_r1.getAriaPosInset(index_r5));
     ɵɵadvance(2);
     ɵɵclassMap(ctx_r1.cx("itemContent"));
-    ɵɵattribute("data-pc-section", "content");
+    ɵɵproperty("pBind", ctx_r1.getPTOptions(processedItem_r1, index_r5, "itemContent"));
     ɵɵadvance();
     ɵɵproperty("ngIf", !ctx_r1.itemTemplate);
     ɵɵadvance();
@@ -558,13 +593,14 @@ function Menubar_div_0_ng_container_1_Template(rf, ctx) {
 }
 function Menubar_div_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div");
-    ɵɵtemplate(1, Menubar_div_0_ng_container_1_Template, 1, 0, "ng-container", 7);
+    ɵɵelementStart(0, "div", 7);
+    ɵɵtemplate(1, Menubar_div_0_ng_container_1_Template, 1, 0, "ng-container", 8);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cx("start"));
+    ɵɵproperty("pBind", ctx_r1.ptm("start"));
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r1.startTemplate || ctx_r1._startTemplate);
   }
@@ -572,7 +608,11 @@ function Menubar_div_0_Template(rf, ctx) {
 function Menubar_a_1__svg_svg_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 10);
+    ɵɵelement(0, "svg", 11);
+  }
+  if (rf & 2) {
+    const ctx_r1 = ɵɵnextContext(2);
+    ɵɵproperty("pBind", ctx_r1.ptm("buttonIcon"));
   }
 }
 function Menubar_a_1_3_ng_template_0_Template(rf, ctx) {
@@ -585,7 +625,7 @@ function Menubar_a_1_3_Template(rf, ctx) {
 function Menubar_a_1_Template(rf, ctx) {
   if (rf & 1) {
     const _r3 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "a", 8, 2);
+    ɵɵelementStart(0, "a", 9, 2);
     ɵɵlistener("click", function Menubar_a_1_Template_a_click_0_listener($event) {
       ɵɵrestoreView(_r3);
       const ctx_r1 = ɵɵnextContext();
@@ -595,13 +635,14 @@ function Menubar_a_1_Template(rf, ctx) {
       const ctx_r1 = ɵɵnextContext();
       return ɵɵresetView(ctx_r1.menuButtonKeydown($event));
     });
-    ɵɵtemplate(2, Menubar_a_1__svg_svg_2_Template, 1, 0, "svg", 9)(3, Menubar_a_1_3_Template, 1, 0, null, 7);
+    ɵɵtemplate(2, Menubar_a_1__svg_svg_2_Template, 1, 1, "svg", 10)(3, Menubar_a_1_3_Template, 1, 0, null, 8);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cx("button"));
-    ɵɵattribute("aria-haspopup", ctx_r1.model.length && ctx_r1.model.length > 0 ? true : false)("aria-expanded", ctx_r1.mobileActive)("aria-controls", ctx_r1.id)("aria-label", ctx_r1.config.translation.aria.navigation)("data-pc-section", "button");
+    ɵɵproperty("pBind", ctx_r1.ptm("button"));
+    ɵɵattribute("aria-haspopup", ctx_r1.model.length && ctx_r1.model.length > 0 ? true : false)("aria-expanded", ctx_r1.mobileActive)("aria-controls", ctx_r1.id)("aria-label", ctx_r1.config.translation.aria.navigation);
     ɵɵadvance(2);
     ɵɵproperty("ngIf", !ctx_r1.menuIconTemplate && !ctx_r1._menuIconTemplate);
     ɵɵadvance();
@@ -615,13 +656,14 @@ function Menubar_div_4_ng_container_1_Template(rf, ctx) {
 }
 function Menubar_div_4_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div");
-    ɵɵtemplate(1, Menubar_div_4_ng_container_1_Template, 1, 0, "ng-container", 7);
+    ɵɵelementStart(0, "div", 7);
+    ɵɵtemplate(1, Menubar_div_4_ng_container_1_Template, 1, 0, "ng-container", 8);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cx("end"));
+    ɵɵproperty("pBind", ctx_r1.ptm("end"));
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r1.endTemplate || ctx_r1._endTemplate);
   }
@@ -674,7 +716,7 @@ var classes = {
 };
 var MenuBarStyle = class _MenuBarStyle extends BaseStyle {
   name = "menubar";
-  theme = style;
+  style = style;
   classes = classes;
   inlineStyles = inlineStyles;
   static ɵfac = /* @__PURE__ */ (() => {
@@ -709,6 +751,7 @@ var MenubarClasses;
   MenubarClasses2["separator"] = "p-menubar-separator";
   MenubarClasses2["end"] = "p-menubar-end";
 })(MenubarClasses || (MenubarClasses = {}));
+var MENUBAR_INSTANCE = new InjectionToken("MENUBAR_INSTANCE");
 var MenubarService = class _MenubarService {
   autoHide;
   autoHideDelay;
@@ -751,8 +794,8 @@ var MenubarSub = class _MenubarSub extends BaseComponent {
   mouseLeaveSubscriber;
   menubarService = inject(MenubarService);
   _componentStyle = inject(MenuBarStyle);
-  ngOnInit() {
-    super.ngOnInit();
+  hostName = "Menubar";
+  onInit() {
     this.mouseLeaveSubscriber = this.menubarService.mouseLeft$.subscribe(() => {
       this.cd.markForCheck();
     });
@@ -787,6 +830,7 @@ var MenubarSub = class _MenubarSub extends BaseComponent {
     if (this.activeItemPath) {
       return this.activeItemPath.some((path) => path.key === processedItem.key);
     }
+    return false;
   }
   isItemDisabled(processedItem) {
     return this.getItemProp(processedItem, "disabled");
@@ -815,9 +859,20 @@ var MenubarSub = class _MenubarSub extends BaseComponent {
       });
     }
   }
-  ngOnDestroy() {
+  getPTOptions(processedItem, index, key) {
+    return this.ptm(key, {
+      context: {
+        item: processedItem.item,
+        index,
+        active: this.isItemActive(processedItem),
+        focused: this.isItemFocused(processedItem),
+        disabled: this.isItemDisabled(processedItem),
+        level: this.level
+      }
+    });
+  }
+  onDestroy() {
     this.mouseLeaveSubscriber?.unsubscribe();
-    super.ngOnDestroy();
   }
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵMenubarSub_BaseFactory;
@@ -828,7 +883,7 @@ var MenubarSub = class _MenubarSub extends BaseComponent {
   static ɵcmp = ɵɵdefineComponent({
     type: _MenubarSub,
     selectors: [["p-menubarSub"], ["p-menubarsub"], ["", "pMenubarSub", ""]],
-    hostAttrs: ["data-pc-section", "menu", "role", "menubar"],
+    hostAttrs: ["role", "menubar"],
     hostVars: 6,
     hostBindings: function MenubarSub_HostBindings(rf, ctx) {
       if (rf & 2) {
@@ -865,7 +920,7 @@ var MenubarSub = class _MenubarSub extends BaseComponent {
     features: [ɵɵInheritDefinitionFeature],
     decls: 1,
     vars: 1,
-    consts: [["listItem", ""], ["htmlLabel", ""], ["htmlRouteLabel", ""], ["ngFor", "", 3, "ngForOf"], ["role", "separator", 3, "style", "class", 4, "ngIf"], ["role", "menuitem", "pTooltip", "", 3, "style", "class", "tooltipOptions", 4, "ngIf"], ["role", "separator"], ["role", "menuitem", "pTooltip", "", 3, "tooltipOptions"], [3, "click", "mouseenter"], [4, "ngIf"], ["pMenubarSub", "", 3, "itemTemplate", "items", "mobileActive", "autoDisplay", "menuId", "activeItemPath", "focusedItemId", "level", "inlineStyles", "itemClick", "itemMouseEnter", 4, "ngIf"], ["pRipple", "", 3, "class", 4, "ngIf"], ["pRipple", "", 3, "routerLink", "queryParams", "routerLinkActive", "routerLinkActiveOptions", "target", "class", "fragment", "queryParamsHandling", "preserveFragment", "skipLocationChange", "replaceUrl", "state", 4, "ngIf"], ["pRipple", ""], [3, "class", "style", 4, "ngIf"], [3, "class", "id", 4, "ngIf", "ngIfElse"], [3, "class", "value", 4, "ngIf"], [3, "id"], [3, "innerHTML", "id"], [3, "value"], [4, "ngTemplateOutlet"], ["data-p-icon", "angle-down", 3, "class", 4, "ngIf"], ["data-p-icon", "angle-right", 3, "class", 4, "ngIf"], ["data-p-icon", "angle-down"], ["data-p-icon", "angle-right"], [3, "data-pc-section"], ["pRipple", "", 3, "routerLink", "queryParams", "routerLinkActive", "routerLinkActiveOptions", "target", "fragment", "queryParamsHandling", "preserveFragment", "skipLocationChange", "replaceUrl", "state"], [3, "class", "ngStyle", 4, "ngIf"], [3, "class", 4, "ngIf", "ngIfElse"], [3, "ngStyle"], [3, "innerHTML"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], ["pMenubarSub", "", 3, "itemClick", "itemMouseEnter", "itemTemplate", "items", "mobileActive", "autoDisplay", "menuId", "activeItemPath", "focusedItemId", "level", "inlineStyles"]],
+    consts: [["listItem", ""], ["htmlLabel", ""], ["htmlRouteLabel", ""], ["ngFor", "", 3, "ngForOf"], ["role", "separator", 3, "style", "class", "pBind", 4, "ngIf"], ["role", "menuitem", "pTooltip", "", 3, "style", "class", "pBind", "tooltipOptions", 4, "ngIf"], ["role", "separator", 3, "pBind"], ["role", "menuitem", "pTooltip", "", 3, "pBind", "tooltipOptions"], [3, "click", "mouseenter", "pBind"], [4, "ngIf"], ["pMenubarSub", "", 3, "itemTemplate", "items", "mobileActive", "autoDisplay", "menuId", "activeItemPath", "focusedItemId", "level", "inlineStyles", "pt", "pBind", "itemClick", "itemMouseEnter", 4, "ngIf"], ["pRipple", "", 3, "class", "pBind", 4, "ngIf"], ["pRipple", "", 3, "routerLink", "queryParams", "routerLinkActive", "routerLinkActiveOptions", "target", "class", "fragment", "queryParamsHandling", "preserveFragment", "skipLocationChange", "replaceUrl", "state", "pBind", 4, "ngIf"], ["pRipple", "", 3, "pBind"], [3, "class", "style", "pBind", 4, "ngIf"], [3, "class", "id", "pBind", 4, "ngIf", "ngIfElse"], [3, "class", "value", "pt", 4, "ngIf"], [3, "pBind"], [3, "id", "pBind"], [3, "innerHTML", "id", "pBind"], [3, "value", "pt"], [4, "ngTemplateOutlet"], ["data-p-icon", "angle-down", 3, "class", "pBind", 4, "ngIf"], ["data-p-icon", "angle-right", 3, "class", "pBind", 4, "ngIf"], ["data-p-icon", "angle-down", 3, "pBind"], ["data-p-icon", "angle-right", 3, "pBind"], ["pRipple", "", 3, "routerLink", "queryParams", "routerLinkActive", "routerLinkActiveOptions", "target", "fragment", "queryParamsHandling", "preserveFragment", "skipLocationChange", "replaceUrl", "state", "pBind"], [3, "class", "ngStyle", "pBind", 4, "ngIf"], [3, "class", "pBind", 4, "ngIf", "ngIfElse"], [3, "ngStyle", "pBind"], [3, "innerHTML", "pBind"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], ["pMenubarSub", "", 3, "itemClick", "itemMouseEnter", "itemTemplate", "items", "mobileActive", "autoDisplay", "menuId", "activeItemPath", "focusedItemId", "level", "inlineStyles", "pt", "pBind"]],
     template: function MenubarSub_Template(rf, ctx) {
       if (rf & 1) {
         ɵɵtemplate(0, MenubarSub_ng_template_0_Template, 2, 2, "ng-template", 3);
@@ -874,7 +929,7 @@ var MenubarSub = class _MenubarSub extends BaseComponent {
         ɵɵproperty("ngForOf", ctx.items);
       }
     },
-    dependencies: [_MenubarSub, CommonModule, NgForOf, NgIf, NgTemplateOutlet, NgStyle, RouterModule, RouterLink, RouterLinkActive, Ripple, TooltipModule, Tooltip, AngleDownIcon, AngleRightIcon, BadgeModule, Badge, SharedModule],
+    dependencies: [_MenubarSub, CommonModule, NgForOf, NgIf, NgTemplateOutlet, NgStyle, RouterModule, RouterLink, RouterLinkActive, Ripple, TooltipModule, Tooltip, Bind, AngleDownIcon, AngleRightIcon, BadgeModule, Badge, SharedModule, BindModule],
     encapsulation: 2
   });
 };
@@ -884,7 +939,7 @@ var MenubarSub = class _MenubarSub extends BaseComponent {
     args: [{
       selector: "p-menubarSub, p-menubarsub, [pMenubarSub]",
       standalone: true,
-      imports: [CommonModule, RouterModule, Ripple, TooltipModule, AngleDownIcon, AngleRightIcon, BadgeModule, SharedModule],
+      imports: [CommonModule, RouterModule, Ripple, TooltipModule, AngleDownIcon, AngleRightIcon, BadgeModule, SharedModule, BindModule],
       template: `
         <ng-template ngFor let-processedItem [ngForOf]="items" let-index="index">
             <li
@@ -893,14 +948,13 @@ var MenubarSub = class _MenubarSub extends BaseComponent {
                 [style]="getItemProp(processedItem, 'style')"
                 [class]="cn(cx('separator'), processedItem?.styleClass)"
                 role="separator"
-                [attr.data-pc-section]="'separator'"
+                [pBind]="ptm('separator')"
             ></li>
             <li
                 #listItem
                 *ngIf="isItemVisible(processedItem) && !getItemProp(processedItem, 'separator')"
                 role="menuitem"
                 [attr.id]="getItemId(processedItem)"
-                [attr.data-pc-section]="'menuitem'"
                 [attr.data-p-highlight]="isItemActive(processedItem)"
                 [attr.data-p-focused]="isItemFocused(processedItem)"
                 [attr.data-p-disabled]="isItemDisabled(processedItem)"
@@ -912,37 +966,44 @@ var MenubarSub = class _MenubarSub extends BaseComponent {
                 [attr.aria-posinset]="getAriaPosInset(index)"
                 [style]="getItemProp(processedItem, 'style')"
                 [class]="cn(cx('item', { instance: this, processedItem }), getItemProp(processedItem, 'styleClass'))"
+                [pBind]="getPTOptions(processedItem, index, 'item')"
                 pTooltip
                 [tooltipOptions]="getItemProp(processedItem, 'tooltipOptions')"
             >
-                <div [class]="cx('itemContent')" [attr.data-pc-section]="'content'" (click)="onItemClick($event, processedItem)" (mouseenter)="onItemMouseEnter({ $event, processedItem })">
+                <div [class]="cx('itemContent')" [pBind]="getPTOptions(processedItem, index, 'itemContent')" (click)="onItemClick($event, processedItem)" (mouseenter)="onItemMouseEnter({ $event, processedItem })">
                     <ng-container *ngIf="!itemTemplate">
                         <a
                             *ngIf="!getItemProp(processedItem, 'routerLink')"
                             [attr.href]="getItemProp(processedItem, 'url')"
                             [attr.data-automationid]="getItemProp(processedItem, 'automationId')"
-                            [attr.data-pc-section]="'action'"
                             [attr.target]="getItemProp(processedItem, 'target')"
                             [class]="cx('itemLink')"
                             [attr.tabindex]="-1"
+                            [pBind]="getPTOptions(processedItem, index, 'itemLink')"
                             pRipple
                         >
-                            <span *ngIf="getItemProp(processedItem, 'icon')" [class]="cn(cx('itemIcon'), getItemProp(processedItem, 'icon'))" [style]="getItemProp(processedItem, 'iconStyle')" [attr.data-pc-section]="'icon'" [attr.tabindex]="-1">
+                            <span
+                                *ngIf="getItemProp(processedItem, 'icon')"
+                                [class]="cn(cx('itemIcon'), getItemProp(processedItem, 'icon'))"
+                                [style]="getItemProp(processedItem, 'iconStyle')"
+                                [attr.tabindex]="-1"
+                                [pBind]="getPTOptions(processedItem, index, 'itemIcon')"
+                            >
                             </span>
-                            <span *ngIf="getItemProp(processedItem, 'escape'); else htmlLabel" [class]="cx('itemLabel')" [attr.data-pc-section]="'label'" [id]="getItemLabelId(processedItem)">
+                            <span *ngIf="getItemProp(processedItem, 'escape'); else htmlLabel" [class]="cx('itemLabel')" [id]="getItemLabelId(processedItem)" [pBind]="getPTOptions(processedItem, index, 'itemLabel')">
                                 {{ getItemLabel(processedItem) }}
                             </span>
                             <ng-template #htmlLabel>
-                                <span [class]="cx('itemLabel')" [innerHTML]="getItemLabel(processedItem)" [attr.data-pc-section]="'label'" [id]="getItemLabelId(processedItem)"></span>
+                                <span [class]="cx('itemLabel')" [innerHTML]="getItemLabel(processedItem)" [id]="getItemLabelId(processedItem)" [pBind]="getPTOptions(processedItem, index, 'itemLabel')"></span>
                             </ng-template>
-                            <p-badge *ngIf="getItemProp(processedItem, 'badge')" [class]="getItemProp(processedItem, 'badgeStyleClass')" [value]="getItemProp(processedItem, 'badge')" />
+                            <p-badge *ngIf="getItemProp(processedItem, 'badge')" [class]="getItemProp(processedItem, 'badgeStyleClass')" [value]="getItemProp(processedItem, 'badge')" [pt]="getPTOptions(processedItem, index, 'pcBadge')" />
 
                             <ng-container *ngIf="isItemGroup(processedItem)">
                                 <ng-container *ngIf="!submenuiconTemplate">
-                                    <svg data-p-icon="angle-down" [class]="cx('submenuIcon')" *ngIf="root" [attr.data-pc-section]="'submenuicon'" />
-                                    <svg data-p-icon="angle-right" [class]="cx('submenuIcon')" *ngIf="!root" [attr.data-pc-section]="'submenuicon'" />
+                                    <svg data-p-icon="angle-down" [class]="cx('submenuIcon')" *ngIf="root" [pBind]="getPTOptions(processedItem, index, 'submenuIcon')" />
+                                    <svg data-p-icon="angle-right" [class]="cx('submenuIcon')" *ngIf="!root" [pBind]="getPTOptions(processedItem, index, 'submenuIcon')" />
                                 </ng-container>
-                                <ng-template *ngTemplateOutlet="submenuiconTemplate" [attr.data-pc-section]="'submenuicon'"></ng-template>
+                                <ng-template *ngTemplateOutlet="submenuiconTemplate"></ng-template>
                             </ng-container>
                         </a>
                         <a
@@ -950,7 +1011,6 @@ var MenubarSub = class _MenubarSub extends BaseComponent {
                             [routerLink]="getItemProp(processedItem, 'routerLink')"
                             [attr.data-automationid]="getItemProp(processedItem, 'automationId')"
                             [attr.tabindex]="-1"
-                            [attr.data-pc-section]="'action'"
                             [queryParams]="getItemProp(processedItem, 'queryParams')"
                             [routerLinkActive]="'p-menubar-item-link-active'"
                             [routerLinkActiveOptions]="getItemProp(processedItem, 'routerLinkActiveOptions') || { exact: false }"
@@ -962,24 +1022,25 @@ var MenubarSub = class _MenubarSub extends BaseComponent {
                             [skipLocationChange]="getItemProp(processedItem, 'skipLocationChange')"
                             [replaceUrl]="getItemProp(processedItem, 'replaceUrl')"
                             [state]="getItemProp(processedItem, 'state')"
+                            [pBind]="getPTOptions(processedItem, index, 'itemLink')"
                             pRipple
                         >
                             <span
                                 [class]="cn(cx('itemIcon'), getItemProp(processedItem, 'icon'))"
                                 *ngIf="getItemProp(processedItem, 'icon')"
                                 [ngStyle]="getItemProp(processedItem, 'iconStyle')"
-                                [attr.data-pc-section]="'icon'"
                                 [attr.tabindex]="-1"
+                                [pBind]="getPTOptions(processedItem, index, 'itemIcon')"
                             ></span>
-                            <span [class]="cx('itemLabel')" *ngIf="getItemProp(processedItem, 'escape'); else htmlRouteLabel">{{ getItemLabel(processedItem) }}</span>
-                            <ng-template #htmlRouteLabel><span [class]="cx('itemLabel')" [innerHTML]="getItemLabel(processedItem)" [attr.data-pc-section]="'label'"></span></ng-template>
-                            <p-badge *ngIf="getItemProp(processedItem, 'badge')" [class]="getItemProp(processedItem, 'badgeStyleClass')" [value]="getItemProp(processedItem, 'badge')" />
+                            <span [class]="cx('itemLabel')" *ngIf="getItemProp(processedItem, 'escape'); else htmlRouteLabel" [pBind]="getPTOptions(processedItem, index, 'itemLabel')">{{ getItemLabel(processedItem) }}</span>
+                            <ng-template #htmlRouteLabel><span [class]="cx('itemLabel')" [innerHTML]="getItemLabel(processedItem)" [pBind]="getPTOptions(processedItem, index, 'itemLabel')"></span></ng-template>
+                            <p-badge *ngIf="getItemProp(processedItem, 'badge')" [class]="getItemProp(processedItem, 'badgeStyleClass')" [value]="getItemProp(processedItem, 'badge')" [pt]="getPTOptions(processedItem, index, 'pcBadge')" />
                             <ng-container *ngIf="isItemGroup(processedItem)">
                                 <ng-container *ngIf="!submenuiconTemplate">
-                                    <svg data-p-icon="angle-down" [class]="cx('submenuIcon')" [attr.data-pc-section]="'submenuicon'" *ngIf="root" />
-                                    <svg data-p-icon="angle-right" [class]="cx('submenuIcon')" [attr.data-pc-section]="'submenuicon'" *ngIf="!root" />
+                                    <svg data-p-icon="angle-down" [class]="cx('submenuIcon')" *ngIf="root" [pBind]="getPTOptions(processedItem, index, 'submenuIcon')" />
+                                    <svg data-p-icon="angle-right" [class]="cx('submenuIcon')" *ngIf="!root" [pBind]="getPTOptions(processedItem, index, 'submenuIcon')" />
                                 </ng-container>
-                                <ng-template *ngTemplateOutlet="submenuiconTemplate" [attr.data-pc-section]="'submenuicon'"></ng-template>
+                                <ng-template *ngTemplateOutlet="submenuiconTemplate"></ng-template>
                             </ng-container>
                         </a>
                     </ng-container>
@@ -1002,6 +1063,8 @@ var MenubarSub = class _MenubarSub extends BaseComponent {
                     (itemClick)="itemClick.emit($event)"
                     (itemMouseEnter)="onItemMouseEnter($event)"
                     [inlineStyles]="sx('submenu', true, { instance: this, processedItem })"
+                    [pt]="pt()"
+                    [pBind]="ptm('submenu')"
                 ></ul>
             </li>
         </ng-template>
@@ -1011,7 +1074,6 @@ var MenubarSub = class _MenubarSub extends BaseComponent {
         "[id]": "root ? menuId : null",
         "[attr.aria-activedescendant]": "focusedItemId",
         "[class]": "level === 0 ? cx('rootList') : cx('submenu')",
-        "data-pc-section": "menu",
         role: "menubar",
         "[style]": "inlineStyles"
       }
@@ -1104,6 +1166,16 @@ var Menubar = class _Menubar extends BaseComponent {
   renderer;
   cd;
   menubarService;
+  $pcMenubar = inject(MENUBAR_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
+  }
   /**
    * An array of menuitems.
    * @group Props
@@ -1242,8 +1314,7 @@ var Menubar = class _Menubar extends BaseComponent {
       }
     });
   }
-  ngOnInit() {
-    super.ngOnInit();
+  onInit() {
     this.bindMatchMediaListener();
     this.menubarService.autoHide = this.autoHide;
     this.menubarService.autoHideDelay = this.autoHideDelay;
@@ -1283,7 +1354,7 @@ var Menubar = class _Menubar extends BaseComponent {
   _itemTemplate;
   _menuIconTemplate;
   _submenuIconTemplate;
-  ngAfterContentInit() {
+  onAfterContentInit() {
     this.templates?.forEach((item) => {
       switch (item.getType()) {
         case "start":
@@ -1360,7 +1431,7 @@ var Menubar = class _Menubar extends BaseComponent {
       processedItem
     } = event;
     const grouped = this.isProcessedItemGroup(processedItem);
-    const root = a(processedItem.parent);
+    const root = l(processedItem.parent);
     const selected = this.isSelected(processedItem);
     if (selected) {
       const {
@@ -1378,7 +1449,7 @@ var Menubar = class _Menubar extends BaseComponent {
         item
       });
       this.dirty = !root;
-      bt(this.rootmenu.el.nativeElement);
+      bt(this.rootmenu?.el.nativeElement);
     } else {
       if (grouped) {
         this.onItemChange(event);
@@ -1387,7 +1458,7 @@ var Menubar = class _Menubar extends BaseComponent {
         this.hide(originalEvent);
         this.changeFocusedItemIndex(originalEvent, rootProcessedItem ? rootProcessedItem.index : -1);
         this.mobileActive = false;
-        bt(this.rootmenu.el.nativeElement);
+        bt(this.rootmenu?.el.nativeElement);
       }
     }
   }
@@ -1426,7 +1497,7 @@ var Menubar = class _Menubar extends BaseComponent {
   }
   scrollInView(index = -1) {
     const id = index !== -1 ? `${this.id}_${index}` : this.focusedItemId;
-    const element = z(this.rootmenu.el.nativeElement, `li[id="${id}"]`);
+    const element = z(this.rootmenu?.el.nativeElement, `li[id="${id}"]`);
     if (element) {
       element.scrollIntoView && element.scrollIntoView({
         block: "nearest",
@@ -1439,7 +1510,7 @@ var Menubar = class _Menubar extends BaseComponent {
       processedItem,
       isFocus
     } = event;
-    if (a(processedItem)) return;
+    if (l(processedItem)) return;
     const {
       index,
       key,
@@ -1458,7 +1529,7 @@ var Menubar = class _Menubar extends BaseComponent {
       item
     });
     grouped && (this.dirty = true);
-    isFocus && bt(this.rootmenu.el.nativeElement);
+    isFocus && bt(this.rootmenu?.el.nativeElement);
     if (type === "hover" && this.queryMatches) {
       return;
     }
@@ -1467,11 +1538,11 @@ var Menubar = class _Menubar extends BaseComponent {
   toggle(event) {
     if (this.mobileActive) {
       this.mobileActive = false;
-      zindexutils.clear(this.rootmenu.el.nativeElement);
+      zindexutils.clear(this.rootmenu?.el.nativeElement);
       this.hide();
     } else {
       this.mobileActive = true;
-      zindexutils.set("menu", this.rootmenu.el.nativeElement, this.config.zIndex.menu);
+      zindexutils.set("menu", this.rootmenu?.el.nativeElement, this.config.zIndex.menu);
       setTimeout(() => {
         this.show();
       }, 0);
@@ -1482,7 +1553,7 @@ var Menubar = class _Menubar extends BaseComponent {
   hide(event, isFocus) {
     if (this.mobileActive) {
       setTimeout(() => {
-        bt(this.menubutton.nativeElement);
+        bt(this.menubutton?.nativeElement);
       }, 0);
     }
     this.activeItemPath.set([]);
@@ -1569,7 +1640,7 @@ var Menubar = class _Menubar extends BaseComponent {
       case "ShiftRight":
         break;
       default:
-        if (!metaKey && j(event.key)) {
+        if (!metaKey && J(event.key)) {
           this.searchItems(event, event.key);
         }
         break;
@@ -1648,7 +1719,7 @@ var Menubar = class _Menubar extends BaseComponent {
   }
   onArrowDownKey(event) {
     const processedItem = this.visibleItems[this.focusedItemInfo().index];
-    const root = processedItem ? a(processedItem.parent) : null;
+    const root = processedItem ? l(processedItem.parent) : null;
     if (root) {
       const grouped = this.isProccessedItemGroup(processedItem);
       if (grouped) {
@@ -1694,7 +1765,7 @@ var Menubar = class _Menubar extends BaseComponent {
   }
   onArrowUpKey(event) {
     const processedItem = this.visibleItems[this.focusedItemInfo().index];
-    const root = a(processedItem.parent);
+    const root = l(processedItem.parent);
     if (root) {
       const grouped = this.isProccessedItemGroup(processedItem);
       if (grouped) {
@@ -1775,8 +1846,8 @@ var Menubar = class _Menubar extends BaseComponent {
   }
   onEnterKey(event) {
     if (this.focusedItemInfo().index !== -1) {
-      const element = z(this.rootmenu.el.nativeElement, `li[id="${`${this.focusedItemId}`}"]`);
-      const anchorElement = element && z(element, 'a[data-pc-section="action"]');
+      const element = z(this.rootmenu?.el.nativeElement, `li[id="${`${this.focusedItemId}`}"]`);
+      const anchorElement = element && (z(element, '[data-pc-section="itemlink"]') || z(element, "a,button"));
       anchorElement ? anchorElement.click() : element && element.click();
     }
     event.preventDefault();
@@ -1812,8 +1883,8 @@ var Menubar = class _Menubar extends BaseComponent {
     if (isPlatformBrowser(this.platformId)) {
       if (!this.outsideClickListener) {
         this.outsideClickListener = this.renderer.listen(this.document, "click", (event) => {
-          const isOutsideContainer = this.rootmenu.el.nativeElement !== event.target && !this.rootmenu.el.nativeElement.contains(event.target);
-          const isOutsideMenuButton = this.mobileActive && this.menubutton.nativeElement !== event.target && !this.menubutton.nativeElement.contains(event.target);
+          const isOutsideContainer = this.rootmenu?.el.nativeElement !== event.target && !this.rootmenu?.el.nativeElement?.contains(event.target);
+          const isOutsideMenuButton = this.mobileActive && this.menubutton?.nativeElement !== event.target && !this.menubutton?.nativeElement?.contains(event.target);
           if (isOutsideContainer) {
             isOutsideMenuButton ? this.mobileActive = false : this.hide();
           }
@@ -1833,12 +1904,11 @@ var Menubar = class _Menubar extends BaseComponent {
       this.resizeListener = null;
     }
   }
-  ngOnDestroy() {
+  onDestroy() {
     this.mouseLeaveSubscriber?.unsubscribe();
     this.unbindOutsideClickListener();
     this.unbindResizeListener();
     this.unbindMatchMediaListener();
-    super.ngOnDestroy();
   }
   static ɵfac = function Menubar_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _Menubar)(ɵɵdirectiveInject(DOCUMENT), ɵɵdirectiveInject(PLATFORM_ID), ɵɵdirectiveInject(ElementRef), ɵɵdirectiveInject(Renderer2), ɵɵdirectiveInject(ChangeDetectorRef), ɵɵdirectiveInject(MenubarService));
@@ -1876,7 +1946,6 @@ var Menubar = class _Menubar extends BaseComponent {
         ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.rootmenu = _t.first);
       }
     },
-    hostAttrs: ["data-pc-section", "root", "data-pc-name", "menubar"],
     hostVars: 2,
     hostBindings: function Menubar_HostBindings(rf, ctx) {
       if (rf & 2) {
@@ -1900,16 +1969,22 @@ var Menubar = class _Menubar extends BaseComponent {
       onFocus: "onFocus",
       onBlur: "onBlur"
     },
-    features: [ɵɵProvidersFeature([MenubarService, MenuBarStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([MenubarService, MenuBarStyle, {
+      provide: MENUBAR_INSTANCE,
+      useExisting: _Menubar
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _Menubar
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     ngContentSelectors: _c10,
     decls: 7,
-    vars: 17,
-    consts: [["rootmenu", ""], ["legacy", ""], ["menubutton", ""], [3, "class", 4, "ngIf"], ["tabindex", "0", "role", "button", 3, "class", "click", "keydown", 4, "ngIf"], ["pMenubarSub", "", "tabindex", "0", 3, "itemClick", "focus", "blur", "keydown", "itemMouseEnter", "mouseleave", "items", "itemTemplate", "menuId", "root", "baseZIndex", "autoZIndex", "mobileActive", "autoDisplay", "focusedItemId", "submenuiconTemplate", "activeItemPath"], [3, "class", 4, "ngIf", "ngIfElse"], [4, "ngTemplateOutlet"], ["tabindex", "0", "role", "button", 3, "click", "keydown"], ["data-p-icon", "bars", 4, "ngIf"], ["data-p-icon", "bars"]],
+    vars: 19,
+    consts: [["rootmenu", ""], ["legacy", ""], ["menubutton", ""], [3, "class", "pBind", 4, "ngIf"], ["tabindex", "0", "role", "button", 3, "class", "pBind", "click", "keydown", 4, "ngIf"], ["pMenubarSub", "", "tabindex", "0", 3, "itemClick", "focus", "blur", "keydown", "itemMouseEnter", "mouseleave", "items", "itemTemplate", "menuId", "root", "baseZIndex", "autoZIndex", "mobileActive", "autoDisplay", "focusedItemId", "submenuiconTemplate", "activeItemPath", "pt", "pBind"], [3, "class", "pBind", 4, "ngIf", "ngIfElse"], [3, "pBind"], [4, "ngTemplateOutlet"], ["tabindex", "0", "role", "button", 3, "click", "keydown", "pBind"], ["data-p-icon", "bars", 3, "pBind", 4, "ngIf"], ["data-p-icon", "bars", 3, "pBind"]],
     template: function Menubar_Template(rf, ctx) {
       if (rf & 1) {
         const _r1 = ɵɵgetCurrentView();
         ɵɵprojectionDef();
-        ɵɵtemplate(0, Menubar_div_0_Template, 2, 3, "div", 3)(1, Menubar_a_1_Template, 4, 9, "a", 4);
+        ɵɵtemplate(0, Menubar_div_0_Template, 2, 4, "div", 3)(1, Menubar_a_1_Template, 4, 9, "a", 4);
         ɵɵelementStart(2, "ul", 5, 0);
         ɵɵlistener("itemClick", function Menubar_Template_ul_itemClick_2_listener($event) {
           ɵɵrestoreView(_r1);
@@ -1931,7 +2006,7 @@ var Menubar = class _Menubar extends BaseComponent {
           return ɵɵresetView(ctx.onMouseLeave($event));
         });
         ɵɵelementEnd();
-        ɵɵtemplate(4, Menubar_div_4_Template, 2, 3, "div", 6)(5, Menubar_ng_template_5_Template, 2, 2, "ng-template", null, 1, ɵɵtemplateRefExtractor);
+        ɵɵtemplate(4, Menubar_div_4_Template, 2, 4, "div", 6)(5, Menubar_ng_template_5_Template, 2, 2, "ng-template", null, 1, ɵɵtemplateRefExtractor);
       }
       if (rf & 2) {
         const legacy_r4 = ɵɵreference(6);
@@ -1939,13 +2014,13 @@ var Menubar = class _Menubar extends BaseComponent {
         ɵɵadvance();
         ɵɵproperty("ngIf", ctx.model && ctx.model.length > 0);
         ɵɵadvance();
-        ɵɵproperty("items", ctx.processedItems)("itemTemplate", ctx.itemTemplate)("menuId", ctx.id)("root", true)("baseZIndex", ctx.baseZIndex)("autoZIndex", ctx.autoZIndex)("mobileActive", ctx.mobileActive)("autoDisplay", ctx.autoDisplay)("focusedItemId", ctx.focused ? ctx.focusedItemId : void 0)("submenuiconTemplate", ctx.submenuIconTemplate || ctx._submenuIconTemplate)("activeItemPath", ctx.activeItemPath());
+        ɵɵproperty("items", ctx.processedItems)("itemTemplate", ctx.itemTemplate)("menuId", ctx.id)("root", true)("baseZIndex", ctx.baseZIndex)("autoZIndex", ctx.autoZIndex)("mobileActive", ctx.mobileActive)("autoDisplay", ctx.autoDisplay)("focusedItemId", ctx.focused ? ctx.focusedItemId : void 0)("submenuiconTemplate", ctx.submenuIconTemplate || ctx._submenuIconTemplate)("activeItemPath", ctx.activeItemPath())("pt", ctx.pt())("pBind", ctx.ptm("rootList"));
         ɵɵattribute("aria-label", ctx.ariaLabel)("aria-labelledby", ctx.ariaLabelledBy);
         ɵɵadvance(2);
         ɵɵproperty("ngIf", ctx.endTemplate || ctx._endTemplate)("ngIfElse", legacy_r4);
       }
     },
-    dependencies: [CommonModule, NgIf, NgTemplateOutlet, RouterModule, MenubarSub, TooltipModule, BarsIcon, BadgeModule, SharedModule],
+    dependencies: [CommonModule, NgIf, NgTemplateOutlet, RouterModule, MenubarSub, TooltipModule, Bind, BarsIcon, BadgeModule, SharedModule, BindModule],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -1956,9 +2031,9 @@ var Menubar = class _Menubar extends BaseComponent {
     args: [{
       selector: "p-menubar",
       standalone: true,
-      imports: [CommonModule, RouterModule, MenubarSub, TooltipModule, BarsIcon, BadgeModule, SharedModule],
+      imports: [CommonModule, RouterModule, MenubarSub, TooltipModule, BarsIcon, BadgeModule, SharedModule, BindModule],
       template: `
-        <div [class]="cx('start')" *ngIf="startTemplate || _startTemplate">
+        <div [class]="cx('start')" *ngIf="startTemplate || _startTemplate" [pBind]="ptm('start')">
             <ng-container *ngTemplateOutlet="startTemplate || _startTemplate"></ng-container>
         </div>
         <a
@@ -1969,13 +2044,13 @@ var Menubar = class _Menubar extends BaseComponent {
             [attr.aria-expanded]="mobileActive"
             [attr.aria-controls]="id"
             [attr.aria-label]="config.translation.aria.navigation"
-            [attr.data-pc-section]="'button'"
             *ngIf="model && model.length > 0"
             [class]="cx('button')"
+            [pBind]="ptm('button')"
             (click)="menuButtonClick($event)"
             (keydown)="menuButtonKeydown($event)"
         >
-            <svg data-p-icon="bars" *ngIf="!menuIconTemplate && !_menuIconTemplate" />
+            <svg data-p-icon="bars" *ngIf="!menuIconTemplate && !_menuIconTemplate" [pBind]="ptm('buttonIcon')" />
             <ng-template *ngTemplateOutlet="menuIconTemplate || _menuIconTemplate"></ng-template>
         </a>
         <ul
@@ -2001,8 +2076,10 @@ var Menubar = class _Menubar extends BaseComponent {
             (keydown)="onKeyDown($event)"
             (itemMouseEnter)="onItemMouseEnter($event)"
             (mouseleave)="onMouseLeave($event)"
+            [pt]="pt()"
+            [pBind]="ptm('rootList')"
         ></ul>
-        <div [class]="cx('end')" *ngIf="endTemplate || _endTemplate; else legacy">
+        <div [class]="cx('end')" *ngIf="endTemplate || _endTemplate; else legacy" [pBind]="ptm('end')">
             <ng-container *ngTemplateOutlet="endTemplate || _endTemplate"></ng-container>
         </div>
         <ng-template #legacy>
@@ -2013,12 +2090,17 @@ var Menubar = class _Menubar extends BaseComponent {
     `,
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
-      providers: [MenubarService, MenuBarStyle],
+      providers: [MenubarService, MenuBarStyle, {
+        provide: MENUBAR_INSTANCE,
+        useExisting: Menubar
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: Menubar
+      }],
       host: {
-        "[class]": 'cn(cx("root"), styleClass)',
-        "data-pc-section": "root",
-        "data-pc-name": "menubar"
-      }
+        "[class]": 'cn(cx("root"), styleClass)'
+      },
+      hostDirectives: [Bind]
     }]
   }], () => [{
     type: Document,

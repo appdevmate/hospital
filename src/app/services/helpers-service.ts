@@ -1,12 +1,21 @@
 import { Injectable } from '@angular/core';
 import { MessageService } from 'primeng/api';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HelpersService {
 
-  constructor(private messageService: MessageService) { }
+  private readonly SESSION_EXPIRED_DELAY_MS = 2000;
+
+  constructor(private messageService: MessageService, private oidc: OidcSecurityService) { }
+
+  redirectToLogin(): void {
+    this.notifyError('Session Expired', 'Please log in again');
+    sessionStorage.setItem('returnUrl', window.location.pathname);
+    setTimeout(() => this.oidc.authorize(), this.SESSION_EXPIRED_DELAY_MS);
+  }
 
   notifySuccess(message: string) {
     this.messageService.add({

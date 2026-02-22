@@ -57,6 +57,7 @@ import { CheckboxModule } from 'primeng/checkbox';
       [responsiveLayout]="config.responsive !== false ? 'scroll' : 'stack'"
       [scrollable]="true"
       [scrollHeight]="config.scrollHeight || '600px'"
+      [globalFilterFields]="globalFilterFields"
       [editMode]="config.editType === 'cell' ? 'cell' : 'row'"
       sortMode="single"
       [resizableColumns]="true"
@@ -678,6 +679,9 @@ export class GenericTableComponent<T = any> implements OnChanges {
     }
     get viewColumns(): TableColumn[] {
         return (this.columns || []).filter((c) => this.visibleFields.includes(c.field));
+    }
+    get globalFilterFields(): string[] {
+        return this.viewColumns.map((c) => c.field);
     }
     getColSpan(): number {
         let base = this.viewColumns.length + (this.showActionsCol() ? 1 : 0);

@@ -167,6 +167,27 @@ import { Fluid } from 'primeng/fluid';
                                 <small class="p-error" *ngIf="invalid('dob')">Date of birth is required</small>
                             </div>
                         </p-fluid>
+
+                        <div class="mb-4">
+                            <p-floatLabel variant="on">
+                                <p-autoComplete
+                                    inputId="bloodGroup"
+                                    formControlName="bloodGroup"
+                                    [suggestions]="filteredBloodGroupOptions"
+                                    (completeMethod)="filterBloodGroup($event)"
+                                    [forceSelection]="true"
+                                    [dropdown]="true"
+                                    [readonly]="true"
+                                    styleClass="w-full"
+                                    autocomplete="off"
+                                >
+                                    <ng-template pTemplate="item" let-option>
+                                        <span>{{ option }}</span>
+                                    </ng-template>
+                                </p-autoComplete>
+                                <label for="bloodGroup"><i class="pi pi-heart"></i> Blood Group</label>
+                            </p-floatLabel>
+                        </div>
                     </div>
                     <!-- Date & Time Information Section -->
 
@@ -496,11 +517,14 @@ export class NewDoctor implements AfterViewInit {
     educationOptions = [{ name: 'MBBS' }, { name: 'MD' }, { name: 'DO' }, { name: 'MS' }, { name: 'PhD' }, { name: 'Fellowship' }];
     filteredEducationOptions: any[] = [];
 
+    bloodGroupOptions: string[] = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+    filteredBloodGroupOptions: string[] = [];
+
     constructor(
         private fb: FormBuilder,
         private helpersService: HelpersService,
         private doctorService: DoctorsService,
-        public ref: DynamicDialogRef
+        public ref: DynamicDialogRef,
     ) {
         this.form = this.fb.group({
             name: ['', [Validators.required, Validators.minLength(3)]],
@@ -521,7 +545,8 @@ export class NewDoctor implements AfterViewInit {
             education: [null],
             dutyDays: [[]],
             dutyStart: [null],
-            dutyEnd: [null]
+            dutyEnd: [null],
+            bloodGroup: ['']
         });
 
         this.resetFormState();
@@ -565,7 +590,11 @@ export class NewDoctor implements AfterViewInit {
                 if (kind === 'department') this.filteredDepartmentOptions = items || [];
                 else this.filteredSpecializationOptions = items || [];
             },
-            error: () => {
+            error: (err) => {
+                if (err?.error?.message == 'Unauthorized') {
+                    this.helpersService.redirectToLogin();
+                    return;
+                }
                 if (kind === 'department') this.filteredDepartmentOptions = [];
                 else this.filteredSpecializationOptions = [];
             }
@@ -601,6 +630,11 @@ export class NewDoctor implements AfterViewInit {
     filterStatus(e: { query: string }) {
         const q = (e?.query || '').toLowerCase();
         this.filteredStatusOptions = this.statusOptions.filter((x) => x.toLowerCase().includes(q));
+    }
+
+    filterBloodGroup(e: { query: string }) {
+        const q = (e?.query || '').toLowerCase();
+        this.filteredBloodGroupOptions = this.bloodGroupOptions.filter((x) => x.toLowerCase().includes(q));
     }
 
     // ===== Validation helpers =====
@@ -708,7 +742,8 @@ export class NewDoctor implements AfterViewInit {
             education: f.education ? (typeof f.education === 'string' ? f.education.trim() : f.education.name) : null,
             dutyDays: Array.isArray(f.dutyDays) ? f.dutyDays.map((d: string) => d.toLowerCase()) : [],
             dutyStart: formatTime(f.dutyStart),
-            dutyEnd: formatTime(f.dutyEnd)
+            dutyEnd: formatTime(f.dutyEnd),
+            bloodGroup: f.bloodGroup ? f.bloodGroup.trim() : null
         };
 
         console.log('Submitting payload:', payload);
@@ -722,8 +757,8 @@ export class NewDoctor implements AfterViewInit {
             error: (err) => {
                 console.error('Error creating doctor:', err);
                 if (err.error.message == 'Unauthorized') {
-                    this.helpersService.notifyError('Unauthorized', 'Please login again');
-                    this.isSubmitting = false;
+                    this.helpersService.redirectToLogin();
+                    return;
                 } else {
                     this.helpersService.notifyError('Error', err?.error?.message || 'Failed to create doctor profile');
                     this.isSubmitting = false;
@@ -758,7 +793,8 @@ export class NewDoctor implements AfterViewInit {
                 education: null,
                 dutyDays: [],
                 dutyStart: null,
-                dutyEnd: null
+                dutyEnd: null,
+                bloodGroup: ''
             },
             { emitEvent: false }
         );
@@ -789,8 +825,8 @@ export class NewDoctor implements AfterViewInit {
             error: (err) => {
                 console.error('Error creating department:', err);
                 if (err.error.message == 'Unauthorized') {
-                    this.helpersService.notifyError('Unauthorized', 'Please login again');
-                    this.isSavingDept = false;
+                    this.helpersService.redirectToLogin();
+                    return;
                 } else {
                     this.helpersService.notifyError('Error', 'Failed to add department');
                     this.isSavingDept = false;
@@ -823,8 +859,8 @@ export class NewDoctor implements AfterViewInit {
             error: (err) => {
                 console.error('Error creating specialization:', err);
                 if (err.error.message == 'Unauthorized') {
-                    this.helpersService.notifyError('Unauthorized', 'Please login again');
-                    this.isSavingSpec = false;
+                    this.helpersService.redirectToLogin();
+                    return;
                 } else {
                     this.helpersService.notifyError('Error', 'Failed to add specialization');
                     this.isSavingSpec = false;
@@ -873,8 +909,8 @@ export class NewDoctor implements AfterViewInit {
             error: (err) => {
                 console.error(err);
                 if (err.error.message == 'Unauthorized') {
-                    this.helpersService.notifyError('Unauthorized', 'Please login again');
-                    this.isUploadingBulk = false;
+                    this.helpersService.redirectToLogin();
+                    return;
                 } else {
                     this.helpersService.notifyError('Upload failed', `Could not import ${this.bulkType}s`);
                     this.isUploadingBulk = false;

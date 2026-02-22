@@ -1,21 +1,39 @@
 import {
   Ripple,
   RippleModule
-} from "./chunk-VZLF74PJ.js";
+} from "./chunk-OC77X5LN.js";
 import {
   ChevronLeftIcon,
   ChevronRightIcon
-} from "./chunk-BIL3W6KN.js";
+} from "./chunk-RHA7RL5K.js";
+import "./chunk-YXZQJBKH.js";
 import {
-  BaseComponent
-} from "./chunk-4YMQ5OOY.js";
+  BaseComponent,
+  PARENT_INSTANCE
+} from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
-} from "./chunk-L2L2T6ID.js";
+} from "./chunk-4ATYD752.js";
+import {
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
 import {
   PrimeTemplate,
   SharedModule
-} from "./chunk-ZKOTJBQ6.js";
+} from "./chunk-LMEEH3AJ.js";
+import "./chunk-GOP36Q47.js";
+import {
+  K,
+  Q,
+  Rt,
+  V2 as V,
+  bt,
+  k,
+  s3 as s,
+  v,
+  z2 as z
+} from "./chunk-UCHM6OXG.js";
 import {
   CommonModule,
   NgTemplateOutlet,
@@ -34,6 +52,7 @@ import {
   ViewChild,
   ViewEncapsulation,
   booleanAttribute,
+  contentChild,
   input,
   model,
   numberAttribute,
@@ -47,8 +66,10 @@ import {
   ɵɵconditional,
   ɵɵconditionalCreate,
   ɵɵcontentQuery,
+  ɵɵcontentQuerySignal,
   ɵɵdefineComponent,
   ɵɵdefineNgModule,
+  ɵɵdomProperty,
   ɵɵelement,
   ɵɵelementContainer,
   ɵɵelementEnd,
@@ -61,11 +82,15 @@ import {
   ɵɵprojection,
   ɵɵprojectionDef,
   ɵɵproperty,
+  ɵɵqueryAdvance,
   ɵɵqueryRefresh,
+  ɵɵreference,
   ɵɵtemplate,
+  ɵɵtemplateRefExtractor,
   ɵɵviewQuery
 } from "./chunk-EIF6IUR4.js";
 import {
+  InjectionToken,
   computed,
   effect,
   forwardRef,
@@ -77,25 +102,13 @@ import {
   ɵɵresetView,
   ɵɵrestoreView
 } from "./chunk-LW34VNAR.js";
-import "./chunk-YVXMBCE5.js";
 import "./chunk-G6ECYYJH.js";
+import "./chunk-YVXMBCE5.js";
 import "./chunk-RTGP7ALM.js";
-import "./chunk-BMDSN43F.js";
-import {
-  K,
-  Q2 as Q,
-  Rt,
-  V,
-  bt,
-  k,
-  s3 as s,
-  v,
-  z2 as z
-} from "./chunk-RK2DVQNP.js";
 import "./chunk-4MWRP73S.js";
 
 // node_modules/@primeuix/styles/dist/tabs/index.mjs
-var style = "\n    .p-tabs {\n        display: flex;\n        flex-direction: column;\n    }\n\n    .p-tablist {\n        display: flex;\n        position: relative;\n    }\n\n    .p-tabs-scrollable > .p-tablist {\n        overflow: hidden;\n    }\n\n    .p-tablist-viewport {\n        overflow-x: auto;\n        overflow-y: hidden;\n        scroll-behavior: smooth;\n        scrollbar-width: none;\n        overscroll-behavior: contain auto;\n    }\n\n    .p-tablist-viewport::-webkit-scrollbar {\n        display: none;\n    }\n\n    .p-tablist-tab-list {\n        position: relative;\n        display: flex;\n        background: dt('tabs.tablist.background');\n        border-style: solid;\n        border-color: dt('tabs.tablist.border.color');\n        border-width: dt('tabs.tablist.border.width');\n    }\n\n    .p-tablist-content {\n        flex-grow: 1;\n    }\n\n    .p-tablist-nav-button {\n        all: unset;\n        position: absolute !important;\n        flex-shrink: 0;\n        inset-block-start: 0;\n        z-index: 2;\n        height: 100%;\n        display: flex;\n        align-items: center;\n        justify-content: center;\n        background: dt('tabs.nav.button.background');\n        color: dt('tabs.nav.button.color');\n        width: dt('tabs.nav.button.width');\n        transition:\n            color dt('tabs.transition.duration'),\n            outline-color dt('tabs.transition.duration'),\n            box-shadow dt('tabs.transition.duration');\n        box-shadow: dt('tabs.nav.button.shadow');\n        outline-color: transparent;\n        cursor: pointer;\n    }\n\n    .p-tablist-nav-button:focus-visible {\n        z-index: 1;\n        box-shadow: dt('tabs.nav.button.focus.ring.shadow');\n        outline: dt('tabs.nav.button.focus.ring.width') dt('tabs.nav.button.focus.ring.style') dt('tabs.nav.button.focus.ring.color');\n        outline-offset: dt('tabs.nav.button.focus.ring.offset');\n    }\n\n    .p-tablist-nav-button:hover {\n        color: dt('tabs.nav.button.hover.color');\n    }\n\n    .p-tablist-prev-button {\n        inset-inline-start: 0;\n    }\n\n    .p-tablist-next-button {\n        inset-inline-end: 0;\n    }\n\n    .p-tablist-prev-button:dir(rtl),\n    .p-tablist-next-button:dir(rtl) {\n        transform: rotate(180deg);\n    }\n\n    .p-tab {\n        flex-shrink: 0;\n        cursor: pointer;\n        user-select: none;\n        position: relative;\n        border-style: solid;\n        white-space: nowrap;\n        gap: dt('tabs.tab.gap');\n        background: dt('tabs.tab.background');\n        border-width: dt('tabs.tab.border.width');\n        border-color: dt('tabs.tab.border.color');\n        color: dt('tabs.tab.color');\n        padding: dt('tabs.tab.padding');\n        font-weight: dt('tabs.tab.font.weight');\n        transition:\n            background dt('tabs.transition.duration'),\n            border-color dt('tabs.transition.duration'),\n            color dt('tabs.transition.duration'),\n            outline-color dt('tabs.transition.duration'),\n            box-shadow dt('tabs.transition.duration');\n        margin: dt('tabs.tab.margin');\n        outline-color: transparent;\n    }\n\n    .p-tab:not(.p-disabled):focus-visible {\n        z-index: 1;\n        box-shadow: dt('tabs.tab.focus.ring.shadow');\n        outline: dt('tabs.tab.focus.ring.width') dt('tabs.tab.focus.ring.style') dt('tabs.tab.focus.ring.color');\n        outline-offset: dt('tabs.tab.focus.ring.offset');\n    }\n\n    .p-tab:not(.p-tab-active):not(.p-disabled):hover {\n        background: dt('tabs.tab.hover.background');\n        border-color: dt('tabs.tab.hover.border.color');\n        color: dt('tabs.tab.hover.color');\n    }\n\n    .p-tab-active {\n        background: dt('tabs.tab.active.background');\n        border-color: dt('tabs.tab.active.border.color');\n        color: dt('tabs.tab.active.color');\n    }\n\n    .p-tabpanels {\n        background: dt('tabs.tabpanel.background');\n        color: dt('tabs.tabpanel.color');\n        padding: dt('tabs.tabpanel.padding');\n        outline: 0 none;\n    }\n\n    .p-tabpanel:focus-visible {\n        box-shadow: dt('tabs.tabpanel.focus.ring.shadow');\n        outline: dt('tabs.tabpanel.focus.ring.width') dt('tabs.tabpanel.focus.ring.style') dt('tabs.tabpanel.focus.ring.color');\n        outline-offset: dt('tabs.tabpanel.focus.ring.offset');\n    }\n\n    .p-tablist-active-bar {\n        z-index: 1;\n        display: block;\n        position: absolute;\n        inset-block-end: dt('tabs.active.bar.bottom');\n        height: dt('tabs.active.bar.height');\n        background: dt('tabs.active.bar.background');\n        transition: 250ms cubic-bezier(0.35, 0, 0.25, 1);\n    }\n";
+var style = "\n    .p-tabs {\n        display: flex;\n        flex-direction: column;\n    }\n\n    .p-tablist {\n        display: flex;\n        position: relative;\n        overflow: hidden;\n        background: dt('tabs.tablist.background');\n    }\n\n    .p-tablist-viewport {\n        overflow-x: auto;\n        overflow-y: hidden;\n        scroll-behavior: smooth;\n        scrollbar-width: none;\n        overscroll-behavior: contain auto;\n    }\n\n    .p-tablist-viewport::-webkit-scrollbar {\n        display: none;\n    }\n\n    .p-tablist-tab-list {\n        position: relative;\n        display: flex;\n        border-style: solid;\n        border-color: dt('tabs.tablist.border.color');\n        border-width: dt('tabs.tablist.border.width');\n    }\n\n    .p-tablist-content {\n        flex-grow: 1;\n    }\n\n    .p-tablist-nav-button {\n        all: unset;\n        position: absolute !important;\n        flex-shrink: 0;\n        inset-block-start: 0;\n        z-index: 2;\n        height: 100%;\n        display: flex;\n        align-items: center;\n        justify-content: center;\n        background: dt('tabs.nav.button.background');\n        color: dt('tabs.nav.button.color');\n        width: dt('tabs.nav.button.width');\n        transition:\n            color dt('tabs.transition.duration'),\n            outline-color dt('tabs.transition.duration'),\n            box-shadow dt('tabs.transition.duration');\n        box-shadow: dt('tabs.nav.button.shadow');\n        outline-color: transparent;\n        cursor: pointer;\n    }\n\n    .p-tablist-nav-button:focus-visible {\n        z-index: 1;\n        box-shadow: dt('tabs.nav.button.focus.ring.shadow');\n        outline: dt('tabs.nav.button.focus.ring.width') dt('tabs.nav.button.focus.ring.style') dt('tabs.nav.button.focus.ring.color');\n        outline-offset: dt('tabs.nav.button.focus.ring.offset');\n    }\n\n    .p-tablist-nav-button:hover {\n        color: dt('tabs.nav.button.hover.color');\n    }\n\n    .p-tablist-prev-button {\n        inset-inline-start: 0;\n    }\n\n    .p-tablist-next-button {\n        inset-inline-end: 0;\n    }\n\n    .p-tablist-prev-button:dir(rtl),\n    .p-tablist-next-button:dir(rtl) {\n        transform: rotate(180deg);\n    }\n\n    .p-tab {\n        flex-shrink: 0;\n        cursor: pointer;\n        user-select: none;\n        position: relative;\n        border-style: solid;\n        white-space: nowrap;\n        gap: dt('tabs.tab.gap');\n        background: dt('tabs.tab.background');\n        border-width: dt('tabs.tab.border.width');\n        border-color: dt('tabs.tab.border.color');\n        color: dt('tabs.tab.color');\n        padding: dt('tabs.tab.padding');\n        font-weight: dt('tabs.tab.font.weight');\n        transition:\n            background dt('tabs.transition.duration'),\n            border-color dt('tabs.transition.duration'),\n            color dt('tabs.transition.duration'),\n            outline-color dt('tabs.transition.duration'),\n            box-shadow dt('tabs.transition.duration');\n        margin: dt('tabs.tab.margin');\n        outline-color: transparent;\n    }\n\n    .p-tab:not(.p-disabled):focus-visible {\n        z-index: 1;\n        box-shadow: dt('tabs.tab.focus.ring.shadow');\n        outline: dt('tabs.tab.focus.ring.width') dt('tabs.tab.focus.ring.style') dt('tabs.tab.focus.ring.color');\n        outline-offset: dt('tabs.tab.focus.ring.offset');\n    }\n\n    .p-tab:not(.p-tab-active):not(.p-disabled):hover {\n        background: dt('tabs.tab.hover.background');\n        border-color: dt('tabs.tab.hover.border.color');\n        color: dt('tabs.tab.hover.color');\n    }\n\n    .p-tab-active {\n        background: dt('tabs.tab.active.background');\n        border-color: dt('tabs.tab.active.border.color');\n        color: dt('tabs.tab.active.color');\n    }\n\n    .p-tabpanels {\n        background: dt('tabs.tabpanel.background');\n        color: dt('tabs.tabpanel.color');\n        padding: dt('tabs.tabpanel.padding');\n        outline: 0 none;\n    }\n\n    .p-tabpanel:focus-visible {\n        box-shadow: dt('tabs.tabpanel.focus.ring.shadow');\n        outline: dt('tabs.tabpanel.focus.ring.width') dt('tabs.tabpanel.focus.ring.style') dt('tabs.tabpanel.focus.ring.color');\n        outline-offset: dt('tabs.tabpanel.focus.ring.offset');\n    }\n\n    .p-tablist-active-bar {\n        z-index: 1;\n        display: block;\n        position: absolute;\n        inset-block-end: dt('tabs.active.bar.bottom');\n        height: dt('tabs.active.bar.height');\n        background: dt('tabs.active.bar.background');\n        transition: 250ms cubic-bezier(0.35, 0, 0.25, 1);\n    }\n";
 
 // node_modules/primeng/fesm2022/primeng-tabs.mjs
 var _c0 = ["previcon"];
@@ -141,6 +154,7 @@ function TabList_Conditional_0_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext();
     ɵɵclassMap(ctx_r2.cx("prevButton"));
+    ɵɵproperty("pBind", ctx_r2.ptm("prevButton"));
     ɵɵattribute("aria-label", ctx_r2.prevButtonAriaLabel)("tabindex", ctx_r2.tabindex())("data-pc-group-section", "navigator");
     ɵɵadvance(2);
     ɵɵconditional(ctx_r2.prevIconTemplate || ctx_r2._prevIconTemplate ? 2 : 3);
@@ -181,14 +195,30 @@ function TabList_Conditional_8_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext();
     ɵɵclassMap(ctx_r2.cx("nextButton"));
+    ɵɵproperty("pBind", ctx_r2.ptm("nextButton"));
     ɵɵattribute("aria-label", ctx_r2.nextButtonAriaLabel)("tabindex", ctx_r2.tabindex())("data-pc-group-section", "navigator");
     ɵɵadvance(2);
     ɵɵconditional(ctx_r2.nextIconTemplate || ctx_r2._nextIconTemplate ? 2 : 3);
   }
 }
-function TabPanel_Conditional_0_Template(rf, ctx) {
+function TabPanel_ng_template_0_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵprojection(0);
+  }
+}
+function TabPanel_Conditional_2_ng_container_0_Template(rf, ctx) {
+  if (rf & 1) {
+    ɵɵelementContainer(0);
+  }
+}
+function TabPanel_Conditional_2_Template(rf, ctx) {
+  if (rf & 1) {
+    ɵɵtemplate(0, TabPanel_Conditional_2_ng_container_0_Template, 1, 0, "ng-container", 1);
+  }
+  if (rf & 2) {
+    const ctx_r0 = ɵɵnextContext();
+    const defaultContent_r2 = ɵɵreference(1);
+    ɵɵproperty("ngTemplateOutlet", ctx_r0.content() ? ctx_r0.content() : defaultContent_r2);
   }
 }
 var classes$4 = {
@@ -200,7 +230,7 @@ var classes$4 = {
 };
 var TabsStyle = class _TabsStyle extends BaseStyle {
   name = "tabs";
-  theme = style;
+  style = style;
   classes = classes$4;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵTabsStyle_BaseFactory;
@@ -231,12 +261,39 @@ var TabsClasses;
   TabsClasses2["tabpanel"] = "p-tabs-panel";
 })(TabsClasses || (TabsClasses = {}));
 var classes$3 = {
-  root: "p-tablist",
-  content: ({
+  root: ({
     instance
-  }) => ["p-tablist-content", {
-    "p-tablist-viewport": instance.scrollable()
-  }],
+  }) => ["p-tab", {
+    "p-tab-active": instance.active(),
+    "p-disabled": instance.disabled()
+  }]
+};
+var TabStyle = class _TabStyle extends BaseStyle {
+  name = "tab";
+  classes = classes$3;
+  static ɵfac = /* @__PURE__ */ (() => {
+    let ɵTabStyle_BaseFactory;
+    return function TabStyle_Factory(__ngFactoryType__) {
+      return (ɵTabStyle_BaseFactory || (ɵTabStyle_BaseFactory = ɵɵgetInheritedFactory(_TabStyle)))(__ngFactoryType__ || _TabStyle);
+    };
+  })();
+  static ɵprov = ɵɵdefineInjectable({
+    token: _TabStyle,
+    factory: _TabStyle.ɵfac
+  });
+};
+(() => {
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(TabStyle, [{
+    type: Injectable
+  }], null, null);
+})();
+var TabClasses;
+(function(TabClasses2) {
+  TabClasses2["tab"] = "p-tab";
+})(TabClasses || (TabClasses = {}));
+var classes$2 = {
+  root: "p-tablist",
+  content: "p-tablist-content p-tablist-viewport",
   tabList: "p-tablist-tab-list",
   activeBar: "p-tablist-active-bar",
   prevButton: "p-tablist-prev-button p-tablist-nav-button",
@@ -244,7 +301,7 @@ var classes$3 = {
 };
 var TabListStyle = class _TabListStyle extends BaseStyle {
   name = "tablist";
-  classes = classes$3;
+  classes = classes$2;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵTabListStyle_BaseFactory;
     return function TabListStyle_Factory(__ngFactoryType__) {
@@ -270,7 +327,18 @@ var TabListClasses;
   TabListClasses2["prevButton"] = "p-tablist-prev-button";
   TabListClasses2["nextButton"] = "p-tablist-next-button";
 })(TabListClasses || (TabListClasses = {}));
+var TABLIST_INSTANCE = new InjectionToken("TABLIST_INSTANCE");
 var TabList = class _TabList extends BaseComponent {
+  $pcTabList = inject(TABLIST_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
+  }
   /**
    * A template reference variable that represents the previous icon in a UI component.
    * @type {TemplateRef<any> | undefined}
@@ -319,13 +387,12 @@ var TabList = class _TabList extends BaseComponent {
     });
   }
   get prevButtonAriaLabel() {
-    return this.config.translation.aria.previous;
+    return this.config?.translation?.aria?.previous;
   }
   get nextButtonAriaLabel() {
-    return this.config.translation.aria.next;
+    return this.config?.translation?.aria?.next;
   }
-  ngAfterViewInit() {
-    super.ngAfterViewInit();
+  onAfterViewInit() {
     if (this.showNavigators() && isPlatformBrowser(this.platformId)) {
       this.updateButtonState();
       this.bindResizeObserver();
@@ -333,8 +400,8 @@ var TabList = class _TabList extends BaseComponent {
   }
   _prevIconTemplate;
   _nextIconTemplate;
-  ngAfterContentInit() {
-    this.templates.forEach((t) => {
+  onAfterContentInit() {
+    this.templates?.forEach((t) => {
       switch (t.getType()) {
         case "previcon":
           this._prevIconTemplate = t.template;
@@ -345,9 +412,8 @@ var TabList = class _TabList extends BaseComponent {
       }
     });
   }
-  ngOnDestroy() {
+  onDestroy() {
     this.unbindResizeObserver();
-    super.ngOnDestroy();
   }
   onScroll(event) {
     this.showNavigators() && this.updateButtonState();
@@ -378,7 +444,7 @@ var TabList = class _TabList extends BaseComponent {
     const scrollLeft = Math.abs(_content.scrollLeft);
     const width = Rt(_content);
     this.isPrevButtonEnabled.set(scrollLeft !== 0);
-    this.isNextButtonEnabled.set(_list.offsetWidth >= offsetWidth && scrollLeft !== scrollWidth - width);
+    this.isNextButtonEnabled.set(_list.offsetWidth >= offsetWidth && Math.abs(scrollLeft - scrollWidth + width) > 1);
   }
   updateInkBar() {
     const _content = this.content?.nativeElement;
@@ -441,23 +507,28 @@ var TabList = class _TabList extends BaseComponent {
         ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.tabs = _t.first);
       }
     },
-    hostVars: 3,
+    hostVars: 2,
     hostBindings: function TabList_HostBindings(rf, ctx) {
       if (rf & 2) {
-        ɵɵattribute("data-pc-name", "tablist");
         ɵɵclassMap(ctx.cx("root"));
       }
     },
-    features: [ɵɵProvidersFeature([TabListStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([TabListStyle, {
+      provide: TABLIST_INSTANCE,
+      useExisting: _TabList
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _TabList
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     ngContentSelectors: _c7,
     decls: 9,
-    vars: 9,
-    consts: [["content", ""], ["tabs", ""], ["inkbar", ""], ["prevButton", ""], ["nextButton", ""], ["type", "button", "pRipple", "", 3, "class"], [3, "scroll"], ["role", "tablist"], ["role", "presentation"], ["type", "button", "pRipple", "", 3, "click"], ["data-p-icon", "chevron-left"], [4, "ngTemplateOutlet"], ["data-p-icon", "chevron-right"]],
+    vars: 11,
+    consts: [["content", ""], ["tabs", ""], ["inkbar", ""], ["prevButton", ""], ["nextButton", ""], ["type", "button", "pRipple", "", 3, "pBind", "class"], [3, "scroll", "pBind"], ["role", "tablist", 3, "pBind"], ["role", "presentation", 3, "pBind"], ["type", "button", "pRipple", "", 3, "click", "pBind"], ["data-p-icon", "chevron-left"], [4, "ngTemplateOutlet"], ["data-p-icon", "chevron-right"]],
     template: function TabList_Template(rf, ctx) {
       if (rf & 1) {
         const _r1 = ɵɵgetCurrentView();
         ɵɵprojectionDef();
-        ɵɵconditionalCreate(0, TabList_Conditional_0_Template, 4, 6, "button", 5);
+        ɵɵconditionalCreate(0, TabList_Conditional_0_Template, 4, 7, "button", 5);
         ɵɵelementStart(1, "div", 6, 0);
         ɵɵlistener("scroll", function TabList_Template_div_scroll_1_listener($event) {
           ɵɵrestoreView(_r1);
@@ -467,22 +538,24 @@ var TabList = class _TabList extends BaseComponent {
         ɵɵprojection(5);
         ɵɵelement(6, "span", 8, 2);
         ɵɵelementEnd()();
-        ɵɵconditionalCreate(8, TabList_Conditional_8_Template, 4, 6, "button", 5);
+        ɵɵconditionalCreate(8, TabList_Conditional_8_Template, 4, 7, "button", 5);
       }
       if (rf & 2) {
         ɵɵconditional(ctx.showNavigators() && ctx.isPrevButtonEnabled() ? 0 : -1);
         ɵɵadvance();
         ɵɵclassMap(ctx.cx("content"));
+        ɵɵproperty("pBind", ctx.ptm("content"));
         ɵɵadvance(2);
         ɵɵclassMap(ctx.cx("tabList"));
+        ɵɵproperty("pBind", ctx.ptm("tabList"));
         ɵɵadvance(3);
         ɵɵclassMap(ctx.cx("activeBar"));
-        ɵɵattribute("data-pc-section", "inkbar");
+        ɵɵproperty("pBind", ctx.ptm("activeBar"));
         ɵɵadvance(2);
         ɵɵconditional(ctx.showNavigators() && ctx.isNextButtonEnabled() ? 8 : -1);
       }
     },
-    dependencies: [CommonModule, NgTemplateOutlet, ChevronLeftIcon, ChevronRightIcon, RippleModule, Ripple, SharedModule],
+    dependencies: [CommonModule, NgTemplateOutlet, ChevronLeftIcon, ChevronRightIcon, RippleModule, Ripple, SharedModule, BindModule, Bind],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -493,10 +566,20 @@ var TabList = class _TabList extends BaseComponent {
     args: [{
       selector: "p-tablist",
       standalone: true,
-      imports: [CommonModule, ChevronLeftIcon, ChevronRightIcon, RippleModule, SharedModule],
+      imports: [CommonModule, ChevronLeftIcon, ChevronRightIcon, RippleModule, SharedModule, BindModule],
       template: `
         @if (showNavigators() && isPrevButtonEnabled()) {
-            <button type="button" #prevButton pRipple [class]="cx('prevButton')" [attr.aria-label]="prevButtonAriaLabel" [attr.tabindex]="tabindex()" [attr.data-pc-group-section]="'navigator'" (click)="onPrevButtonClick()">
+            <button
+                type="button"
+                #prevButton
+                pRipple
+                [pBind]="ptm('prevButton')"
+                [class]="cx('prevButton')"
+                [attr.aria-label]="prevButtonAriaLabel"
+                [attr.tabindex]="tabindex()"
+                [attr.data-pc-group-section]="'navigator'"
+                (click)="onPrevButtonClick()"
+            >
                 @if (prevIconTemplate || _prevIconTemplate) {
                     <ng-container *ngTemplateOutlet="prevIconTemplate || _prevIconTemplate" />
                 } @else {
@@ -504,14 +587,24 @@ var TabList = class _TabList extends BaseComponent {
                 }
             </button>
         }
-        <div #content [class]="cx('content')" (scroll)="onScroll($event)">
-            <div #tabs [class]="cx('tabList')" role="tablist">
+        <div #content [pBind]="ptm('content')" [class]="cx('content')" (scroll)="onScroll($event)">
+            <div #tabs [pBind]="ptm('tabList')" [class]="cx('tabList')" role="tablist">
                 <ng-content />
-                <span #inkbar role="presentation" [class]="cx('activeBar')" [attr.data-pc-section]="'inkbar'"></span>
+                <span #inkbar [pBind]="ptm('activeBar')" role="presentation" [class]="cx('activeBar')"></span>
             </div>
         </div>
         @if (showNavigators() && isNextButtonEnabled()) {
-            <button type="button" #nextButton pRipple [class]="cx('nextButton')" [attr.aria-label]="nextButtonAriaLabel" [attr.tabindex]="tabindex()" [attr.data-pc-group-section]="'navigator'" (click)="onNextButtonClick()">
+            <button
+                type="button"
+                #nextButton
+                pRipple
+                [pBind]="ptm('nextButton')"
+                [class]="cx('nextButton')"
+                [attr.aria-label]="nextButtonAriaLabel"
+                [attr.tabindex]="tabindex()"
+                [attr.data-pc-group-section]="'navigator'"
+                (click)="onNextButtonClick()"
+            >
                 @if (nextIconTemplate || _nextIconTemplate) {
                     <ng-container *ngTemplateOutlet="nextIconTemplate || _nextIconTemplate" />
                 } @else {
@@ -523,10 +616,16 @@ var TabList = class _TabList extends BaseComponent {
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
       host: {
-        "[class]": 'cx("root")',
-        "[attr.data-pc-name]": '"tablist"'
+        "[class]": 'cx("root")'
       },
-      providers: [TabListStyle]
+      providers: [TabListStyle, {
+        provide: TABLIST_INSTANCE,
+        useExisting: TabList
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: TabList
+      }],
+      hostDirectives: [Bind]
     }]
   }], () => [], {
     prevIconTemplate: [{
@@ -567,38 +666,18 @@ var TabList = class _TabList extends BaseComponent {
     }]
   });
 })();
-var classes$2 = {
-  root: ({
-    instance
-  }) => ["p-tab", {
-    "p-tab-active": instance.active(),
-    "p-disabled": instance.disabled()
-  }]
-};
-var TabStyle = class _TabStyle extends BaseStyle {
-  name = "tab";
-  classes = classes$2;
-  static ɵfac = /* @__PURE__ */ (() => {
-    let ɵTabStyle_BaseFactory;
-    return function TabStyle_Factory(__ngFactoryType__) {
-      return (ɵTabStyle_BaseFactory || (ɵTabStyle_BaseFactory = ɵɵgetInheritedFactory(_TabStyle)))(__ngFactoryType__ || _TabStyle);
-    };
-  })();
-  static ɵprov = ɵɵdefineInjectable({
-    token: _TabStyle,
-    factory: _TabStyle.ɵfac
-  });
-};
-(() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(TabStyle, [{
-    type: Injectable
-  }], null, null);
-})();
-var TabClasses;
-(function(TabClasses2) {
-  TabClasses2["tab"] = "p-tab";
-})(TabClasses || (TabClasses = {}));
+var TAB_INSTANCE = new InjectionToken("TAB_INSTANCE");
 var Tab = class _Tab extends BaseComponent {
+  $pcTab = inject(TAB_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
+  }
   /**
    * Value of tab.
    * @defaultValue undefined
@@ -634,15 +713,19 @@ var Tab = class _Tab extends BaseComponent {
   active = computed(() => k(this.pcTabs.value(), this.value()), ...ngDevMode ? [{
     debugName: "active"
   }] : []);
-  tabindex = computed(() => this.active() ? this.pcTabs.tabindex() : -1, ...ngDevMode ? [{
+  tabindex = computed(() => this.disabled() ? -1 : this.active() ? this.pcTabs.tabindex() : -1, ...ngDevMode ? [{
     debugName: "tabindex"
   }] : []);
   mutationObserver;
   onFocus(event) {
-    this.pcTabs.selectOnFocus() && this.changeActiveValue();
+    if (!this.disabled()) {
+      this.pcTabs.selectOnFocus() && this.changeActiveValue();
+    }
   }
   onClick(event) {
-    this.changeActiveValue();
+    if (!this.disabled()) {
+      this.changeActiveValue();
+    }
   }
   onKeyDown(event) {
     switch (event.code) {
@@ -674,8 +757,7 @@ var Tab = class _Tab extends BaseComponent {
     }
     event.stopPropagation();
   }
-  ngAfterViewInit() {
-    super.ngAfterViewInit();
+  onAfterViewInit() {
     this.bindMutationObserver();
   }
   onArrowRightKey(event) {
@@ -707,16 +789,18 @@ var Tab = class _Tab extends BaseComponent {
     event.preventDefault();
   }
   onEnterKey(event) {
-    this.changeActiveValue();
+    if (!this.disabled()) {
+      this.changeActiveValue();
+    }
     event.preventDefault();
   }
   findNextTab(tabElement, selfCheck = false) {
     const element = selfCheck ? tabElement : tabElement.nextElementSibling;
-    return element ? Q(element, "data-p-disabled") || Q(element, "data-pc-section") === "inkbar" ? this.findNextTab(element) : element : null;
+    return element ? Q(element, "data-p-disabled") || Q(element, "data-pc-section") === "activebar" ? this.findNextTab(element) : element : null;
   }
   findPrevTab(tabElement, selfCheck = false) {
     const element = selfCheck ? tabElement : tabElement.previousElementSibling;
-    return element ? Q(element, "data-p-disabled") || Q(element, "data-pc-section") === "inkbar" ? this.findPrevTab(element) : element : null;
+    return element ? Q(element, "data-p-disabled") || Q(element, "data-pc-section") === "activebar" ? this.findPrevTab(element) : element : null;
   }
   findFirstTab() {
     return this.findNextTab(this.pcTabList?.tabs?.nativeElement?.firstElementChild, true);
@@ -753,13 +837,12 @@ var Tab = class _Tab extends BaseComponent {
     }
   }
   unbindMutationObserver() {
-    this.mutationObserver.disconnect();
+    this.mutationObserver?.disconnect();
   }
-  ngOnDestroy() {
+  onDestroy() {
     if (this.mutationObserver) {
       this.unbindMutationObserver();
     }
-    super.ngOnDestroy();
   }
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵTab_BaseFactory;
@@ -782,7 +865,7 @@ var Tab = class _Tab extends BaseComponent {
         });
       }
       if (rf & 2) {
-        ɵɵattribute("data-pc-name", "tab")("id", ctx.id())("aria-controls", ctx.ariaControls())("role", "tab")("aria-selected", ctx.active())("data-p-disabled", ctx.disabled())("data-p-active", ctx.active())("tabindex", ctx.tabindex());
+        ɵɵattribute("id", ctx.id())("aria-controls", ctx.ariaControls())("role", "tab")("aria-selected", ctx.active())("aria-disabled", ctx.disabled())("data-p-disabled", ctx.disabled())("data-p-active", ctx.active())("tabindex", ctx.tabindex());
         ɵɵclassMap(ctx.cx("root"));
       }
     },
@@ -793,7 +876,13 @@ var Tab = class _Tab extends BaseComponent {
     outputs: {
       value: "valueChange"
     },
-    features: [ɵɵProvidersFeature([TabStyle]), ɵɵHostDirectivesFeature([Ripple]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([TabStyle, {
+      provide: TAB_INSTANCE,
+      useExisting: _Tab
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _Tab
+    }]), ɵɵHostDirectivesFeature([Ripple, Bind]), ɵɵInheritDefinitionFeature],
     ngContentSelectors: _c7,
     decls: 1,
     vars: 0,
@@ -803,7 +892,7 @@ var Tab = class _Tab extends BaseComponent {
         ɵɵprojection(0);
       }
     },
-    dependencies: [CommonModule, SharedModule],
+    dependencies: [CommonModule, SharedModule, BindModule],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -814,23 +903,29 @@ var Tab = class _Tab extends BaseComponent {
     args: [{
       selector: "p-tab",
       standalone: true,
-      imports: [CommonModule, SharedModule],
+      imports: [CommonModule, SharedModule, BindModule],
       template: ` <ng-content></ng-content>`,
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
       host: {
         "[class]": 'cx("root")',
-        "[attr.data-pc-name]": '"tab"',
         "[attr.id]": "id()",
         "[attr.aria-controls]": "ariaControls()",
         "[attr.role]": '"tab"',
         "[attr.aria-selected]": "active()",
+        "[attr.aria-disabled]": "disabled()",
         "[attr.data-p-disabled]": "disabled()",
         "[attr.data-p-active]": "active()",
         "[attr.tabindex]": "tabindex()"
       },
-      hostDirectives: [Ripple],
-      providers: [TabStyle]
+      hostDirectives: [Ripple, Bind],
+      providers: [TabStyle, {
+        provide: TAB_INSTANCE,
+        useExisting: Tab
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: Tab
+      }]
     }]
   }], null, {
     onFocus: [{
@@ -877,8 +972,31 @@ var TabPanelClasses;
 (function(TabPanelClasses2) {
   TabPanelClasses2["root"] = "p-tabpanel";
 })(TabPanelClasses || (TabPanelClasses = {}));
+var TABPANEL_INSTANCE = new InjectionToken("TABPANEL_INSTANCE");
 var TabPanel = class _TabPanel extends BaseComponent {
+  $pcTabPanel = inject(TABPANEL_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
   pcTabs = inject(forwardRef(() => Tabs));
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
+  }
+  /**
+   * When enabled, tab is not rendered until activation.
+   * @type boolean
+   * @defaultValue false
+   * @group Props
+   */
+  lazy = input(false, ...ngDevMode ? [{
+    debugName: "lazy",
+    transform: booleanAttribute
+  }] : [{
+    transform: booleanAttribute
+  }]);
   /**
    * Value of the active tab.
    * @defaultValue undefined
@@ -886,6 +1004,13 @@ var TabPanel = class _TabPanel extends BaseComponent {
    */
   value = model(void 0, ...ngDevMode ? [{
     debugName: "value"
+  }] : []);
+  /**
+   * Template for initializing complex content when lazy is enabled.
+   * @group Templates
+   */
+  content = contentChild("content", ...ngDevMode ? [{
+    debugName: "content"
   }] : []);
   id = computed(() => `${this.pcTabs.id()}_tabpanel_${this.value()}`, ...ngDevMode ? [{
     debugName: "id"
@@ -895,6 +1020,22 @@ var TabPanel = class _TabPanel extends BaseComponent {
   }] : []);
   active = computed(() => k(this.pcTabs.value(), this.value()), ...ngDevMode ? [{
     debugName: "active"
+  }] : []);
+  isLazyEnabled = computed(() => this.pcTabs.lazy() || this.lazy(), ...ngDevMode ? [{
+    debugName: "isLazyEnabled"
+  }] : []);
+  hasBeenRendered = false;
+  shouldRender = computed(() => {
+    if (!this.isLazyEnabled() || this.hasBeenRendered) {
+      return true;
+    }
+    if (this.active()) {
+      this.hasBeenRendered = true;
+      return true;
+    }
+    return false;
+  }, ...ngDevMode ? [{
+    debugName: "shouldRender"
   }] : []);
   _componentStyle = inject(TabPanelStyle);
   static ɵfac = /* @__PURE__ */ (() => {
@@ -906,33 +1047,52 @@ var TabPanel = class _TabPanel extends BaseComponent {
   static ɵcmp = ɵɵdefineComponent({
     type: _TabPanel,
     selectors: [["p-tabpanel"]],
+    contentQueries: function TabPanel_ContentQueries(rf, ctx, dirIndex) {
+      if (rf & 1) {
+        ɵɵcontentQuerySignal(dirIndex, ctx.content, _c2, 5);
+      }
+      if (rf & 2) {
+        ɵɵqueryAdvance();
+      }
+    },
     hostVars: 7,
     hostBindings: function TabPanel_HostBindings(rf, ctx) {
       if (rf & 2) {
-        ɵɵattribute("data-pc-name", "tabpanel")("id", ctx.id())("role", "tabpanel")("aria-labelledby", ctx.ariaLabelledby())("data-p-active", ctx.active());
+        ɵɵdomProperty("hidden", !ctx.active());
+        ɵɵattribute("id", ctx.id())("role", "tabpanel")("aria-labelledby", ctx.ariaLabelledby())("data-p-active", ctx.active());
         ɵɵclassMap(ctx.cx("root"));
       }
     },
     inputs: {
+      lazy: [1, "lazy"],
       value: [1, "value"]
     },
     outputs: {
       value: "valueChange"
     },
-    features: [ɵɵProvidersFeature([TabPanelStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([TabPanelStyle, {
+      provide: TABPANEL_INSTANCE,
+      useExisting: _TabPanel
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _TabPanel
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     ngContentSelectors: _c7,
-    decls: 1,
+    decls: 3,
     vars: 1,
+    consts: [["defaultContent", ""], [4, "ngTemplateOutlet"]],
     template: function TabPanel_Template(rf, ctx) {
       if (rf & 1) {
         ɵɵprojectionDef();
-        ɵɵconditionalCreate(0, TabPanel_Conditional_0_Template, 1, 0);
+        ɵɵtemplate(0, TabPanel_ng_template_0_Template, 1, 0, "ng-template", null, 0, ɵɵtemplateRefExtractor);
+        ɵɵconditionalCreate(2, TabPanel_Conditional_2_Template, 1, 1, "ng-container");
       }
       if (rf & 2) {
-        ɵɵconditional(ctx.active() ? 0 : -1);
+        ɵɵadvance(2);
+        ɵɵconditional(ctx.shouldRender() ? 2 : -1);
       }
     },
-    dependencies: [CommonModule],
+    dependencies: [NgTemplateOutlet, BindModule],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -943,21 +1103,34 @@ var TabPanel = class _TabPanel extends BaseComponent {
     args: [{
       selector: "p-tabpanel",
       standalone: true,
-      imports: [CommonModule],
-      template: `@if (active()) {
-        <ng-content></ng-content>
-    }`,
+      imports: [NgTemplateOutlet, BindModule],
+      template: `
+        <ng-template #defaultContent>
+            <ng-content />
+        </ng-template>
+
+        @if (shouldRender()) {
+            <ng-container *ngTemplateOutlet="content() ? content() : defaultContent" />
+        }
+    `,
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
+      providers: [TabPanelStyle, {
+        provide: TABPANEL_INSTANCE,
+        useExisting: TabPanel
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: TabPanel
+      }],
       host: {
         "[class]": 'cx("root")',
-        "[attr.data-pc-name]": '"tabpanel"',
         "[attr.id]": "id()",
         "[attr.role]": '"tabpanel"',
         "[attr.aria-labelledby]": "ariaLabelledby()",
-        "[attr.data-p-active]": "active()"
+        "[attr.data-p-active]": "active()",
+        "[hidden]": "!active()"
       },
-      providers: [TabPanelStyle]
+      hostDirectives: [Bind]
     }]
   }], null, null);
 })();
@@ -987,8 +1160,19 @@ var TabPanelsClasses;
 (function(TabPanelsClasses2) {
   TabPanelsClasses2["root"] = "p-tabpanels";
 })(TabPanelsClasses || (TabPanelsClasses = {}));
+var TABPANELS_INSTANCE = new InjectionToken("TABPANELS_INSTANCE");
 var TabPanels = class _TabPanels extends BaseComponent {
+  $pcTabPanels = inject(TABPANELS_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
   _componentStyle = inject(TabPanelsStyle);
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
+  }
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵTabPanels_BaseFactory;
     return function TabPanels_Factory(__ngFactoryType__) {
@@ -998,14 +1182,20 @@ var TabPanels = class _TabPanels extends BaseComponent {
   static ɵcmp = ɵɵdefineComponent({
     type: _TabPanels,
     selectors: [["p-tabpanels"]],
-    hostVars: 4,
+    hostVars: 3,
     hostBindings: function TabPanels_HostBindings(rf, ctx) {
       if (rf & 2) {
-        ɵɵattribute("data-pc-name", "tabpanels")("role", "presentation");
+        ɵɵattribute("role", "presentation");
         ɵɵclassMap(ctx.cx("root"));
       }
     },
-    features: [ɵɵProvidersFeature([TabPanelsStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([TabPanelsStyle, {
+      provide: TABPANELS_INSTANCE,
+      useExisting: _TabPanels
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _TabPanels
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     ngContentSelectors: _c7,
     decls: 1,
     vars: 0,
@@ -1015,7 +1205,7 @@ var TabPanels = class _TabPanels extends BaseComponent {
         ɵɵprojection(0);
       }
     },
-    dependencies: [CommonModule],
+    dependencies: [CommonModule, BindModule],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -1026,20 +1216,37 @@ var TabPanels = class _TabPanels extends BaseComponent {
     args: [{
       selector: "p-tabpanels",
       standalone: true,
-      imports: [CommonModule],
+      imports: [CommonModule, BindModule],
       template: ` <ng-content></ng-content>`,
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
       host: {
         "[class]": 'cx("root")',
-        "[attr.data-pc-name]": '"tabpanels"',
         "[attr.role]": '"presentation"'
       },
-      providers: [TabPanelsStyle]
+      providers: [TabPanelsStyle, {
+        provide: TABPANELS_INSTANCE,
+        useExisting: TabPanels
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: TabPanels
+      }],
+      hostDirectives: [Bind]
     }]
   }], null, null);
 })();
+var TABS_INSTANCE = new InjectionToken("TABS_INSTANCE");
 var Tabs = class _Tabs extends BaseComponent {
+  $pcTabs = inject(TABS_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
+  }
   /**
    * Value of the active tab.
    * @defaultValue undefined
@@ -1061,7 +1268,7 @@ var Tabs = class _Tabs extends BaseComponent {
     transform: booleanAttribute
   }]);
   /**
-   * When enabled, hidden tabs are not rendered at all. Defaults to false that hides tabs with css.
+   * When enabled, tabs are not rendered until activation.
    * @type boolean
    * @defaultValue false
    * @group Props
@@ -1124,10 +1331,10 @@ var Tabs = class _Tabs extends BaseComponent {
   static ɵcmp = ɵɵdefineComponent({
     type: _Tabs,
     selectors: [["p-tabs"]],
-    hostVars: 4,
+    hostVars: 3,
     hostBindings: function Tabs_HostBindings(rf, ctx) {
       if (rf & 2) {
-        ɵɵattribute("data-pc-name", "tabs")("id", ctx.id());
+        ɵɵattribute("id", ctx.id());
         ɵɵclassMap(ctx.cx("root"));
       }
     },
@@ -1142,7 +1349,13 @@ var Tabs = class _Tabs extends BaseComponent {
     outputs: {
       value: "valueChange"
     },
-    features: [ɵɵProvidersFeature([TabsStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([TabsStyle, {
+      provide: TABS_INSTANCE,
+      useExisting: _Tabs
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _Tabs
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     ngContentSelectors: _c7,
     decls: 1,
     vars: 0,
@@ -1152,7 +1365,7 @@ var Tabs = class _Tabs extends BaseComponent {
         ɵɵprojection(0);
       }
     },
-    dependencies: [CommonModule],
+    dependencies: [CommonModule, BindModule],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -1163,16 +1376,22 @@ var Tabs = class _Tabs extends BaseComponent {
     args: [{
       selector: "p-tabs",
       standalone: true,
-      imports: [CommonModule],
+      imports: [CommonModule, BindModule],
       template: ` <ng-content></ng-content>`,
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
-      providers: [TabsStyle],
+      providers: [TabsStyle, {
+        provide: TABS_INSTANCE,
+        useExisting: Tabs
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: Tabs
+      }],
       host: {
         "[class]": 'cx("root")',
-        "[attr.data-pc-name]": '"tabs"',
         "[attr.id]": "id()"
-      }
+      },
+      hostDirectives: [Bind]
     }]
   }], null, null);
 })();
@@ -1182,19 +1401,19 @@ var TabsModule = class _TabsModule {
   };
   static ɵmod = ɵɵdefineNgModule({
     type: _TabsModule,
-    imports: [Tabs, TabPanels, TabPanel, TabList, Tab],
-    exports: [Tabs, TabPanels, TabPanel, TabList, Tab]
+    imports: [Tabs, TabPanels, TabPanel, TabList, Tab, BindModule],
+    exports: [Tabs, TabPanels, TabPanel, TabList, Tab, BindModule]
   });
   static ɵinj = ɵɵdefineInjector({
-    imports: [Tabs, TabPanels, TabPanel, TabList, Tab]
+    imports: [Tabs, TabPanels, TabPanel, TabList, Tab, BindModule, BindModule]
   });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(TabsModule, [{
     type: NgModule,
     args: [{
-      imports: [Tabs, TabPanels, TabPanel, TabList, Tab],
-      exports: [Tabs, TabPanels, TabPanel, TabList, Tab]
+      imports: [Tabs, TabPanels, TabPanel, TabList, Tab, BindModule],
+      exports: [Tabs, TabPanels, TabPanel, TabList, Tab, BindModule]
     }]
   }], null, null);
 })();

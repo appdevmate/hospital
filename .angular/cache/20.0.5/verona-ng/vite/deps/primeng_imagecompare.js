@@ -1,13 +1,20 @@
 import {
-  BaseComponent
-} from "./chunk-4YMQ5OOY.js";
+  BaseComponent,
+  PARENT_INSTANCE
+} from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
-} from "./chunk-L2L2T6ID.js";
+} from "./chunk-4ATYD752.js";
+import {
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
 import {
   PrimeTemplate,
   SharedModule
-} from "./chunk-ZKOTJBQ6.js";
+} from "./chunk-LMEEH3AJ.js";
+import "./chunk-GOP36Q47.js";
+import "./chunk-UCHM6OXG.js";
 import {
   CommonModule,
   NgTemplateOutlet,
@@ -24,6 +31,7 @@ import {
   NgModule,
   ViewEncapsulation,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -42,15 +50,14 @@ import {
   ɵɵtemplate
 } from "./chunk-EIF6IUR4.js";
 import {
+  InjectionToken,
   inject,
   ɵɵdefineInjectable,
   ɵɵdefineInjector
 } from "./chunk-LW34VNAR.js";
-import "./chunk-YVXMBCE5.js";
 import "./chunk-G6ECYYJH.js";
+import "./chunk-YVXMBCE5.js";
 import "./chunk-RTGP7ALM.js";
-import "./chunk-BMDSN43F.js";
-import "./chunk-RK2DVQNP.js";
 import "./chunk-4MWRP73S.js";
 
 // node_modules/@primeuix/styles/dist/imagecompare/index.mjs
@@ -79,7 +86,7 @@ var classes = {
 };
 var ImageCompareStyle = class _ImageCompareStyle extends BaseStyle {
   name = "imagecompare";
-  theme = style;
+  style = style;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵImageCompareStyle_BaseFactory;
@@ -102,7 +109,15 @@ var ImageCompareClasses;
   ImageCompareClasses2["root"] = "p-imagecompare";
   ImageCompareClasses2["slider"] = "p-imagecompare-slider";
 })(ImageCompareClasses || (ImageCompareClasses = {}));
+var IMAGECOMPARE_INSTANCE = new InjectionToken("IMAGECOMPARE_INSTANCE");
 var ImageCompare = class _ImageCompare extends BaseComponent {
+  $pcImageCompare = inject(IMAGECOMPARE_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
   /**
    * Index of the element in tabbing order.
    * @defaultValue 0
@@ -135,12 +150,14 @@ var ImageCompare = class _ImageCompare extends BaseComponent {
   _componentStyle = inject(ImageCompareStyle);
   mutationObserver;
   isRTL = false;
-  ngOnInit() {
-    super.ngOnInit();
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
+  }
+  onInit() {
     this.updateDirection();
     this.observeDirectionChanges();
   }
-  ngAfterContentInit() {
+  onAfterContentInit() {
     this.templates?.forEach((item) => {
       switch (item.getType()) {
         case "left":
@@ -177,11 +194,10 @@ var ImageCompare = class _ImageCompare extends BaseComponent {
       this.mutationObserver.observe(targetNode, config);
     }
   }
-  ngOnDestroy() {
+  onDestroy() {
     if (this.mutationObserver) {
       this.mutationObserver.disconnect();
     }
-    super.ngOnDestroy();
   }
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵImageCompare_BaseFactory;
@@ -217,10 +233,16 @@ var ImageCompare = class _ImageCompare extends BaseComponent {
       ariaLabelledby: "ariaLabelledby",
       ariaLabel: "ariaLabel"
     },
-    features: [ɵɵProvidersFeature([ImageCompareStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([ImageCompareStyle, {
+      provide: IMAGECOMPARE_INSTANCE,
+      useExisting: _ImageCompare
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _ImageCompare
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     decls: 3,
-    vars: 4,
-    consts: [[4, "ngTemplateOutlet"], ["type", "range", "min", "0", "max", "100", "value", "50", 3, "input"]],
+    vars: 5,
+    consts: [[4, "ngTemplateOutlet"], ["type", "range", "min", "0", "max", "100", "value", "50", 3, "input", "pBind"]],
     template: function ImageCompare_Template(rf, ctx) {
       if (rf & 1) {
         ɵɵtemplate(0, ImageCompare_0_Template, 1, 0, null, 0)(1, ImageCompare_1_Template, 1, 0, null, 0);
@@ -236,9 +258,10 @@ var ImageCompare = class _ImageCompare extends BaseComponent {
         ɵɵproperty("ngTemplateOutlet", ctx.rightTemplate || ctx._rightTemplate);
         ɵɵadvance();
         ɵɵclassMap(ctx.cx("slider"));
+        ɵɵproperty("pBind", ctx.ptm("slider"));
       }
     },
-    dependencies: [CommonModule, NgTemplateOutlet, SharedModule],
+    dependencies: [CommonModule, NgTemplateOutlet, SharedModule, BindModule, Bind],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -249,12 +272,12 @@ var ImageCompare = class _ImageCompare extends BaseComponent {
     args: [{
       selector: "p-imageCompare, p-imagecompare, p-image-compare",
       standalone: true,
-      imports: [CommonModule, SharedModule],
+      imports: [CommonModule, SharedModule, BindModule],
       template: `
         <ng-template *ngTemplateOutlet="leftTemplate || _leftTemplate"></ng-template>
         <ng-template *ngTemplateOutlet="rightTemplate || _rightTemplate"></ng-template>
 
-        <input type="range" min="0" max="100" value="50" (input)="onSlide($event)" [class]="cx('slider')" />
+        <input type="range" min="0" max="100" value="50" (input)="onSlide($event)" [class]="cx('slider')" [pBind]="ptm('slider')" />
     `,
       host: {
         "[class]": "cx('root')",
@@ -262,9 +285,16 @@ var ImageCompare = class _ImageCompare extends BaseComponent {
         "[attr.aria-labelledby]": "ariaLabelledby",
         "[attr.aria-label]": "ariaLabel"
       },
+      hostDirectives: [Bind],
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
-      providers: [ImageCompareStyle]
+      providers: [ImageCompareStyle, {
+        provide: IMAGECOMPARE_INSTANCE,
+        useExisting: ImageCompare
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: ImageCompare
+      }]
     }]
   }], null, {
     tabindex: [{

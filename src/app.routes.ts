@@ -3,11 +3,13 @@ import { Routes } from '@angular/router';
 import { AppLayout } from '@/layout/components/app.layout';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { UserProfileComponent } from '@/components/user-profile/user-profile';
+import { authGuard } from './app/guards/auth.guard';
 
 export const appRoutes: Routes = [
     {
         path: '',
         component: AppLayout,
+        canActivate: [authGuard],
         children: [
             { path: '', data: { breadcrumb: 'Saas Dashboard' }, loadComponent: () => import('@/pages/dashboard/saasdashboard').then((c) => c.SaasDashboard) },
             { path: 'dashboard-sales', data: { breadcrumb: 'Sales Dashboard' }, loadComponent: () => import('@/pages/dashboard/salesdashboard').then((c) => c.SalesDashboard) },

@@ -1,32 +1,37 @@
 import {
   Tooltip,
   TooltipModule
-} from "./chunk-IRWYTOKA.js";
+} from "./chunk-OLS4C5IP.js";
+import {
+  Badge,
+  BadgeModule
+} from "./chunk-B6BBOHQM.js";
+import {
+  ConnectedOverlayScrollHandler,
+  DomHandler
+} from "./chunk-S73J4WE3.js";
 import {
   zindexutils
 } from "./chunk-BB55NINM.js";
 import {
-  ConnectedOverlayScrollHandler,
-  DomHandler
-} from "./chunk-QVUTNZUY.js";
-import {
   Ripple
-} from "./chunk-VZLF74PJ.js";
+} from "./chunk-OC77X5LN.js";
 import {
-  Badge,
-  BadgeModule
-} from "./chunk-EGVFVLQK.js";
-import {
-  BaseComponent
-} from "./chunk-4YMQ5OOY.js";
+  BaseComponent,
+  PARENT_INSTANCE
+} from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
-} from "./chunk-L2L2T6ID.js";
+} from "./chunk-4ATYD752.js";
+import {
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
 import {
   OverlayService,
   PrimeTemplate,
   SharedModule
-} from "./chunk-ZKOTJBQ6.js";
+} from "./chunk-LMEEH3AJ.js";
 import "./chunk-6QGHQEN4.js";
 import {
   animate,
@@ -34,6 +39,16 @@ import {
   transition,
   trigger
 } from "./chunk-53DGU4C2.js";
+import "./chunk-GOP36Q47.js";
+import {
+  D,
+  I,
+  Y2 as Y,
+  Yt,
+  bt,
+  s3 as s,
+  z2 as z
+} from "./chunk-UCHM6OXG.js";
 import {
   RouterLink,
   RouterLinkActive,
@@ -72,6 +87,7 @@ import {
   input,
   numberAttribute,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -93,6 +109,8 @@ import {
   ɵɵlistener,
   ɵɵloadQuery,
   ɵɵnextContext,
+  ɵɵpipe,
+  ɵɵpipeBind1,
   ɵɵproperty,
   ɵɵpureFunction0,
   ɵɵpureFunction1,
@@ -109,6 +127,7 @@ import {
   ɵɵviewQuery
 } from "./chunk-EIF6IUR4.js";
 import {
+  InjectionToken,
   computed,
   forwardRef,
   inject,
@@ -118,23 +137,13 @@ import {
   ɵɵresetView,
   ɵɵrestoreView
 } from "./chunk-LW34VNAR.js";
-import "./chunk-YVXMBCE5.js";
 import "./chunk-G6ECYYJH.js";
+import "./chunk-YVXMBCE5.js";
 import "./chunk-RTGP7ALM.js";
-import "./chunk-BMDSN43F.js";
-import {
-  D,
-  I,
-  Y2 as Y,
-  Yt,
-  bt,
-  s3 as s,
-  z2 as z
-} from "./chunk-RK2DVQNP.js";
 import "./chunk-4MWRP73S.js";
 
 // node_modules/@primeuix/styles/dist/menu/index.mjs
-var style2 = "\n    .p-menu {\n        background: dt('menu.background');\n        color: dt('menu.color');\n        border: 1px solid dt('menu.border.color');\n        border-radius: dt('menu.border.radius');\n        min-width: 12.5rem;\n    }\n\n    .p-menu-list {\n        margin: 0;\n        padding: dt('menu.list.padding');\n        outline: 0 none;\n        list-style: none;\n        display: flex;\n        flex-direction: column;\n        gap: dt('menu.list.gap');\n    }\n\n    .p-menu-item-content {\n        transition:\n            background dt('menu.transition.duration'),\n            color dt('menu.transition.duration');\n        border-radius: dt('menu.item.border.radius');\n        color: dt('menu.item.color');\n    }\n\n    .p-menu-item-link {\n        cursor: pointer;\n        display: flex;\n        align-items: center;\n        text-decoration: none;\n        overflow: hidden;\n        position: relative;\n        color: inherit;\n        padding: dt('menu.item.padding');\n        gap: dt('menu.item.gap');\n        user-select: none;\n        outline: 0 none;\n    }\n\n    .p-menu-item-label {\n        line-height: 1;\n    }\n\n    .p-menu-item-icon {\n        color: dt('menu.item.icon.color');\n    }\n\n    .p-menu-item.p-focus .p-menu-item-content {\n        color: dt('menu.item.focus.color');\n        background: dt('menu.item.focus.background');\n    }\n\n    .p-menu-item.p-focus .p-menu-item-icon {\n        color: dt('menu.item.icon.focus.color');\n    }\n\n    .p-menu-item:not(.p-disabled) .p-menu-item-content:hover {\n        color: dt('menu.item.focus.color');\n        background: dt('menu.item.focus.background');\n    }\n\n    .p-menu-item:not(.p-disabled) .p-menu-item-content:hover .p-menu-item-icon {\n        color: dt('menu.item.icon.focus.color');\n    }\n\n    .p-menu-overlay {\n        box-shadow: dt('menu.shadow');\n    }\n\n    .p-menu-submenu-label {\n        background: dt('menu.submenu.label.background');\n        padding: dt('menu.submenu.label.padding');\n        color: dt('menu.submenu.label.color');\n        font-weight: dt('menu.submenu.label.font.weight');\n    }\n\n    .p-menu-separator {\n        border-block-start: 1px solid dt('menu.separator.border.color');\n    }\n";
+var style2 = "\n    .p-menu {\n        background: dt('menu.background');\n        color: dt('menu.color');\n        border: 1px solid dt('menu.border.color');\n        border-radius: dt('menu.border.radius');\n        min-width: 12.5rem;\n    }\n\n    .p-menu-list {\n        margin: 0;\n        padding: dt('menu.list.padding');\n        outline: 0 none;\n        list-style: none;\n        display: flex;\n        flex-direction: column;\n        gap: dt('menu.list.gap');\n    }\n\n    .p-menu-item-content {\n        transition:\n            background dt('menu.transition.duration'),\n            color dt('menu.transition.duration');\n        border-radius: dt('menu.item.border.radius');\n        color: dt('menu.item.color');\n        overflow: hidden;\n    }\n\n    .p-menu-item-link {\n        cursor: pointer;\n        display: flex;\n        align-items: center;\n        text-decoration: none;\n        overflow: hidden;\n        position: relative;\n        color: inherit;\n        padding: dt('menu.item.padding');\n        gap: dt('menu.item.gap');\n        user-select: none;\n        outline: 0 none;\n    }\n\n    .p-menu-item-label {\n        line-height: 1;\n    }\n\n    .p-menu-item-icon {\n        color: dt('menu.item.icon.color');\n    }\n\n    .p-menu-item.p-focus .p-menu-item-content {\n        color: dt('menu.item.focus.color');\n        background: dt('menu.item.focus.background');\n    }\n\n    .p-menu-item.p-focus .p-menu-item-icon {\n        color: dt('menu.item.icon.focus.color');\n    }\n\n    .p-menu-item:not(.p-disabled) .p-menu-item-content:hover {\n        color: dt('menu.item.focus.color');\n        background: dt('menu.item.focus.background');\n    }\n\n    .p-menu-item:not(.p-disabled) .p-menu-item-content:hover .p-menu-item-icon {\n        color: dt('menu.item.icon.focus.color');\n    }\n\n    .p-menu-overlay {\n        box-shadow: dt('menu.shadow');\n    }\n\n    .p-menu-submenu-label {\n        background: dt('menu.submenu.label.background');\n        padding: dt('menu.submenu.label.padding');\n        color: dt('menu.submenu.label.color');\n        font-weight: dt('menu.submenu.label.font.weight');\n    }\n\n    .p-menu-separator {\n        border-block-start: 1px solid dt('menu.separator.border.color');\n    }\n";
 
 // node_modules/primeng/fesm2022/primeng-menu.mjs
 var _c0 = ["pMenuItemContent", ""];
@@ -162,8 +171,8 @@ function MenuItemContent_ng_container_1_a_1_Template(rf, ctx) {
     const ctx_r1 = ɵɵnextContext(2);
     const itemContent_r3 = ɵɵreference(4);
     ɵɵclassMap(ctx_r1.cx("itemLink"));
-    ɵɵproperty("target", ctx_r1.item.target);
-    ɵɵattribute("title", ctx_r1.item.title)("href", ctx_r1.item.url || null, ɵɵsanitizeUrl)("data-automationid", ctx_r1.item.automationId)("tabindex", -1)("data-pc-section", "action");
+    ɵɵproperty("target", ctx_r1.item.target)("pBind", ctx_r1.getPTOptions("itemLink"));
+    ɵɵattribute("title", ctx_r1.item.title)("href", ctx_r1.item.url || null, ɵɵsanitizeUrl)("data-automationid", ctx_r1.item.automationId)("tabindex", -1);
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", itemContent_r3)("ngTemplateOutletContext", ɵɵpureFunction1(10, _c1, ctx_r1.item));
   }
@@ -183,8 +192,8 @@ function MenuItemContent_ng_container_1_a_2_Template(rf, ctx) {
     const ctx_r1 = ɵɵnextContext(2);
     const itemContent_r3 = ɵɵreference(4);
     ɵɵclassMap(ctx_r1.cx("itemLink"));
-    ɵɵproperty("routerLink", ctx_r1.item.routerLink)("queryParams", ctx_r1.item.queryParams)("routerLinkActiveOptions", ctx_r1.item.routerLinkActiveOptions || ɵɵpureFunction0(18, _c2))("target", ctx_r1.item.target)("fragment", ctx_r1.item.fragment)("queryParamsHandling", ctx_r1.item.queryParamsHandling)("preserveFragment", ctx_r1.item.preserveFragment)("skipLocationChange", ctx_r1.item.skipLocationChange)("replaceUrl", ctx_r1.item.replaceUrl)("state", ctx_r1.item.state);
-    ɵɵattribute("data-automationid", ctx_r1.item.automationId)("tabindex", -1)("data-pc-section", "action")("title", ctx_r1.item.title);
+    ɵɵproperty("routerLink", ctx_r1.item.routerLink)("queryParams", ctx_r1.item.queryParams)("routerLinkActiveOptions", ctx_r1.item.routerLinkActiveOptions || ɵɵpureFunction0(18, _c2))("target", ctx_r1.item.target)("fragment", ctx_r1.item.fragment)("queryParamsHandling", ctx_r1.item.queryParamsHandling)("preserveFragment", ctx_r1.item.preserveFragment)("skipLocationChange", ctx_r1.item.skipLocationChange)("replaceUrl", ctx_r1.item.replaceUrl)("state", ctx_r1.item.state)("pBind", ctx_r1.getPTOptions("itemLink"));
+    ɵɵattribute("data-automationid", ctx_r1.item.automationId)("tabindex", -1)("title", ctx_r1.item.title);
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", itemContent_r3)("ngTemplateOutletContext", ɵɵpureFunction1(19, _c1, ctx_r1.item));
   }
@@ -224,48 +233,54 @@ function MenuItemContent_ng_container_2_Template(rf, ctx) {
 }
 function MenuItemContent_ng_template_3_span_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "span");
+    ɵɵelement(0, "span", 12);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
     ɵɵstyleMap(ctx_r1.item.iconStyle);
-    ɵɵclassMap(ctx_r1.cx("itemIcon", ɵɵpureFunction1(4, _c3, ctx_r1.item)));
+    ɵɵclassMap(ctx_r1.cx("itemIcon", ɵɵpureFunction1(6, _c3, ctx_r1.item)));
+    ɵɵproperty("pBind", ctx_r1.getPTOptions("itemIcon"));
+    ɵɵattribute("data-pc-section", "itemicon");
   }
 }
 function MenuItemContent_ng_template_3_span_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "span");
+    ɵɵelementStart(0, "span", 12);
     ɵɵtext(1);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r1.cx("itemLabel"));
+    ɵɵproperty("pBind", ctx_r1.getPTOptions("itemLabel"));
+    ɵɵattribute("data-pc-section", "itemlabel");
     ɵɵadvance();
     ɵɵtextInterpolate(ctx_r1.item.label);
   }
 }
 function MenuItemContent_ng_template_3_ng_template_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "span", 12);
+    ɵɵelement(0, "span", 13);
+    ɵɵpipe(1, "safeHtml");
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
-    ɵɵproperty("innerHTML", ctx_r1.sanitizeHtml(ctx_r1.item.label), ɵɵsanitizeHtml);
+    ɵɵproperty("innerHTML", ɵɵpipeBind1(1, 3, ctx_r1.item.label), ɵɵsanitizeHtml)("pBind", ctx_r1.getPTOptions("itemLabel"));
+    ɵɵattribute("data-pc-section", "itemlabel");
   }
 }
 function MenuItemContent_ng_template_3_p_badge_4_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "p-badge", 13);
+    ɵɵelement(0, "p-badge", 14);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
-    ɵɵproperty("styleClass", ctx_r1.item.badgeStyleClass)("value", ctx_r1.item.badge);
+    ɵɵproperty("styleClass", ctx_r1.item.badgeStyleClass)("value", ctx_r1.item.badge)("pt", ctx_r1.getPTOptions("pcBadge"));
   }
 }
 function MenuItemContent_ng_template_3_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, MenuItemContent_ng_template_3_span_0_Template, 1, 6, "span", 9)(1, MenuItemContent_ng_template_3_span_1_Template, 2, 3, "span", 10)(2, MenuItemContent_ng_template_3_ng_template_2_Template, 1, 1, "ng-template", null, 1, ɵɵtemplateRefExtractor)(4, MenuItemContent_ng_template_3_p_badge_4_Template, 1, 2, "p-badge", 11);
+    ɵɵtemplate(0, MenuItemContent_ng_template_3_span_0_Template, 1, 8, "span", 9)(1, MenuItemContent_ng_template_3_span_1_Template, 2, 5, "span", 10)(2, MenuItemContent_ng_template_3_ng_template_2_Template, 2, 5, "ng-template", null, 1, ɵɵtemplateRefExtractor)(4, MenuItemContent_ng_template_3_p_badge_4_Template, 1, 3, "p-badge", 11);
   }
   if (rf & 2) {
     const htmlLabel_r4 = ɵɵreference(3);
@@ -303,13 +318,14 @@ function Menu_div_0_div_2_ng_container_1_Template(rf, ctx) {
 }
 function Menu_div_0_div_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div");
-    ɵɵtemplate(1, Menu_div_0_div_2_ng_container_1_Template, 1, 0, "ng-container", 8);
+    ɵɵelementStart(0, "div", 8);
+    ɵɵtemplate(1, Menu_div_0_div_2_ng_container_1_Template, 1, 0, "ng-container", 9);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r1.cx("start"));
+    ɵɵproperty("pBind", ctx_r1.ptm("start"));
     ɵɵattribute("data-pc-section", "start");
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r1.startTemplate ?? ctx_r1._startTemplate);
@@ -317,11 +333,13 @@ function Menu_div_0_div_2_Template(rf, ctx) {
 }
 function Menu_div_0_5_ng_template_0_li_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "li", 12);
+    ɵɵelement(0, "li", 13);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(4);
     ɵɵclassMap(ctx_r1.cx("separator"));
+    ɵɵproperty("pBind", ctx_r1.ptm("separator"));
+    ɵɵattribute("data-pc-section", "separator");
   }
 }
 function Menu_div_0_5_ng_template_0_li_1_ng_container_1_span_1_Template(rf, ctx) {
@@ -338,18 +356,18 @@ function Menu_div_0_5_ng_template_0_li_1_ng_container_1_span_1_Template(rf, ctx)
 }
 function Menu_div_0_5_ng_template_0_li_1_ng_container_1_ng_template_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "span", 16);
+    ɵɵelement(0, "span", 17);
+    ɵɵpipe(1, "safeHtml");
   }
   if (rf & 2) {
     const submenu_r3 = ɵɵnextContext(3).$implicit;
-    const ctx_r1 = ɵɵnextContext(3);
-    ɵɵproperty("innerHTML", ctx_r1.sanitizeHtml(submenu_r3.label), ɵɵsanitizeHtml);
+    ɵɵproperty("innerHTML", ɵɵpipeBind1(1, 1, submenu_r3.label), ɵɵsanitizeHtml);
   }
 }
 function Menu_div_0_5_ng_template_0_li_1_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, Menu_div_0_5_ng_template_0_li_1_ng_container_1_span_1_Template, 2, 1, "span", 15)(2, Menu_div_0_5_ng_template_0_li_1_ng_container_1_ng_template_2_Template, 1, 1, "ng-template", null, 2, ɵɵtemplateRefExtractor);
+    ɵɵtemplate(1, Menu_div_0_5_ng_template_0_li_1_ng_container_1_span_1_Template, 2, 1, "span", 16)(2, Menu_div_0_5_ng_template_0_li_1_ng_container_1_ng_template_2_Template, 2, 3, "ng-template", null, 2, ɵɵtemplateRefExtractor);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -366,8 +384,8 @@ function Menu_div_0_5_ng_template_0_li_1_ng_container_2_Template(rf, ctx) {
 }
 function Menu_div_0_5_ng_template_0_li_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "li", 13);
-    ɵɵtemplate(1, Menu_div_0_5_ng_template_0_li_1_ng_container_1_Template, 4, 2, "ng-container", 7)(2, Menu_div_0_5_ng_template_0_li_1_ng_container_2_Template, 1, 0, "ng-container", 14);
+    ɵɵelementStart(0, "li", 14);
+    ɵɵtemplate(1, Menu_div_0_5_ng_template_0_li_1_ng_container_1_Template, 4, 2, "ng-container", 7)(2, Menu_div_0_5_ng_template_0_li_1_ng_container_2_Template, 1, 0, "ng-container", 15);
     ɵɵelementEnd();
   }
   if (rf & 2) {
@@ -376,27 +394,29 @@ function Menu_div_0_5_ng_template_0_li_1_Template(rf, ctx) {
     const i_r6 = ctx_r4.index;
     const ctx_r1 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r1.cx("submenuLabel"));
-    ɵɵproperty("tooltipOptions", submenu_r3.tooltipOptions);
-    ɵɵattribute("data-automationid", submenu_r3.automationId)("id", ctx_r1.menuitemId(submenu_r3, ctx_r1.id, i_r6));
+    ɵɵproperty("pBind", ctx_r1.ptm("submenuLabel"))("tooltipOptions", submenu_r3.tooltipOptions);
+    ɵɵattribute("data-automationid", submenu_r3.automationId)("id", ctx_r1.menuitemId(submenu_r3, ctx_r1.id, i_r6))("data-pc-section", "submenulabel");
     ɵɵadvance();
     ɵɵproperty("ngIf", !ctx_r1.submenuHeaderTemplate && !ctx_r1._submenuHeaderTemplate);
     ɵɵadvance();
-    ɵɵproperty("ngTemplateOutlet", ctx_r1.submenuHeaderTemplate ?? ctx_r1._submenuHeaderTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(8, _c1, submenu_r3));
+    ɵɵproperty("ngTemplateOutlet", ctx_r1.submenuHeaderTemplate ?? ctx_r1._submenuHeaderTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(10, _c1, submenu_r3));
   }
 }
 function Menu_div_0_5_ng_template_0_ng_template_2_li_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "li", 12);
+    ɵɵelement(0, "li", 13);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(5);
     ɵɵclassMap(ctx_r1.cx("separator"));
+    ɵɵproperty("pBind", ctx_r1.ptm("separator"));
+    ɵɵattribute("data-pc-section", "separator");
   }
 }
 function Menu_div_0_5_ng_template_0_ng_template_2_li_1_Template(rf, ctx) {
   if (rf & 1) {
     const _r7 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "li", 18);
+    ɵɵelementStart(0, "li", 19);
     ɵɵlistener("onMenuItemClick", function Menu_div_0_5_ng_template_0_ng_template_2_li_1_Template_li_onMenuItemClick_0_listener($event) {
       ɵɵrestoreView(_r7);
       const ctx_r7 = ɵɵnextContext();
@@ -415,14 +435,14 @@ function Menu_div_0_5_ng_template_0_ng_template_2_li_1_Template(rf, ctx) {
     const i_r6 = ɵɵnextContext().index;
     const ctx_r1 = ɵɵnextContext(3);
     ɵɵstyleMap(item_r9.style);
-    ɵɵclassMap(ctx_r1.cn(ctx_r1.cx("item", ɵɵpureFunction2(13, _c13, item_r9, ctx_r1.menuitemId(item_r9, ctx_r1.id, i_r6, j_r10))), item_r9 == null ? null : item_r9.styleClass));
-    ɵɵproperty("pMenuItemContent", item_r9)("itemTemplate", ctx_r1.itemTemplate ?? ctx_r1._itemTemplate)("tooltipOptions", item_r9.tooltipOptions);
+    ɵɵclassMap(ctx_r1.cn(ctx_r1.cx("item", ɵɵpureFunction2(15, _c13, item_r9, ctx_r1.menuitemId(item_r9, ctx_r1.id, i_r6, j_r10))), item_r9 == null ? null : item_r9.styleClass));
+    ɵɵproperty("pMenuItemContent", item_r9)("itemTemplate", ctx_r1.itemTemplate ?? ctx_r1._itemTemplate)("idx", j_r10)("menuitemId", ctx_r1.menuitemId(item_r9, ctx_r1.id, i_r6, j_r10))("tooltipOptions", item_r9.tooltipOptions);
     ɵɵattribute("data-pc-section", "menuitem")("aria-label", ctx_r1.label(item_r9.label))("data-p-focused", ctx_r1.isItemFocused(ctx_r1.menuitemId(item_r9, ctx_r1.id, i_r6, j_r10)))("data-p-disabled", ctx_r1.disabled(item_r9.disabled))("aria-disabled", ctx_r1.disabled(item_r9.disabled))("id", ctx_r1.menuitemId(item_r9, ctx_r1.id, i_r6, j_r10));
   }
 }
 function Menu_div_0_5_ng_template_0_ng_template_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, Menu_div_0_5_ng_template_0_ng_template_2_li_0_Template, 1, 2, "li", 10)(1, Menu_div_0_5_ng_template_0_ng_template_2_li_1_Template, 1, 16, "li", 17);
+    ɵɵtemplate(0, Menu_div_0_5_ng_template_0_ng_template_2_li_0_Template, 1, 4, "li", 11)(1, Menu_div_0_5_ng_template_0_ng_template_2_li_1_Template, 1, 18, "li", 18);
   }
   if (rf & 2) {
     const item_r9 = ctx.$implicit;
@@ -434,7 +454,7 @@ function Menu_div_0_5_ng_template_0_ng_template_2_Template(rf, ctx) {
 }
 function Menu_div_0_5_ng_template_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, Menu_div_0_5_ng_template_0_li_0_Template, 1, 2, "li", 10)(1, Menu_div_0_5_ng_template_0_li_1_Template, 3, 10, "li", 11)(2, Menu_div_0_5_ng_template_0_ng_template_2_Template, 2, 2, "ng-template", 9);
+    ɵɵtemplate(0, Menu_div_0_5_ng_template_0_li_0_Template, 1, 4, "li", 11)(1, Menu_div_0_5_ng_template_0_li_1_Template, 3, 12, "li", 12)(2, Menu_div_0_5_ng_template_0_ng_template_2_Template, 2, 2, "ng-template", 10);
   }
   if (rf & 2) {
     const submenu_r3 = ctx.$implicit;
@@ -447,7 +467,7 @@ function Menu_div_0_5_ng_template_0_Template(rf, ctx) {
 }
 function Menu_div_0_5_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, Menu_div_0_5_ng_template_0_Template, 3, 3, "ng-template", 9);
+    ɵɵtemplate(0, Menu_div_0_5_ng_template_0_Template, 3, 3, "ng-template", 10);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
@@ -456,17 +476,19 @@ function Menu_div_0_5_Template(rf, ctx) {
 }
 function Menu_div_0_6_ng_template_0_li_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "li", 12);
+    ɵɵelement(0, "li", 13);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(4);
     ɵɵclassMap(ctx_r1.cx("separator"));
+    ɵɵproperty("pBind", ctx_r1.ptm("separator"));
+    ɵɵattribute("data-pc-section", "separator");
   }
 }
 function Menu_div_0_6_ng_template_0_li_1_Template(rf, ctx) {
   if (rf & 1) {
     const _r11 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "li", 20);
+    ɵɵelementStart(0, "li", 21);
     ɵɵlistener("onMenuItemClick", function Menu_div_0_6_ng_template_0_li_1_Template_li_onMenuItemClick_0_listener($event) {
       ɵɵrestoreView(_r11);
       const ctx_r11 = ɵɵnextContext();
@@ -482,14 +504,14 @@ function Menu_div_0_6_ng_template_0_li_1_Template(rf, ctx) {
     const item_r13 = ctx_r11.$implicit;
     const i_r14 = ctx_r11.index;
     const ctx_r1 = ɵɵnextContext(3);
-    ɵɵclassMap(ctx_r1.cn(ctx_r1.cx("item", ɵɵpureFunction2(12, _c13, item_r13, ctx_r1.menuitemId(item_r13, ctx_r1.id, i_r14))), item_r13 == null ? null : item_r13.styleClass));
-    ɵɵproperty("pMenuItemContent", item_r13)("itemTemplate", ctx_r1.itemTemplate ?? ctx_r1._itemTemplate)("ngStyle", item_r13.style)("tooltipOptions", item_r13.tooltipOptions);
+    ɵɵclassMap(ctx_r1.cn(ctx_r1.cx("item", ɵɵpureFunction2(14, _c13, item_r13, ctx_r1.menuitemId(item_r13, ctx_r1.id, i_r14))), item_r13 == null ? null : item_r13.styleClass));
+    ɵɵproperty("pMenuItemContent", item_r13)("itemTemplate", ctx_r1.itemTemplate ?? ctx_r1._itemTemplate)("idx", i_r14)("menuitemId", ctx_r1.menuitemId(item_r13, ctx_r1.id, i_r14))("ngStyle", item_r13.style)("tooltipOptions", item_r13.tooltipOptions);
     ɵɵattribute("data-pc-section", "menuitem")("aria-label", ctx_r1.label(item_r13.label))("data-p-focused", ctx_r1.isItemFocused(ctx_r1.menuitemId(item_r13, ctx_r1.id, i_r14)))("data-p-disabled", ctx_r1.disabled(item_r13.disabled))("aria-disabled", ctx_r1.disabled(item_r13.disabled))("id", ctx_r1.menuitemId(item_r13, ctx_r1.id, i_r14));
   }
 }
 function Menu_div_0_6_ng_template_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, Menu_div_0_6_ng_template_0_li_0_Template, 1, 2, "li", 10)(1, Menu_div_0_6_ng_template_0_li_1_Template, 1, 15, "li", 19);
+    ɵɵtemplate(0, Menu_div_0_6_ng_template_0_li_0_Template, 1, 4, "li", 11)(1, Menu_div_0_6_ng_template_0_li_1_Template, 1, 17, "li", 20);
   }
   if (rf & 2) {
     const item_r13 = ctx.$implicit;
@@ -500,7 +522,7 @@ function Menu_div_0_6_ng_template_0_Template(rf, ctx) {
 }
 function Menu_div_0_6_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, Menu_div_0_6_ng_template_0_Template, 2, 2, "ng-template", 9);
+    ɵɵtemplate(0, Menu_div_0_6_ng_template_0_Template, 2, 2, "ng-template", 10);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
@@ -514,13 +536,14 @@ function Menu_div_0_div_7_ng_container_1_Template(rf, ctx) {
 }
 function Menu_div_0_div_7_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div");
-    ɵɵtemplate(1, Menu_div_0_div_7_ng_container_1_Template, 1, 0, "ng-container", 8);
+    ɵɵelementStart(0, "div", 8);
+    ɵɵtemplate(1, Menu_div_0_div_7_ng_container_1_Template, 1, 0, "ng-container", 9);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r1.cx("end"));
+    ɵɵproperty("pBind", ctx_r1.ptm("end"));
     ɵɵattribute("data-pc-section", "end");
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r1.endTemplate ?? ctx_r1._endTemplate);
@@ -543,7 +566,7 @@ function Menu_div_0_Template(rf, ctx) {
       const ctx_r1 = ɵɵnextContext();
       return ɵɵresetView(ctx_r1.onOverlayAnimationEnd($event));
     });
-    ɵɵtemplate(2, Menu_div_0_div_2_Template, 2, 4, "div", 5);
+    ɵɵtemplate(2, Menu_div_0_div_2_Template, 2, 5, "div", 5);
     ɵɵelementStart(3, "ul", 6, 1);
     ɵɵlistener("focus", function Menu_div_0_Template_ul_focus_3_listener($event) {
       ɵɵrestoreView(_r1);
@@ -560,19 +583,20 @@ function Menu_div_0_Template(rf, ctx) {
     });
     ɵɵtemplate(5, Menu_div_0_5_Template, 1, 1, null, 7)(6, Menu_div_0_6_Template, 1, 1, null, 7);
     ɵɵelementEnd();
-    ɵɵtemplate(7, Menu_div_0_div_7_Template, 2, 4, "div", 5);
+    ɵɵtemplate(7, Menu_div_0_div_7_Template, 2, 5, "div", 5);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext();
     ɵɵstyleMap(ctx_r1.sx("root"));
     ɵɵclassMap(ctx_r1.cn(ctx_r1.cx("root"), ctx_r1.styleClass));
-    ɵɵproperty("ngStyle", ctx_r1.style)("@overlayAnimation", ɵɵpureFunction1(24, _c12, ɵɵpureFunction2(21, _c11, ctx_r1.showTransitionOptions, ctx_r1.hideTransitionOptions)))("@.disabled", ctx_r1.popup !== true);
+    ɵɵproperty("ngStyle", ctx_r1.style)("@overlayAnimation", ɵɵpureFunction1(26, _c12, ɵɵpureFunction2(23, _c11, ctx_r1.showTransitionOptions, ctx_r1.hideTransitionOptions)))("@.disabled", ctx_r1.popup !== true)("pBind", ctx_r1.ptm("root"));
     ɵɵattribute("data-pc-name", "menu")("id", ctx_r1.id);
     ɵɵadvance(2);
     ɵɵproperty("ngIf", ctx_r1.startTemplate ?? ctx_r1._startTemplate);
     ɵɵadvance();
     ɵɵclassMap(ctx_r1.cx("list"));
+    ɵɵproperty("pBind", ctx_r1.ptm("list"));
     ɵɵattribute("id", ctx_r1.id + "_list")("tabindex", ctx_r1.getTabIndexValue())("data-pc-section", "menu")("aria-activedescendant", ctx_r1.activedescendant())("aria-label", ctx_r1.ariaLabel)("aria-labelledBy", ctx_r1.ariaLabelledBy);
     ɵɵadvance(2);
     ɵɵproperty("ngIf", ctx_r1.hasSubMenu());
@@ -617,7 +641,7 @@ var classes = {
 };
 var MenuStyle = class _MenuStyle extends BaseStyle {
   name = "menu";
-  theme = style2;
+  style = style2;
   classes = classes;
   inlineStyles = inlineStyles;
   static ɵfac = /* @__PURE__ */ (() => {
@@ -650,6 +674,7 @@ var MenuClasses;
   MenuClasses2["itemIcon"] = "p-menu-item-icon";
   MenuClasses2["itemLabel"] = "p-menu-item-label";
 })(MenuClasses || (MenuClasses = {}));
+var MENU_INSTANCE = new InjectionToken("MENU_INSTANCE");
 var SafeHtmlPipe = class _SafeHtmlPipe {
   platformId;
   sanitizer;
@@ -689,20 +714,19 @@ var SafeHtmlPipe = class _SafeHtmlPipe {
     type: DomSanitizer
   }], null);
 })();
-function sanitizeHtml(value) {
-  const platformId = inject(PLATFORM_ID);
-  const sanitizer = inject(DomSanitizer);
-  if (!value || !isPlatformBrowser(platformId)) {
-    return value;
-  }
-  return sanitizer.bypassSecurityTrustHtml(value);
-}
 var MenuItemContent = class _MenuItemContent extends BaseComponent {
   item;
   itemTemplate;
+  menuitemId = input("", ...ngDevMode ? [{
+    debugName: "menuitemId"
+  }] : []);
+  idx = input(0, ...ngDevMode ? [{
+    debugName: "idx"
+  }] : []);
   onMenuItemClick = new EventEmitter();
   menu;
   _componentStyle = inject(MenuStyle);
+  hostName = "Menu";
   constructor(menu) {
     super();
     this.menu = menu;
@@ -713,6 +737,9 @@ var MenuItemContent = class _MenuItemContent extends BaseComponent {
       item
     });
   }
+  getPTOptions(key) {
+    return this.menu.getPTOptions(key, this.item, this.idx(), this.menuitemId());
+  }
   static ɵfac = function MenuItemContent_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _MenuItemContent)(ɵɵdirectiveInject(forwardRef(() => Menu)));
   };
@@ -721,7 +748,9 @@ var MenuItemContent = class _MenuItemContent extends BaseComponent {
     selectors: [["", "pMenuItemContent", ""]],
     inputs: {
       item: [0, "pMenuItemContent", "item"],
-      itemTemplate: "itemTemplate"
+      itemTemplate: "itemTemplate",
+      menuitemId: [1, "menuitemId"],
+      idx: [1, "idx"]
     },
     outputs: {
       onMenuItemClick: "onMenuItemClick"
@@ -729,8 +758,8 @@ var MenuItemContent = class _MenuItemContent extends BaseComponent {
     features: [ɵɵProvidersFeature([MenuStyle]), ɵɵInheritDefinitionFeature],
     attrs: _c0,
     decls: 5,
-    vars: 5,
-    consts: [["itemContent", ""], ["htmlLabel", ""], [3, "click"], [4, "ngIf"], ["pRipple", "", 3, "class", "target", 4, "ngIf"], ["routerLinkActive", "p-menu-item-link-active", "pRipple", "", 3, "routerLink", "queryParams", "routerLinkActiveOptions", "class", "target", "fragment", "queryParamsHandling", "preserveFragment", "skipLocationChange", "replaceUrl", "state", 4, "ngIf"], ["pRipple", "", 3, "target"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], ["routerLinkActive", "p-menu-item-link-active", "pRipple", "", 3, "routerLink", "queryParams", "routerLinkActiveOptions", "target", "fragment", "queryParamsHandling", "preserveFragment", "skipLocationChange", "replaceUrl", "state"], [3, "class", "style", 4, "ngIf"], [3, "class", 4, "ngIf", "ngIfElse"], [3, "styleClass", "value", 4, "ngIf"], [1, "p-menu-item-label", 3, "innerHTML"], [3, "styleClass", "value"]],
+    vars: 6,
+    consts: [["itemContent", ""], ["htmlLabel", ""], [3, "click", "pBind"], [4, "ngIf"], ["pRipple", "", 3, "class", "target", "pBind", 4, "ngIf"], ["routerLinkActive", "p-menu-item-link-active", "pRipple", "", 3, "routerLink", "queryParams", "routerLinkActiveOptions", "class", "target", "fragment", "queryParamsHandling", "preserveFragment", "skipLocationChange", "replaceUrl", "state", "pBind", 4, "ngIf"], ["pRipple", "", 3, "target", "pBind"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], ["routerLinkActive", "p-menu-item-link-active", "pRipple", "", 3, "routerLink", "queryParams", "routerLinkActiveOptions", "target", "fragment", "queryParamsHandling", "preserveFragment", "skipLocationChange", "replaceUrl", "state", "pBind"], [3, "class", "pBind", "style", 4, "ngIf"], [3, "class", "pBind", 4, "ngIf", "ngIfElse"], [3, "styleClass", "value", "pt", 4, "ngIf"], [3, "pBind"], [1, "p-menu-item-label", 3, "innerHTML", "pBind"], [3, "styleClass", "value", "pt"]],
     template: function MenuItemContent_Template(rf, ctx) {
       if (rf & 1) {
         const _r1 = ɵɵgetCurrentView();
@@ -744,6 +773,7 @@ var MenuItemContent = class _MenuItemContent extends BaseComponent {
       }
       if (rf & 2) {
         ɵɵclassMap(ctx.cx("itemContent"));
+        ɵɵproperty("pBind", ctx.getPTOptions("itemContent"));
         ɵɵattribute("data-pc-section", "content");
         ɵɵadvance();
         ɵɵproperty("ngIf", !ctx.itemTemplate);
@@ -751,7 +781,7 @@ var MenuItemContent = class _MenuItemContent extends BaseComponent {
         ɵɵproperty("ngIf", ctx.itemTemplate);
       }
     },
-    dependencies: [CommonModule, NgIf, NgTemplateOutlet, RouterModule, RouterLink, RouterLinkActive, Ripple, TooltipModule, BadgeModule, Badge, SharedModule],
+    dependencies: [CommonModule, NgIf, NgTemplateOutlet, RouterModule, RouterLink, RouterLinkActive, Ripple, TooltipModule, Bind, BadgeModule, Badge, SharedModule, BindModule, SafeHtmlPipe],
     encapsulation: 2
   });
 };
@@ -761,8 +791,8 @@ var MenuItemContent = class _MenuItemContent extends BaseComponent {
     args: [{
       selector: "[pMenuItemContent]",
       standalone: true,
-      imports: [CommonModule, RouterModule, Ripple, TooltipModule, BadgeModule, SharedModule],
-      template: ` <div [class]="cx('itemContent')" (click)="onItemClick($event, item)" [attr.data-pc-section]="'content'">
+      imports: [CommonModule, RouterModule, Ripple, TooltipModule, BadgeModule, SharedModule, SafeHtmlPipe, BindModule],
+      template: ` <div [class]="cx('itemContent')" (click)="onItemClick($event, item)" [attr.data-pc-section]="'content'" [pBind]="getPTOptions('itemContent')">
         <ng-container *ngIf="!itemTemplate">
             <a
                 *ngIf="!item?.routerLink"
@@ -770,9 +800,9 @@ var MenuItemContent = class _MenuItemContent extends BaseComponent {
                 [attr.href]="item.url || null"
                 [attr.data-automationid]="item.automationId"
                 [attr.tabindex]="-1"
-                [attr.data-pc-section]="'action'"
                 [class]="cx('itemLink')"
                 [target]="item.target"
+                [pBind]="getPTOptions('itemLink')"
                 pRipple
             >
                 <ng-container *ngTemplateOutlet="itemContent; context: { $implicit: item }"></ng-container>
@@ -782,7 +812,6 @@ var MenuItemContent = class _MenuItemContent extends BaseComponent {
                 [routerLink]="item.routerLink"
                 [attr.data-automationid]="item.automationId"
                 [attr.tabindex]="-1"
-                [attr.data-pc-section]="'action'"
                 [attr.title]="item.title"
                 [queryParams]="item.queryParams"
                 routerLinkActive="p-menu-item-link-active"
@@ -795,6 +824,7 @@ var MenuItemContent = class _MenuItemContent extends BaseComponent {
                 [skipLocationChange]="item.skipLocationChange"
                 [replaceUrl]="item.replaceUrl"
                 [state]="item.state"
+                [pBind]="getPTOptions('itemLink')"
                 pRipple
             >
                 <ng-container *ngTemplateOutlet="itemContent; context: { $implicit: item }"></ng-container>
@@ -806,10 +836,10 @@ var MenuItemContent = class _MenuItemContent extends BaseComponent {
         </ng-container>
 
         <ng-template #itemContent>
-            <span [class]="cx('itemIcon', { item })" *ngIf="item.icon" [style]="item.iconStyle"></span>
-            <span [class]="cx('itemLabel')" *ngIf="item.escape !== false; else htmlLabel">{{ item.label }}</span>
-            <ng-template #htmlLabel><span class="p-menu-item-label" [innerHTML]="sanitizeHtml(item.label)"></span></ng-template>
-            <p-badge *ngIf="item.badge" [styleClass]="item.badgeStyleClass" [value]="item.badge" />
+            <span [class]="cx('itemIcon', { item })" [pBind]="getPTOptions('itemIcon')" *ngIf="item.icon" [style]="item.iconStyle" [attr.data-pc-section]="'itemicon'"></span>
+            <span [class]="cx('itemLabel')" [pBind]="getPTOptions('itemLabel')" [attr.data-pc-section]="'itemlabel'" *ngIf="item.escape !== false; else htmlLabel">{{ item.label }}</span>
+            <ng-template #htmlLabel><span class="p-menu-item-label" [attr.data-pc-section]="'itemlabel'" [innerHTML]="item.label | safeHtml" [pBind]="getPTOptions('itemLabel')"></span></ng-template>
+            <p-badge *ngIf="item.badge" [styleClass]="item.badgeStyleClass" [value]="item.badge" [pt]="getPTOptions('pcBadge')" />
         </ng-template>
     </div>`,
       encapsulation: ViewEncapsulation.None,
@@ -952,11 +982,31 @@ var Menu = class _Menu extends BaseComponent {
   focused = false;
   overlayVisible = false;
   relativeAlign;
+  $pcMenu = inject(MENU_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
   _componentStyle = inject(MenuStyle);
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptm("host"));
+  }
   constructor(overlayService) {
     super();
     this.overlayService = overlayService;
     this.id = this.id || s("pn_id_");
+  }
+  getPTOptions(key, item, index, id) {
+    return this.ptm(key, {
+      context: {
+        item,
+        index,
+        focused: this.isItemFocused(id),
+        disabled: this.disabled(item.disabled)
+      }
+    });
   }
   /**
    * Toggles the visibility of the popup menu.
@@ -981,8 +1031,7 @@ var Menu = class _Menu extends BaseComponent {
     this.overlayVisible = true;
     this.cd.markForCheck();
   }
-  ngOnInit() {
-    super.ngOnInit();
+  onInit() {
     if (!this.popup) {
       this.bindDocumentClickListener();
     }
@@ -1018,7 +1067,7 @@ var Menu = class _Menu extends BaseComponent {
   submenuHeaderTemplate;
   _submenuHeaderTemplate;
   templates;
-  ngAfterContentInit() {
+  onAfterContentInit() {
     this.templates?.forEach((item) => {
       switch (item.getType()) {
         case "start":
@@ -1049,13 +1098,13 @@ var Menu = class _Menu extends BaseComponent {
           this.container = event.element;
           this.moveOnTop();
           this.onShow.emit({});
-          this.attrSelector && this.container.setAttribute(this.attrSelector, "");
+          this.$attrSelector && this.container?.setAttribute(this.$attrSelector, "");
           this.appendOverlay();
           this.alignOverlay();
           this.bindDocumentClickListener();
           this.bindDocumentResizeListener();
           this.bindScrollListener();
-          bt(this.listViewChild.nativeElement);
+          bt(this.listViewChild?.nativeElement);
         }
         break;
       case "void":
@@ -1191,12 +1240,12 @@ var Menu = class _Menu extends BaseComponent {
     event.preventDefault();
   }
   onEndKey(event) {
-    this.changeFocusedOptionIndex(Y(this.containerViewChild.nativeElement, 'li[data-pc-section="menuitem"][data-p-disabled="false"]').length - 1);
+    this.changeFocusedOptionIndex(Y(this.containerViewChild?.nativeElement, 'li[data-pc-section="menuitem"][data-p-disabled="false"]').length - 1);
     event.preventDefault();
   }
   onEnterKey(event) {
-    const element = z(this.containerViewChild.nativeElement, `li[id="${`${this.focusedOptionIndex()}`}"]`);
-    const anchorElement = element && z(element, 'a[data-pc-section="action"]');
+    const element = z(this.containerViewChild?.nativeElement, `li[id="${`${this.focusedOptionIndex()}`}"]`);
+    const anchorElement = element && (z(element, '[data-pc-section="itemlink"]') || z(element, "a,button"));
     this.popup && bt(this.target);
     anchorElement ? anchorElement.click() : element && element.click();
     event.preventDefault();
@@ -1205,17 +1254,17 @@ var Menu = class _Menu extends BaseComponent {
     this.onEnterKey(event);
   }
   findNextOptionIndex(index) {
-    const links = Y(this.containerViewChild.nativeElement, 'li[data-pc-section="menuitem"][data-p-disabled="false"]');
+    const links = Y(this.containerViewChild?.nativeElement, 'li[data-pc-section="menuitem"][data-p-disabled="false"]');
     const matchedOptionIndex = [...links].findIndex((link) => link.id === index);
     return matchedOptionIndex > -1 ? matchedOptionIndex + 1 : 0;
   }
   findPrevOptionIndex(index) {
-    const links = Y(this.containerViewChild.nativeElement, 'li[data-pc-section="menuitem"][data-p-disabled="false"]');
+    const links = Y(this.containerViewChild?.nativeElement, 'li[data-pc-section="menuitem"][data-p-disabled="false"]');
     const matchedOptionIndex = [...links].findIndex((link) => link.id === index);
     return matchedOptionIndex > -1 ? matchedOptionIndex - 1 : 0;
   }
   changeFocusedOptionIndex(index) {
-    const links = Y(this.containerViewChild.nativeElement, 'li[data-pc-section="menuitem"][data-p-disabled="false"]');
+    const links = Y(this.containerViewChild?.nativeElement, 'li[data-pc-section="menuitem"][data-p-disabled="false"]');
     if (links.length > 0) {
       let order = index >= links.length ? links.length - 1 : index < 0 ? 0 : index;
       order > -1 && this.focusedOptionIndex.set(links[order].getAttribute("id"));
@@ -1318,7 +1367,7 @@ var Menu = class _Menu extends BaseComponent {
       this.target = null;
     }
   }
-  ngOnDestroy() {
+  onDestroy() {
     if (this.popup) {
       if (this.scrollHandler) {
         this.scrollHandler.destroy();
@@ -1333,7 +1382,6 @@ var Menu = class _Menu extends BaseComponent {
     if (!this.popup) {
       this.unbindDocumentClickListener();
     }
-    super.ngOnDestroy();
   }
   hasSubMenu() {
     return this.model?.some((item) => item.items) ?? false;
@@ -1401,19 +1449,25 @@ var Menu = class _Menu extends BaseComponent {
       onBlur: "onBlur",
       onFocus: "onFocus"
     },
-    features: [ɵɵProvidersFeature([MenuStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([MenuStyle, {
+      provide: MENU_INSTANCE,
+      useExisting: _Menu
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _Menu
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     decls: 1,
     vars: 1,
-    consts: [["container", ""], ["list", ""], ["htmlSubmenuLabel", ""], [3, "class", "style", "ngStyle", "click", 4, "ngIf"], [3, "click", "ngStyle"], [3, "class", 4, "ngIf"], ["role", "menu", 3, "focus", "blur", "keydown"], [4, "ngIf"], [4, "ngTemplateOutlet"], ["ngFor", "", 3, "ngForOf"], ["role", "separator", 3, "class", 4, "ngIf"], ["pTooltip", "", "role", "none", 3, "class", "tooltipOptions", 4, "ngIf"], ["role", "separator"], ["pTooltip", "", "role", "none", 3, "tooltipOptions"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], [4, "ngIf", "ngIfElse"], [3, "innerHTML"], ["pTooltip", "", "role", "menuitem", 3, "class", "pMenuItemContent", "itemTemplate", "style", "tooltipOptions", "onMenuItemClick", 4, "ngIf"], ["pTooltip", "", "role", "menuitem", 3, "onMenuItemClick", "pMenuItemContent", "itemTemplate", "tooltipOptions"], ["pTooltip", "", "role", "menuitem", 3, "class", "pMenuItemContent", "itemTemplate", "ngStyle", "tooltipOptions", "onMenuItemClick", 4, "ngIf"], ["pTooltip", "", "role", "menuitem", 3, "onMenuItemClick", "pMenuItemContent", "itemTemplate", "ngStyle", "tooltipOptions"]],
+    consts: [["container", ""], ["list", ""], ["htmlSubmenuLabel", ""], [3, "class", "style", "ngStyle", "pBind", "click", 4, "ngIf"], [3, "click", "ngStyle", "pBind"], [3, "class", "pBind", 4, "ngIf"], ["role", "menu", 3, "focus", "blur", "keydown", "pBind"], [4, "ngIf"], [3, "pBind"], [4, "ngTemplateOutlet"], ["ngFor", "", 3, "ngForOf"], ["role", "separator", 3, "class", "pBind", 4, "ngIf"], ["pTooltip", "", "role", "none", 3, "class", "pBind", "tooltipOptions", 4, "ngIf"], ["role", "separator", 3, "pBind"], ["pTooltip", "", "role", "none", 3, "pBind", "tooltipOptions"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], [4, "ngIf", "ngIfElse"], [3, "innerHTML"], ["pTooltip", "", "role", "menuitem", 3, "class", "pMenuItemContent", "itemTemplate", "idx", "menuitemId", "style", "tooltipOptions", "onMenuItemClick", 4, "ngIf"], ["pTooltip", "", "role", "menuitem", 3, "onMenuItemClick", "pMenuItemContent", "itemTemplate", "idx", "menuitemId", "tooltipOptions"], ["pTooltip", "", "role", "menuitem", 3, "class", "pMenuItemContent", "itemTemplate", "idx", "menuitemId", "ngStyle", "tooltipOptions", "onMenuItemClick", 4, "ngIf"], ["pTooltip", "", "role", "menuitem", 3, "onMenuItemClick", "pMenuItemContent", "itemTemplate", "idx", "menuitemId", "ngStyle", "tooltipOptions"]],
     template: function Menu_Template(rf, ctx) {
       if (rf & 1) {
-        ɵɵtemplate(0, Menu_div_0_Template, 8, 26, "div", 3);
+        ɵɵtemplate(0, Menu_div_0_Template, 8, 28, "div", 3);
       }
       if (rf & 2) {
         ɵɵproperty("ngIf", !ctx.popup || ctx.visible);
       }
     },
-    dependencies: [CommonModule, NgForOf, NgIf, NgTemplateOutlet, NgStyle, RouterModule, MenuItemContent, TooltipModule, Tooltip, BadgeModule, SharedModule],
+    dependencies: [CommonModule, NgForOf, NgIf, NgTemplateOutlet, NgStyle, RouterModule, MenuItemContent, TooltipModule, Tooltip, Bind, BadgeModule, SharedModule, BindModule, SafeHtmlPipe],
     encapsulation: 2,
     data: {
       animation: [trigger("overlayAnimation", [transition(":enter", [style({
@@ -1432,7 +1486,7 @@ var Menu = class _Menu extends BaseComponent {
     args: [{
       selector: "p-menu",
       standalone: true,
-      imports: [CommonModule, RouterModule, MenuItemContent, TooltipModule, BadgeModule, SharedModule],
+      imports: [CommonModule, RouterModule, MenuItemContent, TooltipModule, BadgeModule, SharedModule, SafeHtmlPipe, BindModule],
       template: `
         <div
             #container
@@ -1450,13 +1504,15 @@ var Menu = class _Menu extends BaseComponent {
             (@overlayAnimation.done)="onOverlayAnimationEnd($event)"
             [attr.data-pc-name]="'menu'"
             [attr.id]="id"
+            [pBind]="ptm('root')"
         >
-            <div *ngIf="startTemplate ?? _startTemplate" [class]="cx('start')" [attr.data-pc-section]="'start'">
+            <div *ngIf="startTemplate ?? _startTemplate" [class]="cx('start')" [pBind]="ptm('start')" [attr.data-pc-section]="'start'">
                 <ng-container *ngTemplateOutlet="startTemplate ?? _startTemplate"></ng-container>
             </div>
             <ul
                 #list
                 [class]="cx('list')"
+                [pBind]="ptm('list')"
                 role="menu"
                 [attr.id]="id + '_list'"
                 [attr.tabindex]="getTabIndexValue()"
@@ -1469,21 +1525,33 @@ var Menu = class _Menu extends BaseComponent {
                 (keydown)="onListKeyDown($event)"
             >
                 <ng-template ngFor let-submenu let-i="index" [ngForOf]="model" *ngIf="hasSubMenu()">
-                    <li [class]="cx('separator')" *ngIf="submenu.separator && submenu.visible !== false" role="separator"></li>
-                    <li [class]="cx('submenuLabel')" [attr.data-automationid]="submenu.automationId" *ngIf="!submenu.separator" pTooltip [tooltipOptions]="submenu.tooltipOptions" role="none" [attr.id]="menuitemId(submenu, id, i)">
+                    <li [class]="cx('separator')" [pBind]="ptm('separator')" *ngIf="submenu.separator && submenu.visible !== false" role="separator" [attr.data-pc-section]="'separator'"></li>
+                    <li
+                        [class]="cx('submenuLabel')"
+                        [pBind]="ptm('submenuLabel')"
+                        [attr.data-automationid]="submenu.automationId"
+                        *ngIf="!submenu.separator"
+                        pTooltip
+                        [tooltipOptions]="submenu.tooltipOptions"
+                        role="none"
+                        [attr.id]="menuitemId(submenu, id, i)"
+                        [attr.data-pc-section]="'submenulabel'"
+                    >
                         <ng-container *ngIf="!submenuHeaderTemplate && !_submenuHeaderTemplate">
                             <span *ngIf="submenu.escape !== false; else htmlSubmenuLabel">{{ submenu.label }}</span>
-                            <ng-template #htmlSubmenuLabel><span [innerHTML]="sanitizeHtml(submenu.label)"></span></ng-template>
+                            <ng-template #htmlSubmenuLabel><span [innerHTML]="submenu.label | safeHtml"></span></ng-template>
                         </ng-container>
                         <ng-container *ngTemplateOutlet="submenuHeaderTemplate ?? _submenuHeaderTemplate; context: { $implicit: submenu }"></ng-container>
                     </li>
                     <ng-template ngFor let-item let-j="index" [ngForOf]="submenu.items">
-                        <li [class]="cx('separator')" *ngIf="item.separator && (item.visible !== false || submenu.visible !== false)" role="separator"></li>
+                        <li [class]="cx('separator')" [pBind]="ptm('separator')" *ngIf="item.separator && (item.visible !== false || submenu.visible !== false)" role="separator" [attr.data-pc-section]="'separator'"></li>
                         <li
                             [class]="cn(cx('item', { item, id: menuitemId(item, id, i, j) }), item?.styleClass)"
                             *ngIf="!item.separator && item.visible !== false && (item.visible !== undefined || submenu.visible !== false)"
                             [pMenuItemContent]="item"
                             [itemTemplate]="itemTemplate ?? _itemTemplate"
+                            [idx]="j"
+                            [menuitemId]="menuitemId(item, id, i, j)"
                             [style]="item.style"
                             (onMenuItemClick)="itemClick($event, menuitemId(item, id, i, j))"
                             pTooltip
@@ -1499,12 +1567,14 @@ var Menu = class _Menu extends BaseComponent {
                     </ng-template>
                 </ng-template>
                 <ng-template ngFor let-item let-i="index" [ngForOf]="model" *ngIf="!hasSubMenu()">
-                    <li [class]="cx('separator')" *ngIf="item.separator && item.visible !== false" role="separator"></li>
+                    <li [class]="cx('separator')" [pBind]="ptm('separator')" *ngIf="item.separator && item.visible !== false" role="separator" [attr.data-pc-section]="'separator'"></li>
                     <li
                         [class]="cn(cx('item', { item, id: menuitemId(item, id, i) }), item?.styleClass)"
                         *ngIf="!item.separator && item.visible !== false"
                         [pMenuItemContent]="item"
                         [itemTemplate]="itemTemplate ?? _itemTemplate"
+                        [idx]="i"
+                        [menuitemId]="menuitemId(item, id, i)"
                         [ngStyle]="item.style"
                         (onMenuItemClick)="itemClick($event, menuitemId(item, id, i))"
                         pTooltip
@@ -1519,7 +1589,7 @@ var Menu = class _Menu extends BaseComponent {
                     ></li>
                 </ng-template>
             </ul>
-            <div *ngIf="endTemplate ?? _endTemplate" [class]="cx('end')" [attr.data-pc-section]="'end'">
+            <div *ngIf="endTemplate ?? _endTemplate" [class]="cx('end')" [pBind]="ptm('end')" [attr.data-pc-section]="'end'">
                 <ng-container *ngTemplateOutlet="endTemplate ?? _endTemplate"></ng-container>
             </div>
         </div>
@@ -1532,7 +1602,14 @@ var Menu = class _Menu extends BaseComponent {
       }))])])],
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
-      providers: [MenuStyle]
+      providers: [MenuStyle, {
+        provide: MENU_INSTANCE,
+        useExisting: Menu
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: Menu
+      }],
+      hostDirectives: [Bind]
     }]
   }], () => [{
     type: OverlayService
@@ -1669,7 +1746,6 @@ export {
   MenuItemContent,
   MenuModule,
   MenuStyle,
-  SafeHtmlPipe,
-  sanitizeHtml
+  SafeHtmlPipe
 };
 //# sourceMappingURL=primeng_menu.js.map

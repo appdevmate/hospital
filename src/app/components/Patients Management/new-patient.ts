@@ -239,6 +239,27 @@ import { Fluid } from 'primeng/fluid';
 
                         <div class="mb-4">
                             <p-floatLabel variant="on">
+                                <p-autoComplete
+                                    inputId="bloodGroup"
+                                    formControlName="bloodGroup"
+                                    [suggestions]="filteredBloodGroupOptions"
+                                    (completeMethod)="filterBloodGroup($event)"
+                                    [forceSelection]="true"
+                                    [dropdown]="true"
+                                    [readonly]="true"
+                                    styleClass="w-full"
+                                    autocomplete="off"
+                                >
+                                    <ng-template pTemplate="item" let-option>
+                                        <span>{{ option }}</span>
+                                    </ng-template>
+                                </p-autoComplete>
+                                <label for="bloodGroup"><i class="pi pi-heart"></i> Blood Group</label>
+                            </p-floatLabel>
+                        </div>
+
+                        <div class="mb-4">
+                            <p-floatLabel variant="on">
                                 <textarea pTextarea id="medicalHistory" formControlName="medicalHistory" autocomplete="off" class="w-full" rows="3"></textarea>
                                 <label for="medicalHistory"><i class="pi pi-file-edit"></i> Medical History</label>
                             </p-floatLabel>
@@ -342,11 +363,14 @@ export class NewPatient implements AfterViewInit, OnDestroy {
     statusOptions: string[] = ['admitted', 'stable', 'under treatment', 'discharged', 'critical', 'dead'];
     filteredStatusOptions: string[] = [];
 
+    bloodGroupOptions: string[] = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+    filteredBloodGroupOptions: string[] = [];
+
     constructor(
         private fb: FormBuilder,
         private helpersService: HelpersService,
         private patientService: PatientsService,
-        public ref: DynamicDialogRef
+        public ref: DynamicDialogRef,
     ) {
         this.form = this.fb.group({
             name: ['', [Validators.required, Validators.minLength(3)]],
@@ -365,7 +389,8 @@ export class NewPatient implements AfterViewInit, OnDestroy {
             medicalHistory: [''],
             allergies: [''],
             medications: [''],
-            notes: ['']
+            notes: [''],
+            bloodGroup: ['']
         });
 
         this.resetFormState();
@@ -398,6 +423,11 @@ export class NewPatient implements AfterViewInit, OnDestroy {
     filterStatus(e: { query: string }) {
         const q = (e?.query || '').toLowerCase();
         this.filteredStatusOptions = this.statusOptions.filter((x) => x.toLowerCase().includes(q));
+    }
+
+    filterBloodGroup(e: { query: string }) {
+        const q = (e?.query || '').toLowerCase();
+        this.filteredBloodGroupOptions = this.bloodGroupOptions.filter((x) => x.toLowerCase().includes(q));
     }
 
     // ===== Validation helpers =====
@@ -538,7 +568,8 @@ export class NewPatient implements AfterViewInit, OnDestroy {
             medicalHistory: f.medicalHistory ? f.medicalHistory.trim() : null,
             allergies: f.allergies ? f.allergies.trim() : null,
             medications: f.medications ? f.medications.trim() : null,
-            notes: f.notes ? f.notes.trim() : null
+            notes: f.notes ? f.notes.trim() : null,
+            bloodGroup: f.bloodGroup ? f.bloodGroup.trim() : null
         };
 
         console.log('Submitting payload:', payload);
@@ -552,8 +583,8 @@ export class NewPatient implements AfterViewInit, OnDestroy {
             error: (err) => {
                 console.error('Error creating patient:', err);
                 if (err.error.message == 'Unauthorized') {
-                    this.helpersService.notifyError('Unauthorized', 'Please login again');
-                    this.isSubmitting = false;
+                    this.helpersService.redirectToLogin();
+                    return;
                 } else {
                     this.helpersService.notifyError('Error', err?.error?.message || 'Failed to create patient profile');
                     this.isSubmitting = false;
@@ -586,7 +617,8 @@ export class NewPatient implements AfterViewInit, OnDestroy {
                 medicalHistory: '',
                 allergies: '',
                 medications: '',
-                notes: ''
+                notes: '',
+                bloodGroup: ''
             },
             { emitEvent: false }
         );

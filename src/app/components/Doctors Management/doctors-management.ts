@@ -23,7 +23,7 @@ const EditorType = {
     Number: 'number',
     Textarea: 'textarea',
     Autocomplete: 'autocomplete',
-    Time: 'time' // ✅ Add this
+    Time: 'time'
 } as const;
 
 const GENDER_OPTIONS = [
@@ -132,27 +132,7 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
     selected = this._selected;
     loading = this._loading.asReadonly();
     totalRecords = this._totalRecords.asReadonly();
-    visibleCols = signal<string[]>([
-        'name',
-        'email',
-        'gender',
-        'insurance',
-        'department',
-        'specialization',
-        'phone',
-        'qid',
-        'dob',
-        'hiringDate',
-        'status',
-        'experienceYears',
-        'experienceMonths',
-        'notes',
-        'education',
-        'dutyDays',
-        'dutyStart',
-        'dutyEnd',
-        'timestamp'
-    ]);
+    visibleCols = signal<string[]>(['name', 'gender', 'bloodGroup', 'department', 'specialization', 'status', 'dutyDays', 'dutyStart', 'dutyEnd']);
 
     private _customTemplates = signal<{ [k: string]: TemplateRef<any> }>({});
     customTemplates = this._customTemplates;
@@ -206,6 +186,7 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
         { field: 'experienceMonths', header: 'Experience (Months)', editable: true, editorType: EditorType.Number, filterable: true },
         { field: 'notes', header: 'Notes', editable: true, editorType: EditorType.Textarea, showTooltip: true, filterable: true },
         { field: 'education', header: 'Education', editable: true, editorType: EditorType.Textarea, pipe: 'titlecase', showTooltip: true, filterable: true },
+        { field: 'bloodGroup', header: 'Blood Group', editable: true, editorType: EditorType.Text, filterable: true },
         { field: 'dutyDays', header: 'Duty Days', editable: true, editorType: EditorType.Text, showTooltip: true, filterable: false },
         { field: 'dutyStart', header: 'Duty Start', editable: true, editorType: EditorType.Time, filterable: false },
         { field: 'dutyEnd', header: 'Duty End', editable: true, editorType: EditorType.Time, filterable: false },
@@ -228,7 +209,7 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
         private doctors: DoctorsService,
         private confirm: ConfirmationService,
         private helpers: HelpersService,
-        private dialog: DialogService
+        private dialog: DialogService,
     ) {
         const token = sessionStorage.getItem('accessToken') || '';
 
@@ -401,8 +382,8 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
             },
             error: (err) => {
                 if (err.error.message == 'Unauthorized') {
-                    this.helpers.notifyError('Unauthorized', 'Please login again');
-                    this._loading.set(false);
+                    this.helpers.redirectToLogin();
+                    return;
                 } else {
                     this._loading.set(false);
                     api.cancelRowEdit(row, rowIndex);
@@ -470,7 +451,28 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
         const XLSX = await import('xlsx');
 
         // Define all columns in the exact order matching the upload format
-        const headers = ['name', 'dob', 'gender', 'phone', 'qid', 'job', 'insurance', 'specialization', 'department', 'status', 'hiringDate', 'experienceYears', 'experienceMonths', 'notes', 'education', 'dutyDays', 'dutyStart', 'dutyEnd'];
+        const headers = [
+            'name',
+            'email',
+            'dob',
+            'gender',
+            'phone',
+            'qid',
+            'job',
+            'insurance',
+            'specialization',
+            'department',
+            'status',
+            'hiringDate',
+            'experienceYears',
+            'experienceMonths',
+            'notes',
+            'education',
+            'dutyDays',
+            'dutyStart',
+            'dutyEnd',
+            'bloodGroup'
+        ];
 
         // Create workbook and worksheet
         const wb = XLSX.utils.book_new();
@@ -479,6 +481,7 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
         // Set column widths for better readability
         const columnWidths = [
             { wch: 25 }, // name
+            { wch: 30 }, // email
             { wch: 12 }, // dob
             { wch: 10 }, // gender
             { wch: 18 }, // phone
@@ -495,7 +498,8 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
             { wch: 55 }, // education
             { wch: 35 }, // dutyDays
             { wch: 12 }, // dutyStart
-            { wch: 12 } // dutyEnd
+            { wch: 12 }, // dutyEnd
+            { wch: 10 } // bloodGroup
         ];
 
         ws['!cols'] = columnWidths;
@@ -503,6 +507,7 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
         // Optional: Add a sample row with example data as guidance
         const sampleRow = [
             'Dr. Ahmed Hassan', // name
+            'ahmed.hassan@hospital.com', // email
             '1985-03-15', // dob
             'Male', // gender
             '+974-5512-3456', // phone
@@ -519,7 +524,8 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
             'MD from Weill Cornell Medicine-Qatar', // education
             'Sunday, Monday, Tuesday, Wednesday', // dutyDays (comma-separated)
             '08:00', // dutyStart
-            '16:00' // dutyEnd
+            '16:00', // dutyEnd
+            'B+' // bloodGroup
         ];
 
         // Add sample row (comment this out if you want empty template)
@@ -578,7 +584,12 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
 
                         return request$.pipe(
                             map(() => true),
-                            catchError(() => of(false))
+                            catchError((err) => {
+                                if (err?.error?.message == 'Unauthorized') {
+                                    this.helpers.redirectToLogin();
+                                }
+                                return of(false);
+                            })
                         );
                     })
                 )
@@ -623,7 +634,11 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
                             this.helpers.notifySuccess(`${new TitleCasePipe().transform(row.name)} Deleted`);
                             this.fetch();
                         },
-                        error: () => {
+                        error: (err) => {
+                            if (err?.error?.message == 'Unauthorized') {
+                                this.helpers.redirectToLogin();
+                                return;
+                            }
                             this.helpers.notifyError('Delete failed', 'Could not delete');
                         }
                     });
@@ -671,7 +686,11 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
                 this._totalRecords.set(r.totalCount || 0);
                 this._loading.set(false);
             },
-            error: () => {
+            error: (err) => {
+                if (err?.error?.message == 'Unauthorized') {
+                    this.helpers.redirectToLogin();
+                    return;
+                }
                 this._rows.set([]);
                 this._totalRecords.set(0);
                 this._loading.set(false);
@@ -802,6 +821,7 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
                     qid: qidStr,
 
                     // Optional fields (include if present)
+                    email: row.email?.trim().toLowerCase() || null,
                     gender: row.gender || null,
                     job: row.job || null,
                     insurance: row.insurance || null,
@@ -816,7 +836,8 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
                     education: row.education || null,
                     dutyDays: dutyDaysArray, // ✅ USE THE PARSED ARRAY HERE
                     dutyStart: row.dutyStart || null,
-                    dutyEnd: row.dutyEnd || null
+                    dutyEnd: row.dutyEnd || null,
+                    bloodGroup: row.bloodGroup || null
                 };
 
                 valid.push(doctor);

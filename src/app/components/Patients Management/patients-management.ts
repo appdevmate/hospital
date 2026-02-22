@@ -134,7 +134,7 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
     selected = this._selected;
     loading = this._loading.asReadonly();
     totalRecords = this._totalRecords.asReadonly();
-    visibleCols = signal<string[]>(['name', 'email', 'gender', 'insurance', 'department', 'specialization', 'phone', 'qid', 'dob', 'admissionDate', 'status', 'notes', 'medicalHistory', 'allergies', 'medications', 'bedNumber', 'ward', 'timestamp']);
+    visibleCols = signal<string[]>(['name', 'bloodGroup', 'gender', 'phone', 'qid', 'dob', 'admissionDate', 'status', 'notes', 'bedNumber', 'ward']);
 
     private _customTemplates = signal<{ [k: string]: TemplateRef<any> }>({});
     customTemplates = this._customTemplates;
@@ -188,6 +188,7 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
         { field: 'medicalHistory', header: 'Medical History', editable: true, editorType: EditorType.Textarea, pipe: 'titlecase', showTooltip: true, filterable: true },
         { field: 'allergies', header: 'Allergies', editable: true, editorType: EditorType.Text, showTooltip: true, filterable: true },
         { field: 'medications', header: 'Medications', editable: true, editorType: EditorType.Textarea, pipe: 'titlecase', showTooltip: true, filterable: true },
+        { field: 'bloodGroup', header: 'Blood Group', editable: true, editorType: EditorType.Text, filterable: true },
         { field: 'bedNumber', header: 'Bed Number', editable: true, editorType: EditorType.Text, filterable: false },
         { field: 'ward', header: 'Ward', editable: true, editorType: EditorType.Text, filterable: true },
         { field: 'timestamp', header: 'Submitted Date', editable: false, type: 'date', pipe: 'date', dateFormat: 'MM/dd/yyyy', filterable: true }
@@ -210,7 +211,7 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
         private patients: PatientsService,
         private confirm: ConfirmationService,
         private helpers: HelpersService,
-        private dialog: DialogService
+        private dialog: DialogService,
     ) {
         const token = sessionStorage.getItem('accessToken') || '';
 
@@ -296,7 +297,7 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
         const XLSX = await import('xlsx');
 
         // Define all columns in the exact order matching the upload format
-        const headers = ['name', 'email', 'dob', 'gender', 'phone', 'qid', 'insurance', 'specialization', 'department', 'status', 'admissionDate', 'notes', 'medicalHistory', 'allergies', 'medications', 'bedNumber', 'ward'];
+        const headers = ['name', 'email', 'dob', 'gender', 'phone', 'qid', 'insurance', 'specialization', 'department', 'status', 'admissionDate', 'notes', 'medicalHistory', 'allergies', 'medications', 'bedNumber', 'ward', 'bloodGroup'];
 
         // Create workbook and worksheet
         const wb = XLSX.utils.book_new();
@@ -320,7 +321,8 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
             { wch: 30 }, // allergies
             { wch: 50 }, // medications
             { wch: 12 }, // bedNumber
-            { wch: 20 } // ward
+            { wch: 20 }, // ward
+            { wch: 10 } // bloodGroup
         ];
 
         ws['!cols'] = columnWidths;
@@ -343,7 +345,8 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
             'Aspirin allergy', // allergies
             'Metoprolol, Lisinopril', // medications
             'A101', // bedNumber
-            'Cardiology Ward' // ward
+            'Cardiology Ward', // ward
+            'O+' // bloodGroup
         ];
 
         // Add sample row (comment this out if you want empty template)
@@ -402,7 +405,12 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
 
                         return request$.pipe(
                             map(() => true),
-                            catchError(() => of(false))
+                            catchError((err) => {
+                                if (err?.error?.message == 'Unauthorized') {
+                                    this.helpers.redirectToLogin();
+                                }
+                                return of(false);
+                            })
                         );
                     })
                 )
@@ -539,8 +547,8 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
             },
             error: (err) => {
                 if (err.error.message == 'Unauthorized') {
-                    this.helpers.notifyError('Unauthorized', 'Please login again');
-                    this._loading.set(false);
+                    this.helpers.redirectToLogin();
+                    return;
                 } else {
                     this._loading.set(false);
                     api.cancelRowEdit(row, rowIndex);
@@ -583,7 +591,11 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
                             this.helpers.notifySuccess(`${new TitleCasePipe().transform(row.name)} Deleted`);
                             this.fetch();
                         },
-                        error: () => {
+                        error: (err) => {
+                            if (err?.error?.message == 'Unauthorized') {
+                                this.helpers.redirectToLogin();
+                                return;
+                            }
                             this.helpers.notifyError('Delete failed', 'Could not delete');
                         }
                     });
@@ -635,7 +647,11 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
                 this._totalRecords.set(r.totalCount || 0);
                 this._loading.set(false);
             },
-            error: () => {
+            error: (err) => {
+                if (err?.error?.message == 'Unauthorized') {
+                    this.helpers.redirectToLogin();
+                    return;
+                }
                 this._rows.set([]);
                 this._totalRecords.set(0);
                 this._loading.set(false);
@@ -711,6 +727,23 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
         const valid: any[] = [];
         const skipped: { row: any; reason: string }[] = [];
 
+        const lc = (x: any) => (typeof x === 'string' && x.trim() ? x.trim().toLowerCase() : null);
+        const sanitizePhone = (x: any): string | null => {
+            const s = String(x ?? '').trim();
+            if (!s) return null;
+            const sign = s.startsWith('+') ? '+' : '';
+            const digits = s.replace(/\D/g, '');
+            return digits ? sign + digits : null;
+        };
+        const toISODate = (v: any): string | null => {
+            if (!v) return null;
+            if (v instanceof Date && !isNaN(+v)) return v.toISOString().slice(0, 10);
+            const s = String(v).trim();
+            if (/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0, 10);
+            const d = new Date(s);
+            return isNaN(+d) ? null : d.toISOString().slice(0, 10);
+        };
+
         rows.forEach((row, index) => {
             const rowNum = index + 2; // Excel row number (1-indexed + header)
             const errors: string[] = [];
@@ -727,7 +760,8 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
             }
 
             // phone: required
-            if (!row.phone) {
+            const phone = sanitizePhone(row.phone);
+            if (!phone) {
                 errors.push('Phone required');
             }
 
@@ -746,26 +780,27 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
                 // Build valid patient object with all fields
                 const patient: any = {
                     // Required fields
-                    name: row.name?.trim(),
-                    dob: row.dob,
-                    phone: row.phone,
+                    name: row.name?.trim().toLowerCase(),
+                    dob: toISODate(row.dob) ?? row.dob,
+                    phone: phone,
                     qid: qidStr,
 
                     // Optional fields (include if present)
-                    email: row.email || null,
-                    gender: row.gender || null,
-                    job: row.job || null,
-                    insurance: row.insurance || null,
-                    specialization: row.specialization || null,
-                    department: row.department || null,
-                    status: row.status || null,
-                    admissionDate: row.admissionDate || null,
-                    notes: row.notes || null,
-                    medicalHistory: row.medicalHistory || null,
-                    allergies: row.allergies || null,
-                    medications: row.medications || null,
-                    bedNumber: row.bedNumber || null,
-                    ward: row.ward || null
+                    email: row.email?.trim().toLowerCase() || null,
+                    gender: lc(row.gender),
+                    job: row.job?.trim() || null,
+                    insurance: row.insurance?.trim().toLowerCase() || null,
+                    specialization: row.specialization?.trim().toLowerCase() || null,
+                    department: row.department?.trim().toLowerCase() || null,
+                    status: lc(row.status),
+                    admissionDate: toISODate(row.admissionDate),
+                    notes: row.notes?.trim() || null,
+                    medicalHistory: row.medicalHistory?.trim() || null,
+                    allergies: row.allergies?.trim() || null,
+                    medications: row.medications?.trim() || null,
+                    bedNumber: row.bedNumber?.trim() || null,
+                    ward: row.ward?.trim() || null,
+                    bloodGroup: row.bloodGroup?.trim() || null
                 };
 
                 valid.push(patient);
@@ -867,22 +902,29 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
     }
 
     private bulkCreate(rows: any[]) {
+        console.log('[Import] Starting bulk create for', rows.length, 'patients');
         from(rows)
             .pipe(
                 mergeMap(
-                    (dto, idx) =>
-                        this.patients.createPatient(dto).pipe(
-                            map(() => ({ ok: true as const, idx, dto })),
-                            catchError((err) =>
-                                of({
+                    (dto, idx) => {
+                        console.log(`[Import] Row ${idx + 1} DTO:`, JSON.stringify(dto));
+                        return this.patients.createPatient(dto).pipe(
+                            map((res) => {
+                                console.log(`[Import] Row ${idx + 1} SUCCESS:`, res);
+                                return { ok: true as const, idx, dto };
+                            }),
+                            catchError((err) => {
+                                console.error(`[Import] Row ${idx + 1} FAILED:`, err?.error ?? err);
+                                return of({
                                     ok: false as const,
                                     idx,
                                     dto,
                                     err,
                                     msg: (err?.error?.message ?? err?.message ?? (typeof err === 'string' ? err : JSON.stringify(err))) || 'Unknown error'
-                                })
-                            )
-                        ),
+                                });
+                            })
+                        );
+                    },
                     5 // moderate concurrency
                 ),
                 toArray(),

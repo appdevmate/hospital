@@ -1,28 +1,32 @@
 import {
+  Button
+} from "./chunk-N24NSOLO.js";
+import "./chunk-B6BBOHQM.js";
+import "./chunk-ICEVV523.js";
+import "./chunk-YNLAOK3J.js";
+import "./chunk-S73J4WE3.js";
+import {
   zindexutils
 } from "./chunk-BB55NINM.js";
-import {
-  Button
-} from "./chunk-6SV3UMTU.js";
-import "./chunk-KOXUNDHI.js";
-import "./chunk-AXS7T3GQ.js";
-import "./chunk-6PBBDZZF.js";
-import "./chunk-QVUTNZUY.js";
-import "./chunk-VZLF74PJ.js";
+import "./chunk-OC77X5LN.js";
 import {
   ChevronUpIcon
-} from "./chunk-BIL3W6KN.js";
-import "./chunk-EGVFVLQK.js";
+} from "./chunk-RHA7RL5K.js";
+import "./chunk-YXZQJBKH.js";
 import {
-  BaseComponent
-} from "./chunk-4YMQ5OOY.js";
+  BaseComponent,
+  PARENT_INSTANCE
+} from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
-} from "./chunk-L2L2T6ID.js";
+} from "./chunk-4ATYD752.js";
+import {
+  Bind
+} from "./chunk-MLQGRGGO.js";
 import {
   PrimeTemplate,
   SharedModule
-} from "./chunk-ZKOTJBQ6.js";
+} from "./chunk-LMEEH3AJ.js";
 import "./chunk-6QGHQEN4.js";
 import {
   animate,
@@ -31,6 +35,10 @@ import {
   transition,
   trigger
 } from "./chunk-53DGU4C2.js";
+import "./chunk-GOP36Q47.js";
+import {
+  $
+} from "./chunk-UCHM6OXG.js";
 import {
   CommonModule,
   NgIf,
@@ -50,6 +58,7 @@ import {
   ViewEncapsulation,
   numberAttribute,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -77,6 +86,7 @@ import {
   ɵɵtemplateRefExtractor
 } from "./chunk-EIF6IUR4.js";
 import {
+  InjectionToken,
   inject,
   ɵɵdefineInjectable,
   ɵɵdefineInjector,
@@ -84,13 +94,9 @@ import {
   ɵɵresetView,
   ɵɵrestoreView
 } from "./chunk-LW34VNAR.js";
-import "./chunk-YVXMBCE5.js";
 import "./chunk-G6ECYYJH.js";
+import "./chunk-YVXMBCE5.js";
 import "./chunk-RTGP7ALM.js";
-import "./chunk-BMDSN43F.js";
-import {
-  $
-} from "./chunk-RK2DVQNP.js";
 import "./chunk-4MWRP73S.js";
 
 // node_modules/@primeuix/styles/dist/scrolltop/index.mjs
@@ -187,7 +193,7 @@ function ScrollTop_p_button_0_Template(rf, ctx) {
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext();
-    ɵɵproperty("@animation", ɵɵpureFunction1(8, _c2, ɵɵpureFunction2(5, _c1, ctx_r1.showTransitionOptions, ctx_r1.hideTransitionOptions)))("styleClass", ctx_r1.cn(ctx_r1.cx("root"), ctx_r1.styleClass))("ngStyle", ctx_r1.style)("buttonProps", ctx_r1.buttonProps);
+    ɵɵproperty("@animation", ɵɵpureFunction1(9, _c2, ɵɵpureFunction2(6, _c1, ctx_r1.showTransitionOptions, ctx_r1.hideTransitionOptions)))("pt", ctx_r1.ptm("pcButton"))("styleClass", ctx_r1.cn(ctx_r1.cx("root"), ctx_r1.styleClass))("ngStyle", ctx_r1.style)("buttonProps", ctx_r1.buttonProps);
     ɵɵattribute("aria-label", ctx_r1.buttonAriaLabel);
   }
 }
@@ -201,7 +207,7 @@ var classes = {
 };
 var ScrollTopStyle = class _ScrollTopStyle extends BaseStyle {
   name = "scrolltop";
-  theme = style2;
+  style = style2;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵScrollTopStyle_BaseFactory;
@@ -224,7 +230,18 @@ var ScrollTopClasses;
   ScrollTopClasses2["root"] = "p-scrolltop";
   ScrollTopClasses2["icon"] = "p-scrolltop-icon";
 })(ScrollTopClasses || (ScrollTopClasses = {}));
+var SCROLLTOP_INSTANCE = new InjectionToken("SCROLLTOP_INSTANCE");
 var ScrollTop = class _ScrollTop extends BaseComponent {
+  $pcScrollTop = inject(SCROLLTOP_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
+  }
   /**
    * Class of the element.
    * @group Props
@@ -296,12 +313,11 @@ var ScrollTop = class _ScrollTop extends BaseComponent {
   visible = false;
   overlay;
   _componentStyle = inject(ScrollTopStyle);
-  ngOnInit() {
-    super.ngOnInit();
+  onInit() {
     if (this.target === "window") this.bindDocumentScrollListener();
     else if (this.target === "parent") this.bindParentScrollListener();
   }
-  ngAfterContentInit() {
+  onAfterContentInit() {
     this.templates.forEach((item) => {
       switch (item.getType()) {
         case "icon":
@@ -366,14 +382,13 @@ var ScrollTop = class _ScrollTop extends BaseComponent {
       this.documentScrollListener = null;
     }
   }
-  ngOnDestroy() {
+  onDestroy() {
     if (this.target === "window") this.unbindDocumentScrollListener();
     else if (this.target === "parent") this.unbindParentScrollListener();
     if (this.overlay) {
       zindexutils.clear(this.overlay);
       this.overlay = null;
     }
-    super.ngOnDestroy();
   }
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵScrollTop_BaseFactory;
@@ -407,13 +422,19 @@ var ScrollTop = class _ScrollTop extends BaseComponent {
       buttonAriaLabel: "buttonAriaLabel",
       buttonProps: "buttonProps"
     },
-    features: [ɵɵProvidersFeature([ScrollTopStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([ScrollTopStyle, {
+      provide: SCROLLTOP_INSTANCE,
+      useExisting: _ScrollTop
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _ScrollTop
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     decls: 1,
     vars: 1,
-    consts: [["icon", ""], ["type", "button", 3, "styleClass", "ngStyle", "buttonProps", "click", 4, "ngIf"], ["type", "button", 3, "click", "styleClass", "ngStyle", "buttonProps"], [4, "ngIf"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], [3, "class", 4, "ngIf"], ["data-p-icon", "chevron-up", 3, "class", 4, "ngIf"], ["data-p-icon", "chevron-up"], [3, "ngIf"]],
+    consts: [["icon", ""], ["type", "button", 3, "pt", "styleClass", "ngStyle", "buttonProps", "click", 4, "ngIf"], ["type", "button", 3, "click", "pt", "styleClass", "ngStyle", "buttonProps"], [4, "ngIf"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], [3, "class", 4, "ngIf"], ["data-p-icon", "chevron-up", 3, "class", 4, "ngIf"], ["data-p-icon", "chevron-up"], [3, "ngIf"]],
     template: function ScrollTop_Template(rf, ctx) {
       if (rf & 1) {
-        ɵɵtemplate(0, ScrollTop_p_button_0_Template, 3, 10, "p-button", 1);
+        ɵɵtemplate(0, ScrollTop_p_button_0_Template, 3, 11, "p-button", 1);
       }
       if (rf & 2) {
         ɵɵproperty("ngIf", ctx.visible);
@@ -449,6 +470,7 @@ var ScrollTop = class _ScrollTop extends BaseComponent {
             (@animation.done)="onLeave($event)"
             [attr.aria-label]="buttonAriaLabel"
             (click)="onClick()"
+            [pt]="ptm('pcButton')"
             [styleClass]="cn(cx('root'), styleClass)"
             [ngStyle]="style"
             type="button"
@@ -470,7 +492,14 @@ var ScrollTop = class _ScrollTop extends BaseComponent {
       })), state("open", style({
         opacity: 1
       })), transition("void => open", animate("{{showTransitionParams}}")), transition("open => void", animate("{{hideTransitionParams}}"))])],
-      providers: [ScrollTopStyle]
+      providers: [ScrollTopStyle, {
+        provide: SCROLLTOP_INSTANCE,
+        useExisting: ScrollTop
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: ScrollTop
+      }],
+      hostDirectives: [Bind]
     }]
   }], null, {
     styleClass: [{

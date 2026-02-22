@@ -50,6 +50,7 @@ export interface CreateUpdateDoctorRequest {
     dutyStart?: string | null;
     dutyEnd?: string | null;
     licenseNumber?: string | null; // This might already be there
+    bloodGroup?: string | null;
 }
 
 export interface GetDoctorsPageOpts {
