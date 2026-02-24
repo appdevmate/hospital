@@ -65,7 +65,7 @@ const STATUS_SEVERITY: Record<string, 'success' | 'info' | 'warn' | 'danger' | '
         </ng-template>
 
         <ng-template #tbEnd>
-            <p-button label="Export to Excel" icon="pi pi-download" severity="secondary" (onClick)="exportExcel()"></p-button>
+            <p-button label="Export Doctors Data to Excel" icon="pi pi-download" severity="secondary" (onClick)="exportExcel()"></p-button>
         </ng-template>
 
         // Update your template's rowActions section:
@@ -209,7 +209,7 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
         private doctors: DoctorsService,
         private confirm: ConfirmationService,
         private helpers: HelpersService,
-        private dialog: DialogService,
+        private dialog: DialogService
     ) {
         const token = sessionStorage.getItem('accessToken') || '';
 
@@ -578,21 +578,37 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
 
                 this._loading.set(true);
 
-                forkJoin(
-                    ids.map((id) => {
-                        const request$ = deletionOption === 'hard' ? this.doctors.hardDeleteDoctor(id) : this.doctors.deleteDoctor(id);
+                let hasRedirected = false;
 
-                        return request$.pipe(
-                            map(() => true),
-                            catchError((err) => {
-                                if (err?.error?.message == 'Unauthorized') {
-                                    this.helpers.redirectToLogin();
-                                }
-                                return of(false);
-                            })
-                        );
-                    })
-                )
+                const handleUnauthorized = (err: any) => {
+                    if (err?.error?.message == 'Unauthorized' && !hasRedirected) {
+                        hasRedirected = true;
+                        this.helpers.redirectToLogin();
+                    }
+                };
+
+                const request$ =
+                    deletionOption === 'hard'
+                        ? this.doctors.hardDeleteDoctor(ids).pipe(
+                              map(() => ids.map(() => true)),
+                              catchError((err) => {
+                                  handleUnauthorized(err);
+                                  return of(ids.map(() => false));
+                              })
+                          )
+                        : forkJoin(
+                              ids.map((id) =>
+                                  this.doctors.deleteDoctor(id).pipe(
+                                      map(() => true),
+                                      catchError((err) => {
+                                          handleUnauthorized(err);
+                                          return of(false);
+                                      })
+                                  )
+                              )
+                          );
+
+                request$
                     .pipe(finalize(() => this._loading.set(false)))
                     .subscribe((res) => {
                         const successCount = res.filter(Boolean).length;

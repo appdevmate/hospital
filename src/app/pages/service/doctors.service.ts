@@ -108,6 +108,7 @@ export interface BulkCreateResp {
 @Injectable({ providedIn: 'root' })
 export class DoctorsService {
     path = 'doctors';
+    deletePath = 'doctors/delete';
     constructor(private http: HttpClient) {}
 
     private authHeaders(): HttpHeaders {
@@ -242,9 +243,10 @@ export class DoctorsService {
         });
     }
 
-    hardDeleteDoctor(doctorID: string): Observable<{ data: Doctor }> {
-        return this.http.delete<{ data: Doctor }>(Config.buildUrl(this.path + '/' + doctorID), {
-            headers: this.authHeaders()
+    hardDeleteDoctor(idList: string[]): Observable<{ data: Doctor }> {
+        return this.http.delete<{ data: Doctor }>(Config.buildUrl(this.deletePath), {
+            headers: this.authHeaders(),
+            body: { ids: idList }
         });
     }
 

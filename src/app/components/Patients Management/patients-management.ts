@@ -68,7 +68,7 @@ const STATUS_SEVERITY: Record<string, 'success' | 'info' | 'warn' | 'danger' | '
         </ng-template>
 
         <ng-template #tbEnd>
-            <p-button label="Export to Excel" icon="pi pi-download" severity="secondary" (onClick)="exportExcel()"></p-button>
+            <p-button label="Export Patients Data to Excel" icon="pi pi-download" severity="secondary" (onClick)="exportExcel()"></p-button>
         </ng-template>
 
         <ng-template #rowActions let-row let-editing="editing" let-api="api" let-rowIndex="rowIndex">
@@ -134,7 +134,7 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
     selected = this._selected;
     loading = this._loading.asReadonly();
     totalRecords = this._totalRecords.asReadonly();
-    visibleCols = signal<string[]>(['name', 'bloodGroup', 'gender', 'phone', 'qid', 'dob', 'admissionDate', 'status', 'notes', 'bedNumber', 'ward']);
+    visibleCols = signal<string[]>(['name', 'bloodGroup', 'gender', 'phone', 'qid', 'dob', 'status', 'bedNumber', 'ward']);
 
     private _customTemplates = signal<{ [k: string]: TemplateRef<any> }>({});
     customTemplates = this._customTemplates;
@@ -211,7 +211,7 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
         private patients: PatientsService,
         private confirm: ConfirmationService,
         private helpers: HelpersService,
-        private dialog: DialogService,
+        private dialog: DialogService
     ) {
         const token = sessionStorage.getItem('accessToken') || '';
 
@@ -399,21 +399,37 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
 
                 this._loading.set(true);
 
-                forkJoin(
-                    ids.map((id) => {
-                        const request$ = deletionOption === 'hard' ? this.patients.hardDeletePatient(id) : this.patients.deletePatient(id);
+                let hasRedirected = false;
 
-                        return request$.pipe(
-                            map(() => true),
-                            catchError((err) => {
-                                if (err?.error?.message == 'Unauthorized') {
-                                    this.helpers.redirectToLogin();
-                                }
-                                return of(false);
-                            })
-                        );
-                    })
-                )
+                const handleUnauthorized = (err: any) => {
+                    if (err?.error?.message == 'Unauthorized' && !hasRedirected) {
+                        hasRedirected = true;
+                        this.helpers.redirectToLogin();
+                    }
+                };
+
+                const request$ =
+                    deletionOption === 'hard'
+                        ? this.patients.hardDeletePatient(ids).pipe(
+                              map(() => ids.map(() => true)),
+                              catchError((err) => {
+                                  handleUnauthorized(err);
+                                  return of(ids.map(() => false));
+                              })
+                          )
+                        : forkJoin(
+                              ids.map((id) =>
+                                  this.patients.deletePatient(id).pipe(
+                                      map(() => true),
+                                      catchError((err) => {
+                                          handleUnauthorized(err);
+                                          return of(false);
+                                      })
+                                  )
+                              )
+                          );
+
+                request$
                     .pipe(finalize(() => this._loading.set(false)))
                     .subscribe((res) => {
                         const successCount = res.filter(Boolean).length;
