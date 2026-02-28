@@ -186,8 +186,8 @@ export class PatientsService {
         return this.http.get<string[]>(`${Config.buildUrl(this.path)}/filter-options/${field}`, { headers: this.authHeaders() });
     }
 
-    createPatient(patientData: CreateUpdatePatientRequest): Observable<{ data: Patient }> {
-        return this.http.post<{ data: Patient }>(Config.buildUrl(this.path), patientData, {
+    createPatient(patientData: CreateUpdatePatientRequest | CreateUpdatePatientRequest[] | { patients: CreateUpdatePatientRequest[] }): Observable<any> {
+        return this.http.post<any>(Config.buildUrl(this.path), patientData, {
             headers: this.authHeaders()
         });
     }

@@ -224,9 +224,9 @@ export class DoctorsService {
         return this.http.get<string[]>(`${Config.buildUrl(this.path)}/filter-options/${field}`, { headers: this.authHeaders() });
     }
 
-    createDoctor(doctorData: CreateUpdateDoctorRequest): Observable<{ data: Doctor }> {
+    createDoctor(doctorData: CreateUpdateDoctorRequest | CreateUpdateDoctorRequest[] | { doctors: CreateUpdateDoctorRequest[] }): Observable<any> {
         console.log(doctorData);
-        return this.http.post<{ data: Doctor }>(Config.buildUrl(this.path), doctorData, {
+        return this.http.post<any>(Config.buildUrl(this.path), doctorData, {
             headers: this.authHeaders()
         });
     }

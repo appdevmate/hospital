@@ -1,7 +1,7 @@
 import { Component, AfterViewInit, OnDestroy, TemplateRef, ViewChild, DestroyRef, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule, TitleCasePipe } from '@angular/common';
-import { of, from, forkJoin, Subject } from 'rxjs';
-import { catchError, finalize, map, mergeMap, toArray } from 'rxjs/operators';
+import { of, forkJoin, Subject } from 'rxjs';
+import { catchError, finalize, map } from 'rxjs/operators';
 import { TagModule } from 'primeng/tag';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ButtonModule } from 'primeng/button';
@@ -12,7 +12,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { GenericTableComponent } from '../../pages/uikit/generic-table';
 import type { TableColumn, TableConfig, RowEditEvent, FilterControl } from '../../interfaces/tableplugin.interfaces';
 import type { Patient as DoctorLike, GetPatientsPageOpts } from '../../pages/service/patients.service'; // reuse shape
-import { CreateUpdateDoctorRequest, DoctorsService } from '@/pages/service/doctors.service';
+import { DoctorsService } from '@/pages/service/doctors.service';
 import { ConfirmationService } from 'primeng/api';
 import { HelpersService } from '@/services/helpers-service';
 import { NewDoctor } from './new-doctor';
@@ -955,48 +955,20 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
     }
 
     private bulkCreate(rows: any[]) {
-        from(rows)
-            .pipe(
-                mergeMap(
-                    (dto, idx) =>
-                        this.doctors.createDoctor(dto as CreateUpdateDoctorRequest).pipe(
-                            map(() => ({ ok: true as const, idx, dto })),
-                            catchError((err) =>
-                                of({
-                                    ok: false as const,
-                                    idx,
-                                    dto,
-                                    err,
-                                    msg: (err?.error?.message ?? err?.message ?? (typeof err === 'string' ? err : JSON.stringify(err))) || 'Unknown error'
-                                })
-                            )
-                        ),
-                    5 // moderate concurrency
-                ),
-                toArray(),
-                finalize(() => this._loading.set(false))
-            )
-            .subscribe((results) => {
-                const failures = results.filter((r: any) => !r.ok) as Array<{ idx: number; dto: any; msg: string; err: any }>;
-                const successes = results.filter((r: any) => r.ok);
-
-                if (successes.length && !failures.length) {
-                    this.helpers.notifySuccess(`Import completed: ${successes.length}/${results.length}`);
-                } else if (!successes.length) {
-                    const first = failures[0];
-                    this.helpers.notifyError('Import failed', `0/${results.length} created. First error: ${first?.msg}`);
-                    // surface details for debugging
-                    console.error('Import failures', failures);
-                } else {
-                    const sample = failures
-                        .slice(0, 3)
-                        .map((f, i) => `${i + 1}) ${f.msg}`)
-                        .join(' | ');
-                    this.helpers.notifyError('Partial import', `${successes.length}/${results.length} created. ${failures.length} failed. ${sample}`);
-                    console.warn('Partial import details', failures);
+        this.doctors
+            .createDoctor({ doctors: rows })
+            .pipe(finalize(() => this._loading.set(false)))
+            .subscribe({
+                next: () => {
+                    this.helpers.notifySuccess(`Import completed: ${rows.length}/${rows.length}`);
+                    this.fetch();
+                },
+                error: (err) => {
+                    const msg = (err?.error?.message ?? err?.message ?? (typeof err === 'string' ? err : JSON.stringify(err))) || 'Unknown error';
+                    this.helpers.notifyError('Import failed', msg);
+                    console.error('Import failures', err);
+                    this.fetch();
                 }
-
-                this.fetch();
             });
     }
 

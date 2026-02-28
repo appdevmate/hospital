@@ -1,7 +1,7 @@
 import { Component, AfterViewInit, OnDestroy, TemplateRef, ViewChild, DestroyRef, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule, TitleCasePipe } from '@angular/common';
-import { of, from, forkJoin, Subject } from 'rxjs';
-import { catchError, finalize, map, mergeMap, toArray } from 'rxjs/operators';
+import { of, forkJoin, Subject } from 'rxjs';
+import { catchError, finalize, map } from 'rxjs/operators';
 import { TagModule } from 'primeng/tag';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ButtonModule } from 'primeng/button';
@@ -919,54 +919,20 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
 
     private bulkCreate(rows: any[]) {
         console.log('[Import] Starting bulk create for', rows.length, 'patients');
-        from(rows)
-            .pipe(
-                mergeMap(
-                    (dto, idx) => {
-                        console.log(`[Import] Row ${idx + 1} DTO:`, JSON.stringify(dto));
-                        return this.patients.createPatient(dto).pipe(
-                            map((res) => {
-                                console.log(`[Import] Row ${idx + 1} SUCCESS:`, res);
-                                return { ok: true as const, idx, dto };
-                            }),
-                            catchError((err) => {
-                                console.error(`[Import] Row ${idx + 1} FAILED:`, err?.error ?? err);
-                                return of({
-                                    ok: false as const,
-                                    idx,
-                                    dto,
-                                    err,
-                                    msg: (err?.error?.message ?? err?.message ?? (typeof err === 'string' ? err : JSON.stringify(err))) || 'Unknown error'
-                                });
-                            })
-                        );
-                    },
-                    5 // moderate concurrency
-                ),
-                toArray(),
-                finalize(() => this._loading.set(false))
-            )
-            .subscribe((results) => {
-                const failures = results.filter((r: any) => !r.ok) as Array<{ idx: number; dto: any; msg: string; err: any }>;
-                const successes = results.filter((r: any) => r.ok);
-
-                if (successes.length && !failures.length) {
-                    this.helpers.notifySuccess(`Import completed: ${successes.length}/${results.length}`);
-                } else if (!successes.length) {
-                    const first = failures[0];
-                    this.helpers.notifyError('Import failed', `0/${results.length} created. First error: ${first?.msg}`);
-                    // surface details for debugging
-                    console.error('Import failures', failures);
-                } else {
-                    const sample = failures
-                        .slice(0, 3)
-                        .map((f, i) => `${i + 1}) ${f.msg}`)
-                        .join(' | ');
-                    this.helpers.notifyError('Partial import', `${successes.length}/${results.length} created. ${failures.length} failed. ${sample}`);
-                    console.warn('Partial import details', failures);
+        this.patients
+            .createPatient({ patients: rows })
+            .pipe(finalize(() => this._loading.set(false)))
+            .subscribe({
+                next: () => {
+                    this.helpers.notifySuccess(`Import completed: ${rows.length}/${rows.length}`);
+                    this.fetch();
+                },
+                error: (err) => {
+                    const msg = (err?.error?.message ?? err?.message ?? (typeof err === 'string' ? err : JSON.stringify(err))) || 'Unknown error';
+                    this.helpers.notifyError('Import failed', msg);
+                    console.error('Import failures', err);
+                    this.fetch();
                 }
-
-                this.fetch();
             });
     }
 
