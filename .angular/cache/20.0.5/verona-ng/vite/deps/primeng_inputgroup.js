@@ -1,20 +1,15 @@
 import {
-  BaseComponent,
-  PARENT_INSTANCE
-} from "./chunk-YNJ5GKCH.js";
+  BaseComponent
+} from "./chunk-4YMQ5OOY.js";
 import {
   BaseStyle
-} from "./chunk-4ATYD752.js";
-import {
-  Bind,
-  BindModule
-} from "./chunk-MLQGRGGO.js";
+} from "./chunk-L2L2T6ID.js";
 import {
   SharedModule
-} from "./chunk-LMEEH3AJ.js";
-import "./chunk-GOP36Q47.js";
-import "./chunk-UCHM6OXG.js";
-import "./chunk-FHZAWWEY.js";
+} from "./chunk-ZKOTJBQ6.js";
+import {
+  CommonModule
+} from "./chunk-FHZAWWEY.js";
 import "./chunk-5KK3G4LL.js";
 import {
   Component,
@@ -22,9 +17,9 @@ import {
   Input,
   NgModule,
   setClassMetadata,
-  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
+  ɵɵattribute,
   ɵɵclassMap,
   ɵɵdefineComponent,
   ɵɵdefineNgModule,
@@ -33,7 +28,6 @@ import {
   ɵɵprojectionDef
 } from "./chunk-EIF6IUR4.js";
 import {
-  InjectionToken,
   inject,
   ɵɵdefineInjectable,
   ɵɵdefineInjector
@@ -41,6 +35,8 @@ import {
 import "./chunk-G6ECYYJH.js";
 import "./chunk-YVXMBCE5.js";
 import "./chunk-RTGP7ALM.js";
+import "./chunk-BMDSN43F.js";
+import "./chunk-RK2DVQNP.js";
 import "./chunk-4MWRP73S.js";
 
 // node_modules/@primeuix/styles/dist/inputgroup/index.mjs
@@ -48,7 +44,7 @@ var style = "\n    .p-inputgroup,\n    .p-inputgroup .p-iconfield,\n    .p-input
 
 // node_modules/primeng/fesm2022/primeng-inputgroup.mjs
 var _c0 = ["*"];
-var style2 = (
+var theme = (
   /*css*/
   `
     ${style}
@@ -80,10 +76,6 @@ var style2 = (
         border-start-end-radius: dt('inputgroup.addon.border.radius');
         border-end-end-radius: dt('inputgroup.addon.border.radius');
     }
-
-    .p-inputgroup > p-inputmask > .p-inputtext {
-        width: 100%;
-    }
 `
 );
 var classes = {
@@ -95,7 +87,7 @@ var classes = {
 };
 var InputGroupStyle = class _InputGroupStyle extends BaseStyle {
   name = "inputgroup";
-  style = style2;
+  theme = theme;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵInputGroupStyle_BaseFactory;
@@ -117,25 +109,14 @@ var InputGroupClasses;
 (function(InputGroupClasses2) {
   InputGroupClasses2["root"] = "p-inputgroup";
 })(InputGroupClasses || (InputGroupClasses = {}));
-var INPUTGROUP_INSTANCE = new InjectionToken("INPUTGROUP_INSTANCE");
 var InputGroup = class _InputGroup extends BaseComponent {
-  _componentStyle = inject(InputGroupStyle);
-  $pcInputGroup = inject(INPUTGROUP_INSTANCE, {
-    optional: true,
-    skipSelf: true
-  }) ?? void 0;
-  bindDirectiveInstance = inject(Bind, {
-    self: true
-  });
-  onAfterViewChecked() {
-    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
-  }
   /**
    * Class of the element.
    * @deprecated since v20.0.0, use `class` instead.
    * @group Props
    */
   styleClass;
+  _componentStyle = inject(InputGroupStyle);
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵInputGroup_BaseFactory;
     return function InputGroup_Factory(__ngFactoryType__) {
@@ -145,22 +126,17 @@ var InputGroup = class _InputGroup extends BaseComponent {
   static ɵcmp = ɵɵdefineComponent({
     type: _InputGroup,
     selectors: [["p-inputgroup"], ["p-inputGroup"], ["p-input-group"]],
-    hostVars: 2,
+    hostVars: 3,
     hostBindings: function InputGroup_HostBindings(rf, ctx) {
       if (rf & 2) {
+        ɵɵattribute("data-pc-name", "inputgroup");
         ɵɵclassMap(ctx.cn(ctx.cx("root"), ctx.styleClass));
       }
     },
     inputs: {
       styleClass: "styleClass"
     },
-    features: [ɵɵProvidersFeature([InputGroupStyle, {
-      provide: INPUTGROUP_INSTANCE,
-      useExisting: _InputGroup
-    }, {
-      provide: PARENT_INSTANCE,
-      useExisting: _InputGroup
-    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([InputGroupStyle]), ɵɵInheritDefinitionFeature],
     ngContentSelectors: _c0,
     decls: 1,
     vars: 0,
@@ -170,7 +146,7 @@ var InputGroup = class _InputGroup extends BaseComponent {
         ɵɵprojection(0);
       }
     },
-    dependencies: [BindModule],
+    dependencies: [CommonModule, SharedModule],
     encapsulation: 2
   });
 };
@@ -180,17 +156,11 @@ var InputGroup = class _InputGroup extends BaseComponent {
     args: [{
       selector: "p-inputgroup, p-inputGroup, p-input-group",
       standalone: true,
-      imports: [BindModule],
+      imports: [CommonModule, SharedModule],
       template: ` <ng-content></ng-content> `,
-      providers: [InputGroupStyle, {
-        provide: INPUTGROUP_INSTANCE,
-        useExisting: InputGroup
-      }, {
-        provide: PARENT_INSTANCE,
-        useExisting: InputGroup
-      }],
-      hostDirectives: [Bind],
+      providers: [InputGroupStyle],
       host: {
+        "[attr.data-pc-name]": '"inputgroup"',
         "[class]": "cn(cx('root'), styleClass)"
       }
     }]

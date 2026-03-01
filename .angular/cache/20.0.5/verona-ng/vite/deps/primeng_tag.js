@@ -1,19 +1,13 @@
 import {
-  BaseComponent,
-  PARENT_INSTANCE
-} from "./chunk-YNJ5GKCH.js";
+  BaseComponent
+} from "./chunk-4YMQ5OOY.js";
 import {
   BaseStyle
-} from "./chunk-4ATYD752.js";
-import {
-  Bind
-} from "./chunk-MLQGRGGO.js";
+} from "./chunk-L2L2T6ID.js";
 import {
   PrimeTemplate,
   SharedModule
-} from "./chunk-LMEEH3AJ.js";
-import "./chunk-GOP36Q47.js";
-import "./chunk-UCHM6OXG.js";
+} from "./chunk-ZKOTJBQ6.js";
 import {
   CommonModule,
   NgClass,
@@ -32,7 +26,6 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   setClassMetadata,
-  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -57,7 +50,6 @@ import {
   ɵɵtextInterpolate
 } from "./chunk-EIF6IUR4.js";
 import {
-  InjectionToken,
   inject,
   ɵɵdefineInjectable,
   ɵɵdefineInjector
@@ -65,6 +57,8 @@ import {
 import "./chunk-G6ECYYJH.js";
 import "./chunk-YVXMBCE5.js";
 import "./chunk-RTGP7ALM.js";
+import "./chunk-BMDSN43F.js";
+import "./chunk-RK2DVQNP.js";
 import "./chunk-4MWRP73S.js";
 
 // node_modules/@primeuix/styles/dist/tag/index.mjs
@@ -75,18 +69,18 @@ var _c0 = ["icon"];
 var _c1 = ["*"];
 function Tag_ng_container_1_span_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "span", 4);
+    ɵɵelement(0, "span", 3);
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r0.cx("icon"));
-    ɵɵproperty("ngClass", ctx_r0.icon)("pBind", ctx_r0.ptm("icon"));
+    ɵɵproperty("ngClass", ctx_r0.icon);
   }
 }
 function Tag_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, Tag_ng_container_1_span_1_Template, 1, 4, "span", 3);
+    ɵɵtemplate(1, Tag_ng_container_1_span_1_Template, 1, 3, "span", 2);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -104,14 +98,13 @@ function Tag_span_2_1_Template(rf, ctx) {
 }
 function Tag_span_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "span", 2);
-    ɵɵtemplate(1, Tag_span_2_1_Template, 1, 0, null, 5);
+    ɵɵelementStart(0, "span");
+    ɵɵtemplate(1, Tag_span_2_1_Template, 1, 0, null, 4);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext();
     ɵɵclassMap(ctx_r0.cx("icon"));
-    ɵɵproperty("pBind", ctx_r0.ptm("icon"));
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r0.iconTemplate || ctx_r0._iconTemplate);
   }
@@ -133,7 +126,7 @@ var classes = {
 };
 var TagStyle = class _TagStyle extends BaseStyle {
   name = "tag";
-  style = style;
+  theme = style;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵTagStyle_BaseFactory;
@@ -157,18 +150,7 @@ var TagClasses;
   TagClasses2["icon"] = "p-tag-icon";
   TagClasses2["label"] = "p-tag-label";
 })(TagClasses || (TagClasses = {}));
-var TAG_INSTANCE = new InjectionToken("TAG_INSTANCE");
 var Tag = class _Tag extends BaseComponent {
-  $pcTag = inject(TAG_INSTANCE, {
-    optional: true,
-    skipSelf: true
-  }) ?? void 0;
-  bindDirectiveInstance = inject(Bind, {
-    self: true
-  });
-  onAfterViewChecked() {
-    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
-  }
   /**
    * Style class of the component.
    * @deprecated since v20.0.0, use `class` instead.
@@ -199,7 +181,7 @@ var Tag = class _Tag extends BaseComponent {
   templates;
   _iconTemplate;
   _componentStyle = inject(TagStyle);
-  onAfterContentInit() {
+  ngAfterContentInit() {
     this.templates?.forEach((item) => {
       switch (item.getType()) {
         case "icon":
@@ -241,23 +223,17 @@ var Tag = class _Tag extends BaseComponent {
       icon: "icon",
       rounded: [2, "rounded", "rounded", booleanAttribute]
     },
-    features: [ɵɵProvidersFeature([TagStyle, {
-      provide: TAG_INSTANCE,
-      useExisting: _Tag
-    }, {
-      provide: PARENT_INSTANCE,
-      useExisting: _Tag
-    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([TagStyle]), ɵɵInheritDefinitionFeature],
     ngContentSelectors: _c1,
     decls: 5,
-    vars: 6,
-    consts: [[4, "ngIf"], [3, "class", "pBind", 4, "ngIf"], [3, "pBind"], [3, "class", "ngClass", "pBind", 4, "ngIf"], [3, "ngClass", "pBind"], [4, "ngTemplateOutlet"]],
+    vars: 5,
+    consts: [[4, "ngIf"], [3, "class", 4, "ngIf"], [3, "class", "ngClass", 4, "ngIf"], [3, "ngClass"], [4, "ngTemplateOutlet"]],
     template: function Tag_Template(rf, ctx) {
       if (rf & 1) {
         ɵɵprojectionDef();
         ɵɵprojection(0);
-        ɵɵtemplate(1, Tag_ng_container_1_Template, 2, 1, "ng-container", 0)(2, Tag_span_2_Template, 2, 4, "span", 1);
-        ɵɵelementStart(3, "span", 2);
+        ɵɵtemplate(1, Tag_ng_container_1_Template, 2, 1, "ng-container", 0)(2, Tag_span_2_Template, 2, 3, "span", 1);
+        ɵɵelementStart(3, "span");
         ɵɵtext(4);
         ɵɵelementEnd();
       }
@@ -268,12 +244,11 @@ var Tag = class _Tag extends BaseComponent {
         ɵɵproperty("ngIf", ctx.iconTemplate || ctx._iconTemplate);
         ɵɵadvance();
         ɵɵclassMap(ctx.cx("label"));
-        ɵɵproperty("pBind", ctx.ptm("label"));
         ɵɵadvance();
         ɵɵtextInterpolate(ctx.value);
       }
     },
-    dependencies: [CommonModule, NgClass, NgIf, NgTemplateOutlet, SharedModule, Bind],
+    dependencies: [CommonModule, NgClass, NgIf, NgTemplateOutlet, SharedModule],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -284,30 +259,23 @@ var Tag = class _Tag extends BaseComponent {
     args: [{
       selector: "p-tag",
       standalone: true,
-      imports: [CommonModule, SharedModule, Bind],
+      imports: [CommonModule, SharedModule],
       template: `
         <ng-content></ng-content>
         <ng-container *ngIf="!iconTemplate && !_iconTemplate">
-            <span [class]="cx('icon')" [ngClass]="icon" [pBind]="ptm('icon')" *ngIf="icon"></span>
+            <span [class]="cx('icon')" [ngClass]="icon" *ngIf="icon"></span>
         </ng-container>
-        <span [class]="cx('icon')" [pBind]="ptm('icon')" *ngIf="iconTemplate || _iconTemplate">
+        <span [class]="cx('icon')" *ngIf="iconTemplate || _iconTemplate">
             <ng-template *ngTemplateOutlet="iconTemplate || _iconTemplate"></ng-template>
         </span>
-        <span [class]="cx('label')" [pBind]="ptm('label')">{{ value }}</span>
+        <span [class]="cx('label')">{{ value }}</span>
     `,
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
-      providers: [TagStyle, {
-        provide: TAG_INSTANCE,
-        useExisting: Tag
-      }, {
-        provide: PARENT_INSTANCE,
-        useExisting: Tag
-      }],
+      providers: [TagStyle],
       host: {
         "[class]": "cn(cx('root'), styleClass)"
-      },
-      hostDirectives: [Bind]
+      }
     }]
   }], null, {
     styleClass: [{

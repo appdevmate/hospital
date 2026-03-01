@@ -1,62 +1,52 @@
 import {
   Listbox
-} from "./chunk-2R6MWWUB.js";
-import "./chunk-K3NEN5MN.js";
-import "./chunk-DN5THLGW.js";
-import "./chunk-SFMDCIOQ.js";
-import "./chunk-MJV6MLJJ.js";
-import "./chunk-GI2QMI3P.js";
-import "./chunk-343RM6UZ.js";
-import "./chunk-2R7VQYSP.js";
+} from "./chunk-TDVKAHUU.js";
+import "./chunk-ABGXFTG6.js";
+import "./chunk-TTXVI75E.js";
+import "./chunk-TBZ7QADV.js";
+import "./chunk-MUYJFYGV.js";
+import "./chunk-CXGSICYC.js";
+import "./chunk-67V7CIUT.js";
+import "./chunk-5OCKW6BF.js";
 import {
   ButtonDirective,
   ButtonIcon,
   ButtonModule
-} from "./chunk-N24NSOLO.js";
-import "./chunk-B6BBOHQM.js";
-import "./chunk-ICEVV523.js";
-import "./chunk-YNLAOK3J.js";
-import "./chunk-S73J4WE3.js";
+} from "./chunk-2F4Z75VZ.js";
+import "./chunk-EGVFVLQK.js";
+import "./chunk-AXS7T3GQ.js";
+import "./chunk-6PBBDZZF.js";
+import "./chunk-KOXUNDHI.js";
 import {
   Ripple
-} from "./chunk-OC77X5LN.js";
+} from "./chunk-VZLF74PJ.js";
+import "./chunk-QVUTNZUY.js";
 import {
   AngleDoubleDownIcon,
   AngleDoubleUpIcon,
   AngleDownIcon,
   AngleUpIcon
-} from "./chunk-RHA7RL5K.js";
-import "./chunk-YXZQJBKH.js";
+} from "./chunk-BIL3W6KN.js";
 import {
-  BaseComponent,
-  PARENT_INSTANCE
-} from "./chunk-YNJ5GKCH.js";
+  DragDropModule,
+  moveItemInArray
+} from "./chunk-GL6FY4JX.js";
+import {
+  BaseComponent
+} from "./chunk-4YMQ5OOY.js";
 import {
   BaseStyle
-} from "./chunk-4ATYD752.js";
-import {
-  Bind
-} from "./chunk-MLQGRGGO.js";
+} from "./chunk-L2L2T6ID.js";
 import {
   FilterService,
   PrimeTemplate,
   SharedModule
-} from "./chunk-LMEEH3AJ.js";
+} from "./chunk-ZKOTJBQ6.js";
 import {
   FormsModule,
   NgControlStatus,
   NgModel
 } from "./chunk-RZEKJVYA.js";
-import {
-  DragDropModule,
-  moveItemInArray
-} from "./chunk-GL6FY4JX.js";
-import "./chunk-GOP36Q47.js";
-import {
-  _t,
-  h,
-  s3 as s
-} from "./chunk-UCHM6OXG.js";
 import {
   CommonModule,
   NgIf,
@@ -79,7 +69,6 @@ import {
   booleanAttribute,
   numberAttribute,
   setClassMetadata,
-  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -99,7 +88,6 @@ import {
   ɵɵloadQuery,
   ɵɵnextContext,
   ɵɵproperty,
-  ɵɵpureFunction1,
   ɵɵpureFunction3,
   ɵɵqueryRefresh,
   ɵɵtemplate,
@@ -110,7 +98,6 @@ import {
   ɵɵviewQuery
 } from "./chunk-EIF6IUR4.js";
 import {
-  InjectionToken,
   inject,
   ɵɵdefineInjectable,
   ɵɵdefineInjector,
@@ -121,6 +108,12 @@ import {
 import "./chunk-G6ECYYJH.js";
 import "./chunk-YVXMBCE5.js";
 import "./chunk-RTGP7ALM.js";
+import "./chunk-BMDSN43F.js";
+import {
+  C,
+  Kt,
+  s3 as s
+} from "./chunk-RK2DVQNP.js";
 import {
   __spreadValues
 } from "./chunk-4MWRP73S.js";
@@ -145,17 +138,13 @@ var _c11 = (a0, a1, a2) => ({
   selected: a1,
   index: a2
 });
-var _c12 = (a0) => ({
-  options: a0
-});
 function OrderList__svg_svg_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 16);
+    ɵɵelement(0, "svg", 13);
   }
   if (rf & 2) {
-    const ctx_r1 = ɵɵnextContext();
-    ɵɵproperty("pt", ctx_r1.ptm("pcMoveUpButton")["icon"]);
+    ɵɵattribute("data-pc-section", "moveupicon");
   }
 }
 function OrderList_3_ng_template_0_Template(rf, ctx) {
@@ -168,11 +157,10 @@ function OrderList_3_Template(rf, ctx) {
 function OrderList__svg_svg_5_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 17);
+    ɵɵelement(0, "svg", 14);
   }
   if (rf & 2) {
-    const ctx_r1 = ɵɵnextContext();
-    ɵɵproperty("pt", ctx_r1.ptm("pcMoveTopButton")["icon"]);
+    ɵɵattribute("data-pc-section", "movetopicon");
   }
 }
 function OrderList_6_ng_template_0_Template(rf, ctx) {
@@ -185,11 +173,10 @@ function OrderList_6_Template(rf, ctx) {
 function OrderList__svg_svg_8_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 18);
+    ɵɵelement(0, "svg", 15);
   }
   if (rf & 2) {
-    const ctx_r1 = ɵɵnextContext();
-    ɵɵproperty("pt", ctx_r1.ptm("pcMoveDownButton")["icon"]);
+    ɵɵattribute("data-pc-section", "movedownicon");
   }
 }
 function OrderList_9_ng_template_0_Template(rf, ctx) {
@@ -202,11 +189,10 @@ function OrderList_9_Template(rf, ctx) {
 function OrderList__svg_svg_11_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 19);
+    ɵɵelement(0, "svg", 16);
   }
   if (rf & 2) {
-    const ctx_r1 = ɵɵnextContext();
-    ɵɵproperty("pt", ctx_r1.ptm("pcMoveBottomButton")["icon"]);
+    ɵɵattribute("data-pc-section", "movebottomicon");
   }
 }
 function OrderList_12_ng_template_0_Template(rf, ctx) {
@@ -225,7 +211,7 @@ function OrderList_ng_container_15_ng_template_1_0_Template(rf, ctx) {
 }
 function OrderList_ng_container_15_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, OrderList_ng_container_15_ng_template_1_0_Template, 1, 0, null, 10);
+    ɵɵtemplate(0, OrderList_ng_container_15_ng_template_1_0_Template, 1, 0, null, 7);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
@@ -248,7 +234,7 @@ function OrderList_ng_container_16_ng_template_1_0_Template(rf, ctx) {
 }
 function OrderList_ng_container_16_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, OrderList_ng_container_16_ng_template_1_0_Template, 1, 0, null, 20);
+    ɵɵtemplate(0, OrderList_ng_container_16_ng_template_1_0_Template, 1, 0, null, 17);
   }
   if (rf & 2) {
     const option_r3 = ctx.$implicit;
@@ -274,7 +260,7 @@ function OrderList_ng_container_17_ng_template_1_0_Template(rf, ctx) {
 }
 function OrderList_ng_container_17_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, OrderList_ng_container_17_ng_template_1_0_Template, 1, 0, null, 10);
+    ɵɵtemplate(0, OrderList_ng_container_17_ng_template_1_0_Template, 1, 0, null, 7);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
@@ -297,7 +283,7 @@ function OrderList_ng_container_18_ng_template_1_0_Template(rf, ctx) {
 }
 function OrderList_ng_container_18_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, OrderList_ng_container_18_ng_template_1_0_Template, 1, 0, null, 10);
+    ɵɵtemplate(0, OrderList_ng_container_18_ng_template_1_0_Template, 1, 0, null, 7);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
@@ -311,60 +297,13 @@ function OrderList_ng_container_18_Template(rf, ctx) {
     ɵɵelementContainerEnd();
   }
 }
-function OrderList_ng_container_19_ng_template_1_0_ng_template_0_Template(rf, ctx) {
-}
-function OrderList_ng_container_19_ng_template_1_0_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵtemplate(0, OrderList_ng_container_19_ng_template_1_0_ng_template_0_Template, 0, 0, "ng-template");
-  }
-}
-function OrderList_ng_container_19_ng_template_1_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵtemplate(0, OrderList_ng_container_19_ng_template_1_0_Template, 1, 0, null, 10);
-  }
-  if (rf & 2) {
-    const ctx_r1 = ɵɵnextContext(2);
-    ɵɵproperty("ngTemplateOutlet", ctx_r1.filterIconTemplate || ctx_r1._filterIconTemplate);
-  }
-}
-function OrderList_ng_container_19_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, OrderList_ng_container_19_ng_template_1_Template, 1, 1, "ng-template", null, 5, ɵɵtemplateRefExtractor);
-    ɵɵelementContainerEnd();
-  }
-}
-function OrderList_ng_container_20_ng_template_1_0_ng_template_0_Template(rf, ctx) {
-}
-function OrderList_ng_container_20_ng_template_1_0_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵtemplate(0, OrderList_ng_container_20_ng_template_1_0_ng_template_0_Template, 0, 0, "ng-template");
-  }
-}
-function OrderList_ng_container_20_ng_template_1_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵtemplate(0, OrderList_ng_container_20_ng_template_1_0_Template, 1, 0, null, 20);
-  }
-  if (rf & 2) {
-    const options_r6 = ctx.options;
-    const ctx_r1 = ɵɵnextContext(2);
-    ɵɵproperty("ngTemplateOutlet", ctx_r1.filterTemplate || ctx_r1._filterTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(2, _c12, options_r6));
-  }
-}
-function OrderList_ng_container_20_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, OrderList_ng_container_20_ng_template_1_Template, 1, 4, "ng-template", null, 6, ɵɵtemplateRefExtractor);
-    ɵɵelementContainerEnd();
-  }
-}
 var classes = {
   root: () => ["p-orderlist p-component"],
   controls: "p-orderlist-controls"
 };
 var OrderListStyle = class _OrderListStyle extends BaseStyle {
   name = "orderlist";
-  style = style;
+  theme = style;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵOrderListStyle_BaseFactory;
@@ -387,18 +326,7 @@ var OrderListClasses;
   OrderListClasses2["root"] = "p-orderlist";
   OrderListClasses2["controls"] = "p-orderlist-controls";
 })(OrderListClasses || (OrderListClasses = {}));
-var ORDERLIST_INSTANCE = new InjectionToken("ORDERLIST_INSTANCE");
 var OrderList = class _OrderList extends BaseComponent {
-  bindDirectiveInstance = inject(Bind, {
-    self: true
-  });
-  $pcOrderList = inject(ORDERLIST_INSTANCE, {
-    optional: true,
-    skipSelf: true
-  }) ?? void 0;
-  onAfterViewChecked() {
-    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
-  }
   /**
    * Text for the caption.
    * @group Props
@@ -506,11 +434,6 @@ var OrderList = class _OrderList extends BaseComponent {
    */
   autoOptionFocus = true;
   /**
-   * Name of the field that uniquely identifies the record in the data.
-   * @group Props
-   */
-  dataKey;
-  /**
    * A list of values that are currently selected.
    * @group Props
    */
@@ -529,8 +452,6 @@ var OrderList = class _OrderList extends BaseComponent {
     this._value = val;
     if (this.filterValue) {
       this.filter();
-    } else if (this.dragdrop) {
-      this.visibleOptions = [...val || []];
     }
   }
   get value() {
@@ -689,7 +610,8 @@ var OrderList = class _OrderList extends BaseComponent {
         return this.buttonProps;
     }
   }
-  onInit() {
+  ngOnInit() {
+    super.ngOnInit();
     if (this.responsive) {
       this.createStyle();
     }
@@ -698,9 +620,6 @@ var OrderList = class _OrderList extends BaseComponent {
         filter: (value) => this.onFilterKeyup(value),
         reset: () => this.resetFilter()
       };
-    }
-    if (this.dragdrop && this.value && !this.visibleOptions) {
-      this.visibleOptions = [...this.value];
     }
   }
   templates;
@@ -714,7 +633,7 @@ var OrderList = class _OrderList extends BaseComponent {
   _moveDownIconTemplate;
   _moveBottomIconTemplate;
   _filterIconTemplate;
-  onAfterContentInit() {
+  ngAfterContentInit() {
     this.templates.forEach((item) => {
       switch (item.getType()) {
         case "item":
@@ -778,7 +697,7 @@ var OrderList = class _OrderList extends BaseComponent {
    * @group Method
    */
   resetFilter() {
-    this.filterValue = "";
+    this.filterValue = null;
     this.filterViewChild && (this.filterViewChild.nativeElement.value = "");
   }
   isItemVisible(item) {
@@ -793,30 +712,26 @@ var OrderList = class _OrderList extends BaseComponent {
     }
   }
   isSelected(item) {
-    return h(item, this.d_selection) !== -1;
+    return C(item, this.d_selection) !== -1;
   }
   isEmpty() {
     return this.filterValue ? !this.visibleOptions || this.visibleOptions.length === 0 : !this.value || this.value.length === 0;
   }
   moveUp() {
-    if (this.selection && this.value instanceof Array) {
-      const sortedSelection = this.sortByIndexInList(this.selection, this.value);
-      for (let selectedItem of sortedSelection) {
-        let selectedItemIndex = h(selectedItem, this.value);
-        if (selectedItemIndex > 0) {
+    if (this.selection) {
+      for (let i = 0; i < this.selection.length; i++) {
+        let selectedItem = this.selection[i];
+        let selectedItemIndex = C(selectedItem, this.value);
+        if (selectedItemIndex != 0 && this.value instanceof Array) {
           let movedItem = this.value[selectedItemIndex];
           let temp = this.value[selectedItemIndex - 1];
           this.value[selectedItemIndex - 1] = movedItem;
           this.value[selectedItemIndex] = temp;
+        } else {
+          break;
         }
       }
-      if (this.dragdrop) {
-        if (this.filterValue) {
-          this.filter();
-        } else if (this.visibleOptions) {
-          this.visibleOptions = [...this.value];
-        }
-      }
+      if (this.dragdrop && this.filterValue) this.filter();
       this.movedUp = true;
       this.onReorder.emit(this.selection);
     }
@@ -826,7 +741,7 @@ var OrderList = class _OrderList extends BaseComponent {
     if (this.selection) {
       for (let i = this.selection.length - 1; i >= 0; i--) {
         let selectedItem = this.selection[i];
-        let selectedItemIndex = h(selectedItem, this.value || []);
+        let selectedItemIndex = C(selectedItem, this.value);
         if (selectedItemIndex != 0 && this.value instanceof Array) {
           let movedItem = this.value.splice(selectedItemIndex, 1)[0];
           this.value.unshift(movedItem);
@@ -834,13 +749,7 @@ var OrderList = class _OrderList extends BaseComponent {
           break;
         }
       }
-      if (this.dragdrop) {
-        if (this.filterValue) {
-          this.filter();
-        } else if (this.visibleOptions) {
-          this.visibleOptions = [...this.value || []];
-        }
-      }
+      if (this.dragdrop && this.filterValue) this.filter();
       this.onReorder.emit(this.selection);
       setTimeout(() => {
         this.listViewChild.scrollInView(0);
@@ -849,24 +758,20 @@ var OrderList = class _OrderList extends BaseComponent {
     this.listViewChild?.cd?.markForCheck();
   }
   moveDown() {
-    if (this.selection && this.value instanceof Array) {
-      const sortedSelection = this.sortByIndexInList(this.selection, this.value).reverse();
-      for (let selectedItem of sortedSelection) {
-        let selectedItemIndex = h(selectedItem, this.value);
-        if (selectedItemIndex < this.value.length - 1) {
+    if (this.selection) {
+      for (let i = this.selection.length - 1; i >= 0; i--) {
+        let selectedItem = this.selection[i];
+        let selectedItemIndex = C(selectedItem, this.value);
+        if (this.value instanceof Array && selectedItemIndex != this.value.length - 1) {
           let movedItem = this.value[selectedItemIndex];
           let temp = this.value[selectedItemIndex + 1];
           this.value[selectedItemIndex + 1] = movedItem;
           this.value[selectedItemIndex] = temp;
+        } else {
+          break;
         }
       }
-      if (this.dragdrop) {
-        if (this.filterValue) {
-          this.filter();
-        } else if (this.visibleOptions) {
-          this.visibleOptions = [...this.value];
-        }
-      }
+      if (this.dragdrop && this.filterValue) this.filter();
       this.movedDown = true;
       this.onReorder.emit(this.selection);
     }
@@ -876,7 +781,7 @@ var OrderList = class _OrderList extends BaseComponent {
     if (this.selection) {
       for (let i = 0; i < this.selection.length; i++) {
         let selectedItem = this.selection[i];
-        let selectedItemIndex = h(selectedItem, this.value || []);
+        let selectedItemIndex = C(selectedItem, this.value);
         if (this.value instanceof Array && selectedItemIndex != this.value.length - 1) {
           let movedItem = this.value.splice(selectedItemIndex, 1)[0];
           this.value.push(movedItem);
@@ -884,83 +789,26 @@ var OrderList = class _OrderList extends BaseComponent {
           break;
         }
       }
-      if (this.dragdrop) {
-        if (this.filterValue) {
-          this.filter();
-        } else if (this.visibleOptions) {
-          this.visibleOptions = [...this.value || []];
-        }
-      }
+      if (this.dragdrop && this.filterValue) this.filter();
       this.onReorder.emit(this.selection);
-      this.listViewChild?.scrollInView(this.value?.length ? this.value.length - 1 : 0);
+      this.listViewChild.scrollInView(this.value?.length - 1);
     }
     this.listViewChild?.cd?.markForCheck();
   }
   onDrop(event) {
     let previousIndex = event.previousIndex;
     let currentIndex = event.currentIndex;
-    const originalValue = [...this.value || []];
-    const originalVisibleOptions = this.visibleOptions ? [...this.visibleOptions] : null;
     if (previousIndex !== currentIndex) {
-      let itemsToMove = [];
-      if (this.selection && this.selection.length > 1 && h(event.item.data, this.selection) !== -1) {
-        itemsToMove = [...this.selection];
-        if (this.value) {
-          this.value.length = 0;
-          this.value.push(...originalValue);
-        }
-        if (originalVisibleOptions && this.visibleOptions) {
-          this.visibleOptions.length = 0;
-          this.visibleOptions.push(...originalVisibleOptions);
-        }
-        itemsToMove = this.sortByIndexInList(itemsToMove, this.value || []);
-        let itemsBefore = 0;
-        for (const item of itemsToMove) {
-          const itemIndex = h(item, this.value || []);
-          if (itemIndex !== -1 && itemIndex < currentIndex) {
-            itemsBefore++;
-          }
-        }
-        for (let i = itemsToMove.length - 1; i >= 0; i--) {
-          const itemIndex = h(itemsToMove[i], this.value || []);
-          if (itemIndex !== -1) {
-            this.value?.splice(itemIndex, 1);
-          }
-        }
-        const targetIndex = Math.max(0, currentIndex - itemsBefore);
-        for (let i = 0; i < itemsToMove.length; i++) {
-          this.value?.splice(targetIndex + i, 0, itemsToMove[i]);
-        }
-        if (this.dragdrop) {
-          if (this.filterValue) {
-            this.filter();
-          } else if (this.visibleOptions) {
-            this.visibleOptions = [...this.value || []];
-          }
-        }
-        this.cd?.markForCheck();
-        this.onReorder.emit(itemsToMove);
-      } else {
-        itemsToMove = [event.item.data];
+      if (this.visibleOptions) {
         if (this.filterValue) {
-          previousIndex = h(event.item.data, this.value || []);
-          currentIndex = h(this.visibleOptions?.[currentIndex], this.value || []);
+          previousIndex = C(event.item.data, this.value);
+          currentIndex = C(this.visibleOptions[currentIndex], this.value);
         }
-        moveItemInArray(this.value, previousIndex, currentIndex);
-        if (this.dragdrop && this.visibleOptions && !this.filterValue) {
-          this.visibleOptions = [...this.value || []];
-        }
-        this.onReorder.emit([event.item.data]);
+        moveItemInArray(this.visibleOptions, event.previousIndex, event.currentIndex);
       }
+      moveItemInArray(this.value, previousIndex, currentIndex);
+      this.onReorder.emit([event.item.data]);
     }
-  }
-  // Helper method to sort items by their index in a list
-  sortByIndexInList(items, list) {
-    return items.sort((a, b) => {
-      const indexA = h(a, list);
-      const indexB = h(b, list);
-      return indexA - indexB;
-    });
   }
   onListFocus(event) {
     this.onFocus.emit(event);
@@ -982,31 +830,30 @@ var OrderList = class _OrderList extends BaseComponent {
         this.renderer.setAttribute(this.el.nativeElement.children[0], this.id, "");
         this.styleElement = this.renderer.createElement("style");
         this.renderer.setAttribute(this.styleElement, "type", "text/css");
-        _t(this.styleElement, "nonce", this.config?.csp()?.nonce);
         this.renderer.appendChild(this.document.head, this.styleElement);
         let innerHTML = `
                     @media screen and (max-width: ${this.breakpoint}) {
-                        .p-orderlist[${this.$attrSelector}] {
+                        .p-orderlist[${this.attrSelector}] {
                             flex-direction: column;
                         }
 
-                        .p-orderlist[${this.$attrSelector}] .p-orderlist-controls {
+                        .p-orderlist[${this.attrSelector}] .p-orderlist-controls {
                             padding: var(--content-padding);
                             flex-direction: row;
                         }
 
-                        .p-orderlist[${this.$attrSelector}] .p-orderlist-controls .p-button {
+                        .p-orderlist[${this.attrSelector}] .p-orderlist-controls .p-button {
                             margin-right: var(--inline-spacing);
                             margin-bottom: 0;
                         }
 
-                        .p-orderlist[${this.$attrSelector}] .p-orderlist-controls .p-button:last-child {
+                        .p-orderlist[${this.attrSelector}] .p-orderlist-controls .p-button:last-child {
                             margin-right: 0;
                         }
                     }
                 `;
         this.renderer.setProperty(this.styleElement, "innerHTML", innerHTML);
-        _t(this.styleElement, "nonce", this.config?.csp()?.nonce);
+        Kt(this.styleElement, "nonce", this.config?.csp()?.nonce);
       }
     }
   }
@@ -1019,8 +866,9 @@ var OrderList = class _OrderList extends BaseComponent {
       }
     }
   }
-  onDestroy() {
+  ngOnDestroy() {
     this.destroyStyle();
+    super.ngOnDestroy();
   }
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵOrderList_BaseFactory;
@@ -1046,18 +894,18 @@ var OrderList = class _OrderList extends BaseComponent {
         ɵɵcontentQuery(dirIndex, PrimeTemplate, 4);
       }
       if (rf & 2) {
-        let _t2;
-        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.itemTemplate = _t2.first);
-        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.emptyMessageTemplate = _t2.first);
-        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.emptyFilterMessageTemplate = _t2.first);
-        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.filterTemplate = _t2.first);
-        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.headerTemplate = _t2.first);
-        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.moveUpIconTemplate = _t2.first);
-        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.moveTopIconTemplate = _t2.first);
-        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.moveDownIconTemplate = _t2.first);
-        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.moveBottomIconTemplate = _t2.first);
-        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.filterIconTemplate = _t2.first);
-        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.templates = _t2);
+        let _t;
+        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.itemTemplate = _t.first);
+        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.emptyMessageTemplate = _t.first);
+        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.emptyFilterMessageTemplate = _t.first);
+        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.filterTemplate = _t.first);
+        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.headerTemplate = _t.first);
+        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.moveUpIconTemplate = _t.first);
+        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.moveTopIconTemplate = _t.first);
+        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.moveDownIconTemplate = _t.first);
+        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.moveBottomIconTemplate = _t.first);
+        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.filterIconTemplate = _t.first);
+        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.templates = _t);
       }
     },
     viewQuery: function OrderList_Query(rf, ctx) {
@@ -1066,14 +914,15 @@ var OrderList = class _OrderList extends BaseComponent {
         ɵɵviewQuery(_c3, 5);
       }
       if (rf & 2) {
-        let _t2;
-        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.listViewChild = _t2.first);
-        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.filterViewChild = _t2.first);
+        let _t;
+        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.listViewChild = _t.first);
+        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.filterViewChild = _t.first);
       }
     },
-    hostVars: 2,
+    hostVars: 3,
     hostBindings: function OrderList_HostBindings(rf, ctx) {
       if (rf & 2) {
+        ɵɵattribute("data-pc-section", "root");
         ɵɵclassMap(ctx.cn(ctx.cx("root"), ctx.styleClass));
       }
     },
@@ -1099,7 +948,6 @@ var OrderList = class _OrderList extends BaseComponent {
       trackBy: "trackBy",
       scrollHeight: "scrollHeight",
       autoOptionFocus: [2, "autoOptionFocus", "autoOptionFocus", booleanAttribute],
-      dataKey: "dataKey",
       selection: "selection",
       value: "value",
       buttonProps: "buttonProps",
@@ -1116,48 +964,42 @@ var OrderList = class _OrderList extends BaseComponent {
       onFocus: "onFocus",
       onBlur: "onBlur"
     },
-    features: [ɵɵProvidersFeature([OrderListStyle, {
-      provide: ORDERLIST_INSTANCE,
-      useExisting: _OrderList
-    }, {
-      provide: PARENT_INSTANCE,
-      useExisting: _OrderList
-    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
-    decls: 21,
-    vars: 52,
-    consts: [["listelement", ""], ["header", ""], ["item", ""], ["empty", ""], ["emptyfilter", ""], ["filtericon", ""], ["filter", ""], [3, "pBind"], ["type", "button", "pButton", "", "pRipple", "", "hostName", "orderlist", 3, "click", "pt", "disabled", "buttonProps"], ["data-p-icon", "angle-up", "pButtonIcon", "", 3, "pt", 4, "ngIf"], [4, "ngTemplateOutlet"], ["data-p-icon", "angle-double-up", "pButtonIcon", "", 3, "pt", 4, "ngIf"], ["data-p-icon", "angle-down", "pButtonIcon", "", 3, "pt", 4, "ngIf"], ["data-p-icon", "angle-double-down", "pButtonIcon", "", 3, "pt", 4, "ngIf"], ["hostName", "orderlist", 3, "ngModelChange", "onFocus", "onBlur", "onChange", "onDrop", "pt", "multiple", "options", "ngModel", "optionLabel", "id", "listStyle", "striped", "tabindex", "ariaLabel", "disabled", "metaKeySelection", "scrollHeight", "autoOptionFocus", "filter", "filterBy", "filterLocale", "filterPlaceHolder", "dragdrop"], [4, "ngIf"], ["data-p-icon", "angle-up", "pButtonIcon", "", 3, "pt"], ["data-p-icon", "angle-double-up", "pButtonIcon", "", 3, "pt"], ["data-p-icon", "angle-down", "pButtonIcon", "", 3, "pt"], ["data-p-icon", "angle-double-down", "pButtonIcon", "", 3, "pt"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"]],
+    features: [ɵɵProvidersFeature([OrderListStyle]), ɵɵInheritDefinitionFeature],
+    decls: 19,
+    vars: 48,
+    consts: [["listelement", ""], ["header", ""], ["item", ""], ["empty", ""], ["emptyfilter", ""], ["type", "button", "pButton", "", "pRipple", "", 3, "click", "disabled", "buttonProps"], ["data-p-icon", "angle-up", "pButtonIcon", "", 4, "ngIf"], [4, "ngTemplateOutlet"], ["data-p-icon", "angle-double-up", "pButtonIcon", "", 4, "ngIf"], ["data-p-icon", "angle-down", "pButtonIcon", "", 4, "ngIf"], ["data-p-icon", "angle-double-down", "pButtonIcon", "", 4, "ngIf"], ["optionLabel", "name", 3, "ngModelChange", "onFocus", "onBlur", "onChange", "onDrop", "multiple", "options", "ngModel", "id", "listStyle", "striped", "tabindex", "ariaLabel", "disabled", "metaKeySelection", "scrollHeight", "autoOptionFocus", "filter", "filterBy", "filterLocale", "filterPlaceHolder", "dragdrop"], [4, "ngIf"], ["data-p-icon", "angle-up", "pButtonIcon", ""], ["data-p-icon", "angle-double-up", "pButtonIcon", ""], ["data-p-icon", "angle-down", "pButtonIcon", ""], ["data-p-icon", "angle-double-down", "pButtonIcon", ""], [4, "ngTemplateOutlet", "ngTemplateOutletContext"]],
     template: function OrderList_Template(rf, ctx) {
       if (rf & 1) {
         const _r1 = ɵɵgetCurrentView();
-        ɵɵelementStart(0, "div", 7)(1, "button", 8);
+        ɵɵelementStart(0, "div")(1, "button", 5);
         ɵɵlistener("click", function OrderList_Template_button_click_1_listener() {
           ɵɵrestoreView(_r1);
           return ɵɵresetView(ctx.moveUp());
         });
-        ɵɵtemplate(2, OrderList__svg_svg_2_Template, 1, 1, "svg", 9)(3, OrderList_3_Template, 1, 0, null, 10);
+        ɵɵtemplate(2, OrderList__svg_svg_2_Template, 1, 1, "svg", 6)(3, OrderList_3_Template, 1, 0, null, 7);
         ɵɵelementEnd();
-        ɵɵelementStart(4, "button", 8);
+        ɵɵelementStart(4, "button", 5);
         ɵɵlistener("click", function OrderList_Template_button_click_4_listener() {
           ɵɵrestoreView(_r1);
           return ɵɵresetView(ctx.moveTop());
         });
-        ɵɵtemplate(5, OrderList__svg_svg_5_Template, 1, 1, "svg", 11)(6, OrderList_6_Template, 1, 0, null, 10);
+        ɵɵtemplate(5, OrderList__svg_svg_5_Template, 1, 1, "svg", 8)(6, OrderList_6_Template, 1, 0, null, 7);
         ɵɵelementEnd();
-        ɵɵelementStart(7, "button", 8);
+        ɵɵelementStart(7, "button", 5);
         ɵɵlistener("click", function OrderList_Template_button_click_7_listener() {
           ɵɵrestoreView(_r1);
           return ɵɵresetView(ctx.moveDown());
         });
-        ɵɵtemplate(8, OrderList__svg_svg_8_Template, 1, 1, "svg", 12)(9, OrderList_9_Template, 1, 0, null, 10);
+        ɵɵtemplate(8, OrderList__svg_svg_8_Template, 1, 1, "svg", 9)(9, OrderList_9_Template, 1, 0, null, 7);
         ɵɵelementEnd();
-        ɵɵelementStart(10, "button", 8);
+        ɵɵelementStart(10, "button", 5);
         ɵɵlistener("click", function OrderList_Template_button_click_10_listener() {
           ɵɵrestoreView(_r1);
           return ɵɵresetView(ctx.moveBottom());
         });
-        ɵɵtemplate(11, OrderList__svg_svg_11_Template, 1, 1, "svg", 13)(12, OrderList_12_Template, 1, 0, null, 10);
+        ɵɵtemplate(11, OrderList__svg_svg_11_Template, 1, 1, "svg", 10)(12, OrderList_12_Template, 1, 0, null, 7);
         ɵɵelementEnd()();
-        ɵɵelementStart(13, "p-listbox", 14, 0);
+        ɵɵelementStart(13, "p-listbox", 11, 0);
         ɵɵtwoWayListener("ngModelChange", function OrderList_Template_p_listbox_ngModelChange_13_listener($event) {
           ɵɵrestoreView(_r1);
           ɵɵtwoWayBindingSet(ctx.d_selection, $event) || (ctx.d_selection = $event);
@@ -1176,44 +1018,44 @@ var OrderList = class _OrderList extends BaseComponent {
           ɵɵrestoreView(_r1);
           return ɵɵresetView(ctx.onDrop($event));
         });
-        ɵɵtemplate(15, OrderList_ng_container_15_Template, 3, 0, "ng-container", 15)(16, OrderList_ng_container_16_Template, 3, 0, "ng-container", 15)(17, OrderList_ng_container_17_Template, 3, 0, "ng-container", 15)(18, OrderList_ng_container_18_Template, 3, 0, "ng-container", 15)(19, OrderList_ng_container_19_Template, 3, 0, "ng-container", 15)(20, OrderList_ng_container_20_Template, 3, 0, "ng-container", 15);
+        ɵɵtemplate(15, OrderList_ng_container_15_Template, 3, 0, "ng-container", 12)(16, OrderList_ng_container_16_Template, 3, 0, "ng-container", 12)(17, OrderList_ng_container_17_Template, 3, 0, "ng-container", 12)(18, OrderList_ng_container_18_Template, 3, 0, "ng-container", 12);
         ɵɵelementEnd();
       }
       if (rf & 2) {
         ɵɵclassMap(ctx.cx("controls"));
-        ɵɵproperty("pBind", ctx.ptm("controls"));
+        ɵɵattribute("data-pc-section", "controls");
         ɵɵadvance();
-        ɵɵproperty("pt", ctx.ptm("pcMoveUpButton"))("disabled", ctx.moveDisabled())("buttonProps", ctx.getButtonProps("up"));
-        ɵɵattribute("aria-label", ctx.moveUpAriaLabel);
+        ɵɵproperty("disabled", ctx.moveDisabled())("buttonProps", ctx.getButtonProps("up"));
+        ɵɵattribute("aria-label", ctx.moveUpAriaLabel)("data-pc-section", "moveUpButton");
         ɵɵadvance();
         ɵɵproperty("ngIf", !ctx.moveUpIconTemplate && !ctx._moveUpIconTemplate);
         ɵɵadvance();
         ɵɵproperty("ngTemplateOutlet", ctx.moveUpIconTemplate || ctx._moveUpIconTemplate);
         ɵɵadvance();
-        ɵɵproperty("pt", ctx.ptm("pcMoveTopButton"))("disabled", ctx.moveDisabled())("buttonProps", ctx.getButtonProps("top"));
-        ɵɵattribute("aria-label", ctx.moveTopAriaLabel);
+        ɵɵproperty("disabled", ctx.moveDisabled())("buttonProps", ctx.getButtonProps("top"));
+        ɵɵattribute("aria-label", ctx.moveTopAriaLabel)("data-pc-section", "moveTopButton");
         ɵɵadvance();
         ɵɵproperty("ngIf", !ctx.moveTopIconTemplate && !ctx._moveTopIconTemplate);
         ɵɵadvance();
         ɵɵproperty("ngTemplateOutlet", ctx.moveTopIconTemplate || ctx._moveTopIconTemplate);
         ɵɵadvance();
-        ɵɵproperty("pt", ctx.ptm("pcMoveDownButton"))("disabled", ctx.moveDisabled())("buttonProps", ctx.getButtonProps("down"));
-        ɵɵattribute("aria-label", ctx.moveDownAriaLabel);
+        ɵɵproperty("disabled", ctx.moveDisabled())("buttonProps", ctx.getButtonProps("down"));
+        ɵɵattribute("aria-label", ctx.moveDownAriaLabel)("data-pc-section", "moveDownButton");
         ɵɵadvance();
         ɵɵproperty("ngIf", !ctx.moveDownIconTemplate && !ctx._moveDownIconTemplate);
         ɵɵadvance();
         ɵɵproperty("ngTemplateOutlet", ctx.moveDownIconTemplate || ctx._moveDownIconTemplate);
         ɵɵadvance();
-        ɵɵproperty("pt", ctx.ptm("pcMoveBottomButton"))("disabled", ctx.moveDisabled())("buttonProps", ctx.getButtonProps("bottom"));
-        ɵɵattribute("aria-label", ctx.moveBottomAriaLabel);
+        ɵɵproperty("disabled", ctx.moveDisabled())("buttonProps", ctx.getButtonProps("bottom"));
+        ɵɵattribute("aria-label", ctx.moveBottomAriaLabel)("data-pc-section", "moveBottomButton");
         ɵɵadvance();
         ɵɵproperty("ngIf", !ctx.moveBottomIconTemplate && !ctx._moveBottomIconTemplate);
         ɵɵadvance();
         ɵɵproperty("ngTemplateOutlet", ctx.moveBottomIconTemplate || ctx._moveBottomIconTemplate);
         ɵɵadvance();
-        ɵɵproperty("pt", ctx.ptm("pcListbox"))("multiple", true)("options", ctx.value);
+        ɵɵproperty("multiple", true)("options", ctx.value);
         ɵɵtwoWayProperty("ngModel", ctx.d_selection);
-        ɵɵproperty("optionLabel", ctx.dataKey ?? "name")("id", ctx.id + "_list")("listStyle", ctx.listStyle)("striped", ctx.stripedRows)("tabindex", ctx.tabindex)("ariaLabel", ctx.ariaLabel)("disabled", ctx.disabled)("metaKeySelection", ctx.metaKeySelection)("scrollHeight", ctx.scrollHeight)("autoOptionFocus", ctx.autoOptionFocus)("filter", ctx.filterBy)("filterBy", ctx.filterBy)("filterLocale", ctx.filterLocale)("filterPlaceHolder", ctx.filterPlaceholder)("dragdrop", ctx.dragdrop);
+        ɵɵproperty("id", ctx.id + "_list")("listStyle", ctx.listStyle)("striped", ctx.stripedRows)("tabindex", ctx.tabindex)("ariaLabel", ctx.ariaLabel)("disabled", ctx.disabled)("metaKeySelection", ctx.metaKeySelection)("scrollHeight", ctx.scrollHeight)("autoOptionFocus", ctx.autoOptionFocus)("filter", ctx.filterBy)("filterBy", ctx.filterBy)("filterLocale", ctx.filterLocale)("filterPlaceHolder", ctx.filterPlaceholder)("dragdrop", ctx.dragdrop);
         ɵɵadvance(2);
         ɵɵproperty("ngIf", ctx.headerTemplate || ctx._headerTemplate);
         ɵɵadvance();
@@ -1222,13 +1064,9 @@ var OrderList = class _OrderList extends BaseComponent {
         ɵɵproperty("ngIf", ctx.emptyMessageTemplate || ctx._emptyMessageTemplate);
         ɵɵadvance();
         ɵɵproperty("ngIf", ctx.emptyFilterMessageTemplate || ctx._emptyFilterMessageTemplate);
-        ɵɵadvance();
-        ɵɵproperty("ngIf", ctx.filterIconTemplate || ctx._filterIconTemplate);
-        ɵɵadvance();
-        ɵɵproperty("ngIf", ctx.filterTemplate || ctx._filterTemplate);
       }
     },
-    dependencies: [CommonModule, NgIf, NgTemplateOutlet, ButtonModule, ButtonDirective, ButtonIcon, Ripple, DragDropModule, AngleDoubleDownIcon, AngleDoubleUpIcon, AngleUpIcon, AngleDownIcon, Listbox, FormsModule, NgControlStatus, NgModel, SharedModule, Bind],
+    dependencies: [CommonModule, NgIf, NgTemplateOutlet, ButtonModule, ButtonDirective, ButtonIcon, Ripple, DragDropModule, AngleDoubleDownIcon, AngleDoubleUpIcon, AngleUpIcon, AngleDownIcon, Listbox, FormsModule, NgControlStatus, NgModel, SharedModule],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -1239,33 +1077,32 @@ var OrderList = class _OrderList extends BaseComponent {
     args: [{
       selector: "p-orderList, p-orderlist, p-order-list",
       standalone: true,
-      imports: [CommonModule, ButtonModule, Ripple, DragDropModule, AngleDoubleDownIcon, AngleDoubleUpIcon, AngleUpIcon, AngleDownIcon, Listbox, FormsModule, SharedModule, Bind],
+      imports: [CommonModule, ButtonModule, Ripple, DragDropModule, AngleDoubleDownIcon, AngleDoubleUpIcon, AngleUpIcon, AngleDownIcon, Listbox, FormsModule, SharedModule],
       template: `
-        <div [pBind]="ptm('controls')" [class]="cx('controls')">
-            <button [pt]="ptm('pcMoveUpButton')" type="button" [disabled]="moveDisabled()" pButton pRipple (click)="moveUp()" [attr.aria-label]="moveUpAriaLabel" [buttonProps]="getButtonProps('up')" hostName="orderlist">
-                <svg data-p-icon="angle-up" *ngIf="!moveUpIconTemplate && !_moveUpIconTemplate" pButtonIcon [pt]="ptm('pcMoveUpButton')['icon']" />
+        <div [class]="cx('controls')" [attr.data-pc-section]="'controls'">
+            <button type="button" [disabled]="moveDisabled()" pButton pRipple (click)="moveUp()" [attr.aria-label]="moveUpAriaLabel" [attr.data-pc-section]="'moveUpButton'" [buttonProps]="getButtonProps('up')">
+                <svg data-p-icon="angle-up" *ngIf="!moveUpIconTemplate && !_moveUpIconTemplate" [attr.data-pc-section]="'moveupicon'" pButtonIcon />
                 <ng-template *ngTemplateOutlet="moveUpIconTemplate || _moveUpIconTemplate"></ng-template>
             </button>
-            <button [pt]="ptm('pcMoveTopButton')" type="button" [disabled]="moveDisabled()" pButton pRipple (click)="moveTop()" [attr.aria-label]="moveTopAriaLabel" [buttonProps]="getButtonProps('top')" hostName="orderlist">
-                <svg data-p-icon="angle-double-up" *ngIf="!moveTopIconTemplate && !_moveTopIconTemplate" pButtonIcon [pt]="ptm('pcMoveTopButton')['icon']" />
+            <button type="button" [disabled]="moveDisabled()" pButton pRipple (click)="moveTop()" [attr.aria-label]="moveTopAriaLabel" [attr.data-pc-section]="'moveTopButton'" [buttonProps]="getButtonProps('top')">
+                <svg data-p-icon="angle-double-up" *ngIf="!moveTopIconTemplate && !_moveTopIconTemplate" [attr.data-pc-section]="'movetopicon'" pButtonIcon />
                 <ng-template *ngTemplateOutlet="moveTopIconTemplate || _moveTopIconTemplate"></ng-template>
             </button>
-            <button [pt]="ptm('pcMoveDownButton')" type="button" [disabled]="moveDisabled()" pButton pRipple (click)="moveDown()" [attr.aria-label]="moveDownAriaLabel" [buttonProps]="getButtonProps('down')" hostName="orderlist">
-                <svg data-p-icon="angle-down" *ngIf="!moveDownIconTemplate && !_moveDownIconTemplate" pButtonIcon [pt]="ptm('pcMoveDownButton')['icon']" />
+            <button type="button" [disabled]="moveDisabled()" pButton pRipple (click)="moveDown()" [attr.aria-label]="moveDownAriaLabel" [attr.data-pc-section]="'moveDownButton'" [buttonProps]="getButtonProps('down')">
+                <svg data-p-icon="angle-down" *ngIf="!moveDownIconTemplate && !_moveDownIconTemplate" [attr.data-pc-section]="'movedownicon'" pButtonIcon />
                 <ng-template *ngTemplateOutlet="moveDownIconTemplate || _moveDownIconTemplate"></ng-template>
             </button>
-            <button [pt]="ptm('pcMoveBottomButton')" type="button" [disabled]="moveDisabled()" pButton pRipple (click)="moveBottom()" [attr.aria-label]="moveBottomAriaLabel" [buttonProps]="getButtonProps('bottom')" hostName="orderlist">
-                <svg data-p-icon="angle-double-down" *ngIf="!moveBottomIconTemplate && !_moveBottomIconTemplate" pButtonIcon [pt]="ptm('pcMoveBottomButton')['icon']" />
+            <button type="button" [disabled]="moveDisabled()" pButton pRipple (click)="moveBottom()" [attr.aria-label]="moveBottomAriaLabel" [attr.data-pc-section]="'moveBottomButton'" [buttonProps]="getButtonProps('bottom')">
+                <svg data-p-icon="angle-double-down" *ngIf="!moveBottomIconTemplate && !_moveBottomIconTemplate" [attr.data-pc-section]="'movebottomicon'" pButtonIcon />
                 <ng-template *ngTemplateOutlet="moveBottomIconTemplate || _moveBottomIconTemplate"></ng-template>
             </button>
         </div>
         <p-listbox
-            [pt]="ptm('pcListbox')"
             #listelement
             [multiple]="true"
             [options]="value"
             [(ngModel)]="d_selection"
-            [optionLabel]="dataKey ?? 'name'"
+            optionLabel="name"
             [id]="id + '_list'"
             [listStyle]="listStyle"
             [striped]="stripedRows"
@@ -1284,7 +1121,6 @@ var OrderList = class _OrderList extends BaseComponent {
             [filterPlaceHolder]="filterPlaceholder"
             [dragdrop]="dragdrop"
             (onDrop)="onDrop($event)"
-            hostName="orderlist"
         >
             <ng-container *ngIf="headerTemplate || _headerTemplate">
                 <ng-template #header>
@@ -1306,31 +1142,15 @@ var OrderList = class _OrderList extends BaseComponent {
                     <ng-template *ngTemplateOutlet="emptyFilterMessageTemplate || _emptyFilterMessageTemplate"></ng-template>
                 </ng-template>
             </ng-container>
-            <ng-container *ngIf="filterIconTemplate || _filterIconTemplate">
-                <ng-template #filtericon>
-                    <ng-template *ngTemplateOutlet="filterIconTemplate || _filterIconTemplate"></ng-template>
-                </ng-template>
-            </ng-container>
-            <ng-container *ngIf="filterTemplate || _filterTemplate">
-                <ng-template #filter let-options="options">
-                    <ng-template *ngTemplateOutlet="filterTemplate || _filterTemplate; context: { options: options }"></ng-template>
-                </ng-template>
-            </ng-container>
         </p-listbox>
     `,
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
-      providers: [OrderListStyle, {
-        provide: ORDERLIST_INSTANCE,
-        useExisting: OrderList
-      }, {
-        provide: PARENT_INSTANCE,
-        useExisting: OrderList
-      }],
+      providers: [OrderListStyle],
       host: {
-        "[class]": "cn(cx('root'), styleClass)"
-      },
-      hostDirectives: [Bind]
+        "[class]": "cn(cx('root'), styleClass)",
+        "[attr.data-pc-section]": "'root'"
+      }
     }]
   }], null, {
     header: [{
@@ -1416,9 +1236,6 @@ var OrderList = class _OrderList extends BaseComponent {
       args: [{
         transform: booleanAttribute
       }]
-    }],
-    dataKey: [{
-      type: Input
     }],
     selection: [{
       type: Input

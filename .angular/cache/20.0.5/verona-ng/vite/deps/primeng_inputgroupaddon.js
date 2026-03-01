@@ -1,20 +1,15 @@
 import {
-  BaseComponent,
-  PARENT_INSTANCE
-} from "./chunk-YNJ5GKCH.js";
+  BaseComponent
+} from "./chunk-4YMQ5OOY.js";
 import {
   BaseStyle
-} from "./chunk-4ATYD752.js";
-import {
-  Bind,
-  BindModule
-} from "./chunk-MLQGRGGO.js";
+} from "./chunk-L2L2T6ID.js";
 import {
   SharedModule
-} from "./chunk-LMEEH3AJ.js";
-import "./chunk-GOP36Q47.js";
-import "./chunk-UCHM6OXG.js";
-import "./chunk-FHZAWWEY.js";
+} from "./chunk-ZKOTJBQ6.js";
+import {
+  CommonModule
+} from "./chunk-FHZAWWEY.js";
 import "./chunk-5KK3G4LL.js";
 import {
   Component,
@@ -23,10 +18,11 @@ import {
   Input,
   NgModule,
   setClassMetadata,
-  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
+  ɵɵattribute,
   ɵɵclassMap,
+  ɵɵclassProp,
   ɵɵdefineComponent,
   ɵɵdefineNgModule,
   ɵɵgetInheritedFactory,
@@ -35,7 +31,6 @@ import {
   ɵɵstyleMap
 } from "./chunk-EIF6IUR4.js";
 import {
-  InjectionToken,
   inject,
   ɵɵdefineInjectable,
   ɵɵdefineInjector
@@ -43,6 +38,8 @@ import {
 import "./chunk-G6ECYYJH.js";
 import "./chunk-YVXMBCE5.js";
 import "./chunk-RTGP7ALM.js";
+import "./chunk-BMDSN43F.js";
+import "./chunk-RK2DVQNP.js";
 import "./chunk-4MWRP73S.js";
 
 // node_modules/primeng/fesm2022/primeng-inputgroupaddon.mjs
@@ -69,19 +66,7 @@ var InputGroupAddonStyle = class _InputGroupAddonStyle extends BaseStyle {
     type: Injectable
   }], null, null);
 })();
-var INPUTGROUPADDON_INSTANCE = new InjectionToken("INPUTGROUPADDON_INSTANCE");
 var InputGroupAddon = class _InputGroupAddon extends BaseComponent {
-  _componentStyle = inject(InputGroupAddonStyle);
-  $pcInputGroupAddon = inject(INPUTGROUPADDON_INSTANCE, {
-    optional: true,
-    skipSelf: true
-  }) ?? void 0;
-  bindDirectiveInstance = inject(Bind, {
-    self: true
-  });
-  onAfterViewChecked() {
-    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
-  }
   /**
    * Inline style of the element.
    * @group Props
@@ -92,6 +77,7 @@ var InputGroupAddon = class _InputGroupAddon extends BaseComponent {
    * @group Props
    */
   styleClass;
+  _componentStyle = inject(InputGroupAddonStyle);
   get hostStyle() {
     return this.style;
   }
@@ -104,24 +90,20 @@ var InputGroupAddon = class _InputGroupAddon extends BaseComponent {
   static ɵcmp = ɵɵdefineComponent({
     type: _InputGroupAddon,
     selectors: [["p-inputgroup-addon"], ["p-inputGroupAddon"]],
-    hostVars: 4,
+    hostVars: 7,
     hostBindings: function InputGroupAddon_HostBindings(rf, ctx) {
       if (rf & 2) {
+        ɵɵattribute("data-pc-name", "inputgroupaddon");
         ɵɵstyleMap(ctx.hostStyle);
-        ɵɵclassMap(ctx.cn(ctx.cx("root"), ctx.styleClass));
+        ɵɵclassMap(ctx.styleClass);
+        ɵɵclassProp("p-inputgroupaddon", true);
       }
     },
     inputs: {
       style: "style",
       styleClass: "styleClass"
     },
-    features: [ɵɵProvidersFeature([InputGroupAddonStyle, {
-      provide: INPUTGROUPADDON_INSTANCE,
-      useExisting: _InputGroupAddon
-    }, {
-      provide: PARENT_INSTANCE,
-      useExisting: _InputGroupAddon
-    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([InputGroupAddonStyle]), ɵɵInheritDefinitionFeature],
     ngContentSelectors: _c0,
     decls: 1,
     vars: 0,
@@ -131,7 +113,7 @@ var InputGroupAddon = class _InputGroupAddon extends BaseComponent {
         ɵɵprojection(0);
       }
     },
-    dependencies: [BindModule],
+    dependencies: [CommonModule],
     encapsulation: 2
   });
 };
@@ -142,18 +124,13 @@ var InputGroupAddon = class _InputGroupAddon extends BaseComponent {
       selector: "p-inputgroup-addon, p-inputGroupAddon",
       template: ` <ng-content></ng-content> `,
       standalone: true,
-      imports: [BindModule],
+      imports: [CommonModule],
       host: {
-        "[class]": "cn(cx('root'), styleClass)"
+        "[class]": "styleClass",
+        "[class.p-inputgroupaddon]": "true",
+        "[attr.data-pc-name]": '"inputgroupaddon"'
       },
-      providers: [InputGroupAddonStyle, {
-        provide: INPUTGROUPADDON_INSTANCE,
-        useExisting: InputGroupAddon
-      }, {
-        provide: PARENT_INSTANCE,
-        useExisting: InputGroupAddon
-      }],
-      hostDirectives: [Bind]
+      providers: [InputGroupAddonStyle]
     }]
   }], null, {
     style: [{

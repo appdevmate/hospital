@@ -1,95 +1,66 @@
 import {
+  Checkbox
+} from "./chunk-ABGXFTG6.js";
+import {
   Paginator,
   PaginatorModule
-} from "./chunk-KRUL3WWE.js";
-import "./chunk-RPLEE6D7.js";
-import "./chunk-K3NEN5MN.js";
-import "./chunk-XUTOVZDX.js";
-import "./chunk-DN5THLGW.js";
-import {
-  Checkbox
-} from "./chunk-SFMDCIOQ.js";
-import "./chunk-CLO3YU7N.js";
+} from "./chunk-3PVO7QSY.js";
+import "./chunk-O4ZWNVJQ.js";
+import "./chunk-TTXVI75E.js";
+import "./chunk-X6EAVJDO.js";
+import "./chunk-TBZ7QADV.js";
+import "./chunk-ERBKXNZB.js";
 import {
   Scroller
-} from "./chunk-MJV6MLJJ.js";
-import "./chunk-3NL2AYPD.js";
-import "./chunk-GI2QMI3P.js";
-import "./chunk-343RM6UZ.js";
-import "./chunk-2R7VQYSP.js";
-import "./chunk-OLS4C5IP.js";
+} from "./chunk-MUYJFYGV.js";
+import "./chunk-QCZLNNKR.js";
+import "./chunk-CXGSICYC.js";
+import "./chunk-67V7CIUT.js";
+import "./chunk-5OCKW6BF.js";
+import "./chunk-IRWYTOKA.js";
+import "./chunk-BB55NINM.js";
 import {
   Badge,
   BadgeModule
-} from "./chunk-B6BBOHQM.js";
-import "./chunk-ICEVV523.js";
-import "./chunk-YNLAOK3J.js";
-import {
-  DomHandler
-} from "./chunk-S73J4WE3.js";
-import "./chunk-BB55NINM.js";
+} from "./chunk-EGVFVLQK.js";
+import "./chunk-AXS7T3GQ.js";
+import "./chunk-6PBBDZZF.js";
+import "./chunk-KOXUNDHI.js";
 import {
   Ripple
-} from "./chunk-OC77X5LN.js";
+} from "./chunk-VZLF74PJ.js";
+import {
+  DomHandler
+} from "./chunk-QVUTNZUY.js";
 import {
   ArrowDownIcon,
   ArrowUpIcon,
+  CheckIcon,
   ChevronDownIcon,
   ChevronRightIcon,
   SortAltIcon,
   SortAmountDownIcon,
   SortAmountUpAltIcon,
   SpinnerIcon
-} from "./chunk-RHA7RL5K.js";
+} from "./chunk-BIL3W6KN.js";
 import {
-  CheckIcon
-} from "./chunk-YXZQJBKH.js";
-import {
-  BaseComponent,
-  PARENT_INSTANCE
-} from "./chunk-YNJ5GKCH.js";
+  BaseComponent
+} from "./chunk-4YMQ5OOY.js";
 import {
   BaseStyle
-} from "./chunk-4ATYD752.js";
-import {
-  Bind,
-  BindModule
-} from "./chunk-MLQGRGGO.js";
+} from "./chunk-L2L2T6ID.js";
 import {
   FilterService,
   PrimeTemplate,
   SharedModule
-} from "./chunk-LMEEH3AJ.js";
+} from "./chunk-ZKOTJBQ6.js";
+import "./chunk-6QGHQEN4.js";
+import "./chunk-53DGU4C2.js";
 import {
   FormsModule,
   NgControlStatus,
   NgModel
 } from "./chunk-RZEKJVYA.js";
-import "./chunk-6QGHQEN4.js";
-import "./chunk-53DGU4C2.js";
-import "./chunk-GOP36Q47.js";
-import {
-  B,
-  G2 as G,
-  Ht,
-  J2 as J,
-  K,
-  O2 as O,
-  P,
-  Q,
-  R,
-  W,
-  Y2 as Y,
-  bt,
-  ct,
-  k,
-  kt,
-  l,
-  p,
-  pt,
-  s,
-  z2 as z
-} from "./chunk-UCHM6OXG.js";
 import {
   CommonModule,
   NgClass,
@@ -110,18 +81,21 @@ import {
   ElementRef,
   EventEmitter,
   HostListener,
+  Inject,
   Injectable,
   Input,
   NgModule,
   NgZone,
   Output,
+  PLATFORM_ID,
+  Renderer2,
   ViewChild,
   ViewEncapsulation,
   booleanAttribute,
   numberAttribute,
   setClassMetadata,
-  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
+  ɵɵNgOnChangesFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
   ɵɵattribute,
@@ -157,7 +131,7 @@ import {
   ɵɵviewQuery
 } from "./chunk-EIF6IUR4.js";
 import {
-  InjectionToken,
+  DOCUMENT,
   inject,
   ɵɵdefineInjectable,
   ɵɵdefineInjector,
@@ -170,6 +144,29 @@ import "./chunk-YVXMBCE5.js";
 import {
   Subject
 } from "./chunk-RTGP7ALM.js";
+import "./chunk-BMDSN43F.js";
+import {
+  G2 as G,
+  Ht,
+  J,
+  K,
+  O,
+  P,
+  Q,
+  Q2,
+  R,
+  W,
+  Y2 as Y,
+  a,
+  bt,
+  c,
+  ct,
+  k,
+  kt,
+  pt,
+  s,
+  z2 as z
+} from "./chunk-RK2DVQNP.js";
 import {
   __spreadProps,
   __spreadValues
@@ -231,7 +228,7 @@ function TreeTable_div_0_i_2_Template(rf, ctx) {
 function TreeTable_div_0_ng_container_3__svg_svg_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 13);
+    ɵɵelement(0, "svg", 11);
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext(3);
@@ -249,7 +246,7 @@ function TreeTable_div_0_ng_container_3_span_2_1_Template(rf, ctx) {
 function TreeTable_div_0_ng_container_3_span_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementStart(0, "span");
-    ɵɵtemplate(1, TreeTable_div_0_ng_container_3_span_2_1_Template, 1, 0, null, 14);
+    ɵɵtemplate(1, TreeTable_div_0_ng_container_3_span_2_1_Template, 1, 0, null, 12);
     ɵɵelementEnd();
   }
   if (rf & 2) {
@@ -262,7 +259,7 @@ function TreeTable_div_0_ng_container_3_span_2_Template(rf, ctx) {
 function TreeTable_div_0_ng_container_3_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, TreeTable_div_0_ng_container_3__svg_svg_1_Template, 1, 3, "svg", 12)(2, TreeTable_div_0_ng_container_3_span_2_Template, 2, 3, "span", 10);
+    ɵɵtemplate(1, TreeTable_div_0_ng_container_3__svg_svg_1_Template, 1, 3, "svg", 10)(2, TreeTable_div_0_ng_container_3_span_2_Template, 2, 3, "span", 6);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -275,17 +272,15 @@ function TreeTable_div_0_ng_container_3_Template(rf, ctx) {
 }
 function TreeTable_div_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div", 9)(1, "div", 9);
-    ɵɵtemplate(2, TreeTable_div_0_i_2_Template, 1, 2, "i", 10)(3, TreeTable_div_0_ng_container_3_Template, 3, 2, "ng-container", 11);
+    ɵɵelementStart(0, "div")(1, "div");
+    ɵɵtemplate(2, TreeTable_div_0_i_2_Template, 1, 2, "i", 6)(3, TreeTable_div_0_ng_container_3_Template, 3, 2, "ng-container", 9);
     ɵɵelementEnd()();
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext();
     ɵɵclassMap(ctx_r0.cx("loading"));
-    ɵɵproperty("pBind", ctx_r0.ptm("loading"));
     ɵɵadvance();
     ɵɵclassMap(ctx_r0.cx("mask"));
-    ɵɵproperty("pBind", ctx_r0.ptm("mask"));
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r0.loadingIcon);
     ɵɵadvance();
@@ -299,14 +294,13 @@ function TreeTable_div_1_ng_container_1_Template(rf, ctx) {
 }
 function TreeTable_div_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div", 9);
-    ɵɵtemplate(1, TreeTable_div_1_ng_container_1_Template, 1, 0, "ng-container", 14);
+    ɵɵelementStart(0, "div");
+    ɵɵtemplate(1, TreeTable_div_1_ng_container_1_Template, 1, 0, "ng-container", 12);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext();
     ɵɵclassMap(ctx_r0.cx("header"));
-    ɵɵproperty("pBind", ctx_r0.ptm("header"));
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r0.captionTemplate || ctx_r0._captionTemplate);
   }
@@ -318,7 +312,7 @@ function TreeTable_p_paginator_2_1_ng_template_0_ng_container_0_Template(rf, ctx
 }
 function TreeTable_p_paginator_2_1_ng_template_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, TreeTable_p_paginator_2_1_ng_template_0_ng_container_0_Template, 1, 0, "ng-container", 14);
+    ɵɵtemplate(0, TreeTable_p_paginator_2_1_ng_template_0_ng_container_0_Template, 1, 0, "ng-container", 12);
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext(3);
@@ -327,7 +321,7 @@ function TreeTable_p_paginator_2_1_ng_template_0_Template(rf, ctx) {
 }
 function TreeTable_p_paginator_2_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, TreeTable_p_paginator_2_1_ng_template_0_Template, 1, 1, "ng-template", 16);
+    ɵɵtemplate(0, TreeTable_p_paginator_2_1_ng_template_0_Template, 1, 1, "ng-template", 14);
   }
 }
 function TreeTable_p_paginator_2_2_ng_template_0_ng_container_0_Template(rf, ctx) {
@@ -337,7 +331,7 @@ function TreeTable_p_paginator_2_2_ng_template_0_ng_container_0_Template(rf, ctx
 }
 function TreeTable_p_paginator_2_2_ng_template_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, TreeTable_p_paginator_2_2_ng_template_0_ng_container_0_Template, 1, 0, "ng-container", 14);
+    ɵɵtemplate(0, TreeTable_p_paginator_2_2_ng_template_0_ng_container_0_Template, 1, 0, "ng-container", 12);
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext(3);
@@ -346,7 +340,7 @@ function TreeTable_p_paginator_2_2_ng_template_0_Template(rf, ctx) {
 }
 function TreeTable_p_paginator_2_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, TreeTable_p_paginator_2_2_ng_template_0_Template, 1, 1, "ng-template", 17);
+    ɵɵtemplate(0, TreeTable_p_paginator_2_2_ng_template_0_Template, 1, 1, "ng-template", 15);
   }
 }
 function TreeTable_p_paginator_2_3_ng_template_0_ng_container_0_Template(rf, ctx) {
@@ -356,7 +350,7 @@ function TreeTable_p_paginator_2_3_ng_template_0_ng_container_0_Template(rf, ctx
 }
 function TreeTable_p_paginator_2_3_ng_template_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, TreeTable_p_paginator_2_3_ng_template_0_ng_container_0_Template, 1, 0, "ng-container", 14);
+    ɵɵtemplate(0, TreeTable_p_paginator_2_3_ng_template_0_ng_container_0_Template, 1, 0, "ng-container", 12);
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext(3);
@@ -365,7 +359,7 @@ function TreeTable_p_paginator_2_3_ng_template_0_Template(rf, ctx) {
 }
 function TreeTable_p_paginator_2_3_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, TreeTable_p_paginator_2_3_ng_template_0_Template, 1, 1, "ng-template", 18);
+    ɵɵtemplate(0, TreeTable_p_paginator_2_3_ng_template_0_Template, 1, 1, "ng-template", 16);
   }
 }
 function TreeTable_p_paginator_2_4_ng_template_0_ng_container_0_Template(rf, ctx) {
@@ -375,7 +369,7 @@ function TreeTable_p_paginator_2_4_ng_template_0_ng_container_0_Template(rf, ctx
 }
 function TreeTable_p_paginator_2_4_ng_template_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, TreeTable_p_paginator_2_4_ng_template_0_ng_container_0_Template, 1, 0, "ng-container", 14);
+    ɵɵtemplate(0, TreeTable_p_paginator_2_4_ng_template_0_ng_container_0_Template, 1, 0, "ng-container", 12);
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext(3);
@@ -384,24 +378,24 @@ function TreeTable_p_paginator_2_4_ng_template_0_Template(rf, ctx) {
 }
 function TreeTable_p_paginator_2_4_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, TreeTable_p_paginator_2_4_ng_template_0_Template, 1, 1, "ng-template", 19);
+    ɵɵtemplate(0, TreeTable_p_paginator_2_4_ng_template_0_Template, 1, 1, "ng-template", 17);
   }
 }
 function TreeTable_p_paginator_2_Template(rf, ctx) {
   if (rf & 1) {
     const _r2 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "p-paginator", 15);
+    ɵɵelementStart(0, "p-paginator", 13);
     ɵɵlistener("onPageChange", function TreeTable_p_paginator_2_Template_p_paginator_onPageChange_0_listener($event) {
       ɵɵrestoreView(_r2);
       const ctx_r0 = ɵɵnextContext();
       return ɵɵresetView(ctx_r0.onPageChange($event));
     });
-    ɵɵtemplate(1, TreeTable_p_paginator_2_1_Template, 1, 0, null, 11)(2, TreeTable_p_paginator_2_2_Template, 1, 0, null, 11)(3, TreeTable_p_paginator_2_3_Template, 1, 0, null, 11)(4, TreeTable_p_paginator_2_4_Template, 1, 0, null, 11);
+    ɵɵtemplate(1, TreeTable_p_paginator_2_1_Template, 1, 0, null, 9)(2, TreeTable_p_paginator_2_2_Template, 1, 0, null, 9)(3, TreeTable_p_paginator_2_3_Template, 1, 0, null, 9)(4, TreeTable_p_paginator_2_4_Template, 1, 0, null, 9);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext();
-    ɵɵproperty("pt", ctx_r0.ptm("pcPaginator"))("rows", ctx_r0.rows)("first", ctx_r0.first)("totalRecords", ctx_r0.totalRecords)("pageLinkSize", ctx_r0.pageLinks)("styleClass", ctx_r0.cx("pcPaginator"))("alwaysShow", ctx_r0.alwaysShowPaginator)("rowsPerPageOptions", ctx_r0.rowsPerPageOptions)("templateLeft", ctx_r0.paginatorLeftTemplate ?? ctx_r0._paginatorLeftTemplate)("templateRight", ctx_r0.paginatorRightTemplate ?? ctx_r0._paginatorRightTemplate)("appendTo", ctx_r0.paginatorDropdownAppendTo)("currentPageReportTemplate", ctx_r0.currentPageReportTemplate)("showFirstLastIcon", ctx_r0.showFirstLastIcon)("dropdownItemTemplate", ctx_r0.paginatorDropdownItemTemplate ?? ctx_r0._paginatorDropdownItemTemplate)("showCurrentPageReport", ctx_r0.showCurrentPageReport)("showJumpToPageDropdown", ctx_r0.showJumpToPageDropdown)("showPageLinks", ctx_r0.showPageLinks)("locale", ctx_r0.paginatorLocale);
+    ɵɵproperty("rows", ctx_r0.rows)("first", ctx_r0.first)("totalRecords", ctx_r0.totalRecords)("pageLinkSize", ctx_r0.pageLinks)("styleClass", ctx_r0.cx("pcPaginator"))("alwaysShow", ctx_r0.alwaysShowPaginator)("rowsPerPageOptions", ctx_r0.rowsPerPageOptions)("templateLeft", ctx_r0.paginatorLeftTemplate ?? ctx_r0._paginatorLeftTemplate)("templateRight", ctx_r0.paginatorRightTemplate ?? ctx_r0._paginatorRightTemplate)("appendTo", ctx_r0.paginatorDropdownAppendTo)("currentPageReportTemplate", ctx_r0.currentPageReportTemplate)("showFirstLastIcon", ctx_r0.showFirstLastIcon)("dropdownItemTemplate", ctx_r0.paginatorDropdownItemTemplate ?? ctx_r0._paginatorDropdownItemTemplate)("showCurrentPageReport", ctx_r0.showCurrentPageReport)("showJumpToPageDropdown", ctx_r0.showJumpToPageDropdown)("showPageLinks", ctx_r0.showPageLinks)("locale", ctx_r0.paginatorLocale);
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r0.paginatorFirstPageLinkIconTemplate || ctx_r0._paginatorFirstPageLinkIconTemplate);
     ɵɵadvance();
@@ -429,64 +423,60 @@ function TreeTable_div_3_ng_container_8_Template(rf, ctx) {
 }
 function TreeTable_div_3_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div", 9)(1, "table", 20, 0);
-    ɵɵtemplate(3, TreeTable_div_3_ng_container_3_Template, 1, 0, "ng-container", 21);
-    ɵɵelementStart(4, "thead", 22);
-    ɵɵtemplate(5, TreeTable_div_3_ng_container_5_Template, 1, 0, "ng-container", 21);
+    ɵɵelementStart(0, "div")(1, "table", 18, 0);
+    ɵɵtemplate(3, TreeTable_div_3_ng_container_3_Template, 1, 0, "ng-container", 19);
+    ɵɵelementStart(4, "thead", 20);
+    ɵɵtemplate(5, TreeTable_div_3_ng_container_5_Template, 1, 0, "ng-container", 19);
     ɵɵelementEnd();
-    ɵɵelement(6, "tbody", 23);
-    ɵɵelementStart(7, "tfoot", 22);
-    ɵɵtemplate(8, TreeTable_div_3_ng_container_8_Template, 1, 0, "ng-container", 21);
+    ɵɵelement(6, "tbody", 21);
+    ɵɵelementStart(7, "tfoot", 20);
+    ɵɵtemplate(8, TreeTable_div_3_ng_container_8_Template, 1, 0, "ng-container", 19);
     ɵɵelementEnd()()();
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext();
     ɵɵclassMap(ctx_r0.cx("wrapper"));
-    ɵɵproperty("pBind", ctx_r0.ptm("wrapper"));
     ɵɵadvance();
-    ɵɵproperty("pBind", ctx_r0.ptm("table"))("ngClass", ctx_r0.tableStyleClass)("ngStyle", ctx_r0.tableStyle);
+    ɵɵproperty("ngClass", ctx_r0.tableStyleClass)("ngStyle", ctx_r0.tableStyle);
     ɵɵadvance(2);
-    ɵɵproperty("ngTemplateOutlet", ctx_r0.colGroupTemplate || ctx_r0._colGroupTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(23, _c32, ctx_r0.columns));
+    ɵɵproperty("ngTemplateOutlet", ctx_r0.colGroupTemplate || ctx_r0._colGroupTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(18, _c32, ctx_r0.columns));
     ɵɵadvance();
     ɵɵclassMap(ctx_r0.cx("thead"));
-    ɵɵproperty("pBind", ctx_r0.ptm("thead"));
     ɵɵadvance();
-    ɵɵproperty("ngTemplateOutlet", ctx_r0.headerTemplate || ctx_r0._headerTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(25, _c32, ctx_r0.columns));
+    ɵɵproperty("ngTemplateOutlet", ctx_r0.headerTemplate || ctx_r0._headerTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(20, _c32, ctx_r0.columns));
     ɵɵadvance();
     ɵɵclassMap(ctx_r0.cx("tbody"));
-    ɵɵproperty("pBind", ctx_r0.ptm("tbody"))("pTreeTableBody", ctx_r0.columns)("pTreeTableBodyTemplate", ctx_r0.bodyTemplate ?? ctx_r0._bodyTemplate);
+    ɵɵproperty("pTreeTableBody", ctx_r0.columns)("pTreeTableBodyTemplate", ctx_r0.bodyTemplate ?? ctx_r0._bodyTemplate);
     ɵɵadvance();
     ɵɵclassMap(ctx_r0.cx("tfoot"));
-    ɵɵproperty("pBind", ctx_r0.ptm("tfoot"));
     ɵɵadvance();
-    ɵɵproperty("ngTemplateOutlet", ctx_r0.footerTemplate || ctx_r0._footerTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(27, _c32, ctx_r0.columns));
+    ɵɵproperty("ngTemplateOutlet", ctx_r0.footerTemplate || ctx_r0._footerTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(22, _c32, ctx_r0.columns));
   }
 }
 function TreeTable_div_4_div_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "div", 26, 2);
+    ɵɵelement(0, "div", 24, 2);
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext(2);
-    ɵɵproperty("ngClass", ɵɵpureFunction2(6, _c34, ctx_r0.cx("scrollableView"), ctx_r0.cx("frozenView")))("ttScrollableView", ctx_r0.frozenColumns)("frozen", true)("ngStyle", ɵɵpureFunction1(9, _c35, ctx_r0.frozenWidth))("scrollHeight", ctx_r0.scrollHeight)("pBind", ctx_r0.ptm("scrollableView"));
+    ɵɵproperty("ngClass", ɵɵpureFunction2(5, _c34, ctx_r0.cx("scrollableView"), ctx_r0.cx("frozenView")))("ttScrollableView", ctx_r0.frozenColumns)("frozen", true)("ngStyle", ɵɵpureFunction1(8, _c35, ctx_r0.frozenWidth))("scrollHeight", ctx_r0.scrollHeight);
   }
 }
 function TreeTable_div_4_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div", 9);
-    ɵɵtemplate(1, TreeTable_div_4_div_1_Template, 2, 11, "div", 24);
-    ɵɵelement(2, "div", 25, 1);
+    ɵɵelementStart(0, "div");
+    ɵɵtemplate(1, TreeTable_div_4_div_1_Template, 2, 10, "div", 22);
+    ɵɵelement(2, "div", 23, 1);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext();
     ɵɵclassMap(ctx_r0.cx("scrollableWrapper"));
-    ɵɵproperty("pBind", ctx_r0.ptm("scrollableWrapper"));
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r0.frozenColumns || ctx_r0.frozenBodyTemplate || ctx_r0._frozenBodyTemplate);
     ɵɵadvance();
     ɵɵclassMap(ctx_r0.cx("scrollableView"));
-    ɵɵproperty("pBind", ctx_r0.ptm("scrollableView"))("ttScrollableView", ctx_r0.columns)("frozen", false)("scrollHeight", ctx_r0.scrollHeight)("ngStyle", ɵɵpureFunction2(11, _c33, ctx_r0.frozenWidth, "calc(100% - " + ctx_r0.frozenWidth + ")"));
+    ɵɵproperty("ttScrollableView", ctx_r0.columns)("frozen", false)("scrollHeight", ctx_r0.scrollHeight)("ngStyle", ɵɵpureFunction2(9, _c33, ctx_r0.frozenWidth, "calc(100% - " + ctx_r0.frozenWidth + ")"));
   }
 }
 function TreeTable_p_paginator_5_1_ng_template_0_ng_container_0_Template(rf, ctx) {
@@ -496,7 +486,7 @@ function TreeTable_p_paginator_5_1_ng_template_0_ng_container_0_Template(rf, ctx
 }
 function TreeTable_p_paginator_5_1_ng_template_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, TreeTable_p_paginator_5_1_ng_template_0_ng_container_0_Template, 1, 0, "ng-container", 14);
+    ɵɵtemplate(0, TreeTable_p_paginator_5_1_ng_template_0_ng_container_0_Template, 1, 0, "ng-container", 12);
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext(3);
@@ -505,7 +495,7 @@ function TreeTable_p_paginator_5_1_ng_template_0_Template(rf, ctx) {
 }
 function TreeTable_p_paginator_5_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, TreeTable_p_paginator_5_1_ng_template_0_Template, 1, 1, "ng-template", 16);
+    ɵɵtemplate(0, TreeTable_p_paginator_5_1_ng_template_0_Template, 1, 1, "ng-template", 14);
   }
 }
 function TreeTable_p_paginator_5_2_ng_template_0_ng_container_0_Template(rf, ctx) {
@@ -515,7 +505,7 @@ function TreeTable_p_paginator_5_2_ng_template_0_ng_container_0_Template(rf, ctx
 }
 function TreeTable_p_paginator_5_2_ng_template_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, TreeTable_p_paginator_5_2_ng_template_0_ng_container_0_Template, 1, 0, "ng-container", 14);
+    ɵɵtemplate(0, TreeTable_p_paginator_5_2_ng_template_0_ng_container_0_Template, 1, 0, "ng-container", 12);
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext(3);
@@ -524,7 +514,7 @@ function TreeTable_p_paginator_5_2_ng_template_0_Template(rf, ctx) {
 }
 function TreeTable_p_paginator_5_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, TreeTable_p_paginator_5_2_ng_template_0_Template, 1, 1, "ng-template", 17);
+    ɵɵtemplate(0, TreeTable_p_paginator_5_2_ng_template_0_Template, 1, 1, "ng-template", 15);
   }
 }
 function TreeTable_p_paginator_5_3_ng_template_0_ng_container_0_Template(rf, ctx) {
@@ -534,7 +524,7 @@ function TreeTable_p_paginator_5_3_ng_template_0_ng_container_0_Template(rf, ctx
 }
 function TreeTable_p_paginator_5_3_ng_template_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, TreeTable_p_paginator_5_3_ng_template_0_ng_container_0_Template, 1, 0, "ng-container", 14);
+    ɵɵtemplate(0, TreeTable_p_paginator_5_3_ng_template_0_ng_container_0_Template, 1, 0, "ng-container", 12);
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext(3);
@@ -543,7 +533,7 @@ function TreeTable_p_paginator_5_3_ng_template_0_Template(rf, ctx) {
 }
 function TreeTable_p_paginator_5_3_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, TreeTable_p_paginator_5_3_ng_template_0_Template, 1, 1, "ng-template", 18);
+    ɵɵtemplate(0, TreeTable_p_paginator_5_3_ng_template_0_Template, 1, 1, "ng-template", 16);
   }
 }
 function TreeTable_p_paginator_5_4_ng_template_0_ng_container_0_Template(rf, ctx) {
@@ -553,7 +543,7 @@ function TreeTable_p_paginator_5_4_ng_template_0_ng_container_0_Template(rf, ctx
 }
 function TreeTable_p_paginator_5_4_ng_template_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, TreeTable_p_paginator_5_4_ng_template_0_ng_container_0_Template, 1, 0, "ng-container", 14);
+    ɵɵtemplate(0, TreeTable_p_paginator_5_4_ng_template_0_ng_container_0_Template, 1, 0, "ng-container", 12);
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext(3);
@@ -562,24 +552,24 @@ function TreeTable_p_paginator_5_4_ng_template_0_Template(rf, ctx) {
 }
 function TreeTable_p_paginator_5_4_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, TreeTable_p_paginator_5_4_ng_template_0_Template, 1, 1, "ng-template", 19);
+    ɵɵtemplate(0, TreeTable_p_paginator_5_4_ng_template_0_Template, 1, 1, "ng-template", 17);
   }
 }
 function TreeTable_p_paginator_5_Template(rf, ctx) {
   if (rf & 1) {
     const _r3 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "p-paginator", 15);
+    ɵɵelementStart(0, "p-paginator", 13);
     ɵɵlistener("onPageChange", function TreeTable_p_paginator_5_Template_p_paginator_onPageChange_0_listener($event) {
       ɵɵrestoreView(_r3);
       const ctx_r0 = ɵɵnextContext();
       return ɵɵresetView(ctx_r0.onPageChange($event));
     });
-    ɵɵtemplate(1, TreeTable_p_paginator_5_1_Template, 1, 0, null, 11)(2, TreeTable_p_paginator_5_2_Template, 1, 0, null, 11)(3, TreeTable_p_paginator_5_3_Template, 1, 0, null, 11)(4, TreeTable_p_paginator_5_4_Template, 1, 0, null, 11);
+    ɵɵtemplate(1, TreeTable_p_paginator_5_1_Template, 1, 0, null, 9)(2, TreeTable_p_paginator_5_2_Template, 1, 0, null, 9)(3, TreeTable_p_paginator_5_3_Template, 1, 0, null, 9)(4, TreeTable_p_paginator_5_4_Template, 1, 0, null, 9);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext();
-    ɵɵproperty("pt", ctx_r0.ptm("pcPaginator"))("rows", ctx_r0.rows)("first", ctx_r0.first)("totalRecords", ctx_r0.totalRecords)("pageLinkSize", ctx_r0.pageLinks)("styleClass", ctx_r0.cx("pcPaginator"))("alwaysShow", ctx_r0.alwaysShowPaginator)("rowsPerPageOptions", ctx_r0.rowsPerPageOptions)("templateLeft", ctx_r0.paginatorLeftTemplate ?? ctx_r0._paginatorLeftTemplate)("templateRight", ctx_r0.paginatorRightTemplate ?? ctx_r0._paginatorRightTemplate)("appendTo", ctx_r0.paginatorDropdownAppendTo)("currentPageReportTemplate", ctx_r0.currentPageReportTemplate)("showFirstLastIcon", ctx_r0.showFirstLastIcon)("dropdownItemTemplate", ctx_r0.paginatorDropdownItemTemplate ?? ctx_r0._paginatorDropdownItemTemplate)("showCurrentPageReport", ctx_r0.showCurrentPageReport)("showJumpToPageDropdown", ctx_r0.showJumpToPageDropdown)("showPageLinks", ctx_r0.showPageLinks)("locale", ctx_r0.paginatorLocale);
+    ɵɵproperty("rows", ctx_r0.rows)("first", ctx_r0.first)("totalRecords", ctx_r0.totalRecords)("pageLinkSize", ctx_r0.pageLinks)("styleClass", ctx_r0.cx("pcPaginator"))("alwaysShow", ctx_r0.alwaysShowPaginator)("rowsPerPageOptions", ctx_r0.rowsPerPageOptions)("templateLeft", ctx_r0.paginatorLeftTemplate ?? ctx_r0._paginatorLeftTemplate)("templateRight", ctx_r0.paginatorRightTemplate ?? ctx_r0._paginatorRightTemplate)("appendTo", ctx_r0.paginatorDropdownAppendTo)("currentPageReportTemplate", ctx_r0.currentPageReportTemplate)("showFirstLastIcon", ctx_r0.showFirstLastIcon)("dropdownItemTemplate", ctx_r0.paginatorDropdownItemTemplate ?? ctx_r0._paginatorDropdownItemTemplate)("showCurrentPageReport", ctx_r0.showCurrentPageReport)("showJumpToPageDropdown", ctx_r0.showJumpToPageDropdown)("showPageLinks", ctx_r0.showPageLinks)("locale", ctx_r0.paginatorLocale);
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r0.paginatorFirstPageLinkIconTemplate || ctx_r0._paginatorFirstPageLinkIconTemplate);
     ɵɵadvance();
@@ -597,33 +587,31 @@ function TreeTable_div_6_ng_container_1_Template(rf, ctx) {
 }
 function TreeTable_div_6_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div", 9);
-    ɵɵtemplate(1, TreeTable_div_6_ng_container_1_Template, 1, 0, "ng-container", 14);
+    ɵɵelementStart(0, "div");
+    ɵɵtemplate(1, TreeTable_div_6_ng_container_1_Template, 1, 0, "ng-container", 12);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext();
     ɵɵclassMap(ctx_r0.cx("footer"));
-    ɵɵproperty("pBind", ctx_r0.ptm("footer"));
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r0.summaryTemplate || ctx_r0._summaryTemplate);
   }
 }
 function TreeTable_div_7_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "div", 9, 3);
+    ɵɵelement(0, "div", null, 3);
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext();
     ɵɵclassMap(ctx_r0.cx("columnResizerHelper"));
     ɵɵstyleProp("display", "none");
-    ɵɵproperty("pBind", ctx_r0.ptm("columnResizerHelper"));
   }
 }
 function TreeTable_span_8__svg_svg_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 28);
+    ɵɵelement(0, "svg", 26);
   }
 }
 function TreeTable_span_8_3_ng_template_0_Template(rf, ctx) {
@@ -635,15 +623,14 @@ function TreeTable_span_8_3_Template(rf, ctx) {
 }
 function TreeTable_span_8_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "span", 9, 4);
-    ɵɵtemplate(2, TreeTable_span_8__svg_svg_2_Template, 1, 0, "svg", 27)(3, TreeTable_span_8_3_Template, 1, 0, null, 14);
+    ɵɵelementStart(0, "span", null, 4);
+    ɵɵtemplate(2, TreeTable_span_8__svg_svg_2_Template, 1, 0, "svg", 25)(3, TreeTable_span_8_3_Template, 1, 0, null, 12);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext();
     ɵɵclassMap(ctx_r0.cx("reorderIndicatorUp"));
     ɵɵstyleProp("display", "none");
-    ɵɵproperty("pBind", ctx_r0.ptm("reorderIndicatorUp"));
     ɵɵadvance(2);
     ɵɵproperty("ngIf", !ctx_r0.reorderIndicatorUpIconTemplate && !ctx_r0._reorderIndicatorUpIconTemplate);
     ɵɵadvance();
@@ -653,7 +640,7 @@ function TreeTable_span_8_Template(rf, ctx) {
 function TreeTable_span_9__svg_svg_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 30);
+    ɵɵelement(0, "svg", 28);
   }
 }
 function TreeTable_span_9_3_ng_template_0_Template(rf, ctx) {
@@ -665,15 +652,14 @@ function TreeTable_span_9_3_Template(rf, ctx) {
 }
 function TreeTable_span_9_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "span", 9, 5);
-    ɵɵtemplate(2, TreeTable_span_9__svg_svg_2_Template, 1, 0, "svg", 29)(3, TreeTable_span_9_3_Template, 1, 0, null, 14);
+    ɵɵelementStart(0, "span", null, 5);
+    ɵɵtemplate(2, TreeTable_span_9__svg_svg_2_Template, 1, 0, "svg", 27)(3, TreeTable_span_9_3_Template, 1, 0, null, 12);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext();
     ɵɵclassMap(ctx_r0.cx("reorderIndicatorDown"));
     ɵɵstyleProp("display", "none");
-    ɵɵproperty("pBind", ctx_r0.ptm("reorderIndicatorDown"));
     ɵɵadvance(2);
     ɵɵproperty("ngIf", !ctx_r0.reorderIndicatorDownIconTemplate && !ctx_r0._reorderIndicatorDownIconTemplate);
     ɵɵadvance();
@@ -777,7 +763,7 @@ function TTScrollableView_p_scroller_8_ng_template_2_ng_container_0_Template(rf,
 }
 function TTScrollableView_p_scroller_8_ng_template_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, TTScrollableView_p_scroller_8_ng_template_2_ng_container_0_Template, 1, 0, "ng-container", 13);
+    ɵɵtemplate(0, TTScrollableView_p_scroller_8_ng_template_2_ng_container_0_Template, 1, 0, "ng-container", 12);
   }
   if (rf & 2) {
     const items_r3 = ctx.$implicit;
@@ -794,7 +780,7 @@ function TTScrollableView_p_scroller_8_ng_container_4_ng_template_1_ng_container
 }
 function TTScrollableView_p_scroller_8_ng_container_4_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, TTScrollableView_p_scroller_8_ng_container_4_ng_template_1_ng_container_0_Template, 1, 0, "ng-container", 13);
+    ɵɵtemplate(0, TTScrollableView_p_scroller_8_ng_container_4_ng_template_1_ng_container_0_Template, 1, 0, "ng-container", 12);
   }
   if (rf & 2) {
     const scrollerOptions_r6 = ctx.options;
@@ -812,19 +798,19 @@ function TTScrollableView_p_scroller_8_ng_container_4_Template(rf, ctx) {
 function TTScrollableView_p_scroller_8_Template(rf, ctx) {
   if (rf & 1) {
     const _r1 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "p-scroller", 18, 3);
+    ɵɵelementStart(0, "p-scroller", 17, 3);
     ɵɵlistener("onLazyLoad", function TTScrollableView_p_scroller_8_Template_p_scroller_onLazyLoad_0_listener($event) {
       ɵɵrestoreView(_r1);
       const ctx_r1 = ɵɵnextContext();
       return ɵɵresetView(ctx_r1.tt.onLazyItemLoad($event));
     });
-    ɵɵtemplate(2, TTScrollableView_p_scroller_8_ng_template_2_Template, 1, 5, "ng-template", null, 4, ɵɵtemplateRefExtractor)(4, TTScrollableView_p_scroller_8_ng_container_4_Template, 3, 0, "ng-container", 16);
+    ɵɵtemplate(2, TTScrollableView_p_scroller_8_ng_template_2_Template, 1, 5, "ng-template", null, 4, ɵɵtemplateRefExtractor)(4, TTScrollableView_p_scroller_8_ng_container_4_Template, 3, 0, "ng-container", 15);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext();
-    ɵɵstyleMap(ɵɵpureFunction1(10, _c49, ctx_r1.tt.scrollHeight !== "flex" ? ctx_r1.tt.scrollHeight : void 0));
-    ɵɵproperty("items", ctx_r1.tt.serializedValue)("styleClass", ctx_r1.cx("scrollableBody"))("scrollHeight", ctx_r1.scrollHeight !== "flex" ? void 0 : "100%")("itemSize", ctx_r1.tt.virtualScrollItemSize || ctx_r1.tt._virtualRowHeight)("lazy", ctx_r1.tt.lazy)("options", ctx_r1.tt.virtualScrollOptions)("pt", ctx_r1.ptm("virtualScroller"));
+    ɵɵstyleMap(ɵɵpureFunction1(9, _c49, ctx_r1.tt.scrollHeight !== "flex" ? ctx_r1.tt.scrollHeight : void 0));
+    ɵɵproperty("items", ctx_r1.tt.serializedValue)("styleClass", ctx_r1.cx("scrollableBody"))("scrollHeight", ctx_r1.scrollHeight !== "flex" ? void 0 : "100%")("itemSize", ctx_r1.tt.virtualScrollItemSize || ctx_r1.tt._virtualRowHeight)("lazy", ctx_r1.tt.lazy)("options", ctx_r1.tt.virtualScrollOptions);
     ɵɵadvance(4);
     ɵɵproperty("ngIf", ctx_r1.tt.loaderTemplate || ctx_r1.tt._loaderTemplate);
   }
@@ -837,8 +823,8 @@ function TTScrollableView_ng_container_9_ng_container_3_Template(rf, ctx) {
 function TTScrollableView_ng_container_9_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵelementStart(1, "div", 12, 6);
-    ɵɵtemplate(3, TTScrollableView_ng_container_9_ng_container_3_Template, 1, 0, "ng-container", 13);
+    ɵɵelementStart(1, "div", 11, 6);
+    ɵɵtemplate(3, TTScrollableView_ng_container_9_ng_container_3_Template, 1, 0, "ng-container", 12);
     ɵɵelementEnd();
     ɵɵelementContainerEnd();
   }
@@ -847,9 +833,9 @@ function TTScrollableView_ng_container_9_Template(rf, ctx) {
     const buildInItems_r5 = ɵɵreference(11);
     ɵɵadvance();
     ɵɵclassMap(ctx_r1.cx("scrollableBody"));
-    ɵɵproperty("pBind", ctx_r1.ptm("scrollableBody"))("ngStyle", ɵɵpureFunction2(6, _c52, ctx_r1.tt.scrollHeight !== "flex" ? ctx_r1.scrollHeight : void 0, !ctx_r1.frozen && ctx_r1.tt.scrollHeight ? "scroll" : void 0));
+    ɵɵproperty("ngStyle", ɵɵpureFunction2(5, _c52, ctx_r1.tt.scrollHeight !== "flex" ? ctx_r1.scrollHeight : void 0, !ctx_r1.frozen && ctx_r1.tt.scrollHeight ? "scroll" : void 0));
     ɵɵadvance(2);
-    ɵɵproperty("ngTemplateOutlet", buildInItems_r5)("ngTemplateOutletContext", ɵɵpureFunction2(10, _c50, ctx_r1.serializedValue, ɵɵpureFunction0(9, _c53)));
+    ɵɵproperty("ngTemplateOutlet", buildInItems_r5)("ngTemplateOutletContext", ɵɵpureFunction2(9, _c50, ctx_r1.serializedValue, ɵɵpureFunction0(8, _c53)));
   }
 }
 function TTScrollableView_ng_template_10_ng_container_2_Template(rf, ctx) {
@@ -867,11 +853,11 @@ function TTScrollableView_ng_template_10_div_4_Template(rf, ctx) {
 }
 function TTScrollableView_ng_template_10_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "table", 19, 7);
-    ɵɵtemplate(2, TTScrollableView_ng_template_10_ng_container_2_Template, 1, 0, "ng-container", 13);
-    ɵɵelement(3, "tbody", 20);
+    ɵɵelementStart(0, "table", 18, 7);
+    ɵɵtemplate(2, TTScrollableView_ng_template_10_ng_container_2_Template, 1, 0, "ng-container", 12);
+    ɵɵelement(3, "tbody", 19);
     ɵɵelementEnd();
-    ɵɵtemplate(4, TTScrollableView_ng_template_10_div_4_Template, 2, 2, "div", 21);
+    ɵɵtemplate(4, TTScrollableView_ng_template_10_div_4_Template, 2, 2, "div", 20);
   }
   if (rf & 2) {
     const items_r7 = ctx.$implicit;
@@ -879,12 +865,12 @@ function TTScrollableView_ng_template_10_Template(rf, ctx) {
     const ctx_r1 = ɵɵnextContext();
     ɵɵstyleMap(scrollerOptions_r8.contentStyle);
     ɵɵclassMap(ctx_r1.tt.tableStyleClass);
-    ɵɵproperty("pBind", ctx_r1.ptm("table"))("ngClass", scrollerOptions_r8.contentStyleClass)("ngStyle", ctx_r1.tt.tableStyle);
+    ɵɵproperty("ngClass", scrollerOptions_r8.contentStyleClass)("ngStyle", ctx_r1.tt.tableStyle);
     ɵɵadvance(2);
-    ɵɵproperty("ngTemplateOutlet", ctx_r1.frozen ? ctx_r1.tt.frozenColGroupTemplate || ctx_r1.tt._frozenColGroupTemplate || ctx_r1.tt.colGroupTemplate || ctx_r1.tt._colGroupTemplate : ctx_r1.tt.colGroupTemplate || ctx_r1.tt._colGroupTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(18, _c32, ctx_r1.columns));
+    ɵɵproperty("ngTemplateOutlet", ctx_r1.frozen ? ctx_r1.tt.frozenColGroupTemplate || ctx_r1.tt._frozenColGroupTemplate || ctx_r1.tt.colGroupTemplate || ctx_r1.tt._colGroupTemplate : ctx_r1.tt.colGroupTemplate || ctx_r1.tt._colGroupTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(15, _c32, ctx_r1.columns));
     ɵɵadvance();
     ɵɵclassMap(ctx_r1.cx("tbody"));
-    ɵɵproperty("pBind", ctx_r1.ptm("tbody"))("pBind", ctx_r1.ptm("tbody"))("pTreeTableBody", ctx_r1.columns)("pTreeTableBodyTemplate", ctx_r1.frozen ? ctx_r1.tt.frozenBodyTemplate || ctx_r1.tt._frozenBodyTemplate || ctx_r1.tt.bodyTemplate || ctx_r1.tt._bodyTemplate : ctx_r1.tt.bodyTemplate || ctx_r1.tt._bodyTemplate)("serializedNodes", items_r7)("frozen", ctx_r1.frozen);
+    ɵɵproperty("pTreeTableBody", ctx_r1.columns)("pTreeTableBodyTemplate", ctx_r1.frozen ? ctx_r1.tt.frozenBodyTemplate || ctx_r1.tt._frozenBodyTemplate || ctx_r1.tt.bodyTemplate || ctx_r1.tt._bodyTemplate : ctx_r1.tt.bodyTemplate || ctx_r1.tt._bodyTemplate)("serializedNodes", items_r7)("frozen", ctx_r1.frozen);
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r1.frozen);
   }
@@ -901,29 +887,26 @@ function TTScrollableView_div_12_ng_container_7_Template(rf, ctx) {
 }
 function TTScrollableView_div_12_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div", 11, 9)(2, "div", 11, 10)(4, "table", 22);
-    ɵɵtemplate(5, TTScrollableView_div_12_ng_container_5_Template, 1, 0, "ng-container", 13);
-    ɵɵelementStart(6, "tfoot", 14);
-    ɵɵtemplate(7, TTScrollableView_div_12_ng_container_7_Template, 1, 0, "ng-container", 13);
+    ɵɵelementStart(0, "div", null, 9)(2, "div", null, 10)(4, "table", 21);
+    ɵɵtemplate(5, TTScrollableView_div_12_ng_container_5_Template, 1, 0, "ng-container", 12);
+    ɵɵelementStart(6, "tfoot", 13);
+    ɵɵtemplate(7, TTScrollableView_div_12_ng_container_7_Template, 1, 0, "ng-container", 12);
     ɵɵelementEnd()()()();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cx("scrollableFooter"));
-    ɵɵproperty("pBind", ctx_r1.ptm("scrollableFooter"));
     ɵɵadvance(2);
     ɵɵclassMap(ctx_r1.cx("scrollableFooterBox"));
-    ɵɵproperty("pBind", ctx_r1.ptm("scrollableFooterBox"));
     ɵɵadvance(2);
     ɵɵclassMap(ctx_r1.cx("scrollableFooterTable"));
-    ɵɵproperty("ngClass", ctx_r1.tt.tableStyleClass)("ngStyle", ctx_r1.tt.tableStyle)("pBind", ctx_r1.ptm("scrollableFooterTable"));
+    ɵɵproperty("ngClass", ctx_r1.tt.tableStyleClass)("ngStyle", ctx_r1.tt.tableStyle);
     ɵɵadvance();
-    ɵɵproperty("ngTemplateOutlet", ctx_r1.frozen ? ctx_r1.tt.frozenColGroupTemplate || ctx_r1.tt._frozenColGroupTemplate || ctx_r1.tt.colGroupTemplate || ctx_r1.tt._colGroupTemplate : ctx_r1.tt.colGroupTemplate || ctx_r1.tt._colGroupTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(18, _c32, ctx_r1.columns));
+    ɵɵproperty("ngTemplateOutlet", ctx_r1.frozen ? ctx_r1.tt.frozenColGroupTemplate || ctx_r1.tt._frozenColGroupTemplate || ctx_r1.tt.colGroupTemplate || ctx_r1.tt._colGroupTemplate : ctx_r1.tt.colGroupTemplate || ctx_r1.tt._colGroupTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(14, _c32, ctx_r1.columns));
     ɵɵadvance();
     ɵɵclassMap(ctx_r1.cx("tfoot"));
-    ɵɵproperty("pBind", ctx_r1.ptm("tfoot"));
     ɵɵadvance();
-    ɵɵproperty("ngTemplateOutlet", ctx_r1.frozen ? ctx_r1.tt.frozenFooterTemplate || ctx_r1.tt._frozenFooterTemplate || ctx_r1.tt.footerTemplate || ctx_r1.tt._footerTemplate : ctx_r1.tt.footerTemplate || ctx_r1.tt._footerTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(20, _c32, ctx_r1.columns));
+    ɵɵproperty("ngTemplateOutlet", ctx_r1.frozen ? ctx_r1.tt.frozenFooterTemplate || ctx_r1.tt._frozenFooterTemplate || ctx_r1.tt.footerTemplate || ctx_r1.tt._footerTemplate : ctx_r1.tt.footerTemplate || ctx_r1.tt._footerTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(16, _c32, ctx_r1.columns));
   }
 }
 function TTSortIcon_ng_container_0__svg_svg_1_Template(rf, ctx) {
@@ -934,7 +917,6 @@ function TTSortIcon_ng_container_0__svg_svg_1_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r0.cx("sortableColumnIcon"));
-    ɵɵproperty("pBind", ctx_r0.ptm("sortableColumnIcon"));
   }
 }
 function TTSortIcon_ng_container_0__svg_svg_2_Template(rf, ctx) {
@@ -945,7 +927,6 @@ function TTSortIcon_ng_container_0__svg_svg_2_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r0.cx("sortableColumnIcon"));
-    ɵɵproperty("pBind", ctx_r0.ptm("sortableColumnIcon"));
   }
 }
 function TTSortIcon_ng_container_0__svg_svg_3_Template(rf, ctx) {
@@ -956,13 +937,12 @@ function TTSortIcon_ng_container_0__svg_svg_3_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r0.cx("sortableColumnIcon"));
-    ɵɵproperty("pBind", ctx_r0.ptm("sortableColumnIcon"));
   }
 }
 function TTSortIcon_ng_container_0_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, TTSortIcon_ng_container_0__svg_svg_1_Template, 1, 3, "svg", 3)(2, TTSortIcon_ng_container_0__svg_svg_2_Template, 1, 3, "svg", 4)(3, TTSortIcon_ng_container_0__svg_svg_3_Template, 1, 3, "svg", 5);
+    ɵɵtemplate(1, TTSortIcon_ng_container_0__svg_svg_1_Template, 1, 2, "svg", 3)(2, TTSortIcon_ng_container_0__svg_svg_2_Template, 1, 2, "svg", 4)(3, TTSortIcon_ng_container_0__svg_svg_3_Template, 1, 2, "svg", 5);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -984,26 +964,25 @@ function TTSortIcon_span_1_1_Template(rf, ctx) {
 }
 function TTSortIcon_span_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "span", 9);
-    ɵɵtemplate(1, TTSortIcon_span_1_1_Template, 1, 0, null, 10);
+    ɵɵelementStart(0, "span");
+    ɵɵtemplate(1, TTSortIcon_span_1_1_Template, 1, 0, null, 9);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext();
     ɵɵclassMap(ctx_r0.cx("sortableColumnIcon"));
-    ɵɵproperty("pBind", ctx_r0.ptm("sortableColumnIcon"));
     ɵɵadvance();
-    ɵɵproperty("ngTemplateOutlet", ctx_r0.tt.sortIconTemplate || ctx_r0.tt._sortIconTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(5, _c32, ctx_r0.sortOrder));
+    ɵɵproperty("ngTemplateOutlet", ctx_r0.tt.sortIconTemplate || ctx_r0.tt._sortIconTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(4, _c32, ctx_r0.sortOrder));
   }
 }
 function TTSortIcon_p_badge_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "p-badge", 11);
+    ɵɵelement(0, "p-badge", 10);
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext();
     ɵɵclassMap(ctx_r0.cx("sortableColumnBadge"));
-    ɵɵproperty("value", ctx_r0.getBadgeValue())("pt", ctx_r0.ptm("pcSortableColumnBadge"));
+    ɵɵproperty("value", ctx_r0.getBadgeValue());
   }
 }
 var _c54 = (a0, a1) => ({
@@ -1096,8 +1075,6 @@ function TreeTableToggler_ng_container_1__svg_svg_1_Template(rf, ctx) {
     ɵɵelement(0, "svg", 5);
   }
   if (rf & 2) {
-    const ctx_r0 = ɵɵnextContext(2);
-    ɵɵproperty("pBind", ctx_r0.ptm("nodetoggleicon"));
     ɵɵattribute("aria-hidden", true);
   }
 }
@@ -1107,15 +1084,13 @@ function TreeTableToggler_ng_container_1__svg_svg_2_Template(rf, ctx) {
     ɵɵelement(0, "svg", 6);
   }
   if (rf & 2) {
-    const ctx_r0 = ɵɵnextContext(2);
-    ɵɵproperty("pBind", ctx_r0.ptm("nodetoggleicon"));
     ɵɵattribute("aria-hidden", true);
   }
 }
 function TreeTableToggler_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, TreeTableToggler_ng_container_1__svg_svg_1_Template, 1, 2, "svg", 3)(2, TreeTableToggler_ng_container_1__svg_svg_2_Template, 1, 2, "svg", 4);
+    ɵɵtemplate(1, TreeTableToggler_ng_container_1__svg_svg_1_Template, 1, 1, "svg", 3)(2, TreeTableToggler_ng_container_1__svg_svg_2_Template, 1, 1, "svg", 4);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -1133,7 +1108,7 @@ function TreeTableToggler_2_Template(rf, ctx) {
     ɵɵtemplate(0, TreeTableToggler_2_ng_template_0_Template, 0, 0, "ng-template");
   }
 }
-var style = (
+var theme = (
   /*css*/
   `
 /* For PrimeNG */
@@ -1655,6 +1630,7 @@ var classes = {
     "p-treetable-flex-scrollable": instance.scrollable && instance.scrollHeight === "flex"
   }],
   loading: "p-treetable-loading",
+  //TODO: required?
   mask: "p-treetable-mask p-overlay-mask",
   loadingIcon: "p-treetable-loading-icon",
   header: "p-treetable-header",
@@ -1724,7 +1700,7 @@ var classes = {
 };
 var TreeTableStyle = class _TreeTableStyle extends BaseStyle {
   name = "treetable";
-  style = style;
+  theme = theme;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵTreeTableStyle_BaseFactory;
@@ -1781,7 +1757,6 @@ var TreeTableClasses;
   TreeTableClasses2["scrollableFooterTable"] = "p-treetable-scrollable-footer-table";
   TreeTableClasses2["sortableColumnIcon"] = "p-sortable-column-icon";
 })(TreeTableClasses || (TreeTableClasses = {}));
-var TREETABLE_INSTANCE = new InjectionToken("TREETABLE_INSTANCE");
 var TreeTableService = class _TreeTableService {
   sortSource = new Subject();
   selectionSource = new Subject();
@@ -1823,12 +1798,6 @@ var TreeTableService = class _TreeTableService {
 })();
 var TreeTable = class _TreeTable extends BaseComponent {
   _componentStyle = inject(TreeTableStyle);
-  bindDirectiveInstance = inject(Bind, {
-    self: true
-  });
-  onAfterViewChecked() {
-    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
-  }
   /**
    * An array of objects to represent dynamic columns.
    * @group Props
@@ -2393,14 +2362,15 @@ var TreeTable = class _TreeTable extends BaseComponent {
   documentEditListener;
   initialized;
   toggleRowIndex;
-  onInit() {
+  ngOnInit() {
+    super.ngOnInit();
     if (this.lazy && this.lazyLoadOnInit && !this.virtualScroll) {
       this.onLazyLoad.emit(this.createLazyLoadMetadata());
     }
     this.initialized = true;
   }
   templates;
-  onAfterContentInit() {
+  ngAfterContentInit() {
     this.templates.forEach((item) => {
       switch (item.getType()) {
         case "caption":
@@ -2487,7 +2457,8 @@ var TreeTable = class _TreeTable extends BaseComponent {
   filterService = inject(FilterService);
   tableService = inject(TreeTableService);
   zone = inject(NgZone);
-  onChanges(simpleChange) {
+  ngOnChanges(simpleChange) {
+    super.ngOnChanges(simpleChange);
     if (simpleChange.value) {
       this._value = simpleChange.value.currentValue;
       if (!this.lazy) {
@@ -2577,10 +2548,10 @@ var TreeTable = class _TreeTable extends BaseComponent {
       this.selectedKeys = {};
       if (Array.isArray(this._selection)) {
         for (let node of this._selection) {
-          this.selectedKeys[String(p(node.data, this.dataKey))] = 1;
+          this.selectedKeys[String(c(node.data, this.dataKey))] = 1;
         }
       } else {
-        this.selectedKeys[String(p(this._selection.data, this.dataKey))] = 1;
+        this.selectedKeys[String(c(this._selection.data, this.dataKey))] = 1;
       }
     }
   }
@@ -2670,9 +2641,9 @@ var TreeTable = class _TreeTable extends BaseComponent {
       });
     } else {
       nodes.sort((node1, node2) => {
-        let value1 = p(node1.data, this.sortField);
-        let value2 = p(node2.data, this.sortField);
-        let result = 0;
+        let value1 = c(node1.data, this.sortField);
+        let value2 = c(node2.data, this.sortField);
+        let result = null;
         if (value1 == null && value2 != null) result = -1;
         else if (value1 != null && value2 == null) result = 1;
         else if (value1 == null && value2 == null) result = 0;
@@ -2724,12 +2695,12 @@ var TreeTable = class _TreeTable extends BaseComponent {
     }
   }
   multisortField(node1, node2, multiSortMeta, index) {
-    if (l(this.multiSortMeta) || l(multiSortMeta[index])) {
+    if (a(this.multiSortMeta) || a(multiSortMeta[index])) {
       return 0;
     }
-    let value1 = p(node1.data, multiSortMeta[index].field);
-    let value2 = p(node2.data, multiSortMeta[index].field);
-    let result = 0;
+    let value1 = c(node1.data, multiSortMeta[index].field);
+    let value2 = c(node2.data, multiSortMeta[index].field);
+    let result = null;
     if (value1 == null && value2 != null) result = -1;
     else if (value1 != null && value2 == null) result = 1;
     else if (value1 == null && value2 == null) result = 0;
@@ -2898,7 +2869,7 @@ var TreeTable = class _TreeTable extends BaseComponent {
           const isContainerInViewport = this.el?.nativeElement.offsetWidth >= scrollableBodyTableWidth;
           let setWidth = (container, table, width, isContainerInViewport2) => {
             if (container && table) {
-              container.style.width = isContainerInViewport2 ? width + O(scrollableBody) + "px" : "auto";
+              container.style.width = isContainerInViewport2 ? width + P(scrollableBody) + "px" : "auto";
               table.style.width = width + "px";
             }
           };
@@ -2921,7 +2892,7 @@ var TreeTable = class _TreeTable extends BaseComponent {
       });
     }
     this.resizeHelperViewChild.nativeElement.style.display = "none";
-    P(this.el?.nativeElement, "p-unselectable-text");
+    O(this.el?.nativeElement, "p-unselectable-text");
   }
   findParentScrollableView(column) {
     if (column) {
@@ -3005,7 +2976,7 @@ var TreeTable = class _TreeTable extends BaseComponent {
         dropIndex = dropIndex - 1;
       }
       if (allowDrop) {
-        B(this.columns, dragIndex, dropIndex);
+        Q(this.columns, dragIndex, dropIndex);
         this.onColReorder.emit({
           dragIndex,
           dropIndex,
@@ -3029,7 +3000,7 @@ var TreeTable = class _TreeTable extends BaseComponent {
       let rowNode = event.rowNode;
       let selected = this.isSelected(rowNode.node);
       let metaSelection = this.rowTouched ? false : this.metaKeySelection;
-      let dataKeyValue = this.dataKey ? String(p(rowNode.node.data, this.dataKey)) : null;
+      let dataKeyValue = this.dataKey ? String(c(rowNode.node.data, this.dataKey)) : null;
       if (metaSelection) {
         let keyboardEvent = event.originalEvent;
         let metaKey = keyboardEvent.metaKey || keyboardEvent.ctrlKey;
@@ -3154,7 +3125,7 @@ var TreeTable = class _TreeTable extends BaseComponent {
       } else if (this.contextMenuSelectionMode === "joint") {
         this.preventSelectionSetterPropagation = true;
         let selected = this.isSelected(node);
-        let dataKeyValue = this.dataKey ? String(p(node.data, this.dataKey)) : null;
+        let dataKeyValue = this.dataKey ? String(c(node.data, this.dataKey)) : null;
         if (!selected) {
           if (this.isSingleSelectionMode()) {
             this.selection = node;
@@ -3240,7 +3211,7 @@ var TreeTable = class _TreeTable extends BaseComponent {
     if (node.children && node.children.length) {
       let selectedChildCount = 0;
       let childPartialSelected = false;
-      let dataKeyValue = this.dataKey ? String(p(node.data, this.dataKey)) : null;
+      let dataKeyValue = this.dataKey ? String(c(node.data, this.dataKey)) : null;
       for (let child of node.children) {
         if (this.isSelected(child)) selectedChildCount++;
         else if (child.partialSelected) childPartialSelected = true;
@@ -3273,7 +3244,7 @@ var TreeTable = class _TreeTable extends BaseComponent {
   }
   propagateSelectionDown(node, select) {
     let index = this.findIndexInSelection(node);
-    let dataKeyValue = this.dataKey ? String(p(node.data, this.dataKey)) : null;
+    let dataKeyValue = this.dataKey ? String(c(node.data, this.dataKey)) : null;
     if (select && index == -1) {
       this._selection = [...this.selection || [], node];
       if (dataKeyValue) {
@@ -3299,7 +3270,7 @@ var TreeTable = class _TreeTable extends BaseComponent {
         if (node.hasOwnProperty("checked")) {
           return node["checked"];
         } else {
-          return this.selectedKeys[p(node.data, this.dataKey)] !== void 0;
+          return this.selectedKeys[c(node.data, this.dataKey)] !== void 0;
         }
       } else {
         if (Array.isArray(this.selection)) return this.findIndexInSelection(node) > -1;
@@ -3315,7 +3286,7 @@ var TreeTable = class _TreeTable extends BaseComponent {
     return this.selectionMode && this.selectionKeys ? this.selectionKeys[this.nodeKey(node)]?.partialChecked === true : false;
   }
   nodeKey(node) {
-    return p(node, this.dataKey) || p(node?.data, this.dataKey);
+    return c(node, this.dataKey) || c(node?.data, this.dataKey);
   }
   toggleCheckbox(event) {
     let {
@@ -3553,7 +3524,7 @@ var TreeTable = class _TreeTable extends BaseComponent {
       globalFilterFieldsArray
     } = filterOptions;
     let matched = false;
-    const isMatched = (field) => filterConstraint(p(node.data, field), filterValue, this.filterLocale);
+    const isMatched = (field) => filterConstraint(c(node.data, field), filterValue, this.filterLocale);
     matched = globalFilterFieldsArray?.length ? globalFilterFieldsArray.some((globalFilterField) => isMatched(globalFilterField.field || globalFilterField)) : isMatched(filterField);
     if (!matched || isStrictMode && !this.isNodeLeaf(node)) {
       matched = this.findFilteredNodes(node, {
@@ -3610,7 +3581,7 @@ var TreeTable = class _TreeTable extends BaseComponent {
     if (!this.documentEditListener) {
       this.documentEditListener = this.renderer.listen(this.document, "click", (event) => {
         if (this.editingCell && !this.editingCellClick && this.isEditingCellValid()) {
-          P(this.editingCell, "p-cell-editing");
+          O(this.editingCell, "p-cell-editing");
           this.editingCell = null;
           this.onEditComplete.emit({
             field: this.editingCellField,
@@ -3630,12 +3601,13 @@ var TreeTable = class _TreeTable extends BaseComponent {
       this.documentEditListener = null;
     }
   }
-  onDestroy() {
+  ngOnDestroy() {
     this.unbindDocumentEditListener();
     this.editingCell = null;
     this.editingCellField = null;
     this.editingCellData = null;
     this.initialized = null;
+    super.ngOnDestroy();
   }
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵTreeTable_BaseFactory;
@@ -3820,19 +3792,13 @@ var TreeTable = class _TreeTable extends BaseComponent {
       selectionKeysChange: "selectionKeysChange"
     },
     standalone: false,
-    features: [ɵɵProvidersFeature([TreeTableService, TreeTableStyle, {
-      provide: TREETABLE_INSTANCE,
-      useExisting: _TreeTable
-    }, {
-      provide: PARENT_INSTANCE,
-      useExisting: _TreeTable
-    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([TreeTableService, TreeTableStyle]), ɵɵInheritDefinitionFeature, ɵɵNgOnChangesFeature],
     decls: 10,
     vars: 10,
-    consts: [["table", ""], ["scrollableView", ""], ["scrollableFrozenView", ""], ["resizeHelper", ""], ["reorderIndicatorUp", ""], ["reorderIndicatorDown", ""], [3, "pBind", "class", 4, "ngIf"], [3, "pt", "rows", "first", "totalRecords", "pageLinkSize", "styleClass", "alwaysShow", "rowsPerPageOptions", "templateLeft", "templateRight", "appendTo", "currentPageReportTemplate", "showFirstLastIcon", "dropdownItemTemplate", "showCurrentPageReport", "showJumpToPageDropdown", "showPageLinks", "locale", "onPageChange", 4, "ngIf"], [3, "pBind", "class", "display", 4, "ngIf"], [3, "pBind"], [3, "class", 4, "ngIf"], [4, "ngIf"], ["data-p-icon", "spinner", 3, "spin", "class", 4, "ngIf"], ["data-p-icon", "spinner", 3, "spin"], [4, "ngTemplateOutlet"], [3, "onPageChange", "pt", "rows", "first", "totalRecords", "pageLinkSize", "styleClass", "alwaysShow", "rowsPerPageOptions", "templateLeft", "templateRight", "appendTo", "currentPageReportTemplate", "showFirstLastIcon", "dropdownItemTemplate", "showCurrentPageReport", "showJumpToPageDropdown", "showPageLinks", "locale"], ["pTemplate", "firstpagelinkicon"], ["pTemplate", "previouspagelinkicon"], ["pTemplate", "lastpagelinkicon"], ["pTemplate", "nextpagelinkicon"], ["role", "treegrid", 3, "pBind", "ngClass", "ngStyle"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], ["role", "rowgroup", 3, "pBind"], ["role", "rowgroup", 3, "pBind", "pTreeTableBody", "pTreeTableBodyTemplate"], [3, "ngClass", "ttScrollableView", "frozen", "ngStyle", "scrollHeight", "pBind", 4, "ngIf"], [3, "pBind", "ttScrollableView", "frozen", "scrollHeight", "ngStyle"], [3, "ngClass", "ttScrollableView", "frozen", "ngStyle", "scrollHeight", "pBind"], ["data-p-icon", "arrow-down", 4, "ngIf"], ["data-p-icon", "arrow-down"], ["data-p-icon", "arrow-up", 4, "ngIf"], ["data-p-icon", "arrow-up"]],
+    consts: [["table", ""], ["scrollableView", ""], ["scrollableFrozenView", ""], ["resizeHelper", ""], ["reorderIndicatorUp", ""], ["reorderIndicatorDown", ""], [3, "class", 4, "ngIf"], [3, "rows", "first", "totalRecords", "pageLinkSize", "styleClass", "alwaysShow", "rowsPerPageOptions", "templateLeft", "templateRight", "appendTo", "currentPageReportTemplate", "showFirstLastIcon", "dropdownItemTemplate", "showCurrentPageReport", "showJumpToPageDropdown", "showPageLinks", "locale", "onPageChange", 4, "ngIf"], [3, "class", "display", 4, "ngIf"], [4, "ngIf"], ["data-p-icon", "spinner", 3, "spin", "class", 4, "ngIf"], ["data-p-icon", "spinner", 3, "spin"], [4, "ngTemplateOutlet"], [3, "onPageChange", "rows", "first", "totalRecords", "pageLinkSize", "styleClass", "alwaysShow", "rowsPerPageOptions", "templateLeft", "templateRight", "appendTo", "currentPageReportTemplate", "showFirstLastIcon", "dropdownItemTemplate", "showCurrentPageReport", "showJumpToPageDropdown", "showPageLinks", "locale"], ["pTemplate", "firstpagelinkicon"], ["pTemplate", "previouspagelinkicon"], ["pTemplate", "lastpagelinkicon"], ["pTemplate", "nextpagelinkicon"], ["role", "table", 3, "ngClass", "ngStyle"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], ["role", "rowgroup"], ["role", "rowgroup", 3, "pTreeTableBody", "pTreeTableBodyTemplate"], [3, "ngClass", "ttScrollableView", "frozen", "ngStyle", "scrollHeight", 4, "ngIf"], [3, "ttScrollableView", "frozen", "scrollHeight", "ngStyle"], [3, "ngClass", "ttScrollableView", "frozen", "ngStyle", "scrollHeight"], ["data-p-icon", "arrow-down", 4, "ngIf"], ["data-p-icon", "arrow-down"], ["data-p-icon", "arrow-up", 4, "ngIf"], ["data-p-icon", "arrow-up"]],
     template: function TreeTable_Template(rf, ctx) {
       if (rf & 1) {
-        ɵɵtemplate(0, TreeTable_div_0_Template, 4, 8, "div", 6)(1, TreeTable_div_1_Template, 2, 4, "div", 6)(2, TreeTable_p_paginator_2_Template, 5, 22, "p-paginator", 7)(3, TreeTable_div_3_Template, 9, 29, "div", 6)(4, TreeTable_div_4_Template, 4, 14, "div", 6)(5, TreeTable_p_paginator_5_Template, 5, 22, "p-paginator", 7)(6, TreeTable_div_6_Template, 2, 4, "div", 6)(7, TreeTable_div_7_Template, 2, 5, "div", 8)(8, TreeTable_span_8_Template, 4, 7, "span", 8)(9, TreeTable_span_9_Template, 4, 7, "span", 8);
+        ɵɵtemplate(0, TreeTable_div_0_Template, 4, 6, "div", 6)(1, TreeTable_div_1_Template, 2, 3, "div", 6)(2, TreeTable_p_paginator_2_Template, 5, 21, "p-paginator", 7)(3, TreeTable_div_3_Template, 9, 24, "div", 6)(4, TreeTable_div_4_Template, 4, 12, "div", 6)(5, TreeTable_p_paginator_5_Template, 5, 21, "p-paginator", 7)(6, TreeTable_div_6_Template, 2, 3, "div", 6)(7, TreeTable_div_7_Template, 2, 4, "div", 8)(8, TreeTable_span_8_Template, 4, 6, "span", 8)(9, TreeTable_span_9_Template, 4, 6, "span", 8);
       }
       if (rf & 2) {
         ɵɵproperty("ngIf", ctx.loading && ctx.showLoader);
@@ -3856,7 +3822,7 @@ var TreeTable = class _TreeTable extends BaseComponent {
         ɵɵproperty("ngIf", ctx.reorderableColumns);
       }
     },
-    dependencies: () => [NgClass, NgIf, NgTemplateOutlet, NgStyle, Paginator, PrimeTemplate, SpinnerIcon, ArrowDownIcon, ArrowUpIcon, Bind, TTScrollableView, TTBody],
+    dependencies: () => [NgClass, NgIf, NgTemplateOutlet, NgStyle, Paginator, PrimeTemplate, SpinnerIcon, ArrowDownIcon, ArrowUpIcon, TTScrollableView, TTBody],
     encapsulation: 2
   });
 };
@@ -3867,8 +3833,8 @@ var TreeTable = class _TreeTable extends BaseComponent {
       selector: "p-treeTable, p-treetable, p-tree-table",
       standalone: false,
       template: `
-        <div [pBind]="ptm('loading')" [class]="cx('loading')" *ngIf="loading && showLoader">
-            <div [pBind]="ptm('mask')" [class]="cx('mask')">
+        <div [class]="cx('loading')" *ngIf="loading && showLoader">
+            <div [class]="cx('mask')">
                 <i *ngIf="loadingIcon" [class]="cn(cx('loadingIcon'), 'pi-spin' + loadingIcon)"></i>
                 <ng-container *ngIf="!loadingIcon">
                     <svg data-p-icon="spinner" *ngIf="!loadingIconTemplate && !_loadingIconTemplate" [spin]="true" [class]="cx('loadingIcon')" />
@@ -3878,11 +3844,10 @@ var TreeTable = class _TreeTable extends BaseComponent {
                 </ng-container>
             </div>
         </div>
-        <div [pBind]="ptm('header')" *ngIf="captionTemplate || _captionTemplate" [class]="cx('header')">
+        <div *ngIf="captionTemplate || _captionTemplate" [class]="cx('header')">
             <ng-container *ngTemplateOutlet="captionTemplate || _captionTemplate"></ng-container>
         </div>
         <p-paginator
-            [pt]="ptm('pcPaginator')"
             [rows]="rows"
             [first]="first"
             [totalRecords]="totalRecords"
@@ -3920,20 +3885,20 @@ var TreeTable = class _TreeTable extends BaseComponent {
             </ng-template>
         </p-paginator>
 
-        <div [pBind]="ptm('wrapper')" [class]="cx('wrapper')" *ngIf="!scrollable">
-            <table role="treegrid" [pBind]="ptm('table')" #table [ngClass]="tableStyleClass" [ngStyle]="tableStyle">
+        <div [class]="cx('wrapper')" *ngIf="!scrollable">
+            <table role="table" #table [ngClass]="tableStyleClass" [ngStyle]="tableStyle">
                 <ng-container *ngTemplateOutlet="colGroupTemplate || _colGroupTemplate; context: { $implicit: columns }"></ng-container>
-                <thead role="rowgroup" [class]="cx('thead')" [pBind]="ptm('thead')">
+                <thead role="rowgroup" [class]="cx('thead')">
                     <ng-container *ngTemplateOutlet="headerTemplate || _headerTemplate; context: { $implicit: columns }"></ng-container>
                 </thead>
-                <tbody [class]="cx('tbody')" [pBind]="ptm('tbody')" role="rowgroup" [pTreeTableBody]="columns" [pTreeTableBodyTemplate]="bodyTemplate ?? _bodyTemplate"></tbody>
-                <tfoot [class]="cx('tfoot')" [pBind]="ptm('tfoot')" role="rowgroup">
+                <tbody [class]="cx('tbody')" role="rowgroup" [pTreeTableBody]="columns" [pTreeTableBodyTemplate]="bodyTemplate ?? _bodyTemplate"></tbody>
+                <tfoot [class]="cx('tfoot')" role="rowgroup">
                     <ng-container *ngTemplateOutlet="footerTemplate || _footerTemplate; context: { $implicit: columns }"></ng-container>
                 </tfoot>
             </table>
         </div>
 
-        <div [pBind]="ptm('scrollableWrapper')" [class]="cx('scrollableWrapper')" *ngIf="scrollable">
+        <div [class]="cx('scrollableWrapper')" *ngIf="scrollable">
             <div
                 [ngClass]="[cx('scrollableView'), cx('frozenView')]"
                 *ngIf="frozenColumns || frozenBodyTemplate || _frozenBodyTemplate"
@@ -3942,21 +3907,11 @@ var TreeTable = class _TreeTable extends BaseComponent {
                 [frozen]="true"
                 [ngStyle]="{ width: frozenWidth }"
                 [scrollHeight]="scrollHeight"
-                [pBind]="ptm('scrollableView')"
             ></div>
-            <div
-                [class]="cx('scrollableView')"
-                [pBind]="ptm('scrollableView')"
-                #scrollableView
-                [ttScrollableView]="columns"
-                [frozen]="false"
-                [scrollHeight]="scrollHeight"
-                [ngStyle]="{ left: frozenWidth, width: 'calc(100% - ' + frozenWidth + ')' }"
-            ></div>
+            <div [class]="cx('scrollableView')" #scrollableView [ttScrollableView]="columns" [frozen]="false" [scrollHeight]="scrollHeight" [ngStyle]="{ left: frozenWidth, width: 'calc(100% - ' + frozenWidth + ')' }"></div>
         </div>
 
         <p-paginator
-            [pt]="ptm('pcPaginator')"
             [rows]="rows"
             [first]="first"
             [totalRecords]="totalRecords"
@@ -3993,33 +3948,26 @@ var TreeTable = class _TreeTable extends BaseComponent {
                 <ng-container *ngTemplateOutlet="paginatorNextPageLinkIconTemplate || _paginatorNextPageLinkIconTemplate"></ng-container>
             </ng-template>
         </p-paginator>
-        <div [pBind]="ptm('footer')" *ngIf="summaryTemplate || _summaryTemplate" [class]="cx('footer')">
+        <div *ngIf="summaryTemplate || _summaryTemplate" [class]="cx('footer')">
             <ng-container *ngTemplateOutlet="summaryTemplate || _summaryTemplate"></ng-container>
         </div>
 
-        <div [pBind]="ptm('columnResizerHelper')" #resizeHelper [class]="cx('columnResizerHelper')" [style.display]="'none'" *ngIf="resizableColumns"></div>
-        <span [pBind]="ptm('reorderIndicatorUp')" #reorderIndicatorUp [class]="cx('reorderIndicatorUp')" [style.display]="'none'" *ngIf="reorderableColumns">
+        <div #resizeHelper [class]="cx('columnResizerHelper')" [style.display]="'none'" *ngIf="resizableColumns"></div>
+        <span #reorderIndicatorUp [class]="cx('reorderIndicatorUp')" [style.display]="'none'" *ngIf="reorderableColumns">
             <svg data-p-icon="arrow-down" *ngIf="!reorderIndicatorUpIconTemplate && !_reorderIndicatorUpIconTemplate" />
             <ng-template *ngTemplateOutlet="reorderIndicatorUpIconTemplate || _reorderIndicatorUpIconTemplate"></ng-template>
         </span>
-        <span [pBind]="ptm('reorderIndicatorDown')" #reorderIndicatorDown [class]="cx('reorderIndicatorDown')" [style.display]="'none'" *ngIf="reorderableColumns">
+        <span #reorderIndicatorDown [class]="cx('reorderIndicatorDown')" [style.display]="'none'" *ngIf="reorderableColumns">
             <svg data-p-icon="arrow-up" *ngIf="!reorderIndicatorDownIconTemplate && !_reorderIndicatorDownIconTemplate" />
             <ng-template *ngTemplateOutlet="reorderIndicatorDownIconTemplate || _reorderIndicatorDownIconTemplate"></ng-template>
         </span>
     `,
-      providers: [TreeTableService, TreeTableStyle, {
-        provide: TREETABLE_INSTANCE,
-        useExisting: TreeTable
-      }, {
-        provide: PARENT_INSTANCE,
-        useExisting: TreeTable
-      }],
+      providers: [TreeTableService, TreeTableStyle],
       encapsulation: ViewEncapsulation.None,
       host: {
         "[class]": "cn(cx('root'), styleClass)",
         "[attr.data-scrollselectors]": "'.p-treetable-scrollable-body'"
-      },
-      hostDirectives: [Bind]
+      }
     }]
   }], null, {
     columns: [{
@@ -4535,19 +4483,20 @@ var TreeTable = class _TreeTable extends BaseComponent {
     }]
   });
 })();
-var TTBody = class _TTBody extends BaseComponent {
+var TTBody = class _TTBody {
   tt;
   treeTableService;
+  cd;
   columns;
   template;
   frozen;
   serializedNodes;
   scrollerOptions;
   subscription;
-  constructor(tt, treeTableService) {
-    super();
+  constructor(tt, treeTableService, cd) {
     this.tt = tt;
     this.treeTableService = treeTableService;
+    this.cd = cd;
     this.subscription = this.tt.tableService.uiUpdateSource$.subscribe(() => {
       if (this.tt.virtualScroll) {
         this.cd.detectChanges();
@@ -4565,13 +4514,13 @@ var TTBody = class _TTBody extends BaseComponent {
     const getItemOptions = this.getScrollerOption("getItemOptions");
     return getItemOptions ? getItemOptions(rowIndex).index : rowIndex;
   }
-  onDestroy() {
+  ngOnDestroy() {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
   }
   static ɵfac = function TTBody_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _TTBody)(ɵɵdirectiveInject(TreeTable), ɵɵdirectiveInject(TreeTableService));
+    return new (__ngFactoryType__ || _TTBody)(ɵɵdirectiveInject(TreeTable), ɵɵdirectiveInject(TreeTableService), ɵɵdirectiveInject(ChangeDetectorRef));
   };
   static ɵcmp = ɵɵdefineComponent({
     type: _TTBody,
@@ -4584,7 +4533,6 @@ var TTBody = class _TTBody extends BaseComponent {
       scrollerOptions: "scrollerOptions"
     },
     standalone: false,
-    features: [ɵɵInheritDefinitionFeature],
     attrs: _c36,
     decls: 2,
     vars: 3,
@@ -4635,6 +4583,8 @@ var TTBody = class _TTBody extends BaseComponent {
     type: TreeTable
   }, {
     type: TreeTableService
+  }, {
+    type: ChangeDetectorRef
   }], {
     columns: [{
       type: Input,
@@ -4660,8 +4610,8 @@ var TTBody = class _TTBody extends BaseComponent {
 })();
 var TTScrollableView = class _TTScrollableView extends BaseComponent {
   tt;
+  el;
   zone;
-  hostName = "TreeTable";
   columns;
   frozen;
   scrollHeaderViewChild;
@@ -4690,12 +4640,14 @@ var TTScrollableView = class _TTScrollableView extends BaseComponent {
       console.log('Percentage scroll height calculation is removed in favor of the more performant CSS based flex mode, use scrollHeight="flex" instead.');
     }
   }
-  constructor(tt, zone) {
+  constructor(tt, el, zone) {
     super();
     this.tt = tt;
+    this.el = el;
     this.zone = zone;
   }
-  onAfterViewInit() {
+  ngAfterViewInit() {
+    super.ngAfterViewInit();
     if (isPlatformBrowser(this.platformId)) {
       if (!this.frozen) {
         if (this.tt.frozenColumns || this.tt.frozenBodyTemplate || this.tt._frozenBodyTemplate) {
@@ -4707,17 +4659,15 @@ var TTScrollableView = class _TTScrollableView extends BaseComponent {
           else this.frozenSiblingBody = z(frozenView, ".p-treetable-scrollable-body");
         }
         if (this.scrollHeight) {
-          let scrollBarWidth = O();
-          if (this.scrollHeaderBoxViewChild?.nativeElement) {
-            this.scrollHeaderBoxViewChild.nativeElement.style.paddingRight = scrollBarWidth + "px";
-          }
+          let scrollBarWidth = P();
+          this.scrollHeaderBoxViewChild.nativeElement.style.paddingRight = scrollBarWidth + "px";
           if (this.scrollFooterBoxViewChild && this.scrollFooterBoxViewChild.nativeElement) {
             this.scrollFooterBoxViewChild.nativeElement.style.paddingRight = scrollBarWidth + "px";
           }
         }
       } else {
         if (this.scrollableAlignerViewChild && this.scrollableAlignerViewChild.nativeElement) {
-          this.scrollableAlignerViewChild.nativeElement.style.height = pt() + "px";
+          this.scrollableAlignerViewChild.nativeElement.style.height = ct() + "px";
         }
       }
       this.bindEvents();
@@ -4818,12 +4768,13 @@ var TTScrollableView = class _TTScrollableView extends BaseComponent {
       }
     }
   }
-  onDestroy() {
+  ngOnDestroy() {
+    super.ngOnDestroy();
     this.unbindEvents();
     this.frozenSiblingBody = null;
   }
   static ɵfac = function TTScrollableView_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _TTScrollableView)(ɵɵdirectiveInject(TreeTable), ɵɵdirectiveInject(NgZone));
+    return new (__ngFactoryType__ || _TTScrollableView)(ɵɵdirectiveInject(TreeTable), ɵɵdirectiveInject(ElementRef), ɵɵdirectiveInject(NgZone));
   };
   static ɵcmp = ɵɵdefineComponent({
     type: _TTScrollableView,
@@ -4862,33 +4813,30 @@ var TTScrollableView = class _TTScrollableView extends BaseComponent {
     features: [ɵɵProvidersFeature([TreeTableStyle]), ɵɵInheritDefinitionFeature],
     attrs: _c48,
     decls: 13,
-    vars: 24,
-    consts: [["scrollHeader", ""], ["scrollHeaderBox", ""], ["buildInItems", ""], ["scroller", ""], ["content", ""], ["loader", ""], ["scrollBody", ""], ["scrollTable", ""], ["scrollableAligner", ""], ["scrollFooter", ""], ["scrollFooterBox", ""], [3, "pBind"], [3, "pBind", "ngStyle"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], ["role", "rowgroup", 3, "pBind"], [3, "items", "styleClass", "style", "scrollHeight", "itemSize", "lazy", "options", "pt", "onLazyLoad", 4, "ngIf"], [4, "ngIf"], [3, "class", "pBind", 4, "ngIf"], [3, "onLazyLoad", "items", "styleClass", "scrollHeight", "itemSize", "lazy", "options", "pt"], ["role", "treegrid", 3, "pBind", "ngClass", "ngStyle"], ["role", "rowgroup", 3, "pBind", "pTreeTableBody", "pTreeTableBodyTemplate", "serializedNodes", "frozen"], [3, "background-color", 4, "ngIf"], [3, "ngClass", "ngStyle", "pBind"]],
+    vars: 20,
+    consts: [["scrollHeader", ""], ["scrollHeaderBox", ""], ["buildInItems", ""], ["scroller", ""], ["content", ""], ["loader", ""], ["scrollBody", ""], ["scrollTable", ""], ["scrollableAligner", ""], ["scrollFooter", ""], ["scrollFooterBox", ""], [3, "ngStyle"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], ["role", "rowgroup"], [3, "items", "styleClass", "style", "scrollHeight", "itemSize", "lazy", "options", "onLazyLoad", 4, "ngIf"], [4, "ngIf"], [3, "class", 4, "ngIf"], [3, "onLazyLoad", "items", "styleClass", "scrollHeight", "itemSize", "lazy", "options"], ["role", "table", 3, "ngClass", "ngStyle"], ["role", "rowgroup", 3, "pTreeTableBody", "pTreeTableBodyTemplate", "serializedNodes", "frozen"], [3, "background-color", 4, "ngIf"], [3, "ngClass", "ngStyle"]],
     template: function TTScrollableView_Template(rf, ctx) {
       if (rf & 1) {
-        ɵɵelementStart(0, "div", 11, 0)(2, "div", 11, 1)(4, "table", 12);
-        ɵɵtemplate(5, TTScrollableView_ng_container_5_Template, 1, 0, "ng-container", 13);
-        ɵɵelementStart(6, "thead", 14);
-        ɵɵtemplate(7, TTScrollableView_ng_container_7_Template, 1, 0, "ng-container", 13);
+        ɵɵelementStart(0, "div", null, 0)(2, "div", null, 1)(4, "table", 11);
+        ɵɵtemplate(5, TTScrollableView_ng_container_5_Template, 1, 0, "ng-container", 12);
+        ɵɵelementStart(6, "thead", 13);
+        ɵɵtemplate(7, TTScrollableView_ng_container_7_Template, 1, 0, "ng-container", 12);
         ɵɵelementEnd()()()();
-        ɵɵtemplate(8, TTScrollableView_p_scroller_8_Template, 5, 12, "p-scroller", 15)(9, TTScrollableView_ng_container_9_Template, 4, 13, "ng-container", 16)(10, TTScrollableView_ng_template_10_Template, 5, 20, "ng-template", null, 2, ɵɵtemplateRefExtractor)(12, TTScrollableView_div_12_Template, 8, 22, "div", 17);
+        ɵɵtemplate(8, TTScrollableView_p_scroller_8_Template, 5, 11, "p-scroller", 14)(9, TTScrollableView_ng_container_9_Template, 4, 12, "ng-container", 15)(10, TTScrollableView_ng_template_10_Template, 5, 17, "ng-template", null, 2, ɵɵtemplateRefExtractor)(12, TTScrollableView_div_12_Template, 8, 18, "div", 16);
       }
       if (rf & 2) {
         ɵɵclassMap(ctx.cx("scrollableHeader"));
-        ɵɵproperty("pBind", ctx.ptm("scrollableHeader"));
         ɵɵadvance(2);
         ɵɵclassMap(ctx.cx("scrollableHeaderBox"));
-        ɵɵproperty("pBind", ctx.ptm("scrollableHeaderBox"));
         ɵɵadvance(2);
         ɵɵclassMap(ctx.cn(ctx.cx("scrollableHeaderTable"), ctx.tt.tableStyleClass));
-        ɵɵproperty("pBind", ctx.ptm("scrollableHeaderTable"))("ngStyle", ctx.tt.tableStyle);
+        ɵɵproperty("ngStyle", ctx.tt.tableStyle);
         ɵɵadvance();
-        ɵɵproperty("ngTemplateOutlet", ctx.frozen ? ctx.tt.frozenColGroupTemplate || ctx.tt._frozenColGroupTemplate || ctx.tt.colGroupTemplate || ctx.tt._colGroupTemplate : ctx.tt.colGroupTemplate || ctx.tt._colGroupTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(20, _c32, ctx.columns));
+        ɵɵproperty("ngTemplateOutlet", ctx.frozen ? ctx.tt.frozenColGroupTemplate || ctx.tt._frozenColGroupTemplate || ctx.tt.colGroupTemplate || ctx.tt._colGroupTemplate : ctx.tt.colGroupTemplate || ctx.tt._colGroupTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(16, _c32, ctx.columns));
         ɵɵadvance();
         ɵɵclassMap(ctx.cx("thead"));
-        ɵɵproperty("pBind", ctx.ptm("thead"));
         ɵɵadvance();
-        ɵɵproperty("ngTemplateOutlet", ctx.frozen ? ctx.tt.frozenHeaderTemplate || ctx.tt._frozenHeaderTemplate || ctx.tt.headerTemplate || ctx.tt._headerTemplate : ctx.tt.headerTemplate || ctx.tt._headerTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(22, _c32, ctx.columns));
+        ɵɵproperty("ngTemplateOutlet", ctx.frozen ? ctx.tt.frozenHeaderTemplate || ctx.tt._frozenHeaderTemplate || ctx.tt.headerTemplate || ctx.tt._headerTemplate : ctx.tt.headerTemplate || ctx.tt._headerTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(18, _c32, ctx.columns));
         ɵɵadvance();
         ɵɵproperty("ngIf", ctx.tt.virtualScroll);
         ɵɵadvance();
@@ -4897,7 +4845,7 @@ var TTScrollableView = class _TTScrollableView extends BaseComponent {
         ɵɵproperty("ngIf", ctx.tt.footerTemplate || ctx.tt._footerTemplate);
       }
     },
-    dependencies: () => [NgClass, NgIf, NgTemplateOutlet, NgStyle, Scroller, Bind, TTBody],
+    dependencies: () => [NgClass, NgIf, NgTemplateOutlet, NgStyle, Scroller, TTBody],
     encapsulation: 2
   });
 };
@@ -4908,13 +4856,13 @@ var TTScrollableView = class _TTScrollableView extends BaseComponent {
       selector: "[ttScrollableView]",
       standalone: false,
       template: `
-        <div #scrollHeader [class]="cx('scrollableHeader')" [pBind]="ptm('scrollableHeader')">
-            <div #scrollHeaderBox [class]="cx('scrollableHeaderBox')" [pBind]="ptm('scrollableHeaderBox')">
-                <table [class]="cn(cx('scrollableHeaderTable'), tt.tableStyleClass)" [pBind]="ptm('scrollableHeaderTable')" [ngStyle]="tt.tableStyle">
+        <div #scrollHeader [class]="cx('scrollableHeader')">
+            <div #scrollHeaderBox [class]="cx('scrollableHeaderBox')">
+                <table [class]="cn(cx('scrollableHeaderTable'), tt.tableStyleClass)" [ngStyle]="tt.tableStyle">
                     <ng-container
                         *ngTemplateOutlet="frozen ? tt.frozenColGroupTemplate || tt._frozenColGroupTemplate || tt.colGroupTemplate || tt._colGroupTemplate : tt.colGroupTemplate || tt._colGroupTemplate; context: { $implicit: columns }"
                     ></ng-container>
-                    <thead role="rowgroup" [class]="cx('thead')" [pBind]="ptm('thead')">
+                    <thead role="rowgroup" [class]="cx('thead')">
                         <ng-container
                             *ngTemplateOutlet="frozen ? tt.frozenHeaderTemplate || tt._frozenHeaderTemplate || tt.headerTemplate || tt._headerTemplate : tt.headerTemplate || tt._headerTemplate; context: { $implicit: columns }"
                         ></ng-container>
@@ -4934,7 +4882,6 @@ var TTScrollableView = class _TTScrollableView extends BaseComponent {
             [lazy]="tt.lazy"
             (onLazyLoad)="tt.onLazyItemLoad($event)"
             [options]="tt.virtualScrollOptions"
-            [pt]="ptm('virtualScroller')"
         >
             <ng-template #content let-items let-scrollerOptions="options">
                 <ng-container *ngTemplateOutlet="buildInItems; context: { $implicit: items, options: scrollerOptions }"></ng-container>
@@ -4949,7 +4896,6 @@ var TTScrollableView = class _TTScrollableView extends BaseComponent {
             <div
                 #scrollBody
                 [class]="cx('scrollableBody')"
-                [pBind]="ptm('scrollableBody')"
                 [ngStyle]="{
                     'max-height': tt.scrollHeight !== 'flex' ? scrollHeight : undefined,
                     'overflow-y': !frozen && tt.scrollHeight ? 'scroll' : undefined
@@ -4960,15 +4906,13 @@ var TTScrollableView = class _TTScrollableView extends BaseComponent {
         </ng-container>
 
         <ng-template #buildInItems let-items let-scrollerOptions="options">
-            <table role="treegrid" #scrollTable [pBind]="ptm('table')" [class]="tt.tableStyleClass" [ngClass]="scrollerOptions.contentStyleClass" [ngStyle]="tt.tableStyle" [style]="scrollerOptions.contentStyle">
+            <table role="table" #scrollTable [class]="tt.tableStyleClass" [ngClass]="scrollerOptions.contentStyleClass" [ngStyle]="tt.tableStyle" [style]="scrollerOptions.contentStyle">
                 <ng-container
                     *ngTemplateOutlet="frozen ? tt.frozenColGroupTemplate || tt._frozenColGroupTemplate || tt.colGroupTemplate || tt._colGroupTemplate : tt.colGroupTemplate || tt._colGroupTemplate; context: { $implicit: columns }"
                 ></ng-container>
                 <tbody
-                    [pBind]="ptm('tbody')"
                     role="rowgroup"
                     [class]="cx('tbody')"
-                    [pBind]="ptm('tbody')"
                     [pTreeTableBody]="columns"
                     [pTreeTableBodyTemplate]="frozen ? tt.frozenBodyTemplate || tt._frozenBodyTemplate || tt.bodyTemplate || tt._bodyTemplate : tt.bodyTemplate || tt._bodyTemplate"
                     [serializedNodes]="items"
@@ -4978,13 +4922,13 @@ var TTScrollableView = class _TTScrollableView extends BaseComponent {
             <div #scrollableAligner [style.background-color]="'transparent'" *ngIf="frozen"></div>
         </ng-template>
 
-        <div #scrollFooter *ngIf="tt.footerTemplate || tt._footerTemplate" [class]="cx('scrollableFooter')" [pBind]="ptm('scrollableFooter')">
-            <div #scrollFooterBox [class]="cx('scrollableFooterBox')" [pBind]="ptm('scrollableFooterBox')">
-                <table [class]="cx('scrollableFooterTable')" [ngClass]="tt.tableStyleClass" [ngStyle]="tt.tableStyle" [pBind]="ptm('scrollableFooterTable')">
+        <div #scrollFooter *ngIf="tt.footerTemplate || tt._footerTemplate" [class]="cx('scrollableFooter')">
+            <div #scrollFooterBox [class]="cx('scrollableFooterBox')">
+                <table [class]="cx('scrollableFooterTable')" [ngClass]="tt.tableStyleClass" [ngStyle]="tt.tableStyle">
                     <ng-container
                         *ngTemplateOutlet="frozen ? tt.frozenColGroupTemplate || tt._frozenColGroupTemplate || tt.colGroupTemplate || tt._colGroupTemplate : tt.colGroupTemplate || tt._colGroupTemplate; context: { $implicit: columns }"
                     ></ng-container>
-                    <tfoot role="rowgroup" [class]="cx('tfoot')" [pBind]="ptm('tfoot')">
+                    <tfoot role="rowgroup" [class]="cx('tfoot')">
                         <ng-container
                             *ngTemplateOutlet="frozen ? tt.frozenFooterTemplate || tt._frozenFooterTemplate || tt.footerTemplate || tt._footerTemplate : tt.footerTemplate || tt._footerTemplate; context: { $implicit: columns }"
                         ></ng-container>
@@ -4998,6 +4942,8 @@ var TTScrollableView = class _TTScrollableView extends BaseComponent {
     }]
   }], () => [{
     type: TreeTable
+  }, {
+    type: ElementRef
   }, {
     type: NgZone
   }], {
@@ -5054,17 +5000,6 @@ var TTScrollableView = class _TTScrollableView extends BaseComponent {
 })();
 var TTSortableColumn = class _TTSortableColumn extends BaseComponent {
   tt;
-  hostName = "TreeTable ";
-  bindDirectiveInstance = inject(Bind, {
-    self: true
-  });
-  onAfterViewChecked() {
-    this.bindDirectiveInstance.setAttrs(this.ptm("sortableColumn", {
-      context: {
-        sorted: this.sorted
-      }
-    }));
-  }
   field;
   ttSortableColumnDisabled;
   sorted;
@@ -5084,7 +5019,8 @@ var TTSortableColumn = class _TTSortableColumn extends BaseComponent {
       });
     }
   }
-  onInit() {
+  ngOnInit() {
+    super.ngOnInit();
     if (this.isEnabled()) {
       this.updateSortState();
     }
@@ -5099,7 +5035,7 @@ var TTSortableColumn = class _TTSortableColumn extends BaseComponent {
         originalEvent: event,
         field: this.field
       });
-      ct();
+      pt();
     }
   }
   onEnterKey(event) {
@@ -5108,7 +5044,8 @@ var TTSortableColumn = class _TTSortableColumn extends BaseComponent {
   isEnabled() {
     return this.ttSortableColumnDisabled !== true;
   }
-  onDestroy() {
+  ngOnDestroy() {
+    super.ngOnDestroy();
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
@@ -5140,7 +5077,7 @@ var TTSortableColumn = class _TTSortableColumn extends BaseComponent {
       ttSortableColumnDisabled: [2, "ttSortableColumnDisabled", "ttSortableColumnDisabled", booleanAttribute]
     },
     standalone: false,
-    features: [ɵɵProvidersFeature([TreeTableStyle]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature]
+    features: [ɵɵProvidersFeature([TreeTableStyle]), ɵɵInheritDefinitionFeature]
   });
 };
 (() => {
@@ -5155,8 +5092,7 @@ var TTSortableColumn = class _TTSortableColumn extends BaseComponent {
         role: "columnheader",
         "[attr.aria-sort]": "ariaSorted"
       },
-      providers: [TreeTableStyle],
-      hostDirectives: [Bind]
+      providers: [TreeTableStyle]
     }]
   }], () => [{
     type: TreeTable
@@ -5184,7 +5120,6 @@ var TTSortableColumn = class _TTSortableColumn extends BaseComponent {
 var TTSortIcon = class _TTSortIcon extends BaseComponent {
   tt;
   cd;
-  hostName = "TreeTable";
   field;
   ariaLabelDesc;
   ariaLabelAsc;
@@ -5200,7 +5135,8 @@ var TTSortIcon = class _TTSortIcon extends BaseComponent {
       this.cd.markForCheck();
     });
   }
-  onInit() {
+  ngOnInit() {
+    super.ngOnInit();
     this.updateSortState();
   }
   onClick(event) {
@@ -5234,7 +5170,8 @@ var TTSortIcon = class _TTSortIcon extends BaseComponent {
   isMultiSorted() {
     return this.tt.sortMode === "multiple" && this.getMultiSortMetaIndex() > -1;
   }
-  onDestroy() {
+  ngOnDestroy() {
+    super.ngOnDestroy();
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
@@ -5254,10 +5191,10 @@ var TTSortIcon = class _TTSortIcon extends BaseComponent {
     features: [ɵɵProvidersFeature([TreeTableStyle]), ɵɵInheritDefinitionFeature],
     decls: 3,
     vars: 3,
-    consts: [[4, "ngIf"], [3, "class", "pBind", 4, "ngIf"], ["size", "small", 3, "class", "value", "pt", 4, "ngIf"], ["data-p-icon", "sort-alt", 3, "class", "pBind", 4, "ngIf"], ["data-p-icon", "sort-amount-up-alt", 3, "class", "pBind", 4, "ngIf"], ["data-p-icon", "sort-amount-down", 3, "class", "pBind", 4, "ngIf"], ["data-p-icon", "sort-alt", 3, "pBind"], ["data-p-icon", "sort-amount-up-alt", 3, "pBind"], ["data-p-icon", "sort-amount-down", 3, "pBind"], [3, "pBind"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], ["size", "small", 3, "value", "pt"]],
+    consts: [[4, "ngIf"], [3, "class", 4, "ngIf"], ["size", "small", 3, "class", "value", 4, "ngIf"], ["data-p-icon", "sort-alt", 3, "class", 4, "ngIf"], ["data-p-icon", "sort-amount-up-alt", 3, "class", 4, "ngIf"], ["data-p-icon", "sort-amount-down", 3, "class", 4, "ngIf"], ["data-p-icon", "sort-alt"], ["data-p-icon", "sort-amount-up-alt"], ["data-p-icon", "sort-amount-down"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], ["size", "small", 3, "value"]],
     template: function TTSortIcon_Template(rf, ctx) {
       if (rf & 1) {
-        ɵɵtemplate(0, TTSortIcon_ng_container_0_Template, 4, 3, "ng-container", 0)(1, TTSortIcon_span_1_Template, 2, 7, "span", 1)(2, TTSortIcon_p_badge_2_Template, 1, 4, "p-badge", 2);
+        ɵɵtemplate(0, TTSortIcon_ng_container_0_Template, 4, 3, "ng-container", 0)(1, TTSortIcon_span_1_Template, 2, 6, "span", 1)(2, TTSortIcon_p_badge_2_Template, 1, 3, "p-badge", 2);
       }
       if (rf & 2) {
         ɵɵproperty("ngIf", !ctx.tt.sortIconTemplate && !ctx.tt._sortIconTemplate);
@@ -5267,7 +5204,7 @@ var TTSortIcon = class _TTSortIcon extends BaseComponent {
         ɵɵproperty("ngIf", ctx.isMultiSorted());
       }
     },
-    dependencies: () => [NgIf, NgTemplateOutlet, SortAltIcon, SortAmountUpAltIcon, SortAmountDownIcon, Badge, Bind],
+    dependencies: () => [NgIf, NgTemplateOutlet, SortAltIcon, SortAmountUpAltIcon, SortAmountDownIcon, Badge],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -5280,14 +5217,14 @@ var TTSortIcon = class _TTSortIcon extends BaseComponent {
       standalone: false,
       template: `
         <ng-container *ngIf="!tt.sortIconTemplate && !tt._sortIconTemplate">
-            <svg data-p-icon="sort-alt" [class]="cx('sortableColumnIcon')" [pBind]="ptm('sortableColumnIcon')" *ngIf="sortOrder === 0" />
-            <svg data-p-icon="sort-amount-up-alt" [class]="cx('sortableColumnIcon')" *ngIf="sortOrder === 1" [pBind]="ptm('sortableColumnIcon')" />
-            <svg data-p-icon="sort-amount-down" [class]="cx('sortableColumnIcon')" *ngIf="sortOrder === -1" [pBind]="ptm('sortableColumnIcon')" />
+            <svg data-p-icon="sort-alt" [class]="cx('sortableColumnIcon')" *ngIf="sortOrder === 0" />
+            <svg data-p-icon="sort-amount-up-alt" [class]="cx('sortableColumnIcon')" *ngIf="sortOrder === 1" />
+            <svg data-p-icon="sort-amount-down" [class]="cx('sortableColumnIcon')" *ngIf="sortOrder === -1" />
         </ng-container>
-        <span *ngIf="tt.sortIconTemplate || tt._sortIconTemplate" [class]="cx('sortableColumnIcon')" [pBind]="ptm('sortableColumnIcon')">
+        <span *ngIf="tt.sortIconTemplate || tt._sortIconTemplate" [class]="cx('sortableColumnIcon')">
             <ng-template *ngTemplateOutlet="tt.sortIconTemplate || tt._sortIconTemplate; context: { $implicit: sortOrder }"></ng-template>
         </span>
-        <p-badge *ngIf="isMultiSorted()" [class]="cx('sortableColumnBadge')" [value]="getBadgeValue()" size="small" [pt]="ptm('pcSortableColumnBadge')"></p-badge>
+        <p-badge *ngIf="isMultiSorted()" [class]="cx('sortableColumnBadge')" [value]="getBadgeValue()" size="small"></p-badge>
     `,
       encapsulation: ViewEncapsulation.None,
       changeDetection: ChangeDetectionStrategy.OnPush,
@@ -5309,21 +5246,27 @@ var TTSortIcon = class _TTSortIcon extends BaseComponent {
     }]
   });
 })();
-var TTResizableColumn = class _TTResizableColumn extends BaseComponent {
+var TTResizableColumn = class _TTResizableColumn {
+  document;
+  platformId;
+  renderer;
   tt;
+  el;
   zone;
-  hostName = "TreeTable";
   ttResizableColumnDisabled;
   resizer;
   resizerMouseDownListener;
   documentMouseMoveListener;
   documentMouseUpListener;
-  constructor(tt, zone) {
-    super();
+  constructor(document, platformId, renderer, tt, el, zone) {
+    this.document = document;
+    this.platformId = platformId;
+    this.renderer = renderer;
     this.tt = tt;
+    this.el = el;
     this.zone = zone;
   }
-  onAfterViewInit() {
+  ngAfterViewInit() {
     if (isPlatformBrowser(this.platformId)) {
       if (this.isEnabled()) {
         W(this.el.nativeElement, "p-resizable-column");
@@ -5366,7 +5309,7 @@ var TTResizableColumn = class _TTResizableColumn extends BaseComponent {
   isEnabled() {
     return this.ttResizableColumnDisabled !== true;
   }
-  onDestroy() {
+  ngOnDestroy() {
     if (this.resizerMouseDownListener) {
       this.resizerMouseDownListener();
       this.resizerMouseDownListener = null;
@@ -5374,7 +5317,7 @@ var TTResizableColumn = class _TTResizableColumn extends BaseComponent {
     this.unbindDocumentEvents();
   }
   static ɵfac = function TTResizableColumn_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _TTResizableColumn)(ɵɵdirectiveInject(TreeTable), ɵɵdirectiveInject(NgZone));
+    return new (__ngFactoryType__ || _TTResizableColumn)(ɵɵdirectiveInject(DOCUMENT), ɵɵdirectiveInject(PLATFORM_ID), ɵɵdirectiveInject(Renderer2), ɵɵdirectiveInject(TreeTable), ɵɵdirectiveInject(ElementRef), ɵɵdirectiveInject(NgZone));
   };
   static ɵdir = ɵɵdefineDirective({
     type: _TTResizableColumn,
@@ -5382,8 +5325,7 @@ var TTResizableColumn = class _TTResizableColumn extends BaseComponent {
     inputs: {
       ttResizableColumnDisabled: [2, "ttResizableColumnDisabled", "ttResizableColumnDisabled", booleanAttribute]
     },
-    standalone: false,
-    features: [ɵɵInheritDefinitionFeature]
+    standalone: false
   });
 };
 (() => {
@@ -5394,7 +5336,23 @@ var TTResizableColumn = class _TTResizableColumn extends BaseComponent {
       standalone: false
     }]
   }], () => [{
+    type: Document,
+    decorators: [{
+      type: Inject,
+      args: [DOCUMENT]
+    }]
+  }, {
+    type: void 0,
+    decorators: [{
+      type: Inject,
+      args: [PLATFORM_ID]
+    }]
+  }, {
+    type: Renderer2
+  }, {
     type: TreeTable
+  }, {
+    type: ElementRef
   }, {
     type: NgZone
   }], {
@@ -5406,22 +5364,28 @@ var TTResizableColumn = class _TTResizableColumn extends BaseComponent {
     }]
   });
 })();
-var TTReorderableColumn = class _TTReorderableColumn extends BaseComponent {
+var TTReorderableColumn = class _TTReorderableColumn {
+  document;
+  platformId;
+  renderer;
   tt;
+  el;
   zone;
-  hostName = "TreeTable";
   ttReorderableColumnDisabled;
   dragStartListener;
   dragOverListener;
   dragEnterListener;
   dragLeaveListener;
   mouseDownListener;
-  constructor(tt, zone) {
-    super();
+  constructor(document, platformId, renderer, tt, el, zone) {
+    this.document = document;
+    this.platformId = platformId;
+    this.renderer = renderer;
     this.tt = tt;
+    this.el = el;
     this.zone = zone;
   }
-  onAfterViewInit() {
+  ngAfterViewInit() {
     if (this.isEnabled()) {
       this.bindEvents();
     }
@@ -5481,11 +5445,11 @@ var TTReorderableColumn = class _TTReorderableColumn extends BaseComponent {
   isEnabled() {
     return this.ttReorderableColumnDisabled !== true;
   }
-  onDestroy() {
+  ngOnDestroy() {
     this.unbindEvents();
   }
   static ɵfac = function TTReorderableColumn_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _TTReorderableColumn)(ɵɵdirectiveInject(TreeTable), ɵɵdirectiveInject(NgZone));
+    return new (__ngFactoryType__ || _TTReorderableColumn)(ɵɵdirectiveInject(DOCUMENT), ɵɵdirectiveInject(PLATFORM_ID), ɵɵdirectiveInject(Renderer2), ɵɵdirectiveInject(TreeTable), ɵɵdirectiveInject(ElementRef), ɵɵdirectiveInject(NgZone));
   };
   static ɵdir = ɵɵdefineDirective({
     type: _TTReorderableColumn,
@@ -5500,8 +5464,7 @@ var TTReorderableColumn = class _TTReorderableColumn extends BaseComponent {
     inputs: {
       ttReorderableColumnDisabled: [2, "ttReorderableColumnDisabled", "ttReorderableColumnDisabled", booleanAttribute]
     },
-    standalone: false,
-    features: [ɵɵInheritDefinitionFeature]
+    standalone: false
   });
 };
 (() => {
@@ -5512,7 +5475,23 @@ var TTReorderableColumn = class _TTReorderableColumn extends BaseComponent {
       standalone: false
     }]
   }], () => [{
+    type: Document,
+    decorators: [{
+      type: Inject,
+      args: [DOCUMENT]
+    }]
+  }, {
+    type: void 0,
+    decorators: [{
+      type: Inject,
+      args: [PLATFORM_ID]
+    }]
+  }, {
+    type: Renderer2
+  }, {
     type: TreeTable
+  }, {
+    type: ElementRef
   }, {
     type: NgZone
   }], {
@@ -5546,7 +5525,8 @@ var TTSelectableRow = class _TTSelectableRow extends BaseComponent {
       });
     }
   }
-  onInit() {
+  ngOnInit() {
+    super.ngOnInit();
     if (this.isEnabled()) {
       this.selected = this.tt.isSelected(this.rowNode.node);
     }
@@ -5588,7 +5568,8 @@ var TTSelectableRow = class _TTSelectableRow extends BaseComponent {
   isEnabled() {
     return this.ttSelectableRowDisabled !== true;
   }
-  onDestroy() {
+  ngOnDestroy() {
+    super.ngOnDestroy();
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
@@ -5611,7 +5592,7 @@ var TTSelectableRow = class _TTSelectableRow extends BaseComponent {
         });
       }
       if (rf & 2) {
-        ɵɵattribute("aria-selected", ctx.selected);
+        ɵɵattribute("aria-checked", ctx.selected);
         ɵɵclassMap(ctx.cx("row"));
       }
     },
@@ -5631,7 +5612,7 @@ var TTSelectableRow = class _TTSelectableRow extends BaseComponent {
       standalone: false,
       host: {
         "[class]": 'cx("row")',
-        "[attr.aria-selected]": "selected"
+        "[attr.aria-checked]": "selected"
       },
       providers: [TreeTableStyle]
     }]
@@ -5682,7 +5663,8 @@ var TTSelectableRowDblClick = class _TTSelectableRowDblClick extends BaseCompone
       });
     }
   }
-  onInit() {
+  ngOnInit() {
+    super.ngOnInit();
     if (this.isEnabled()) {
       this.selected = this.tt.isSelected(this.rowNode.node);
     }
@@ -5698,7 +5680,8 @@ var TTSelectableRowDblClick = class _TTSelectableRowDblClick extends BaseCompone
   isEnabled() {
     return this.ttSelectableRowDisabled !== true;
   }
-  onDestroy() {
+  ngOnDestroy() {
+    super.ngOnDestroy();
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
@@ -5791,7 +5774,8 @@ var TTContextMenuRow = class _TTContextMenuRow extends BaseComponent {
   isEnabled() {
     return this.ttContextMenuRowDisabled !== true;
   }
-  onDestroy() {
+  ngOnDestroy() {
+    super.ngOnDestroy();
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
@@ -5859,7 +5843,6 @@ var TTCheckbox = class _TTCheckbox extends BaseComponent {
   tt;
   tableService;
   cd;
-  hostName = "TreeTable";
   disabled;
   rowNode;
   checked;
@@ -5883,7 +5866,8 @@ var TTCheckbox = class _TTCheckbox extends BaseComponent {
       this.cd.markForCheck();
     });
   }
-  onInit() {
+  ngOnInit() {
+    super.ngOnInit();
     if (this.tt.selectionKeys) {
       this.checked = this.tt.isNodeSelected(this.rowNode.node);
       this.partialChecked = this.tt.isNodePartialSelected(this.rowNode.node);
@@ -5908,7 +5892,7 @@ var TTCheckbox = class _TTCheckbox extends BaseComponent {
         });
       }
     }
-    ct();
+    pt();
   }
   onFocus() {
     this.focused = true;
@@ -5916,7 +5900,8 @@ var TTCheckbox = class _TTCheckbox extends BaseComponent {
   onBlur() {
     this.focused = false;
   }
-  onDestroy() {
+  ngOnDestroy() {
+    super.ngOnDestroy();
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
@@ -5934,8 +5919,8 @@ var TTCheckbox = class _TTCheckbox extends BaseComponent {
     standalone: false,
     features: [ɵɵProvidersFeature([TreeTableStyle]), ɵɵInheritDefinitionFeature],
     decls: 2,
-    vars: 8,
-    consts: [[3, "onChange", "ngModel", "pt", "binary", "disabled", "indeterminate", "styleClass", "tabIndex"], [4, "ngIf"], ["pTemplate", "icon"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"]],
+    vars: 7,
+    consts: [[3, "onChange", "ngModel", "binary", "disabled", "indeterminate", "styleClass", "tabIndex"], [4, "ngIf"], ["pTemplate", "icon"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"]],
     template: function TTCheckbox_Template(rf, ctx) {
       if (rf & 1) {
         ɵɵelementStart(0, "p-checkbox", 0);
@@ -5946,7 +5931,7 @@ var TTCheckbox = class _TTCheckbox extends BaseComponent {
         ɵɵelementEnd();
       }
       if (rf & 2) {
-        ɵɵproperty("ngModel", ctx.checked)("pt", ctx.ptm("pcRowCheckbox"))("binary", true)("disabled", ctx.disabled)("indeterminate", ctx.partialChecked)("styleClass", ctx.cx("pcNodeCheckbox"))("tabIndex", -1);
+        ɵɵproperty("ngModel", ctx.checked)("binary", true)("disabled", ctx.disabled)("indeterminate", ctx.partialChecked)("styleClass", ctx.cx("pcNodeCheckbox"))("tabIndex", -1);
         ɵɵadvance();
         ɵɵproperty("ngIf", ctx.tt.checkboxIconTemplate || ctx.tt._checkboxIconTemplate);
       }
@@ -5963,7 +5948,7 @@ var TTCheckbox = class _TTCheckbox extends BaseComponent {
       selector: "p-treeTableCheckbox, p-treetable-checkbox, p-tree-table-checkbox",
       standalone: false,
       template: `
-        <p-checkbox [ngModel]="checked" [pt]="ptm('pcRowCheckbox')" (onChange)="onClick($event)" [binary]="true" [disabled]="disabled" [indeterminate]="partialChecked" [styleClass]="cx('pcNodeCheckbox')" [tabIndex]="-1">
+        <p-checkbox [ngModel]="checked" (onChange)="onClick($event)" [binary]="true" [disabled]="disabled" [indeterminate]="partialChecked" [styleClass]="cx('pcNodeCheckbox')" [tabIndex]="-1">
             <ng-container *ngIf="tt.checkboxIconTemplate || tt._checkboxIconTemplate">
                 <ng-template pTemplate="icon">
                     <ng-template *ngTemplateOutlet="tt.checkboxIconTemplate || tt._checkboxIconTemplate; context: { $implicit: checked, partialSelected: partialChecked }"></ng-template>
@@ -5994,17 +5979,18 @@ var TTCheckbox = class _TTCheckbox extends BaseComponent {
     }]
   });
 })();
-var TTHeaderCheckbox = class _TTHeaderCheckbox extends BaseComponent {
+var TTHeaderCheckbox = class _TTHeaderCheckbox {
   tt;
   tableService;
+  cd;
   checked;
   disabled;
   selectionChangeSubscription;
   valueChangeSubscription;
-  constructor(tt, tableService) {
-    super();
+  constructor(tt, tableService, cd) {
     this.tt = tt;
     this.tableService = tableService;
+    this.cd = cd;
     this.valueChangeSubscription = this.tt.tableService.uiUpdateSource$.subscribe(() => {
       this.checked = this.updateCheckedState();
     });
@@ -6012,16 +5998,16 @@ var TTHeaderCheckbox = class _TTHeaderCheckbox extends BaseComponent {
       this.checked = this.updateCheckedState();
     });
   }
-  onInit() {
+  ngOnInit() {
     this.checked = this.updateCheckedState();
   }
   onClick(event) {
-    if ((this.tt?.value || this.tt?.filteredNodes) && (this.tt?.value && this.tt.value.length > 0 || this.tt?.filteredNodes && this.tt.filteredNodes.length > 0)) {
-      this.tt?.toggleNodesWithCheckbox(event, !this.checked);
+    if ((this.tt.value || this.tt.filteredNodes) && (this.tt.value.length > 0 || this.tt.filteredNodes.length > 0)) {
+      this.tt.toggleNodesWithCheckbox(event, !this.checked);
     }
-    ct();
+    pt();
   }
-  onDestroy() {
+  ngOnDestroy() {
     if (this.selectionChangeSubscription) {
       this.selectionChangeSubscription.unsubscribe();
     }
@@ -6060,16 +6046,15 @@ var TTHeaderCheckbox = class _TTHeaderCheckbox extends BaseComponent {
     return checked;
   }
   static ɵfac = function TTHeaderCheckbox_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _TTHeaderCheckbox)(ɵɵdirectiveInject(TreeTable), ɵɵdirectiveInject(TreeTableService));
+    return new (__ngFactoryType__ || _TTHeaderCheckbox)(ɵɵdirectiveInject(TreeTable), ɵɵdirectiveInject(TreeTableService), ɵɵdirectiveInject(ChangeDetectorRef));
   };
   static ɵcmp = ɵɵdefineComponent({
     type: _TTHeaderCheckbox,
     selectors: [["p-treeTableHeaderCheckbox"]],
     standalone: false,
-    features: [ɵɵInheritDefinitionFeature],
     decls: 2,
-    vars: 5,
-    consts: [[3, "onChange", "ngModel", "pt", "binary", "disabled"], [4, "ngIf"], ["pTemplate", "icon"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"]],
+    vars: 4,
+    consts: [[3, "onChange", "ngModel", "binary", "disabled"], [4, "ngIf"], ["pTemplate", "icon"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"]],
     template: function TTHeaderCheckbox_Template(rf, ctx) {
       if (rf & 1) {
         ɵɵelementStart(0, "p-checkbox", 0);
@@ -6080,7 +6065,7 @@ var TTHeaderCheckbox = class _TTHeaderCheckbox extends BaseComponent {
         ɵɵelementEnd();
       }
       if (rf & 2) {
-        ɵɵproperty("ngModel", ctx.checked)("pt", ctx.ptm("pcHeaderCheckbox"))("binary", true)("disabled", !ctx.tt.value || ctx.tt.value.length === 0);
+        ɵɵproperty("ngModel", ctx.checked)("binary", true)("disabled", !ctx.tt.value || ctx.tt.value.length === 0);
         ɵɵadvance();
         ɵɵproperty("ngIf", ctx.tt.headerCheckboxIconTemplate || ctx.tt._headerCheckboxIconTemplate);
       }
@@ -6097,7 +6082,7 @@ var TTHeaderCheckbox = class _TTHeaderCheckbox extends BaseComponent {
       selector: "p-treeTableHeaderCheckbox",
       standalone: false,
       template: `
-        <p-checkbox [ngModel]="checked" [pt]="ptm('pcHeaderCheckbox')" (onChange)="onClick($event)" [binary]="true" [disabled]="!tt.value || tt.value.length === 0">
+        <p-checkbox [ngModel]="checked" (onChange)="onClick($event)" [binary]="true" [disabled]="!tt.value || tt.value.length === 0">
             <ng-container *ngIf="tt.headerCheckboxIconTemplate || tt._headerCheckboxIconTemplate">
                 <ng-template pTemplate="icon">
                     <ng-template *ngTemplateOutlet="tt.headerCheckboxIconTemplate || tt._headerCheckboxIconTemplate; context: { $implicit: checked }"></ng-template>
@@ -6112,20 +6097,23 @@ var TTHeaderCheckbox = class _TTHeaderCheckbox extends BaseComponent {
     type: TreeTable
   }, {
     type: TreeTableService
+  }, {
+    type: ChangeDetectorRef
   }], null);
 })();
-var TTEditableColumn = class _TTEditableColumn extends BaseComponent {
+var TTEditableColumn = class _TTEditableColumn {
   tt;
+  el;
   zone;
   data;
   field;
   ttEditableColumnDisabled;
-  constructor(tt, zone) {
-    super();
+  constructor(tt, el, zone) {
     this.tt = tt;
+    this.el = el;
     this.zone = zone;
   }
-  onAfterViewInit() {
+  ngAfterViewInit() {
     if (this.isEnabled()) {
       W(this.el.nativeElement, "p-editable-column");
     }
@@ -6138,7 +6126,7 @@ var TTEditableColumn = class _TTEditableColumn extends BaseComponent {
           if (!this.tt.isEditingCellValid()) {
             return;
           }
-          if (this.tt.editingCell) P(this.tt.editingCell, "p-cell-editing");
+          O(this.tt.editingCell, "p-cell-editing");
           this.openCell();
         }
       } else {
@@ -6164,7 +6152,7 @@ var TTEditableColumn = class _TTEditableColumn extends BaseComponent {
     });
   }
   closeEditingCell() {
-    if (this.tt.editingCell) P(this.tt.editingCell, "p-checkbox-icon");
+    O(this.tt.editingCell, "p-checkbox-icon");
     this.tt.editingCell = null;
     this.tt.unbindDocumentEditListener();
   }
@@ -6172,7 +6160,7 @@ var TTEditableColumn = class _TTEditableColumn extends BaseComponent {
     if (this.isEnabled()) {
       if (event.keyCode == 13 && !event.shiftKey) {
         if (this.tt.isEditingCellValid()) {
-          if (this.tt.editingCell) P(this.tt.editingCell, "p-cell-editing");
+          O(this.tt.editingCell, "p-cell-editing");
           this.closeEditingCell();
           this.tt.onEditComplete.emit({
             field: this.field,
@@ -6182,7 +6170,7 @@ var TTEditableColumn = class _TTEditableColumn extends BaseComponent {
         event.preventDefault();
       } else if (event.keyCode == 27) {
         if (this.tt.isEditingCellValid()) {
-          if (this.tt.editingCell) P(this.tt.editingCell, "p-cell-editing");
+          O(this.tt.editingCell, "p-cell-editing");
           this.closeEditingCell();
           this.tt.onEditCancel.emit({
             field: this.field,
@@ -6263,7 +6251,7 @@ var TTEditableColumn = class _TTEditableColumn extends BaseComponent {
     return this.ttEditableColumnDisabled !== true;
   }
   static ɵfac = function TTEditableColumn_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _TTEditableColumn)(ɵɵdirectiveInject(TreeTable), ɵɵdirectiveInject(NgZone));
+    return new (__ngFactoryType__ || _TTEditableColumn)(ɵɵdirectiveInject(TreeTable), ɵɵdirectiveInject(ElementRef), ɵɵdirectiveInject(NgZone));
   };
   static ɵdir = ɵɵdefineDirective({
     type: _TTEditableColumn,
@@ -6282,8 +6270,7 @@ var TTEditableColumn = class _TTEditableColumn extends BaseComponent {
       field: [0, "ttEditableColumnField", "field"],
       ttEditableColumnDisabled: [2, "ttEditableColumnDisabled", "ttEditableColumnDisabled", booleanAttribute]
     },
-    standalone: false,
-    features: [ɵɵInheritDefinitionFeature]
+    standalone: false
   });
 };
 (() => {
@@ -6295,6 +6282,8 @@ var TTEditableColumn = class _TTEditableColumn extends BaseComponent {
     }]
   }], () => [{
     type: TreeTable
+  }, {
+    type: ElementRef
   }, {
     type: NgZone
   }], {
@@ -6325,13 +6314,6 @@ var TTEditableColumn = class _TTEditableColumn extends BaseComponent {
 var TreeTableCellEditor = class _TreeTableCellEditor extends BaseComponent {
   tt;
   editableColumn;
-  hostName = "TreeTable";
-  bindDirectiveInstance = inject(Bind, {
-    self: true
-  });
-  onAfterViewChecked() {
-    this.bindDirectiveInstance.setAttrs(this.ptm("cellEditor"));
-  }
   templates;
   inputTemplate;
   outputTemplate;
@@ -6340,7 +6322,7 @@ var TreeTableCellEditor = class _TreeTableCellEditor extends BaseComponent {
     this.tt = tt;
     this.editableColumn = editableColumn;
   }
-  onAfterContentInit() {
+  ngAfterContentInit() {
     this.templates.forEach((item) => {
       switch (item.getType()) {
         case "input":
@@ -6368,7 +6350,7 @@ var TreeTableCellEditor = class _TreeTableCellEditor extends BaseComponent {
       }
     },
     standalone: false,
-    features: [ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵInheritDefinitionFeature],
     decls: 2,
     vars: 2,
     consts: [[4, "ngIf"], [4, "ngTemplateOutlet"]],
@@ -6400,8 +6382,7 @@ var TreeTableCellEditor = class _TreeTableCellEditor extends BaseComponent {
             <ng-container *ngTemplateOutlet="outputTemplate"></ng-container>
         </ng-container>
     `,
-      encapsulation: ViewEncapsulation.None,
-      hostDirectives: [Bind]
+      encapsulation: ViewEncapsulation.None
     }]
   }], () => [{
     type: TreeTable
@@ -6418,14 +6399,6 @@ var TTRow = class _TTRow extends BaseComponent {
   tt;
   el;
   zone;
-  hostName = "TreeTable";
-  bindDirectiveInstance = inject(Bind, {
-    self: true
-  });
-  treeTable = inject(TreeTable);
-  onAfterViewChecked() {
-    this.bindDirectiveInstance.setAttrs(this.ptm("row", this.ptmOptions()));
-  }
   get level() {
     return this.rowNode?.["level"] + 1;
   }
@@ -6520,12 +6493,12 @@ var TTRow = class _TTRow extends BaseComponent {
   onTabKey(event) {
     const rows = this.el.nativeElement ? [...Y(this.el.nativeElement.parentNode, "tr")] : void 0;
     if (rows && s(rows)) {
-      const hasSelectedRow = rows.some((row) => Q(row, "data-p-highlight") || row.getAttribute("aria-selected") === "true");
+      const hasSelectedRow = rows.some((row) => Q2(row, "data-p-highlight") || row.getAttribute("aria-checked") === "true");
       rows.forEach((row) => {
         row.tabIndex = -1;
       });
       if (hasSelectedRow) {
-        const selectedNodes = rows.filter((node) => Q(node, "data-p-highlight") || node.getAttribute("aria-selected") === "true");
+        const selectedNodes = rows.filter((node) => Q2(node, "data-p-highlight") || node.getAttribute("aria-checked") === "true");
         selectedNodes[0].tabIndex = 0;
         return;
       }
@@ -6561,11 +6534,10 @@ var TTRow = class _TTRow extends BaseComponent {
     this.zone.runOutsideAngular(() => {
       setTimeout(() => {
         const container = this.tt.el?.nativeElement;
-        const tbody = z(container, ".p-treetable-tbody");
-        const row = tbody?.children?.[index || this.tt.toggleRowIndex || 0];
+        const row = z(container, ".p-treetable-tbody").children[index || this.tt.toggleRowIndex];
         const rows = [...Y(container, "tr")];
         rows && rows.forEach((r) => {
-          if (row && !row.isSameNode(r)) {
+          if (!row.isSameNode(r)) {
             r.tabIndex = -1;
           }
         });
@@ -6576,23 +6548,13 @@ var TTRow = class _TTRow extends BaseComponent {
       }, 25);
     });
   }
-  ptmOptions() {
-    return {
-      context: {
-        selectable: this.treeTable?.rowHover || this.treeTable.selectionMode === "row",
-        selected: this.treeTable.isSelected(this.rowNode?.node),
-        scrollable: this.treeTable?.scrollable,
-        rowNode: this.rowNode
-      }
-    };
-  }
   static ɵfac = function TTRow_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _TTRow)(ɵɵdirectiveInject(TreeTable), ɵɵdirectiveInject(ElementRef), ɵɵdirectiveInject(NgZone));
   };
   static ɵdir = ɵɵdefineDirective({
     type: _TTRow,
     selectors: [["", "ttRow", ""]],
-    hostVars: 6,
+    hostVars: 7,
     hostBindings: function TTRow_HostBindings(rf, ctx) {
       if (rf & 1) {
         ɵɵlistener("keydown", function TTRow_keydown_HostBindingHandler($event) {
@@ -6601,7 +6563,7 @@ var TTRow = class _TTRow extends BaseComponent {
       }
       if (rf & 2) {
         ɵɵdomProperty("tabindex", "0")("role", ctx.row);
-        ɵɵattribute("aria-expanded", ctx.expanded)("aria-level", ctx.level);
+        ɵɵattribute("aria-expanded", ctx.expanded)("aria-level", ctx.level)("data-pc-section", ctx.row);
         ɵɵclassMap("p-element " + ctx.styleClass);
       }
     },
@@ -6609,7 +6571,7 @@ var TTRow = class _TTRow extends BaseComponent {
       rowNode: [0, "ttRow", "rowNode"]
     },
     standalone: false,
-    features: [ɵɵProvidersFeature([TreeTableStyle]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature]
+    features: [ɵɵProvidersFeature([TreeTableStyle]), ɵɵInheritDefinitionFeature]
   });
 };
 (() => {
@@ -6623,10 +6585,10 @@ var TTRow = class _TTRow extends BaseComponent {
         "[tabindex]": "'0'",
         "[attr.aria-expanded]": "expanded",
         "[attr.aria-level]": "level",
+        "[attr.data-pc-section]": "row",
         "[role]": "row"
       },
-      providers: [TreeTableStyle],
-      hostDirectives: [Bind]
+      providers: [TreeTableStyle]
     }]
   }], () => [{
     type: TreeTable
@@ -6647,13 +6609,6 @@ var TTRow = class _TTRow extends BaseComponent {
 })();
 var TreeTableToggler = class _TreeTableToggler extends BaseComponent {
   tt;
-  hostName = "TreeTable";
-  bindDirectiveInstance = inject(Bind, {
-    self: true
-  });
-  onAfterViewChecked() {
-    this.bindDirectiveInstance.setAttrs(this.ptm("toggler"));
-  }
   rowNode;
   _componentStyle = inject(TreeTableStyle);
   constructor(tt) {
@@ -6661,7 +6616,7 @@ var TreeTableToggler = class _TreeTableToggler extends BaseComponent {
     this.tt = tt;
   }
   get toggleButtonAriaLabel() {
-    return this.config.translation ? this.rowNode.expanded ? this.config.translation?.aria?.collapseRow : this.config.translation?.aria?.expandRow : void 0;
+    return this.config.translation ? this.rowNode.expanded ? this.config.translation.aria.collapseRow : this.config.translation.aria.expandRow : void 0;
   }
   onClick(event) {
     this.rowNode.node.expanded = !this.rowNode.node.expanded;
@@ -6690,10 +6645,10 @@ var TreeTableToggler = class _TreeTableToggler extends BaseComponent {
       rowNode: "rowNode"
     },
     standalone: false,
-    features: [ɵɵProvidersFeature([TreeTableStyle]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([TreeTableStyle]), ɵɵInheritDefinitionFeature],
     decls: 3,
     vars: 14,
-    consts: [["type", "button", "tabindex", "-1", "pRipple", "", 3, "click", "pBind"], [4, "ngIf"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], ["data-p-icon", "chevron-down", 3, "pBind", 4, "ngIf"], ["data-p-icon", "chevron-right", 3, "pBind", 4, "ngIf"], ["data-p-icon", "chevron-down", 3, "pBind"], ["data-p-icon", "chevron-right", 3, "pBind"]],
+    consts: [["type", "button", "tabindex", "-1", "pRipple", "", 3, "click"], [4, "ngIf"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], ["data-p-icon", "chevron-down", 4, "ngIf"], ["data-p-icon", "chevron-right", 4, "ngIf"], ["data-p-icon", "chevron-down"], ["data-p-icon", "chevron-right"]],
     template: function TreeTableToggler_Template(rf, ctx) {
       if (rf & 1) {
         ɵɵelementStart(0, "button", 0);
@@ -6706,15 +6661,14 @@ var TreeTableToggler = class _TreeTableToggler extends BaseComponent {
       if (rf & 2) {
         ɵɵclassMap(ctx.cx("toggler"));
         ɵɵstyleProp("visibility", ctx.rowNode.node.leaf === false || ctx.rowNode.node.children && ctx.rowNode.node.children.length ? "visible" : "hidden")("margin-inline-start", ctx.rowNode.level * 16 + "px");
-        ɵɵproperty("pBind", ctx.ptm("rowToggleButton"));
-        ɵɵattribute("data-pc-group-section", "rowactionbutton")("aria-label", ctx.toggleButtonAriaLabel);
+        ɵɵattribute("data-pc-section", "rowtoggler")("data-pc-group-section", "rowactionbutton")("aria-label", ctx.toggleButtonAriaLabel);
         ɵɵadvance();
         ɵɵproperty("ngIf", !ctx.tt.togglerIconTemplate && !ctx.tt._togglerIconTemplate);
         ɵɵadvance();
         ɵɵproperty("ngTemplateOutlet", ctx.tt.togglerIconTemplate || ctx.tt._togglerIconTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(12, _c32, ctx.rowNode.node.expanded));
       }
     },
-    dependencies: () => [NgIf, NgTemplateOutlet, Ripple, ChevronDownIcon, ChevronRightIcon, Bind],
+    dependencies: () => [NgIf, NgTemplateOutlet, Ripple, ChevronDownIcon, ChevronRightIcon],
     encapsulation: 2
   });
 };
@@ -6728,25 +6682,24 @@ var TreeTableToggler = class _TreeTableToggler extends BaseComponent {
         <button
             type="button"
             [class]="cx('toggler')"
-            [pBind]="ptm('rowToggleButton')"
             (click)="onClick($event)"
             tabindex="-1"
             pRipple
             [style.visibility]="rowNode.node.leaf === false || (rowNode.node.children && rowNode.node.children.length) ? 'visible' : 'hidden'"
             [style.marginInlineStart]="rowNode.level * 16 + 'px'"
+            [attr.data-pc-section]="'rowtoggler'"
             [attr.data-pc-group-section]="'rowactionbutton'"
             [attr.aria-label]="toggleButtonAriaLabel"
         >
             <ng-container *ngIf="!tt.togglerIconTemplate && !tt._togglerIconTemplate">
-                <svg data-p-icon="chevron-down" *ngIf="rowNode.node.expanded" [pBind]="ptm('nodetoggleicon')" [attr.aria-hidden]="true" />
-                <svg data-p-icon="chevron-right" *ngIf="!rowNode.node.expanded" [pBind]="ptm('nodetoggleicon')" [attr.aria-hidden]="true" />
+                <svg data-p-icon="chevron-down" *ngIf="rowNode.node.expanded" [attr.aria-hidden]="true" />
+                <svg data-p-icon="chevron-right" *ngIf="!rowNode.node.expanded" [attr.aria-hidden]="true" />
             </ng-container>
             <ng-template *ngTemplateOutlet="tt.togglerIconTemplate || tt._togglerIconTemplate; context: { $implicit: rowNode.node.expanded }"></ng-template>
         </button>
     `,
       encapsulation: ViewEncapsulation.None,
-      providers: [TreeTableStyle],
-      hostDirectives: [Bind]
+      providers: [TreeTableStyle]
     }]
   }], () => [{
     type: TreeTable
@@ -6763,18 +6716,18 @@ var TreeTableModule = class _TreeTableModule {
   static ɵmod = ɵɵdefineNgModule({
     type: _TreeTableModule,
     declarations: [TreeTable, TreeTableToggler, TTScrollableView, TTBody, TTSortableColumn, TTSortIcon, TTResizableColumn, TTRow, TTReorderableColumn, TTSelectableRow, TTSelectableRowDblClick, TTContextMenuRow, TTCheckbox, TTHeaderCheckbox, TTEditableColumn, TreeTableCellEditor],
-    imports: [CommonModule, PaginatorModule, Ripple, Scroller, SpinnerIcon, ArrowDownIcon, ArrowUpIcon, SortAltIcon, SortAmountUpAltIcon, SortAmountDownIcon, BadgeModule, CheckIcon, ChevronDownIcon, ChevronRightIcon, Checkbox, SharedModule, FormsModule, BindModule],
+    imports: [CommonModule, PaginatorModule, Ripple, Scroller, SpinnerIcon, ArrowDownIcon, ArrowUpIcon, SortAltIcon, SortAmountUpAltIcon, SortAmountDownIcon, BadgeModule, CheckIcon, ChevronDownIcon, ChevronRightIcon, Checkbox, SharedModule, FormsModule],
     exports: [TreeTable, SharedModule, TreeTableToggler, TTSortableColumn, TTSortIcon, TTResizableColumn, TTRow, TTReorderableColumn, TTSelectableRow, TTSelectableRowDblClick, TTContextMenuRow, TTCheckbox, TTHeaderCheckbox, TTEditableColumn, TreeTableCellEditor, Scroller]
   });
   static ɵinj = ɵɵdefineInjector({
-    imports: [CommonModule, PaginatorModule, Scroller, SpinnerIcon, ArrowDownIcon, ArrowUpIcon, SortAltIcon, SortAmountUpAltIcon, SortAmountDownIcon, BadgeModule, CheckIcon, ChevronDownIcon, ChevronRightIcon, Checkbox, SharedModule, FormsModule, BindModule, SharedModule]
+    imports: [CommonModule, PaginatorModule, Scroller, SpinnerIcon, ArrowDownIcon, ArrowUpIcon, SortAltIcon, SortAmountUpAltIcon, SortAmountDownIcon, BadgeModule, CheckIcon, ChevronDownIcon, ChevronRightIcon, Checkbox, SharedModule, FormsModule, SharedModule]
   });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(TreeTableModule, [{
     type: NgModule,
     args: [{
-      imports: [CommonModule, PaginatorModule, Ripple, Scroller, SpinnerIcon, ArrowDownIcon, ArrowUpIcon, SortAltIcon, SortAmountUpAltIcon, SortAmountDownIcon, BadgeModule, CheckIcon, ChevronDownIcon, ChevronRightIcon, Checkbox, SharedModule, FormsModule, BindModule],
+      imports: [CommonModule, PaginatorModule, Ripple, Scroller, SpinnerIcon, ArrowDownIcon, ArrowUpIcon, SortAltIcon, SortAmountUpAltIcon, SortAmountDownIcon, BadgeModule, CheckIcon, ChevronDownIcon, ChevronRightIcon, Checkbox, SharedModule, FormsModule],
       exports: [TreeTable, SharedModule, TreeTableToggler, TTSortableColumn, TTSortIcon, TTResizableColumn, TTRow, TTReorderableColumn, TTSelectableRow, TTSelectableRowDblClick, TTContextMenuRow, TTCheckbox, TTHeaderCheckbox, TTEditableColumn, TreeTableCellEditor, Scroller],
       declarations: [TreeTable, TreeTableToggler, TTScrollableView, TTBody, TTSortableColumn, TTSortIcon, TTResizableColumn, TTRow, TTReorderableColumn, TTSelectableRow, TTSelectableRowDblClick, TTContextMenuRow, TTCheckbox, TTHeaderCheckbox, TTEditableColumn, TreeTableCellEditor]
     }]

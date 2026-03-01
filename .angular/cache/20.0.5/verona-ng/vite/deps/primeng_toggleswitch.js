@@ -1,30 +1,22 @@
 import {
   BaseEditableHolder
-} from "./chunk-343RM6UZ.js";
-import "./chunk-2R7VQYSP.js";
+} from "./chunk-67V7CIUT.js";
+import "./chunk-5OCKW6BF.js";
 import {
   AutoFocus
-} from "./chunk-YNLAOK3J.js";
-import "./chunk-S73J4WE3.js";
-import {
-  PARENT_INSTANCE
-} from "./chunk-YNJ5GKCH.js";
+} from "./chunk-KOXUNDHI.js";
+import "./chunk-QVUTNZUY.js";
+import "./chunk-4YMQ5OOY.js";
 import {
   BaseStyle
-} from "./chunk-4ATYD752.js";
-import {
-  Bind,
-  BindModule
-} from "./chunk-MLQGRGGO.js";
+} from "./chunk-L2L2T6ID.js";
 import {
   PrimeTemplate,
   SharedModule
-} from "./chunk-LMEEH3AJ.js";
+} from "./chunk-ZKOTJBQ6.js";
 import {
   NG_VALUE_ACCESSOR
 } from "./chunk-RZEKJVYA.js";
-import "./chunk-GOP36Q47.js";
-import "./chunk-UCHM6OXG.js";
 import {
   CommonModule,
   NgTemplateOutlet
@@ -47,7 +39,6 @@ import {
   input,
   numberAttribute,
   setClassMetadata,
-  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -74,7 +65,6 @@ import {
   ɵɵviewQuery
 } from "./chunk-EIF6IUR4.js";
 import {
-  InjectionToken,
   forwardRef,
   inject,
   ɵɵdefineInjectable,
@@ -85,6 +75,8 @@ import {
 import "./chunk-G6ECYYJH.js";
 import "./chunk-YVXMBCE5.js";
 import "./chunk-RTGP7ALM.js";
+import "./chunk-BMDSN43F.js";
+import "./chunk-RK2DVQNP.js";
 import "./chunk-4MWRP73S.js";
 
 // node_modules/@primeuix/styles/dist/toggleswitch/index.mjs
@@ -103,14 +95,14 @@ function ToggleSwitch_Conditional_4_ng_container_0_Template(rf, ctx) {
 }
 function ToggleSwitch_Conditional_4_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, ToggleSwitch_Conditional_4_ng_container_0_Template, 1, 0, "ng-container", 3);
+    ɵɵtemplate(0, ToggleSwitch_Conditional_4_ng_container_0_Template, 1, 0, "ng-container", 2);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext();
     ɵɵproperty("ngTemplateOutlet", ctx_r1.handleTemplate || ctx_r1._handleTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(2, _c2, ctx_r1.checked()));
   }
 }
-var style2 = (
+var theme = (
   /*css*/
   `
     ${style}
@@ -140,7 +132,7 @@ var classes = {
 };
 var ToggleSwitchStyle = class _ToggleSwitchStyle extends BaseStyle {
   name = "toggleswitch";
-  style = style2;
+  theme = theme;
   classes = classes;
   inlineStyles = inlineStyles;
   static ɵfac = /* @__PURE__ */ (() => {
@@ -165,23 +157,12 @@ var ToggleSwitchClasses;
   ToggleSwitchClasses2["input"] = "p-toggleswitch-input";
   ToggleSwitchClasses2["slider"] = "p-toggleswitch-slider";
 })(ToggleSwitchClasses || (ToggleSwitchClasses = {}));
-var TOGGLESWITCH_INSTANCE = new InjectionToken("TOGGLESWITCH_INSTANCE");
 var TOGGLESWITCH_VALUE_ACCESSOR = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => ToggleSwitch),
   multi: true
 };
 var ToggleSwitch = class _ToggleSwitch extends BaseEditableHolder {
-  $pcToggleSwitch = inject(TOGGLESWITCH_INSTANCE, {
-    optional: true,
-    skipSelf: true
-  }) ?? void 0;
-  bindDirectiveInstance = inject(Bind, {
-    self: true
-  });
-  onAfterViewChecked() {
-    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
-  }
   /**
    * Style class of the component.
    * @deprecated since v20.0.0, use `class` instead.
@@ -261,7 +242,7 @@ var ToggleSwitch = class _ToggleSwitch extends BaseEditableHolder {
   onHostClick(event) {
     this.onClick(event);
   }
-  onAfterContentInit() {
+  ngAfterContentInit() {
     this.templates.forEach((item) => {
       switch (item.getType()) {
         case "handle":
@@ -333,7 +314,7 @@ var ToggleSwitch = class _ToggleSwitch extends BaseEditableHolder {
         ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.input = _t.first);
       }
     },
-    hostVars: 5,
+    hostVars: 6,
     hostBindings: function ToggleSwitch_HostBindings(rf, ctx) {
       if (rf & 1) {
         ɵɵlistener("click", function ToggleSwitch_click_HostBindingHandler($event) {
@@ -341,7 +322,7 @@ var ToggleSwitch = class _ToggleSwitch extends BaseEditableHolder {
         });
       }
       if (rf & 2) {
-        ɵɵattribute("data-pc-name", "toggleswitch");
+        ɵɵattribute("data-pc-name", "toggleswitch")("data-pc-section", "root");
         ɵɵstyleMap(ctx.sx("root"));
         ɵɵclassMap(ctx.cn(ctx.cx("root"), ctx.styleClass));
       }
@@ -361,16 +342,10 @@ var ToggleSwitch = class _ToggleSwitch extends BaseEditableHolder {
     outputs: {
       onChange: "onChange"
     },
-    features: [ɵɵProvidersFeature([TOGGLESWITCH_VALUE_ACCESSOR, ToggleSwitchStyle, {
-      provide: TOGGLESWITCH_INSTANCE,
-      useExisting: _ToggleSwitch
-    }, {
-      provide: PARENT_INSTANCE,
-      useExisting: _ToggleSwitch
-    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([TOGGLESWITCH_VALUE_ACCESSOR, ToggleSwitchStyle]), ɵɵInheritDefinitionFeature],
     decls: 5,
-    vars: 20,
-    consts: [["input", ""], ["type", "checkbox", "role", "switch", 3, "focus", "blur", "checked", "pAutoFocus", "pBind"], [3, "pBind"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"]],
+    vars: 19,
+    consts: [["input", ""], ["type", "checkbox", "role", "switch", 3, "focus", "blur", "checked", "pAutoFocus"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"]],
     template: function ToggleSwitch_Template(rf, ctx) {
       if (rf & 1) {
         const _r1 = ɵɵgetCurrentView();
@@ -383,25 +358,24 @@ var ToggleSwitch = class _ToggleSwitch extends BaseEditableHolder {
           return ɵɵresetView(ctx.onBlur());
         });
         ɵɵelementEnd();
-        ɵɵelementStart(2, "div", 2)(3, "div", 2);
+        ɵɵelementStart(2, "div")(3, "div");
         ɵɵconditionalCreate(4, ToggleSwitch_Conditional_4_Template, 1, 4, "ng-container");
         ɵɵelementEnd()();
       }
       if (rf & 2) {
         ɵɵclassMap(ctx.cx("input"));
-        ɵɵproperty("checked", ctx.checked())("pAutoFocus", ctx.autofocus)("pBind", ctx.ptm("input"));
-        ɵɵattribute("id", ctx.inputId)("required", ctx.required() ? "" : void 0)("disabled", ctx.$disabled() ? "" : void 0)("aria-checked", ctx.checked())("aria-labelledby", ctx.ariaLabelledBy)("aria-label", ctx.ariaLabel)("name", ctx.name())("tabindex", ctx.tabindex);
+        ɵɵproperty("checked", ctx.checked())("pAutoFocus", ctx.autofocus);
+        ɵɵattribute("id", ctx.inputId)("required", ctx.required() ? "" : void 0)("disabled", ctx.$disabled() ? "" : void 0)("aria-checked", ctx.checked())("aria-labelledby", ctx.ariaLabelledBy)("aria-label", ctx.ariaLabel)("name", ctx.name())("tabindex", ctx.tabindex)("data-pc-section", "hiddenInput");
         ɵɵadvance(2);
         ɵɵclassMap(ctx.cx("slider"));
-        ɵɵproperty("pBind", ctx.ptm("slider"));
+        ɵɵattribute("data-pc-section", "slider");
         ɵɵadvance();
         ɵɵclassMap(ctx.cx("handle"));
-        ɵɵproperty("pBind", ctx.ptm("handle"));
         ɵɵadvance();
         ɵɵconditional(ctx.handleTemplate || ctx._handleTemplate ? 4 : -1);
       }
     },
-    dependencies: [CommonModule, NgTemplateOutlet, AutoFocus, SharedModule, BindModule, Bind],
+    dependencies: [CommonModule, NgTemplateOutlet, AutoFocus, SharedModule],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -412,7 +386,7 @@ var ToggleSwitch = class _ToggleSwitch extends BaseEditableHolder {
     args: [{
       selector: "p-toggleswitch, p-toggleSwitch, p-toggle-switch",
       standalone: true,
-      imports: [CommonModule, AutoFocus, SharedModule, BindModule],
+      imports: [CommonModule, AutoFocus, SharedModule],
       template: `
         <input
             #input
@@ -430,32 +404,26 @@ var ToggleSwitch = class _ToggleSwitch extends BaseEditableHolder {
             [attr.tabindex]="tabindex"
             (focus)="onFocus()"
             (blur)="onBlur()"
+            [attr.data-pc-section]="'hiddenInput'"
             [pAutoFocus]="autofocus"
-            [pBind]="ptm('input')"
         />
-        <div [class]="cx('slider')" [pBind]="ptm('slider')">
-            <div [class]="cx('handle')" [pBind]="ptm('handle')">
+        <div [class]="cx('slider')" [attr.data-pc-section]="'slider'">
+            <div [class]="cx('handle')">
                 @if (handleTemplate || _handleTemplate) {
                     <ng-container *ngTemplateOutlet="handleTemplate || _handleTemplate; context: { checked: checked() }" />
                 }
             </div>
         </div>
     `,
-      providers: [TOGGLESWITCH_VALUE_ACCESSOR, ToggleSwitchStyle, {
-        provide: TOGGLESWITCH_INSTANCE,
-        useExisting: ToggleSwitch
-      }, {
-        provide: PARENT_INSTANCE,
-        useExisting: ToggleSwitch
-      }],
+      providers: [TOGGLESWITCH_VALUE_ACCESSOR, ToggleSwitchStyle],
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
       host: {
         "[class]": "cn(cx('root'), styleClass)",
         "[style]": "sx('root')",
-        "[attr.data-pc-name]": "'toggleswitch'"
-      },
-      hostDirectives: [Bind]
+        "[attr.data-pc-name]": "'toggleswitch'",
+        "[attr.data-pc-section]": "'root'"
+      }
     }]
   }], null, {
     styleClass: [{

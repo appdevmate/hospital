@@ -179,6 +179,7 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
         { field: 'specialization', header: 'Specialization', editable: true, editorType: EditorType.Text, pipe: 'titlecase', showTooltip: true, filterable: true },
         { field: 'phone', header: 'Phone', editable: true, editorType: EditorType.Text, filterable: true },
         { field: 'qid', header: 'Qatar ID', editable: true, editorType: EditorType.Text, filterable: true },
+        { field: 'licenseNumber', header: 'License Number', editable: true, editorType: EditorType.Text, filterable: true },
         { field: 'dob', header: 'Date of Birth', editable: true, editorType: EditorType.Date, type: 'date', pipe: 'date', dateFormat: 'MM/dd/yyyy', filterable: true },
         { field: 'hiringDate', header: 'Join Date', editable: true, editorType: EditorType.Date, type: 'date', pipe: 'date', dateFormat: 'MM/dd/yyyy', filterable: true },
         { field: 'status', header: 'Level', editable: true, editorType: EditorType.Autocomplete, editorOptions: DOCTOR_STATUS_OPTIONS, customTemplate: true, filterable: true },
@@ -309,7 +310,7 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
 
         const changedFields: any = {};
 
-        const allFields = ['name', 'dob', 'gender', 'phone', 'qid', 'job', 'insurance', 'department', 'specialization', 'status', 'hiringDate', 'experienceYears', 'experienceMonths', 'notes', 'education', 'dutyDays', 'dutyStart', 'dutyEnd'];
+        const allFields = ['name', 'dob', 'gender', 'phone', 'qid', 'licenseNumber', 'job', 'insurance', 'department', 'specialization', 'status', 'hiringDate', 'experienceYears', 'experienceMonths', 'notes', 'education', 'dutyDays', 'dutyStart', 'dutyEnd'];
 
         let hasChanges = false;
 

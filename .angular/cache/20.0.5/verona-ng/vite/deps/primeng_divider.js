@@ -1,19 +1,12 @@
 import {
-  BaseComponent,
-  PARENT_INSTANCE
-} from "./chunk-YNJ5GKCH.js";
+  BaseComponent
+} from "./chunk-4YMQ5OOY.js";
 import {
   BaseStyle
-} from "./chunk-4ATYD752.js";
-import {
-  Bind,
-  BindModule
-} from "./chunk-MLQGRGGO.js";
+} from "./chunk-L2L2T6ID.js";
 import {
   SharedModule
-} from "./chunk-LMEEH3AJ.js";
-import "./chunk-GOP36Q47.js";
-import "./chunk-UCHM6OXG.js";
+} from "./chunk-ZKOTJBQ6.js";
 import {
   CommonModule
 } from "./chunk-FHZAWWEY.js";
@@ -26,7 +19,6 @@ import {
   NgModule,
   ViewEncapsulation,
   setClassMetadata,
-  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵattribute,
@@ -38,11 +30,9 @@ import {
   ɵɵgetInheritedFactory,
   ɵɵprojection,
   ɵɵprojectionDef,
-  ɵɵproperty,
   ɵɵstyleMap
 } from "./chunk-EIF6IUR4.js";
 import {
-  InjectionToken,
   inject,
   ɵɵdefineInjectable,
   ɵɵdefineInjector
@@ -50,6 +40,8 @@ import {
 import "./chunk-G6ECYYJH.js";
 import "./chunk-YVXMBCE5.js";
 import "./chunk-RTGP7ALM.js";
+import "./chunk-BMDSN43F.js";
+import "./chunk-RK2DVQNP.js";
 import "./chunk-4MWRP73S.js";
 
 // node_modules/@primeuix/styles/dist/divider/index.mjs
@@ -85,7 +77,7 @@ var classes = {
 };
 var DividerStyle = class _DividerStyle extends BaseStyle {
   name = "divider";
-  style = style;
+  theme = style;
   classes = classes;
   inlineStyles = inlineStyles;
   static ɵfac = /* @__PURE__ */ (() => {
@@ -109,18 +101,7 @@ var DividerClasses;
   DividerClasses2["root"] = "p-divider";
   DividerClasses2["content"] = "p-divider-content";
 })(DividerClasses || (DividerClasses = {}));
-var DIVIDER_INSTANCE = new InjectionToken("DIVIDER_INSTANCE");
 var Divider = class _Divider extends BaseComponent {
-  $pcDivider = inject(DIVIDER_INSTANCE, {
-    optional: true,
-    skipSelf: true
-  }) ?? void 0;
-  bindDirectiveInstance = inject(Bind, {
-    self: true
-  });
-  onAfterViewChecked() {
-    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
-  }
   /**
    * Style class of the component.
    * @deprecated since v20.0.0, use `class` instead.
@@ -152,7 +133,7 @@ var Divider = class _Divider extends BaseComponent {
   static ɵcmp = ɵɵdefineComponent({
     type: _Divider,
     selectors: [["p-divider"]],
-    hostAttrs: ["role", "separator"],
+    hostAttrs: ["data-pc-name", "divider", "role", "separator"],
     hostVars: 5,
     hostBindings: function Divider_HostBindings(rf, ctx) {
       if (rf & 2) {
@@ -167,30 +148,22 @@ var Divider = class _Divider extends BaseComponent {
       type: "type",
       align: "align"
     },
-    features: [ɵɵProvidersFeature([DividerStyle, {
-      provide: DIVIDER_INSTANCE,
-      useExisting: _Divider
-    }, {
-      provide: PARENT_INSTANCE,
-      useExisting: _Divider
-    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([DividerStyle]), ɵɵInheritDefinitionFeature],
     ngContentSelectors: _c0,
     decls: 2,
-    vars: 3,
-    consts: [[3, "pBind"]],
+    vars: 2,
     template: function Divider_Template(rf, ctx) {
       if (rf & 1) {
         ɵɵprojectionDef();
-        ɵɵelementStart(0, "div", 0);
+        ɵɵelementStart(0, "div");
         ɵɵprojection(1);
         ɵɵelementEnd();
       }
       if (rf & 2) {
         ɵɵclassMap(ctx.cx("content"));
-        ɵɵproperty("pBind", ctx.ptm("content"));
       }
     },
-    dependencies: [CommonModule, SharedModule, BindModule, Bind],
+    dependencies: [CommonModule, SharedModule],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -201,9 +174,9 @@ var Divider = class _Divider extends BaseComponent {
     args: [{
       selector: "p-divider",
       standalone: true,
-      imports: [CommonModule, SharedModule, BindModule],
+      imports: [CommonModule, SharedModule],
       template: `
-        <div [pBind]="ptm('content')" [class]="cx('content')">
+        <div [class]="cx('content')">
             <ng-content></ng-content>
         </div>
     `,
@@ -211,18 +184,12 @@ var Divider = class _Divider extends BaseComponent {
       encapsulation: ViewEncapsulation.None,
       host: {
         "[attr.aria-orientation]": "layout",
+        "data-pc-name": "divider",
         role: "separator",
         "[class]": "cn(cx('root'), styleClass)",
         "[style]": "sx('root')"
       },
-      providers: [DividerStyle, {
-        provide: DIVIDER_INSTANCE,
-        useExisting: Divider
-      }, {
-        provide: PARENT_INSTANCE,
-        useExisting: Divider
-      }],
-      hostDirectives: [Bind]
+      providers: [DividerStyle]
     }]
   }], null, {
     styleClass: [{
@@ -245,19 +212,19 @@ var DividerModule = class _DividerModule {
   };
   static ɵmod = ɵɵdefineNgModule({
     type: _DividerModule,
-    imports: [Divider, BindModule],
-    exports: [Divider, BindModule]
+    imports: [Divider],
+    exports: [Divider]
   });
   static ɵinj = ɵɵdefineInjector({
-    imports: [Divider, BindModule, BindModule]
+    imports: [Divider]
   });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(DividerModule, [{
     type: NgModule,
     args: [{
-      imports: [Divider, BindModule],
-      exports: [Divider, BindModule]
+      imports: [Divider],
+      exports: [Divider]
     }]
   }], null, null);
 })();

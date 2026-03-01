@@ -1,19 +1,13 @@
 import {
-  BaseComponent,
-  PARENT_INSTANCE
-} from "./chunk-YNJ5GKCH.js";
+  BaseComponent
+} from "./chunk-4YMQ5OOY.js";
 import {
   BaseStyle
-} from "./chunk-4ATYD752.js";
-import {
-  Bind
-} from "./chunk-MLQGRGGO.js";
+} from "./chunk-L2L2T6ID.js";
 import {
   PrimeTemplate,
   SharedModule
-} from "./chunk-LMEEH3AJ.js";
-import "./chunk-GOP36Q47.js";
-import "./chunk-UCHM6OXG.js";
+} from "./chunk-ZKOTJBQ6.js";
 import {
   CommonModule,
   NgForOf,
@@ -31,10 +25,10 @@ import {
   NgModule,
   ViewEncapsulation,
   setClassMetadata,
-  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
+  ɵɵattribute,
   ɵɵclassMap,
   ɵɵcontentQuery,
   ɵɵdefineComponent,
@@ -56,7 +50,6 @@ import {
   ɵɵtemplateRefExtractor
 } from "./chunk-EIF6IUR4.js";
 import {
-  InjectionToken,
   inject,
   ɵɵdefineInjectable,
   ɵɵdefineInjector
@@ -64,6 +57,8 @@ import {
 import "./chunk-G6ECYYJH.js";
 import "./chunk-YVXMBCE5.js";
 import "./chunk-RTGP7ALM.js";
+import "./chunk-BMDSN43F.js";
+import "./chunk-RK2DVQNP.js";
 import "./chunk-4MWRP73S.js";
 
 // node_modules/@primeuix/styles/dist/timeline/index.mjs
@@ -89,7 +84,7 @@ function Timeline_div_0_ng_container_4_ng_container_1_Template(rf, ctx) {
 function Timeline_div_0_ng_container_4_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, Timeline_div_0_ng_container_4_ng_container_1_Template, 1, 0, "ng-container", 3);
+    ɵɵtemplate(1, Timeline_div_0_ng_container_4_ng_container_1_Template, 1, 0, "ng-container", 2);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -101,22 +96,21 @@ function Timeline_div_0_ng_container_4_Template(rf, ctx) {
 }
 function Timeline_div_0_ng_template_5_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "div", 2);
+    ɵɵelement(0, "div");
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r1.cx("eventMarker"));
-    ɵɵproperty("pBind", ctx_r1.ptm("eventMarker"));
+    ɵɵattribute("data-pc-section", "marker");
   }
 }
 function Timeline_div_0_div_7_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "div", 2);
+    ɵɵelement(0, "div");
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r1.cx("eventConnector"));
-    ɵɵproperty("pBind", ctx_r1.ptm("eventConnector"));
   }
 }
 function Timeline_div_0_ng_container_9_Template(rf, ctx) {
@@ -126,14 +120,14 @@ function Timeline_div_0_ng_container_9_Template(rf, ctx) {
 }
 function Timeline_div_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div", 2)(1, "div", 2);
-    ɵɵtemplate(2, Timeline_div_0_ng_container_2_Template, 1, 0, "ng-container", 3);
+    ɵɵelementStart(0, "div")(1, "div");
+    ɵɵtemplate(2, Timeline_div_0_ng_container_2_Template, 1, 0, "ng-container", 2);
     ɵɵelementEnd();
-    ɵɵelementStart(3, "div", 2);
-    ɵɵtemplate(4, Timeline_div_0_ng_container_4_Template, 2, 4, "ng-container", 4)(5, Timeline_div_0_ng_template_5_Template, 1, 3, "ng-template", null, 0, ɵɵtemplateRefExtractor)(7, Timeline_div_0_div_7_Template, 1, 3, "div", 5);
+    ɵɵelementStart(3, "div");
+    ɵɵtemplate(4, Timeline_div_0_ng_container_4_Template, 2, 4, "ng-container", 3)(5, Timeline_div_0_ng_template_5_Template, 1, 3, "ng-template", null, 0, ɵɵtemplateRefExtractor)(7, Timeline_div_0_div_7_Template, 1, 2, "div", 4);
     ɵɵelementEnd();
-    ɵɵelementStart(8, "div", 2);
-    ɵɵtemplate(9, Timeline_div_0_ng_container_9_Template, 1, 0, "ng-container", 3);
+    ɵɵelementStart(8, "div");
+    ɵɵtemplate(9, Timeline_div_0_ng_container_9_Template, 1, 0, "ng-container", 2);
     ɵɵelementEnd()();
   }
   if (rf & 2) {
@@ -142,22 +136,22 @@ function Timeline_div_0_Template(rf, ctx) {
     const marker_r4 = ɵɵreference(6);
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cx("event"));
-    ɵɵproperty("pBind", ctx_r1.ptm("event"));
+    ɵɵattribute("data-pc-section", "event");
     ɵɵadvance();
     ɵɵclassMap(ctx_r1.cx("eventOpposite"));
-    ɵɵproperty("pBind", ctx_r1.ptm("eventOpposite"));
+    ɵɵattribute("data-pc-section", "opposite");
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r1.oppositeTemplate || ctx_r1._oppositeTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(19, _c3, event_r1));
     ɵɵadvance();
     ɵɵclassMap(ctx_r1.cx("eventSeparator"));
-    ɵɵproperty("pBind", ctx_r1.ptm("eventSeparator"));
+    ɵɵattribute("data-pc-section", "separator");
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r1.markerTemplate || ctx_r1._markerTemplate)("ngIfElse", marker_r4);
     ɵɵadvance(3);
     ɵɵproperty("ngIf", !last_r3);
     ɵɵadvance();
     ɵɵclassMap(ctx_r1.cx("eventContent"));
-    ɵɵproperty("pBind", ctx_r1.ptm("eventContent"));
+    ɵɵattribute("data-pc-section", "content");
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r1.contentTemplate || ctx_r1._contentTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(21, _c3, event_r1));
   }
@@ -175,7 +169,7 @@ var classes = {
 };
 var TimelineStyle = class _TimelineStyle extends BaseStyle {
   name = "timeline";
-  style = style;
+  theme = style;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵTimelineStyle_BaseFactory;
@@ -203,18 +197,7 @@ var TimelineClasses;
   TimelineClasses2["eventConnector"] = "p-timeline-event-connector";
   TimelineClasses2["eventContent"] = "p-timeline-event-content";
 })(TimelineClasses || (TimelineClasses = {}));
-var TIMELINE_INSTANCE = new InjectionToken("TIMELINE_INSTANCE");
 var Timeline = class _Timeline extends BaseComponent {
-  bindDirectiveInstance = inject(Bind, {
-    self: true
-  });
-  $pcTimeline = inject(TIMELINE_INSTANCE, {
-    optional: true,
-    skipSelf: true
-  }) ?? void 0;
-  onAfterViewChecked() {
-    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
-  }
   /**
    * An array of events to display.
    * @group Props
@@ -259,7 +242,7 @@ var Timeline = class _Timeline extends BaseComponent {
   getBlockableElement() {
     return this.el.nativeElement.children[0];
   }
-  onAfterContentInit() {
+  ngAfterContentInit() {
     this.templates.forEach((item) => {
       switch (item.getType()) {
         case "content":
@@ -298,9 +281,10 @@ var Timeline = class _Timeline extends BaseComponent {
         ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.templates = _t);
       }
     },
-    hostVars: 2,
+    hostVars: 4,
     hostBindings: function Timeline_HostBindings(rf, ctx) {
       if (rf & 2) {
+        ɵɵattribute("data-pc-section", "root")("data-pc-name", "timeline");
         ɵɵclassMap(ctx.cn(ctx.cx("root"), ctx.styleClass));
       }
     },
@@ -310,16 +294,10 @@ var Timeline = class _Timeline extends BaseComponent {
       align: "align",
       layout: "layout"
     },
-    features: [ɵɵProvidersFeature([TimelineStyle, {
-      provide: TIMELINE_INSTANCE,
-      useExisting: _Timeline
-    }, {
-      provide: PARENT_INSTANCE,
-      useExisting: _Timeline
-    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([TimelineStyle]), ɵɵInheritDefinitionFeature],
     decls: 1,
     vars: 1,
-    consts: [["marker", ""], [3, "pBind", "class", 4, "ngFor", "ngForOf"], [3, "pBind"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], [4, "ngIf", "ngIfElse"], [3, "pBind", "class", 4, "ngIf"]],
+    consts: [["marker", ""], [3, "class", 4, "ngFor", "ngForOf"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], [4, "ngIf", "ngIfElse"], [3, "class", 4, "ngIf"]],
     template: function Timeline_Template(rf, ctx) {
       if (rf & 1) {
         ɵɵtemplate(0, Timeline_div_0_Template, 10, 23, "div", 1);
@@ -328,7 +306,7 @@ var Timeline = class _Timeline extends BaseComponent {
         ɵɵproperty("ngForOf", ctx.value);
       }
     },
-    dependencies: [CommonModule, NgForOf, NgIf, NgTemplateOutlet, SharedModule, Bind],
+    dependencies: [CommonModule, NgForOf, NgIf, NgTemplateOutlet, SharedModule],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -339,39 +317,34 @@ var Timeline = class _Timeline extends BaseComponent {
     args: [{
       selector: "p-timeline",
       standalone: true,
-      imports: [CommonModule, SharedModule, Bind],
+      imports: [CommonModule, SharedModule],
       template: `
-        <div [pBind]="ptm('event')" *ngFor="let event of value; let last = last" [class]="cx('event')">
-            <div [pBind]="ptm('eventOpposite')" [class]="cx('eventOpposite')">
+        <div *ngFor="let event of value; let last = last" [class]="cx('event')" [attr.data-pc-section]="'event'">
+            <div [class]="cx('eventOpposite')" [attr.data-pc-section]="'opposite'">
                 <ng-container *ngTemplateOutlet="oppositeTemplate || _oppositeTemplate; context: { $implicit: event }"></ng-container>
             </div>
-            <div [pBind]="ptm('eventSeparator')" [class]="cx('eventSeparator')">
+            <div [class]="cx('eventSeparator')" [attr.data-pc-section]="'separator'">
                 <ng-container *ngIf="markerTemplate || _markerTemplate; else marker">
                     <ng-container *ngTemplateOutlet="markerTemplate || _markerTemplate; context: { $implicit: event }"></ng-container>
                 </ng-container>
                 <ng-template #marker>
-                    <div [pBind]="ptm('eventMarker')" [class]="cx('eventMarker')"></div>
+                    <div [class]="cx('eventMarker')" [attr.data-pc-section]="'marker'"></div>
                 </ng-template>
-                <div [pBind]="ptm('eventConnector')" *ngIf="!last" [class]="cx('eventConnector')"></div>
+                <div *ngIf="!last" [class]="cx('eventConnector')"></div>
             </div>
-            <div [pBind]="ptm('eventContent')" [class]="cx('eventContent')">
+            <div [class]="cx('eventContent')" [attr.data-pc-section]="'content'">
                 <ng-container *ngTemplateOutlet="contentTemplate || _contentTemplate; context: { $implicit: event }"></ng-container>
             </div>
         </div>
     `,
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
-      providers: [TimelineStyle, {
-        provide: TIMELINE_INSTANCE,
-        useExisting: Timeline
-      }, {
-        provide: PARENT_INSTANCE,
-        useExisting: Timeline
-      }],
+      providers: [TimelineStyle],
       host: {
-        "[class]": "cn(cx('root'), styleClass)"
-      },
-      hostDirectives: [Bind]
+        "[class]": "cn(cx('root'), styleClass)",
+        "[attr.data-pc-section]": "'root'",
+        "[attr.data-pc-name]": "'timeline'"
+      }
     }]
   }], null, {
     value: [{

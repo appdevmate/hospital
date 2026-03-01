@@ -2,29 +2,23 @@ import {
   zindexutils
 } from "./chunk-BB55NINM.js";
 import {
+  CheckIcon,
   ExclamationTriangleIcon,
   InfoCircleIcon,
   TimesCircleIcon,
   TimesIcon
-} from "./chunk-RHA7RL5K.js";
+} from "./chunk-BIL3W6KN.js";
 import {
-  CheckIcon
-} from "./chunk-YXZQJBKH.js";
-import {
-  BaseComponent,
-  PARENT_INSTANCE
-} from "./chunk-YNJ5GKCH.js";
+  BaseComponent
+} from "./chunk-4YMQ5OOY.js";
 import {
   BaseStyle
-} from "./chunk-4ATYD752.js";
-import {
-  Bind
-} from "./chunk-MLQGRGGO.js";
+} from "./chunk-L2L2T6ID.js";
 import {
   MessageService,
   PrimeTemplate,
   SharedModule
-} from "./chunk-LMEEH3AJ.js";
+} from "./chunk-ZKOTJBQ6.js";
 import "./chunk-6QGHQEN4.js";
 import {
   animate,
@@ -35,12 +29,6 @@ import {
   transition,
   trigger
 } from "./chunk-53DGU4C2.js";
-import "./chunk-GOP36Q47.js";
-import {
-  _t,
-  l,
-  s3 as s
-} from "./chunk-UCHM6OXG.js";
 import {
   CommonModule,
   NgClass,
@@ -64,7 +52,6 @@ import {
   booleanAttribute,
   numberAttribute,
   setClassMetadata,
-  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -99,7 +86,6 @@ import {
   ɵɵtextInterpolate1
 } from "./chunk-EIF6IUR4.js";
 import {
-  InjectionToken,
   inject,
   ɵɵdefineInjectable,
   ɵɵdefineInjector,
@@ -110,6 +96,12 @@ import {
 import "./chunk-G6ECYYJH.js";
 import "./chunk-YVXMBCE5.js";
 import "./chunk-RTGP7ALM.js";
+import "./chunk-BMDSN43F.js";
+import {
+  Kt,
+  a,
+  s3 as s
+} from "./chunk-RK2DVQNP.js";
 import "./chunk-4MWRP73S.js";
 
 // node_modules/@primeuix/styles/dist/toast/index.mjs
@@ -149,15 +141,25 @@ function ToastItem_Conditional_2_Template(rf, ctx) {
 }
 function ToastItem_Conditional_3_ng_container_1_Conditional_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "span", 4);
+    ɵɵelement(0, "span");
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r1.cn(ctx_r1.cx("messageIcon"), ctx_r1.message == null ? null : ctx_r1.message.icon));
-    ɵɵproperty("pBind", ctx_r1.ptm("messageIcon"));
   }
 }
 function ToastItem_Conditional_3_ng_container_1_Conditional_2_Case_0_Template(rf, ctx) {
+  if (rf & 1) {
+    ɵɵnamespaceSVG();
+    ɵɵelement(0, "svg", 10);
+  }
+  if (rf & 2) {
+    const ctx_r1 = ɵɵnextContext(4);
+    ɵɵclassMap(ctx_r1.cx("messageIcon"));
+    ɵɵattribute("aria-hidden", true)("data-pc-section", "icon");
+  }
+}
+function ToastItem_Conditional_3_ng_container_1_Conditional_2_Case_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
     ɵɵelement(0, "svg", 11);
@@ -165,11 +167,10 @@ function ToastItem_Conditional_3_ng_container_1_Conditional_2_Case_0_Template(rf
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(4);
     ɵɵclassMap(ctx_r1.cx("messageIcon"));
-    ɵɵproperty("pBind", ctx_r1.ptm("messageIcon"));
-    ɵɵattribute("aria-hidden", true);
+    ɵɵattribute("aria-hidden", true)("data-pc-section", "icon");
   }
 }
-function ToastItem_Conditional_3_ng_container_1_Conditional_2_Case_1_Template(rf, ctx) {
+function ToastItem_Conditional_3_ng_container_1_Conditional_2_Case_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
     ɵɵelement(0, "svg", 12);
@@ -177,11 +178,10 @@ function ToastItem_Conditional_3_ng_container_1_Conditional_2_Case_1_Template(rf
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(4);
     ɵɵclassMap(ctx_r1.cx("messageIcon"));
-    ɵɵproperty("pBind", ctx_r1.ptm("messageIcon"));
-    ɵɵattribute("aria-hidden", true);
+    ɵɵattribute("aria-hidden", true)("data-pc-section", "icon");
   }
 }
-function ToastItem_Conditional_3_ng_container_1_Conditional_2_Case_2_Template(rf, ctx) {
+function ToastItem_Conditional_3_ng_container_1_Conditional_2_Case_3_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
     ɵɵelement(0, "svg", 13);
@@ -189,37 +189,23 @@ function ToastItem_Conditional_3_ng_container_1_Conditional_2_Case_2_Template(rf
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(4);
     ɵɵclassMap(ctx_r1.cx("messageIcon"));
-    ɵɵproperty("pBind", ctx_r1.ptm("messageIcon"));
-    ɵɵattribute("aria-hidden", true);
-  }
-}
-function ToastItem_Conditional_3_ng_container_1_Conditional_2_Case_3_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 14);
-  }
-  if (rf & 2) {
-    const ctx_r1 = ɵɵnextContext(4);
-    ɵɵclassMap(ctx_r1.cx("messageIcon"));
-    ɵɵproperty("pBind", ctx_r1.ptm("messageIcon"));
-    ɵɵattribute("aria-hidden", true);
+    ɵɵattribute("aria-hidden", true)("data-pc-section", "icon");
   }
 }
 function ToastItem_Conditional_3_ng_container_1_Conditional_2_Case_4_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 12);
+    ɵɵelement(0, "svg", 11);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(4);
     ɵɵclassMap(ctx_r1.cx("messageIcon"));
-    ɵɵproperty("pBind", ctx_r1.ptm("messageIcon"));
-    ɵɵattribute("aria-hidden", true);
+    ɵɵattribute("aria-hidden", true)("data-pc-section", "icon");
   }
 }
 function ToastItem_Conditional_3_ng_container_1_Conditional_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵconditionalCreate(0, ToastItem_Conditional_3_ng_container_1_Conditional_2_Case_0_Template, 1, 4, ":svg:svg", 7)(1, ToastItem_Conditional_3_ng_container_1_Conditional_2_Case_1_Template, 1, 4, ":svg:svg", 8)(2, ToastItem_Conditional_3_ng_container_1_Conditional_2_Case_2_Template, 1, 4, ":svg:svg", 9)(3, ToastItem_Conditional_3_ng_container_1_Conditional_2_Case_3_Template, 1, 4, ":svg:svg", 10)(4, ToastItem_Conditional_3_ng_container_1_Conditional_2_Case_4_Template, 1, 4, ":svg:svg", 8);
+    ɵɵconditionalCreate(0, ToastItem_Conditional_3_ng_container_1_Conditional_2_Case_0_Template, 1, 4, ":svg:svg", 6)(1, ToastItem_Conditional_3_ng_container_1_Conditional_2_Case_1_Template, 1, 4, ":svg:svg", 7)(2, ToastItem_Conditional_3_ng_container_1_Conditional_2_Case_2_Template, 1, 4, ":svg:svg", 8)(3, ToastItem_Conditional_3_ng_container_1_Conditional_2_Case_3_Template, 1, 4, ":svg:svg", 9)(4, ToastItem_Conditional_3_ng_container_1_Conditional_2_Case_4_Template, 1, 4, ":svg:svg", 7);
   }
   if (rf & 2) {
     let tmp_4_0;
@@ -230,11 +216,11 @@ function ToastItem_Conditional_3_ng_container_1_Conditional_2_Template(rf, ctx) 
 function ToastItem_Conditional_3_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵconditionalCreate(1, ToastItem_Conditional_3_ng_container_1_Conditional_1_Template, 1, 3, "span", 2)(2, ToastItem_Conditional_3_ng_container_1_Conditional_2_Template, 5, 1);
-    ɵɵelementStart(3, "div", 6)(4, "div", 6);
+    ɵɵconditionalCreate(1, ToastItem_Conditional_3_ng_container_1_Conditional_1_Template, 1, 2, "span", 2)(2, ToastItem_Conditional_3_ng_container_1_Conditional_2_Template, 5, 1);
+    ɵɵelementStart(3, "div", 5)(4, "div", 5);
     ɵɵtext(5);
     ɵɵelementEnd();
-    ɵɵelementStart(6, "div", 6);
+    ɵɵelementStart(6, "div", 5);
     ɵɵtext(7);
     ɵɵelementEnd()();
     ɵɵelementContainerEnd();
@@ -244,13 +230,16 @@ function ToastItem_Conditional_3_ng_container_1_Template(rf, ctx) {
     ɵɵadvance();
     ɵɵconditional(ctx_r1.message.icon ? 1 : 2);
     ɵɵadvance(2);
-    ɵɵproperty("pBind", ctx_r1.ptm("messageText"))("ngClass", ctx_r1.cx("messageText"));
+    ɵɵproperty("ngClass", ctx_r1.cx("messageText"));
+    ɵɵattribute("data-pc-section", "text");
     ɵɵadvance();
-    ɵɵproperty("pBind", ctx_r1.ptm("summary"))("ngClass", ctx_r1.cx("summary"));
+    ɵɵproperty("ngClass", ctx_r1.cx("summary"));
+    ɵɵattribute("data-pc-section", "summary");
     ɵɵadvance();
     ɵɵtextInterpolate1(" ", ctx_r1.message.summary, " ");
     ɵɵadvance();
-    ɵɵproperty("pBind", ctx_r1.ptm("detail"))("ngClass", ctx_r1.cx("detail"));
+    ɵɵproperty("ngClass", ctx_r1.cx("detail"));
+    ɵɵattribute("data-pc-section", "detail");
     ɵɵadvance();
     ɵɵtextInterpolate(ctx_r1.message.detail);
   }
@@ -262,17 +251,16 @@ function ToastItem_Conditional_3_ng_container_2_Template(rf, ctx) {
 }
 function ToastItem_Conditional_3_Conditional_3_Conditional_2_span_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "span", 4);
+    ɵɵelement(0, "span");
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(4);
     ɵɵclassMap(ctx_r1.cn(ctx_r1.cx("closeIcon"), ctx_r1.message == null ? null : ctx_r1.message.closeIcon));
-    ɵɵproperty("pBind", ctx_r1.ptm("closeIcon"));
   }
 }
 function ToastItem_Conditional_3_Conditional_3_Conditional_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, ToastItem_Conditional_3_Conditional_3_Conditional_2_span_0_Template, 1, 3, "span", 17);
+    ɵɵtemplate(0, ToastItem_Conditional_3_Conditional_3_Conditional_2_span_0_Template, 1, 2, "span", 16);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
@@ -282,19 +270,18 @@ function ToastItem_Conditional_3_Conditional_3_Conditional_2_Template(rf, ctx) {
 function ToastItem_Conditional_3_Conditional_3_Conditional_3_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 18);
+    ɵɵelement(0, "svg", 17);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r1.cx("closeIcon"));
-    ɵɵproperty("pBind", ctx_r1.ptm("closeIcon"));
-    ɵɵattribute("aria-hidden", true);
+    ɵɵattribute("aria-hidden", true)("data-pc-section", "closeicon");
   }
 }
 function ToastItem_Conditional_3_Conditional_3_Template(rf, ctx) {
   if (rf & 1) {
     const _r3 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "div")(1, "button", 15);
+    ɵɵelementStart(0, "div")(1, "button", 14);
     ɵɵlistener("click", function ToastItem_Conditional_3_Conditional_3_Template_button_click_1_listener($event) {
       ɵɵrestoreView(_r3);
       const ctx_r1 = ɵɵnextContext(2);
@@ -304,29 +291,28 @@ function ToastItem_Conditional_3_Conditional_3_Template(rf, ctx) {
       const ctx_r1 = ɵɵnextContext(2);
       return ɵɵresetView(ctx_r1.onCloseIconClick($event));
     });
-    ɵɵconditionalCreate(2, ToastItem_Conditional_3_Conditional_3_Conditional_2_Template, 1, 1, "span", 2)(3, ToastItem_Conditional_3_Conditional_3_Conditional_3_Template, 1, 4, ":svg:svg", 16);
+    ɵɵconditionalCreate(2, ToastItem_Conditional_3_Conditional_3_Conditional_2_Template, 1, 1, "span", 2)(3, ToastItem_Conditional_3_Conditional_3_Conditional_3_Template, 1, 4, ":svg:svg", 15);
     ɵɵelementEnd()();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
     ɵɵadvance();
-    ɵɵproperty("pBind", ctx_r1.ptm("closeButton"));
-    ɵɵattribute("class", ctx_r1.cx("closeButton"))("aria-label", ctx_r1.closeAriaLabel);
+    ɵɵattribute("class", ctx_r1.cx("closeButton"))("aria-label", ctx_r1.closeAriaLabel)("data-pc-section", "closebutton");
     ɵɵadvance();
     ɵɵconditional(ctx_r1.message.closeIcon ? 2 : 3);
   }
 }
 function ToastItem_Conditional_3_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div", 4);
-    ɵɵtemplate(1, ToastItem_Conditional_3_ng_container_1_Template, 8, 9, "ng-container", 5)(2, ToastItem_Conditional_3_ng_container_2_Template, 1, 0, "ng-container", 3);
+    ɵɵelementStart(0, "div");
+    ɵɵtemplate(1, ToastItem_Conditional_3_ng_container_1_Template, 8, 9, "ng-container", 4)(2, ToastItem_Conditional_3_ng_container_2_Template, 1, 0, "ng-container", 3);
     ɵɵconditionalCreate(3, ToastItem_Conditional_3_Conditional_3_Template, 4, 4, "div");
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cn(ctx_r1.cx("messageContent"), ctx_r1.message == null ? null : ctx_r1.message.contentStyleClass));
-    ɵɵproperty("pBind", ctx_r1.ptm("messageContent"));
+    ɵɵattribute("data-pc-section", "content");
     ɵɵadvance();
     ɵɵproperty("ngIf", !ctx_r1.template);
     ɵɵadvance();
@@ -360,7 +346,7 @@ function Toast_p_toastItem_0_Template(rf, ctx) {
     const msg_r3 = ctx.$implicit;
     const i_r4 = ctx.index;
     const ctx_r1 = ɵɵnextContext();
-    ɵɵproperty("message", msg_r3)("index", i_r4)("life", ctx_r1.life)("template", ctx_r1.template || ctx_r1._template)("headlessTemplate", ctx_r1.headlessTemplate || ctx_r1._headlessTemplate)("@toastAnimation", void 0)("showTransformOptions", ctx_r1.showTransformOptions)("hideTransformOptions", ctx_r1.hideTransformOptions)("showTransitionOptions", ctx_r1.showTransitionOptions)("hideTransitionOptions", ctx_r1.hideTransitionOptions)("pt", ctx_r1.pt);
+    ɵɵproperty("message", msg_r3)("index", i_r4)("life", ctx_r1.life)("template", ctx_r1.template || ctx_r1._template)("headlessTemplate", ctx_r1.headlessTemplate || ctx_r1._headlessTemplate)("@toastAnimation", void 0)("showTransformOptions", ctx_r1.showTransformOptions)("hideTransformOptions", ctx_r1.hideTransformOptions)("showTransitionOptions", ctx_r1.showTransitionOptions)("hideTransitionOptions", ctx_r1.hideTransitionOptions);
   }
 }
 var inlineStyles = {
@@ -414,7 +400,7 @@ var classes = {
 };
 var ToastStyle = class _ToastStyle extends BaseStyle {
   name = "toast";
-  style = style2;
+  theme = style2;
   classes = classes;
   inlineStyles = inlineStyles;
   static ɵfac = /* @__PURE__ */ (() => {
@@ -445,7 +431,6 @@ var ToastClasses;
   ToastClasses2["closeButton"] = "p-toast-close-button";
   ToastClasses2["closeIcon"] = "p-toast-close-icon";
 })(ToastClasses || (ToastClasses = {}));
-var TOAST_INSTANCE = new InjectionToken("TOAST_INSTANCE");
 var ToastItem = class _ToastItem extends BaseComponent {
   zone;
   message;
@@ -464,12 +449,12 @@ var ToastItem = class _ToastItem extends BaseComponent {
     super();
     this.zone = zone;
   }
-  onAfterViewInit() {
+  ngAfterViewInit() {
+    super.ngAfterViewInit();
     this.initTimeout();
   }
   initTimeout() {
     if (!this.message?.sticky) {
-      this.clearTimeout();
       this.zone.runOutsideAngular(() => {
         this.timeout = setTimeout(() => {
           this.onClose.emit({
@@ -503,8 +488,9 @@ var ToastItem = class _ToastItem extends BaseComponent {
   get closeAriaLabel() {
     return this.config.translation.aria ? this.config.translation.aria.close : void 0;
   }
-  onDestroy() {
+  ngOnDestroy() {
     this.clearTimeout();
+    super.ngOnDestroy();
   }
   static ɵfac = function ToastItem_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _ToastItem)(ɵɵdirectiveInject(NgZone));
@@ -528,8 +514,8 @@ var ToastItem = class _ToastItem extends BaseComponent {
     },
     features: [ɵɵProvidersFeature([ToastStyle]), ɵɵInheritDefinitionFeature],
     decls: 4,
-    vars: 13,
-    consts: [["container", ""], ["role", "alert", "aria-live", "assertive", "aria-atomic", "true", 3, "mouseenter", "mouseleave", "pBind"], [3, "pBind", "class"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], [3, "pBind"], [4, "ngIf"], [3, "pBind", "ngClass"], ["data-p-icon", "check", 3, "pBind", "class"], ["data-p-icon", "info-circle", 3, "pBind", "class"], ["data-p-icon", "times-circle", 3, "pBind", "class"], ["data-p-icon", "exclamation-triangle", 3, "pBind", "class"], ["data-p-icon", "check", 3, "pBind"], ["data-p-icon", "info-circle", 3, "pBind"], ["data-p-icon", "times-circle", 3, "pBind"], ["data-p-icon", "exclamation-triangle", 3, "pBind"], ["type", "button", "autofocus", "", 3, "click", "keydown.enter", "pBind"], ["data-p-icon", "times", 3, "pBind", "class"], [3, "pBind", "class", 4, "ngIf"], ["data-p-icon", "times", 3, "pBind"]],
+    vars: 14,
+    consts: [["container", ""], ["role", "alert", "aria-live", "assertive", "aria-atomic", "true", 3, "mouseenter", "mouseleave"], [3, "class"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], [4, "ngIf"], [3, "ngClass"], ["data-p-icon", "check", 3, "class"], ["data-p-icon", "info-circle", 3, "class"], ["data-p-icon", "times-circle", 3, "class"], ["data-p-icon", "exclamation-triangle", 3, "class"], ["data-p-icon", "check"], ["data-p-icon", "info-circle"], ["data-p-icon", "times-circle"], ["data-p-icon", "exclamation-triangle"], ["type", "button", "autofocus", "", 3, "click", "keydown.enter"], ["data-p-icon", "times", 3, "class"], [3, "class", 4, "ngIf"], ["data-p-icon", "times"]],
     template: function ToastItem_Template(rf, ctx) {
       if (rf & 1) {
         const _r1 = ɵɵgetCurrentView();
@@ -546,13 +532,13 @@ var ToastItem = class _ToastItem extends BaseComponent {
       }
       if (rf & 2) {
         ɵɵclassMap(ctx.cn(ctx.cx("message"), ctx.message == null ? null : ctx.message.styleClass));
-        ɵɵproperty("pBind", ctx.ptm("message"))("@messageState", ɵɵpureFunction1(11, _c1, ɵɵpureFunction4(6, _c0, ctx.showTransformOptions, ctx.hideTransformOptions, ctx.showTransitionOptions, ctx.hideTransitionOptions)));
-        ɵɵattribute("id", ctx.message == null ? null : ctx.message.id);
+        ɵɵproperty("@messageState", ɵɵpureFunction1(12, _c1, ɵɵpureFunction4(7, _c0, ctx.showTransformOptions, ctx.hideTransformOptions, ctx.showTransitionOptions, ctx.hideTransitionOptions)));
+        ɵɵattribute("id", ctx.message == null ? null : ctx.message.id)("data-pc-name", "toast")("data-pc-section", "root");
         ɵɵadvance(2);
         ɵɵconditional(ctx.headlessTemplate ? 2 : 3);
       }
     },
-    dependencies: [CommonModule, NgClass, NgIf, NgTemplateOutlet, CheckIcon, ExclamationTriangleIcon, InfoCircleIcon, TimesIcon, TimesCircleIcon, SharedModule, Bind],
+    dependencies: [CommonModule, NgClass, NgIf, NgTemplateOutlet, CheckIcon, ExclamationTriangleIcon, InfoCircleIcon, TimesIcon, TimesCircleIcon, SharedModule],
     encapsulation: 2,
     data: {
       animation: [trigger("messageState", [state("visible", style({
@@ -576,12 +562,11 @@ var ToastItem = class _ToastItem extends BaseComponent {
     args: [{
       selector: "p-toastItem",
       standalone: true,
-      imports: [CommonModule, CheckIcon, ExclamationTriangleIcon, InfoCircleIcon, TimesIcon, TimesCircleIcon, SharedModule, Bind],
+      imports: [CommonModule, CheckIcon, ExclamationTriangleIcon, InfoCircleIcon, TimesIcon, TimesCircleIcon, SharedModule],
       template: `
         <div
             #container
             [attr.id]="message?.id"
-            [pBind]="ptm('message')"
             [class]="cn(cx('message'), message?.styleClass)"
             [@messageState]="{
                 value: 'visible',
@@ -597,48 +582,50 @@ var ToastItem = class _ToastItem extends BaseComponent {
             role="alert"
             aria-live="assertive"
             aria-atomic="true"
+            [attr.data-pc-name]="'toast'"
+            [attr.data-pc-section]="'root'"
         >
             @if (headlessTemplate) {
                 <ng-container *ngTemplateOutlet="headlessTemplate; context: { $implicit: message, closeFn: onCloseIconClick }"></ng-container>
             } @else {
-                <div [pBind]="ptm('messageContent')" [class]="cn(cx('messageContent'), message?.contentStyleClass)">
+                <div [class]="cn(cx('messageContent'), message?.contentStyleClass)" [attr.data-pc-section]="'content'">
                     <ng-container *ngIf="!template">
                         @if (message.icon) {
-                            <span [pBind]="ptm('messageIcon')" [class]="cn(cx('messageIcon'), message?.icon)"></span>
+                            <span [class]="cn(cx('messageIcon'), message?.icon)"></span>
                         } @else {
                             @switch (message.severity) {
                                 @case ('success') {
-                                    <svg [pBind]="ptm('messageIcon')" data-p-icon="check" [class]="cx('messageIcon')" [attr.aria-hidden]="true" />
+                                    <svg data-p-icon="check" [class]="cx('messageIcon')" [attr.aria-hidden]="true" [attr.data-pc-section]="'icon'" />
                                 }
                                 @case ('info') {
-                                    <svg [pBind]="ptm('messageIcon')" data-p-icon="info-circle" [class]="cx('messageIcon')" [attr.aria-hidden]="true" />
+                                    <svg data-p-icon="info-circle" [class]="cx('messageIcon')" [attr.aria-hidden]="true" [attr.data-pc-section]="'icon'" />
                                 }
                                 @case ('error') {
-                                    <svg [pBind]="ptm('messageIcon')" data-p-icon="times-circle" [class]="cx('messageIcon')" [attr.aria-hidden]="true" />
+                                    <svg data-p-icon="times-circle" [class]="cx('messageIcon')" [attr.aria-hidden]="true" [attr.data-pc-section]="'icon'" />
                                 }
                                 @case ('warn') {
-                                    <svg [pBind]="ptm('messageIcon')" data-p-icon="exclamation-triangle" [class]="cx('messageIcon')" [attr.aria-hidden]="true" />
+                                    <svg data-p-icon="exclamation-triangle" [class]="cx('messageIcon')" [attr.aria-hidden]="true" [attr.data-pc-section]="'icon'" />
                                 }
                                 @default {
-                                    <svg [pBind]="ptm('messageIcon')" data-p-icon="info-circle" [class]="cx('messageIcon')" [attr.aria-hidden]="true" />
+                                    <svg data-p-icon="info-circle" [class]="cx('messageIcon')" [attr.aria-hidden]="true" [attr.data-pc-section]="'icon'" />
                                 }
                             }
                         }
-                        <div [pBind]="ptm('messageText')" [ngClass]="cx('messageText')">
-                            <div [pBind]="ptm('summary')" [ngClass]="cx('summary')">
+                        <div [ngClass]="cx('messageText')" [attr.data-pc-section]="'text'">
+                            <div [ngClass]="cx('summary')" [attr.data-pc-section]="'summary'">
                                 {{ message.summary }}
                             </div>
-                            <div [pBind]="ptm('detail')" [ngClass]="cx('detail')">{{ message.detail }}</div>
+                            <div [ngClass]="cx('detail')" [attr.data-pc-section]="'detail'">{{ message.detail }}</div>
                         </div>
                     </ng-container>
                     <ng-container *ngTemplateOutlet="template; context: { $implicit: message }"></ng-container>
                     @if (message?.closable !== false) {
                         <div>
-                            <button [pBind]="ptm('closeButton')" type="button" [attr.class]="cx('closeButton')" (click)="onCloseIconClick($event)" (keydown.enter)="onCloseIconClick($event)" [attr.aria-label]="closeAriaLabel" autofocus>
+                            <button type="button" [attr.class]="cx('closeButton')" (click)="onCloseIconClick($event)" (keydown.enter)="onCloseIconClick($event)" [attr.aria-label]="closeAriaLabel" [attr.data-pc-section]="'closebutton'" autofocus>
                                 @if (message.closeIcon) {
-                                    <span [pBind]="ptm('closeIcon')" *ngIf="message.closeIcon" [class]="cn(cx('closeIcon'), message?.closeIcon)"></span>
+                                    <span *ngIf="message.closeIcon" [class]="cn(cx('closeIcon'), message?.closeIcon)"></span>
                                 } @else {
-                                    <svg [pBind]="ptm('closeIcon')" data-p-icon="times" [class]="cx('closeIcon')" [attr.aria-hidden]="true" />
+                                    <svg data-p-icon="times" [class]="cx('closeIcon')" [attr.aria-hidden]="true" [attr.data-pc-section]="'closeicon'" />
                                 }
                             </button>
                         </div>
@@ -704,16 +691,6 @@ var ToastItem = class _ToastItem extends BaseComponent {
   });
 })();
 var Toast = class _Toast extends BaseComponent {
-  $pcToast = inject(TOAST_INSTANCE, {
-    optional: true,
-    skipSelf: true
-  }) ?? void 0;
-  bindDirectiveInstance = inject(Bind, {
-    self: true
-  });
-  onAfterViewChecked() {
-    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
-  }
   /**
    * Key of the message in case message is targeted to a specific toast component.
    * @group Props
@@ -815,7 +792,8 @@ var Toast = class _Toast extends BaseComponent {
   constructor() {
     super();
   }
-  onInit() {
+  ngOnInit() {
+    super.ngOnInit();
     this.messageSubscription = this.messageService.messageObserver.subscribe((messages) => {
       if (messages) {
         if (Array.isArray(messages)) {
@@ -839,7 +817,7 @@ var Toast = class _Toast extends BaseComponent {
   }
   _template;
   _headlessTemplate;
-  onAfterContentInit() {
+  ngAfterContentInit() {
     this.templates?.forEach((item) => {
       switch (item.getType()) {
         case "message":
@@ -854,7 +832,8 @@ var Toast = class _Toast extends BaseComponent {
       }
     });
   }
-  onAfterViewInit() {
+  ngAfterViewInit() {
+    super.ngAfterViewInit();
     if (this.breakpoints) {
       this.createStyle();
     }
@@ -901,7 +880,7 @@ var Toast = class _Toast extends BaseComponent {
   }
   onAnimationEnd(event) {
     if (event.toState === "void") {
-      if (this.autoZIndex && l(this.messages)) {
+      if (this.autoZIndex && a(this.messages)) {
         zindexutils.clear(this.el?.nativeElement);
       }
     }
@@ -910,7 +889,6 @@ var Toast = class _Toast extends BaseComponent {
     if (!this.styleElement) {
       this.styleElement = this.renderer.createElement("style");
       this.styleElement.type = "text/css";
-      _t(this.styleElement, "nonce", this.config?.csp()?.nonce);
       this.renderer.appendChild(this.document.head, this.styleElement);
       let innerHTML = "";
       for (let breakpoint in this.breakpoints) {
@@ -927,7 +905,7 @@ var Toast = class _Toast extends BaseComponent {
                 `;
       }
       this.renderer.setProperty(this.styleElement, "innerHTML", innerHTML);
-      _t(this.styleElement, "nonce", this.config?.csp()?.nonce);
+      Kt(this.styleElement, "nonce", this.config?.csp()?.nonce);
     }
   }
   destroyStyle() {
@@ -936,7 +914,7 @@ var Toast = class _Toast extends BaseComponent {
       this.styleElement = null;
     }
   }
-  onDestroy() {
+  ngOnDestroy() {
     if (this.messageSubscription) {
       this.messageSubscription.unsubscribe();
     }
@@ -947,6 +925,7 @@ var Toast = class _Toast extends BaseComponent {
       this.clearSubscription.unsubscribe();
     }
     this.destroyStyle();
+    super.ngOnDestroy();
   }
   static ɵfac = function Toast_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _Toast)();
@@ -961,10 +940,10 @@ var Toast = class _Toast extends BaseComponent {
         ɵɵcontentQuery(dirIndex, PrimeTemplate, 4);
       }
       if (rf & 2) {
-        let _t2;
-        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.template = _t2.first);
-        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.headlessTemplate = _t2.first);
-        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.templates = _t2);
+        let _t;
+        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.template = _t.first);
+        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.headlessTemplate = _t.first);
+        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.templates = _t);
       }
     },
     hostVars: 4,
@@ -992,19 +971,13 @@ var Toast = class _Toast extends BaseComponent {
     outputs: {
       onClose: "onClose"
     },
-    features: [ɵɵProvidersFeature([ToastStyle, {
-      provide: TOAST_INSTANCE,
-      useExisting: _Toast
-    }, {
-      provide: PARENT_INSTANCE,
-      useExisting: _Toast
-    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([ToastStyle]), ɵɵInheritDefinitionFeature],
     decls: 1,
     vars: 1,
-    consts: [[3, "message", "index", "life", "template", "headlessTemplate", "showTransformOptions", "hideTransformOptions", "showTransitionOptions", "hideTransitionOptions", "pt", "onClose", 4, "ngFor", "ngForOf"], [3, "onClose", "message", "index", "life", "template", "headlessTemplate", "showTransformOptions", "hideTransformOptions", "showTransitionOptions", "hideTransitionOptions", "pt"]],
+    consts: [[3, "message", "index", "life", "template", "headlessTemplate", "showTransformOptions", "hideTransformOptions", "showTransitionOptions", "hideTransitionOptions", "onClose", 4, "ngFor", "ngForOf"], [3, "onClose", "message", "index", "life", "template", "headlessTemplate", "showTransformOptions", "hideTransformOptions", "showTransitionOptions", "hideTransitionOptions"]],
     template: function Toast_Template(rf, ctx) {
       if (rf & 1) {
-        ɵɵtemplate(0, Toast_p_toastItem_0_Template, 1, 11, "p-toastItem", 0);
+        ɵɵtemplate(0, Toast_p_toastItem_0_Template, 1, 10, "p-toastItem", 0);
       }
       if (rf & 2) {
         ɵɵproperty("ngForOf", ctx.messages);
@@ -1041,24 +1014,16 @@ var Toast = class _Toast extends BaseComponent {
             [hideTransformOptions]="hideTransformOptions"
             [showTransitionOptions]="showTransitionOptions"
             [hideTransitionOptions]="hideTransitionOptions"
-            [pt]="pt"
         ></p-toastItem>
     `,
       animations: [trigger("toastAnimation", [transition(":enter, :leave", [query("@*", animateChild())])])],
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
-      providers: [ToastStyle, {
-        provide: TOAST_INSTANCE,
-        useExisting: Toast
-      }, {
-        provide: PARENT_INSTANCE,
-        useExisting: Toast
-      }],
+      providers: [ToastStyle],
       host: {
         "[class]": "cn(cx('root'), styleClass)",
         "[style]": "sx('root')"
-      },
-      hostDirectives: [Bind]
+      }
     }]
   }], () => [], {
     key: [{

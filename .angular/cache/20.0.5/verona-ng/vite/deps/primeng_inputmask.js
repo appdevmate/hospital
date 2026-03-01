@@ -1,42 +1,31 @@
 import {
   BaseInput
-} from "./chunk-3NL2AYPD.js";
+} from "./chunk-QCZLNNKR.js";
 import {
   InputText
-} from "./chunk-GI2QMI3P.js";
-import "./chunk-343RM6UZ.js";
-import "./chunk-2R7VQYSP.js";
-import "./chunk-ICEVV523.js";
+} from "./chunk-CXGSICYC.js";
+import "./chunk-67V7CIUT.js";
+import "./chunk-5OCKW6BF.js";
+import "./chunk-AXS7T3GQ.js";
+import "./chunk-6PBBDZZF.js";
 import {
   AutoFocus
-} from "./chunk-YNLAOK3J.js";
-import "./chunk-S73J4WE3.js";
+} from "./chunk-KOXUNDHI.js";
+import "./chunk-QVUTNZUY.js";
 import {
   TimesIcon
-} from "./chunk-RHA7RL5K.js";
-import "./chunk-YXZQJBKH.js";
-import {
-  PARENT_INSTANCE
-} from "./chunk-YNJ5GKCH.js";
+} from "./chunk-BIL3W6KN.js";
+import "./chunk-4YMQ5OOY.js";
 import {
   BaseStyle
-} from "./chunk-4ATYD752.js";
-import {
-  Bind,
-  BindModule
-} from "./chunk-MLQGRGGO.js";
+} from "./chunk-L2L2T6ID.js";
 import {
   PrimeTemplate,
   SharedModule
-} from "./chunk-LMEEH3AJ.js";
+} from "./chunk-ZKOTJBQ6.js";
 import {
   NG_VALUE_ACCESSOR
 } from "./chunk-RZEKJVYA.js";
-import "./chunk-GOP36Q47.js";
-import {
-  Nt,
-  tt
-} from "./chunk-UCHM6OXG.js";
 import {
   CommonModule,
   NgIf,
@@ -59,7 +48,6 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   setClassMetadata,
-  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -83,8 +71,6 @@ import {
   ɵɵviewQuery
 } from "./chunk-EIF6IUR4.js";
 import {
-  InjectionToken,
-  computed,
   forwardRef,
   inject,
   ɵɵdefineInjectable,
@@ -96,6 +82,11 @@ import {
 import "./chunk-G6ECYYJH.js";
 import "./chunk-YVXMBCE5.js";
 import "./chunk-RTGP7ALM.js";
+import "./chunk-BMDSN43F.js";
+import {
+  Nt,
+  tt
+} from "./chunk-RK2DVQNP.js";
 import "./chunk-4MWRP73S.js";
 
 // node_modules/primeng/fesm2022/primeng-inputmask.mjs
@@ -116,7 +107,7 @@ function InputMask_ng_container_2__svg_svg_1_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r2.cx("clearIcon"));
-    ɵɵproperty("pBind", ctx_r2.ptm("clearIcon"));
+    ɵɵattribute("data-pc-section", "clearIcon");
   }
 }
 function InputMask_ng_container_2_span_2_1_ng_template_0_Template(rf, ctx) {
@@ -141,7 +132,7 @@ function InputMask_ng_container_2_span_2_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r2.cx("clearIcon"));
-    ɵɵproperty("pBind", ctx_r2.ptm("clearIcon"));
+    ɵɵattribute("data-pc-section", "clearIcon");
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r2.clearIconTemplate || ctx_r2._clearIconTemplate);
   }
@@ -160,7 +151,7 @@ function InputMask_ng_container_2_Template(rf, ctx) {
     ɵɵproperty("ngIf", ctx_r2.clearIconTemplate || ctx_r2._clearIconTemplate);
   }
 }
-var style = (
+var theme = (
   /*css*/
   `
     /* For PrimeNG */
@@ -205,14 +196,14 @@ var style = (
 var classes = {
   root: ({
     instance
-  }) => ["p-inputmask p-component p-inputwrapper", {
+  }) => ["p-inputmask", {
     "p-variant-filled": instance.$variant() === "filled"
   }],
   clearIcon: "p-inputmask-clear-icon"
 };
 var InputMaskStyle = class _InputMaskStyle extends BaseStyle {
   name = "inputmask";
-  style = style;
+  theme = theme;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵInputMaskStyle_BaseFactory;
@@ -235,31 +226,12 @@ var InputMaskClasses;
   InputMaskClasses2["root"] = "p-inputmask";
   InputMaskClasses2["clearIcon"] = "p-inputmask-clear-icon";
 })(InputMaskClasses || (InputMaskClasses = {}));
-var INPUTMASK_INSTANCE = new InjectionToken("INPUTMASK_INSTANCE");
 var INPUTMASK_VALUE_ACCESSOR = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => InputMask),
   multi: true
 };
 var InputMask = class _InputMask extends BaseInput {
-  _componentStyle = inject(InputMaskStyle);
-  $pcInputMask = inject(INPUTMASK_INSTANCE, {
-    optional: true,
-    skipSelf: true
-  }) ?? void 0;
-  bindDirectiveInstance = inject(Bind, {
-    self: true
-  });
-  onAfterViewChecked() {
-    this.bindDirectiveInstance.setAttrs(this.ptms(["root", "host"]));
-  }
-  ptmParams = computed(() => ({
-    context: {
-      filled: this.$variant() === "filled"
-    }
-  }), ...ngDevMode ? [{
-    debugName: "ptmParams"
-  }] : []);
   /**
    * HTML5 input type.
    * @group Props
@@ -425,7 +397,9 @@ var InputMask = class _InputMask extends BaseInput {
   caretTimeoutId;
   androidChrome = true;
   focused;
-  onInit() {
+  _componentStyle = inject(InputMaskStyle);
+  ngOnInit() {
+    super.ngOnInit();
     if (isPlatformBrowser(this.platformId)) {
       let ua = navigator.userAgent;
       this.androidChrome = /chrome/i.test(ua) && /android/i.test(ua);
@@ -433,7 +407,7 @@ var InputMask = class _InputMask extends BaseInput {
     this.initMask();
   }
   _clearIconTemplate;
-  onAfterContentInit() {
+  ngAfterContentInit() {
     this.templates.forEach((item) => {
       switch (item.getType()) {
         case "clearicon":
@@ -443,9 +417,6 @@ var InputMask = class _InputMask extends BaseInput {
     });
   }
   initMask() {
-    if (!this.mask) {
-      return;
-    }
     this.tests = [];
     this.partialPosition = this.mask.length;
     this.len = this.mask.length;
@@ -704,9 +675,7 @@ var InputMask = class _InputMask extends BaseInput {
     }
   }
   writeBuffer() {
-    if (this.buffer && this.inputViewChild?.nativeElement) {
-      this.inputViewChild.nativeElement.value = this.buffer.join("");
-    }
+    this.inputViewChild.nativeElement.value = this.buffer.join("");
   }
   checkVal(allow) {
     let test = this.inputViewChild?.nativeElement.value, lastMatch = -1, i, c, pos;
@@ -802,12 +771,8 @@ var InputMask = class _InputMask extends BaseInput {
     return unmaskedBuffer.join("");
   }
   updateModel(e) {
-    const target = e.target;
-    if (!target) {
-      return;
-    }
-    const updatedValue = this.unmask ? this.getUnmaskedValue() : target.value;
-    if (updatedValue !== null && updatedValue !== void 0) {
+    const updatedValue = this.unmask ? this.getUnmaskedValue() : e.target.value;
+    if (updatedValue !== null || updatedValue !== void 0) {
       this.value = updatedValue;
       this.writeModelValue(this.value);
       this.onModelChange(this.value);
@@ -867,12 +832,6 @@ var InputMask = class _InputMask extends BaseInput {
         ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.inputViewChild = _t.first);
       }
     },
-    hostVars: 2,
-    hostBindings: function InputMask_HostBindings(rf, ctx) {
-      if (rf & 2) {
-        ɵɵclassMap(ctx.cx("root"));
-      }
-    },
     inputs: {
       type: "type",
       slotChar: "slotChar",
@@ -903,16 +862,10 @@ var InputMask = class _InputMask extends BaseInput {
       onKeydown: "onKeydown",
       onClear: "onClear"
     },
-    features: [ɵɵProvidersFeature([INPUTMASK_VALUE_ACCESSOR, InputMaskStyle, {
-      provide: INPUTMASK_INSTANCE,
-      useExisting: _InputMask
-    }, {
-      provide: PARENT_INSTANCE,
-      useExisting: _InputMask
-    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([INPUTMASK_VALUE_ACCESSOR, InputMaskStyle]), ɵɵInheritDefinitionFeature],
     decls: 3,
-    vars: 26,
-    consts: [["input", ""], ["pInputText", "", 3, "focus", "blur", "keydown", "keypress", "input", "paste", "pt", "invalid", "ngStyle", "pSize", "variant", "pAutoFocus", "fluid"], [4, "ngIf"], ["data-p-icon", "times", 3, "class", "pBind", "click", 4, "ngIf"], [3, "class", "pBind", "click", 4, "ngIf"], ["data-p-icon", "times", 3, "click", "pBind"], [3, "click", "pBind"], [4, "ngTemplateOutlet"]],
+    vars: 27,
+    consts: [["input", ""], ["pInputText", "", 3, "focus", "blur", "keydown", "keypress", "input", "paste", "invalid", "ngStyle", "pSize", "variant", "pAutoFocus", "fluid"], [4, "ngIf"], ["data-p-icon", "times", 3, "class", "click", 4, "ngIf"], [3, "class", "click", 4, "ngIf"], ["data-p-icon", "times", 3, "click"], [3, "click"], [4, "ngTemplateOutlet"]],
     template: function InputMask_Template(rf, ctx) {
       if (rf & 1) {
         const _r1 = ɵɵgetCurrentView();
@@ -940,14 +893,14 @@ var InputMask = class _InputMask extends BaseInput {
         ɵɵtemplate(2, InputMask_ng_container_2_Template, 3, 2, "ng-container", 2);
       }
       if (rf & 2) {
-        ɵɵclassMap(ctx.styleClass);
-        ɵɵproperty("pt", ctx.ptm("pcInputText", ctx.ptmParams()))("invalid", ctx.invalid())("ngStyle", ctx.style)("pSize", ctx.size())("variant", ctx.$variant())("pAutoFocus", ctx.autofocus)("fluid", ctx.hasFluid);
-        ɵɵattribute("id", ctx.inputId)("type", ctx.type)("name", ctx.name())("placeholder", ctx.placeholder)("title", ctx.title)("size", ctx.inputSize())("autocomplete", ctx.autocomplete)("maxlength", ctx.maxlength())("minlength", ctx.minlength())("tabindex", ctx.tabindex)("aria-label", ctx.ariaLabel)("aria-labelledBy", ctx.ariaLabelledBy)("aria-required", ctx.ariaRequired)("required", ctx.required() ? "" : void 0)("readonly", ctx.readonly ? "" : void 0)("disabled", ctx.$disabled() ? "" : void 0);
+        ɵɵclassMap(ctx.cn(ctx.cx("root"), ctx.styleClass));
+        ɵɵproperty("invalid", ctx.invalid())("ngStyle", ctx.style)("pSize", ctx.size())("variant", ctx.$variant())("pAutoFocus", ctx.autofocus)("fluid", ctx.hasFluid);
+        ɵɵattribute("id", ctx.inputId)("type", ctx.type)("name", ctx.name())("placeholder", ctx.placeholder)("title", ctx.title)("size", ctx.inputSize())("autocomplete", ctx.autocomplete)("maxlength", ctx.maxlength())("minlength", ctx.minlength())("tabindex", ctx.tabindex)("aria-label", ctx.ariaLabel)("aria-labelledBy", ctx.ariaLabelledBy)("aria-required", ctx.ariaRequired)("required", ctx.required() ? "" : void 0)("readonly", ctx.readonly ? "" : void 0)("disabled", ctx.$disabled() ? "" : void 0)("data-pc-name", "inputmask")("data-pc-section", "root");
         ɵɵadvance(2);
         ɵɵproperty("ngIf", ctx.value != null && ctx.$filled() && ctx.showClear && !ctx.$disabled());
       }
     },
-    dependencies: [CommonModule, NgIf, NgTemplateOutlet, NgStyle, InputText, AutoFocus, TimesIcon, SharedModule, BindModule, Bind],
+    dependencies: [CommonModule, NgIf, NgTemplateOutlet, NgStyle, InputText, AutoFocus, TimesIcon, SharedModule],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -958,17 +911,16 @@ var InputMask = class _InputMask extends BaseInput {
     args: [{
       selector: "p-inputmask, p-inputMask, p-input-mask",
       standalone: true,
-      imports: [CommonModule, InputText, AutoFocus, TimesIcon, SharedModule, BindModule],
+      imports: [CommonModule, InputText, AutoFocus, TimesIcon, SharedModule],
       template: `
         <input
             #input
             pInputText
-            [pt]="ptm('pcInputText', ptmParams())"
+            [class]="cn(cx('root'), styleClass)"
             [attr.id]="inputId"
             [attr.type]="type"
             [attr.name]="name()"
             [invalid]="invalid()"
-            [class]="styleClass"
             [ngStyle]="style"
             [attr.placeholder]="placeholder"
             [attr.title]="title"
@@ -992,28 +944,20 @@ var InputMask = class _InputMask extends BaseInput {
             [pAutoFocus]="autofocus"
             (input)="onInputChange($event)"
             (paste)="handleInputChange($event)"
+            [attr.data-pc-name]="'inputmask'"
+            [attr.data-pc-section]="'root'"
             [fluid]="hasFluid"
         />
         <ng-container *ngIf="value != null && $filled() && showClear && !$disabled()">
-            <svg data-p-icon="times" *ngIf="!clearIconTemplate && !_clearIconTemplate" [class]="cx('clearIcon')" [pBind]="ptm('clearIcon')" (click)="clear()" />
-            <span *ngIf="clearIconTemplate || _clearIconTemplate" [class]="cx('clearIcon')" [pBind]="ptm('clearIcon')" (click)="clear()">
+            <svg data-p-icon="times" *ngIf="!clearIconTemplate && !_clearIconTemplate" [class]="cx('clearIcon')" (click)="clear()" [attr.data-pc-section]="'clearIcon'" />
+            <span *ngIf="clearIconTemplate || _clearIconTemplate" [class]="cx('clearIcon')" (click)="clear()" [attr.data-pc-section]="'clearIcon'">
                 <ng-template *ngTemplateOutlet="clearIconTemplate || _clearIconTemplate"></ng-template>
             </span>
         </ng-container>
     `,
-      providers: [INPUTMASK_VALUE_ACCESSOR, InputMaskStyle, {
-        provide: INPUTMASK_INSTANCE,
-        useExisting: InputMask
-      }, {
-        provide: PARENT_INSTANCE,
-        useExisting: InputMask
-      }],
+      providers: [INPUTMASK_VALUE_ACCESSOR, InputMaskStyle],
       changeDetection: ChangeDetectionStrategy.OnPush,
-      encapsulation: ViewEncapsulation.None,
-      hostDirectives: [Bind],
-      host: {
-        "[class]": "cx('root')"
-      }
+      encapsulation: ViewEncapsulation.None
     }]
   }], null, {
     type: [{
