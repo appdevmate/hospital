@@ -1,41 +1,58 @@
 import {
   Tooltip,
   TooltipModule
-} from "./chunk-IRWYTOKA.js";
+} from "./chunk-NG66ICPZ.js";
+import "./chunk-S73J4WE3.js";
+import {
+  Ripple
+} from "./chunk-OC77X5LN.js";
+import {
+  AngleDownIcon,
+  AngleRightIcon,
+  BarsIcon
+} from "./chunk-RHA7RL5K.js";
+import "./chunk-YXZQJBKH.js";
 import {
   zindexutils
 } from "./chunk-BB55NINM.js";
 import {
   Badge,
   BadgeModule
-} from "./chunk-EGVFVLQK.js";
+} from "./chunk-TENFQJBN.js";
 import {
-  Ripple
-} from "./chunk-VZLF74PJ.js";
-import "./chunk-QVUTNZUY.js";
+  Bind
+} from "./chunk-MLQGRGGO.js";
 import {
-  AngleDownIcon,
-  AngleRightIcon,
-  BarsIcon
-} from "./chunk-BIL3W6KN.js";
+  BaseComponent,
+  PARENT_INSTANCE
+} from "./chunk-YNJ5GKCH.js";
+import {
+  BaseStyle
+} from "./chunk-4ATYD752.js";
+import {
+  PrimeTemplate,
+  SharedModule
+} from "./chunk-LMEEH3AJ.js";
+import "./chunk-GOP36Q47.js";
+import {
+  J,
+  M,
+  Yt,
+  bt,
+  l,
+  m,
+  s,
+  s3 as s2,
+  z2 as z
+} from "./chunk-UCHM6OXG.js";
 import {
   RouterLink,
   RouterLinkActive,
   RouterModule
-} from "./chunk-Y35IOCZT.js";
-import {
-  BaseComponent
-} from "./chunk-4YMQ5OOY.js";
-import {
-  BaseStyle
-} from "./chunk-L2L2T6ID.js";
-import {
-  PrimeTemplate,
-  SharedModule
-} from "./chunk-ZKOTJBQ6.js";
-import "./chunk-SRUCT75H.js";
-import "./chunk-L26I7UJA.js";
+} from "./chunk-EFY5GPDX.js";
+import "./chunk-J5N23VJV.js";
 import "./chunk-3XGGEXNB.js";
+import "./chunk-L26I7UJA.js";
 import {
   CommonModule,
   NgForOf,
@@ -60,6 +77,7 @@ import {
   booleanAttribute,
   numberAttribute,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -90,6 +108,7 @@ import {
   ɵɵsanitizeHtml,
   ɵɵsanitizeUrl,
   ɵɵstyleMap,
+  ɵɵstyleProp,
   ɵɵtemplate,
   ɵɵtemplateRefExtractor,
   ɵɵtext,
@@ -98,6 +117,7 @@ import {
   ɵɵviewQuery
 } from "./chunk-EIF6IUR4.js";
 import {
+  InjectionToken,
   effect,
   forwardRef,
   inject,
@@ -108,518 +128,507 @@ import {
   ɵɵresetView,
   ɵɵrestoreView
 } from "./chunk-LW34VNAR.js";
-import "./chunk-G6ECYYJH.js";
 import "./chunk-YVXMBCE5.js";
+import "./chunk-G6ECYYJH.js";
 import "./chunk-RTGP7ALM.js";
-import "./chunk-BMDSN43F.js";
-import {
-  M,
-  Yt,
-  a,
-  bt,
-  j,
-  m,
-  s,
-  s3 as s2,
-  z2 as z
-} from "./chunk-RK2DVQNP.js";
 import "./chunk-4MWRP73S.js";
 
 // node_modules/@primeuix/styles/dist/megamenu/index.mjs
 var style = "\n    .p-megamenu {\n        position: relative;\n        display: flex;\n        align-items: center;\n        background: dt('megamenu.background');\n        border: 1px solid dt('megamenu.border.color');\n        border-radius: dt('megamenu.border.radius');\n        color: dt('megamenu.color');\n        gap: dt('megamenu.gap');\n    }\n\n    .p-megamenu-start,\n    .p-megamenu-end {\n        display: flex;\n        align-items: center;\n    }\n\n    .p-megamenu-root-list {\n        margin: 0;\n        padding: 0;\n        list-style: none;\n        outline: 0 none;\n        align-items: center;\n        display: flex;\n        flex-wrap: wrap;\n        gap: dt('megamenu.gap');\n    }\n\n    .p-megamenu-root-list > .p-megamenu-item > .p-megamenu-item-content {\n        border-radius: dt('megamenu.base.item.border.radius');\n    }\n\n    .p-megamenu-root-list > .p-megamenu-item > .p-megamenu-item-content > .p-megamenu-item-link {\n        padding: dt('megamenu.base.item.padding');\n    }\n\n    .p-megamenu-item-content {\n        transition:\n            background dt('megamenu.transition.duration'),\n            color dt('megamenu.transition.duration');\n        border-radius: dt('megamenu.item.border.radius');\n        color: dt('megamenu.item.color');\n    }\n\n    .p-megamenu-item-link {\n        cursor: pointer;\n        display: flex;\n        align-items: center;\n        text-decoration: none;\n        overflow: hidden;\n        position: relative;\n        color: inherit;\n        padding: dt('megamenu.item.padding');\n        gap: dt('megamenu.item.gap');\n        user-select: none;\n        outline: 0 none;\n    }\n\n    .p-megamenu-item-label {\n        line-height: 1;\n    }\n\n    .p-megamenu-item-icon {\n        color: dt('megamenu.item.icon.color');\n    }\n\n    .p-megamenu-submenu-icon {\n        color: dt('megamenu.submenu.icon.color');\n        font-size: dt('megamenu.submenu.icon.size');\n        width: dt('megamenu.submenu.icon.size');\n        height: dt('megamenu.submenu.icon.size');\n    }\n\n    .p-megamenu-item.p-focus > .p-megamenu-item-content {\n        color: dt('megamenu.item.focus.color');\n        background: dt('megamenu.item.focus.background');\n    }\n\n    .p-megamenu-item.p-focus > .p-megamenu-item-content .p-megamenu-item-icon {\n        color: dt('megamenu.item.icon.focus.color');\n    }\n\n    .p-megamenu-item.p-focus > .p-megamenu-item-content .p-megamenu-submenu-icon {\n        color: dt('megamenu.submenu.icon.focus.color');\n    }\n\n    .p-megamenu-item:not(.p-disabled) > .p-megamenu-item-content:hover {\n        color: dt('megamenu.item.focus.color');\n        background: dt('megamenu.item.focus.background');\n    }\n\n    .p-megamenu-item:not(.p-disabled) > .p-megamenu-item-content:hover .p-megamenu-item-icon {\n        color: dt('megamenu.item.icon.focus.color');\n    }\n\n    .p-megamenu-item:not(.p-disabled) > .p-megamenu-item-content:hover .p-megamenu-submenu-icon {\n        color: dt('megamenu.submenu.icon.focus.color');\n    }\n\n    .p-megamenu-item-active > .p-megamenu-item-content {\n        color: dt('megamenu.item.active.color');\n        background: dt('megamenu.item.active.background');\n    }\n\n    .p-megamenu-item-active > .p-megamenu-item-content .p-megamenu-item-icon {\n        color: dt('megamenu.item.icon.active.color');\n    }\n\n    .p-megamenu-item-active > .p-megamenu-item-content .p-megamenu-submenu-icon {\n        color: dt('megamenu.submenu.icon.active.color');\n    }\n\n    .p-megamenu-overlay {\n        display: none;\n        position: absolute;\n        width: auto;\n        z-index: 1;\n        left: 0;\n        min-width: 100%;\n        padding: dt('megamenu.overlay.padding');\n        background: dt('megamenu.overlay.background');\n        color: dt('megamenu.overlay.color');\n        border: 1px solid dt('megamenu.overlay.border.color');\n        border-radius: dt('megamenu.overlay.border.radius');\n        box-shadow: dt('megamenu.overlay.shadow');\n    }\n\n    .p-megamenu-overlay:dir(rtl) {\n        left: auto;\n        right: 0;\n    }\n\n    .p-megamenu-root-list > .p-megamenu-item-active > .p-megamenu-overlay {\n        display: block;\n    }\n\n    .p-megamenu-submenu {\n        margin: 0;\n        list-style: none;\n        padding: dt('megamenu.submenu.padding');\n        min-width: 12.5rem;\n        display: flex;\n        flex-direction: column;\n        gap: dt('megamenu.submenu.gap');\n    }\n\n    .p-megamenu-submenu-label {\n        padding: dt('megamenu.submenu.label.padding');\n        color: dt('megamenu.submenu.label.color');\n        font-weight: dt('megamenu.submenu.label.font.weight');\n        background: dt('megamenu.submenu.label.background');\n    }\n\n    .p-megamenu-separator {\n        border-block-start: 1px solid dt('megamenu.separator.border.color');\n    }\n\n    .p-megamenu-horizontal {\n        align-items: center;\n        padding: dt('megamenu.horizontal.orientation.padding');\n    }\n\n    .p-megamenu-horizontal .p-megamenu-root-list {\n        display: flex;\n        align-items: center;\n        flex-wrap: wrap;\n        gap: dt('megamenu.horizontal.orientation.gap');\n    }\n\n    .p-megamenu-horizontal .p-megamenu-end {\n        margin-left: auto;\n        align-self: center;\n    }\n\n    .p-megamenu-horizontal .p-megamenu-end:dir(rtl) {\n        margin-left: 0;\n        margin-right: auto;\n    }\n\n    .p-megamenu-vertical {\n        display: inline-flex;\n        min-width: 12.5rem;\n        flex-direction: column;\n        align-items: stretch;\n        padding: dt('megamenu.vertical.orientation.padding');\n    }\n\n    .p-megamenu-vertical .p-megamenu-root-list {\n        align-items: stretch;\n        flex-direction: column;\n        gap: dt('megamenu.vertical.orientation.gap');\n    }\n\n    .p-megamenu-vertical .p-megamenu-root-list > .p-megamenu-item-active > .p-megamenu-overlay {\n        left: 100%;\n        top: 0;\n    }\n\n    .p-megamenu-vertical .p-megamenu-root-list > .p-megamenu-item-active > .p-megamenu-overlay:dir(rtl) {\n        left: auto;\n        right: 100%;\n    }\n\n    .p-megamenu-vertical .p-megamenu-root-list > .p-megamenu-item > .p-megamenu-item-content .p-megamenu-submenu-icon {\n        margin-left: auto;\n    }\n\n    .p-megamenu-vertical .p-megamenu-root-list > .p-megamenu-item > .p-megamenu-item-content .p-megamenu-submenu-icon:dir(rtl) {\n        margin-left: 0;\n        margin-right: auto;\n        transform: rotate(180deg);\n    }\n\n    .p-megamenu-grid {\n        display: flex;\n    }\n\n    .p-megamenu-col-2,\n    .p-megamenu-col-3,\n    .p-megamenu-col-4,\n    .p-megamenu-col-6,\n    .p-megamenu-col-12 {\n        flex: 0 0 auto;\n        padding: dt('megamenu.overlay.gap');\n    }\n\n    .p-megamenu-col-2 {\n        width: 16.6667%;\n    }\n\n    .p-megamenu-col-3 {\n        width: 25%;\n    }\n\n    .p-megamenu-col-4 {\n        width: 33.3333%;\n    }\n\n    .p-megamenu-col-6 {\n        width: 50%;\n    }\n\n    .p-megamenu-col-12 {\n        width: 100%;\n    }\n\n    .p-megamenu-button {\n        display: none;\n        justify-content: center;\n        align-items: center;\n        cursor: pointer;\n        width: dt('megamenu.mobile.button.size');\n        height: dt('megamenu.mobile.button.size');\n        position: relative;\n        color: dt('megamenu.mobile.button.color');\n        border: 0 none;\n        background: transparent;\n        border-radius: dt('megamenu.mobile.button.border.radius');\n        transition:\n            background dt('megamenu.transition.duration'),\n            color dt('megamenu.transition.duration'),\n            outline-color dt('megamenu.transition.duration'),\n            box-shadow dt('megamenu.transition.duration');\n        outline-color: transparent;\n    }\n\n    .p-megamenu-button:hover {\n        color: dt('megamenu.mobile.button.hover.color');\n        background: dt('megamenu.mobile.button.hover.background');\n    }\n\n    .p-megamenu-button:focus-visible {\n        box-shadow: dt('megamenu.mobile.button.focus.ring.shadow');\n        outline: dt('megamenu.mobile.button.focus.ring.width') dt('megamenu.mobile.button.focus.ring.style') dt('megamenu.mobile.button.focus.ring.color');\n        outline-offset: dt('megamenu.mobile.button.focus.ring.offset');\n    }\n\n    .p-megamenu-mobile {\n        display: flex;\n    }\n\n    .p-megamenu-mobile .p-megamenu-button {\n        display: flex;\n    }\n\n    .p-megamenu-mobile .p-megamenu-root-list {\n        position: absolute;\n        display: none;\n        flex-direction: column;\n        top: 100%;\n        left: 0;\n        z-index: 1;\n        width: 100%;\n        padding: dt('megamenu.submenu.padding');\n        gap: dt('megamenu.submenu.gap');\n        background: dt('megamenu.overlay.background');\n        border: 1px solid dt('megamenu.overlay.border.color');\n        box-shadow: dt('megamenu.overlay.shadow');\n    }\n\n    .p-megamenu-mobile .p-megamenu-root-list:dir(rtl) {\n        left: auto;\n        right: 0;\n    }\n\n    .p-megamenu-mobile-active .p-megamenu-root-list {\n        display: block;\n    }\n\n    .p-megamenu-mobile .p-megamenu-root-list .p-megamenu-item {\n        width: 100%;\n        position: static;\n    }\n\n    .p-megamenu-mobile .p-megamenu-overlay {\n        position: static;\n        border: 0 none;\n        border-radius: 0;\n        box-shadow: none;\n    }\n\n    .p-megamenu-mobile .p-megamenu-grid {\n        flex-wrap: wrap;\n        overflow: auto;\n        max-height: 90%;\n    }\n\n    .p-megamenu-mobile .p-megamenu-root-list > .p-megamenu-item > .p-megamenu-item-content .p-megamenu-submenu-icon {\n        margin-left: auto;\n        transition: transform 0.2s;\n    }\n\n    .p-megamenu-mobile .p-megamenu-root-list > .p-megamenu-item > .p-megamenu-item-content .p-megamenu-submenu-icon:dir(rtl) {\n        margin-left: 0;\n        margin-right: auto;\n    }\n\n    .p-megamenu-mobile .p-megamenu-root-list > .p-megamenu-item-active > .p-megamenu-item-content .p-megamenu-submenu-icon {\n        transform: rotate(-180deg);\n    }\n";
 
 // node_modules/primeng/fesm2022/primeng-megamenu.mjs
-var _c0 = ["menubar"];
-var _c1 = (a0) => ({
+var _c0 = (a0) => ({
   processedItem: a0
 });
-var _c2 = () => ({
+var _c1 = () => ({
   exact: false
 });
-var _c3 = (a0) => ({
+var _c2 = (a0) => ({
   $implicit: a0
 });
-function MegaMenuSub_ul_0_li_2_Template(rf, ctx) {
+function MegaMenuSub_li_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "li", 8);
+    ɵɵelementStart(0, "li", 5);
     ɵɵtext(1);
     ɵɵelementEnd();
   }
   if (rf & 2) {
-    const ctx_r1 = ɵɵnextContext(2);
-    ɵɵstyleMap(ctx_r1.getItemProp(ctx_r1.submenu, "style"));
-    ɵɵclassMap(ctx_r1.cn(ctx_r1.cx("submenuLabel"), ctx_r1.getItemProp(ctx_r1.submenu, "class")));
+    const ctx_r0 = ɵɵnextContext();
+    ɵɵstyleMap(ctx_r0.getItemProp(ctx_r0.submenu, "style"));
+    ɵɵclassMap(ctx_r0.cn(ctx_r0.cx("submenuLabel"), ctx_r0.getItemProp(ctx_r0.submenu, "class")));
+    ɵɵproperty("pBind", ctx_r0.ptm("submenuLabel"));
     ɵɵadvance();
-    ɵɵtextInterpolate1(" ", ctx_r1.getItemLabel(ctx_r1.submenu), " ");
+    ɵɵtextInterpolate1(" ", ctx_r0.getItemLabel(ctx_r0.submenu), " ");
   }
 }
-function MegaMenuSub_ul_0_ng_template_3_li_0_Template(rf, ctx) {
+function MegaMenuSub_ng_template_1_li_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "li", 11);
+    ɵɵelement(0, "li", 8);
   }
   if (rf & 2) {
-    const processedItem_r3 = ɵɵnextContext().$implicit;
-    const ctx_r1 = ɵɵnextContext(2);
-    ɵɵstyleMap(ctx_r1.getItemProp(processedItem_r3, "style"));
-    ɵɵclassMap(ctx_r1.cn(ctx_r1.cx("separator"), ctx_r1.getItemProp(processedItem_r3, "class")));
-    ɵɵattribute("id", ctx_r1.getItemId(processedItem_r3))("data-pc-section", "separator");
+    const processedItem_r2 = ɵɵnextContext().$implicit;
+    const ctx_r0 = ɵɵnextContext();
+    ɵɵstyleMap(ctx_r0.getItemProp(processedItem_r2, "style"));
+    ɵɵclassMap(ctx_r0.cn(ctx_r0.cx("separator"), ctx_r0.getItemProp(processedItem_r2, "class")));
+    ɵɵproperty("pBind", ctx_r0.ptm("separator"));
+    ɵɵattribute("id", ctx_r0.getItemId(processedItem_r2));
   }
 }
-function MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_1_span_1_Template(rf, ctx) {
+function MegaMenuSub_ng_template_1_li_1_ng_container_3_a_1_span_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "span", 22);
+    ɵɵelement(0, "span", 19);
   }
   if (rf & 2) {
-    const processedItem_r3 = ɵɵnextContext(4).$implicit;
-    const ctx_r1 = ɵɵnextContext(2);
-    ɵɵclassMap(ctx_r1.cn(ctx_r1.cx("itemIcon"), ctx_r1.getItemProp(processedItem_r3, "icon")));
-    ɵɵproperty("ngStyle", ctx_r1.getItemProp(processedItem_r3, "iconStyle"));
-    ɵɵattribute("data-pc-section", "icon")("tabindex", -1);
+    const ctx_r3 = ɵɵnextContext(4);
+    const processedItem_r2 = ctx_r3.$implicit;
+    const index_r5 = ctx_r3.index;
+    const ctx_r0 = ɵɵnextContext();
+    ɵɵclassMap(ctx_r0.cn(ctx_r0.cx("itemIcon"), ctx_r0.getItemProp(processedItem_r2, "icon")));
+    ɵɵproperty("ngStyle", ctx_r0.getItemProp(processedItem_r2, "iconStyle"))("pBind", ctx_r0.getPTOptions(processedItem_r2, index_r5, "itemIcon"));
+    ɵɵattribute("tabindex", -1);
   }
 }
-function MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_1_span_2_Template(rf, ctx) {
+function MegaMenuSub_ng_template_1_li_1_ng_container_3_a_1_span_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "span");
+    ɵɵelementStart(0, "span", 20);
     ɵɵtext(1);
     ɵɵelementEnd();
   }
   if (rf & 2) {
-    const processedItem_r3 = ɵɵnextContext(4).$implicit;
-    const ctx_r1 = ɵɵnextContext(2);
-    ɵɵclassMap(ctx_r1.cx("itemLabel"));
-    ɵɵattribute("data-pc-section", "label");
+    const ctx_r3 = ɵɵnextContext(4);
+    const processedItem_r2 = ctx_r3.$implicit;
+    const index_r5 = ctx_r3.index;
+    const ctx_r0 = ɵɵnextContext();
+    ɵɵclassMap(ctx_r0.cx("itemLabel"));
+    ɵɵproperty("pBind", ctx_r0.getPTOptions(processedItem_r2, index_r5, "itemLabel"));
     ɵɵadvance();
-    ɵɵtextInterpolate1(" ", ctx_r1.getItemLabel(processedItem_r3), " ");
+    ɵɵtextInterpolate1(" ", ctx_r0.getItemLabel(processedItem_r2), " ");
   }
 }
-function MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_1_ng_template_3_Template(rf, ctx) {
+function MegaMenuSub_ng_template_1_li_1_ng_container_3_a_1_ng_template_3_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "span", 23);
+    ɵɵelement(0, "span", 21);
   }
   if (rf & 2) {
-    const processedItem_r3 = ɵɵnextContext(4).$implicit;
-    const ctx_r1 = ɵɵnextContext(2);
-    ɵɵclassMap(ctx_r1.cx("itemLabel"));
-    ɵɵproperty("innerHTML", ctx_r1.getItemLabel(processedItem_r3), ɵɵsanitizeHtml);
-    ɵɵattribute("data-pc-section", "label");
+    const ctx_r3 = ɵɵnextContext(4);
+    const processedItem_r2 = ctx_r3.$implicit;
+    const index_r5 = ctx_r3.index;
+    const ctx_r0 = ɵɵnextContext();
+    ɵɵclassMap(ctx_r0.cx("itemLabel"));
+    ɵɵproperty("innerHTML", ctx_r0.getItemLabel(processedItem_r2), ɵɵsanitizeHtml)("pBind", ctx_r0.getPTOptions(processedItem_r2, index_r5, "itemLabel"));
   }
 }
-function MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_1_p_badge_5_Template(rf, ctx) {
+function MegaMenuSub_ng_template_1_li_1_ng_container_3_a_1_p_badge_5_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "p-badge", 24);
+    ɵɵelement(0, "p-badge", 22);
   }
   if (rf & 2) {
-    const processedItem_r3 = ɵɵnextContext(4).$implicit;
-    const ctx_r1 = ɵɵnextContext(2);
-    ɵɵclassMap(ctx_r1.getItemProp(processedItem_r3, "badgeStyleClass"));
-    ɵɵproperty("value", ctx_r1.getItemProp(processedItem_r3, "badge"));
+    const processedItem_r2 = ɵɵnextContext(4).$implicit;
+    const ctx_r0 = ɵɵnextContext();
+    ɵɵclassMap(ctx_r0.getItemProp(processedItem_r2, "badgeStyleClass"));
+    ɵɵproperty("value", ctx_r0.getItemProp(processedItem_r2, "badge"));
   }
 }
-function MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_1_ng_container_6_ng_container_1_Conditional_1_Template(rf, ctx) {
+function MegaMenuSub_ng_template_1_li_1_ng_container_3_a_1_ng_container_6_ng_container_1_Conditional_1_Template(rf, ctx) {
+  if (rf & 1) {
+    ɵɵnamespaceSVG();
+    ɵɵelement(0, "svg", 26);
+  }
+  if (rf & 2) {
+    const ctx_r3 = ɵɵnextContext(6);
+    const processedItem_r2 = ctx_r3.$implicit;
+    const index_r5 = ctx_r3.index;
+    const ctx_r0 = ɵɵnextContext();
+    ɵɵclassMap(ctx_r0.cx("submenuIcon"));
+    ɵɵproperty("pBind", ctx_r0.getPTOptions(processedItem_r2, index_r5, "submenuIcon"));
+    ɵɵattribute("aria-hidden", true);
+  }
+}
+function MegaMenuSub_ng_template_1_li_1_ng_container_3_a_1_ng_container_6_ng_container_1_Conditional_2__svg_svg_0_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
     ɵɵelement(0, "svg", 28);
   }
   if (rf & 2) {
-    const ctx_r1 = ɵɵnextContext(8);
-    ɵɵclassMap(ctx_r1.cx("submenuIcon"));
-    ɵɵattribute("data-pc-section", "submenuicon")("aria-hidden", true);
+    const ctx_r3 = ɵɵnextContext(7);
+    const processedItem_r2 = ctx_r3.$implicit;
+    const index_r5 = ctx_r3.index;
+    const ctx_r0 = ɵɵnextContext();
+    ɵɵclassMap(ctx_r0.cx("submenuIcon"));
+    ɵɵproperty("pBind", ctx_r0.getPTOptions(processedItem_r2, index_r5, "submenuIcon"));
+    ɵɵattribute("aria-hidden", true);
   }
 }
-function MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_1_ng_container_6_ng_container_1_Conditional_2__svg_svg_0_Template(rf, ctx) {
+function MegaMenuSub_ng_template_1_li_1_ng_container_3_a_1_ng_container_6_ng_container_1_Conditional_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 30);
+    ɵɵtemplate(0, MegaMenuSub_ng_template_1_li_1_ng_container_3_a_1_ng_container_6_ng_container_1_Conditional_2__svg_svg_0_Template, 1, 4, "svg", 27);
   }
   if (rf & 2) {
-    const ctx_r1 = ɵɵnextContext(9);
-    ɵɵclassMap(ctx_r1.cx("submenuIcon"));
-    ɵɵattribute("data-pc-section", "submenuicon")("aria-hidden", true);
+    const ctx_r0 = ɵɵnextContext(7);
+    ɵɵproperty("ngIf", ctx_r0.orientation === "vertical");
   }
 }
-function MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_1_ng_container_6_ng_container_1_Conditional_2_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵtemplate(0, MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_1_ng_container_6_ng_container_1_Conditional_2__svg_svg_0_Template, 1, 4, "svg", 29);
-  }
-  if (rf & 2) {
-    const ctx_r1 = ɵɵnextContext(8);
-    ɵɵproperty("ngIf", ctx_r1.orientation === "vertical");
-  }
-}
-function MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_1_ng_container_6_ng_container_1_Template(rf, ctx) {
+function MegaMenuSub_ng_template_1_li_1_ng_container_3_a_1_ng_container_6_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵconditionalCreate(1, MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_1_ng_container_6_ng_container_1_Conditional_1_Template, 1, 4, ":svg:svg", 26)(2, MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_1_ng_container_6_ng_container_1_Conditional_2_Template, 1, 1, ":svg:svg", 27);
+    ɵɵconditionalCreate(1, MegaMenuSub_ng_template_1_li_1_ng_container_3_a_1_ng_container_6_ng_container_1_Conditional_1_Template, 1, 4, ":svg:svg", 24)(2, MegaMenuSub_ng_template_1_li_1_ng_container_3_a_1_ng_container_6_ng_container_1_Conditional_2_Template, 1, 1, ":svg:svg", 25);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
-    const ctx_r1 = ɵɵnextContext(7);
+    const ctx_r0 = ɵɵnextContext(6);
     ɵɵadvance();
-    ɵɵconditional(ctx_r1.orientation === "horizontal" || ctx_r1.mobileActive ? 1 : 2);
+    ɵɵconditional(ctx_r0.orientation === "horizontal" || ctx_r0.mobileActive ? 1 : 2);
   }
 }
-function MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_1_ng_container_6_2_ng_template_0_Template(rf, ctx) {
+function MegaMenuSub_ng_template_1_li_1_ng_container_3_a_1_ng_container_6_2_ng_template_0_Template(rf, ctx) {
 }
-function MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_1_ng_container_6_2_Template(rf, ctx) {
+function MegaMenuSub_ng_template_1_li_1_ng_container_3_a_1_ng_container_6_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_1_ng_container_6_2_ng_template_0_Template, 0, 0, "ng-template", 31);
+    ɵɵtemplate(0, MegaMenuSub_ng_template_1_li_1_ng_container_3_a_1_ng_container_6_2_ng_template_0_Template, 0, 0, "ng-template", 29);
   }
   if (rf & 2) {
-    ɵɵproperty("data-pc-section", "submenuicon")("aria-hidden", true);
+    ɵɵproperty("aria-hidden", true);
   }
 }
-function MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_1_ng_container_6_Template(rf, ctx) {
+function MegaMenuSub_ng_template_1_li_1_ng_container_3_a_1_ng_container_6_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_1_ng_container_6_ng_container_1_Template, 3, 1, "ng-container", 14)(2, MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_1_ng_container_6_2_Template, 1, 2, null, 25);
+    ɵɵtemplate(1, MegaMenuSub_ng_template_1_li_1_ng_container_3_a_1_ng_container_6_ng_container_1_Template, 3, 1, "ng-container", 11)(2, MegaMenuSub_ng_template_1_li_1_ng_container_3_a_1_ng_container_6_2_Template, 1, 1, null, 23);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
-    const ctx_r1 = ɵɵnextContext(6);
+    const ctx_r0 = ɵɵnextContext(5);
     ɵɵadvance();
-    ɵɵproperty("ngIf", !ctx_r1.megaMenu.submenuIconTemplate && !ctx_r1.megaMenu._submenuIconTemplate);
+    ɵɵproperty("ngIf", !ctx_r0.megaMenu.submenuIconTemplate && !ctx_r0.megaMenu._submenuIconTemplate);
     ɵɵadvance();
-    ɵɵproperty("ngTemplateOutlet", ctx_r1.megaMenu.submenuIconTemplate || ctx_r1.megaMenu._submenuIconTemplate);
+    ɵɵproperty("ngTemplateOutlet", ctx_r0.megaMenu.submenuIconTemplate || ctx_r0.megaMenu._submenuIconTemplate);
   }
 }
-function MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_1_Template(rf, ctx) {
+function MegaMenuSub_ng_template_1_li_1_ng_container_3_a_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "a", 18);
-    ɵɵtemplate(1, MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_1_span_1_Template, 1, 5, "span", 19)(2, MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_1_span_2_Template, 2, 4, "span", 20)(3, MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_1_ng_template_3_Template, 1, 4, "ng-template", null, 2, ɵɵtemplateRefExtractor)(5, MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_1_p_badge_5_Template, 1, 3, "p-badge", 21)(6, MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_1_ng_container_6_Template, 3, 2, "ng-container", 14);
+    ɵɵelementStart(0, "a", 15);
+    ɵɵtemplate(1, MegaMenuSub_ng_template_1_li_1_ng_container_3_a_1_span_1_Template, 1, 5, "span", 16)(2, MegaMenuSub_ng_template_1_li_1_ng_container_3_a_1_span_2_Template, 2, 4, "span", 17)(3, MegaMenuSub_ng_template_1_li_1_ng_container_3_a_1_ng_template_3_Template, 1, 4, "ng-template", null, 1, ɵɵtemplateRefExtractor)(5, MegaMenuSub_ng_template_1_li_1_ng_container_3_a_1_p_badge_5_Template, 1, 3, "p-badge", 18)(6, MegaMenuSub_ng_template_1_li_1_ng_container_3_a_1_ng_container_6_Template, 3, 2, "ng-container", 11);
     ɵɵelementEnd();
   }
   if (rf & 2) {
-    const htmlLabel_r5 = ɵɵreference(4);
-    const processedItem_r3 = ɵɵnextContext(3).$implicit;
-    const ctx_r1 = ɵɵnextContext(2);
-    ɵɵclassMap(ctx_r1.cx("itemLink"));
-    ɵɵproperty("target", ctx_r1.getItemProp(processedItem_r3, "target"));
-    ɵɵattribute("href", ctx_r1.getItemProp(processedItem_r3, "url"), ɵɵsanitizeUrl)("data-automationid", ctx_r1.getItemProp(processedItem_r3, "automationId"))("data-pc-section", "action")("tabindex", -1);
+    const htmlLabel_r6 = ɵɵreference(4);
+    const ctx_r3 = ɵɵnextContext(3);
+    const processedItem_r2 = ctx_r3.$implicit;
+    const index_r5 = ctx_r3.index;
+    const ctx_r0 = ɵɵnextContext();
+    ɵɵclassMap(ctx_r0.cx("itemLink"));
+    ɵɵproperty("target", ctx_r0.getItemProp(processedItem_r2, "target"))("pBind", ctx_r0.getPTOptions(processedItem_r2, index_r5, "itemLink"));
+    ɵɵattribute("href", ctx_r0.getItemProp(processedItem_r2, "url"), ɵɵsanitizeUrl)("data-automationid", ctx_r0.getItemProp(processedItem_r2, "automationId"))("tabindex", -1);
     ɵɵadvance();
-    ɵɵproperty("ngIf", ctx_r1.getItemProp(processedItem_r3, "icon"));
+    ɵɵproperty("ngIf", ctx_r0.getItemProp(processedItem_r2, "icon"));
     ɵɵadvance();
-    ɵɵproperty("ngIf", ctx_r1.getItemProp(processedItem_r3, "escape"))("ngIfElse", htmlLabel_r5);
+    ɵɵproperty("ngIf", ctx_r0.getItemProp(processedItem_r2, "escape"))("ngIfElse", htmlLabel_r6);
     ɵɵadvance(3);
-    ɵɵproperty("ngIf", ctx_r1.getItemProp(processedItem_r3, "badge"));
+    ɵɵproperty("ngIf", ctx_r0.getItemProp(processedItem_r2, "badge"));
     ɵɵadvance();
-    ɵɵproperty("ngIf", ctx_r1.isItemGroup(processedItem_r3));
+    ɵɵproperty("ngIf", ctx_r0.isItemGroup(processedItem_r2));
   }
 }
-function MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_2_span_1_Template(rf, ctx) {
+function MegaMenuSub_ng_template_1_li_1_ng_container_3_a_2_span_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "span", 22);
+    ɵɵelement(0, "span", 19);
   }
   if (rf & 2) {
-    const processedItem_r3 = ɵɵnextContext(4).$implicit;
-    const ctx_r1 = ɵɵnextContext(2);
-    ɵɵclassMap(ctx_r1.cn(ctx_r1.cx("itemIcon"), ctx_r1.getItemProp(processedItem_r3, "icon")));
-    ɵɵproperty("ngStyle", ctx_r1.getItemProp(processedItem_r3, "iconStyle"));
-    ɵɵattribute("data-pc-section", "icon")("tabindex", -1);
+    const ctx_r3 = ɵɵnextContext(4);
+    const processedItem_r2 = ctx_r3.$implicit;
+    const index_r5 = ctx_r3.index;
+    const ctx_r0 = ɵɵnextContext();
+    ɵɵclassMap(ctx_r0.cn(ctx_r0.cx("itemIcon"), ctx_r0.getItemProp(processedItem_r2, "icon")));
+    ɵɵproperty("ngStyle", ctx_r0.getItemProp(processedItem_r2, "iconStyle"))("pBind", ctx_r0.getPTOptions(processedItem_r2, index_r5, "itemIcon"));
+    ɵɵattribute("tabindex", -1);
   }
 }
-function MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_2_span_2_Template(rf, ctx) {
+function MegaMenuSub_ng_template_1_li_1_ng_container_3_a_2_span_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "span");
+    ɵɵelementStart(0, "span", 20);
     ɵɵtext(1);
     ɵɵelementEnd();
   }
   if (rf & 2) {
-    const processedItem_r3 = ɵɵnextContext(4).$implicit;
-    const ctx_r1 = ɵɵnextContext(2);
-    ɵɵclassMap(ctx_r1.cx("itemLabel"));
+    const ctx_r3 = ɵɵnextContext(4);
+    const processedItem_r2 = ctx_r3.$implicit;
+    const index_r5 = ctx_r3.index;
+    const ctx_r0 = ɵɵnextContext();
+    ɵɵclassMap(ctx_r0.cx("itemLabel"));
+    ɵɵproperty("pBind", ctx_r0.getPTOptions(processedItem_r2, index_r5, "itemLabel"));
     ɵɵadvance();
-    ɵɵtextInterpolate(ctx_r1.getItemLabel(processedItem_r3));
+    ɵɵtextInterpolate(ctx_r0.getItemLabel(processedItem_r2));
   }
 }
-function MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_2_ng_template_3_Template(rf, ctx) {
+function MegaMenuSub_ng_template_1_li_1_ng_container_3_a_2_ng_template_3_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "span", 23);
+    ɵɵelement(0, "span", 21);
   }
   if (rf & 2) {
-    const processedItem_r3 = ɵɵnextContext(4).$implicit;
-    const ctx_r1 = ɵɵnextContext(2);
-    ɵɵclassMap(ctx_r1.cx("itemLabel"));
-    ɵɵproperty("innerHTML", ctx_r1.getItemLabel(processedItem_r3), ɵɵsanitizeHtml);
-    ɵɵattribute("data-pc-section", "label");
+    const ctx_r3 = ɵɵnextContext(4);
+    const processedItem_r2 = ctx_r3.$implicit;
+    const index_r5 = ctx_r3.index;
+    const ctx_r0 = ɵɵnextContext();
+    ɵɵclassMap(ctx_r0.cx("itemLabel"));
+    ɵɵproperty("innerHTML", ctx_r0.getItemLabel(processedItem_r2), ɵɵsanitizeHtml)("pBind", ctx_r0.getPTOptions(processedItem_r2, index_r5, "itemLabel"));
   }
 }
-function MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_2_p_badge_5_Template(rf, ctx) {
+function MegaMenuSub_ng_template_1_li_1_ng_container_3_a_2_p_badge_5_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelement(0, "p-badge", 34);
+    ɵɵelement(0, "p-badge", 32);
   }
   if (rf & 2) {
-    const processedItem_r3 = ɵɵnextContext(4).$implicit;
-    const ctx_r1 = ɵɵnextContext(2);
-    ɵɵproperty("styleClass", ctx_r1.getItemProp(processedItem_r3, "badgeStyleClass"))("value", ctx_r1.getItemProp(processedItem_r3, "badge"));
+    const processedItem_r2 = ɵɵnextContext(4).$implicit;
+    const ctx_r0 = ɵɵnextContext();
+    ɵɵproperty("styleClass", ctx_r0.getItemProp(processedItem_r2, "badgeStyleClass"))("value", ctx_r0.getItemProp(processedItem_r2, "badge"));
   }
 }
-function MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_2_ng_container_6_ng_container_1__svg_svg_1_Template(rf, ctx) {
+function MegaMenuSub_ng_template_1_li_1_ng_container_3_a_2_ng_container_6_ng_container_1__svg_svg_1_Template(rf, ctx) {
+  if (rf & 1) {
+    ɵɵnamespaceSVG();
+    ɵɵelement(0, "svg", 26);
+  }
+  if (rf & 2) {
+    const ctx_r3 = ɵɵnextContext(6);
+    const processedItem_r2 = ctx_r3.$implicit;
+    const index_r5 = ctx_r3.index;
+    const ctx_r0 = ɵɵnextContext();
+    ɵɵclassMap(ctx_r0.cx("submenuIcon"));
+    ɵɵproperty("pBind", ctx_r0.getPTOptions(processedItem_r2, index_r5, "submenuIcon"));
+    ɵɵattribute("aria-hidden", true);
+  }
+}
+function MegaMenuSub_ng_template_1_li_1_ng_container_3_a_2_ng_container_6_ng_container_1__svg_svg_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
     ɵɵelement(0, "svg", 28);
   }
   if (rf & 2) {
-    const ctx_r1 = ɵɵnextContext(8);
-    ɵɵclassMap(ctx_r1.cx("submenuIcon"));
-    ɵɵattribute("data-pc-section", "submenuicon")("aria-hidden", true);
+    const ctx_r3 = ɵɵnextContext(6);
+    const processedItem_r2 = ctx_r3.$implicit;
+    const index_r5 = ctx_r3.index;
+    const ctx_r0 = ɵɵnextContext();
+    ɵɵclassMap(ctx_r0.cx("submenuIcon"));
+    ɵɵproperty("pBind", ctx_r0.getPTOptions(processedItem_r2, index_r5, "submenuIcon"));
+    ɵɵattribute("aria-hidden", true);
   }
 }
-function MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_2_ng_container_6_ng_container_1__svg_svg_2_Template(rf, ctx) {
-  if (rf & 1) {
-    ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 30);
-  }
-  if (rf & 2) {
-    const ctx_r1 = ɵɵnextContext(8);
-    ɵɵclassMap(ctx_r1.cx("submenuIcon"));
-    ɵɵattribute("data-pc-section", "submenuicon")("aria-hidden", true);
-  }
-}
-function MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_2_ng_container_6_ng_container_1_Template(rf, ctx) {
+function MegaMenuSub_ng_template_1_li_1_ng_container_3_a_2_ng_container_6_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_2_ng_container_6_ng_container_1__svg_svg_1_Template, 1, 4, "svg", 35)(2, MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_2_ng_container_6_ng_container_1__svg_svg_2_Template, 1, 4, "svg", 29);
+    ɵɵtemplate(1, MegaMenuSub_ng_template_1_li_1_ng_container_3_a_2_ng_container_6_ng_container_1__svg_svg_1_Template, 1, 4, "svg", 33)(2, MegaMenuSub_ng_template_1_li_1_ng_container_3_a_2_ng_container_6_ng_container_1__svg_svg_2_Template, 1, 4, "svg", 27);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
-    const ctx_r1 = ɵɵnextContext(7);
+    const ctx_r0 = ɵɵnextContext(6);
     ɵɵadvance();
-    ɵɵproperty("ngIf", ctx_r1.orientation === "horizontal");
+    ɵɵproperty("ngIf", ctx_r0.orientation === "horizontal");
     ɵɵadvance();
-    ɵɵproperty("ngIf", ctx_r1.orientation === "vertical");
+    ɵɵproperty("ngIf", ctx_r0.orientation === "vertical");
   }
 }
-function MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_2_ng_container_6_2_ng_template_0_Template(rf, ctx) {
+function MegaMenuSub_ng_template_1_li_1_ng_container_3_a_2_ng_container_6_2_ng_template_0_Template(rf, ctx) {
 }
-function MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_2_ng_container_6_2_Template(rf, ctx) {
+function MegaMenuSub_ng_template_1_li_1_ng_container_3_a_2_ng_container_6_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_2_ng_container_6_2_ng_template_0_Template, 0, 0, "ng-template", 31);
+    ɵɵtemplate(0, MegaMenuSub_ng_template_1_li_1_ng_container_3_a_2_ng_container_6_2_ng_template_0_Template, 0, 0, "ng-template", 29);
   }
   if (rf & 2) {
-    ɵɵproperty("data-pc-section", "submenuicon")("aria-hidden", true);
+    ɵɵproperty("aria-hidden", true);
   }
 }
-function MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_2_ng_container_6_Template(rf, ctx) {
+function MegaMenuSub_ng_template_1_li_1_ng_container_3_a_2_ng_container_6_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_2_ng_container_6_ng_container_1_Template, 3, 2, "ng-container", 14)(2, MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_2_ng_container_6_2_Template, 1, 2, null, 25);
+    ɵɵtemplate(1, MegaMenuSub_ng_template_1_li_1_ng_container_3_a_2_ng_container_6_ng_container_1_Template, 3, 2, "ng-container", 11)(2, MegaMenuSub_ng_template_1_li_1_ng_container_3_a_2_ng_container_6_2_Template, 1, 1, null, 23);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
-    const ctx_r1 = ɵɵnextContext(6);
+    const ctx_r0 = ɵɵnextContext(5);
     ɵɵadvance();
-    ɵɵproperty("ngIf", !ctx_r1.megaMenu.submenuIconTemplate && !ctx_r1.megaMenu._submenuIconTemplate);
+    ɵɵproperty("ngIf", !ctx_r0.megaMenu.submenuIconTemplate && !ctx_r0.megaMenu._submenuIconTemplate);
     ɵɵadvance();
-    ɵɵproperty("ngTemplateOutlet", ctx_r1.megaMenu.submenuIconTemplate || ctx_r1.megaMenu._submenuIconTemplate);
+    ɵɵproperty("ngTemplateOutlet", ctx_r0.megaMenu.submenuIconTemplate || ctx_r0.megaMenu._submenuIconTemplate);
   }
 }
-function MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_2_Template(rf, ctx) {
+function MegaMenuSub_ng_template_1_li_1_ng_container_3_a_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "a", 32);
-    ɵɵtemplate(1, MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_2_span_1_Template, 1, 5, "span", 19)(2, MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_2_span_2_Template, 2, 3, "span", 20)(3, MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_2_ng_template_3_Template, 1, 4, "ng-template", null, 3, ɵɵtemplateRefExtractor)(5, MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_2_p_badge_5_Template, 1, 2, "p-badge", 33)(6, MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_2_ng_container_6_Template, 3, 2, "ng-container", 14);
+    ɵɵelementStart(0, "a", 30);
+    ɵɵtemplate(1, MegaMenuSub_ng_template_1_li_1_ng_container_3_a_2_span_1_Template, 1, 5, "span", 16)(2, MegaMenuSub_ng_template_1_li_1_ng_container_3_a_2_span_2_Template, 2, 4, "span", 17)(3, MegaMenuSub_ng_template_1_li_1_ng_container_3_a_2_ng_template_3_Template, 1, 4, "ng-template", null, 2, ɵɵtemplateRefExtractor)(5, MegaMenuSub_ng_template_1_li_1_ng_container_3_a_2_p_badge_5_Template, 1, 2, "p-badge", 31)(6, MegaMenuSub_ng_template_1_li_1_ng_container_3_a_2_ng_container_6_Template, 3, 2, "ng-container", 11);
     ɵɵelementEnd();
   }
   if (rf & 2) {
-    const htmlRouteLabel_r6 = ɵɵreference(4);
-    const processedItem_r3 = ɵɵnextContext(3).$implicit;
-    const ctx_r1 = ɵɵnextContext(2);
-    ɵɵclassMap(ctx_r1.cx("itemLink"));
-    ɵɵproperty("routerLink", ctx_r1.getItemProp(processedItem_r3, "routerLink"))("queryParams", ctx_r1.getItemProp(processedItem_r3, "queryParams"))("routerLinkActive", "p-megamenu-item-link-active")("routerLinkActiveOptions", ctx_r1.getItemProp(processedItem_r3, "routerLinkActiveOptions") || ɵɵpureFunction0(21, _c2))("target", ctx_r1.getItemProp(processedItem_r3, "target"))("fragment", ctx_r1.getItemProp(processedItem_r3, "fragment"))("queryParamsHandling", ctx_r1.getItemProp(processedItem_r3, "queryParamsHandling"))("preserveFragment", ctx_r1.getItemProp(processedItem_r3, "preserveFragment"))("skipLocationChange", ctx_r1.getItemProp(processedItem_r3, "skipLocationChange"))("replaceUrl", ctx_r1.getItemProp(processedItem_r3, "replaceUrl"))("state", ctx_r1.getItemProp(processedItem_r3, "state"));
-    ɵɵattribute("data-automationid", ctx_r1.getItemProp(processedItem_r3, "automationId"))("tabindex", -1)("data-pc-section", "action");
+    const htmlRouteLabel_r7 = ɵɵreference(4);
+    const ctx_r3 = ɵɵnextContext(3);
+    const processedItem_r2 = ctx_r3.$implicit;
+    const index_r5 = ctx_r3.index;
+    const ctx_r0 = ɵɵnextContext();
+    ɵɵclassMap(ctx_r0.cx("itemLink"));
+    ɵɵproperty("routerLink", ctx_r0.getItemProp(processedItem_r2, "routerLink"))("queryParams", ctx_r0.getItemProp(processedItem_r2, "queryParams"))("routerLinkActive", "p-megamenu-item-link-active")("routerLinkActiveOptions", ctx_r0.getItemProp(processedItem_r2, "routerLinkActiveOptions") || ɵɵpureFunction0(21, _c1))("target", ctx_r0.getItemProp(processedItem_r2, "target"))("fragment", ctx_r0.getItemProp(processedItem_r2, "fragment"))("queryParamsHandling", ctx_r0.getItemProp(processedItem_r2, "queryParamsHandling"))("preserveFragment", ctx_r0.getItemProp(processedItem_r2, "preserveFragment"))("skipLocationChange", ctx_r0.getItemProp(processedItem_r2, "skipLocationChange"))("replaceUrl", ctx_r0.getItemProp(processedItem_r2, "replaceUrl"))("state", ctx_r0.getItemProp(processedItem_r2, "state"))("pBind", ctx_r0.getPTOptions(processedItem_r2, index_r5, "itemLink"));
+    ɵɵattribute("data-automationid", ctx_r0.getItemProp(processedItem_r2, "automationId"))("tabindex", -1);
     ɵɵadvance();
-    ɵɵproperty("ngIf", ctx_r1.getItemProp(processedItem_r3, "icon"));
+    ɵɵproperty("ngIf", ctx_r0.getItemProp(processedItem_r2, "icon"));
     ɵɵadvance();
-    ɵɵproperty("ngIf", ctx_r1.getItemProp(processedItem_r3, "escape"))("ngIfElse", htmlRouteLabel_r6);
+    ɵɵproperty("ngIf", ctx_r0.getItemProp(processedItem_r2, "escape"))("ngIfElse", htmlRouteLabel_r7);
     ɵɵadvance(3);
-    ɵɵproperty("ngIf", ctx_r1.getItemProp(processedItem_r3, "badge"));
+    ɵɵproperty("ngIf", ctx_r0.getItemProp(processedItem_r2, "badge"));
     ɵɵadvance();
-    ɵɵproperty("ngIf", ctx_r1.isItemGroup(processedItem_r3));
+    ɵɵproperty("ngIf", ctx_r0.isItemGroup(processedItem_r2));
   }
 }
-function MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_Template(rf, ctx) {
+function MegaMenuSub_ng_template_1_li_1_ng_container_3_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_1_Template, 7, 12, "a", 16)(2, MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_a_2_Template, 7, 22, "a", 17);
+    ɵɵtemplate(1, MegaMenuSub_ng_template_1_li_1_ng_container_3_a_1_Template, 7, 12, "a", 13)(2, MegaMenuSub_ng_template_1_li_1_ng_container_3_a_2_Template, 7, 22, "a", 14);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
-    const processedItem_r3 = ɵɵnextContext(2).$implicit;
-    const ctx_r1 = ɵɵnextContext(2);
+    const processedItem_r2 = ɵɵnextContext(2).$implicit;
+    const ctx_r0 = ɵɵnextContext();
     ɵɵadvance();
-    ɵɵproperty("ngIf", !ctx_r1.getItemProp(processedItem_r3, "routerLink"));
+    ɵɵproperty("ngIf", !ctx_r0.getItemProp(processedItem_r2, "routerLink"));
     ɵɵadvance();
-    ɵɵproperty("ngIf", ctx_r1.getItemProp(processedItem_r3, "routerLink"));
+    ɵɵproperty("ngIf", ctx_r0.getItemProp(processedItem_r2, "routerLink"));
   }
 }
-function MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_4_1_ng_template_0_Template(rf, ctx) {
+function MegaMenuSub_ng_template_1_li_1_ng_container_4_1_ng_template_0_Template(rf, ctx) {
 }
-function MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_4_1_Template(rf, ctx) {
+function MegaMenuSub_ng_template_1_li_1_ng_container_4_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_4_1_ng_template_0_Template, 0, 0, "ng-template");
+    ɵɵtemplate(0, MegaMenuSub_ng_template_1_li_1_ng_container_4_1_ng_template_0_Template, 0, 0, "ng-template");
   }
 }
-function MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_4_Template(rf, ctx) {
+function MegaMenuSub_ng_template_1_li_1_ng_container_4_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_4_1_Template, 1, 0, null, 36);
+    ɵɵtemplate(1, MegaMenuSub_ng_template_1_li_1_ng_container_4_1_Template, 1, 0, null, 34);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
-    const processedItem_r3 = ɵɵnextContext(2).$implicit;
-    const ctx_r1 = ɵɵnextContext(2);
+    const processedItem_r2 = ɵɵnextContext(2).$implicit;
+    const ctx_r0 = ɵɵnextContext();
     ɵɵadvance();
-    ɵɵproperty("ngTemplateOutlet", ctx_r1.itemTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(2, _c3, processedItem_r3.item));
+    ɵɵproperty("ngTemplateOutlet", ctx_r0.itemTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(2, _c2, processedItem_r2.item));
   }
 }
-function MegaMenuSub_ul_0_ng_template_3_li_1_div_5_div_2_p_megamenu_sub_1_Template(rf, ctx) {
+function MegaMenuSub_ng_template_1_li_1_div_5_div_2_ul_1_Template(rf, ctx) {
   if (rf & 1) {
-    const _r7 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "p-megamenu-sub", 39);
-    ɵɵlistener("itemClick", function MegaMenuSub_ul_0_ng_template_3_li_1_div_5_div_2_p_megamenu_sub_1_Template_p_megamenu_sub_itemClick_0_listener($event) {
-      ɵɵrestoreView(_r7);
-      const ctx_r1 = ɵɵnextContext(6);
-      return ɵɵresetView(ctx_r1.itemClick.emit($event));
-    })("itemMouseEnter", function MegaMenuSub_ul_0_ng_template_3_li_1_div_5_div_2_p_megamenu_sub_1_Template_p_megamenu_sub_itemMouseEnter_0_listener($event) {
-      ɵɵrestoreView(_r7);
-      const ctx_r1 = ɵɵnextContext(6);
-      return ɵɵresetView(ctx_r1.onItemMouseEnter($event));
+    const _r8 = ɵɵgetCurrentView();
+    ɵɵelementStart(0, "ul", 37);
+    ɵɵlistener("itemClick", function MegaMenuSub_ng_template_1_li_1_div_5_div_2_ul_1_Template_ul_itemClick_0_listener($event) {
+      ɵɵrestoreView(_r8);
+      const ctx_r0 = ɵɵnextContext(5);
+      return ɵɵresetView(ctx_r0.itemClick.emit($event));
+    })("itemMouseEnter", function MegaMenuSub_ng_template_1_li_1_div_5_div_2_ul_1_Template_ul_itemMouseEnter_0_listener($event) {
+      ɵɵrestoreView(_r8);
+      const ctx_r0 = ɵɵnextContext(5);
+      return ɵɵresetView(ctx_r0.onItemMouseEnter($event));
     });
     ɵɵelementEnd();
   }
   if (rf & 2) {
-    const submenu_r8 = ctx.$implicit;
-    const ctx_r1 = ɵɵnextContext(6);
-    ɵɵproperty("id", ctx_r1.getSubListId(submenu_r8))("submenu", submenu_r8)("items", submenu_r8.items)("itemTemplate", ctx_r1.itemTemplate)("mobileActive", ctx_r1.mobileActive)("menuId", ctx_r1.menuId)("focusedItemId", ctx_r1.focusedItemId)("level", ctx_r1.level + 1)("root", false);
+    const submenu_r9 = ctx.$implicit;
+    const ctx_r0 = ɵɵnextContext(5);
+    ɵɵproperty("id", ctx_r0.getSubListId(submenu_r9))("submenu", submenu_r9)("items", submenu_r9.items)("itemTemplate", ctx_r0.itemTemplate)("mobileActive", ctx_r0.mobileActive)("menuId", ctx_r0.menuId)("focusedItemId", ctx_r0.focusedItemId)("level", ctx_r0.level + 1)("root", false)("pt", ctx_r0.pt());
   }
 }
-function MegaMenuSub_ul_0_ng_template_3_li_1_div_5_div_2_Template(rf, ctx) {
+function MegaMenuSub_ng_template_1_li_1_div_5_div_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div");
-    ɵɵtemplate(1, MegaMenuSub_ul_0_ng_template_3_li_1_div_5_div_2_p_megamenu_sub_1_Template, 1, 9, "p-megamenu-sub", 38);
+    ɵɵelementStart(0, "div", 20);
+    ɵɵtemplate(1, MegaMenuSub_ng_template_1_li_1_div_5_div_2_ul_1_Template, 1, 10, "ul", 36);
     ɵɵelementEnd();
   }
   if (rf & 2) {
-    const col_r9 = ctx.$implicit;
-    const processedItem_r3 = ɵɵnextContext(3).$implicit;
-    const ctx_r1 = ɵɵnextContext(2);
-    ɵɵclassMap(ctx_r1.cx("column", ɵɵpureFunction1(3, _c1, processedItem_r3)));
+    const col_r10 = ctx.$implicit;
+    const processedItem_r2 = ɵɵnextContext(3).$implicit;
+    const ctx_r0 = ɵɵnextContext();
+    ɵɵclassMap(ctx_r0.cx("column", ɵɵpureFunction1(4, _c0, processedItem_r2)));
+    ɵɵproperty("pBind", ctx_r0.ptm("column"));
     ɵɵadvance();
-    ɵɵproperty("ngForOf", col_r9);
+    ɵɵproperty("ngForOf", col_r10);
   }
 }
-function MegaMenuSub_ul_0_ng_template_3_li_1_div_5_Template(rf, ctx) {
+function MegaMenuSub_ng_template_1_li_1_div_5_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div")(1, "div");
-    ɵɵtemplate(2, MegaMenuSub_ul_0_ng_template_3_li_1_div_5_div_2_Template, 2, 5, "div", 37);
+    ɵɵelementStart(0, "div", 20)(1, "div", 20);
+    ɵɵtemplate(2, MegaMenuSub_ng_template_1_li_1_div_5_div_2_Template, 2, 6, "div", 35);
     ɵɵelementEnd()();
   }
   if (rf & 2) {
-    const processedItem_r3 = ɵɵnextContext(2).$implicit;
-    const ctx_r1 = ɵɵnextContext(2);
-    ɵɵclassMap(ctx_r1.cx("overlay"));
-    ɵɵattribute("data-pc-section", "panel");
+    const processedItem_r2 = ɵɵnextContext(2).$implicit;
+    const ctx_r0 = ɵɵnextContext();
+    ɵɵclassMap(ctx_r0.cx("overlay"));
+    ɵɵproperty("pBind", ctx_r0.ptm("overlay"));
     ɵɵadvance();
-    ɵɵclassMap(ctx_r1.cx("grid"));
-    ɵɵattribute("data-pc-section", "grid");
+    ɵɵclassMap(ctx_r0.cx("grid"));
+    ɵɵproperty("pBind", ctx_r0.ptm("grid"));
     ɵɵadvance();
-    ɵɵproperty("ngForOf", processedItem_r3.items);
+    ɵɵproperty("ngForOf", processedItem_r2.items);
   }
 }
-function MegaMenuSub_ul_0_ng_template_3_li_1_Template(rf, ctx) {
+function MegaMenuSub_ng_template_1_li_1_Template(rf, ctx) {
   if (rf & 1) {
-    const _r4 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "li", 12, 1)(2, "div", 13);
-    ɵɵlistener("click", function MegaMenuSub_ul_0_ng_template_3_li_1_Template_div_click_2_listener($event) {
-      ɵɵrestoreView(_r4);
-      const processedItem_r3 = ɵɵnextContext().$implicit;
-      const ctx_r1 = ɵɵnextContext(2);
-      return ɵɵresetView(ctx_r1.onItemClick($event, processedItem_r3));
-    })("mouseenter", function MegaMenuSub_ul_0_ng_template_3_li_1_Template_div_mouseenter_2_listener($event) {
-      ɵɵrestoreView(_r4);
-      const processedItem_r3 = ɵɵnextContext().$implicit;
-      const ctx_r1 = ɵɵnextContext(2);
-      return ɵɵresetView(ctx_r1.onItemMouseEnter({
+    const _r3 = ɵɵgetCurrentView();
+    ɵɵelementStart(0, "li", 9, 0)(2, "div", 10);
+    ɵɵlistener("click", function MegaMenuSub_ng_template_1_li_1_Template_div_click_2_listener($event) {
+      ɵɵrestoreView(_r3);
+      const processedItem_r2 = ɵɵnextContext().$implicit;
+      const ctx_r0 = ɵɵnextContext();
+      return ɵɵresetView(ctx_r0.onItemClick($event, processedItem_r2));
+    })("mouseenter", function MegaMenuSub_ng_template_1_li_1_Template_div_mouseenter_2_listener($event) {
+      ɵɵrestoreView(_r3);
+      const processedItem_r2 = ɵɵnextContext().$implicit;
+      const ctx_r0 = ɵɵnextContext();
+      return ɵɵresetView(ctx_r0.onItemMouseEnter({
         $event,
-        processedItem: processedItem_r3
+        processedItem: processedItem_r2
       }));
     });
-    ɵɵtemplate(3, MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_3_Template, 3, 2, "ng-container", 14)(4, MegaMenuSub_ul_0_ng_template_3_li_1_ng_container_4_Template, 2, 4, "ng-container", 14);
+    ɵɵtemplate(3, MegaMenuSub_ng_template_1_li_1_ng_container_3_Template, 3, 2, "ng-container", 11)(4, MegaMenuSub_ng_template_1_li_1_ng_container_4_Template, 2, 4, "ng-container", 11);
     ɵɵelementEnd();
-    ɵɵtemplate(5, MegaMenuSub_ul_0_ng_template_3_li_1_div_5_Template, 3, 7, "div", 15);
+    ɵɵtemplate(5, MegaMenuSub_ng_template_1_li_1_div_5_Template, 3, 7, "div", 12);
     ɵɵelementEnd();
   }
   if (rf & 2) {
-    const ctx_r9 = ɵɵnextContext();
-    const processedItem_r3 = ctx_r9.$implicit;
-    const index_r11 = ctx_r9.index;
-    const ctx_r1 = ɵɵnextContext(2);
-    ɵɵclassMap(ctx_r1.cn(ctx_r1.cx("item", ɵɵpureFunction1(22, _c1, processedItem_r3)), ctx_r1.getItemProp(processedItem_r3, "styleClass")));
-    ɵɵproperty("ngStyle", ctx_r1.getItemProp(processedItem_r3, "style"))("tooltipOptions", ctx_r1.getItemProp(processedItem_r3, "tooltipOptions"));
-    ɵɵattribute("id", ctx_r1.getItemId(processedItem_r3))("data-pc-section", "menuitem")("data-p-highlight", ctx_r1.isItemActive(processedItem_r3))("data-p-focused", ctx_r1.isItemFocused(processedItem_r3))("data-p-disabled", ctx_r1.isItemDisabled(processedItem_r3))("aria-label", ctx_r1.getItemLabel(processedItem_r3))("aria-disabled", ctx_r1.isItemDisabled(processedItem_r3) || void 0)("aria-haspopup", ctx_r1.isItemGroup(processedItem_r3) && !ctx_r1.getItemProp(processedItem_r3, "to") ? "menu" : void 0)("aria-expanded", ctx_r1.isItemGroup(processedItem_r3) ? ctx_r1.isItemActive(processedItem_r3) : void 0)("aria-level", ctx_r1.level + 1)("aria-setsize", ctx_r1.getAriaSetSize())("aria-posinset", ctx_r1.getAriaPosInset(index_r11));
+    const ctx_r3 = ɵɵnextContext();
+    const processedItem_r2 = ctx_r3.$implicit;
+    const index_r5 = ctx_r3.index;
+    const ctx_r0 = ɵɵnextContext();
+    ɵɵclassMap(ctx_r0.cn(ctx_r0.cx("item", ɵɵpureFunction1(22, _c0, processedItem_r2)), ctx_r0.getItemProp(processedItem_r2, "styleClass")));
+    ɵɵproperty("ngStyle", ctx_r0.getItemProp(processedItem_r2, "style"))("tooltipOptions", ctx_r0.getItemProp(processedItem_r2, "tooltipOptions"))("pBind", ctx_r0.getPTOptions(processedItem_r2, index_r5, "item"));
+    ɵɵattribute("id", ctx_r0.getItemId(processedItem_r2))("data-p-active", ctx_r0.isItemActive(processedItem_r2))("data-p-focused", ctx_r0.isItemFocused(processedItem_r2))("data-p-disabled", ctx_r0.isItemDisabled(processedItem_r2))("aria-label", ctx_r0.getItemLabel(processedItem_r2))("aria-disabled", ctx_r0.isItemDisabled(processedItem_r2) || void 0)("aria-haspopup", ctx_r0.isItemGroup(processedItem_r2) && !ctx_r0.getItemProp(processedItem_r2, "to") ? "menu" : void 0)("aria-expanded", ctx_r0.isItemGroup(processedItem_r2) ? ctx_r0.isItemActive(processedItem_r2) : void 0)("aria-level", ctx_r0.level + 1)("aria-setsize", ctx_r0.getAriaSetSize())("aria-posinset", ctx_r0.getAriaPosInset(index_r5));
     ɵɵadvance(2);
-    ɵɵclassMap(ctx_r1.cx("itemContent"));
-    ɵɵattribute("data-pc-section", "content");
+    ɵɵclassMap(ctx_r0.cx("itemContent"));
+    ɵɵproperty("pBind", ctx_r0.getPTOptions(processedItem_r2, index_r5, "itemContent"));
     ɵɵadvance();
-    ɵɵproperty("ngIf", !ctx_r1.itemTemplate);
+    ɵɵproperty("ngIf", !ctx_r0.itemTemplate);
     ɵɵadvance();
-    ɵɵproperty("ngIf", ctx_r1.itemTemplate);
+    ɵɵproperty("ngIf", ctx_r0.itemTemplate);
     ɵɵadvance();
-    ɵɵproperty("ngIf", ctx_r1.isItemVisible(processedItem_r3) && ctx_r1.isItemGroup(processedItem_r3));
+    ɵɵproperty("ngIf", ctx_r0.isItemVisible(processedItem_r2) && ctx_r0.isItemGroup(processedItem_r2));
   }
 }
-function MegaMenuSub_ul_0_ng_template_3_Template(rf, ctx) {
+function MegaMenuSub_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, MegaMenuSub_ul_0_ng_template_3_li_0_Template, 1, 6, "li", 9)(1, MegaMenuSub_ul_0_ng_template_3_li_1_Template, 6, 24, "li", 10);
+    ɵɵtemplate(0, MegaMenuSub_ng_template_1_li_0_Template, 1, 6, "li", 6)(1, MegaMenuSub_ng_template_1_li_1_Template, 6, 24, "li", 7);
   }
   if (rf & 2) {
-    const processedItem_r3 = ctx.$implicit;
-    const ctx_r1 = ɵɵnextContext(2);
-    ɵɵproperty("ngIf", ctx_r1.isItemVisible(processedItem_r3) && ctx_r1.getItemProp(processedItem_r3, "separator"));
+    const processedItem_r2 = ctx.$implicit;
+    const ctx_r0 = ɵɵnextContext();
+    ɵɵproperty("ngIf", ctx_r0.isItemVisible(processedItem_r2) && ctx_r0.getItemProp(processedItem_r2, "separator"));
     ɵɵadvance();
-    ɵɵproperty("ngIf", ctx_r1.isItemVisible(processedItem_r3) && !ctx_r1.getItemProp(processedItem_r3, "separator"));
+    ɵɵproperty("ngIf", ctx_r0.isItemVisible(processedItem_r2) && !ctx_r0.getItemProp(processedItem_r2, "separator"));
   }
 }
-function MegaMenuSub_ul_0_Template(rf, ctx) {
-  if (rf & 1) {
-    const _r1 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "ul", 5, 0);
-    ɵɵlistener("keydown", function MegaMenuSub_ul_0_Template_ul_keydown_0_listener($event) {
-      ɵɵrestoreView(_r1);
-      const ctx_r1 = ɵɵnextContext();
-      return ɵɵresetView(ctx_r1.menuKeydown.emit($event));
-    })("focus", function MegaMenuSub_ul_0_Template_ul_focus_0_listener($event) {
-      ɵɵrestoreView(_r1);
-      const ctx_r1 = ɵɵnextContext();
-      return ɵɵresetView(ctx_r1.menuFocus.emit($event));
-    })("blur", function MegaMenuSub_ul_0_Template_ul_blur_0_listener($event) {
-      ɵɵrestoreView(_r1);
-      const ctx_r1 = ɵɵnextContext();
-      return ɵɵresetView(ctx_r1.menuBlur.emit($event));
-    });
-    ɵɵtemplate(2, MegaMenuSub_ul_0_li_2_Template, 2, 5, "li", 6)(3, MegaMenuSub_ul_0_ng_template_3_Template, 2, 2, "ng-template", 7);
-    ɵɵelementEnd();
-  }
-  if (rf & 2) {
-    const ctx_r1 = ɵɵnextContext();
-    ɵɵstyleMap(ctx_r1.sx("rootList"));
-    ɵɵclassMap(ctx_r1.root ? ctx_r1.cx("rootList") : ctx_r1.cx("submenu"));
-    ɵɵproperty("tabindex", ctx_r1.tabindex);
-    ɵɵattribute("role", ctx_r1.root ? "menubar" : "menu")("id", ctx_r1.id)("aria-orientation", ctx_r1.orientation)("aria-activedescendant", ctx_r1.focusedItemId)("data-pc-section", ctx_r1.root ? "root" : "submenu");
-    ɵɵadvance(2);
-    ɵɵproperty("ngIf", ctx_r1.submenu);
-    ɵɵadvance();
-    ɵɵproperty("ngForOf", ctx_r1.items);
-  }
-}
-var _c4 = ["start"];
-var _c5 = ["end"];
-var _c6 = ["menuicon"];
-var _c7 = ["submenuicon"];
-var _c8 = ["item"];
-var _c9 = ["button"];
-var _c10 = ["buttonicon"];
-var _c11 = ["menubutton"];
-var _c12 = ["rootmenu"];
+var _c3 = ["start"];
+var _c4 = ["end"];
+var _c5 = ["menuicon"];
+var _c6 = ["submenuicon"];
+var _c7 = ["item"];
+var _c8 = ["button"];
+var _c9 = ["buttonicon"];
+var _c10 = ["menubutton"];
+var _c11 = ["rootmenu"];
 function MegaMenu_div_0_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainer(0);
@@ -627,13 +636,14 @@ function MegaMenu_div_0_ng_container_1_Template(rf, ctx) {
 }
 function MegaMenu_div_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div");
+    ɵɵelementStart(0, "div", 6);
     ɵɵtemplate(1, MegaMenu_div_0_ng_container_1_Template, 1, 0, "ng-container", 4);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cx("start"));
+    ɵɵproperty("pBind", ctx_r1.ptm("start"));
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r1.startTemplate || ctx_r1._startTemplate);
   }
@@ -641,7 +651,11 @@ function MegaMenu_div_0_Template(rf, ctx) {
 function MegaMenu_ng_container_1_a_1__svg_svg_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 9);
+    ɵɵelement(0, "svg", 10);
+  }
+  if (rf & 2) {
+    const ctx_r1 = ɵɵnextContext(3);
+    ɵɵproperty("pBind", ctx_r1.ptm("buttonIcon"));
   }
 }
 function MegaMenu_ng_container_1_a_1_3_ng_template_0_Template(rf, ctx) {
@@ -654,7 +668,7 @@ function MegaMenu_ng_container_1_a_1_3_Template(rf, ctx) {
 function MegaMenu_ng_container_1_a_1_Template(rf, ctx) {
   if (rf & 1) {
     const _r3 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "a", 7, 1);
+    ɵɵelementStart(0, "a", 8, 1);
     ɵɵlistener("click", function MegaMenu_ng_container_1_a_1_Template_a_click_0_listener($event) {
       ɵɵrestoreView(_r3);
       const ctx_r1 = ɵɵnextContext(2);
@@ -664,12 +678,13 @@ function MegaMenu_ng_container_1_a_1_Template(rf, ctx) {
       const ctx_r1 = ɵɵnextContext(2);
       return ɵɵresetView(ctx_r1.menuButtonKeydown($event));
     });
-    ɵɵtemplate(2, MegaMenu_ng_container_1_a_1__svg_svg_2_Template, 1, 0, "svg", 8)(3, MegaMenu_ng_container_1_a_1_3_Template, 1, 0, null, 4);
+    ɵɵtemplate(2, MegaMenu_ng_container_1_a_1__svg_svg_2_Template, 1, 1, "svg", 9)(3, MegaMenu_ng_container_1_a_1_3_Template, 1, 0, null, 4);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r1.cx("button"));
+    ɵɵproperty("pBind", ctx_r1.ptm("button"));
     ɵɵattribute("aria-haspopup", ctx_r1.model.length && ctx_r1.model.length > 0 ? true : false)("aria-expanded", ctx_r1.mobileActive)("aria-controls", ctx_r1.id)("aria-label", ctx_r1.config.translation.aria.navigation);
     ɵɵadvance(2);
     ɵɵproperty("ngIf", !ctx_r1.buttonIconTemplate && !ctx_r1._buttonIconTemplate);
@@ -680,7 +695,7 @@ function MegaMenu_ng_container_1_a_1_Template(rf, ctx) {
 function MegaMenu_ng_container_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, MegaMenu_ng_container_1_a_1_Template, 4, 8, "a", 6);
+    ɵɵtemplate(1, MegaMenu_ng_container_1_a_1_Template, 4, 9, "a", 7);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -701,13 +716,14 @@ function MegaMenu_div_5_ng_container_1_Template(rf, ctx) {
 }
 function MegaMenu_div_5_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div");
+    ɵɵelementStart(0, "div", 6);
     ɵɵtemplate(1, MegaMenu_div_5_ng_container_1_Template, 1, 0, "ng-container", 4);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cx("end"));
+    ɵɵproperty("pBind", ctx_r1.ptm("end"));
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r1.endTemplate || ctx_r1._endTemplate);
   }
@@ -787,7 +803,7 @@ var classes = {
 };
 var MegaMenuStyle = class _MegaMenuStyle extends BaseStyle {
   name = "megamenu";
-  theme = style;
+  style = style;
   classes = classes;
   inlineStyles = inlineStyles;
   static ɵfac = /* @__PURE__ */ (() => {
@@ -826,7 +842,20 @@ var MegaMenuClasses;
   MegaMenuClasses2["separator"] = "p-megamenu-separator";
   MegaMenuClasses2["end"] = "p-megamenu-end";
 })(MegaMenuClasses || (MegaMenuClasses = {}));
+var MEGAMENU_INSTANCE = new InjectionToken("MEGAMENU_INSTANCE");
+var MEGAMENU_SUB_INSTANCE = new InjectionToken("MEGAMENU_SUB_INSTANCE");
 var MegaMenuSub = class _MegaMenuSub extends BaseComponent {
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  $pcMegaMenu = inject(MEGAMENU_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  $pcMegaMenuSub = inject(MEGAMENU_SUB_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
   id;
   items;
   itemTemplate;
@@ -849,9 +878,11 @@ var MegaMenuSub = class _MegaMenuSub extends BaseComponent {
   menuFocus = new EventEmitter();
   menuBlur = new EventEmitter();
   menuKeydown = new EventEmitter();
-  menubarViewChild;
   megaMenu = inject(forwardRef(() => MegaMenu));
   _componentStyle = inject(MegaMenuStyle);
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptm(this.root ? "rootList" : "submenu"));
+  }
   onItemClick(event, processedItem) {
     this.getItemProp(processedItem, "command", {
       originalEvent: event,
@@ -898,10 +929,10 @@ var MegaMenuSub = class _MegaMenuSub extends BaseComponent {
     return s(processedItem.items);
   }
   getAriaSetSize() {
-    return this.items.filter((processedItem) => this.isItemVisible(processedItem) && !this.getItemProp(processedItem, "separator")).length;
+    return this.items?.filter((processedItem) => this.isItemVisible(processedItem) && !this.getItemProp(processedItem, "separator")).length;
   }
   getAriaPosInset(index) {
-    return index - this.items.slice(0, index).filter((processedItem) => this.isItemVisible(processedItem) && this.getItemProp(processedItem, "separator")).length + 1;
+    return index - (this.items?.slice(0, index).filter((processedItem) => this.isItemVisible(processedItem) && this.getItemProp(processedItem, "separator")).length || 0) + 1;
   }
   onItemMouseEnter(param) {
     const {
@@ -913,6 +944,18 @@ var MegaMenuSub = class _MegaMenuSub extends BaseComponent {
       processedItem
     });
   }
+  getPTOptions(processedItem, index, key) {
+    const ptContext = {
+      context: {
+        item: processedItem.item,
+        index,
+        active: this.isItemActive(processedItem),
+        focused: this.isItemFocused(processedItem),
+        disabled: this.isItemDisabled(processedItem)
+      }
+    };
+    return this.ptm(key, ptContext);
+  }
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵMegaMenuSub_BaseFactory;
     return function MegaMenuSub_Factory(__ngFactoryType__) {
@@ -921,14 +964,24 @@ var MegaMenuSub = class _MegaMenuSub extends BaseComponent {
   })();
   static ɵcmp = ɵɵdefineComponent({
     type: _MegaMenuSub,
-    selectors: [["p-megaMenuSub"], ["p-megamenu-sub"]],
-    viewQuery: function MegaMenuSub_Query(rf, ctx) {
+    selectors: [["p-megaMenuSub"], ["p-megamenu-sub"], ["ul", "pMegaMenuSub", ""]],
+    hostVars: 12,
+    hostBindings: function MegaMenuSub_HostBindings(rf, ctx) {
       if (rf & 1) {
-        ɵɵviewQuery(_c0, 7);
+        ɵɵlistener("keydown", function MegaMenuSub_keydown_HostBindingHandler($event) {
+          return ctx.menuKeydown.emit($event);
+        })("focus", function MegaMenuSub_focus_HostBindingHandler($event) {
+          return ctx.menuFocus.emit($event);
+        })("blur", function MegaMenuSub_blur_HostBindingHandler($event) {
+          return ctx.menuBlur.emit($event);
+        });
       }
       if (rf & 2) {
-        let _t;
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.menubarViewChild = _t.first);
+        ɵɵdomProperty("tabindex", ctx.tabindex);
+        ɵɵattribute("role", ctx.root ? "menubar" : "menu")("id", ctx.id)("aria-orientation", ctx.orientation)("aria-activedescendant", ctx.focusedItemId)("data-pc-section", ctx.root ? "rootlist" : "submenu");
+        ɵɵstyleMap(ctx.sx("rootList"));
+        ɵɵclassMap(ctx.root ? ctx.cx("rootList") : ctx.cx("submenu"));
+        ɵɵstyleProp("display", ctx.isSubmenuVisible(ctx.submenu) ? null : "none");
       }
     },
     inputs: {
@@ -957,19 +1010,27 @@ var MegaMenuSub = class _MegaMenuSub extends BaseComponent {
       menuBlur: "menuBlur",
       menuKeydown: "menuKeydown"
     },
-    features: [ɵɵInheritDefinitionFeature],
-    decls: 1,
-    vars: 1,
-    consts: [["menubar", ""], ["listItem", ""], ["htmlLabel", ""], ["htmlRouteLabel", ""], [3, "class", "style", "tabindex", "keydown", "focus", "blur", 4, "ngIf"], [3, "keydown", "focus", "blur", "tabindex"], ["role", "presentation", 3, "class", "style", 4, "ngIf"], ["ngFor", "", 3, "ngForOf"], ["role", "presentation"], ["role", "separator", 3, "style", "class", 4, "ngIf"], ["role", "menuitem", "pTooltip", "", 3, "ngStyle", "class", "tooltipOptions", 4, "ngIf"], ["role", "separator"], ["role", "menuitem", "pTooltip", "", 3, "ngStyle", "tooltipOptions"], [3, "click", "mouseenter"], [4, "ngIf"], [3, "class", 4, "ngIf"], ["pRipple", "", 3, "target", "class", 4, "ngIf"], ["pRipple", "", 3, "routerLink", "queryParams", "routerLinkActive", "routerLinkActiveOptions", "target", "class", "fragment", "queryParamsHandling", "preserveFragment", "skipLocationChange", "replaceUrl", "state", 4, "ngIf"], ["pRipple", "", 3, "target"], [3, "class", "ngStyle", 4, "ngIf"], [3, "class", 4, "ngIf", "ngIfElse"], [3, "class", "value", 4, "ngIf"], [3, "ngStyle"], [3, "innerHTML"], [3, "value"], [4, "ngTemplateOutlet"], ["data-p-icon", "angle-down", 3, "class"], ["data-p-icon", "angle-right", 3, "class"], ["data-p-icon", "angle-down"], ["data-p-icon", "angle-right", 3, "class", 4, "ngIf"], ["data-p-icon", "angle-right"], [3, "data-pc-section", "aria-hidden"], ["pRipple", "", 3, "routerLink", "queryParams", "routerLinkActive", "routerLinkActiveOptions", "target", "fragment", "queryParamsHandling", "preserveFragment", "skipLocationChange", "replaceUrl", "state"], [3, "styleClass", "value", 4, "ngIf"], [3, "styleClass", "value"], ["data-p-icon", "angle-down", 3, "class", 4, "ngIf"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], [3, "class", 4, "ngFor", "ngForOf"], [3, "id", "submenu", "items", "itemTemplate", "mobileActive", "menuId", "focusedItemId", "level", "root", "itemClick", "itemMouseEnter", 4, "ngFor", "ngForOf"], [3, "itemClick", "itemMouseEnter", "id", "submenu", "items", "itemTemplate", "mobileActive", "menuId", "focusedItemId", "level", "root"]],
+    features: [ɵɵProvidersFeature([{
+      provide: MEGAMENU_SUB_INSTANCE,
+      useExisting: _MegaMenuSub
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _MegaMenuSub
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
+    decls: 2,
+    vars: 2,
+    consts: [["listItem", ""], ["htmlLabel", ""], ["htmlRouteLabel", ""], ["role", "presentation", 3, "class", "style", "pBind", 4, "ngIf"], ["ngFor", "", 3, "ngForOf"], ["role", "presentation", 3, "pBind"], ["role", "separator", 3, "style", "class", "pBind", 4, "ngIf"], ["role", "menuitem", "pTooltip", "", 3, "ngStyle", "class", "tooltipOptions", "pBind", 4, "ngIf"], ["role", "separator", 3, "pBind"], ["role", "menuitem", "pTooltip", "", 3, "ngStyle", "tooltipOptions", "pBind"], [3, "click", "mouseenter", "pBind"], [4, "ngIf"], [3, "class", "pBind", 4, "ngIf"], ["pRipple", "", 3, "target", "class", "pBind", 4, "ngIf"], ["pRipple", "", 3, "routerLink", "queryParams", "routerLinkActive", "routerLinkActiveOptions", "target", "class", "fragment", "queryParamsHandling", "preserveFragment", "skipLocationChange", "replaceUrl", "state", "pBind", 4, "ngIf"], ["pRipple", "", 3, "target", "pBind"], [3, "class", "ngStyle", "pBind", 4, "ngIf"], [3, "class", "pBind", 4, "ngIf", "ngIfElse"], [3, "class", "value", 4, "ngIf"], [3, "ngStyle", "pBind"], [3, "pBind"], [3, "innerHTML", "pBind"], [3, "value"], [4, "ngTemplateOutlet"], ["data-p-icon", "angle-down", 3, "class", "pBind"], ["data-p-icon", "angle-right", 3, "class", "pBind"], ["data-p-icon", "angle-down", 3, "pBind"], ["data-p-icon", "angle-right", 3, "class", "pBind", 4, "ngIf"], ["data-p-icon", "angle-right", 3, "pBind"], [3, "aria-hidden"], ["pRipple", "", 3, "routerLink", "queryParams", "routerLinkActive", "routerLinkActiveOptions", "target", "fragment", "queryParamsHandling", "preserveFragment", "skipLocationChange", "replaceUrl", "state", "pBind"], [3, "styleClass", "value", 4, "ngIf"], [3, "styleClass", "value"], ["data-p-icon", "angle-down", 3, "class", "pBind", 4, "ngIf"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], [3, "class", "pBind", 4, "ngFor", "ngForOf"], ["pMegaMenuSub", "", 3, "id", "submenu", "items", "itemTemplate", "mobileActive", "menuId", "focusedItemId", "level", "root", "pt", "itemClick", "itemMouseEnter", 4, "ngFor", "ngForOf"], ["pMegaMenuSub", "", 3, "itemClick", "itemMouseEnter", "id", "submenu", "items", "itemTemplate", "mobileActive", "menuId", "focusedItemId", "level", "root", "pt"]],
     template: function MegaMenuSub_Template(rf, ctx) {
       if (rf & 1) {
-        ɵɵtemplate(0, MegaMenuSub_ul_0_Template, 4, 12, "ul", 4);
+        ɵɵtemplate(0, MegaMenuSub_li_0_Template, 2, 6, "li", 3)(1, MegaMenuSub_ng_template_1_Template, 2, 2, "ng-template", 4);
       }
       if (rf & 2) {
-        ɵɵproperty("ngIf", ctx.isSubmenuVisible(ctx.submenu));
+        ɵɵproperty("ngIf", ctx.submenu);
+        ɵɵadvance();
+        ɵɵproperty("ngForOf", ctx.items);
       }
     },
-    dependencies: [_MegaMenuSub, CommonModule, NgForOf, NgIf, NgTemplateOutlet, NgStyle, RouterModule, RouterLink, RouterLinkActive, Ripple, TooltipModule, Tooltip, AngleDownIcon, AngleRightIcon, BadgeModule, Badge, SharedModule],
+    dependencies: [_MegaMenuSub, CommonModule, NgForOf, NgIf, NgTemplateOutlet, NgStyle, RouterModule, RouterLink, RouterLinkActive, Ripple, TooltipModule, Tooltip, Bind, AngleDownIcon, AngleRightIcon, BadgeModule, Badge, SharedModule],
     encapsulation: 2
   });
 };
@@ -977,164 +1038,171 @@ var MegaMenuSub = class _MegaMenuSub extends BaseComponent {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(MegaMenuSub, [{
     type: Component,
     args: [{
-      selector: "p-megaMenuSub, p-megamenu-sub",
+      selector: "p-megaMenuSub, p-megamenu-sub, ul[pMegaMenuSub]",
       standalone: true,
-      imports: [CommonModule, RouterModule, Ripple, TooltipModule, AngleDownIcon, AngleRightIcon, BadgeModule, SharedModule],
+      imports: [CommonModule, RouterModule, Ripple, TooltipModule, AngleDownIcon, AngleRightIcon, BadgeModule, SharedModule, Bind],
       template: `
-        <ul
-            *ngIf="isSubmenuVisible(submenu)"
-            #menubar
-            [class]="root ? cx('rootList') : cx('submenu')"
-            [style]="sx('rootList')"
-            [attr.role]="root ? 'menubar' : 'menu'"
-            [attr.id]="id"
-            [attr.aria-orientation]="orientation"
-            [tabindex]="tabindex"
-            [attr.aria-activedescendant]="focusedItemId"
-            [attr.data-pc-section]="root ? 'root' : 'submenu'"
-            (keydown)="menuKeydown.emit($event)"
-            (focus)="menuFocus.emit($event)"
-            (blur)="menuBlur.emit($event)"
-        >
-            <li *ngIf="submenu" [class]="cn(cx('submenuLabel'), getItemProp(submenu, 'class'))" [style]="getItemProp(submenu, 'style')" role="presentation">
-                {{ getItemLabel(submenu) }}
-            </li>
-            <ng-template ngFor let-processedItem [ngForOf]="items" let-index="index">
-                <li
-                    *ngIf="isItemVisible(processedItem) && getItemProp(processedItem, 'separator')"
-                    [attr.id]="getItemId(processedItem)"
-                    [style]="getItemProp(processedItem, 'style')"
-                    [class]="cn(cx('separator'), this.getItemProp(processedItem, 'class'))"
-                    role="separator"
-                    [attr.data-pc-section]="'separator'"
-                ></li>
-                <li
-                    #listItem
-                    *ngIf="isItemVisible(processedItem) && !getItemProp(processedItem, 'separator')"
-                    role="menuitem"
-                    [attr.id]="getItemId(processedItem)"
-                    [attr.data-pc-section]="'menuitem'"
-                    [attr.data-p-highlight]="isItemActive(processedItem)"
-                    [attr.data-p-focused]="isItemFocused(processedItem)"
-                    [attr.data-p-disabled]="isItemDisabled(processedItem)"
-                    [attr.aria-label]="getItemLabel(processedItem)"
-                    [attr.aria-disabled]="isItemDisabled(processedItem) || undefined"
-                    [attr.aria-haspopup]="isItemGroup(processedItem) && !getItemProp(processedItem, 'to') ? 'menu' : undefined"
-                    [attr.aria-expanded]="isItemGroup(processedItem) ? isItemActive(processedItem) : undefined"
-                    [attr.aria-level]="level + 1"
-                    [attr.aria-setsize]="getAriaSetSize()"
-                    [attr.aria-posinset]="getAriaPosInset(index)"
-                    [ngStyle]="getItemProp(processedItem, 'style')"
-                    [class]="cn(cx('item', { processedItem }), getItemProp(processedItem, 'styleClass'))"
-                    pTooltip
-                    [tooltipOptions]="getItemProp(processedItem, 'tooltipOptions')"
-                >
-                    <div [class]="cx('itemContent')" [attr.data-pc-section]="'content'" (click)="onItemClick($event, processedItem)" (mouseenter)="onItemMouseEnter({ $event, processedItem })">
-                        <ng-container *ngIf="!itemTemplate">
-                            <a
-                                *ngIf="!getItemProp(processedItem, 'routerLink')"
-                                [attr.href]="getItemProp(processedItem, 'url')"
-                                [attr.data-automationid]="getItemProp(processedItem, 'automationId')"
-                                [attr.data-pc-section]="'action'"
-                                [target]="getItemProp(processedItem, 'target')"
-                                [class]="cx('itemLink')"
+        <li *ngIf="submenu" [class]="cn(cx('submenuLabel'), getItemProp(submenu, 'class'))" [style]="getItemProp(submenu, 'style')" role="presentation" [pBind]="ptm('submenuLabel')">
+            {{ getItemLabel(submenu) }}
+        </li>
+        <ng-template ngFor let-processedItem [ngForOf]="items" let-index="index">
+            <li
+                *ngIf="isItemVisible(processedItem) && getItemProp(processedItem, 'separator')"
+                [attr.id]="getItemId(processedItem)"
+                [style]="getItemProp(processedItem, 'style')"
+                [class]="cn(cx('separator'), this.getItemProp(processedItem, 'class'))"
+                role="separator"
+                [pBind]="ptm('separator')"
+            ></li>
+            <li
+                #listItem
+                *ngIf="isItemVisible(processedItem) && !getItemProp(processedItem, 'separator')"
+                role="menuitem"
+                [attr.id]="getItemId(processedItem)"
+                [attr.data-p-active]="isItemActive(processedItem)"
+                [attr.data-p-focused]="isItemFocused(processedItem)"
+                [attr.data-p-disabled]="isItemDisabled(processedItem)"
+                [attr.aria-label]="getItemLabel(processedItem)"
+                [attr.aria-disabled]="isItemDisabled(processedItem) || undefined"
+                [attr.aria-haspopup]="isItemGroup(processedItem) && !getItemProp(processedItem, 'to') ? 'menu' : undefined"
+                [attr.aria-expanded]="isItemGroup(processedItem) ? isItemActive(processedItem) : undefined"
+                [attr.aria-level]="level + 1"
+                [attr.aria-setsize]="getAriaSetSize()"
+                [attr.aria-posinset]="getAriaPosInset(index)"
+                [ngStyle]="getItemProp(processedItem, 'style')"
+                [class]="cn(cx('item', { processedItem }), getItemProp(processedItem, 'styleClass'))"
+                pTooltip
+                [tooltipOptions]="getItemProp(processedItem, 'tooltipOptions')"
+                [pBind]="getPTOptions(processedItem, index, 'item')"
+            >
+                <div [class]="cx('itemContent')" [pBind]="getPTOptions(processedItem, index, 'itemContent')" (click)="onItemClick($event, processedItem)" (mouseenter)="onItemMouseEnter({ $event, processedItem })">
+                    <ng-container *ngIf="!itemTemplate">
+                        <a
+                            *ngIf="!getItemProp(processedItem, 'routerLink')"
+                            [attr.href]="getItemProp(processedItem, 'url')"
+                            [attr.data-automationid]="getItemProp(processedItem, 'automationId')"
+                            [target]="getItemProp(processedItem, 'target')"
+                            [class]="cx('itemLink')"
+                            [attr.tabindex]="-1"
+                            [pBind]="getPTOptions(processedItem, index, 'itemLink')"
+                            pRipple
+                        >
+                            <span
+                                *ngIf="getItemProp(processedItem, 'icon')"
+                                [class]="cn(cx('itemIcon'), getItemProp(processedItem, 'icon'))"
+                                [ngStyle]="getItemProp(processedItem, 'iconStyle')"
                                 [attr.tabindex]="-1"
-                                pRipple
+                                [pBind]="getPTOptions(processedItem, index, 'itemIcon')"
                             >
-                                <span
-                                    *ngIf="getItemProp(processedItem, 'icon')"
-                                    [class]="cn(cx('itemIcon'), getItemProp(processedItem, 'icon'))"
-                                    [ngStyle]="getItemProp(processedItem, 'iconStyle')"
-                                    [attr.data-pc-section]="'icon'"
-                                    [attr.tabindex]="-1"
-                                >
-                                </span>
-                                <span *ngIf="getItemProp(processedItem, 'escape'); else htmlLabel" [class]="cx('itemLabel')" [attr.data-pc-section]="'label'">
-                                    {{ getItemLabel(processedItem) }}
-                                </span>
-                                <ng-template #htmlLabel>
-                                    <span [class]="cx('itemLabel')" [innerHTML]="getItemLabel(processedItem)" [attr.data-pc-section]="'label'"></span>
-                                </ng-template>
-                                <p-badge *ngIf="getItemProp(processedItem, 'badge')" [class]="getItemProp(processedItem, 'badgeStyleClass')" [value]="getItemProp(processedItem, 'badge')" />
-                                <ng-container *ngIf="isItemGroup(processedItem)">
-                                    <ng-container *ngIf="!megaMenu.submenuIconTemplate && !megaMenu._submenuIconTemplate">
-                                        @if (orientation === 'horizontal' || mobileActive) {
-                                            <svg data-p-icon="angle-down" [class]="cx('submenuIcon')" [attr.data-pc-section]="'submenuicon'" [attr.aria-hidden]="true" />
-                                        } @else {
-                                            <svg data-p-icon="angle-right" [class]="cx('submenuIcon')" [attr.data-pc-section]="'submenuicon'" *ngIf="orientation === 'vertical'" [attr.aria-hidden]="true" />
-                                        }
-                                    </ng-container>
-                                    <ng-template *ngTemplateOutlet="megaMenu.submenuIconTemplate || megaMenu._submenuIconTemplate" [attr.data-pc-section]="'submenuicon'" [attr.aria-hidden]="true"></ng-template>
+                            </span>
+                            <span *ngIf="getItemProp(processedItem, 'escape'); else htmlLabel" [class]="cx('itemLabel')" [pBind]="getPTOptions(processedItem, index, 'itemLabel')">
+                                {{ getItemLabel(processedItem) }}
+                            </span>
+                            <ng-template #htmlLabel>
+                                <span [class]="cx('itemLabel')" [innerHTML]="getItemLabel(processedItem)" [pBind]="getPTOptions(processedItem, index, 'itemLabel')"></span>
+                            </ng-template>
+                            <p-badge *ngIf="getItemProp(processedItem, 'badge')" [class]="getItemProp(processedItem, 'badgeStyleClass')" [value]="getItemProp(processedItem, 'badge')" />
+                            <ng-container *ngIf="isItemGroup(processedItem)">
+                                <ng-container *ngIf="!megaMenu.submenuIconTemplate && !megaMenu._submenuIconTemplate">
+                                    @if (orientation === 'horizontal' || mobileActive) {
+                                        <svg data-p-icon="angle-down" [class]="cx('submenuIcon')" [pBind]="getPTOptions(processedItem, index, 'submenuIcon')" [attr.aria-hidden]="true" />
+                                    } @else {
+                                        <svg data-p-icon="angle-right" [class]="cx('submenuIcon')" [pBind]="getPTOptions(processedItem, index, 'submenuIcon')" *ngIf="orientation === 'vertical'" [attr.aria-hidden]="true" />
+                                    }
                                 </ng-container>
-                            </a>
-                            <a
-                                *ngIf="getItemProp(processedItem, 'routerLink')"
-                                [routerLink]="getItemProp(processedItem, 'routerLink')"
-                                [attr.data-automationid]="getItemProp(processedItem, 'automationId')"
+                                <ng-template *ngTemplateOutlet="megaMenu.submenuIconTemplate || megaMenu._submenuIconTemplate" [attr.aria-hidden]="true"></ng-template>
+                            </ng-container>
+                        </a>
+                        <a
+                            *ngIf="getItemProp(processedItem, 'routerLink')"
+                            [routerLink]="getItemProp(processedItem, 'routerLink')"
+                            [attr.data-automationid]="getItemProp(processedItem, 'automationId')"
+                            [attr.tabindex]="-1"
+                            [queryParams]="getItemProp(processedItem, 'queryParams')"
+                            [routerLinkActive]="'p-megamenu-item-link-active'"
+                            [routerLinkActiveOptions]="getItemProp(processedItem, 'routerLinkActiveOptions') || { exact: false }"
+                            [target]="getItemProp(processedItem, 'target')"
+                            [class]="cx('itemLink')"
+                            [fragment]="getItemProp(processedItem, 'fragment')"
+                            [queryParamsHandling]="getItemProp(processedItem, 'queryParamsHandling')"
+                            [preserveFragment]="getItemProp(processedItem, 'preserveFragment')"
+                            [skipLocationChange]="getItemProp(processedItem, 'skipLocationChange')"
+                            [replaceUrl]="getItemProp(processedItem, 'replaceUrl')"
+                            [state]="getItemProp(processedItem, 'state')"
+                            [pBind]="getPTOptions(processedItem, index, 'itemLink')"
+                            pRipple
+                        >
+                            <span
+                                [class]="cn(cx('itemIcon'), getItemProp(processedItem, 'icon'))"
+                                *ngIf="getItemProp(processedItem, 'icon')"
+                                [ngStyle]="getItemProp(processedItem, 'iconStyle')"
                                 [attr.tabindex]="-1"
-                                [attr.data-pc-section]="'action'"
-                                [queryParams]="getItemProp(processedItem, 'queryParams')"
-                                [routerLinkActive]="'p-megamenu-item-link-active'"
-                                [routerLinkActiveOptions]="getItemProp(processedItem, 'routerLinkActiveOptions') || { exact: false }"
-                                [target]="getItemProp(processedItem, 'target')"
-                                [class]="cx('itemLink')"
-                                [fragment]="getItemProp(processedItem, 'fragment')"
-                                [queryParamsHandling]="getItemProp(processedItem, 'queryParamsHandling')"
-                                [preserveFragment]="getItemProp(processedItem, 'preserveFragment')"
-                                [skipLocationChange]="getItemProp(processedItem, 'skipLocationChange')"
-                                [replaceUrl]="getItemProp(processedItem, 'replaceUrl')"
-                                [state]="getItemProp(processedItem, 'state')"
-                                pRipple
-                            >
-                                <span
-                                    [class]="cn(cx('itemIcon'), getItemProp(processedItem, 'icon'))"
-                                    *ngIf="getItemProp(processedItem, 'icon')"
-                                    [ngStyle]="getItemProp(processedItem, 'iconStyle')"
-                                    [attr.data-pc-section]="'icon'"
-                                    [attr.tabindex]="-1"
-                                ></span>
-                                <span [class]="cx('itemLabel')" *ngIf="getItemProp(processedItem, 'escape'); else htmlRouteLabel">{{ getItemLabel(processedItem) }}</span>
-                                <ng-template #htmlRouteLabel><span [class]="cx('itemLabel')" [innerHTML]="getItemLabel(processedItem)" [attr.data-pc-section]="'label'"></span></ng-template>
-                                <p-badge *ngIf="getItemProp(processedItem, 'badge')" [styleClass]="getItemProp(processedItem, 'badgeStyleClass')" [value]="getItemProp(processedItem, 'badge')" />
-                                <ng-container *ngIf="isItemGroup(processedItem)">
-                                    <ng-container *ngIf="!megaMenu.submenuIconTemplate && !megaMenu._submenuIconTemplate">
-                                        <svg data-p-icon="angle-down" [class]="cx('submenuIcon')" [attr.data-pc-section]="'submenuicon'" *ngIf="orientation === 'horizontal'" [attr.aria-hidden]="true" />
-                                        <svg data-p-icon="angle-right" [class]="cx('submenuIcon')" [attr.data-pc-section]="'submenuicon'" *ngIf="orientation === 'vertical'" [attr.aria-hidden]="true" />
-                                    </ng-container>
-                                    <ng-template *ngTemplateOutlet="megaMenu.submenuIconTemplate || megaMenu._submenuIconTemplate" [attr.data-pc-section]="'submenuicon'" [attr.aria-hidden]="true"></ng-template>
+                                [pBind]="getPTOptions(processedItem, index, 'itemIcon')"
+                            ></span>
+                            <span [class]="cx('itemLabel')" *ngIf="getItemProp(processedItem, 'escape'); else htmlRouteLabel" [pBind]="getPTOptions(processedItem, index, 'itemLabel')">{{ getItemLabel(processedItem) }}</span>
+                            <ng-template #htmlRouteLabel><span [class]="cx('itemLabel')" [innerHTML]="getItemLabel(processedItem)" [pBind]="getPTOptions(processedItem, index, 'itemLabel')"></span></ng-template>
+                            <p-badge *ngIf="getItemProp(processedItem, 'badge')" [styleClass]="getItemProp(processedItem, 'badgeStyleClass')" [value]="getItemProp(processedItem, 'badge')" />
+                            <ng-container *ngIf="isItemGroup(processedItem)">
+                                <ng-container *ngIf="!megaMenu.submenuIconTemplate && !megaMenu._submenuIconTemplate">
+                                    <svg data-p-icon="angle-down" [class]="cx('submenuIcon')" [pBind]="getPTOptions(processedItem, index, 'submenuIcon')" *ngIf="orientation === 'horizontal'" [attr.aria-hidden]="true" />
+                                    <svg data-p-icon="angle-right" [class]="cx('submenuIcon')" [pBind]="getPTOptions(processedItem, index, 'submenuIcon')" *ngIf="orientation === 'vertical'" [attr.aria-hidden]="true" />
                                 </ng-container>
-                            </a>
-                        </ng-container>
-                        <ng-container *ngIf="itemTemplate">
-                            <ng-template *ngTemplateOutlet="itemTemplate; context: { $implicit: processedItem.item }"></ng-template>
-                        </ng-container>
-                    </div>
-                    <div *ngIf="isItemVisible(processedItem) && isItemGroup(processedItem)" [class]="cx('overlay')" [attr.data-pc-section]="'panel'">
-                        <div [class]="cx('grid')" [attr.data-pc-section]="'grid'">
-                            <div *ngFor="let col of processedItem.items" [class]="cx('column', { processedItem })">
-                                <p-megamenu-sub
-                                    *ngFor="let submenu of col"
-                                    [id]="getSubListId(submenu)"
-                                    [submenu]="submenu"
-                                    [items]="submenu.items"
-                                    [itemTemplate]="itemTemplate"
-                                    [mobileActive]="mobileActive"
-                                    [menuId]="menuId"
-                                    [focusedItemId]="focusedItemId"
-                                    [level]="level + 1"
-                                    [root]="false"
-                                    (itemClick)="itemClick.emit($event)"
-                                    (itemMouseEnter)="onItemMouseEnter($event)"
-                                >
-                                </p-megamenu-sub>
-                            </div>
+                                <ng-template *ngTemplateOutlet="megaMenu.submenuIconTemplate || megaMenu._submenuIconTemplate" [attr.aria-hidden]="true"></ng-template>
+                            </ng-container>
+                        </a>
+                    </ng-container>
+                    <ng-container *ngIf="itemTemplate">
+                        <ng-template *ngTemplateOutlet="itemTemplate; context: { $implicit: processedItem.item }"></ng-template>
+                    </ng-container>
+                </div>
+                <div *ngIf="isItemVisible(processedItem) && isItemGroup(processedItem)" [class]="cx('overlay')" [pBind]="ptm('overlay')">
+                    <div [class]="cx('grid')" [pBind]="ptm('grid')">
+                        <div *ngFor="let col of processedItem.items" [class]="cx('column', { processedItem })" [pBind]="ptm('column')">
+                            <ul
+                                pMegaMenuSub
+                                *ngFor="let submenu of col"
+                                [id]="getSubListId(submenu)"
+                                [submenu]="submenu"
+                                [items]="submenu.items"
+                                [itemTemplate]="itemTemplate"
+                                [mobileActive]="mobileActive"
+                                [menuId]="menuId"
+                                [focusedItemId]="focusedItemId"
+                                [level]="level + 1"
+                                [root]="false"
+                                (itemClick)="itemClick.emit($event)"
+                                (itemMouseEnter)="onItemMouseEnter($event)"
+                                [pt]="pt()"
+                            ></ul>
                         </div>
                     </div>
-                </li>
-            </ng-template>
-        </ul>
+                </div>
+            </li>
+        </ng-template>
     `,
-      encapsulation: ViewEncapsulation.None
+      encapsulation: ViewEncapsulation.None,
+      providers: [{
+        provide: MEGAMENU_SUB_INSTANCE,
+        useExisting: MegaMenuSub
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: MegaMenuSub
+      }],
+      host: {
+        "[class]": 'root ? cx("rootList") : cx("submenu")',
+        "[style]": 'sx("rootList")',
+        "[style.display]": 'isSubmenuVisible(submenu) ? null : "none"',
+        "[attr.role]": 'root ? "menubar" : "menu"',
+        "[attr.id]": "id",
+        "[attr.aria-orientation]": "orientation",
+        "[tabindex]": "tabindex",
+        "[attr.aria-activedescendant]": "focusedItemId",
+        "[attr.data-pc-section]": 'root ? "rootlist" : "submenu"',
+        "(keydown)": "menuKeydown.emit($event)",
+        "(focus)": "menuFocus.emit($event)",
+        "(blur)": "menuBlur.emit($event)"
+      },
+      hostDirectives: [Bind]
     }]
   }], null, {
     id: [{
@@ -1220,16 +1288,13 @@ var MegaMenuSub = class _MegaMenuSub extends BaseComponent {
     }],
     menuKeydown: [{
       type: Output
-    }],
-    menubarViewChild: [{
-      type: ViewChild,
-      args: ["menubar", {
-        static: true
-      }]
     }]
   });
 })();
 var MegaMenu = class _MegaMenu extends BaseComponent {
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
   /**
    * An array of menuitems.
    * @group Props
@@ -1360,8 +1425,8 @@ var MegaMenu = class _MegaMenu extends BaseComponent {
     const processedItem = s(this.activeItem()) ? this.activeItem() : null;
     return processedItem ? processedItem.items.reduce((items, col) => {
       col.forEach((submenu) => {
-        submenu.items.forEach((a2) => {
-          items.push(a2);
+        submenu.items.forEach((a) => {
+          items.push(a);
         });
       });
       return items;
@@ -1390,12 +1455,14 @@ var MegaMenu = class _MegaMenu extends BaseComponent {
       }
     });
   }
-  ngOnInit() {
-    super.ngOnInit();
+  onInit() {
     this.bindMatchMediaListener();
     this.id = this.id || s2("pn_id_");
   }
-  ngAfterContentInit() {
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
+  }
+  onAfterContentInit() {
     this.templates?.forEach((item) => {
       switch (item.getType()) {
         case "start":
@@ -1473,7 +1540,7 @@ var MegaMenu = class _MegaMenu extends BaseComponent {
       processedItem
     } = event;
     const grouped = this.isProcessedItemGroup(processedItem);
-    const root = a(processedItem.parent);
+    const root = l(processedItem.parent);
     const selected = this.isSelected(processedItem);
     if (selected) {
       const {
@@ -1491,7 +1558,7 @@ var MegaMenu = class _MegaMenu extends BaseComponent {
       });
       this.dirty = !root;
       if (!this.mobileActive) {
-        bt(this.rootmenu?.menubarViewChild?.nativeElement, {
+        bt(this.rootmenu?.el?.nativeElement, {
           preventScroll: true
         });
       }
@@ -1517,11 +1584,11 @@ var MegaMenu = class _MegaMenu extends BaseComponent {
   toggle(event) {
     if (this.mobileActive) {
       this.mobileActive = false;
-      zindexutils.clear(this.rootmenu.el.nativeElement);
+      zindexutils.clear(this.rootmenu?.el.nativeElement);
       this.hide();
     } else {
       this.mobileActive = true;
-      zindexutils.set("menu", this.rootmenu.el.nativeElement, this.config.zIndex.menu);
+      zindexutils.set("menu", this.rootmenu?.el.nativeElement, this.config.zIndex.menu);
       setTimeout(() => {
         this.show();
       }, 0);
@@ -1541,9 +1608,9 @@ var MegaMenu = class _MegaMenu extends BaseComponent {
     const id = index !== -1 ? `${this.id}_${index}` : this.focusedItemId;
     let element;
     if (id === null && this.queryMatches) {
-      element = this.menubuttonViewChild.nativeElement;
+      element = this.menubuttonViewChild?.nativeElement;
     } else {
-      element = z(this.rootmenu?.menubarViewChild?.nativeElement, `li[id="${id}"]`);
+      element = z(this.rootmenu?.el?.nativeElement, `li[id="${id}"]`);
     }
     if (element) {
       element.scrollIntoView && element.scrollIntoView({
@@ -1558,7 +1625,7 @@ var MegaMenu = class _MegaMenu extends BaseComponent {
       processedItem,
       isFocus
     } = event;
-    if (a(processedItem)) return;
+    if (l(processedItem)) return;
     const {
       index,
       key,
@@ -1577,7 +1644,7 @@ var MegaMenu = class _MegaMenu extends BaseComponent {
       item
     });
     grouped && (this.dirty = true);
-    isFocus && bt(this.rootmenu?.menubarViewChild?.nativeElement);
+    isFocus && bt(this.rootmenu?.el?.nativeElement);
   }
   hide(event, isFocus) {
     if (this.mobileActive) {
@@ -1594,7 +1661,7 @@ var MegaMenu = class _MegaMenu extends BaseComponent {
       parentKey: "",
       item: null
     });
-    isFocus && bt(this.rootmenu?.menubarViewChild?.nativeElement);
+    isFocus && bt(this.rootmenu?.el?.nativeElement);
     this.dirty = false;
   }
   onMenuFocus(event) {
@@ -1661,7 +1728,7 @@ var MegaMenu = class _MegaMenu extends BaseComponent {
       case "ShiftRight":
         break;
       default:
-        if (!metaKey && j(event.key)) {
+        if (!metaKey && J(event.key)) {
           this.searchItems(event, event.key);
         }
         break;
@@ -1919,7 +1986,7 @@ var MegaMenu = class _MegaMenu extends BaseComponent {
   onEnterKey(event) {
     if (this.focusedItemInfo().index !== -1) {
       const element = z(this.rootmenu?.el?.nativeElement, `li[id="${`${this.focusedItemId}`}"]`);
-      const anchorElement = element && z(element, 'a[data-pc-section="action"]');
+      const anchorElement = element && (z(element, '[data-pc-section="itemlink"]') || z(element, "a,button"));
       anchorElement ? anchorElement.click() : element && element.click();
       const processedItem = this.visibleItems[this.focusedItemInfo().index];
       const grouped = this.isProccessedItemGroup(processedItem);
@@ -1980,11 +2047,10 @@ var MegaMenu = class _MegaMenu extends BaseComponent {
       this.resizeListener = null;
     }
   }
-  ngOnDestroy() {
+  onDestroy() {
     this.unbindOutsideClickListener();
     this.unbindResizeListener();
     this.unbindMatchMediaListener();
-    super.ngOnDestroy();
   }
   static ɵfac = function MegaMenu_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _MegaMenu)();
@@ -1994,13 +2060,13 @@ var MegaMenu = class _MegaMenu extends BaseComponent {
     selectors: [["p-megaMenu"], ["p-megamenu"], ["p-mega-menu"]],
     contentQueries: function MegaMenu_ContentQueries(rf, ctx, dirIndex) {
       if (rf & 1) {
+        ɵɵcontentQuery(dirIndex, _c3, 4);
         ɵɵcontentQuery(dirIndex, _c4, 4);
         ɵɵcontentQuery(dirIndex, _c5, 4);
         ɵɵcontentQuery(dirIndex, _c6, 4);
         ɵɵcontentQuery(dirIndex, _c7, 4);
         ɵɵcontentQuery(dirIndex, _c8, 4);
         ɵɵcontentQuery(dirIndex, _c9, 4);
-        ɵɵcontentQuery(dirIndex, _c10, 4);
         ɵɵcontentQuery(dirIndex, PrimeTemplate, 4);
       }
       if (rf & 2) {
@@ -2017,8 +2083,8 @@ var MegaMenu = class _MegaMenu extends BaseComponent {
     },
     viewQuery: function MegaMenu_Query(rf, ctx) {
       if (rf & 1) {
+        ɵɵviewQuery(_c10, 5);
         ɵɵviewQuery(_c11, 5);
-        ɵɵviewQuery(_c12, 5);
       }
       if (rf & 2) {
         let _t;
@@ -2026,7 +2092,6 @@ var MegaMenu = class _MegaMenu extends BaseComponent {
         ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.rootmenu = _t.first);
       }
     },
-    hostAttrs: ["data-pc-section", "root", "data-pc-name", "megamenu"],
     hostVars: 3,
     hostBindings: function MegaMenu_HostBindings(rf, ctx) {
       if (rf & 2) {
@@ -2046,33 +2111,39 @@ var MegaMenu = class _MegaMenu extends BaseComponent {
       disabled: [2, "disabled", "disabled", booleanAttribute],
       tabindex: [2, "tabindex", "tabindex", numberAttribute]
     },
-    features: [ɵɵProvidersFeature([MegaMenuStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([MegaMenuStyle, {
+      provide: MEGAMENU_INSTANCE,
+      useExisting: _MegaMenu
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _MegaMenu
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     decls: 6,
-    vars: 20,
-    consts: [["rootmenu", ""], ["menubutton", ""], [3, "class", 4, "ngIf"], [4, "ngIf"], [4, "ngTemplateOutlet"], [3, "itemClick", "menuFocus", "menuBlur", "menuKeydown", "itemMouseEnter", "itemTemplate", "items", "menuId", "root", "orientation", "ariaLabel", "disabled", "tabindex", "activeItem", "level", "ariaLabelledBy", "focusedItemId", "mobileActive", "queryMatches", "scrollHeight"], ["role", "button", "tabindex", "0", 3, "class", "click", "keydown", 4, "ngIf"], ["role", "button", "tabindex", "0", 3, "click", "keydown"], ["data-p-icon", "bars", 4, "ngIf"], ["data-p-icon", "bars"]],
+    vars: 21,
+    consts: [["rootmenu", ""], ["menubutton", ""], [3, "class", "pBind", 4, "ngIf"], [4, "ngIf"], [4, "ngTemplateOutlet"], ["pMegaMenuSub", "", 3, "itemClick", "menuFocus", "menuBlur", "menuKeydown", "itemMouseEnter", "itemTemplate", "items", "menuId", "root", "orientation", "ariaLabel", "disabled", "tabindex", "activeItem", "level", "ariaLabelledBy", "focusedItemId", "mobileActive", "queryMatches", "scrollHeight", "pt"], [3, "pBind"], ["role", "button", "tabindex", "0", 3, "class", "pBind", "click", "keydown", 4, "ngIf"], ["role", "button", "tabindex", "0", 3, "click", "keydown", "pBind"], ["data-p-icon", "bars", 3, "pBind", 4, "ngIf"], ["data-p-icon", "bars", 3, "pBind"]],
     template: function MegaMenu_Template(rf, ctx) {
       if (rf & 1) {
         const _r1 = ɵɵgetCurrentView();
-        ɵɵtemplate(0, MegaMenu_div_0_Template, 2, 3, "div", 2)(1, MegaMenu_ng_container_1_Template, 2, 1, "ng-container", 3)(2, MegaMenu_ng_container_2_Template, 1, 0, "ng-container", 4);
-        ɵɵelementStart(3, "p-megamenu-sub", 5, 0);
-        ɵɵlistener("itemClick", function MegaMenu_Template_p_megamenu_sub_itemClick_3_listener($event) {
+        ɵɵtemplate(0, MegaMenu_div_0_Template, 2, 4, "div", 2)(1, MegaMenu_ng_container_1_Template, 2, 1, "ng-container", 3)(2, MegaMenu_ng_container_2_Template, 1, 0, "ng-container", 4);
+        ɵɵelementStart(3, "ul", 5, 0);
+        ɵɵlistener("itemClick", function MegaMenu_Template_ul_itemClick_3_listener($event) {
           ɵɵrestoreView(_r1);
           return ɵɵresetView(ctx.onItemClick($event));
-        })("menuFocus", function MegaMenu_Template_p_megamenu_sub_menuFocus_3_listener($event) {
+        })("menuFocus", function MegaMenu_Template_ul_menuFocus_3_listener($event) {
           ɵɵrestoreView(_r1);
           return ɵɵresetView(ctx.onMenuFocus($event));
-        })("menuBlur", function MegaMenu_Template_p_megamenu_sub_menuBlur_3_listener($event) {
+        })("menuBlur", function MegaMenu_Template_ul_menuBlur_3_listener($event) {
           ɵɵrestoreView(_r1);
           return ɵɵresetView(ctx.onMenuBlur($event));
-        })("menuKeydown", function MegaMenu_Template_p_megamenu_sub_menuKeydown_3_listener($event) {
+        })("menuKeydown", function MegaMenu_Template_ul_menuKeydown_3_listener($event) {
           ɵɵrestoreView(_r1);
           return ɵɵresetView(ctx.onKeyDown($event));
-        })("itemMouseEnter", function MegaMenu_Template_p_megamenu_sub_itemMouseEnter_3_listener($event) {
+        })("itemMouseEnter", function MegaMenu_Template_ul_itemMouseEnter_3_listener($event) {
           ɵɵrestoreView(_r1);
           return ɵɵresetView(ctx.onItemMouseEnter($event));
         });
         ɵɵelementEnd();
-        ɵɵtemplate(5, MegaMenu_div_5_Template, 2, 3, "div", 2);
+        ɵɵtemplate(5, MegaMenu_div_5_Template, 2, 4, "div", 2);
       }
       if (rf & 2) {
         ɵɵproperty("ngIf", ctx.startTemplate || ctx._startTemplate);
@@ -2081,13 +2152,13 @@ var MegaMenu = class _MegaMenu extends BaseComponent {
         ɵɵadvance();
         ɵɵproperty("ngTemplateOutlet", ctx.buttonTemplate || ctx._buttonTemplate);
         ɵɵadvance();
-        ɵɵproperty("itemTemplate", ctx.itemTemplate || ctx._itemTemplate)("items", ctx.processedItems)("menuId", ctx.id)("root", true)("orientation", ctx.orientation)("ariaLabel", ctx.ariaLabel)("disabled", ctx.disabled)("tabindex", !ctx.disabled ? ctx.tabindex : -1)("activeItem", ctx.activeItem())("level", 0)("ariaLabelledBy", ctx.ariaLabelledBy)("focusedItemId", ctx.focused ? ctx.focusedItemId : void 0)("mobileActive", ctx.mobileActive)("queryMatches", ctx.queryMatches)("scrollHeight", ctx.scrollHeight);
+        ɵɵproperty("itemTemplate", ctx.itemTemplate || ctx._itemTemplate)("items", ctx.processedItems)("menuId", ctx.id)("root", true)("orientation", ctx.orientation)("ariaLabel", ctx.ariaLabel)("disabled", ctx.disabled)("tabindex", !ctx.disabled ? ctx.tabindex : -1)("activeItem", ctx.activeItem())("level", 0)("ariaLabelledBy", ctx.ariaLabelledBy)("focusedItemId", ctx.focused ? ctx.focusedItemId : void 0)("mobileActive", ctx.mobileActive)("queryMatches", ctx.queryMatches)("scrollHeight", ctx.scrollHeight)("pt", ctx.pt());
         ɵɵattribute("id", ctx.id + "_list");
         ɵɵadvance(2);
         ɵɵproperty("ngIf", ctx.endTemplate || ctx._endTemplate);
       }
     },
-    dependencies: [CommonModule, NgIf, NgTemplateOutlet, RouterModule, MegaMenuSub, TooltipModule, BarsIcon, BadgeModule, SharedModule],
+    dependencies: [CommonModule, NgIf, NgTemplateOutlet, RouterModule, MegaMenuSub, TooltipModule, Bind, BarsIcon, BadgeModule, SharedModule],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -2098,9 +2169,9 @@ var MegaMenu = class _MegaMenu extends BaseComponent {
     args: [{
       selector: "p-megaMenu, p-megamenu, p-mega-menu",
       standalone: true,
-      imports: [CommonModule, RouterModule, MegaMenuSub, TooltipModule, BarsIcon, BadgeModule, SharedModule],
+      imports: [CommonModule, RouterModule, MegaMenuSub, TooltipModule, BarsIcon, BadgeModule, SharedModule, Bind],
       template: `
-        <div [class]="cx('start')" *ngIf="startTemplate || _startTemplate">
+        <div [class]="cx('start')" *ngIf="startTemplate || _startTemplate" [pBind]="ptm('start')">
             <ng-container *ngTemplateOutlet="startTemplate || _startTemplate"></ng-container>
         </div>
         <ng-container *ngIf="!buttonTemplate && !_buttonTemplate">
@@ -2114,15 +2185,17 @@ var MegaMenu = class _MegaMenu extends BaseComponent {
                 [attr.aria-expanded]="mobileActive"
                 [attr.aria-controls]="id"
                 [attr.aria-label]="config.translation.aria.navigation"
+                [pBind]="ptm('button')"
                 (click)="menuButtonClick($event)"
                 (keydown)="menuButtonKeydown($event)"
             >
-                <svg data-p-icon="bars" *ngIf="!buttonIconTemplate && !_buttonIconTemplate" />
+                <svg data-p-icon="bars" *ngIf="!buttonIconTemplate && !_buttonIconTemplate" [pBind]="ptm('buttonIcon')" />
                 <ng-template *ngTemplateOutlet="buttonIconTemplate || _buttonIconTemplate"></ng-template>
             </a>
         </ng-container>
         <ng-container *ngTemplateOutlet="buttonTemplate || _buttonTemplate"></ng-container>
-        <p-megamenu-sub
+        <ul
+            pMegaMenuSub
             #rootmenu
             [itemTemplate]="itemTemplate || _itemTemplate"
             [items]="processedItems"
@@ -2145,20 +2218,26 @@ var MegaMenu = class _MegaMenu extends BaseComponent {
             (itemMouseEnter)="onItemMouseEnter($event)"
             [queryMatches]="queryMatches"
             [scrollHeight]="scrollHeight"
-        ></p-megamenu-sub>
-        <div [class]="cx('end')" *ngIf="endTemplate || _endTemplate">
+            [pt]="pt()"
+        ></ul>
+        <div [class]="cx('end')" *ngIf="endTemplate || _endTemplate" [pBind]="ptm('end')">
             <ng-container *ngTemplateOutlet="endTemplate || _endTemplate"></ng-container>
         </div>
     `,
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
-      providers: [MegaMenuStyle],
+      providers: [MegaMenuStyle, {
+        provide: MEGAMENU_INSTANCE,
+        useExisting: MegaMenu
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: MegaMenu
+      }],
       host: {
         "[class]": 'cn(cx("root"), styleClass)',
-        "[id]": "id",
-        "data-pc-section": "root",
-        "data-pc-name": "megamenu"
-      }
+        "[id]": "id"
+      },
+      hostDirectives: [Bind]
     }]
   }], () => [], {
     model: [{

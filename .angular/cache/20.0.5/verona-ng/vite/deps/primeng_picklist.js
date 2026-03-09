@@ -1,26 +1,29 @@
 import {
   Listbox
-} from "./chunk-TDVKAHUU.js";
-import "./chunk-ABGXFTG6.js";
-import "./chunk-TTXVI75E.js";
-import "./chunk-TBZ7QADV.js";
-import "./chunk-MUYJFYGV.js";
-import "./chunk-CXGSICYC.js";
-import "./chunk-67V7CIUT.js";
-import "./chunk-5OCKW6BF.js";
+} from "./chunk-UOLVGI6M.js";
+import "./chunk-RKFXKJ24.js";
+import "./chunk-NOMKJF35.js";
+import "./chunk-BFEG2ZPT.js";
 import {
   ButtonDirective,
   ButtonIcon,
   ButtonModule
-} from "./chunk-2F4Z75VZ.js";
-import "./chunk-EGVFVLQK.js";
-import "./chunk-AXS7T3GQ.js";
-import "./chunk-6PBBDZZF.js";
-import "./chunk-KOXUNDHI.js";
+} from "./chunk-UM3VFPQ2.js";
+import {
+  CdkDropListGroup,
+  DragDropModule,
+  moveItemInArray
+} from "./chunk-GL6FY4JX.js";
+import "./chunk-K26YQORK.js";
+import "./chunk-KXOKLPXH.js";
+import "./chunk-PJRMHEN5.js";
+import "./chunk-343RM6UZ.js";
+import "./chunk-2R7VQYSP.js";
+import "./chunk-YNLAOK3J.js";
+import "./chunk-S73J4WE3.js";
 import {
   Ripple
-} from "./chunk-VZLF74PJ.js";
-import "./chunk-QVUTNZUY.js";
+} from "./chunk-OC77X5LN.js";
 import {
   AngleDoubleDownIcon,
   AngleDoubleLeftIcon,
@@ -30,24 +33,33 @@ import {
   AngleLeftIcon,
   AngleRightIcon,
   AngleUpIcon
-} from "./chunk-BIL3W6KN.js";
+} from "./chunk-RHA7RL5K.js";
+import "./chunk-YXZQJBKH.js";
+import "./chunk-TENFQJBN.js";
 import {
-  CdkDropListGroup,
-  DragDropModule,
-  moveItemInArray,
-  transferArrayItem
-} from "./chunk-GL6FY4JX.js";
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
 import {
-  BaseComponent
-} from "./chunk-4YMQ5OOY.js";
+  BaseComponent,
+  PARENT_INSTANCE
+} from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
-} from "./chunk-L2L2T6ID.js";
+} from "./chunk-4ATYD752.js";
 import {
   FilterService,
   PrimeTemplate,
   SharedModule
-} from "./chunk-ZKOTJBQ6.js";
+} from "./chunk-LMEEH3AJ.js";
+import "./chunk-GOP36Q47.js";
+import {
+  Y2 as Y,
+  _t,
+  h,
+  l,
+  s3 as s
+} from "./chunk-UCHM6OXG.js";
 import {
   FormsModule,
   NgControlStatus,
@@ -76,6 +88,7 @@ import {
   booleanAttribute,
   numberAttribute,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -110,6 +123,7 @@ import {
   ɵɵviewQuery
 } from "./chunk-EIF6IUR4.js";
 import {
+  InjectionToken,
   inject,
   ɵɵdefineInjectable,
   ɵɵdefineInjector,
@@ -117,17 +131,9 @@ import {
   ɵɵresetView,
   ɵɵrestoreView
 } from "./chunk-LW34VNAR.js";
-import "./chunk-G6ECYYJH.js";
 import "./chunk-YVXMBCE5.js";
+import "./chunk-G6ECYYJH.js";
 import "./chunk-RTGP7ALM.js";
-import "./chunk-BMDSN43F.js";
-import {
-  C,
-  Kt,
-  Y2 as Y,
-  a,
-  s3 as s
-} from "./chunk-RK2DVQNP.js";
 import {
   __spreadValues
 } from "./chunk-4MWRP73S.js";
@@ -172,10 +178,11 @@ var _c23 = (a0, a1, a2, a3) => ({
 function PickList_div_1__svg_svg_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 18);
+    ɵɵelement(0, "svg", 20);
   }
   if (rf & 2) {
-    ɵɵattribute("data-pc-section", "moveupicon");
+    const ctx_r2 = ɵɵnextContext(2);
+    ɵɵproperty("pt", ctx_r2.ptm("pcSourceMoveUpButton")["icon"]);
   }
 }
 function PickList_div_1_3_ng_template_0_Template(rf, ctx) {
@@ -188,10 +195,11 @@ function PickList_div_1_3_Template(rf, ctx) {
 function PickList_div_1__svg_svg_5_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 19);
+    ɵɵelement(0, "svg", 21);
   }
   if (rf & 2) {
-    ɵɵattribute("data-pc-section", "movetopicon");
+    const ctx_r2 = ɵɵnextContext(2);
+    ɵɵproperty("pt", ctx_r2.ptm("pcSourceMoveTopButton")["icon"]);
   }
 }
 function PickList_div_1_6_ng_template_0_Template(rf, ctx) {
@@ -204,10 +212,11 @@ function PickList_div_1_6_Template(rf, ctx) {
 function PickList_div_1__svg_svg_8_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 20);
+    ɵɵelement(0, "svg", 22);
   }
   if (rf & 2) {
-    ɵɵattribute("data-pc-section", "movedownicon");
+    const ctx_r2 = ɵɵnextContext(2);
+    ɵɵproperty("pt", ctx_r2.ptm("pcSourceMoveDownButton")["icon"]);
   }
 }
 function PickList_div_1_9_ng_template_0_Template(rf, ctx) {
@@ -220,10 +229,11 @@ function PickList_div_1_9_Template(rf, ctx) {
 function PickList_div_1__svg_svg_11_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 21);
+    ɵɵelement(0, "svg", 23);
   }
   if (rf & 2) {
-    ɵɵattribute("data-pc-section", "movebottomicon");
+    const ctx_r2 = ɵɵnextContext(2);
+    ɵɵproperty("pt", ctx_r2.ptm("pcSourceMoveBottomButton")["icon"]);
   }
 }
 function PickList_div_1_12_ng_template_0_Template(rf, ctx) {
@@ -236,71 +246,72 @@ function PickList_div_1_12_Template(rf, ctx) {
 function PickList_div_1_Template(rf, ctx) {
   if (rf & 1) {
     const _r2 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "div")(1, "button", 11);
+    ɵɵelementStart(0, "div", 9)(1, "button", 14);
     ɵɵlistener("click", function PickList_div_1_Template_button_click_1_listener() {
       ɵɵrestoreView(_r2);
       const ctx_r2 = ɵɵnextContext();
       const sourcelist_r4 = ɵɵreference(4);
       return ɵɵresetView(ctx_r2.moveUp(sourcelist_r4, ctx_r2.source, ctx_r2.selectedItemsSource, ctx_r2.onSourceReorder, ctx_r2.SOURCE_LIST));
     });
-    ɵɵtemplate(2, PickList_div_1__svg_svg_2_Template, 1, 1, "svg", 13)(3, PickList_div_1_3_Template, 1, 0, null, 14);
+    ɵɵtemplate(2, PickList_div_1__svg_svg_2_Template, 1, 1, "svg", 15)(3, PickList_div_1_3_Template, 1, 0, null, 16);
     ɵɵelementEnd();
-    ɵɵelementStart(4, "button", 11);
+    ɵɵelementStart(4, "button", 14);
     ɵɵlistener("click", function PickList_div_1_Template_button_click_4_listener() {
       ɵɵrestoreView(_r2);
       const ctx_r2 = ɵɵnextContext();
       const sourcelist_r4 = ɵɵreference(4);
       return ɵɵresetView(ctx_r2.moveTop(sourcelist_r4, ctx_r2.source, ctx_r2.selectedItemsSource, ctx_r2.onSourceReorder, ctx_r2.SOURCE_LIST));
     });
-    ɵɵtemplate(5, PickList_div_1__svg_svg_5_Template, 1, 1, "svg", 15)(6, PickList_div_1_6_Template, 1, 0, null, 14);
+    ɵɵtemplate(5, PickList_div_1__svg_svg_5_Template, 1, 1, "svg", 17)(6, PickList_div_1_6_Template, 1, 0, null, 16);
     ɵɵelementEnd();
-    ɵɵelementStart(7, "button", 11);
+    ɵɵelementStart(7, "button", 12);
     ɵɵlistener("click", function PickList_div_1_Template_button_click_7_listener() {
       ɵɵrestoreView(_r2);
       const ctx_r2 = ɵɵnextContext();
       const sourcelist_r4 = ɵɵreference(4);
       return ɵɵresetView(ctx_r2.moveDown(sourcelist_r4, ctx_r2.source, ctx_r2.selectedItemsSource, ctx_r2.onSourceReorder, ctx_r2.SOURCE_LIST));
     });
-    ɵɵtemplate(8, PickList_div_1__svg_svg_8_Template, 1, 1, "svg", 16)(9, PickList_div_1_9_Template, 1, 0, null, 14);
+    ɵɵtemplate(8, PickList_div_1__svg_svg_8_Template, 1, 1, "svg", 18)(9, PickList_div_1_9_Template, 1, 0, null, 16);
     ɵɵelementEnd();
-    ɵɵelementStart(10, "button", 11);
+    ɵɵelementStart(10, "button", 12);
     ɵɵlistener("click", function PickList_div_1_Template_button_click_10_listener() {
       ɵɵrestoreView(_r2);
       const ctx_r2 = ɵɵnextContext();
       const sourcelist_r4 = ɵɵreference(4);
       return ɵɵresetView(ctx_r2.moveBottom(sourcelist_r4, ctx_r2.source, ctx_r2.selectedItemsSource, ctx_r2.onSourceReorder, ctx_r2.SOURCE_LIST));
     });
-    ɵɵtemplate(11, PickList_div_1__svg_svg_11_Template, 1, 1, "svg", 17)(12, PickList_div_1_12_Template, 1, 0, null, 14);
+    ɵɵtemplate(11, PickList_div_1__svg_svg_11_Template, 1, 1, "svg", 19)(12, PickList_div_1_12_Template, 1, 0, null, 16);
     ɵɵelementEnd()();
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext();
     ɵɵclassMap(ctx_r2.cx("sourceControls"));
-    ɵɵattribute("data-pc-section", "sourceControls")("data-pc-group-section", "controls");
+    ɵɵproperty("pBind", ctx_r2.ptm("sourceControls"));
+    ɵɵattribute("data-pc-group-section", "controls");
     ɵɵadvance();
-    ɵɵproperty("disabled", ctx_r2.sourceMoveDisabled())("buttonProps", ctx_r2.getButtonProps("moveup"));
-    ɵɵattribute("aria-label", ctx_r2.moveUpAriaLabel)("data-pc-section", "sourceMoveUpButton");
+    ɵɵproperty("disabled", ctx_r2.sourceMoveDisabled())("buttonProps", ctx_r2.getButtonProps("moveup"))("pt", ctx_r2.ptm("pcSourceMoveUpButton"));
+    ɵɵattribute("aria-label", ctx_r2.moveUpAriaLabel);
     ɵɵadvance();
     ɵɵproperty("ngIf", !ctx_r2.moveUpIconTemplate && !ctx_r2._moveUpIconTemplate);
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r2.moveUpIconTemplate || ctx_r2._moveUpIconTemplate);
     ɵɵadvance();
-    ɵɵproperty("disabled", ctx_r2.sourceMoveDisabled())("buttonProps", ctx_r2.getButtonProps("movetop"));
-    ɵɵattribute("aria-label", ctx_r2.moveTopAriaLabel)("data-pc-section", "sourceMoveTopButton");
+    ɵɵproperty("disabled", ctx_r2.sourceMoveDisabled())("buttonProps", ctx_r2.getButtonProps("movetop"))("pt", ctx_r2.ptm("pcSourceMoveTopButton"));
+    ɵɵattribute("aria-label", ctx_r2.moveTopAriaLabel);
     ɵɵadvance();
     ɵɵproperty("ngIf", !ctx_r2.moveTopIconTemplate && !ctx_r2._moveTopIconTemplate);
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r2.moveTopIconTemplate || ctx_r2._moveTopIconTemplate);
     ɵɵadvance();
-    ɵɵproperty("disabled", ctx_r2.sourceMoveDisabled())("buttonProps", ctx_r2.getButtonProps("movedown"));
-    ɵɵattribute("aria-label", ctx_r2.moveDownAriaLabel)("data-pc-section", "sourceMoveDownButton");
+    ɵɵproperty("disabled", ctx_r2.sourceMoveDisabled())("buttonProps", ctx_r2.getButtonProps("movedown"))("pt", ctx_r2.ptm("pcSourceMoveDownButton"));
+    ɵɵattribute("aria-label", ctx_r2.moveDownAriaLabel);
     ɵɵadvance();
     ɵɵproperty("ngIf", !ctx_r2.moveDownIconTemplate && !ctx_r2._moveDownIconTemplate);
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r2.moveDownIconTemplate || ctx_r2._moveDownIconTemplate);
     ɵɵadvance();
-    ɵɵproperty("disabled", ctx_r2.sourceMoveDisabled())("buttonProps", ctx_r2.getButtonProps("movebottom"));
-    ɵɵattribute("aria-label", ctx_r2.moveBottomAriaLabel)("data-pc-section", "sourceMoveBottomButton");
+    ɵɵproperty("disabled", ctx_r2.sourceMoveDisabled())("buttonProps", ctx_r2.getButtonProps("movebottom"))("pt", ctx_r2.ptm("pcSourceMoveBottomButton"));
+    ɵɵattribute("aria-label", ctx_r2.moveBottomAriaLabel);
     ɵɵadvance();
     ɵɵproperty("ngIf", !ctx_r2.moveBottomIconTemplate || ctx_r2._moveBottomIconTemplate);
     ɵɵadvance();
@@ -328,7 +339,7 @@ function PickList_ng_container_5_ng_template_1_1_Template(rf, ctx) {
 }
 function PickList_ng_container_5_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, PickList_ng_container_5_ng_template_1_div_0_Template, 2, 1, "div", 10)(1, PickList_ng_container_5_ng_template_1_1_Template, 1, 0, null, 14);
+    ɵɵtemplate(0, PickList_ng_container_5_ng_template_1_div_0_Template, 2, 1, "div", 11)(1, PickList_ng_container_5_ng_template_1_1_Template, 1, 0, null, 16);
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(2);
@@ -353,7 +364,7 @@ function PickList_ng_container_6_ng_template_1_0_Template(rf, ctx) {
 }
 function PickList_ng_container_6_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, PickList_ng_container_6_ng_template_1_0_Template, 1, 0, null, 12);
+    ɵɵtemplate(0, PickList_ng_container_6_ng_template_1_0_Template, 1, 0, null, 13);
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(2);
@@ -375,7 +386,7 @@ function PickList_ng_container_7_ng_container_1_Template(rf, ctx) {
 function PickList_ng_container_7_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, PickList_ng_container_7_ng_container_1_Template, 1, 0, "ng-container", 14);
+    ɵɵtemplate(1, PickList_ng_container_7_ng_container_1_Template, 1, 0, "ng-container", 16);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -391,7 +402,7 @@ function PickList_ng_container_8_ng_template_1_ng_container_0_Template(rf, ctx) 
 }
 function PickList_ng_container_8_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, PickList_ng_container_8_ng_template_1_ng_container_0_Template, 1, 0, "ng-container", 12);
+    ɵɵtemplate(0, PickList_ng_container_8_ng_template_1_ng_container_0_Template, 1, 0, "ng-container", 13);
   }
   if (rf & 2) {
     const item_r5 = ctx.$implicit;
@@ -416,7 +427,7 @@ function PickList_ng_container_9_ng_template_1_ng_container_0_Template(rf, ctx) 
 }
 function PickList_ng_container_9_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, PickList_ng_container_9_ng_template_1_ng_container_0_Template, 1, 0, "ng-container", 14);
+    ɵɵtemplate(0, PickList_ng_container_9_ng_template_1_ng_container_0_Template, 1, 0, "ng-container", 16);
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(2);
@@ -437,7 +448,7 @@ function PickList_ng_container_10_ng_template_1_ng_container_0_Template(rf, ctx)
 }
 function PickList_ng_container_10_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, PickList_ng_container_10_ng_template_1_ng_container_0_Template, 1, 0, "ng-container", 14);
+    ɵɵtemplate(0, PickList_ng_container_10_ng_template_1_ng_container_0_Template, 1, 0, "ng-container", 16);
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(2);
@@ -454,25 +465,27 @@ function PickList_ng_container_10_Template(rf, ctx) {
 function PickList_ng_container_13__svg_svg_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 23);
+    ɵɵelement(0, "svg", 25);
   }
   if (rf & 2) {
-    ɵɵattribute("data-pc-section", "movetotargeticon");
+    const ctx_r2 = ɵɵnextContext(2);
+    ɵɵproperty("pt", ctx_r2.ptm("pcMoveToTargetButton")["icon"]);
   }
 }
 function PickList_ng_container_13__svg_svg_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 20);
+    ɵɵelement(0, "svg", 22);
   }
   if (rf & 2) {
-    ɵɵattribute("data-pc-section", "movetotargeticon");
+    const ctx_r2 = ɵɵnextContext(2);
+    ɵɵproperty("pt", ctx_r2.ptm("pcMoveToTargetButton")["icon"]);
   }
 }
 function PickList_ng_container_13_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, PickList_ng_container_13__svg_svg_1_Template, 1, 1, "svg", 22)(2, PickList_ng_container_13__svg_svg_2_Template, 1, 1, "svg", 16);
+    ɵɵtemplate(1, PickList_ng_container_13__svg_svg_1_Template, 1, 1, "svg", 24)(2, PickList_ng_container_13__svg_svg_2_Template, 1, 1, "svg", 18);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -493,25 +506,27 @@ function PickList_14_Template(rf, ctx) {
 function PickList_ng_container_16__svg_svg_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 25);
+    ɵɵelement(0, "svg", 27);
   }
   if (rf & 2) {
-    ɵɵattribute("data-pc-section", "movealltotargeticon");
+    const ctx_r2 = ɵɵnextContext(2);
+    ɵɵproperty("pt", ctx_r2.ptm("pcMoveAllToTargetButton")["icon"]);
   }
 }
 function PickList_ng_container_16__svg_svg_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 21);
+    ɵɵelement(0, "svg", 23);
   }
   if (rf & 2) {
-    ɵɵattribute("data-pc-section", "movealltotargeticon");
+    const ctx_r2 = ɵɵnextContext(2);
+    ɵɵproperty("pt", ctx_r2.ptm("pcMoveAllToTargetButton")["icon"]);
   }
 }
 function PickList_ng_container_16_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, PickList_ng_container_16__svg_svg_1_Template, 1, 1, "svg", 24)(2, PickList_ng_container_16__svg_svg_2_Template, 1, 1, "svg", 17);
+    ɵɵtemplate(1, PickList_ng_container_16__svg_svg_1_Template, 1, 1, "svg", 26)(2, PickList_ng_container_16__svg_svg_2_Template, 1, 1, "svg", 19);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -532,25 +547,27 @@ function PickList_17_Template(rf, ctx) {
 function PickList_ng_container_19__svg_svg_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 27);
+    ɵɵelement(0, "svg", 29);
   }
   if (rf & 2) {
-    ɵɵattribute("data-pc-section", "movedownsourceticon");
+    const ctx_r2 = ɵɵnextContext(2);
+    ɵɵproperty("pt", ctx_r2.ptm("pcMoveToSourceButton")["icon"]);
   }
 }
 function PickList_ng_container_19__svg_svg_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 18);
+    ɵɵelement(0, "svg", 20);
   }
   if (rf & 2) {
-    ɵɵattribute("data-pc-section", "movedownsourceticon");
+    const ctx_r2 = ɵɵnextContext(2);
+    ɵɵproperty("pt", ctx_r2.ptm("pcMoveToSourceButton")["icon"]);
   }
 }
 function PickList_ng_container_19_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, PickList_ng_container_19__svg_svg_1_Template, 1, 1, "svg", 26)(2, PickList_ng_container_19__svg_svg_2_Template, 1, 1, "svg", 13);
+    ɵɵtemplate(1, PickList_ng_container_19__svg_svg_1_Template, 1, 1, "svg", 28)(2, PickList_ng_container_19__svg_svg_2_Template, 1, 1, "svg", 15);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -571,25 +588,27 @@ function PickList_20_Template(rf, ctx) {
 function PickList_ng_container_22__svg_svg_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 29);
+    ɵɵelement(0, "svg", 31);
   }
   if (rf & 2) {
-    ɵɵattribute("data-pc-section", "movealltosourceticon");
+    const ctx_r2 = ɵɵnextContext(2);
+    ɵɵproperty("pt", ctx_r2.ptm("pcMoveAllToSourceButton")["icon"]);
   }
 }
 function PickList_ng_container_22__svg_svg_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 19);
+    ɵɵelement(0, "svg", 21);
   }
   if (rf & 2) {
-    ɵɵattribute("data-pc-section", "movealltosourceticon");
+    const ctx_r2 = ɵɵnextContext(2);
+    ɵɵproperty("pt", ctx_r2.ptm("pcMoveAllToSourceButton")["icon"]);
   }
 }
 function PickList_ng_container_22_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, PickList_ng_container_22__svg_svg_1_Template, 1, 1, "svg", 28)(2, PickList_ng_container_22__svg_svg_2_Template, 1, 1, "svg", 15);
+    ɵɵtemplate(1, PickList_ng_container_22__svg_svg_1_Template, 1, 1, "svg", 30)(2, PickList_ng_container_22__svg_svg_2_Template, 1, 1, "svg", 17);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -628,7 +647,7 @@ function PickList_ng_container_27_ng_template_1_1_Template(rf, ctx) {
 }
 function PickList_ng_container_27_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, PickList_ng_container_27_ng_template_1_div_0_Template, 2, 1, "div", 10)(1, PickList_ng_container_27_ng_template_1_1_Template, 1, 0, null, 14);
+    ɵɵtemplate(0, PickList_ng_container_27_ng_template_1_div_0_Template, 2, 1, "div", 11)(1, PickList_ng_container_27_ng_template_1_1_Template, 1, 0, null, 16);
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(2);
@@ -653,7 +672,7 @@ function PickList_ng_container_28_ng_template_1_0_Template(rf, ctx) {
 }
 function PickList_ng_container_28_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, PickList_ng_container_28_ng_template_1_0_Template, 1, 0, null, 12);
+    ɵɵtemplate(0, PickList_ng_container_28_ng_template_1_0_Template, 1, 0, null, 13);
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(2);
@@ -675,7 +694,7 @@ function PickList_ng_container_29_ng_container_1_Template(rf, ctx) {
 function PickList_ng_container_29_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, PickList_ng_container_29_ng_container_1_Template, 1, 0, "ng-container", 14);
+    ɵɵtemplate(1, PickList_ng_container_29_ng_container_1_Template, 1, 0, "ng-container", 16);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -691,7 +710,7 @@ function PickList_ng_container_30_ng_template_1_ng_container_0_Template(rf, ctx)
 }
 function PickList_ng_container_30_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, PickList_ng_container_30_ng_template_1_ng_container_0_Template, 1, 0, "ng-container", 12);
+    ɵɵtemplate(0, PickList_ng_container_30_ng_template_1_ng_container_0_Template, 1, 0, "ng-container", 13);
   }
   if (rf & 2) {
     const item_r9 = ctx.$implicit;
@@ -716,7 +735,7 @@ function PickList_ng_container_31_ng_template_1_ng_container_0_Template(rf, ctx)
 }
 function PickList_ng_container_31_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, PickList_ng_container_31_ng_template_1_ng_container_0_Template, 1, 0, "ng-container", 14);
+    ɵɵtemplate(0, PickList_ng_container_31_ng_template_1_ng_container_0_Template, 1, 0, "ng-container", 16);
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(2);
@@ -737,7 +756,7 @@ function PickList_ng_container_32_ng_template_1_ng_container_0_Template(rf, ctx)
 }
 function PickList_ng_container_32_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, PickList_ng_container_32_ng_template_1_ng_container_0_Template, 1, 0, "ng-container", 14);
+    ɵɵtemplate(0, PickList_ng_container_32_ng_template_1_ng_container_0_Template, 1, 0, "ng-container", 16);
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(2);
@@ -754,10 +773,11 @@ function PickList_ng_container_32_Template(rf, ctx) {
 function PickList_div_33__svg_svg_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 18);
+    ɵɵelement(0, "svg", 20);
   }
   if (rf & 2) {
-    ɵɵattribute("data-pc-section", "moveupicon");
+    const ctx_r2 = ɵɵnextContext(2);
+    ɵɵproperty("pt", ctx_r2.ptm("pcTargetMoveUpButton")["icon"]);
   }
 }
 function PickList_div_33_3_ng_template_0_Template(rf, ctx) {
@@ -770,10 +790,11 @@ function PickList_div_33_3_Template(rf, ctx) {
 function PickList_div_33__svg_svg_5_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 19);
+    ɵɵelement(0, "svg", 21);
   }
   if (rf & 2) {
-    ɵɵattribute("data-pc-section", "movetopicon");
+    const ctx_r2 = ɵɵnextContext(2);
+    ɵɵproperty("pt", ctx_r2.ptm("pcTargetMoveTopButton")["icon"]);
   }
 }
 function PickList_div_33_6_ng_template_0_Template(rf, ctx) {
@@ -786,10 +807,11 @@ function PickList_div_33_6_Template(rf, ctx) {
 function PickList_div_33__svg_svg_8_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 20);
+    ɵɵelement(0, "svg", 22);
   }
   if (rf & 2) {
-    ɵɵattribute("data-pc-section", "movedownicon");
+    const ctx_r2 = ɵɵnextContext(2);
+    ɵɵproperty("pt", ctx_r2.ptm("pcTargetMoveDownButton")["icon"]);
   }
 }
 function PickList_div_33_9_ng_template_0_Template(rf, ctx) {
@@ -802,10 +824,11 @@ function PickList_div_33_9_Template(rf, ctx) {
 function PickList_div_33__svg_svg_11_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 21);
+    ɵɵelement(0, "svg", 23);
   }
   if (rf & 2) {
-    ɵɵattribute("data-pc-section", "movebottomicon");
+    const ctx_r2 = ɵɵnextContext(2);
+    ɵɵproperty("pt", ctx_r2.ptm("pcTargetMoveBottomButton")["icon"]);
   }
 }
 function PickList_div_33_12_ng_template_0_Template(rf, ctx) {
@@ -818,71 +841,72 @@ function PickList_div_33_12_Template(rf, ctx) {
 function PickList_div_33_Template(rf, ctx) {
   if (rf & 1) {
     const _r13 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "div")(1, "button", 30);
+    ɵɵelementStart(0, "div", 9)(1, "button", 32);
     ɵɵlistener("click", function PickList_div_33_Template_button_click_1_listener() {
       ɵɵrestoreView(_r13);
       const ctx_r2 = ɵɵnextContext();
       const targetlist_r14 = ɵɵreference(26);
       return ɵɵresetView(ctx_r2.moveUp(targetlist_r14, ctx_r2.target, ctx_r2.selectedItemsTarget, ctx_r2.onTargetReorder, ctx_r2.TARGET_LIST));
     });
-    ɵɵtemplate(2, PickList_div_33__svg_svg_2_Template, 1, 1, "svg", 13)(3, PickList_div_33_3_Template, 1, 0, null, 14);
+    ɵɵtemplate(2, PickList_div_33__svg_svg_2_Template, 1, 1, "svg", 15)(3, PickList_div_33_3_Template, 1, 0, null, 16);
     ɵɵelementEnd();
-    ɵɵelementStart(4, "button", 11);
+    ɵɵelementStart(4, "button", 12);
     ɵɵlistener("click", function PickList_div_33_Template_button_click_4_listener() {
       ɵɵrestoreView(_r13);
       const ctx_r2 = ɵɵnextContext();
       const targetlist_r14 = ɵɵreference(26);
       return ɵɵresetView(ctx_r2.moveTop(targetlist_r14, ctx_r2.target, ctx_r2.selectedItemsTarget, ctx_r2.onTargetReorder, ctx_r2.TARGET_LIST));
     });
-    ɵɵtemplate(5, PickList_div_33__svg_svg_5_Template, 1, 1, "svg", 15)(6, PickList_div_33_6_Template, 1, 0, null, 14);
+    ɵɵtemplate(5, PickList_div_33__svg_svg_5_Template, 1, 1, "svg", 17)(6, PickList_div_33_6_Template, 1, 0, null, 16);
     ɵɵelementEnd();
-    ɵɵelementStart(7, "button", 11);
+    ɵɵelementStart(7, "button", 12);
     ɵɵlistener("click", function PickList_div_33_Template_button_click_7_listener() {
       ɵɵrestoreView(_r13);
       const ctx_r2 = ɵɵnextContext();
       const targetlist_r14 = ɵɵreference(26);
       return ɵɵresetView(ctx_r2.moveDown(targetlist_r14, ctx_r2.target, ctx_r2.selectedItemsTarget, ctx_r2.onTargetReorder, ctx_r2.TARGET_LIST));
     });
-    ɵɵtemplate(8, PickList_div_33__svg_svg_8_Template, 1, 1, "svg", 16)(9, PickList_div_33_9_Template, 1, 0, null, 14);
+    ɵɵtemplate(8, PickList_div_33__svg_svg_8_Template, 1, 1, "svg", 18)(9, PickList_div_33_9_Template, 1, 0, null, 16);
     ɵɵelementEnd();
-    ɵɵelementStart(10, "button", 11);
+    ɵɵelementStart(10, "button", 12);
     ɵɵlistener("click", function PickList_div_33_Template_button_click_10_listener() {
       ɵɵrestoreView(_r13);
       const ctx_r2 = ɵɵnextContext();
       const targetlist_r14 = ɵɵreference(26);
       return ɵɵresetView(ctx_r2.moveBottom(targetlist_r14, ctx_r2.target, ctx_r2.selectedItemsTarget, ctx_r2.onTargetReorder, ctx_r2.TARGET_LIST));
     });
-    ɵɵtemplate(11, PickList_div_33__svg_svg_11_Template, 1, 1, "svg", 17)(12, PickList_div_33_12_Template, 1, 0, null, 14);
+    ɵɵtemplate(11, PickList_div_33__svg_svg_11_Template, 1, 1, "svg", 19)(12, PickList_div_33_12_Template, 1, 0, null, 16);
     ɵɵelementEnd()();
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext();
     ɵɵclassMap(ctx_r2.cx("targetControls"));
-    ɵɵattribute("data-pc-section", "targetControls")("data-pc-group-section", "controls");
+    ɵɵproperty("pBind", ctx_r2.ptm("targetControls"));
+    ɵɵattribute("data-pc-group-section", "controls");
     ɵɵadvance();
-    ɵɵproperty("disabled", ctx_r2.targetMoveDisabled())("buttonProps", ctx_r2.getButtonProps("moveup"));
-    ɵɵattribute("aria-label", ctx_r2.moveUpAriaLabel)("data-pc-section", "targetMoveUpButton");
+    ɵɵproperty("disabled", ctx_r2.targetMoveDisabled())("buttonProps", ctx_r2.getButtonProps("moveup"))("pt", ctx_r2.ptm("pcTargetMoveUpButton"));
+    ɵɵattribute("aria-label", ctx_r2.moveUpAriaLabel);
     ɵɵadvance();
     ɵɵproperty("ngIf", !ctx_r2.moveUpIconTemplate && !ctx_r2._moveUpIconTemplate);
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r2.moveUpIconTemplate || ctx_r2._moveUpIconTemplate);
     ɵɵadvance();
-    ɵɵproperty("disabled", ctx_r2.targetMoveDisabled())("buttonProps", ctx_r2.getButtonProps("movetop"));
-    ɵɵattribute("aria-label", ctx_r2.moveTopAriaLabel)("data-pc-section", "targetMoveTopButton");
+    ɵɵproperty("disabled", ctx_r2.targetMoveDisabled())("buttonProps", ctx_r2.getButtonProps("movetop"))("pt", ctx_r2.ptm("pcTargetMoveTopButton"));
+    ɵɵattribute("aria-label", ctx_r2.moveTopAriaLabel);
     ɵɵadvance();
     ɵɵproperty("ngIf", !ctx_r2.moveTopIconTemplate && !ctx_r2._moveTopIconTemplate);
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r2.moveTopIconTemplate || ctx_r2.moveTopIconTemplate);
     ɵɵadvance();
-    ɵɵproperty("disabled", ctx_r2.targetMoveDisabled())("buttonProps", ctx_r2.getButtonProps("movedown"));
-    ɵɵattribute("aria-label", ctx_r2.moveDownAriaLabel)("data-pc-section", "targetMoveDownButton");
+    ɵɵproperty("disabled", ctx_r2.targetMoveDisabled())("buttonProps", ctx_r2.getButtonProps("movedown"))("pt", ctx_r2.ptm("pcTargetMoveDownButton"));
+    ɵɵattribute("aria-label", ctx_r2.moveDownAriaLabel);
     ɵɵadvance();
     ɵɵproperty("ngIf", !ctx_r2.moveDownIconTemplate && !ctx_r2._moveDownIconTemplate);
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r2.moveDownIconTemplate || ctx_r2._moveDownIconTemplate);
     ɵɵadvance();
-    ɵɵproperty("disabled", ctx_r2.targetMoveDisabled())("buttonProps", ctx_r2.getButtonProps("movebottom"));
-    ɵɵattribute("aria-label", ctx_r2.moveBottomAriaLabel)("data-pc-section", "targetMoveBottomButton");
+    ɵɵproperty("disabled", ctx_r2.targetMoveDisabled())("buttonProps", ctx_r2.getButtonProps("movebottom"))("pt", ctx_r2.ptm("pcTargetMoveBottomButton"));
+    ɵɵattribute("aria-label", ctx_r2.moveBottomAriaLabel);
     ɵɵadvance();
     ɵɵproperty("ngIf", !ctx_r2.moveBottomIconTemplate && !ctx_r2._moveBottomIconTemplate);
     ɵɵadvance();
@@ -899,7 +923,7 @@ var classes = {
 };
 var PickListStyle = class _PickListStyle extends BaseStyle {
   name = "picklist";
-  theme = style;
+  style = style;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵPickListStyle_BaseFactory;
@@ -926,7 +950,19 @@ var PickListClasses;
   PickListClasses2["targetListContainer"] = "p-picklist-target-list-container";
   PickListClasses2["targetControls"] = "p-picklist-target-controls";
 })(PickListClasses || (PickListClasses = {}));
+var PICKLIST_INSTANCE = new InjectionToken("PICKLIST_INSTANCE");
 var PickList = class _PickList extends BaseComponent {
+  hostName = "";
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  $pcPickList = inject(PICKLIST_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptm("host"));
+  }
   /**
    * An array of objects for the source list.
    * @group Props
@@ -937,6 +973,11 @@ var PickList = class _PickList extends BaseComponent {
    * @group Props
    */
   target;
+  /**
+   * Name of the field that uniquely identifies the options.
+   * @group Props
+   */
+  dataKey;
   /**
    * Text for the source list caption
    * @group Props
@@ -987,6 +1028,16 @@ var PickList = class _PickList extends BaseComponent {
    * @group Props
    */
   bottomButtonAriaLabel;
+  /**
+   * Defines a string that labels the source list.
+   * @group Props
+   */
+  sourceAriaLabel;
+  /**
+   * Defines a string that labels the target list.
+   * @group Props
+   */
+  targetAriaLabel;
   /**
    * Text for the target list caption
    * @group Props
@@ -1347,8 +1398,7 @@ var PickList = class _PickList extends BaseComponent {
   _componentStyle = inject(PickListStyle);
   mediaChangeListener;
   filterService = inject(FilterService);
-  ngOnInit() {
-    super.ngOnInit();
+  onInit() {
     if (this.responsive) {
       this.createStyle();
       this.initMedia();
@@ -1479,7 +1529,7 @@ var PickList = class _PickList extends BaseComponent {
   _moveAllToSourceIconTemplate;
   _targetFilterIconTemplate;
   _sourceFilterIconTemplate;
-  ngAfterContentInit() {
+  onAfterContentInit() {
     this.templates.forEach((item) => {
       switch (item.getType()) {
         case "item":
@@ -1633,18 +1683,18 @@ var PickList = class _PickList extends BaseComponent {
     this.itemTouched = true;
   }
   sortByIndexInList(items, list) {
-    return items.sort((item1, item2) => C(item1, list) - C(item2, list));
+    return items.sort((item1, item2) => h(item1, list) - h(item2, list));
   }
   triggerChangeDetection() {
-    this.source = [...this.source];
-    this.target = [...this.target];
+    this.source = [...this.source || []];
+    this.target = [...this.target || []];
   }
   moveUp(listElement, list, selectedItems, callback, listType) {
     if (selectedItems && selectedItems.length) {
       selectedItems = this.sortByIndexInList(selectedItems, list);
       for (let i = 0; i < selectedItems.length; i++) {
         let selectedItem = selectedItems[i];
-        let selectedItemIndex = C(selectedItem, list);
+        let selectedItemIndex = h(selectedItem, list);
         if (selectedItemIndex != 0) {
           let movedItem = list[selectedItemIndex];
           let temp = list[selectedItemIndex - 1];
@@ -1668,7 +1718,7 @@ var PickList = class _PickList extends BaseComponent {
       selectedItems = this.sortByIndexInList(selectedItems, list);
       for (let i = 0; i < selectedItems.length; i++) {
         let selectedItem = selectedItems[i];
-        let selectedItemIndex = C(selectedItem, list);
+        let selectedItemIndex = h(selectedItem, list);
         if (selectedItemIndex != 0) {
           let movedItem = list.splice(selectedItemIndex, 1)[0];
           list.unshift(movedItem);
@@ -1689,7 +1739,7 @@ var PickList = class _PickList extends BaseComponent {
       selectedItems = this.sortByIndexInList(selectedItems, list);
       for (let i = selectedItems.length - 1; i >= 0; i--) {
         let selectedItem = selectedItems[i];
-        let selectedItemIndex = C(selectedItem, list);
+        let selectedItemIndex = h(selectedItem, list);
         if (selectedItemIndex != list.length - 1) {
           let movedItem = list[selectedItemIndex];
           let temp = list[selectedItemIndex + 1];
@@ -1713,7 +1763,7 @@ var PickList = class _PickList extends BaseComponent {
       selectedItems = this.sortByIndexInList(selectedItems, list);
       for (let i = selectedItems.length - 1; i >= 0; i--) {
         let selectedItem = selectedItems[i];
-        let selectedItemIndex = C(selectedItem, list);
+        let selectedItemIndex = h(selectedItem, list);
         if (selectedItemIndex != list.length - 1) {
           let movedItem = list.splice(selectedItemIndex, 1)[0];
           list.push(movedItem);
@@ -1734,10 +1784,10 @@ var PickList = class _PickList extends BaseComponent {
       let itemsToMove = [...this.selectedItemsSource];
       for (let i = 0; i < itemsToMove.length; i++) {
         let selectedItem = itemsToMove[i];
-        if (C(selectedItem, this.target) == -1) {
-          this.target?.push(this.source?.splice(C(selectedItem, this.source), 1)[0]);
+        if (h(selectedItem, this.target || []) == -1) {
+          this.target?.push(this.source?.splice(h(selectedItem, this.source), 1)[0]);
           if (this.visibleOptionsSource?.includes(selectedItem)) {
-            this.visibleOptionsSource.splice(C(selectedItem, this.visibleOptionsSource), 1);
+            this.visibleOptionsSource.splice(h(selectedItem, this.visibleOptionsSource), 1);
           }
         }
       }
@@ -1761,7 +1811,9 @@ var PickList = class _PickList extends BaseComponent {
       for (let i = 0; i < this.source.length; i++) {
         if (this.isItemVisible(this.source[i], this.SOURCE_LIST)) {
           let removedItem = this.source.splice(i, 1)[0];
-          this.target?.push(removedItem);
+          if (this.target) {
+            this.target = [...this.target, removedItem];
+          }
           movedItems.push(removedItem);
           i--;
         }
@@ -1785,10 +1837,10 @@ var PickList = class _PickList extends BaseComponent {
       let itemsToMove = [...this.selectedItemsTarget];
       for (let i = 0; i < itemsToMove.length; i++) {
         let selectedItem = itemsToMove[i];
-        if (C(selectedItem, this.source) == -1) {
-          this.source?.push(this.target?.splice(C(selectedItem, this.target), 1)[0]);
+        if (h(selectedItem, this.source || []) == -1) {
+          this.source?.push(this.target?.splice(h(selectedItem, this.target), 1)[0]);
           if (this.visibleOptionsTarget?.includes(selectedItem)) {
-            this.visibleOptionsTarget.splice(C(selectedItem, this.visibleOptionsTarget), 1)[0];
+            this.visibleOptionsTarget.splice(h(selectedItem, this.visibleOptionsTarget), 1)[0];
           }
         }
       }
@@ -1812,7 +1864,9 @@ var PickList = class _PickList extends BaseComponent {
       for (let i = 0; i < this.target.length; i++) {
         if (this.isItemVisible(this.target[i], this.TARGET_LIST)) {
           let removedItem = this.target.splice(i, 1)[0];
-          this.source?.push(removedItem);
+          if (this.source) {
+            this.source = [...this.source, removedItem];
+          }
           movedItems.push(removedItem);
           i--;
         }
@@ -1835,27 +1889,48 @@ var PickList = class _PickList extends BaseComponent {
     return this.findIndexInList(item, selectedItems) != -1;
   }
   findIndexInList(item, selectedItems) {
-    return C(item, selectedItems);
+    return h(item, selectedItems);
   }
   onDrop(event, listType) {
     let isTransfer = event.previousContainer !== event.container;
     let dropIndexes = this.getDropIndexes(event.previousIndex, event.currentIndex, listType, isTransfer, event.item.data);
     if (listType === this.SOURCE_LIST) {
       if (isTransfer) {
-        transferArrayItem(event.previousContainer.data, event.container.data, dropIndexes.previousIndex, dropIndexes.currentIndex);
-        let selectedItemIndex = C(event.item.data, this.selectedItemsTarget);
-        if (selectedItemIndex != -1) {
-          this.selectedItemsTarget.splice(selectedItemIndex, 1);
-          if (this.keepSelection) {
-            this.selectedItemsTarget.push(event.item.data);
+        let itemsToMove = [];
+        if (this.selectedItemsTarget && this.selectedItemsTarget.length > 0 && h(event.item.data, this.selectedItemsTarget) !== -1) {
+          itemsToMove = [...this.selectedItemsTarget];
+        } else {
+          itemsToMove = [event.item.data];
+        }
+        const sortedItems = this.sortByIndexInList(itemsToMove, this.target || []);
+        for (let item of sortedItems) {
+          const itemIndex = h(item, this.target || []);
+          if (itemIndex !== -1) {
+            this.target?.splice(itemIndex, 1);
           }
         }
-        if (this.visibleOptionsTarget) this.visibleOptionsTarget.splice(event.previousIndex, 1);
+        for (let i = 0; i < sortedItems.length; i++) {
+          this.source?.splice(dropIndexes.currentIndex + i, 0, sortedItems[i]);
+        }
+        this.selectedItemsTarget = [];
+        if (this.keepSelection) {
+          this.selectedItemsSource = [...this.selectedItemsSource, ...itemsToMove];
+        }
+        if (this.visibleOptionsTarget) {
+          for (let item of itemsToMove) {
+            const visibleIndex = h(item, this.visibleOptionsTarget);
+            if (visibleIndex !== -1) {
+              this.visibleOptionsTarget.splice(visibleIndex, 1);
+            }
+          }
+        }
         this.onMoveToSource.emit({
-          items: [event.item.data]
+          items: itemsToMove
         });
       } else {
-        moveItemInArray(event.container.data, dropIndexes.previousIndex, dropIndexes.currentIndex);
+        if (this.source) {
+          moveItemInArray(this.source, dropIndexes.previousIndex, dropIndexes.currentIndex);
+        }
         this.onSourceReorder.emit({
           items: [event.item.data]
         });
@@ -1865,20 +1940,41 @@ var PickList = class _PickList extends BaseComponent {
       }
     } else {
       if (isTransfer) {
-        transferArrayItem(event.previousContainer.data, event.container.data, dropIndexes.previousIndex, dropIndexes.currentIndex);
-        let selectedItemIndex = C(event.item.data, this.selectedItemsSource);
-        if (selectedItemIndex != -1) {
-          this.selectedItemsSource.splice(selectedItemIndex, 1);
-          if (this.keepSelection) {
-            this.selectedItemsTarget.push(event.item.data);
+        let itemsToMove = [];
+        if (this.selectedItemsSource && this.selectedItemsSource.length > 0 && h(event.item.data, this.selectedItemsSource) !== -1) {
+          itemsToMove = [...this.selectedItemsSource];
+        } else {
+          itemsToMove = [event.item.data];
+        }
+        const sortedItems = this.sortByIndexInList(itemsToMove, this.source || []);
+        for (let item of sortedItems) {
+          const itemIndex = h(item, this.source || []);
+          if (itemIndex !== -1) {
+            this.source?.splice(itemIndex, 1);
           }
         }
-        if (this.visibleOptionsSource) this.visibleOptionsSource.splice(event.previousIndex, 1);
+        for (let i = 0; i < sortedItems.length; i++) {
+          this.target?.splice(dropIndexes.currentIndex + i, 0, sortedItems[i]);
+        }
+        this.selectedItemsSource = [];
+        if (this.keepSelection) {
+          this.selectedItemsTarget = [...this.selectedItemsTarget, ...itemsToMove];
+        }
+        if (this.visibleOptionsSource) {
+          for (let item of itemsToMove) {
+            const visibleIndex = h(item, this.visibleOptionsSource);
+            if (visibleIndex !== -1) {
+              this.visibleOptionsSource.splice(visibleIndex, 1);
+            }
+          }
+        }
         this.onMoveToTarget.emit({
-          items: [event.item.data]
+          items: itemsToMove
         });
       } else {
-        moveItemInArray(event.container.data, dropIndexes.previousIndex, dropIndexes.currentIndex);
+        if (this.target) {
+          moveItemInArray(this.target, dropIndexes.previousIndex, dropIndexes.currentIndex);
+        }
         this.onTargetReorder.emit({
           items: [event.item.data]
         });
@@ -1887,6 +1983,10 @@ var PickList = class _PickList extends BaseComponent {
         this.filter(this.target, this.TARGET_LIST);
       }
     }
+    if (isTransfer) {
+      this.triggerChangeDetection();
+    }
+    this.cd.markForCheck();
   }
   onListFocus(event, listType) {
     this.onFocus.emit(event);
@@ -1921,11 +2021,11 @@ var PickList = class _PickList extends BaseComponent {
   getDropIndexes(fromIndex, toIndex, droppedList, isTransfer, data) {
     let previousIndex, currentIndex;
     if (droppedList === this.SOURCE_LIST) {
-      previousIndex = isTransfer ? this.filterValueTarget ? C(data, this.target) : fromIndex : this.filterValueSource ? C(data, this.source) : fromIndex;
-      currentIndex = this.filterValueSource ? this.findFilteredCurrentIndex(this.visibleOptionsSource, toIndex, this.source) : toIndex;
+      previousIndex = isTransfer ? this.filterValueTarget ? h(data, this.target || []) : fromIndex : this.filterValueSource ? h(data, this.source || []) : fromIndex;
+      currentIndex = this.filterValueSource ? this.findFilteredCurrentIndex(this.visibleOptionsSource || [], toIndex, this.source || []) : toIndex;
     } else {
-      previousIndex = isTransfer ? this.filterValueSource ? C(data, this.source) : fromIndex : this.filterValueTarget ? C(data, this.target) : fromIndex;
-      currentIndex = this.filterValueTarget ? this.findFilteredCurrentIndex(this.visibleOptionsTarget, toIndex, this.target) : toIndex;
+      previousIndex = isTransfer ? this.filterValueSource ? h(data, this.source || []) : fromIndex : this.filterValueTarget ? h(data, this.target || []) : fromIndex;
+      currentIndex = this.filterValueTarget ? this.findFilteredCurrentIndex(this.visibleOptionsTarget || [], toIndex, this.target || []) : toIndex;
     }
     return {
       previousIndex,
@@ -1934,10 +2034,10 @@ var PickList = class _PickList extends BaseComponent {
   }
   findFilteredCurrentIndex(visibleOptions, index, options) {
     if (visibleOptions.length === index) {
-      let toIndex = C(visibleOptions[index - 1], options);
+      let toIndex = h(visibleOptions[index - 1], options);
       return toIndex + 1;
     } else {
-      return C(visibleOptions[index], options);
+      return h(visibleOptions[index], options);
     }
   }
   resetSourceFilter() {
@@ -1956,8 +2056,8 @@ var PickList = class _PickList extends BaseComponent {
   }
   initMedia() {
     if (isPlatformBrowser(this.platformId)) {
-      this.media = this.document.defaultView.matchMedia(`(max-width: ${this.breakpoint})`);
-      this.viewChanged = this.media.matches;
+      this.media = this.document.defaultView?.matchMedia(`(max-width: ${this.breakpoint})`) || null;
+      this.viewChanged = this.media?.matches || false;
       this.bindMediaChangeListener();
     }
   }
@@ -1984,6 +2084,7 @@ var PickList = class _PickList extends BaseComponent {
         this.renderer.setAttribute(this.el.nativeElement.children[0], this.id, "");
         this.styleElement = this.renderer.createElement("style");
         this.renderer.setAttribute(this.styleElement, "type", "text/css");
+        _t(this.styleElement, "nonce", this.config?.csp()?.nonce);
         this.renderer.appendChild(this.document.head, this.styleElement);
         let innerHTML = `
                 @media screen and (max-width: ${this.breakpoint}) {
@@ -1996,7 +2097,7 @@ var PickList = class _PickList extends BaseComponent {
                     }
                 }`;
         this.renderer.setProperty(this.styleElement, "innerHTML", innerHTML);
-        Kt(this.styleElement, "nonce", this.config?.csp()?.nonce);
+        _t(this.styleElement, "nonce", this.config?.csp()?.nonce);
       }
     }
   }
@@ -2011,16 +2112,16 @@ var PickList = class _PickList extends BaseComponent {
     }
   }
   moveRightDisabled() {
-    return this.disabled || a(this.selectedItemsSource);
+    return this.disabled || l(this.selectedItemsSource);
   }
   moveLeftDisabled() {
-    return this.disabled || a(this.selectedItemsTarget);
+    return this.disabled || l(this.selectedItemsTarget);
   }
   moveAllRightDisabled() {
-    return this.disabled || a(this.source);
+    return this.disabled || l(this.source);
   }
   moveAllLeftDisabled() {
-    return this.disabled || a(this.target);
+    return this.disabled || l(this.target);
   }
   destroyStyle() {
     if (this.styleElement) {
@@ -2029,10 +2130,9 @@ var PickList = class _PickList extends BaseComponent {
       ``;
     }
   }
-  ngOnDestroy() {
+  onDestroy() {
     this.destroyStyle();
     this.destroyMedia();
-    super.ngOnDestroy();
   }
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵPickList_BaseFactory;
@@ -2067,27 +2167,27 @@ var PickList = class _PickList extends BaseComponent {
         ɵɵcontentQuery(dirIndex, PrimeTemplate, 4);
       }
       if (rf & 2) {
-        let _t;
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.itemTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.sourceHeaderTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.targetHeaderTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.sourceFilterTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.targetFilterTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.emptyMessageSourceTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.emptyFilterMessageSourceTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.emptyMessageTargetTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.emptyFilterMessageTargetTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.moveUpIconTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.moveTopIconTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.moveDownIconTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.moveBottomIconTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.moveToTargetIconTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.moveAllToTargetIconTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.moveToSourceIconTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.moveAllToSourceIconTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.targetFilterIconTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.sourceFilterIconTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.templates = _t);
+        let _t2;
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.itemTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.sourceHeaderTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.targetHeaderTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.sourceFilterTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.targetFilterTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.emptyMessageSourceTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.emptyFilterMessageSourceTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.emptyMessageTargetTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.emptyFilterMessageTargetTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.moveUpIconTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.moveTopIconTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.moveDownIconTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.moveBottomIconTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.moveToTargetIconTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.moveAllToTargetIconTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.moveToSourceIconTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.moveAllToSourceIconTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.targetFilterIconTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.sourceFilterIconTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.templates = _t2);
       }
     },
     viewQuery: function PickList_Query(rf, ctx) {
@@ -2098,16 +2198,18 @@ var PickList = class _PickList extends BaseComponent {
         ɵɵviewQuery(_c4, 5);
       }
       if (rf & 2) {
-        let _t;
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.listViewSourceChild = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.listViewTargetChild = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.sourceFilterViewChild = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.targetFilterViewChild = _t.first);
+        let _t2;
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.listViewSourceChild = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.listViewTargetChild = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.sourceFilterViewChild = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.targetFilterViewChild = _t2.first);
       }
     },
     inputs: {
+      hostName: "hostName",
       source: "source",
       target: "target",
+      dataKey: "dataKey",
       sourceHeader: "sourceHeader",
       tabindex: [2, "tabindex", "tabindex", numberAttribute],
       rightButtonAriaLabel: "rightButtonAriaLabel",
@@ -2118,6 +2220,8 @@ var PickList = class _PickList extends BaseComponent {
       downButtonAriaLabel: "downButtonAriaLabel",
       topButtonAriaLabel: "topButtonAriaLabel",
       bottomButtonAriaLabel: "bottomButtonAriaLabel",
+      sourceAriaLabel: "sourceAriaLabel",
+      targetAriaLabel: "targetAriaLabel",
       targetHeader: "targetHeader",
       responsive: [2, "responsive", "responsive", booleanAttribute],
       filterBy: "filterBy",
@@ -2172,16 +2276,22 @@ var PickList = class _PickList extends BaseComponent {
       onFocus: "onFocus",
       onBlur: "onBlur"
     },
-    features: [ɵɵProvidersFeature([PickListStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([PickListStyle, {
+      provide: PARENT_INSTANCE,
+      useExisting: _PickList
+    }, {
+      provide: PICKLIST_INSTANCE,
+      useExisting: _PickList
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     decls: 34,
-    vars: 103,
-    consts: [["sourcelist", ""], ["targetlist", ""], ["header", ""], ["filter", ""], ["item", ""], ["empty", ""], ["emptyfilter", ""], ["cdkDropListGroup", "", 3, "ngStyle"], [3, "class", 4, "ngIf"], ["optionLabel", "name", 3, "ngModelChange", "onFocus", "onBlur", "onChange", "onDblClick", "onDrop", "onFilter", "multiple", "options", "ngModel", "id", "listStyle", "striped", "tabindex", "disabled", "optionDisabled", "metaKeySelection", "scrollHeight", "autoOptionFocus", "filter", "filterBy", "filterLocale", "filterMatchMode", "filterPlaceHolder", "dragdrop"], [4, "ngIf"], ["type", "button", "pButton", "", "pRipple", "", "severity", "secondary", 3, "click", "disabled", "buttonProps"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], ["data-p-icon", "angle-up", "pButtonIcon", "", 4, "ngIf"], [4, "ngTemplateOutlet"], ["data-p-icon", "angle-double-up", "pButtonIcon", "", 4, "ngIf"], ["data-p-icon", "angle-down", "pButtonIcon", "", 4, "ngIf"], ["data-p-icon", "angle-double-down", "pButtonIcon", "", 4, "ngIf"], ["data-p-icon", "angle-up", "pButtonIcon", ""], ["data-p-icon", "angle-double-up", "pButtonIcon", ""], ["data-p-icon", "angle-down", "pButtonIcon", ""], ["data-p-icon", "angle-double-down", "pButtonIcon", ""], ["data-p-icon", "angle-right", "pButtonIcon", "", 4, "ngIf"], ["data-p-icon", "angle-right", "pButtonIcon", ""], ["data-p-icon", "angle-double-right", "pButtonIcon", "", 4, "ngIf"], ["data-p-icon", "angle-double-right", "pButtonIcon", ""], ["data-p-icon", "angle-left", "pButtonIcon", "", 4, "ngIf"], ["data-p-icon", "angle-left", "pButtonIcon", ""], ["data-p-icon", "angle-double-left", "pButtonIcon", "", 4, "ngIf"], ["data-p-icon", "angle-double-left", "pButtonIcon", ""], ["type", "button", "pButton", "", "pRipple", "", "severity", "secondary", 1, "p-button-icon-only", 3, "click", "disabled", "buttonProps"]],
+    vars: 112,
+    consts: [["sourcelist", ""], ["targetlist", ""], ["header", ""], ["filter", ""], ["item", ""], ["empty", ""], ["emptyfilter", ""], ["cdkDropListGroup", "", 3, "ngStyle", "pBind"], [3, "class", "pBind", 4, "ngIf"], [3, "pBind"], ["hostName", "picklist", 3, "ngModelChange", "onFocus", "onBlur", "onChange", "onDblClick", "onDrop", "onFilter", "ariaLabel", "multiple", "options", "ngModel", "optionLabel", "id", "listStyle", "striped", "tabindex", "disabled", "optionDisabled", "metaKeySelection", "scrollHeight", "autoOptionFocus", "filter", "filterBy", "filterLocale", "filterMatchMode", "filterPlaceHolder", "dragdrop", "dropListData", "pt"], [4, "ngIf"], ["type", "button", "pButton", "", "pRipple", "", "severity", "secondary", "hostName", "picklist", 3, "click", "disabled", "buttonProps", "pt"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], ["type", "button", "pButton", "", "pRipple", "", "severity", "secondary", 3, "click", "disabled", "buttonProps", "pt"], ["data-p-icon", "angle-up", "pButtonIcon", "", 3, "pt", 4, "ngIf"], [4, "ngTemplateOutlet"], ["data-p-icon", "angle-double-up", "pButtonIcon", "", 3, "pt", 4, "ngIf"], ["data-p-icon", "angle-down", "pButtonIcon", "", 3, "pt", 4, "ngIf"], ["data-p-icon", "angle-double-down", "pButtonIcon", "", 3, "pt", 4, "ngIf"], ["data-p-icon", "angle-up", "pButtonIcon", "", 3, "pt"], ["data-p-icon", "angle-double-up", "pButtonIcon", "", 3, "pt"], ["data-p-icon", "angle-down", "pButtonIcon", "", 3, "pt"], ["data-p-icon", "angle-double-down", "pButtonIcon", "", 3, "pt"], ["data-p-icon", "angle-right", "pButtonIcon", "", 3, "pt", 4, "ngIf"], ["data-p-icon", "angle-right", "pButtonIcon", "", 3, "pt"], ["data-p-icon", "angle-double-right", "pButtonIcon", "", 3, "pt", 4, "ngIf"], ["data-p-icon", "angle-double-right", "pButtonIcon", "", 3, "pt"], ["data-p-icon", "angle-left", "pButtonIcon", "", 3, "pt", 4, "ngIf"], ["data-p-icon", "angle-left", "pButtonIcon", "", 3, "pt"], ["data-p-icon", "angle-double-left", "pButtonIcon", "", 3, "pt", 4, "ngIf"], ["data-p-icon", "angle-double-left", "pButtonIcon", "", 3, "pt"], ["type", "button", "pButton", "", "pRipple", "", "severity", "secondary", "hostName", "picklist", 1, "p-button-icon-only", 3, "click", "disabled", "buttonProps", "pt"]],
     template: function PickList_Template(rf, ctx) {
       if (rf & 1) {
         const _r1 = ɵɵgetCurrentView();
         ɵɵelementStart(0, "div", 7);
         ɵɵtemplate(1, PickList_div_1_Template, 13, 28, "div", 8);
-        ɵɵelementStart(2, "div")(3, "p-listbox", 9, 0);
+        ɵɵelementStart(2, "div", 9)(3, "p-listbox", 10, 0);
         ɵɵtwoWayListener("ngModelChange", function PickList_Template_p_listbox_ngModelChange_3_listener($event) {
           ɵɵrestoreView(_r1);
           ɵɵtwoWayBindingSet(ctx.selectedItemsSource, $event) || (ctx.selectedItemsSource = $event);
@@ -2206,37 +2316,37 @@ var PickList = class _PickList extends BaseComponent {
           ɵɵrestoreView(_r1);
           return ɵɵresetView(ctx.onFilter($event.originalEvent, ctx.SOURCE_LIST));
         });
-        ɵɵtemplate(5, PickList_ng_container_5_Template, 3, 0, "ng-container", 10)(6, PickList_ng_container_6_Template, 3, 0, "ng-container", 10)(7, PickList_ng_container_7_Template, 2, 1, "ng-container", 10)(8, PickList_ng_container_8_Template, 3, 0, "ng-container", 10)(9, PickList_ng_container_9_Template, 3, 0, "ng-container", 10)(10, PickList_ng_container_10_Template, 3, 0, "ng-container", 10);
+        ɵɵtemplate(5, PickList_ng_container_5_Template, 3, 0, "ng-container", 11)(6, PickList_ng_container_6_Template, 3, 0, "ng-container", 11)(7, PickList_ng_container_7_Template, 2, 1, "ng-container", 11)(8, PickList_ng_container_8_Template, 3, 0, "ng-container", 11)(9, PickList_ng_container_9_Template, 3, 0, "ng-container", 11)(10, PickList_ng_container_10_Template, 3, 0, "ng-container", 11);
         ɵɵelementEnd()();
-        ɵɵelementStart(11, "div")(12, "button", 11);
+        ɵɵelementStart(11, "div", 9)(12, "button", 12);
         ɵɵlistener("click", function PickList_Template_button_click_12_listener() {
           ɵɵrestoreView(_r1);
           return ɵɵresetView(ctx.moveRight());
         });
-        ɵɵtemplate(13, PickList_ng_container_13_Template, 3, 2, "ng-container", 10)(14, PickList_14_Template, 1, 0, null, 12);
+        ɵɵtemplate(13, PickList_ng_container_13_Template, 3, 2, "ng-container", 11)(14, PickList_14_Template, 1, 0, null, 13);
         ɵɵelementEnd();
-        ɵɵelementStart(15, "button", 11);
+        ɵɵelementStart(15, "button", 14);
         ɵɵlistener("click", function PickList_Template_button_click_15_listener() {
           ɵɵrestoreView(_r1);
           return ɵɵresetView(ctx.moveAllRight());
         });
-        ɵɵtemplate(16, PickList_ng_container_16_Template, 3, 2, "ng-container", 10)(17, PickList_17_Template, 1, 0, null, 12);
+        ɵɵtemplate(16, PickList_ng_container_16_Template, 3, 2, "ng-container", 11)(17, PickList_17_Template, 1, 0, null, 13);
         ɵɵelementEnd();
-        ɵɵelementStart(18, "button", 11);
+        ɵɵelementStart(18, "button", 12);
         ɵɵlistener("click", function PickList_Template_button_click_18_listener() {
           ɵɵrestoreView(_r1);
           return ɵɵresetView(ctx.moveLeft());
         });
-        ɵɵtemplate(19, PickList_ng_container_19_Template, 3, 2, "ng-container", 10)(20, PickList_20_Template, 1, 0, null, 12);
+        ɵɵtemplate(19, PickList_ng_container_19_Template, 3, 2, "ng-container", 11)(20, PickList_20_Template, 1, 0, null, 13);
         ɵɵelementEnd();
-        ɵɵelementStart(21, "button", 11);
+        ɵɵelementStart(21, "button", 12);
         ɵɵlistener("click", function PickList_Template_button_click_21_listener() {
           ɵɵrestoreView(_r1);
           return ɵɵresetView(ctx.moveAllLeft());
         });
-        ɵɵtemplate(22, PickList_ng_container_22_Template, 3, 2, "ng-container", 10)(23, PickList_23_Template, 1, 0, null, 12);
+        ɵɵtemplate(22, PickList_ng_container_22_Template, 3, 2, "ng-container", 11)(23, PickList_23_Template, 1, 0, null, 13);
         ɵɵelementEnd()();
-        ɵɵelementStart(24, "div")(25, "p-listbox", 9, 1);
+        ɵɵelementStart(24, "div", 9)(25, "p-listbox", 10, 1);
         ɵɵtwoWayListener("ngModelChange", function PickList_Template_p_listbox_ngModelChange_25_listener($event) {
           ɵɵrestoreView(_r1);
           ɵɵtwoWayBindingSet(ctx.selectedItemsTarget, $event) || (ctx.selectedItemsTarget = $event);
@@ -2261,24 +2371,25 @@ var PickList = class _PickList extends BaseComponent {
           ɵɵrestoreView(_r1);
           return ɵɵresetView(ctx.onFilter($event.originalEvent, ctx.TARGET_LIST));
         });
-        ɵɵtemplate(27, PickList_ng_container_27_Template, 3, 0, "ng-container", 10)(28, PickList_ng_container_28_Template, 3, 0, "ng-container", 10)(29, PickList_ng_container_29_Template, 2, 1, "ng-container", 10)(30, PickList_ng_container_30_Template, 3, 0, "ng-container", 10)(31, PickList_ng_container_31_Template, 3, 0, "ng-container", 10)(32, PickList_ng_container_32_Template, 3, 0, "ng-container", 10);
+        ɵɵtemplate(27, PickList_ng_container_27_Template, 3, 0, "ng-container", 11)(28, PickList_ng_container_28_Template, 3, 0, "ng-container", 11)(29, PickList_ng_container_29_Template, 2, 1, "ng-container", 11)(30, PickList_ng_container_30_Template, 3, 0, "ng-container", 11)(31, PickList_ng_container_31_Template, 3, 0, "ng-container", 11)(32, PickList_ng_container_32_Template, 3, 0, "ng-container", 11);
         ɵɵelementEnd()();
         ɵɵtemplate(33, PickList_div_33_Template, 13, 28, "div", 8);
         ɵɵelementEnd();
       }
       if (rf & 2) {
         ɵɵclassMap(ctx.cn(ctx.cx("root"), ctx.styleClass));
-        ɵɵproperty("ngStyle", ctx.style);
-        ɵɵattribute("data-pc-name", "picklist")("data-pc-section", "root");
+        ɵɵproperty("ngStyle", ctx.style)("pBind", ctx.ptm("root"));
         ɵɵadvance();
         ɵɵproperty("ngIf", ctx.showSourceControls);
         ɵɵadvance();
         ɵɵclassMap(ctx.cx("sourceListContainer"));
-        ɵɵattribute("data-pc-section", "sourceWrapper")("data-pc-group-section", "listWrapper");
+        ɵɵproperty("pBind", ctx.ptm("sourceListContainer"));
+        ɵɵattribute("data-pc-group-section", "listcontainer");
         ɵɵadvance();
-        ɵɵproperty("multiple", true)("options", ctx.source);
+        ɵɵproperty("ariaLabel", ctx.sourceAriaLabel)("multiple", true)("options", ctx.source);
         ɵɵtwoWayProperty("ngModel", ctx.selectedItemsSource);
-        ɵɵproperty("id", ctx.idSource + "_list")("listStyle", ctx.sourceStyle)("striped", ctx.stripedRows)("tabindex", ctx.tabindex)("disabled", ctx.disabled)("optionDisabled", ctx.sourceOptionDisabled)("metaKeySelection", ctx.metaKeySelection)("scrollHeight", ctx.scrollHeight)("autoOptionFocus", ctx.autoOptionFocus)("filter", ctx.filterBy)("filterBy", ctx.filterBy)("filterLocale", ctx.filterLocale)("filterMatchMode", ctx.filterMatchMode)("filterPlaceHolder", ctx.sourceFilterPlaceholder)("dragdrop", ctx.dragdrop);
+        ɵɵproperty("optionLabel", ctx.dataKey ?? "name")("id", ctx.idSource + "_list")("listStyle", ctx.sourceStyle)("striped", ctx.stripedRows)("tabindex", ctx.tabindex)("disabled", ctx.disabled)("optionDisabled", ctx.sourceOptionDisabled)("metaKeySelection", ctx.metaKeySelection)("scrollHeight", ctx.scrollHeight)("autoOptionFocus", ctx.autoOptionFocus)("filter", ctx.filterBy)("filterBy", ctx.filterBy)("filterLocale", ctx.filterLocale)("filterMatchMode", ctx.filterMatchMode)("filterPlaceHolder", ctx.sourceFilterPlaceholder)("dragdrop", ctx.dragdrop)("dropListData", ctx.source)("pt", ctx.ptm("pcListbox"));
+        ɵɵattribute("data-pc-group-section", "list");
         ɵɵadvance(2);
         ɵɵproperty("ngIf", ctx.sourceHeaderTemplate || ctx._sourceHeaderTemplate || ctx.sourceHeader);
         ɵɵadvance();
@@ -2292,43 +2403,46 @@ var PickList = class _PickList extends BaseComponent {
         ɵɵadvance();
         ɵɵproperty("ngIf", ctx.emptyFilterMessageSourceTemplate || ctx._emptyFilterMessageSourceTemplate);
         ɵɵadvance();
-        ɵɵclassMap(ctx.cx("targetControls"));
-        ɵɵattribute("data-pc-section", "buttons")("data-pc-group-section", "controls");
+        ɵɵclassMap(ctx.cx("transferControls"));
+        ɵɵproperty("pBind", ctx.ptm("transferControls"));
+        ɵɵattribute("data-pc-group-section", "controls");
         ɵɵadvance();
-        ɵɵproperty("disabled", ctx.moveRightDisabled())("buttonProps", ctx.getButtonProps("movetotarget"));
-        ɵɵattribute("aria-label", ctx.moveToTargetAriaLabel)("data-pc-section", "moveToTargetButton");
+        ɵɵproperty("disabled", ctx.moveRightDisabled())("buttonProps", ctx.getButtonProps("movetotarget"))("pt", ctx.ptm("pcMoveToTargetButton"));
+        ɵɵattribute("aria-label", ctx.moveToTargetAriaLabel);
         ɵɵadvance();
         ɵɵproperty("ngIf", !ctx.moveToTargetIconTemplate && !ctx._moveToTargetIconTemplate);
         ɵɵadvance();
-        ɵɵproperty("ngTemplateOutlet", ctx.moveToTargetIconTemplate || ctx._moveToTargetIconTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(95, _c21, ctx.viewChanged));
+        ɵɵproperty("ngTemplateOutlet", ctx.moveToTargetIconTemplate || ctx._moveToTargetIconTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(104, _c21, ctx.viewChanged));
         ɵɵadvance();
-        ɵɵproperty("disabled", ctx.moveAllRightDisabled())("buttonProps", ctx.getButtonProps("movealltotarget"));
-        ɵɵattribute("aria-label", ctx.moveAllToTargetAriaLabel)("data-pc-section", "moveAllToTargetButton");
+        ɵɵproperty("disabled", ctx.moveAllRightDisabled())("buttonProps", ctx.getButtonProps("movealltotarget"))("pt", ctx.ptm("pcMoveAllToTargetButton"));
+        ɵɵattribute("aria-label", ctx.moveAllToTargetAriaLabel);
         ɵɵadvance();
         ɵɵproperty("ngIf", !ctx.moveAllToTargetIconTemplate && !ctx._moveAllToTargetIconTemplate);
         ɵɵadvance();
-        ɵɵproperty("ngTemplateOutlet", ctx.moveAllToTargetIconTemplate || ctx._moveAllToTargetIconTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(97, _c21, ctx.viewChanged));
+        ɵɵproperty("ngTemplateOutlet", ctx.moveAllToTargetIconTemplate || ctx._moveAllToTargetIconTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(106, _c21, ctx.viewChanged));
         ɵɵadvance();
-        ɵɵproperty("disabled", ctx.moveLeftDisabled())("buttonProps", ctx.getButtonProps("movetosource"));
-        ɵɵattribute("aria-label", ctx.moveToSourceAriaLabel)("data-pc-section", "moveToSourceButton");
+        ɵɵproperty("disabled", ctx.moveLeftDisabled())("buttonProps", ctx.getButtonProps("movetosource"))("pt", ctx.ptm("pcMoveToSourceButton"));
+        ɵɵattribute("aria-label", ctx.moveToSourceAriaLabel);
         ɵɵadvance();
         ɵɵproperty("ngIf", !ctx.moveToSourceIconTemplate && !ctx._moveToSourceIconTemplate);
         ɵɵadvance();
-        ɵɵproperty("ngTemplateOutlet", ctx.moveToSourceIconTemplate || ctx._moveToSourceIconTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(99, _c21, ctx.viewChanged));
+        ɵɵproperty("ngTemplateOutlet", ctx.moveToSourceIconTemplate || ctx._moveToSourceIconTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(108, _c21, ctx.viewChanged));
         ɵɵadvance();
-        ɵɵproperty("disabled", ctx.moveAllLeftDisabled())("buttonProps", ctx.getButtonProps("movealltosource"));
-        ɵɵattribute("aria-label", ctx.moveAllToSourceAriaLabel)("data-pc-section", "moveAllToSourceButton");
+        ɵɵproperty("disabled", ctx.moveAllLeftDisabled())("buttonProps", ctx.getButtonProps("movealltosource"))("pt", ctx.ptm("pcMoveAllToSourceButton"));
+        ɵɵattribute("aria-label", ctx.moveAllToSourceAriaLabel);
         ɵɵadvance();
         ɵɵproperty("ngIf", !ctx.moveAllToSourceIconTemplate && !ctx._moveAllToSourceIconTemplate);
         ɵɵadvance();
-        ɵɵproperty("ngTemplateOutlet", ctx.moveAllToSourceIconTemplate || ctx._moveAllToSourceIconTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(101, _c21, ctx.viewChanged));
+        ɵɵproperty("ngTemplateOutlet", ctx.moveAllToSourceIconTemplate || ctx._moveAllToSourceIconTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(110, _c21, ctx.viewChanged));
         ɵɵadvance();
         ɵɵclassMap(ctx.cx("targetListContainer"));
-        ɵɵattribute("data-pc-section", "targetWrapper")("data-pc-group-section", "listwrapper");
+        ɵɵproperty("pBind", ctx.ptm("targetListContainer"));
+        ɵɵattribute("data-pc-group-section", "listcontainer");
         ɵɵadvance();
-        ɵɵproperty("multiple", true)("options", ctx.target);
+        ɵɵproperty("ariaLabel", ctx.targetAriaLabel)("multiple", true)("options", ctx.target);
         ɵɵtwoWayProperty("ngModel", ctx.selectedItemsTarget);
-        ɵɵproperty("id", ctx.idTarget + "_list")("listStyle", ctx.targetStyle)("striped", ctx.stripedRows)("tabindex", ctx.tabindex)("disabled", ctx.disabled)("optionDisabled", ctx.targetOptionDisabled)("metaKeySelection", ctx.metaKeySelection)("scrollHeight", ctx.scrollHeight)("autoOptionFocus", ctx.autoOptionFocus)("filter", ctx.filterBy)("filterBy", ctx.filterBy)("filterLocale", ctx.filterLocale)("filterMatchMode", ctx.filterMatchMode)("filterPlaceHolder", ctx.targetFilterPlaceholder)("dragdrop", ctx.dragdrop);
+        ɵɵproperty("optionLabel", ctx.dataKey ?? "name")("id", ctx.idTarget + "_list")("listStyle", ctx.targetStyle)("striped", ctx.stripedRows)("tabindex", ctx.tabindex)("disabled", ctx.disabled)("optionDisabled", ctx.targetOptionDisabled)("metaKeySelection", ctx.metaKeySelection)("scrollHeight", ctx.scrollHeight)("autoOptionFocus", ctx.autoOptionFocus)("filter", ctx.filterBy)("filterBy", ctx.filterBy)("filterLocale", ctx.filterLocale)("filterMatchMode", ctx.filterMatchMode)("filterPlaceHolder", ctx.targetFilterPlaceholder)("dragdrop", ctx.dragdrop)("dropListData", ctx.target)("pt", ctx.ptm("pcListbox"));
+        ɵɵattribute("data-pc-group-section", "list");
         ɵɵadvance(2);
         ɵɵproperty("ngIf", ctx.targetHeaderTemplate || ctx._targetHeaderTemplate || ctx.targetHeader);
         ɵɵadvance();
@@ -2345,7 +2459,7 @@ var PickList = class _PickList extends BaseComponent {
         ɵɵproperty("ngIf", ctx.showTargetControls);
       }
     },
-    dependencies: [CommonModule, NgIf, NgTemplateOutlet, NgStyle, ButtonModule, ButtonDirective, ButtonIcon, Ripple, DragDropModule, CdkDropListGroup, AngleDoubleDownIcon, AngleDoubleLeftIcon, AngleDoubleRightIcon, AngleDoubleUpIcon, AngleDownIcon, AngleLeftIcon, AngleRightIcon, AngleUpIcon, Listbox, FormsModule, NgControlStatus, NgModel, SharedModule],
+    dependencies: [CommonModule, NgIf, NgTemplateOutlet, NgStyle, ButtonModule, ButtonDirective, ButtonIcon, Ripple, DragDropModule, CdkDropListGroup, AngleDoubleDownIcon, AngleDoubleLeftIcon, AngleDoubleRightIcon, AngleDoubleUpIcon, AngleDownIcon, AngleLeftIcon, AngleRightIcon, AngleUpIcon, Listbox, FormsModule, NgControlStatus, NgModel, SharedModule, BindModule, Bind],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -2356,10 +2470,10 @@ var PickList = class _PickList extends BaseComponent {
     args: [{
       selector: "p-pickList, p-picklist, p-pick-list",
       standalone: true,
-      imports: [CommonModule, ButtonModule, Ripple, DragDropModule, AngleDoubleDownIcon, AngleDoubleLeftIcon, AngleDoubleRightIcon, AngleDoubleUpIcon, AngleDownIcon, AngleLeftIcon, AngleRightIcon, AngleUpIcon, Listbox, FormsModule, SharedModule],
+      imports: [CommonModule, ButtonModule, Ripple, DragDropModule, AngleDoubleDownIcon, AngleDoubleLeftIcon, AngleDoubleRightIcon, AngleDoubleUpIcon, AngleDownIcon, AngleLeftIcon, AngleRightIcon, AngleUpIcon, Listbox, FormsModule, SharedModule, BindModule],
       template: `
-        <div [ngStyle]="style" [class]="cn(cx('root'), styleClass)" cdkDropListGroup [attr.data-pc-name]="'picklist'" [attr.data-pc-section]="'root'">
-            <div [class]="cx('sourceControls')" *ngIf="showSourceControls" [attr.data-pc-section]="'sourceControls'" [attr.data-pc-group-section]="'controls'">
+        <div [ngStyle]="style" [class]="cn(cx('root'), styleClass)" cdkDropListGroup [pBind]="ptm('root')">
+            <div [class]="cx('sourceControls')" *ngIf="showSourceControls" [pBind]="ptm('sourceControls')" [attr.data-pc-group-section]="'controls'">
                 <button
                     type="button"
                     [attr.aria-label]="moveUpAriaLabel"
@@ -2368,10 +2482,10 @@ var PickList = class _PickList extends BaseComponent {
                     severity="secondary"
                     [disabled]="sourceMoveDisabled()"
                     (click)="moveUp(sourcelist, source, selectedItemsSource, onSourceReorder, SOURCE_LIST)"
-                    [attr.data-pc-section]="'sourceMoveUpButton'"
                     [buttonProps]="getButtonProps('moveup')"
+                    [pt]="ptm('pcSourceMoveUpButton')"
                 >
-                    <svg data-p-icon="angle-up" *ngIf="!moveUpIconTemplate && !_moveUpIconTemplate" [attr.data-pc-section]="'moveupicon'" pButtonIcon />
+                    <svg data-p-icon="angle-up" *ngIf="!moveUpIconTemplate && !_moveUpIconTemplate" [pt]="ptm('pcSourceMoveUpButton')['icon']" pButtonIcon />
                     <ng-template *ngTemplateOutlet="moveUpIconTemplate || _moveUpIconTemplate"></ng-template>
                 </button>
                 <button
@@ -2382,10 +2496,10 @@ var PickList = class _PickList extends BaseComponent {
                     severity="secondary"
                     [disabled]="sourceMoveDisabled()"
                     (click)="moveTop(sourcelist, source, selectedItemsSource, onSourceReorder, SOURCE_LIST)"
-                    [attr.data-pc-section]="'sourceMoveTopButton'"
                     [buttonProps]="getButtonProps('movetop')"
+                    [pt]="ptm('pcSourceMoveTopButton')"
                 >
-                    <svg data-p-icon="angle-double-up" *ngIf="!moveTopIconTemplate && !_moveTopIconTemplate" [attr.data-pc-section]="'movetopicon'" pButtonIcon />
+                    <svg data-p-icon="angle-double-up" *ngIf="!moveTopIconTemplate && !_moveTopIconTemplate" pButtonIcon [pt]="ptm('pcSourceMoveTopButton')['icon']" />
                     <ng-template *ngTemplateOutlet="moveTopIconTemplate || _moveTopIconTemplate"></ng-template>
                 </button>
                 <button
@@ -2396,10 +2510,11 @@ var PickList = class _PickList extends BaseComponent {
                     severity="secondary"
                     [disabled]="sourceMoveDisabled()"
                     (click)="moveDown(sourcelist, source, selectedItemsSource, onSourceReorder, SOURCE_LIST)"
-                    [attr.data-pc-section]="'sourceMoveDownButton'"
                     [buttonProps]="getButtonProps('movedown')"
+                    [pt]="ptm('pcSourceMoveDownButton')"
+                    hostName="picklist"
                 >
-                    <svg data-p-icon="angle-down" *ngIf="!moveDownIconTemplate && !_moveDownIconTemplate" [attr.data-pc-section]="'movedownicon'" pButtonIcon />
+                    <svg data-p-icon="angle-down" *ngIf="!moveDownIconTemplate && !_moveDownIconTemplate" pButtonIcon [pt]="ptm('pcSourceMoveDownButton')['icon']" />
                     <ng-template *ngTemplateOutlet="moveDownIconTemplate || _moveDownIconTemplate"></ng-template>
                 </button>
                 <button
@@ -2410,20 +2525,22 @@ var PickList = class _PickList extends BaseComponent {
                     severity="secondary"
                     [disabled]="sourceMoveDisabled()"
                     (click)="moveBottom(sourcelist, source, selectedItemsSource, onSourceReorder, SOURCE_LIST)"
-                    [attr.data-pc-section]="'sourceMoveBottomButton'"
                     [buttonProps]="getButtonProps('movebottom')"
+                    [pt]="ptm('pcSourceMoveBottomButton')"
+                    hostName="picklist"
                 >
-                    <svg data-p-icon="angle-double-down" *ngIf="!moveBottomIconTemplate || _moveBottomIconTemplate" [attr.data-pc-section]="'movebottomicon'" pButtonIcon />
+                    <svg data-p-icon="angle-double-down" *ngIf="!moveBottomIconTemplate || _moveBottomIconTemplate" pButtonIcon [pt]="ptm('pcSourceMoveBottomButton')['icon']" />
                     <ng-template *ngTemplateOutlet="moveBottomIconTemplate || _moveBottomIconTemplate"></ng-template>
                 </button>
             </div>
-            <div [class]="cx('sourceListContainer')" [attr.data-pc-section]="'sourceWrapper'" [attr.data-pc-group-section]="'listWrapper'">
+            <div [class]="cx('sourceListContainer')" [attr.data-pc-group-section]="'listcontainer'" [pBind]="ptm('sourceListContainer')">
                 <p-listbox
                     #sourcelist
+                    [ariaLabel]="sourceAriaLabel"
                     [multiple]="true"
                     [options]="source"
                     [(ngModel)]="selectedItemsSource"
-                    optionLabel="name"
+                    [optionLabel]="dataKey ?? 'name'"
                     [id]="idSource + '_list'"
                     [listStyle]="sourceStyle"
                     [striped]="stripedRows"
@@ -2443,8 +2560,12 @@ var PickList = class _PickList extends BaseComponent {
                     [filterMatchMode]="filterMatchMode"
                     [filterPlaceHolder]="sourceFilterPlaceholder"
                     [dragdrop]="dragdrop"
+                    [dropListData]="source"
                     (onDrop)="onDrop($event, SOURCE_LIST)"
                     (onFilter)="onFilter($event.originalEvent, SOURCE_LIST)"
+                    [pt]="ptm('pcListbox')"
+                    hostName="picklist"
+                    [attr.data-pc-group-section]="'list'"
                 >
                     <ng-container *ngIf="sourceHeaderTemplate || _sourceHeaderTemplate || sourceHeader">
                         <ng-template #header>
@@ -2477,7 +2598,7 @@ var PickList = class _PickList extends BaseComponent {
                     </ng-container>
                 </p-listbox>
             </div>
-            <div [class]="cx('targetControls')" [attr.data-pc-section]="'buttons'" [attr.data-pc-group-section]="'controls'">
+            <div [class]="cx('transferControls')" [attr.data-pc-group-section]="'controls'" [pBind]="ptm('transferControls')">
                 <button
                     type="button"
                     [attr.aria-label]="moveToTargetAriaLabel"
@@ -2486,12 +2607,13 @@ var PickList = class _PickList extends BaseComponent {
                     severity="secondary"
                     [disabled]="moveRightDisabled()"
                     (click)="moveRight()"
-                    [attr.data-pc-section]="'moveToTargetButton'"
                     [buttonProps]="getButtonProps('movetotarget')"
+                    [pt]="ptm('pcMoveToTargetButton')"
+                    hostName="picklist"
                 >
                     <ng-container *ngIf="!moveToTargetIconTemplate && !_moveToTargetIconTemplate">
-                        <svg data-p-icon="angle-right" *ngIf="!viewChanged" [attr.data-pc-section]="'movetotargeticon'" pButtonIcon />
-                        <svg data-p-icon="angle-down" *ngIf="viewChanged" [attr.data-pc-section]="'movetotargeticon'" pButtonIcon />
+                        <svg data-p-icon="angle-right" *ngIf="!viewChanged" pButtonIcon [pt]="ptm('pcMoveToTargetButton')['icon']" />
+                        <svg data-p-icon="angle-down" *ngIf="viewChanged" pButtonIcon [pt]="ptm('pcMoveToTargetButton')['icon']" />
                     </ng-container>
                     <ng-template *ngTemplateOutlet="moveToTargetIconTemplate || _moveToTargetIconTemplate; context: { $implicit: viewChanged }"></ng-template>
                 </button>
@@ -2503,12 +2625,12 @@ var PickList = class _PickList extends BaseComponent {
                     severity="secondary"
                     [disabled]="moveAllRightDisabled()"
                     (click)="moveAllRight()"
-                    [attr.data-pc-section]="'moveAllToTargetButton'"
                     [buttonProps]="getButtonProps('movealltotarget')"
+                    [pt]="ptm('pcMoveAllToTargetButton')"
                 >
                     <ng-container *ngIf="!moveAllToTargetIconTemplate && !_moveAllToTargetIconTemplate">
-                        <svg data-p-icon="angle-double-right" *ngIf="!viewChanged" [attr.data-pc-section]="'movealltotargeticon'" pButtonIcon />
-                        <svg data-p-icon="angle-double-down" *ngIf="viewChanged" [attr.data-pc-section]="'movealltotargeticon'" pButtonIcon />
+                        <svg data-p-icon="angle-double-right" *ngIf="!viewChanged" pButtonIcon [pt]="ptm('pcMoveAllToTargetButton')['icon']" />
+                        <svg data-p-icon="angle-double-down" *ngIf="viewChanged" pButtonIcon [pt]="ptm('pcMoveAllToTargetButton')['icon']" />
                     </ng-container>
                     <ng-template *ngTemplateOutlet="moveAllToTargetIconTemplate || _moveAllToTargetIconTemplate; context: { $implicit: viewChanged }"></ng-template>
                 </button>
@@ -2520,12 +2642,13 @@ var PickList = class _PickList extends BaseComponent {
                     severity="secondary"
                     [disabled]="moveLeftDisabled()"
                     (click)="moveLeft()"
-                    [attr.data-pc-section]="'moveToSourceButton'"
                     [buttonProps]="getButtonProps('movetosource')"
+                    [pt]="ptm('pcMoveToSourceButton')"
+                    hostName="picklist"
                 >
                     <ng-container *ngIf="!moveToSourceIconTemplate && !_moveToSourceIconTemplate">
-                        <svg data-p-icon="angle-left" *ngIf="!viewChanged" [attr.data-pc-section]="'movedownsourceticon'" pButtonIcon />
-                        <svg data-p-icon="angle-up" *ngIf="viewChanged" [attr.data-pc-section]="'movedownsourceticon'" pButtonIcon />
+                        <svg data-p-icon="angle-left" *ngIf="!viewChanged" pButtonIcon [pt]="ptm('pcMoveToSourceButton')['icon']" />
+                        <svg data-p-icon="angle-up" *ngIf="viewChanged" pButtonIcon [pt]="ptm('pcMoveToSourceButton')['icon']" />
                     </ng-container>
                     <ng-template *ngTemplateOutlet="moveToSourceIconTemplate || _moveToSourceIconTemplate; context: { $implicit: viewChanged }"></ng-template>
                 </button>
@@ -2537,23 +2660,25 @@ var PickList = class _PickList extends BaseComponent {
                     severity="secondary"
                     [disabled]="moveAllLeftDisabled()"
                     (click)="moveAllLeft()"
-                    [attr.data-pc-section]="'moveAllToSourceButton'"
                     [buttonProps]="getButtonProps('movealltosource')"
+                    [pt]="ptm('pcMoveAllToSourceButton')"
+                    hostName="picklist"
                 >
                     <ng-container *ngIf="!moveAllToSourceIconTemplate && !_moveAllToSourceIconTemplate">
-                        <svg data-p-icon="angle-double-left" *ngIf="!viewChanged" [attr.data-pc-section]="'movealltosourceticon'" pButtonIcon />
-                        <svg data-p-icon="angle-double-up" *ngIf="viewChanged" [attr.data-pc-section]="'movealltosourceticon'" pButtonIcon />
+                        <svg data-p-icon="angle-double-left" *ngIf="!viewChanged" pButtonIcon [pt]="ptm('pcMoveAllToSourceButton')['icon']" />
+                        <svg data-p-icon="angle-double-up" *ngIf="viewChanged" pButtonIcon [pt]="ptm('pcMoveAllToSourceButton')['icon']" />
                     </ng-container>
                     <ng-template *ngTemplateOutlet="moveAllToSourceIconTemplate || _moveAllToSourceIconTemplate; context: { $implicit: viewChanged }"></ng-template>
                 </button>
             </div>
-            <div [class]="cx('targetListContainer')" [attr.data-pc-section]="'targetWrapper'" [attr.data-pc-group-section]="'listwrapper'">
+            <div [class]="cx('targetListContainer')" [attr.data-pc-group-section]="'listcontainer'" [pBind]="ptm('targetListContainer')">
                 <p-listbox
                     #targetlist
+                    [ariaLabel]="targetAriaLabel"
                     [multiple]="true"
                     [options]="target"
                     [(ngModel)]="selectedItemsTarget"
-                    optionLabel="name"
+                    [optionLabel]="dataKey ?? 'name'"
                     [id]="idTarget + '_list'"
                     [listStyle]="targetStyle"
                     [striped]="stripedRows"
@@ -2573,8 +2698,12 @@ var PickList = class _PickList extends BaseComponent {
                     [filterMatchMode]="filterMatchMode"
                     [filterPlaceHolder]="targetFilterPlaceholder"
                     [dragdrop]="dragdrop"
+                    [dropListData]="target"
                     (onDrop)="onDrop($event, TARGET_LIST)"
                     (onFilter)="onFilter($event.originalEvent, TARGET_LIST)"
+                    [pt]="ptm('pcListbox')"
+                    [attr.data-pc-group-section]="'list'"
+                    hostName="picklist"
                 >
                     <ng-container *ngIf="targetHeaderTemplate || _targetHeaderTemplate || targetHeader">
                         <ng-template #header>
@@ -2607,7 +2736,7 @@ var PickList = class _PickList extends BaseComponent {
                     </ng-container>
                 </p-listbox>
             </div>
-            <div [class]="cx('targetControls')" *ngIf="showTargetControls" [attr.data-pc-section]="'targetControls'" [attr.data-pc-group-section]="'controls'">
+            <div [class]="cx('targetControls')" *ngIf="showTargetControls" [attr.data-pc-group-section]="'controls'" [pBind]="ptm('targetControls')">
                 <button
                     type="button"
                     [attr.aria-label]="moveUpAriaLabel"
@@ -2617,10 +2746,11 @@ var PickList = class _PickList extends BaseComponent {
                     class="p-button-icon-only"
                     [disabled]="targetMoveDisabled()"
                     (click)="moveUp(targetlist, target, selectedItemsTarget, onTargetReorder, TARGET_LIST)"
-                    [attr.data-pc-section]="'targetMoveUpButton'"
                     [buttonProps]="getButtonProps('moveup')"
+                    [pt]="ptm('pcTargetMoveUpButton')"
+                    hostName="picklist"
                 >
-                    <svg data-p-icon="angle-up" *ngIf="!moveUpIconTemplate && !_moveUpIconTemplate" [attr.data-pc-section]="'moveupicon'" pButtonIcon />
+                    <svg data-p-icon="angle-up" *ngIf="!moveUpIconTemplate && !_moveUpIconTemplate" pButtonIcon [pt]="ptm('pcTargetMoveUpButton')['icon']" />
                     <ng-template *ngTemplateOutlet="moveUpIconTemplate || _moveUpIconTemplate"></ng-template>
                 </button>
                 <button
@@ -2631,10 +2761,11 @@ var PickList = class _PickList extends BaseComponent {
                     severity="secondary"
                     [disabled]="targetMoveDisabled()"
                     (click)="moveTop(targetlist, target, selectedItemsTarget, onTargetReorder, TARGET_LIST)"
-                    [attr.data-pc-section]="'targetMoveTopButton'"
                     [buttonProps]="getButtonProps('movetop')"
+                    [pt]="ptm('pcTargetMoveTopButton')"
+                    hostName="picklist"
                 >
-                    <svg data-p-icon="angle-double-up" *ngIf="!moveTopIconTemplate && !_moveTopIconTemplate" [attr.data-pc-section]="'movetopicon'" pButtonIcon />
+                    <svg data-p-icon="angle-double-up" *ngIf="!moveTopIconTemplate && !_moveTopIconTemplate" pButtonIcon [pt]="ptm('pcTargetMoveTopButton')['icon']" />
                     <ng-template *ngTemplateOutlet="moveTopIconTemplate || moveTopIconTemplate"></ng-template>
                 </button>
                 <button
@@ -2645,10 +2776,11 @@ var PickList = class _PickList extends BaseComponent {
                     severity="secondary"
                     [disabled]="targetMoveDisabled()"
                     (click)="moveDown(targetlist, target, selectedItemsTarget, onTargetReorder, TARGET_LIST)"
-                    [attr.data-pc-section]="'targetMoveDownButton'"
                     [buttonProps]="getButtonProps('movedown')"
+                    [pt]="ptm('pcTargetMoveDownButton')"
+                    hostName="picklist"
                 >
-                    <svg data-p-icon="angle-down" *ngIf="!moveDownIconTemplate && !_moveDownIconTemplate" [attr.data-pc-section]="'movedownicon'" pButtonIcon />
+                    <svg data-p-icon="angle-down" *ngIf="!moveDownIconTemplate && !_moveDownIconTemplate" pButtonIcon [pt]="ptm('pcTargetMoveDownButton')['icon']" />
                     <ng-template *ngTemplateOutlet="moveDownIconTemplate || _moveDownIconTemplate"></ng-template>
                 </button>
                 <button
@@ -2659,10 +2791,11 @@ var PickList = class _PickList extends BaseComponent {
                     severity="secondary"
                     [disabled]="targetMoveDisabled()"
                     (click)="moveBottom(targetlist, target, selectedItemsTarget, onTargetReorder, TARGET_LIST)"
-                    [attr.data-pc-section]="'targetMoveBottomButton'"
                     [buttonProps]="getButtonProps('movebottom')"
+                    [pt]="ptm('pcTargetMoveBottomButton')"
+                    hostName="picklist"
                 >
-                    <svg data-p-icon="angle-double-down" *ngIf="!moveBottomIconTemplate && !_moveBottomIconTemplate" [attr.data-pc-section]="'movebottomicon'" pButtonIcon />
+                    <svg data-p-icon="angle-double-down" *ngIf="!moveBottomIconTemplate && !_moveBottomIconTemplate" pButtonIcon [pt]="ptm('pcTargetMoveBottomButton')['icon']" />
                     <ng-template *ngTemplateOutlet="moveBottomIconTemplate || _moveBottomIconTemplate"></ng-template>
                 </button>
             </div>
@@ -2670,13 +2803,26 @@ var PickList = class _PickList extends BaseComponent {
     `,
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
-      providers: [PickListStyle]
+      providers: [PickListStyle, {
+        provide: PARENT_INSTANCE,
+        useExisting: PickList
+      }, {
+        provide: PICKLIST_INSTANCE,
+        useExisting: PickList
+      }],
+      hostDirectives: [Bind]
     }]
   }], null, {
+    hostName: [{
+      type: Input
+    }],
     source: [{
       type: Input
     }],
     target: [{
+      type: Input
+    }],
+    dataKey: [{
       type: Input
     }],
     sourceHeader: [{
@@ -2710,6 +2856,12 @@ var PickList = class _PickList extends BaseComponent {
       type: Input
     }],
     bottomButtonAriaLabel: [{
+      type: Input
+    }],
+    sourceAriaLabel: [{
+      type: Input
+    }],
+    targetAriaLabel: [{
       type: Input
     }],
     targetHeader: [{

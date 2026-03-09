@@ -1,12 +1,18 @@
 import {
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
+import {
   BaseComponent
-} from "./chunk-4YMQ5OOY.js";
+} from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
-} from "./chunk-L2L2T6ID.js";
+} from "./chunk-4ATYD752.js";
 import {
   SharedModule
-} from "./chunk-ZKOTJBQ6.js";
+} from "./chunk-LMEEH3AJ.js";
+import "./chunk-GOP36Q47.js";
+import "./chunk-UCHM6OXG.js";
 import {
   CommonModule,
   isPlatformBrowser
@@ -25,6 +31,7 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵattribute,
@@ -36,18 +43,18 @@ import {
   ɵɵelementStart,
   ɵɵgetInheritedFactory,
   ɵɵlistener,
+  ɵɵproperty,
   ɵɵstyleMap
 } from "./chunk-EIF6IUR4.js";
 import {
+  InjectionToken,
   inject,
   ɵɵdefineInjectable,
   ɵɵdefineInjector
 } from "./chunk-LW34VNAR.js";
-import "./chunk-G6ECYYJH.js";
 import "./chunk-YVXMBCE5.js";
+import "./chunk-G6ECYYJH.js";
 import "./chunk-RTGP7ALM.js";
-import "./chunk-BMDSN43F.js";
-import "./chunk-RK2DVQNP.js";
 import {
   __spreadProps,
   __spreadValues
@@ -14379,9 +14386,20 @@ var ChartClasses;
 (function(ChartClasses2) {
   ChartClasses2["root"] = "p-chart";
 })(ChartClasses || (ChartClasses = {}));
+var CHART_INSTANCE = new InjectionToken("CHART_INSTANCE");
 var UIChart = class _UIChart extends BaseComponent {
   el;
   zone;
+  $pcChart = inject(CHART_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
+  }
   /**
    * Type of the chart.
    * @group Props
@@ -14455,8 +14473,7 @@ var UIChart = class _UIChart extends BaseComponent {
     this.el = el;
     this.zone = zone;
   }
-  ngAfterViewInit() {
-    super.ngAfterViewInit();
+  onAfterViewInit() {
     this.initChart();
     this.initialized = true;
   }
@@ -14516,8 +14533,7 @@ var UIChart = class _UIChart extends BaseComponent {
       this.initChart();
     }
   }
-  ngOnDestroy() {
-    super.ngOnDestroy();
+  onDestroy() {
     if (this.chart) {
       this.chart.destroy();
       this.initialized = false;
@@ -14551,10 +14567,13 @@ var UIChart = class _UIChart extends BaseComponent {
     outputs: {
       onDataSelect: "onDataSelect"
     },
-    features: [ɵɵProvidersFeature([ChartStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([ChartStyle, {
+      provide: CHART_INSTANCE,
+      useExisting: _UIChart
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     decls: 1,
-    vars: 4,
-    consts: [["role", "img", 3, "click"]],
+    vars: 5,
+    consts: [["role", "img", 3, "click", "pBind"]],
     template: function UIChart_Template(rf, ctx) {
       if (rf & 1) {
         ɵɵelementStart(0, "canvas", 0);
@@ -14564,10 +14583,11 @@ var UIChart = class _UIChart extends BaseComponent {
         ɵɵelementEnd();
       }
       if (rf & 2) {
+        ɵɵproperty("pBind", ctx.ptm("canvas"));
         ɵɵattribute("aria-label", ctx.ariaLabel)("aria-labelledby", ctx.ariaLabelledBy)("width", ctx.responsive && !ctx.width ? null : ctx.width)("height", ctx.responsive && !ctx.height ? null : ctx.height);
       }
     },
-    dependencies: [CommonModule, SharedModule],
+    dependencies: [CommonModule, SharedModule, BindModule, Bind],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -14578,9 +14598,17 @@ var UIChart = class _UIChart extends BaseComponent {
     args: [{
       selector: "p-chart",
       standalone: true,
-      imports: [CommonModule, SharedModule],
+      imports: [CommonModule, SharedModule, BindModule],
       template: `
-        <canvas role="img" [attr.aria-label]="ariaLabel" [attr.aria-labelledby]="ariaLabelledBy" [attr.width]="responsive && !width ? null : width" [attr.height]="responsive && !height ? null : height" (click)="onCanvasClick($event)"></canvas>
+        <canvas
+            role="img"
+            [attr.aria-label]="ariaLabel"
+            [attr.aria-labelledby]="ariaLabelledBy"
+            [attr.width]="responsive && !width ? null : width"
+            [attr.height]="responsive && !height ? null : height"
+            (click)="onCanvasClick($event)"
+            [pBind]="ptm('canvas')"
+        ></canvas>
     `,
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
@@ -14588,7 +14616,11 @@ var UIChart = class _UIChart extends BaseComponent {
         "[class]": "cx('root')",
         "[style]": "sx('root')"
       },
-      providers: [ChartStyle]
+      providers: [ChartStyle, {
+        provide: CHART_INSTANCE,
+        useExisting: UIChart
+      }],
+      hostDirectives: [Bind]
     }]
   }], () => [{
     type: ElementRef

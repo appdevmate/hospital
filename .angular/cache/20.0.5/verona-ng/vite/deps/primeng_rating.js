@@ -1,23 +1,36 @@
 import {
   BaseEditableHolder
-} from "./chunk-67V7CIUT.js";
-import "./chunk-5OCKW6BF.js";
+} from "./chunk-343RM6UZ.js";
+import "./chunk-2R7VQYSP.js";
 import {
   AutoFocus
-} from "./chunk-KOXUNDHI.js";
-import "./chunk-QVUTNZUY.js";
+} from "./chunk-YNLAOK3J.js";
+import "./chunk-S73J4WE3.js";
 import {
   StarFillIcon,
   StarIcon
-} from "./chunk-BIL3W6KN.js";
-import "./chunk-4YMQ5OOY.js";
+} from "./chunk-RHA7RL5K.js";
+import "./chunk-YXZQJBKH.js";
+import {
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
+import {
+  PARENT_INSTANCE
+} from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
-} from "./chunk-L2L2T6ID.js";
+} from "./chunk-4ATYD752.js";
 import {
   PrimeTemplate,
   SharedModule
-} from "./chunk-ZKOTJBQ6.js";
+} from "./chunk-LMEEH3AJ.js";
+import "./chunk-GOP36Q47.js";
+import {
+  bt,
+  s3 as s,
+  vt
+} from "./chunk-UCHM6OXG.js";
 import {
   NG_VALUE_ACCESSOR
 } from "./chunk-RZEKJVYA.js";
@@ -44,6 +57,7 @@ import {
   booleanAttribute,
   numberAttribute,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -69,6 +83,7 @@ import {
   ɵɵtemplate
 } from "./chunk-EIF6IUR4.js";
 import {
+  InjectionToken,
   forwardRef,
   inject,
   signal,
@@ -78,19 +93,13 @@ import {
   ɵɵresetView,
   ɵɵrestoreView
 } from "./chunk-LW34VNAR.js";
-import "./chunk-G6ECYYJH.js";
 import "./chunk-YVXMBCE5.js";
+import "./chunk-G6ECYYJH.js";
 import "./chunk-RTGP7ALM.js";
-import "./chunk-BMDSN43F.js";
-import {
-  bt,
-  s3 as s,
-  vt
-} from "./chunk-RK2DVQNP.js";
 import "./chunk-4MWRP73S.js";
 
 // node_modules/@primeuix/styles/dist/rating/index.mjs
-var style = "\n    .p-rating {\n        position: relative;\n        display: flex;\n        align-items: center;\n        gap: dt('rating.gap');\n    }\n\n    .p-rating-option {\n        display: inline-flex;\n        align-items: center;\n        cursor: pointer;\n        outline-color: transparent;\n        border-radius: 50%;\n        transition:\n            background dt('rating.transition.duration'),\n            color dt('rating.transition.duration'),\n            border-color dt('rating.transition.duration'),\n            outline-color dt('rating.transition.duration'),\n            box-shadow dt('rating.transition.duration');\n    }\n\n    .p-rating-option.p-focus-visible {\n        box-shadow: dt('rating.focus.ring.shadow');\n        outline: dt('rating.focus.ring.width') dt('rating.focus.ring.style') dt('rating.focus.ring.color');\n        outline-offset: dt('rating.focus.ring.offset');\n    }\n\n    .p-rating-icon {\n        color: dt('rating.icon.color');\n        transition:\n            background dt('rating.transition.duration'),\n            color dt('rating.transition.duration'),\n            border-color dt('rating.transition.duration'),\n            outline-color dt('rating.transition.duration'),\n            box-shadow dt('rating.transition.duration');\n        font-size: dt('rating.icon.size');\n        width: dt('rating.icon.size');\n        height: dt('rating.icon.size');\n    }\n\n    .p-rating:not(.p-disabled):not(.p-readonly) .p-rating-option:hover .p-rating-icon {\n        color: dt('rating.icon.hover.color');\n    }\n\n    .p-rating-option-active .p-rating-icon {\n        color: dt('rating.icon.active.color');\n    }\n\n    .p-rating-icon.p-invalid {\n        /* @todo */\n        stroke: dt('rating.invalid.icon.color');\n    }\n\n    .p-rating.p-readonly .p-rating-option {\n        cursor: not-allowed;\n    }\n";
+var style = "\n    .p-rating {\n        position: relative;\n        display: inline-flex;\n        align-items: center;\n        gap: dt('rating.gap');\n    }\n\n    .p-rating-option {\n        display: inline-flex;\n        align-items: center;\n        cursor: pointer;\n        outline-color: transparent;\n        border-radius: 50%;\n        transition:\n            background dt('rating.transition.duration'),\n            color dt('rating.transition.duration'),\n            border-color dt('rating.transition.duration'),\n            outline-color dt('rating.transition.duration'),\n            box-shadow dt('rating.transition.duration');\n    }\n\n    .p-rating-option.p-focus-visible {\n        box-shadow: dt('rating.focus.ring.shadow');\n        outline: dt('rating.focus.ring.width') dt('rating.focus.ring.style') dt('rating.focus.ring.color');\n        outline-offset: dt('rating.focus.ring.offset');\n    }\n\n    .p-rating-icon {\n        color: dt('rating.icon.color');\n        transition:\n            background dt('rating.transition.duration'),\n            color dt('rating.transition.duration'),\n            border-color dt('rating.transition.duration'),\n            outline-color dt('rating.transition.duration'),\n            box-shadow dt('rating.transition.duration');\n        font-size: dt('rating.icon.size');\n        width: dt('rating.icon.size');\n        height: dt('rating.icon.size');\n    }\n\n    .p-rating:not(.p-disabled):not(.p-readonly) .p-rating-option:hover .p-rating-icon {\n        color: dt('rating.icon.hover.color');\n    }\n\n    .p-rating-option-active .p-rating-icon {\n        color: dt('rating.icon.active.color');\n    }\n\n    .p-rating-icon.p-invalid {\n        /* @todo */\n        stroke: dt('rating.invalid.icon.color');\n    }\n\n    .p-rating.p-readonly .p-rating-option {\n        cursor: not-allowed;\n    }\n";
 
 // node_modules/primeng/fesm2022/primeng-rating.mjs
 var _c0 = ["onicon"];
@@ -125,8 +134,7 @@ function Rating_ng_template_0_Conditional_3_Conditional_1_span_0_Template(rf, ct
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(4);
     ɵɵclassMap(ctx_r2.cx("onIcon"));
-    ɵɵproperty("ngStyle", ctx_r2.iconOnStyle)("ngClass", ctx_r2.iconOnClass);
-    ɵɵattribute("data-pc-section", "onIcon");
+    ɵɵproperty("ngStyle", ctx_r2.iconOnStyle)("ngClass", ctx_r2.iconOnClass)("pBind", ctx_r2.ptm("onIcon"));
   }
 }
 function Rating_ng_template_0_Conditional_3_Conditional_1__svg_svg_1_Template(rf, ctx) {
@@ -137,8 +145,7 @@ function Rating_ng_template_0_Conditional_3_Conditional_1__svg_svg_1_Template(rf
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(4);
     ɵɵclassMap(ctx_r2.cx("onIcon"));
-    ɵɵproperty("ngStyle", ctx_r2.iconOnStyle);
-    ɵɵattribute("data-pc-section", "onIcon");
+    ɵɵproperty("ngStyle", ctx_r2.iconOnStyle)("pBind", ctx_r2.ptm("onIcon"));
   }
 }
 function Rating_ng_template_0_Conditional_3_Conditional_1_Template(rf, ctx) {
@@ -183,8 +190,7 @@ function Rating_ng_template_0_Conditional_4_Conditional_1_span_0_Template(rf, ct
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(4);
     ɵɵclassMap(ctx_r2.cx("offIcon"));
-    ɵɵproperty("ngStyle", ctx_r2.iconOffStyle)("ngClass", ctx_r2.iconOffClass);
-    ɵɵattribute("data-pc-section", "offIcon");
+    ɵɵproperty("ngStyle", ctx_r2.iconOffStyle)("ngClass", ctx_r2.iconOffClass)("pBind", ctx_r2.ptm("offIcon"));
   }
 }
 function Rating_ng_template_0_Conditional_4_Conditional_1__svg_svg_1_Template(rf, ctx) {
@@ -195,8 +201,7 @@ function Rating_ng_template_0_Conditional_4_Conditional_1__svg_svg_1_Template(rf
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(4);
     ɵɵclassMap(ctx_r2.cx("offIcon"));
-    ɵɵproperty("ngStyle", ctx_r2.iconOffStyle);
-    ɵɵattribute("data-pc-section", "offIcon");
+    ɵɵproperty("ngStyle", ctx_r2.iconOffStyle)("pBind", ctx_r2.ptm("offIcon"));
   }
 }
 function Rating_ng_template_0_Conditional_4_Conditional_1_Template(rf, ctx) {
@@ -249,17 +254,19 @@ function Rating_ng_template_0_Template(rf, ctx) {
   if (rf & 2) {
     const star_r2 = ctx.$implicit;
     const ctx_r2 = ɵɵnextContext();
-    ɵɵclassMap(ctx_r2.cx("option", ɵɵpureFunction2(13, _c2, star_r2, ctx_r2.value)));
+    ɵɵclassMap(ctx_r2.cx("option", ɵɵpureFunction2(16, _c2, star_r2, ctx_r2.value)));
+    ɵɵproperty("pBind", ctx_r2.ptm("option"));
     ɵɵadvance();
+    ɵɵproperty("pBind", ctx_r2.ptm("hiddenOptionInputContainer"));
     ɵɵattribute("data-p-hidden-accessible", true);
     ɵɵadvance();
-    ɵɵproperty("value", star_r2 + 1)("checked", ctx_r2.value === star_r2 + 1)("pAutoFocus", ctx_r2.autofocus);
+    ɵɵproperty("value", star_r2 + 1)("checked", ctx_r2.value === star_r2 + 1)("pAutoFocus", ctx_r2.autofocus)("pBind", ctx_r2.ptm("hiddenOptionInput"));
     ɵɵattribute("name", ctx_r2.name() || ctx_r2.nameattr + "_name")("value", ctx_r2.modelValue())("required", ctx_r2.required() ? "" : void 0)("readonly", ctx_r2.readonly ? "" : void 0)("disabled", ctx_r2.$disabled() ? "" : void 0)("aria-label", ctx_r2.starAriaLabel(star_r2 + 1));
     ɵɵadvance();
     ɵɵconditional(star_r2 + 1 <= ctx_r2.value ? 3 : 4);
   }
 }
-var theme = (
+var style2 = (
   /*css*/
   `
     ${style}
@@ -298,7 +305,7 @@ var classes = {
 };
 var RatingStyle = class _RatingStyle extends BaseStyle {
   name = "rating";
-  theme = theme;
+  style = style2;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵRatingStyle_BaseFactory;
@@ -323,12 +330,23 @@ var RatingClasses;
   RatingClasses2["onIcon"] = "p-rating-on-icon";
   RatingClasses2["offIcon"] = "p-rating-off-icon";
 })(RatingClasses || (RatingClasses = {}));
+var RATING_INSTANCE = new InjectionToken("RATING_INSTANCE");
 var RATING_VALUE_ACCESSOR = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => Rating),
   multi: true
 };
 var Rating = class _Rating extends BaseEditableHolder {
+  $pcRating = inject(RATING_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
+  }
   /**
    * When present, changing the value is not possible.
    * @group Props
@@ -403,15 +421,14 @@ var Rating = class _Rating extends BaseEditableHolder {
   _componentStyle = inject(RatingStyle);
   _onIconTemplate;
   _offIconTemplate;
-  ngOnInit() {
-    super.ngOnInit();
+  onInit() {
     this.nameattr = this.nameattr || s("pn_id_");
     this.starsArray = [];
     for (let i = 0; i < this.stars; i++) {
       this.starsArray[i] = i;
     }
   }
-  ngAfterContentInit() {
+  onAfterContentInit() {
     this.templates.forEach((item) => {
       switch (item.getType()) {
         case "onicon":
@@ -467,7 +484,7 @@ var Rating = class _Rating extends BaseEditableHolder {
     });
   }
   starAriaLabel(value) {
-    return value === 1 ? this.config.translation.aria.star : this.config.translation.aria.stars.replace(/{star}/g, value);
+    return value === 1 ? this.config.translation.aria?.star : this.config.translation.aria?.stars?.replace(/{star}/g, value);
   }
   getIconTemplate(i) {
     return !this.value || i >= this.value ? this.offIconTemplate || this._offIconTemplate : this.onIconTemplate || this.offIconTemplate;
@@ -507,10 +524,9 @@ var Rating = class _Rating extends BaseEditableHolder {
         ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.templates = _t);
       }
     },
-    hostVars: 4,
+    hostVars: 2,
     hostBindings: function Rating_HostBindings(rf, ctx) {
       if (rf & 2) {
-        ɵɵattribute("data-pc-name", "rating")("data-pc-section", "root");
         ɵɵclassMap(ctx.cx("root"));
       }
     },
@@ -528,19 +544,25 @@ var Rating = class _Rating extends BaseEditableHolder {
       onFocus: "onFocus",
       onBlur: "onBlur"
     },
-    features: [ɵɵProvidersFeature([RATING_VALUE_ACCESSOR, RatingStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([RATING_VALUE_ACCESSOR, RatingStyle, {
+      provide: RATING_INSTANCE,
+      useExisting: _Rating
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _Rating
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     decls: 1,
     vars: 1,
-    consts: [["ngFor", "", 3, "ngForOf"], [3, "click"], [1, "p-hidden-accessible"], ["type", "radio", 3, "focus", "blur", "change", "value", "checked", "pAutoFocus"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], [3, "class", "ngStyle", "ngClass", 4, "ngIf"], ["data-p-icon", "star-fill", 3, "ngStyle", "class", 4, "ngIf"], [3, "ngStyle", "ngClass"], ["data-p-icon", "star-fill", 3, "ngStyle"], ["data-p-icon", "star", 3, "ngStyle", "class", 4, "ngIf"], ["data-p-icon", "star", 3, "ngStyle"]],
+    consts: [["ngFor", "", 3, "ngForOf"], [3, "click", "pBind"], [1, "p-hidden-accessible", 3, "pBind"], ["type", "radio", 3, "focus", "blur", "change", "value", "checked", "pAutoFocus", "pBind"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], [3, "class", "ngStyle", "ngClass", "pBind", 4, "ngIf"], ["data-p-icon", "star-fill", 3, "ngStyle", "class", "pBind", 4, "ngIf"], [3, "ngStyle", "ngClass", "pBind"], ["data-p-icon", "star-fill", 3, "ngStyle", "pBind"], ["data-p-icon", "star", 3, "ngStyle", "class", "pBind", 4, "ngIf"], ["data-p-icon", "star", 3, "ngStyle", "pBind"]],
     template: function Rating_Template(rf, ctx) {
       if (rf & 1) {
-        ɵɵtemplate(0, Rating_ng_template_0_Template, 5, 16, "ng-template", 0);
+        ɵɵtemplate(0, Rating_ng_template_0_Template, 5, 19, "ng-template", 0);
       }
       if (rf & 2) {
         ɵɵproperty("ngForOf", ctx.starsArray);
       }
     },
-    dependencies: [CommonModule, NgClass, NgForOf, NgIf, NgTemplateOutlet, NgStyle, AutoFocus, StarFillIcon, StarIcon, SharedModule],
+    dependencies: [CommonModule, NgClass, NgForOf, NgIf, NgTemplateOutlet, NgStyle, AutoFocus, StarFillIcon, StarIcon, SharedModule, BindModule, Bind],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -550,12 +572,12 @@ var Rating = class _Rating extends BaseEditableHolder {
     type: Component,
     args: [{
       selector: "p-rating",
-      imports: [CommonModule, AutoFocus, StarFillIcon, StarIcon, SharedModule],
+      imports: [CommonModule, AutoFocus, StarFillIcon, StarIcon, SharedModule, BindModule],
       standalone: true,
       template: `
         <ng-template ngFor [ngForOf]="starsArray" let-star let-i="index">
-            <div [class]="cx('option', { star, value })" (click)="onOptionClick($event, star + 1)">
-                <span class="p-hidden-accessible" [attr.data-p-hidden-accessible]="true">
+            <div [class]="cx('option', { star, value })" (click)="onOptionClick($event, star + 1)" [pBind]="ptm('option')">
+                <span class="p-hidden-accessible" [attr.data-p-hidden-accessible]="true" [pBind]="ptm('hiddenOptionInputContainer')">
                     <input
                         type="radio"
                         [value]="star + 1"
@@ -570,34 +592,40 @@ var Rating = class _Rating extends BaseEditableHolder {
                         (blur)="onInputBlur($event)"
                         (change)="onChange($event, star + 1)"
                         [pAutoFocus]="autofocus"
+                        [pBind]="ptm('hiddenOptionInput')"
                     />
                 </span>
                 @if (star + 1 <= value) {
                     @if (onIconTemplate || _onIconTemplate) {
                         <ng-container *ngTemplateOutlet="onIconTemplate || _onIconTemplate; context: { $implicit: star + 1, class: cx('onIcon') }"></ng-container>
                     } @else {
-                        <span [class]="cx('onIcon')" *ngIf="iconOnClass" [ngStyle]="iconOnStyle" [ngClass]="iconOnClass" [attr.data-pc-section]="'onIcon'"></span>
-                        <svg data-p-icon="star-fill" *ngIf="!iconOnClass" [ngStyle]="iconOnStyle" [class]="cx('onIcon')" [attr.data-pc-section]="'onIcon'" />
+                        <span [class]="cx('onIcon')" *ngIf="iconOnClass" [ngStyle]="iconOnStyle" [ngClass]="iconOnClass" [pBind]="ptm('onIcon')"></span>
+                        <svg data-p-icon="star-fill" *ngIf="!iconOnClass" [ngStyle]="iconOnStyle" [class]="cx('onIcon')" [pBind]="ptm('onIcon')" />
                     }
                 } @else {
                     @if (offIconTemplate || _offIconTemplate) {
                         <ng-container *ngTemplateOutlet="offIconTemplate || _offIconTemplate; context: { $implicit: star + 1, class: cx('offIcon') }"></ng-container>
                     } @else {
-                        <span [class]="cx('offIcon')" *ngIf="iconOffClass" [ngStyle]="iconOffStyle" [ngClass]="iconOffClass" [attr.data-pc-section]="'offIcon'"></span>
-                        <svg data-p-icon="star" *ngIf="!iconOffClass" [ngStyle]="iconOffStyle" [class]="cx('offIcon')" [attr.data-pc-section]="'offIcon'" />
+                        <span [class]="cx('offIcon')" *ngIf="iconOffClass" [ngStyle]="iconOffStyle" [ngClass]="iconOffClass" [pBind]="ptm('offIcon')"></span>
+                        <svg data-p-icon="star" *ngIf="!iconOffClass" [ngStyle]="iconOffStyle" [class]="cx('offIcon')" [pBind]="ptm('offIcon')" />
                     }
                 }
             </div>
         </ng-template>
     `,
-      providers: [RATING_VALUE_ACCESSOR, RatingStyle],
+      providers: [RATING_VALUE_ACCESSOR, RatingStyle, {
+        provide: RATING_INSTANCE,
+        useExisting: Rating
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: Rating
+      }],
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
       host: {
-        "[class]": "cx('root')",
-        "[attr.data-pc-name]": "'rating'",
-        "[attr.data-pc-section]": "'root'"
-      }
+        "[class]": "cx('root')"
+      },
+      hostDirectives: [Bind]
     }]
   }], null, {
     readonly: [{

@@ -33,7 +33,12 @@ export const appRoutes: Routes = [
             {
                 path: 'documents',
                 data: { breadcrumb: 'Documents' },
-                loadComponent: () => import('@/components/documents/document-manager/document-manager').then(m => m.DocumentManagerComponent)
+                loadComponent: () => import('@/components/documents/document-manager/document-manager').then((m) => m.DocumentManagerComponent)
+            },
+            {
+                path: 'calendar',
+                data: { breadcrumb: 'Hospital Calendar' },
+                loadComponent: () => import('@/components/hospital-calendar/hospital-calendar').then((m) => m.HospitalCalendarComponent)
             },
             { path: 'user-profile', data: { breadcrumb: 'Profile' }, component: UserProfileComponent },
             { path: '', redirectTo: 'doctors-management', pathMatch: 'full' },

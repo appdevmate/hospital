@@ -1,43 +1,51 @@
 import {
   TieredMenu
-} from "./chunk-KG46XSN2.js";
+} from "./chunk-V7JCL77B.js";
 import {
   Tooltip,
   TooltipModule
-} from "./chunk-IRWYTOKA.js";
-import "./chunk-BB55NINM.js";
+} from "./chunk-NG66ICPZ.js";
 import {
   ButtonDirective
-} from "./chunk-2F4Z75VZ.js";
-import "./chunk-EGVFVLQK.js";
-import "./chunk-AXS7T3GQ.js";
-import "./chunk-6PBBDZZF.js";
+} from "./chunk-UM3VFPQ2.js";
+import "./chunk-PJRMHEN5.js";
 import {
   AutoFocus
-} from "./chunk-KOXUNDHI.js";
+} from "./chunk-YNLAOK3J.js";
+import "./chunk-S73J4WE3.js";
 import {
   Ripple
-} from "./chunk-VZLF74PJ.js";
-import "./chunk-QVUTNZUY.js";
+} from "./chunk-OC77X5LN.js";
 import {
   ChevronDownIcon
-} from "./chunk-BIL3W6KN.js";
-import "./chunk-Y35IOCZT.js";
+} from "./chunk-RHA7RL5K.js";
+import "./chunk-YXZQJBKH.js";
+import "./chunk-BB55NINM.js";
+import "./chunk-TENFQJBN.js";
 import {
-  BaseComponent
-} from "./chunk-4YMQ5OOY.js";
+  Bind
+} from "./chunk-MLQGRGGO.js";
+import {
+  BaseComponent,
+  PARENT_INSTANCE
+} from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
-} from "./chunk-L2L2T6ID.js";
+} from "./chunk-4ATYD752.js";
 import {
   PrimeTemplate,
   SharedModule
-} from "./chunk-ZKOTJBQ6.js";
+} from "./chunk-LMEEH3AJ.js";
+import "./chunk-GOP36Q47.js";
+import {
+  s3 as s
+} from "./chunk-UCHM6OXG.js";
+import "./chunk-EFY5GPDX.js";
 import "./chunk-6QGHQEN4.js";
 import "./chunk-53DGU4C2.js";
-import "./chunk-SRUCT75H.js";
-import "./chunk-L26I7UJA.js";
+import "./chunk-J5N23VJV.js";
 import "./chunk-3XGGEXNB.js";
+import "./chunk-L26I7UJA.js";
 import {
   CommonModule,
   NgIf,
@@ -59,6 +67,7 @@ import {
   booleanAttribute,
   numberAttribute,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -87,6 +96,7 @@ import {
   ɵɵviewQuery
 } from "./chunk-EIF6IUR4.js";
 import {
+  InjectionToken,
   inject,
   signal,
   ɵɵdefineInjectable,
@@ -95,13 +105,9 @@ import {
   ɵɵresetView,
   ɵɵrestoreView
 } from "./chunk-LW34VNAR.js";
-import "./chunk-G6ECYYJH.js";
 import "./chunk-YVXMBCE5.js";
+import "./chunk-G6ECYYJH.js";
 import "./chunk-RTGP7ALM.js";
-import "./chunk-BMDSN43F.js";
-import {
-  s3 as s
-} from "./chunk-RK2DVQNP.js";
 import "./chunk-4MWRP73S.js";
 
 // node_modules/@primeuix/styles/dist/splitbutton/index.mjs
@@ -135,7 +141,7 @@ function SplitButton_ng_container_0_Template(rf, ctx) {
     const ctx_r2 = ɵɵnextContext();
     ɵɵadvance();
     ɵɵclassMap(ctx_r2.cx("pcButton"));
-    ɵɵproperty("severity", ctx_r2.severity)("text", ctx_r2.text)("outlined", ctx_r2.outlined)("size", ctx_r2.size)("icon", ctx_r2.icon)("iconPos", ctx_r2.iconPos)("disabled", ctx_r2.disabled)("pAutoFocus", ctx_r2.autofocus)("pTooltip", ctx_r2.tooltip)("tooltipOptions", ctx_r2.tooltipOptions);
+    ɵɵproperty("severity", ctx_r2.severity)("text", ctx_r2.text)("outlined", ctx_r2.outlined)("size", ctx_r2.size)("icon", ctx_r2.icon)("iconPos", ctx_r2.iconPos)("disabled", ctx_r2.disabled)("pAutoFocus", ctx_r2.autofocus)("pTooltip", ctx_r2.tooltip)("tooltipOptions", ctx_r2.tooltipOptions)("pt", ctx_r2.ptm("pcButton"));
     ɵɵattribute("tabindex", ctx_r2.tabindex)("aria-label", (ctx_r2.buttonProps == null ? null : ctx_r2.buttonProps["ariaLabel"]) || ctx_r2.label);
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r2.contentTemplate || ctx_r2._contentTemplate);
@@ -155,7 +161,7 @@ function SplitButton_ng_template_1_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext();
     ɵɵclassMap(ctx_r2.cx("pcButton"));
-    ɵɵproperty("severity", ctx_r2.severity)("text", ctx_r2.text)("outlined", ctx_r2.outlined)("size", ctx_r2.size)("icon", ctx_r2.icon)("iconPos", ctx_r2.iconPos)("label", ctx_r2.label)("disabled", ctx_r2.buttonDisabled)("pAutoFocus", ctx_r2.autofocus)("pTooltip", ctx_r2.tooltip)("tooltipOptions", ctx_r2.tooltipOptions);
+    ɵɵproperty("severity", ctx_r2.severity)("text", ctx_r2.text)("outlined", ctx_r2.outlined)("size", ctx_r2.size)("icon", ctx_r2.icon)("iconPos", ctx_r2.iconPos)("label", ctx_r2.label)("disabled", ctx_r2.buttonDisabled)("pAutoFocus", ctx_r2.autofocus)("pTooltip", ctx_r2.tooltip)("tooltipOptions", ctx_r2.tooltipOptions)("pt", ctx_r2.ptm("pcButton"));
     ɵɵattribute("tabindex", ctx_r2.tabindex)("aria-label", ctx_r2.buttonProps == null ? null : ctx_r2.buttonProps["ariaLabel"]);
   }
 }
@@ -210,7 +216,7 @@ var classes = {
 };
 var SplitButtonStyle = class _SplitButtonStyle extends BaseStyle {
   name = "splitbutton";
-  theme = style;
+  style = style;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵSplitButtonStyle_BaseFactory;
@@ -234,7 +240,18 @@ var SplitButtonClasses;
   SplitButtonClasses2["pcButton"] = "p-splitbutton-button";
   SplitButtonClasses2["pcDropdown"] = "p-splitbutton-dropdown";
 })(SplitButtonClasses || (SplitButtonClasses = {}));
+var SPLITBUTTON_INSTANCE = new InjectionToken("SPLITBUTTON_INSTANCE");
 var SplitButton = class _SplitButton extends BaseComponent {
+  $pcSplitButton = inject(SPLITBUTTON_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
+  }
   /**
    * MenuModel instance to define the overlay items.
    * @group Props
@@ -364,9 +381,9 @@ var SplitButton = class _SplitButton extends BaseComponent {
    * @group Props
    */
   set disabled(v) {
-    this._disabled = v;
-    this.buttonDisabled = v;
-    this.menuButtonDisabled = v;
+    this._disabled = v ?? false;
+    this.buttonDisabled = v ?? false;
+    this.menuButtonDisabled = v ?? false;
   }
   get disabled() {
     return this._disabled;
@@ -429,11 +446,10 @@ var SplitButton = class _SplitButton extends BaseComponent {
   _componentStyle = inject(SplitButtonStyle);
   _contentTemplate;
   _dropdownIconTemplate;
-  ngOnInit() {
-    super.ngOnInit();
+  onInit() {
     this.ariaId = s("pn_id_");
   }
-  ngAfterContentInit() {
+  onAfterContentInit() {
     this.templates?.forEach((item) => {
       switch (item.getType()) {
         case "content":
@@ -449,8 +465,8 @@ var SplitButton = class _SplitButton extends BaseComponent {
     });
   }
   onDefaultButtonClick(event) {
-    this.onClick.emit(event);
-    this.menu.hide();
+    this.onClick?.emit(event);
+    this.menu?.hide();
   }
   onDropdownButtonClick(event) {
     this.onDropdownClick.emit(event);
@@ -549,14 +565,20 @@ var SplitButton = class _SplitButton extends BaseComponent {
       onMenuShow: "onMenuShow",
       onDropdownClick: "onDropdownClick"
     },
-    features: [ɵɵProvidersFeature([SplitButtonStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([SplitButtonStyle, {
+      provide: SPLITBUTTON_INSTANCE,
+      useExisting: _SplitButton
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _SplitButton
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     decls: 8,
-    vars: 24,
-    consts: [["defaultButton", ""], ["menu", ""], ["defaultbtn", ""], [4, "ngIf", "ngIfElse"], ["type", "button", "pButton", "", "pRipple", "", 3, "click", "keydown", "size", "severity", "text", "outlined", "disabled"], [3, "class", 4, "ngIf"], [4, "ngIf"], [3, "onHide", "onShow", "id", "popup", "model", "styleClass", "appendTo", "showTransitionOptions", "hideTransitionOptions"], ["type", "button", "pButton", "", "pRipple", "", 3, "click", "severity", "text", "outlined", "size", "icon", "iconPos", "disabled", "pAutoFocus", "pTooltip", "tooltipOptions"], [4, "ngTemplateOutlet"], ["type", "button", "pButton", "", "pRipple", "", 3, "click", "severity", "text", "outlined", "size", "icon", "iconPos", "label", "disabled", "pAutoFocus", "pTooltip", "tooltipOptions"], ["data-p-icon", "chevron-down", 4, "ngIf"], ["data-p-icon", "chevron-down"]],
+    vars: 26,
+    consts: [["defaultButton", ""], ["menu", ""], ["defaultbtn", ""], [4, "ngIf", "ngIfElse"], ["type", "button", "pButton", "", "pRipple", "", 3, "click", "keydown", "size", "severity", "text", "outlined", "disabled", "pt"], [3, "class", 4, "ngIf"], [4, "ngIf"], [3, "onHide", "onShow", "id", "popup", "model", "styleClass", "appendTo", "showTransitionOptions", "hideTransitionOptions", "pt"], ["type", "button", "pButton", "", "pRipple", "", 3, "click", "severity", "text", "outlined", "size", "icon", "iconPos", "disabled", "pAutoFocus", "pTooltip", "tooltipOptions", "pt"], [4, "ngTemplateOutlet"], ["type", "button", "pButton", "", "pRipple", "", 3, "click", "severity", "text", "outlined", "size", "icon", "iconPos", "label", "disabled", "pAutoFocus", "pTooltip", "tooltipOptions", "pt"], ["data-p-icon", "chevron-down", 4, "ngIf"], ["data-p-icon", "chevron-down"]],
     template: function SplitButton_Template(rf, ctx) {
       if (rf & 1) {
         const _r1 = ɵɵgetCurrentView();
-        ɵɵtemplate(0, SplitButton_ng_container_0_Template, 3, 15, "ng-container", 3)(1, SplitButton_ng_template_1_Template, 2, 15, "ng-template", null, 0, ɵɵtemplateRefExtractor);
+        ɵɵtemplate(0, SplitButton_ng_container_0_Template, 3, 16, "ng-container", 3)(1, SplitButton_ng_template_1_Template, 2, 16, "ng-template", null, 0, ɵɵtemplateRefExtractor);
         ɵɵelementStart(3, "button", 4);
         ɵɵlistener("click", function SplitButton_Template_button_click_3_listener($event) {
           ɵɵrestoreView(_r1);
@@ -582,7 +604,7 @@ var SplitButton = class _SplitButton extends BaseComponent {
         ɵɵproperty("ngIf", ctx.contentTemplate || ctx._contentTemplate)("ngIfElse", defaultButton_r5);
         ɵɵadvance(3);
         ɵɵclassMap(ctx.cx("pcDropdown"));
-        ɵɵproperty("size", ctx.size)("severity", ctx.severity)("text", ctx.text)("outlined", ctx.outlined)("disabled", ctx.menuButtonDisabled);
+        ɵɵproperty("size", ctx.size)("severity", ctx.severity)("text", ctx.text)("outlined", ctx.outlined)("disabled", ctx.menuButtonDisabled)("pt", ctx.ptm("pcDropdown"));
         ɵɵattribute("aria-label", (ctx.menuButtonProps == null ? null : ctx.menuButtonProps["ariaLabel"]) || ctx.expandAriaLabel)("aria-haspopup", (ctx.menuButtonProps == null ? null : ctx.menuButtonProps["ariaHasPopup"]) || true)("aria-expanded", (ctx.menuButtonProps == null ? null : ctx.menuButtonProps["ariaExpanded"]) || ctx.isExpanded())("aria-controls", (ctx.menuButtonProps == null ? null : ctx.menuButtonProps["ariaControls"]) || ctx.ariaId);
         ɵɵadvance();
         ɵɵproperty("ngIf", ctx.dropdownIcon);
@@ -590,7 +612,7 @@ var SplitButton = class _SplitButton extends BaseComponent {
         ɵɵproperty("ngIf", !ctx.dropdownIcon);
         ɵɵadvance();
         ɵɵstyleMap(ctx.menuStyle);
-        ɵɵproperty("id", ctx.ariaId)("popup", true)("model", ctx.model)("styleClass", ctx.menuStyleClass)("appendTo", ctx.appendTo)("showTransitionOptions", ctx.showTransitionOptions)("hideTransitionOptions", ctx.hideTransitionOptions);
+        ɵɵproperty("id", ctx.ariaId)("popup", true)("model", ctx.model)("styleClass", ctx.menuStyleClass)("appendTo", ctx.appendTo)("showTransitionOptions", ctx.showTransitionOptions)("hideTransitionOptions", ctx.hideTransitionOptions)("pt", ctx.ptm("pcMenu"));
       }
     },
     dependencies: [CommonModule, NgIf, NgTemplateOutlet, ButtonDirective, TieredMenu, AutoFocus, ChevronDownIcon, Ripple, TooltipModule, Tooltip, SharedModule],
@@ -625,6 +647,7 @@ var SplitButton = class _SplitButton extends BaseComponent {
                 [pAutoFocus]="autofocus"
                 [pTooltip]="tooltip"
                 [tooltipOptions]="tooltipOptions"
+                [pt]="ptm('pcButton')"
             >
                 <ng-container *ngTemplateOutlet="contentTemplate || _contentTemplate"></ng-container>
             </button>
@@ -650,6 +673,7 @@ var SplitButton = class _SplitButton extends BaseComponent {
                 [pAutoFocus]="autofocus"
                 [pTooltip]="tooltip"
                 [tooltipOptions]="tooltipOptions"
+                [pt]="ptm('pcButton')"
             ></button>
         </ng-template>
         <button
@@ -668,6 +692,7 @@ var SplitButton = class _SplitButton extends BaseComponent {
             [attr.aria-haspopup]="menuButtonProps?.['ariaHasPopup'] || true"
             [attr.aria-expanded]="menuButtonProps?.['ariaExpanded'] || isExpanded()"
             [attr.aria-controls]="menuButtonProps?.['ariaControls'] || ariaId"
+            [pt]="ptm('pcDropdown')"
         >
             <span *ngIf="dropdownIcon" [class]="dropdownIcon"></span>
             <ng-container *ngIf="!dropdownIcon">
@@ -687,14 +712,22 @@ var SplitButton = class _SplitButton extends BaseComponent {
             [hideTransitionOptions]="hideTransitionOptions"
             (onHide)="onHide()"
             (onShow)="onShow()"
+            [pt]="ptm('pcMenu')"
         ></p-tieredmenu>
     `,
       changeDetection: ChangeDetectionStrategy.OnPush,
-      providers: [SplitButtonStyle],
+      providers: [SplitButtonStyle, {
+        provide: SPLITBUTTON_INSTANCE,
+        useExisting: SplitButton
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: SplitButton
+      }],
       encapsulation: ViewEncapsulation.None,
       host: {
         "[class]": "cn(cx('root'), styleClass)"
-      }
+      },
+      hostDirectives: [Bind]
     }]
   }], null, {
     model: [{

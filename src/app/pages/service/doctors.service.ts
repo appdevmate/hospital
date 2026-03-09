@@ -11,6 +11,11 @@ export interface Doctor {
     insurance?: string;
     dob?: string;
     timestamp?: string | number;
+    dutyDays?: string[];
+    dutyStart?: string | null;
+    dutyEnd?: string | null;
+    department?: string;
+    specialization?: string;
 }
 
 export interface PagedDoctorsResponse {

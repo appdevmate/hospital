@@ -40,6 +40,11 @@ export class AppMenu {
             ]
         },
         {
+            label: 'Calendar',
+            icon: 'pi pi-calendar',
+            routerLink: ['/calendar']
+        },
+        {
             label: 'Document Control',
             icon: 'pi pi-folder',
             routerLink: ['/documents']

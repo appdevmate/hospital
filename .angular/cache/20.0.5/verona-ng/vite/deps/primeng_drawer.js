@@ -1,31 +1,46 @@
 import {
-  zindexutils
-} from "./chunk-BB55NINM.js";
+  FocusTrap,
+  FocusTrapModule
+} from "./chunk-PF7DN6OW.js";
 import {
   Button
-} from "./chunk-2F4Z75VZ.js";
-import "./chunk-EGVFVLQK.js";
-import "./chunk-AXS7T3GQ.js";
-import "./chunk-6PBBDZZF.js";
-import "./chunk-KOXUNDHI.js";
-import "./chunk-VZLF74PJ.js";
+} from "./chunk-UM3VFPQ2.js";
+import "./chunk-PJRMHEN5.js";
+import "./chunk-YNLAOK3J.js";
 import {
   blockBodyScroll,
   unblockBodyScroll
-} from "./chunk-QVUTNZUY.js";
+} from "./chunk-S73J4WE3.js";
+import "./chunk-OC77X5LN.js";
 import {
   TimesIcon
-} from "./chunk-BIL3W6KN.js";
+} from "./chunk-RHA7RL5K.js";
+import "./chunk-YXZQJBKH.js";
 import {
-  BaseComponent
-} from "./chunk-4YMQ5OOY.js";
+  zindexutils
+} from "./chunk-BB55NINM.js";
+import "./chunk-TENFQJBN.js";
+import {
+  Bind
+} from "./chunk-MLQGRGGO.js";
+import {
+  BaseComponent,
+  PARENT_INSTANCE
+} from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
-} from "./chunk-L2L2T6ID.js";
+} from "./chunk-4ATYD752.js";
 import {
   PrimeTemplate,
   SharedModule
-} from "./chunk-ZKOTJBQ6.js";
+} from "./chunk-LMEEH3AJ.js";
+import "./chunk-GOP36Q47.js";
+import {
+  P,
+  W,
+  _t,
+  ut
+} from "./chunk-UCHM6OXG.js";
 import "./chunk-6QGHQEN4.js";
 import {
   animate,
@@ -57,6 +72,7 @@ import {
   booleanAttribute,
   numberAttribute,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -92,6 +108,7 @@ import {
   ɵɵviewQuery
 } from "./chunk-EIF6IUR4.js";
 import {
+  InjectionToken,
   inject,
   ɵɵdefineInjectable,
   ɵɵdefineInjector,
@@ -99,16 +116,9 @@ import {
   ɵɵresetView,
   ɵɵrestoreView
 } from "./chunk-LW34VNAR.js";
-import "./chunk-G6ECYYJH.js";
 import "./chunk-YVXMBCE5.js";
+import "./chunk-G6ECYYJH.js";
 import "./chunk-RTGP7ALM.js";
-import "./chunk-BMDSN43F.js";
-import {
-  Kt,
-  O,
-  W,
-  ut
-} from "./chunk-RK2DVQNP.js";
 import "./chunk-4MWRP73S.js";
 
 // node_modules/@primeuix/styles/dist/drawer/index.mjs
@@ -152,13 +162,14 @@ function Drawer_div_0_Conditional_3_ng_container_1_Template(rf, ctx) {
 }
 function Drawer_div_0_Conditional_3_div_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div");
+    ɵɵelementStart(0, "div", 9);
     ɵɵtext(1);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r1.cx("title"));
+    ɵɵproperty("pBind", ctx_r1.ptm("title"));
     ɵɵadvance();
     ɵɵtextInterpolate(ctx_r1.header);
   }
@@ -166,7 +177,7 @@ function Drawer_div_0_Conditional_3_div_2_Template(rf, ctx) {
 function Drawer_div_0_Conditional_3_p_button_3_ng_template_1__svg_svg_0_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 11);
+    ɵɵelement(0, "svg", 12);
   }
   if (rf & 2) {
     ɵɵattribute("data-pc-section", "closeicon");
@@ -181,7 +192,7 @@ function Drawer_div_0_Conditional_3_p_button_3_ng_template_1_1_Template(rf, ctx)
 }
 function Drawer_div_0_Conditional_3_p_button_3_ng_template_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, Drawer_div_0_Conditional_3_p_button_3_ng_template_1__svg_svg_0_Template, 1, 1, "svg", 10)(1, Drawer_div_0_Conditional_3_p_button_3_ng_template_1_1_Template, 1, 0, null, 4);
+    ɵɵtemplate(0, Drawer_div_0_Conditional_3_p_button_3_ng_template_1__svg_svg_0_Template, 1, 1, "svg", 11)(1, Drawer_div_0_Conditional_3_p_button_3_ng_template_1_1_Template, 1, 0, null, 4);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(4);
@@ -193,7 +204,7 @@ function Drawer_div_0_Conditional_3_p_button_3_ng_template_1_Template(rf, ctx) {
 function Drawer_div_0_Conditional_3_p_button_3_Template(rf, ctx) {
   if (rf & 1) {
     const _r3 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "p-button", 9);
+    ɵɵelementStart(0, "p-button", 10);
     ɵɵlistener("onClick", function Drawer_div_0_Conditional_3_p_button_3_Template_p_button_onClick_0_listener($event) {
       ɵɵrestoreView(_r3);
       const ctx_r1 = ɵɵnextContext(3);
@@ -208,8 +219,8 @@ function Drawer_div_0_Conditional_3_p_button_3_Template(rf, ctx) {
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
-    ɵɵproperty("ngClass", ctx_r1.cx("pcCloseButton"))("buttonProps", ctx_r1.closeButtonProps)("ariaLabel", ctx_r1.ariaCloseLabel);
-    ɵɵattribute("data-pc-section", "closebutton")("data-pc-group-section", "iconcontainer");
+    ɵɵproperty("pt", ctx_r1.ptm("pcCloseButton"))("ngClass", ctx_r1.cx("pcCloseButton"))("buttonProps", ctx_r1.closeButtonProps)("ariaLabel", ctx_r1.ariaCloseLabel);
+    ɵɵattribute("data-pc-group-section", "iconcontainer");
   }
 }
 function Drawer_div_0_Conditional_3_ng_container_6_Template(rf, ctx) {
@@ -233,7 +244,7 @@ function Drawer_div_0_Conditional_3_ng_container_7_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
     ɵɵadvance();
-    ɵɵproperty("ngClass", ctx_r1.cx("footer"));
+    ɵɵproperty("pBind", ctx_r1.ptm("footer"))("ngClass", ctx_r1.cx("footer"));
     ɵɵattribute("data-pc-section", "footer");
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r1.footerTemplate || ctx_r1._footerTemplate);
@@ -242,17 +253,17 @@ function Drawer_div_0_Conditional_3_ng_container_7_Template(rf, ctx) {
 function Drawer_div_0_Conditional_3_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementStart(0, "div", 5);
-    ɵɵtemplate(1, Drawer_div_0_Conditional_3_ng_container_1_Template, 1, 0, "ng-container", 4)(2, Drawer_div_0_Conditional_3_div_2_Template, 2, 3, "div", 6)(3, Drawer_div_0_Conditional_3_p_button_3_Template, 3, 5, "p-button", 7);
+    ɵɵtemplate(1, Drawer_div_0_Conditional_3_ng_container_1_Template, 1, 0, "ng-container", 4)(2, Drawer_div_0_Conditional_3_div_2_Template, 2, 4, "div", 6)(3, Drawer_div_0_Conditional_3_p_button_3_Template, 3, 5, "p-button", 7);
     ɵɵelementEnd();
     ɵɵelementStart(4, "div", 5);
     ɵɵprojection(5);
     ɵɵtemplate(6, Drawer_div_0_Conditional_3_ng_container_6_Template, 1, 0, "ng-container", 4);
     ɵɵelementEnd();
-    ɵɵtemplate(7, Drawer_div_0_Conditional_3_ng_container_7_Template, 3, 3, "ng-container", 8);
+    ɵɵtemplate(7, Drawer_div_0_Conditional_3_ng_container_7_Template, 3, 4, "ng-container", 8);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
-    ɵɵproperty("ngClass", ctx_r1.cx("header"));
+    ɵɵproperty("pBind", ctx_r1.ptm("header"))("ngClass", ctx_r1.cx("header"));
     ɵɵattribute("data-pc-section", "header");
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r1.headerTemplate || ctx_r1._headerTemplate);
@@ -261,7 +272,7 @@ function Drawer_div_0_Conditional_3_Template(rf, ctx) {
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r1.showCloseIcon && ctx_r1.closable);
     ɵɵadvance();
-    ɵɵproperty("ngClass", ctx_r1.cx("content"));
+    ɵɵproperty("pBind", ctx_r1.ptm("content"))("ngClass", ctx_r1.cx("content"));
     ɵɵattribute("data-pc-section", "content");
     ɵɵadvance(2);
     ɵɵproperty("ngTemplateOutlet", ctx_r1.contentTemplate || ctx_r1._contentTemplate);
@@ -286,20 +297,19 @@ function Drawer_div_0_Template(rf, ctx) {
       const ctx_r1 = ɵɵnextContext();
       return ɵɵresetView(ctx_r1.onKeyDown($event));
     });
-    ɵɵconditionalCreate(2, Drawer_div_0_Conditional_2_Template, 1, 1, "ng-container")(3, Drawer_div_0_Conditional_3_Template, 8, 9);
+    ɵɵconditionalCreate(2, Drawer_div_0_Conditional_2_Template, 1, 1, "ng-container")(3, Drawer_div_0_Conditional_3_Template, 8, 11);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext();
     ɵɵstyleMap(ctx_r1.style);
     ɵɵclassMap(ctx_r1.cn(ctx_r1.cx("root"), ctx_r1.styleClass));
-    ɵɵproperty("@panelState", ɵɵpureFunction1(11, _c9, ɵɵpureFunction2(8, _c8, ctx_r1.transformOptions, ctx_r1.transitionOptions)));
-    ɵɵattribute("data-pc-name", "sidebar")("data-pc-section", "root");
+    ɵɵproperty("pBind", ctx_r1.ptm("root"))("@panelState", ɵɵpureFunction1(10, _c9, ɵɵpureFunction2(7, _c8, ctx_r1.transformOptions, ctx_r1.transitionOptions)));
     ɵɵadvance(2);
     ɵɵconditional(ctx_r1.headlessTemplate || ctx_r1._headlessTemplate ? 2 : 3);
   }
 }
-var theme = (
+var style3 = (
   /*css*/
   `
     ${style2}
@@ -396,7 +406,7 @@ var classes = {
 };
 var DrawerStyle = class _DrawerStyle extends BaseStyle {
   name = "drawer";
-  theme = theme;
+  style = style3;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵDrawerStyle_BaseFactory;
@@ -423,6 +433,7 @@ var DrawerClasses;
   DrawerClasses2["pcCloseButton"] = "p-drawer-close-button";
   DrawerClasses2["content"] = "p-drawer-content";
 })(DrawerClasses || (DrawerClasses = {}));
+var DRAWER_INSTANCE = new InjectionToken("DRAWER_INSTANCE");
 var showAnimation = animation([style({
   transform: "{{transform}}",
   opacity: 0
@@ -431,7 +442,18 @@ var hideAnimation = animation([animate("{{transition}}", style({
   transform: "{{transform}}",
   opacity: 0
 }))]);
+var defaultTransformOptions = "translate3d(-100%, 0px, 0px)";
 var Drawer = class _Drawer extends BaseComponent {
+  $pcDrawer = inject(DRAWER_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptm("host"));
+  }
   /**
    *  Target element to attach the dialog, valid values are "body" or a local ng-template variable of another element (note: use binding with brackets for template variables, e.g. [appendTo]="mydiv" for a div element having #mydiv as variable name).
    * @group Props
@@ -507,7 +529,7 @@ var Drawer = class _Drawer extends BaseComponent {
    * @group Props
    */
   get visible() {
-    return this._visible;
+    return this._visible ?? false;
   }
   set visible(val) {
     this._visible = val;
@@ -549,7 +571,11 @@ var Drawer = class _Drawer extends BaseComponent {
   }
   set fullScreen(value) {
     this._fullScreen = value;
-    if (value) this.transformOptions = "none";
+    if (value === true) {
+      this.transformOptions = "none";
+    } else {
+      this.transformOptions = defaultTransformOptions;
+    }
   }
   /**
    * Title content of the dialog.
@@ -590,14 +616,13 @@ var Drawer = class _Drawer extends BaseComponent {
   _position = "left";
   _fullScreen = false;
   container;
-  transformOptions = "translate3d(-100%, 0px, 0px)";
+  transformOptions = defaultTransformOptions;
   mask;
   maskClickListener;
   documentEscapeListener;
   animationEndListener;
   _componentStyle = inject(DrawerStyle);
-  ngAfterViewInit() {
-    super.ngAfterViewInit();
+  onAfterViewInit() {
     this.initialized = true;
   }
   /**
@@ -631,7 +656,7 @@ var Drawer = class _Drawer extends BaseComponent {
   _closeIconTemplate;
   _headlessTemplate;
   templates;
-  ngAfterContentInit() {
+  onAfterContentInit() {
     this.templates?.forEach((item) => {
       switch (item.getType()) {
         case "content":
@@ -661,7 +686,7 @@ var Drawer = class _Drawer extends BaseComponent {
     }
   }
   show() {
-    this.container.setAttribute(this.attrSelector, "");
+    this.container?.setAttribute(this.$attrSelector, "");
     if (this.autoZIndex) {
       zindexutils.set("modal", this.container, this.baseZIndex || this.config.zIndex.modal);
     }
@@ -690,9 +715,11 @@ var Drawer = class _Drawer extends BaseComponent {
     const zIndex = activeDrawersLength == 1 ? String(parseInt(this.container.style.zIndex) - 1) : String(parseInt(activeDrawers[activeDrawersLength - 1].style.zIndex) - 1);
     if (!this.mask) {
       this.mask = this.renderer.createElement("div");
-      Kt(this.mask, "style", this.getMaskStyle());
-      Kt(this.mask, "style", `z-index: ${zIndex}`);
-      W(this.mask, this.cx("mask"));
+      if (this.mask) {
+        _t(this.mask, "style", this.getMaskStyle());
+        _t(this.mask, "style", `z-index: ${zIndex}`);
+        W(this.mask, this.cx("mask"));
+      }
       if (this.dismissible) {
         this.maskClickListener = this.renderer.listen(this.mask, "click", (event) => {
           if (this.dismissible) {
@@ -711,7 +738,7 @@ var Drawer = class _Drawer extends BaseComponent {
   }
   disableModality() {
     if (this.mask) {
-      O(this.mask, "p-overlay-mask-enter");
+      P(this.mask, "p-overlay-mask-enter");
       W(this.mask, "p-overlay-mask-leave");
       this.animationEndListener = this.renderer.listen(this.mask, "animationend", this.destroyModal.bind(this));
     }
@@ -750,8 +777,11 @@ var Drawer = class _Drawer extends BaseComponent {
   }
   appendContainer() {
     if (this.appendTo) {
-      if (this.appendTo === "body") this.renderer.appendChild(this.document.body, this.container);
-      else ut(this.appendTo, this.container);
+      if (this.appendTo === "body" && this.container) {
+        this.renderer.appendChild(this.document.body, this.container);
+      } else if (this.container) {
+        ut(this.appendTo, this.container);
+      }
     }
   }
   bindDocumentEscapeListener() {
@@ -786,7 +816,7 @@ var Drawer = class _Drawer extends BaseComponent {
       this.animationEndListener = null;
     }
   }
-  ngOnDestroy() {
+  onDestroy() {
     this.initialized = false;
     if (this.visible && this.modal) {
       this.destroyModal();
@@ -820,13 +850,13 @@ var Drawer = class _Drawer extends BaseComponent {
         ɵɵcontentQuery(dirIndex, PrimeTemplate, 4);
       }
       if (rf & 2) {
-        let _t;
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.headerTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.footerTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.contentTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.closeIconTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.headlessTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.templates = _t);
+        let _t2;
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.headerTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.footerTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.contentTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.closeIconTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.headlessTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.templates = _t2);
       }
     },
     viewQuery: function Drawer_Query(rf, ctx) {
@@ -835,9 +865,9 @@ var Drawer = class _Drawer extends BaseComponent {
         ɵɵviewQuery(_c6, 5);
       }
       if (rf & 2) {
-        let _t;
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.containerViewChild = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.closeButtonViewChild = _t.first);
+        let _t2;
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.containerViewChild = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.closeButtonViewChild = _t2.first);
       }
     },
     inputs: {
@@ -866,21 +896,27 @@ var Drawer = class _Drawer extends BaseComponent {
       onHide: "onHide",
       visibleChange: "visibleChange"
     },
-    features: [ɵɵProvidersFeature([DrawerStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([DrawerStyle, {
+      provide: DRAWER_INSTANCE,
+      useExisting: _Drawer
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _Drawer
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     ngContentSelectors: _c7,
     decls: 1,
     vars: 1,
-    consts: [["container", ""], ["icon", ""], ["role", "complementary", 3, "class", "style", "keydown", 4, "ngIf"], ["role", "complementary", 3, "keydown"], [4, "ngTemplateOutlet"], [3, "ngClass"], [3, "class", 4, "ngIf"], [3, "ngClass", "buttonProps", "ariaLabel", "onClick", "keydown.enter", 4, "ngIf"], [4, "ngIf"], [3, "onClick", "keydown.enter", "ngClass", "buttonProps", "ariaLabel"], ["data-p-icon", "times", 4, "ngIf"], ["data-p-icon", "times"]],
+    consts: [["container", ""], ["icon", ""], ["role", "complementary", "pFocusTrap", "", 3, "pBind", "class", "style", "keydown", 4, "ngIf"], ["role", "complementary", "pFocusTrap", "", 3, "keydown", "pBind"], [4, "ngTemplateOutlet"], [3, "pBind", "ngClass"], [3, "pBind", "class", 4, "ngIf"], [3, "pt", "ngClass", "buttonProps", "ariaLabel", "onClick", "keydown.enter", 4, "ngIf"], [4, "ngIf"], [3, "pBind"], [3, "onClick", "keydown.enter", "pt", "ngClass", "buttonProps", "ariaLabel"], ["data-p-icon", "times", 4, "ngIf"], ["data-p-icon", "times"]],
     template: function Drawer_Template(rf, ctx) {
       if (rf & 1) {
         ɵɵprojectionDef();
-        ɵɵtemplate(0, Drawer_div_0_Template, 4, 13, "div", 2);
+        ɵɵtemplate(0, Drawer_div_0_Template, 4, 12, "div", 2);
       }
       if (rf & 2) {
         ɵɵproperty("ngIf", ctx.visible);
       }
     },
-    dependencies: [CommonModule, NgClass, NgIf, NgTemplateOutlet, Button, TimesIcon, SharedModule],
+    dependencies: [CommonModule, NgClass, NgIf, NgTemplateOutlet, Button, TimesIcon, SharedModule, Bind, FocusTrapModule, FocusTrap],
     encapsulation: 2,
     data: {
       animation: [trigger("panelState", [transition("void => visible", [useAnimation(showAnimation)]), transition("visible => void", [useAnimation(hideAnimation)])])]
@@ -894,10 +930,19 @@ var Drawer = class _Drawer extends BaseComponent {
     args: [{
       selector: "p-drawer",
       standalone: true,
-      imports: [CommonModule, Button, TimesIcon, SharedModule],
+      imports: [CommonModule, Button, TimesIcon, SharedModule, Bind, FocusTrapModule],
+      providers: [DrawerStyle, {
+        provide: DRAWER_INSTANCE,
+        useExisting: Drawer
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: Drawer
+      }],
+      hostDirectives: [Bind],
       template: `
         <div
             #container
+            [pBind]="ptm('root')"
             [class]="cn(cx('root'), styleClass)"
             *ngIf="visible"
             [@panelState]="{ value: 'visible', params: { transform: transformOptions, transition: transitionOptions } }"
@@ -905,24 +950,23 @@ var Drawer = class _Drawer extends BaseComponent {
             (@panelState.done)="onAnimationEnd($event)"
             [style]="style"
             role="complementary"
-            [attr.data-pc-name]="'sidebar'"
-            [attr.data-pc-section]="'root'"
             (keydown)="onKeyDown($event)"
+            pFocusTrap
         >
             @if (headlessTemplate || _headlessTemplate) {
                 <ng-container *ngTemplateOutlet="headlessTemplate || _headlessTemplate"></ng-container>
             } @else {
-                <div [ngClass]="cx('header')" [attr.data-pc-section]="'header'">
+                <div [pBind]="ptm('header')" [ngClass]="cx('header')" [attr.data-pc-section]="'header'">
                     <ng-container *ngTemplateOutlet="headerTemplate || _headerTemplate"></ng-container>
-                    <div *ngIf="header" [class]="cx('title')">{{ header }}</div>
+                    <div *ngIf="header" [pBind]="ptm('title')" [class]="cx('title')">{{ header }}</div>
                     <p-button
                         *ngIf="showCloseIcon && closable"
+                        [pt]="ptm('pcCloseButton')"
                         [ngClass]="cx('pcCloseButton')"
                         (onClick)="close($event)"
                         (keydown.enter)="close($event)"
                         [buttonProps]="closeButtonProps"
                         [ariaLabel]="ariaCloseLabel"
-                        [attr.data-pc-section]="'closebutton'"
                         [attr.data-pc-group-section]="'iconcontainer'"
                     >
                         <ng-template #icon>
@@ -932,13 +976,13 @@ var Drawer = class _Drawer extends BaseComponent {
                     </p-button>
                 </div>
 
-                <div [ngClass]="cx('content')" [attr.data-pc-section]="'content'">
+                <div [pBind]="ptm('content')" [ngClass]="cx('content')" [attr.data-pc-section]="'content'">
                     <ng-content></ng-content>
                     <ng-container *ngTemplateOutlet="contentTemplate || _contentTemplate"></ng-container>
                 </div>
 
                 <ng-container *ngIf="footerTemplate || _footerTemplate">
-                    <div [ngClass]="cx('footer')" [attr.data-pc-section]="'footer'">
+                    <div [pBind]="ptm('footer')" [ngClass]="cx('footer')" [attr.data-pc-section]="'footer'">
                         <ng-container *ngTemplateOutlet="footerTemplate || _footerTemplate"></ng-container>
                     </div>
                 </ng-container>
@@ -947,8 +991,7 @@ var Drawer = class _Drawer extends BaseComponent {
     `,
       animations: [trigger("panelState", [transition("void => visible", [useAnimation(showAnimation)]), transition("visible => void", [useAnimation(hideAnimation)])])],
       changeDetection: ChangeDetectionStrategy.OnPush,
-      encapsulation: ViewEncapsulation.None,
-      providers: [DrawerStyle]
+      encapsulation: ViewEncapsulation.None
     }]
   }], null, {
     appendTo: [{
