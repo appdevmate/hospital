@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -12,34 +13,42 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { TextareaModule } from 'primeng/textarea';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { RouterModule } from '@angular/router';
+import { HelpersService } from '@/services/helpers-service';
 
 @Component({
     selector: 'app-hospital-calendar',
     standalone: true,
-    imports: [CommonModule, FormsModule, DialogModule, ButtonModule, InputTextModule, SelectModule, TextareaModule, RouterModule],
+    imports: [CommonModule, FormsModule, RouterModule, DialogModule, ButtonModule, InputTextModule, SelectModule, TextareaModule, ConfirmDialogModule],
+    providers: [ConfirmationService],
     templateUrl: './hospital-calendar.html',
     styleUrl: './hospital-calendar.scss'
 })
-export class HospitalCalendarComponent implements OnInit, AfterViewInit {
+export class HospitalCalendarComponent implements OnInit {
     @ViewChild('calendarEl') calendarEl!: ElementRef;
 
     calendarList: HospitalCalendar[] = [];
     selectedCalendarId = '';
     fcInstance: Calendar | null = null;
-    calendarReady = false;
+    syncing = false;
 
+    // create dialog
     showEventDialog = false;
+    // edit dialog
+    showEditDialog = false;
+    // detail dialog
     showDetailDialog = false;
+
     loading = false;
     pendingStart = '';
     pendingEnd = '';
     selectedEvent: any = null;
-    syncing = false;
 
     newEvent = { name: '', description: '', color: '#3B82F6', recurrence: 'none' };
+    editEvent = { name: '', description: '', color: '#3B82F6', recurrence: 'none', startDate: '', endDate: '' };
 
     colorOptions = [
         { value: '#3B82F6', label: 'Blue' },
@@ -60,14 +69,14 @@ export class HospitalCalendarComponent implements OnInit, AfterViewInit {
     constructor(
         private calendarService: HospitalCalendarService,
         private doctorsService: DoctorsService,
+        private confirmationService: ConfirmationService,
+        private helpers: HelpersService,
         private cd: ChangeDetectorRef
     ) {}
 
     ngOnInit() {
         this.syncDoctorCalendars();
     }
-
-    ngAfterViewInit() {}
 
     syncDoctorCalendars() {
         this.syncing = true;
@@ -78,16 +87,13 @@ export class HospitalCalendarComponent implements OnInit, AfterViewInit {
             doctors: this.doctorsService.getDoctorsPage({ pageSize: 200 }).pipe(catchError(() => of({ data: [] })))
         }).subscribe(({ calendars, doctors }) => {
             const doctorList = doctors.data || [];
-            const doctorNames = new Set(doctorList.map((d) => d.name).filter(Boolean));
+            const doctorNames = new Set(doctorList.map((d: any) => d.name).filter(Boolean));
             const existingNames = new Set(calendars.map((c) => c.name));
 
-            // Calendars to create — doctor exists but no calendar yet
-            const missing = doctorList.filter((d) => d.name && !existingNames.has(d.name));
-
-            // Calendars to delete — calendar exists but doctor was deleted
+            const missing = doctorList.filter((d: any) => d.name && !existingNames.has(d.name));
             const orphaned = calendars.filter((c) => !doctorNames.has(c.name));
 
-            const creates$ = missing.map((d) => this.calendarService.createCalendar(d.name, `Calendar for ${d.name}`).pipe(catchError(() => of(null))));
+            const creates$ = missing.map((d: any) => this.calendarService.createCalendar(d.name, `Calendar for ${d.name}`).pipe(catchError(() => of(null))));
 
             const deletes$ = orphaned.map((c) => this.calendarService.deleteCalendar(c.calendarId).pipe(catchError(() => of(null))));
 
@@ -113,14 +119,17 @@ export class HospitalCalendarComponent implements OnInit, AfterViewInit {
     selectFirst() {
         if (this.calendarList.length > 0) {
             this.selectedCalendarId = this.calendarList[0].calendarId;
-            setTimeout(() => {
-                this.initCalendar();
-            }, 0);
+            setTimeout(() => this.initCalendar(), 0);
         }
         this.cd.detectChanges();
     }
 
     initCalendar() {
+        if (this.fcInstance) {
+            this.fcInstance.destroy();
+            this.fcInstance = null;
+        }
+
         this.fcInstance = new Calendar(this.calendarEl.nativeElement, {
             plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
             initialView: 'dayGridMonth',
@@ -146,15 +155,22 @@ export class HospitalCalendarComponent implements OnInit, AfterViewInit {
                 this.selectedEvent = arg.event;
                 this.showDetailDialog = true;
                 this.cd.detectChanges();
+            },
+            eventDrop: (arg) => {
+                this.saveEventDrop(arg);
             }
         });
+
         this.fcInstance.render();
-        this.calendarReady = true;
-        if (this.selectedCalendarId) this.loadEvents();
+        this.loadEvents();
     }
 
     onCalendarChange() {
-        this.loadEvents();
+        if (this.fcInstance) {
+            this.loadEvents();
+        } else {
+            setTimeout(() => this.initCalendar(), 0);
+        }
     }
 
     loadEvents() {
@@ -176,6 +192,7 @@ export class HospitalCalendarComponent implements OnInit, AfterViewInit {
         });
     }
 
+    // Create
     onCreate() {
         if (!this.newEvent.name) return;
         this.loading = true;
@@ -192,13 +209,102 @@ export class HospitalCalendarComponent implements OnInit, AfterViewInit {
                 next: () => {
                     this.showEventDialog = false;
                     this.loading = false;
+                    this.helpers.notifySuccess('Event Created');
                     this.loadEvents();
                     this.cd.detectChanges();
                 },
                 error: (err) => {
                     console.error(err);
                     this.loading = false;
+                    this.helpers.notifyError('Failed', 'Could not create event');
                 }
+            });
+    }
+
+    // Open edit dialog from detail dialog
+    openEdit() {
+        if (!this.selectedEvent) return;
+        this.editEvent = {
+            name: this.selectedEvent.title,
+            description: this.selectedEvent.extendedProps?.description || '',
+            color: this.selectedEvent.backgroundColor || '#3B82F6',
+            recurrence: this.selectedEvent.extendedProps?.recurrence || 'none',
+            startDate: this.selectedEvent.startStr,
+            endDate: this.selectedEvent.endStr || ''
+        };
+        this.showDetailDialog = false;
+        this.showEditDialog = true;
+        this.cd.detectChanges();
+    }
+
+    // Save edit
+    onUpdate() {
+        if (!this.editEvent.name || !this.selectedEvent) return;
+        this.loading = true;
+        this.calendarService
+            .updateEvent(this.selectedCalendarId, this.selectedEvent.id, {
+                name: this.editEvent.name,
+                description: this.editEvent.description,
+                startDate: this.editEvent.startDate,
+                endDate: this.editEvent.endDate,
+                color: this.editEvent.color,
+                recurrence: this.editEvent.recurrence
+            })
+            .subscribe({
+                next: () => {
+                    this.showEditDialog = false;
+                    this.loading = false;
+                    this.helpers.notifySuccess('Event Updated');
+                    this.loadEvents();
+                    this.cd.detectChanges();
+                },
+                error: (err) => {
+                    console.error(err);
+                    this.loading = false;
+                    this.helpers.notifyError('Failed', 'Could not update event');
+                }
+            });
+    }
+
+    // Delete from detail dialog
+    onDelete() {
+        if (!this.selectedEvent) return;
+        this.confirmationService.confirm({
+            message: `Delete "${this.selectedEvent.title}"?`,
+            header: 'Confirm Delete',
+            icon: 'pi pi-exclamation-triangle',
+            acceptButtonProps: { label: 'Delete', severity: 'danger' },
+            rejectButtonProps: { label: 'Cancel', severity: 'secondary', outlined: true },
+            accept: () => {
+                this.calendarService.deleteEvent(this.selectedCalendarId, this.selectedEvent.id).subscribe({
+                    next: () => {
+                        this.showDetailDialog = false;
+                        this.helpers.notifySuccess('Event Deleted');
+                        this.loadEvents();
+                        this.cd.detectChanges();
+                    },
+                    error: (err) => {
+                        console.error(err);
+                        this.helpers.notifyError('Failed', 'Could not delete event');
+                    }
+                });
+            }
+        });
+    }
+
+    // Save drag-and-drop
+    saveEventDrop(arg: any) {
+        this.calendarService
+            .updateEvent(this.selectedCalendarId, arg.event.id, {
+                name: arg.event.title,
+                description: arg.event.extendedProps?.description || '',
+                startDate: arg.event.startStr,
+                endDate: arg.event.endStr || '',
+                color: arg.event.backgroundColor || '#3B82F6',
+                recurrence: arg.event.extendedProps?.recurrence || 'none'
+            })
+            .subscribe({
+                error: () => arg.revert()
             });
     }
 }

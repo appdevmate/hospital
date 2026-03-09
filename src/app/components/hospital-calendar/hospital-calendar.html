@@ -64,7 +64,7 @@
 
     </ng-container>
 
-    <!-- New Event Dialog -->
+    <!-- Create Event Dialog -->
     <p-dialog header="New Event" [(visible)]="showEventDialog" [style]="{ width: '460px' }" [modal]="true"
         [draggable]="false" [resizable]="false">
         <div style="display: flex; flex-direction: column; gap: 1.2rem; padding: 0.5rem 0;">
@@ -101,7 +101,7 @@
             <div style="display: flex; flex-direction: column; gap: 0.4rem;">
                 <label class="field-label">Repeat</label>
                 <p-select [options]="recurrenceOptions" [(ngModel)]="newEvent.recurrence" optionLabel="label"
-                    optionValue="value" [style]="{ width: '100%' }" />
+                    optionValue="value" appendTo="body" [style]="{ width: '100%' }" />
             </div>
 
             <hr style="border: none; border-top: 1px solid #F3F4F6; margin: 0;" />
@@ -114,8 +114,56 @@
         </div>
     </p-dialog>
 
+    <!-- Edit Event Dialog -->
+    <p-dialog header="Edit Event" [(visible)]="showEditDialog" [style]="{ width: '460px' }" [modal]="true"
+        [draggable]="false" [resizable]="false">
+        <div style="display: flex; flex-direction: column; gap: 1.2rem; padding: 0.5rem 0;">
+
+            <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+                <label class="field-label">Event Name *</label>
+                <input pInputText [(ngModel)]="editEvent.name" class="w-full" />
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+                <label class="field-label">Description</label>
+                <textarea pTextarea [(ngModel)]="editEvent.description" rows="2" class="w-full"></textarea>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+                <label class="field-label">Color</label>
+                <div style="display: flex; flex-direction: row; gap: 10px; align-items: center;">
+                    <div *ngFor="let color of colorOptions" (click)="editEvent.color = color.value"
+                        [title]="color.label" [style]="{
+              background: color.value,
+              width: '28px', height: '28px',
+              borderRadius: '50%',
+              cursor: 'pointer',
+              transform: editEvent.color === color.value ? 'scale(1.25)' : 'scale(1)',
+              boxShadow: editEvent.color === color.value ? '0 0 0 3px white, 0 0 0 5px ' + color.value : 'none',
+              transition: 'transform 0.15s'
+            }">
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+                <label class="field-label">Repeat</label>
+                <p-select [options]="recurrenceOptions" [(ngModel)]="editEvent.recurrence" optionLabel="label"
+                    optionValue="value" appendTo="body" [style]="{ width: '100%' }" />
+            </div>
+
+            <hr style="border: none; border-top: 1px solid #F3F4F6; margin: 0;" />
+
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <p-button label="Cancel" severity="secondary" [outlined]="true" (click)="showEditDialog = false" />
+                <p-button label="Save Changes" [loading]="loading" (click)="onUpdate()" />
+            </div>
+
+        </div>
+    </p-dialog>
+
     <!-- Event Detail Dialog -->
-    <p-dialog header="Event Details" [(visible)]="showDetailDialog" [style]="{ width: '400px' }" [modal]="true"
+    <p-dialog header="Event Details" [(visible)]="showDetailDialog" [style]="{ width: '420px' }" [modal]="true"
         [draggable]="false" [resizable]="false">
         <div style="display: flex; flex-direction: column; gap: 1.2rem; padding: 0.5rem 0;" *ngIf="selectedEvent">
 
@@ -148,11 +196,18 @@
 
             <hr style="border: none; border-top: 1px solid #F3F4F6; margin: 0;" />
 
-            <div style="display: flex; justify-content: flex-end;">
-                <p-button label="Close" severity="secondary" [outlined]="true" (click)="showDetailDialog = false" />
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <p-button label="Delete" severity="danger" [outlined]="true" icon="pi pi-trash" (click)="onDelete()" />
+                <div style="display: flex; gap: 10px;">
+                    <p-button label="Close" severity="secondary" [outlined]="true" (click)="showDetailDialog = false" />
+                    <p-button label="Edit" icon="pi pi-pencil" (click)="openEdit()" />
+                </div>
             </div>
 
         </div>
     </p-dialog>
+
+    <!-- Confirm Dialog -->
+    <p-confirmDialog appendTo="body" />
 
 </div>

@@ -47,4 +47,12 @@ export class HospitalCalendarService {
     deleteCalendar(calendarId: string) {
         return this.http.delete(`${API_URL}/calendars/${calendarId}`, { headers });
     }
+
+    updateEvent(calendarId: string, eventId: string, event: Partial<HospitalEvent>) {
+        return this.http.patch(`${API_URL}/calendars/${calendarId}/events/${eventId}`, event, { headers });
+    }
+
+    deleteEvent(calendarId: string, eventId: string) {
+        return this.http.delete(`${API_URL}/calendars/${calendarId}/events/${eventId}`, { headers });
+    }
 }
