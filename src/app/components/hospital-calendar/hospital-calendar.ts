@@ -46,6 +46,17 @@ export class HospitalCalendarComponent implements OnInit {
     pendingStart = '';
     pendingEnd = '';
     selectedEvent: any = null;
+    resyncing = false;
+
+    private dayNameToNumber: Record<string, number> = {
+        sun: 0,
+        mon: 1,
+        tue: 2,
+        wed: 3,
+        thu: 4,
+        fri: 5,
+        sat: 6
+    };
 
     newEvent = { name: '', description: '', color: '#3B82F6', recurrence: 'none' };
     editEvent = { name: '', description: '', color: '#3B82F6', recurrence: 'none', startDate: '', endDate: '' };
@@ -103,6 +114,7 @@ export class HospitalCalendarComponent implements OnInit {
                 this.calendarList = calendars;
                 this.syncing = false;
                 this.selectFirst();
+                this.syncDutyShifts(doctorList, calendars);
                 return;
             }
 
@@ -111,6 +123,7 @@ export class HospitalCalendarComponent implements OnInit {
                     this.calendarList = updated;
                     this.syncing = false;
                     this.selectFirst();
+                    this.syncDutyShifts(doctorList, calendars);
                 });
             });
         });
@@ -306,5 +319,146 @@ export class HospitalCalendarComponent implements OnInit {
             .subscribe({
                 error: () => arg.revert()
             });
+    }
+
+    syncDutyShifts(doctors: any[], calendars: HospitalCalendar[]) {
+        const today = new Date();
+        const threeMonthsLater = new Date();
+        threeMonthsLater.setMonth(threeMonthsLater.getMonth() + 3);
+
+        doctors.forEach((doctor) => {
+            if (!doctor.dutyDays?.length || !doctor.dutyStart || !doctor.dutyEnd) return;
+
+            const cal = calendars.find((c) => c.name === doctor.name);
+            if (!cal) return;
+
+            // Check if duty shifts already exist
+            this.calendarService.getEvents(cal.calendarId).subscribe((existingEvents) => {
+                const hasDutyShifts = existingEvents.some((e) => e.description?.includes('DUTY_SHIFT'));
+                if (hasDutyShifts) return;
+
+                // Generate events for next 3 months
+                const creates: any[] = [];
+                const cursor = new Date(today);
+
+                while (cursor <= threeMonthsLater) {
+                    const dayNum = cursor.getDay();
+                    const dayName = Object.keys(this.dayNameToNumber).find((k) => this.dayNameToNumber[k] === dayNum);
+
+                    if (dayName && doctor.dutyDays.includes(dayName)) {
+                        const dateStr = `${cursor.getFullYear()}-${String(cursor.getMonth() + 1).padStart(2, '0')}-${String(cursor.getDate()).padStart(2, '0')}`;
+                        creates.push({
+                            name: `${doctor.name} - Duty Shift`,
+                            description: 'DUTY_SHIFT',
+                            startDate: `${dateStr}T${doctor.dutyStart}:00`,
+                            endDate: `${dateStr}T${doctor.dutyEnd}:00`,
+                            color: '#10B981',
+                            recurrence: 'none'
+                        });
+                    }
+                    cursor.setDate(cursor.getDate() + 1);
+                }
+
+                if (creates.length === 0) return;
+
+                // Create all events sequentially using forkJoin
+                const creates$ = creates.map((e) => this.calendarService.createEvent(cal.calendarId, e).pipe(catchError(() => of(null))));
+
+                forkJoin(creates$).subscribe(() => {
+                    // Reload if this is the currently selected calendar
+                    if (this.selectedCalendarId === cal.calendarId) {
+                        this.loadEvents();
+                    }
+                });
+            });
+        });
+    }
+
+    resyncDutySchedule() {
+        if (!this.selectedCalendarId) return;
+        this.resyncing = true;
+
+        // Delete all existing duty shifts for selected calendar
+        this.calendarService.getEvents(this.selectedCalendarId).subscribe((events) => {
+            const dutyShifts = events.filter((e) => e.description?.includes('DUTY_SHIFT'));
+
+            if (dutyShifts.length === 0) {
+                this.resyncing = false;
+                this.runDutySync();
+                return;
+            }
+
+            const deletes$ = dutyShifts.map((e) => this.calendarService.deleteEvent(this.selectedCalendarId, e.eventId).pipe(catchError(() => of(null))));
+
+            forkJoin(deletes$).subscribe(() => {
+                this.runDutySync();
+            });
+        });
+    }
+
+    private runDutySync() {
+        this.doctorsService.getDoctorsPage({ pageSize: 200 }).subscribe((result) => {
+            const doctor = result.data.find((d: any) => {
+                const cal = this.calendarList.find((c) => c.calendarId === this.selectedCalendarId);
+                return cal && d.name === cal.name;
+            });
+
+            if (!doctor || !doctor.dutyDays?.length || !doctor.dutyStart || !doctor.dutyEnd) {
+                this.resyncing = false;
+                this.helpers.notifyWarning('No duty schedule found for this doctor');
+                return;
+            }
+
+            const today = new Date();
+            const threeMonthsLater = new Date();
+            threeMonthsLater.setMonth(threeMonthsLater.getMonth() + 3);
+            const cursor = new Date(today);
+            const creates: any[] = [];
+
+            while (cursor <= threeMonthsLater) {
+                const dayNum = cursor.getDay();
+                const dayName = Object.keys(this.dayNameToNumber).find((k) => this.dayNameToNumber[k] === dayNum);
+
+                if (dayName && doctor.dutyDays.includes(dayName)) {
+                    const dateStr = `${cursor.getFullYear()}-${String(cursor.getMonth() + 1).padStart(2, '0')}-${String(cursor.getDate()).padStart(2, '0')}`;
+                    creates.push({
+                        name: `${doctor.name} - Duty Shift`,
+                        description: 'DUTY_SHIFT',
+                        startDate: `${dateStr}T${doctor.dutyStart}:00`,
+                        endDate: `${dateStr}T${doctor.dutyEnd}:00`,
+                        color: '#10B981',
+                        recurrence: 'none'
+                    });
+                }
+                cursor.setDate(cursor.getDate() + 1);
+            }
+
+            if (creates.length === 0) {
+                this.resyncing = false;
+                this.helpers.notifyWarning('No duty days to sync');
+                return;
+            }
+
+            this.createInBatches(creates, 0);
+        });
+    }
+
+    private createInBatches(events: any[], index: number) {
+        const batchSize = 5;
+        const batch = events.slice(index, index + batchSize);
+
+        if (batch.length === 0) {
+            this.resyncing = false;
+            this.helpers.notifySuccess('Duty schedule synced');
+            this.loadEvents();
+            this.cd.detectChanges();
+            return;
+        }
+
+        const batch$ = batch.map((e) => this.calendarService.createEvent(this.selectedCalendarId, e).pipe(catchError(() => of(null))));
+
+        forkJoin(batch$).subscribe(() => {
+            setTimeout(() => this.createInBatches(events, index + batchSize), 300);
+        });
     }
 }

@@ -27,6 +27,8 @@
                 <p-select [options]="calendarList" [(ngModel)]="selectedCalendarId" optionLabel="name"
                     optionValue="calendarId" placeholder="Select Calendar" (onChange)="onCalendarChange()"
                     [style]="{ minWidth: '220px' }" />
+                <p-button class="ml-2" label="Re-sync Duty Schedule" icon="pi pi-refresh" severity="success"
+                    [loading]="resyncing" (click)="resyncDutySchedule()" />
             </div>
         </div>
 
