@@ -1,16 +1,22 @@
 import {
   Badge,
   BadgeModule
-} from "./chunk-EGVFVLQK.js";
+} from "./chunk-TENFQJBN.js";
 import {
-  BaseComponent
-} from "./chunk-4YMQ5OOY.js";
+  Bind
+} from "./chunk-MLQGRGGO.js";
+import {
+  BaseComponent,
+  PARENT_INSTANCE
+} from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
-} from "./chunk-L2L2T6ID.js";
+} from "./chunk-4ATYD752.js";
 import {
   SharedModule
-} from "./chunk-ZKOTJBQ6.js";
+} from "./chunk-LMEEH3AJ.js";
+import "./chunk-GOP36Q47.js";
+import "./chunk-UCHM6OXG.js";
 import {
   CommonModule
 } from "./chunk-FHZAWWEY.js";
@@ -24,9 +30,11 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
+  ɵɵclassMap,
   ɵɵdefineComponent,
   ɵɵdefineNgModule,
   ɵɵelement,
@@ -39,20 +47,19 @@ import {
   ɵɵstyleMap
 } from "./chunk-EIF6IUR4.js";
 import {
+  InjectionToken,
   inject,
   ɵɵdefineInjectable,
   ɵɵdefineInjector
 } from "./chunk-LW34VNAR.js";
-import "./chunk-G6ECYYJH.js";
 import "./chunk-YVXMBCE5.js";
+import "./chunk-G6ECYYJH.js";
 import "./chunk-RTGP7ALM.js";
-import "./chunk-BMDSN43F.js";
-import "./chunk-RK2DVQNP.js";
 import "./chunk-4MWRP73S.js";
 
 // node_modules/primeng/fesm2022/primeng-overlaybadge.mjs
 var _c0 = ["*"];
-var theme = (
+var style = (
   /*css*/
   `
 .p-overlaybadge {
@@ -77,7 +84,7 @@ var classes = {
 };
 var OverlayBadgeStyle = class _OverlayBadgeStyle extends BaseStyle {
   name = "overlaybadge";
-  theme = theme;
+  style = style;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵOverlayBadgeStyle_BaseFactory;
@@ -95,7 +102,15 @@ var OverlayBadgeStyle = class _OverlayBadgeStyle extends BaseStyle {
     type: Injectable
   }], null, null);
 })();
+var OVERLAYBADGE_INSTANCE = new InjectionToken("OVERLAYBADGE_INSTANCE");
 var OverlayBadge = class _OverlayBadge extends BaseComponent {
+  $pcOverlayBadge = inject(OVERLAYBADGE_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
   /**
    * Class of the element.
    * @group Props
@@ -139,6 +154,9 @@ var OverlayBadge = class _OverlayBadge extends BaseComponent {
     return this._size;
   }
   _size;
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptm("host"));
+  }
   _componentStyle = inject(OverlayBadgeStyle);
   constructor() {
     super();
@@ -158,11 +176,17 @@ var OverlayBadge = class _OverlayBadge extends BaseComponent {
       badgeDisabled: [2, "badgeDisabled", "badgeDisabled", booleanAttribute],
       size: "size"
     },
-    features: [ɵɵProvidersFeature([OverlayBadgeStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([OverlayBadgeStyle, {
+      provide: OVERLAYBADGE_INSTANCE,
+      useExisting: _OverlayBadge
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _OverlayBadge
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     ngContentSelectors: _c0,
     decls: 3,
-    vars: 7,
-    consts: [[1, "p-overlaybadge"], [3, "styleClass", "badgeSize", "severity", "value", "badgeDisabled"]],
+    vars: 11,
+    consts: [[3, "pBind"], [3, "pt", "styleClass", "badgeSize", "severity", "value", "badgeDisabled"]],
     template: function OverlayBadge_Template(rf, ctx) {
       if (rf & 1) {
         ɵɵprojectionDef();
@@ -172,12 +196,14 @@ var OverlayBadge = class _OverlayBadge extends BaseComponent {
         ɵɵelementEnd();
       }
       if (rf & 2) {
+        ɵɵclassMap(ctx.cx("root"));
+        ɵɵproperty("pBind", ctx.ptm("root"));
         ɵɵadvance(2);
         ɵɵstyleMap(ctx.style);
-        ɵɵproperty("styleClass", ctx.styleClass)("badgeSize", ctx.badgeSize)("severity", ctx.severity)("value", ctx.value)("badgeDisabled", ctx.badgeDisabled);
+        ɵɵproperty("pt", ctx.ptm("pcBadge"))("styleClass", ctx.styleClass)("badgeSize", ctx.badgeSize)("severity", ctx.severity)("value", ctx.value)("badgeDisabled", ctx.badgeDisabled);
       }
     },
-    dependencies: [CommonModule, BadgeModule, Badge, SharedModule],
+    dependencies: [CommonModule, BadgeModule, Badge, SharedModule, Bind],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -188,16 +214,23 @@ var OverlayBadge = class _OverlayBadge extends BaseComponent {
     args: [{
       selector: "p-overlayBadge, p-overlay-badge, p-overlaybadge",
       standalone: true,
-      imports: [CommonModule, BadgeModule, SharedModule],
+      imports: [CommonModule, BadgeModule, SharedModule, Bind],
       template: `
-        <div class="p-overlaybadge">
+        <div [class]="cx('root')" [pBind]="ptm('root')">
             <ng-content></ng-content>
-            <p-badge [styleClass]="styleClass" [style]="style" [badgeSize]="badgeSize" [severity]="severity" [value]="value" [badgeDisabled]="badgeDisabled" />
+            <p-badge [pt]="ptm('pcBadge')" [styleClass]="styleClass" [style]="style" [badgeSize]="badgeSize" [severity]="severity" [value]="value" [badgeDisabled]="badgeDisabled" />
         </div>
     `,
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
-      providers: [OverlayBadgeStyle]
+      providers: [OverlayBadgeStyle, {
+        provide: OVERLAYBADGE_INSTANCE,
+        useExisting: OverlayBadge
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: OverlayBadge
+      }],
+      hostDirectives: [Bind]
     }]
   }], () => [], {
     styleClass: [{

@@ -1,0 +1,112 @@
+<div class="hospital-calendar-page">
+
+    <!-- Header -->
+    <div class="calendar-header">
+        <div class="header-left">
+            <i class="pi pi-calendar" style="font-size: 1.4rem; color: #16a34a;"></i>
+            <h2>Hospital Calendar</h2>
+        </div>
+        <div class="header-right">
+            <p-select [options]="calendarList" [(ngModel)]="selectedCalendarId" optionLabel="name"
+                optionValue="calendarId" placeholder="Select Calendar" (onChange)="onCalendarChange()"
+                [style]="{ minWidth: '220px' }" />
+        </div>
+    </div>
+
+    <!-- FullCalendar -->
+    <div class="calendar-container">
+        <div #calendarEl></div>
+    </div>
+
+    <!-- New Event Dialog -->
+    <p-dialog header="New Event" [(visible)]="showEventDialog" [style]="{ width: '460px' }" [modal]="true"
+        [draggable]="false" [resizable]="false">
+        <div style="display: flex; flex-direction: column; gap: 1.2rem; padding: 0.5rem 0;">
+
+            <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+                <label class="field-label">Event Name *</label>
+                <input pInputText placeholder="e.g. Dr. Ahmed Consultation" [(ngModel)]="newEvent.name"
+                    class="w-full" />
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+                <label class="field-label">Description</label>
+                <textarea pTextarea placeholder="Optional details" [(ngModel)]="newEvent.description" rows="2"
+                    class="w-full"></textarea>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+                <label class="field-label">Color</label>
+                <div style="display: flex; flex-direction: row; gap: 10px; align-items: center;">
+                    <div *ngFor="let color of colorOptions" (click)="newEvent.color = color.value" [title]="color.label"
+                        [style]="{
+              background: color.value,
+              width: '28px', height: '28px',
+              borderRadius: '50%',
+              cursor: 'pointer',
+              transform: newEvent.color === color.value ? 'scale(1.25)' : 'scale(1)',
+              boxShadow: newEvent.color === color.value ? '0 0 0 3px white, 0 0 0 5px ' + color.value : 'none',
+              transition: 'transform 0.15s'
+            }">
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+                <label class="field-label">Repeat</label>
+                <p-select [options]="recurrenceOptions" [(ngModel)]="newEvent.recurrence" optionLabel="label"
+                    optionValue="value" [style]="{ width: '100%' }" />
+            </div>
+
+            <hr style="border: none; border-top: 1px solid #F3F4F6; margin: 0;" />
+
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <p-button label="Cancel" severity="secondary" [outlined]="true" (click)="showEventDialog = false" />
+                <p-button label="Create Event" [loading]="loading" (click)="onCreate()" />
+            </div>
+
+        </div>
+    </p-dialog>
+
+    <!-- Event Detail Dialog -->
+    <p-dialog header="Event Details" [(visible)]="showDetailDialog" [style]="{ width: '400px' }" [modal]="true"
+        [draggable]="false" [resizable]="false">
+        <div style="display: flex; flex-direction: column; gap: 1.2rem; padding: 0.5rem 0;" *ngIf="selectedEvent">
+
+            <div style="display: flex; align-items: center; gap: 0.8rem;">
+                <div [style]="{
+          width: '14px', height: '14px', borderRadius: '50%', flexShrink: '0',
+          background: selectedEvent.backgroundColor || '#3B82F6'
+        }"></div>
+                <span style="font-size: 1.1rem; font-weight: 700; color: #111827;">{{ selectedEvent.title }}</span>
+            </div>
+
+            <div *ngIf="selectedEvent.extendedProps?.description" style="display: flex; gap: 0.7rem;">
+                <i class="pi pi-align-left" style="color: #9CA3AF; margin-top: 2px;"></i>
+                <span style="color: #4B5563; font-size: 0.95rem;">{{ selectedEvent.extendedProps.description }}</span>
+            </div>
+
+            <div style="display: flex; gap: 0.7rem; align-items: center;">
+                <i class="pi pi-calendar" style="color: #9CA3AF;"></i>
+                <span style="color: #4B5563; font-size: 0.9rem;">{{ selectedEvent.startStr | date:'EEEE, MMMM d, y'
+                    }}</span>
+            </div>
+
+            <div *ngIf="selectedEvent.extendedProps?.recurrence && selectedEvent.extendedProps?.recurrence !== 'none'"
+                style="display: flex; gap: 0.7rem; align-items: center;">
+                <i class="pi pi-refresh" style="color: #9CA3AF;"></i>
+                <span style="color: #4B5563; font-size: 0.9rem; text-transform: capitalize;">
+                    Repeats {{ selectedEvent.extendedProps.recurrence }}
+                </span>
+            </div>
+
+            <hr style="border: none; border-top: 1px solid #F3F4F6; margin: 0;" />
+
+            <div style="display: flex; justify-content: flex-end;">
+                <p-button label="Close" severity="secondary" [outlined]="true" (click)="showDetailDialog = false" />
+            </div>
+
+        </div>
+    </p-dialog>
+
+</div>

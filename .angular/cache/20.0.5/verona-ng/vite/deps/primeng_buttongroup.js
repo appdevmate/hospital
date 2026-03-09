@@ -1,10 +1,12 @@
 import {
   BaseComponent
-} from "./chunk-4YMQ5OOY.js";
+} from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
-} from "./chunk-L2L2T6ID.js";
-import "./chunk-ZKOTJBQ6.js";
+} from "./chunk-4ATYD752.js";
+import "./chunk-LMEEH3AJ.js";
+import "./chunk-GOP36Q47.js";
+import "./chunk-UCHM6OXG.js";
 import {
   CommonModule
 } from "./chunk-FHZAWWEY.js";
@@ -31,11 +33,9 @@ import {
   ɵɵdefineInjectable,
   ɵɵdefineInjector
 } from "./chunk-LW34VNAR.js";
-import "./chunk-G6ECYYJH.js";
 import "./chunk-YVXMBCE5.js";
+import "./chunk-G6ECYYJH.js";
 import "./chunk-RTGP7ALM.js";
-import "./chunk-BMDSN43F.js";
-import "./chunk-RK2DVQNP.js";
 import "./chunk-4MWRP73S.js";
 
 // node_modules/@primeuix/styles/dist/buttongroup/index.mjs
@@ -43,7 +43,7 @@ var style = "\n    .p-buttongroup {\n        display: inline-flex;\n    }\n\n   
 
 // node_modules/primeng/fesm2022/primeng-buttongroup.mjs
 var _c0 = ["*"];
-var theme = (
+var style2 = (
   /*css*/
   `
     ${style}
@@ -79,7 +79,7 @@ var classes = {
 };
 var ButtonGroupStyle = class _ButtonGroupStyle extends BaseStyle {
   name = "buttongroup";
-  theme = theme;
+  style = style2;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵButtonGroupStyle_BaseFactory;

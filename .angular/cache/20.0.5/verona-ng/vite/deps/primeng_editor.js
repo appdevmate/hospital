@@ -1,16 +1,26 @@
 import {
   BaseEditableHolder
-} from "./chunk-67V7CIUT.js";
-import "./chunk-5OCKW6BF.js";
-import "./chunk-4YMQ5OOY.js";
+} from "./chunk-343RM6UZ.js";
+import "./chunk-2R7VQYSP.js";
+import {
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
+import {
+  PARENT_INSTANCE
+} from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
-} from "./chunk-L2L2T6ID.js";
+} from "./chunk-4ATYD752.js";
 import {
   Header,
   PrimeTemplate,
   SharedModule
-} from "./chunk-ZKOTJBQ6.js";
+} from "./chunk-LMEEH3AJ.js";
+import "./chunk-GOP36Q47.js";
+import {
+  z2 as z
+} from "./chunk-UCHM6OXG.js";
 import {
   NG_VALUE_ACCESSOR
 } from "./chunk-RZEKJVYA.js";
@@ -35,6 +45,7 @@ import {
   ViewEncapsulation,
   afterNextRender,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -57,18 +68,15 @@ import {
   ɵɵtext
 } from "./chunk-EIF6IUR4.js";
 import {
+  InjectionToken,
   forwardRef,
   inject,
   ɵɵdefineInjectable,
   ɵɵdefineInjector
 } from "./chunk-LW34VNAR.js";
-import "./chunk-G6ECYYJH.js";
 import "./chunk-YVXMBCE5.js";
+import "./chunk-G6ECYYJH.js";
 import "./chunk-RTGP7ALM.js";
-import "./chunk-BMDSN43F.js";
-import {
-  z2 as z
-} from "./chunk-RK2DVQNP.js";
 import {
   __spreadValues
 } from "./chunk-4MWRP73S.js";
@@ -87,67 +95,129 @@ function Editor_div_0_ng_container_2_Template(rf, ctx) {
 }
 function Editor_div_0_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div");
+    ɵɵelementStart(0, "div", 2);
     ɵɵprojection(1);
-    ɵɵtemplate(2, Editor_div_0_ng_container_2_Template, 1, 0, "ng-container", 2);
+    ɵɵtemplate(2, Editor_div_0_ng_container_2_Template, 1, 0, "ng-container", 3);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext();
     ɵɵclassMap(ctx_r0.cx("toolbar"));
+    ɵɵproperty("pBind", ctx_r0.ptm("toolbar"));
     ɵɵadvance(2);
     ɵɵproperty("ngTemplateOutlet", ctx_r0.headerTemplate || ctx_r0._headerTemplate);
   }
 }
 function Editor_div_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div")(1, "span", 3)(2, "select", 4)(3, "option", 5);
+    ɵɵelementStart(0, "div", 2)(1, "span", 4)(2, "select", 5)(3, "option", 6);
     ɵɵtext(4, "Heading");
     ɵɵelementEnd();
-    ɵɵelementStart(5, "option", 6);
+    ɵɵelementStart(5, "option", 7);
     ɵɵtext(6, "Subheading");
     ɵɵelementEnd();
-    ɵɵelementStart(7, "option", 7);
+    ɵɵelementStart(7, "option", 8);
     ɵɵtext(8, "Normal");
     ɵɵelementEnd()();
-    ɵɵelementStart(9, "select", 8)(10, "option", 7);
+    ɵɵelementStart(9, "select", 9)(10, "option", 8);
     ɵɵtext(11, "Sans Serif");
     ɵɵelementEnd();
-    ɵɵelementStart(12, "option", 9);
+    ɵɵelementStart(12, "option", 10);
     ɵɵtext(13, "Serif");
     ɵɵelementEnd();
-    ɵɵelementStart(14, "option", 10);
+    ɵɵelementStart(14, "option", 11);
     ɵɵtext(15, "Monospace");
     ɵɵelementEnd()()();
-    ɵɵelementStart(16, "span", 3);
-    ɵɵelement(17, "button", 11)(18, "button", 12)(19, "button", 13);
+    ɵɵelementStart(16, "span", 4);
+    ɵɵelement(17, "button", 12)(18, "button", 13)(19, "button", 14);
     ɵɵelementEnd();
-    ɵɵelementStart(20, "span", 3);
-    ɵɵelement(21, "select", 14)(22, "select", 15);
+    ɵɵelementStart(20, "span", 4);
+    ɵɵelement(21, "select", 15)(22, "select", 16);
     ɵɵelementEnd();
-    ɵɵelementStart(23, "span", 3);
-    ɵɵelement(24, "button", 16)(25, "button", 17);
-    ɵɵelementStart(26, "select", 18);
-    ɵɵelement(27, "option", 7);
-    ɵɵelementStart(28, "option", 19);
+    ɵɵelementStart(23, "span", 4);
+    ɵɵelement(24, "button", 17)(25, "button", 18);
+    ɵɵelementStart(26, "select", 19);
+    ɵɵelement(27, "option", 8);
+    ɵɵelementStart(28, "option", 20);
     ɵɵtext(29, "center");
     ɵɵelementEnd();
-    ɵɵelementStart(30, "option", 20);
+    ɵɵelementStart(30, "option", 21);
     ɵɵtext(31, "right");
     ɵɵelementEnd();
-    ɵɵelementStart(32, "option", 21);
+    ɵɵelementStart(32, "option", 22);
     ɵɵtext(33, "justify");
     ɵɵelementEnd()()();
-    ɵɵelementStart(34, "span", 3);
-    ɵɵelement(35, "button", 22)(36, "button", 23)(37, "button", 24);
+    ɵɵelementStart(34, "span", 4);
+    ɵɵelement(35, "button", 23)(36, "button", 24)(37, "button", 25);
     ɵɵelementEnd();
-    ɵɵelementStart(38, "span", 3);
-    ɵɵelement(39, "button", 25);
+    ɵɵelementStart(38, "span", 4);
+    ɵɵelement(39, "button", 26);
     ɵɵelementEnd()();
   }
   if (rf & 2) {
     const ctx_r0 = ɵɵnextContext();
     ɵɵclassMap(ctx_r0.cx("toolbar"));
+    ɵɵproperty("pBind", ctx_r0.ptm("toolbar"));
+    ɵɵadvance();
+    ɵɵproperty("pBind", ctx_r0.ptm("formats"));
+    ɵɵadvance();
+    ɵɵproperty("pBind", ctx_r0.ptm("header"));
+    ɵɵadvance();
+    ɵɵproperty("pBind", ctx_r0.ptm("option"));
+    ɵɵadvance(2);
+    ɵɵproperty("pBind", ctx_r0.ptm("option"));
+    ɵɵadvance(2);
+    ɵɵproperty("pBind", ctx_r0.ptm("option"));
+    ɵɵadvance(2);
+    ɵɵproperty("pBind", ctx_r0.ptm("select"));
+    ɵɵadvance();
+    ɵɵproperty("pBind", ctx_r0.ptm("option"));
+    ɵɵadvance(2);
+    ɵɵproperty("pBind", ctx_r0.ptm("option"));
+    ɵɵadvance(2);
+    ɵɵproperty("pBind", ctx_r0.ptm("option"));
+    ɵɵadvance(2);
+    ɵɵproperty("pBind", ctx_r0.ptm("formats"));
+    ɵɵadvance();
+    ɵɵproperty("pBind", ctx_r0.ptm("bold"));
+    ɵɵadvance();
+    ɵɵproperty("pBind", ctx_r0.ptm("italic"));
+    ɵɵadvance();
+    ɵɵproperty("pBind", ctx_r0.ptm("underline"));
+    ɵɵadvance();
+    ɵɵproperty("pBind", ctx_r0.ptm("formats"));
+    ɵɵadvance();
+    ɵɵproperty("pBind", ctx_r0.ptm("color"));
+    ɵɵadvance();
+    ɵɵproperty("pBind", ctx_r0.ptm("background"));
+    ɵɵadvance();
+    ɵɵproperty("pBind", ctx_r0.ptm("formats"));
+    ɵɵadvance();
+    ɵɵproperty("pBind", ctx_r0.ptm("list"));
+    ɵɵadvance();
+    ɵɵproperty("pBind", ctx_r0.ptm("list"));
+    ɵɵadvance();
+    ɵɵproperty("pBind", ctx_r0.ptm("select"));
+    ɵɵadvance();
+    ɵɵproperty("pBind", ctx_r0.ptm("option"));
+    ɵɵadvance();
+    ɵɵproperty("pBind", ctx_r0.ptm("option"));
+    ɵɵadvance(2);
+    ɵɵproperty("pBind", ctx_r0.ptm("option"));
+    ɵɵadvance(2);
+    ɵɵproperty("pBind", ctx_r0.ptm("option"));
+    ɵɵadvance(2);
+    ɵɵproperty("pBind", ctx_r0.ptm("formats"));
+    ɵɵadvance();
+    ɵɵproperty("pBind", ctx_r0.ptm("link"));
+    ɵɵadvance();
+    ɵɵproperty("pBind", ctx_r0.ptm("image"));
+    ɵɵadvance();
+    ɵɵproperty("pBind", ctx_r0.ptm("codeBlock"));
+    ɵɵadvance();
+    ɵɵproperty("pBind", ctx_r0.ptm("formats"));
+    ɵɵadvance();
+    ɵɵproperty("pBind", ctx_r0.ptm("clean"));
   }
 }
 var classes = {
@@ -161,7 +231,7 @@ var classes = {
 };
 var EditorStyle = class _EditorStyle extends BaseStyle {
   name = "editor";
-  theme = style;
+  style = style;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵEditorStyle_BaseFactory;
@@ -185,12 +255,23 @@ var EditorClasses;
   EditorClasses2["toolbar"] = "p-editor-toolbar";
   EditorClasses2["content"] = "p-editor-content";
 })(EditorClasses || (EditorClasses = {}));
+var EDITOR_INSTANCE = new InjectionToken("EDITOR_INSTANCE");
 var EDITOR_VALUE_ACCESSOR = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => Editor),
   multi: true
 };
 var Editor = class _Editor extends BaseEditableHolder {
+  $pcEditor = inject(EDITOR_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
+  }
   /**
    * Inline style of the container.
    * @group Props
@@ -208,12 +289,12 @@ var Editor = class _Editor extends BaseEditableHolder {
    */
   placeholder;
   /**
-   * Whitelist of formats to display, see here for available options.
+   * Whitelist of formats to display, see [here](https://quilljs.com/docs/formats/) for available options.
    * @group Props
    */
   formats;
   /**
-   * Modules configuration of Editor, see here for available options.
+   * Modules configuration of Editor, see [here](https://quilljs.com/docs/modules/) for available options.
    * @group Props
    */
   modules;
@@ -251,7 +332,7 @@ var Editor = class _Editor extends BaseEditableHolder {
    * @param {EditorInitEvent} event - custom event.
    * @group Emits
    */
-  onInit = new EventEmitter();
+  onEditorInit = new EventEmitter();
   /**
    * Callback to invoke when text of editor changes.
    * @param {EditorTextChangeEvent} event - custom event.
@@ -264,6 +345,24 @@ var Editor = class _Editor extends BaseEditableHolder {
    * @group Emits
    */
   onSelectionChange = new EventEmitter();
+  /**
+   * Callback to invoke when editor content changes (combines both text and selection changes).
+   * @param {EditorChangeEvent} event - custom event.
+   * @group Emits
+   */
+  onEditorChange = new EventEmitter();
+  /**
+   * Callback to invoke when editor receives focus.
+   * @param {EditorFocusEvent} event - custom event.
+   * @group Emits
+   */
+  onFocus = new EventEmitter();
+  /**
+   * Callback to invoke when editor loses focus.
+   * @param {EditorBlurEvent} event - custom event.
+   * @group Emits
+   */
+  onBlur = new EventEmitter();
   toolbar;
   value;
   delayedCommand = null;
@@ -281,6 +380,8 @@ var Editor = class _Editor extends BaseEditableHolder {
     return this.quillElements?.editorElement?.isConnected;
   }
   quillElements;
+  focusListener = null;
+  blurListener = null;
   _componentStyle = inject(EditorStyle);
   constructor() {
     super();
@@ -289,7 +390,7 @@ var Editor = class _Editor extends BaseEditableHolder {
       this.initQuillEditor();
     });
   }
-  ngAfterContentInit() {
+  onAfterContentInit() {
     this.templates.forEach((item) => {
       switch (item.getType()) {
         case "header":
@@ -374,7 +475,7 @@ var Editor = class _Editor extends BaseEditableHolder {
     }
     this.quill.on("text-change", (delta, oldContents, source) => {
       if (source === "user") {
-        let html = isQuill2 ? this.quill.getSemanticHTML() : z(editorElement, ".ql-editor").innerHTML;
+        let html = isQuill2 ? this.quill.getSemanticHTML() : z(editorElement, ".ql-editor")?.innerHTML;
         let text = this.quill.getText().trim();
         if (html === "<p><br></p>") {
           html = null;
@@ -396,9 +497,41 @@ var Editor = class _Editor extends BaseEditableHolder {
         source
       });
     });
-    this.onInit.emit({
+    this.quill.on("editor-change", (eventName, ...args) => {
+      this.onEditorChange.emit({
+        eventName,
+        args
+      });
+    });
+    const editorEl = this.quill.root;
+    this.focusListener = () => {
+      this.onFocus.emit({
+        source: "user"
+      });
+    };
+    this.blurListener = () => {
+      this.onBlur.emit({
+        source: "user"
+      });
+    };
+    editorEl.addEventListener("focus", this.focusListener);
+    editorEl.addEventListener("blur", this.blurListener);
+    this.onEditorInit.emit({
       editor: this.quill
     });
+  }
+  onDestroy() {
+    if (this.quill && this.quill.root) {
+      const editorEl = this.quill.root;
+      if (this.focusListener) {
+        editorEl.removeEventListener("focus", this.focusListener);
+        this.focusListener = null;
+      }
+      if (this.blurListener) {
+        editorEl.removeEventListener("blur", this.blurListener);
+        this.blurListener = null;
+      }
+    }
   }
   initQuillElements() {
     if (!this.quillElements) {
@@ -445,19 +578,28 @@ var Editor = class _Editor extends BaseEditableHolder {
       readonly: "readonly"
     },
     outputs: {
-      onInit: "onInit",
+      onEditorInit: "onInit",
       onTextChange: "onTextChange",
-      onSelectionChange: "onSelectionChange"
+      onSelectionChange: "onSelectionChange",
+      onEditorChange: "onEditorChange",
+      onFocus: "onFocus",
+      onBlur: "onBlur"
     },
-    features: [ɵɵProvidersFeature([EDITOR_VALUE_ACCESSOR, EditorStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([EDITOR_VALUE_ACCESSOR, EditorStyle, {
+      provide: EDITOR_INSTANCE,
+      useExisting: _Editor
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _Editor
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     ngContentSelectors: _c2,
     decls: 3,
-    vars: 5,
-    consts: [[3, "class", 4, "ngIf"], [3, "ngStyle"], [4, "ngTemplateOutlet"], [1, "ql-formats"], [1, "ql-header"], ["value", "1"], ["value", "2"], ["selected", ""], [1, "ql-font"], ["value", "serif"], ["value", "monospace"], ["aria-label", "Bold", "type", "button", 1, "ql-bold"], ["aria-label", "Italic", "type", "button", 1, "ql-italic"], ["aria-label", "Underline", "type", "button", 1, "ql-underline"], [1, "ql-color"], [1, "ql-background"], ["value", "ordered", "aria-label", "Ordered List", "type", "button", 1, "ql-list"], ["value", "bullet", "aria-label", "Unordered List", "type", "button", 1, "ql-list"], [1, "ql-align"], ["value", "center"], ["value", "right"], ["value", "justify"], ["aria-label", "Insert Link", "type", "button", 1, "ql-link"], ["aria-label", "Insert Image", "type", "button", 1, "ql-image"], ["aria-label", "Insert Code Block", "type", "button", 1, "ql-code-block"], ["aria-label", "Remove Styles", "type", "button", 1, "ql-clean"]],
+    vars: 6,
+    consts: [[3, "class", "pBind", 4, "ngIf"], [3, "ngStyle", "pBind"], [3, "pBind"], [4, "ngTemplateOutlet"], [1, "ql-formats", 3, "pBind"], [1, "ql-header", 3, "pBind"], ["value", "1", 3, "pBind"], ["value", "2", 3, "pBind"], ["selected", "", 3, "pBind"], [1, "ql-font", 3, "pBind"], ["value", "serif", 3, "pBind"], ["value", "monospace", 3, "pBind"], ["aria-label", "Bold", "type", "button", 1, "ql-bold", 3, "pBind"], ["aria-label", "Italic", "type", "button", 1, "ql-italic", 3, "pBind"], ["aria-label", "Underline", "type", "button", 1, "ql-underline", 3, "pBind"], [1, "ql-color", 3, "pBind"], [1, "ql-background", 3, "pBind"], ["value", "ordered", "aria-label", "Ordered List", "type", "button", 1, "ql-list", 3, "pBind"], ["value", "bullet", "aria-label", "Unordered List", "type", "button", 1, "ql-list", 3, "pBind"], [1, "ql-align", 3, "pBind"], ["value", "center", 3, "pBind"], ["value", "right", 3, "pBind"], ["value", "justify", 3, "pBind"], ["aria-label", "Insert Link", "type", "button", 1, "ql-link", 3, "pBind"], ["aria-label", "Insert Image", "type", "button", 1, "ql-image", 3, "pBind"], ["aria-label", "Insert Code Block", "type", "button", 1, "ql-code-block", 3, "pBind"], ["aria-label", "Remove Styles", "type", "button", 1, "ql-clean", 3, "pBind"]],
     template: function Editor_Template(rf, ctx) {
       if (rf & 1) {
         ɵɵprojectionDef(_c1);
-        ɵɵtemplate(0, Editor_div_0_Template, 3, 3, "div", 0)(1, Editor_div_1_Template, 40, 2, "div", 0);
+        ɵɵtemplate(0, Editor_div_0_Template, 3, 4, "div", 0)(1, Editor_div_1_Template, 40, 33, "div", 0);
         ɵɵelement(2, "div", 1);
       }
       if (rf & 2) {
@@ -466,10 +608,10 @@ var Editor = class _Editor extends BaseEditableHolder {
         ɵɵproperty("ngIf", !ctx.toolbar && !ctx.headerTemplate && !ctx._headerTemplate);
         ɵɵadvance();
         ɵɵclassMap(ctx.cx("content"));
-        ɵɵproperty("ngStyle", ctx.style);
+        ɵɵproperty("ngStyle", ctx.style)("pBind", ctx.ptm("content"));
       }
     },
-    dependencies: [CommonModule, NgIf, NgTemplateOutlet, NgStyle, SharedModule],
+    dependencies: [CommonModule, NgIf, NgTemplateOutlet, NgStyle, SharedModule, BindModule, Bind],
     encapsulation: 2,
     changeDetection: 0
   });
@@ -480,61 +622,68 @@ var Editor = class _Editor extends BaseEditableHolder {
     args: [{
       selector: "p-editor",
       standalone: true,
-      imports: [CommonModule, SharedModule],
+      imports: [CommonModule, SharedModule, BindModule],
       template: `
-        <div [class]="cx('toolbar')" *ngIf="toolbar || headerTemplate || _headerTemplate">
+        <div [class]="cx('toolbar')" *ngIf="toolbar || headerTemplate || _headerTemplate" [pBind]="ptm('toolbar')">
             <ng-content select="p-header"></ng-content>
             <ng-container *ngTemplateOutlet="headerTemplate || _headerTemplate"></ng-container>
         </div>
-        <div [class]="cx('toolbar')" *ngIf="!toolbar && !headerTemplate && !_headerTemplate">
-            <span class="ql-formats">
-                <select class="ql-header">
-                    <option value="1">Heading</option>
-                    <option value="2">Subheading</option>
-                    <option selected>Normal</option>
+        <div [class]="cx('toolbar')" *ngIf="!toolbar && !headerTemplate && !_headerTemplate" [pBind]="ptm('toolbar')">
+            <span class="ql-formats" [pBind]="ptm('formats')">
+                <select class="ql-header" [pBind]="ptm('header')">
+                    <option value="1" [pBind]="ptm('option')">Heading</option>
+                    <option value="2" [pBind]="ptm('option')">Subheading</option>
+                    <option selected [pBind]="ptm('option')">Normal</option>
                 </select>
-                <select class="ql-font">
-                    <option selected>Sans Serif</option>
-                    <option value="serif">Serif</option>
-                    <option value="monospace">Monospace</option>
-                </select>
-            </span>
-            <span class="ql-formats">
-                <button class="ql-bold" aria-label="Bold" type="button"></button>
-                <button class="ql-italic" aria-label="Italic" type="button"></button>
-                <button class="ql-underline" aria-label="Underline" type="button"></button>
-            </span>
-            <span class="ql-formats">
-                <select class="ql-color"></select>
-                <select class="ql-background"></select>
-            </span>
-            <span class="ql-formats">
-                <button class="ql-list" value="ordered" aria-label="Ordered List" type="button"></button>
-                <button class="ql-list" value="bullet" aria-label="Unordered List" type="button"></button>
-                <select class="ql-align">
-                    <option selected></option>
-                    <option value="center">center</option>
-                    <option value="right">right</option>
-                    <option value="justify">justify</option>
+                <select class="ql-font" [pBind]="ptm('select')">
+                    <option selected [pBind]="ptm('option')">Sans Serif</option>
+                    <option value="serif" [pBind]="ptm('option')">Serif</option>
+                    <option value="monospace" [pBind]="ptm('option')">Monospace</option>
                 </select>
             </span>
-            <span class="ql-formats">
-                <button class="ql-link" aria-label="Insert Link" type="button"></button>
-                <button class="ql-image" aria-label="Insert Image" type="button"></button>
-                <button class="ql-code-block" aria-label="Insert Code Block" type="button"></button>
+            <span class="ql-formats" [pBind]="ptm('formats')">
+                <button class="ql-bold" aria-label="Bold" type="button" [pBind]="ptm('bold')"></button>
+                <button class="ql-italic" aria-label="Italic" type="button" [pBind]="ptm('italic')"></button>
+                <button class="ql-underline" aria-label="Underline" type="button" [pBind]="ptm('underline')"></button>
             </span>
-            <span class="ql-formats">
-                <button class="ql-clean" aria-label="Remove Styles" type="button"></button>
+            <span class="ql-formats" [pBind]="ptm('formats')">
+                <select class="ql-color" [pBind]="ptm('color')"></select>
+                <select class="ql-background" [pBind]="ptm('background')"></select>
+            </span>
+            <span class="ql-formats" [pBind]="ptm('formats')">
+                <button class="ql-list" value="ordered" aria-label="Ordered List" type="button" [pBind]="ptm('list')"></button>
+                <button class="ql-list" value="bullet" aria-label="Unordered List" type="button" [pBind]="ptm('list')"></button>
+                <select class="ql-align" [pBind]="ptm('select')">
+                    <option selected [pBind]="ptm('option')"></option>
+                    <option value="center" [pBind]="ptm('option')">center</option>
+                    <option value="right" [pBind]="ptm('option')">right</option>
+                    <option value="justify" [pBind]="ptm('option')">justify</option>
+                </select>
+            </span>
+            <span class="ql-formats" [pBind]="ptm('formats')">
+                <button class="ql-link" aria-label="Insert Link" type="button" [pBind]="ptm('link')"></button>
+                <button class="ql-image" aria-label="Insert Image" type="button" [pBind]="ptm('image')"></button>
+                <button class="ql-code-block" aria-label="Insert Code Block" type="button" [pBind]="ptm('codeBlock')"></button>
+            </span>
+            <span class="ql-formats" [pBind]="ptm('formats')">
+                <button class="ql-clean" aria-label="Remove Styles" type="button" [pBind]="ptm('clean')"></button>
             </span>
         </div>
-        <div [class]="cx('content')" [ngStyle]="style"></div>
+        <div [class]="cx('content')" [ngStyle]="style" [pBind]="ptm('content')"></div>
     `,
-      providers: [EDITOR_VALUE_ACCESSOR, EditorStyle],
+      providers: [EDITOR_VALUE_ACCESSOR, EditorStyle, {
+        provide: EDITOR_INSTANCE,
+        useExisting: Editor
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: Editor
+      }],
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
       host: {
         "[class]": "cn(cx('root'), styleClass)"
-      }
+      },
+      hostDirectives: [Bind]
     }]
   }], () => [], {
     style: [{
@@ -564,13 +713,23 @@ var Editor = class _Editor extends BaseEditableHolder {
     readonly: [{
       type: Input
     }],
-    onInit: [{
-      type: Output
+    onEditorInit: [{
+      type: Output,
+      args: ["onInit"]
     }],
     onTextChange: [{
       type: Output
     }],
     onSelectionChange: [{
+      type: Output
+    }],
+    onEditorChange: [{
+      type: Output
+    }],
+    onFocus: [{
+      type: Output
+    }],
+    onBlur: [{
       type: Output
     }],
     toolbar: [{

@@ -1,17 +1,28 @@
 import {
-  MinusIcon,
   PlusIcon
-} from "./chunk-BIL3W6KN.js";
+} from "./chunk-RHA7RL5K.js";
 import {
-  BaseComponent
-} from "./chunk-4YMQ5OOY.js";
+  MinusIcon
+} from "./chunk-YXZQJBKH.js";
+import {
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
+import {
+  BaseComponent,
+  PARENT_INSTANCE
+} from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
-} from "./chunk-L2L2T6ID.js";
+} from "./chunk-4ATYD752.js";
 import {
   PrimeTemplate,
   SharedModule
-} from "./chunk-ZKOTJBQ6.js";
+} from "./chunk-LMEEH3AJ.js";
+import "./chunk-GOP36Q47.js";
+import {
+  s3 as s
+} from "./chunk-UCHM6OXG.js";
 import "./chunk-6QGHQEN4.js";
 import {
   animate,
@@ -40,6 +51,7 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -71,6 +83,7 @@ import {
   ɵɵtextInterpolate
 } from "./chunk-EIF6IUR4.js";
 import {
+  InjectionToken,
   inject,
   ɵɵdefineInjectable,
   ɵɵdefineInjector,
@@ -78,13 +91,9 @@ import {
   ɵɵresetView,
   ɵɵrestoreView
 } from "./chunk-LW34VNAR.js";
-import "./chunk-G6ECYYJH.js";
 import "./chunk-YVXMBCE5.js";
+import "./chunk-G6ECYYJH.js";
 import "./chunk-RTGP7ALM.js";
-import "./chunk-BMDSN43F.js";
-import {
-  s3 as s
-} from "./chunk-RK2DVQNP.js";
 import "./chunk-4MWRP73S.js";
 
 // node_modules/@primeuix/styles/dist/fieldset/index.mjs
@@ -116,12 +125,12 @@ var _c9 = (a0) => ({
 function Fieldset_ng_container_2_ng_container_2__svg_svg_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 9);
+    ɵɵelement(0, "svg", 10);
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r2.cx("toggleIcon"));
-    ɵɵattribute("data-pc-section", "togglericon");
+    ɵɵproperty("pBind", ctx_r2.ptm("toggleIcon"));
   }
 }
 function Fieldset_ng_container_2_ng_container_2_span_2_ng_container_1_Template(rf, ctx) {
@@ -131,14 +140,14 @@ function Fieldset_ng_container_2_ng_container_2_span_2_ng_container_1_Template(r
 }
 function Fieldset_ng_container_2_ng_container_2_span_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "span");
-    ɵɵtemplate(1, Fieldset_ng_container_2_ng_container_2_span_2_ng_container_1_Template, 1, 0, "ng-container", 4);
+    ɵɵelementStart(0, "span", 2);
+    ɵɵtemplate(1, Fieldset_ng_container_2_ng_container_2_span_2_ng_container_1_Template, 1, 0, "ng-container", 5);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r2.cx("toggleIcon"));
-    ɵɵattribute("data-pc-section", "togglericon");
+    ɵɵproperty("pBind", ctx_r2.ptm("toggleIcon"));
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r2.expandIconTemplate || ctx_r2._expandIconTemplate);
   }
@@ -146,7 +155,7 @@ function Fieldset_ng_container_2_ng_container_2_span_2_Template(rf, ctx) {
 function Fieldset_ng_container_2_ng_container_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, Fieldset_ng_container_2_ng_container_2__svg_svg_1_Template, 1, 3, "svg", 7)(2, Fieldset_ng_container_2_ng_container_2_span_2_Template, 2, 4, "span", 8);
+    ɵɵtemplate(1, Fieldset_ng_container_2_ng_container_2__svg_svg_1_Template, 1, 3, "svg", 8)(2, Fieldset_ng_container_2_ng_container_2_span_2_Template, 2, 4, "span", 9);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -160,12 +169,13 @@ function Fieldset_ng_container_2_ng_container_2_Template(rf, ctx) {
 function Fieldset_ng_container_2_ng_container_3__svg_svg_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 11);
+    ɵɵelement(0, "svg", 12);
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r2.cx("toggleIcon"));
-    ɵɵattribute("aria-hidden", true)("data-pc-section", "togglericon");
+    ɵɵproperty("pBind", ctx_r2.ptm("toggleIcon"));
+    ɵɵattribute("aria-hidden", true);
   }
 }
 function Fieldset_ng_container_2_ng_container_3_span_2_ng_container_1_Template(rf, ctx) {
@@ -175,14 +185,14 @@ function Fieldset_ng_container_2_ng_container_3_span_2_ng_container_1_Template(r
 }
 function Fieldset_ng_container_2_ng_container_3_span_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "span");
-    ɵɵtemplate(1, Fieldset_ng_container_2_ng_container_3_span_2_ng_container_1_Template, 1, 0, "ng-container", 4);
+    ɵɵelementStart(0, "span", 2);
+    ɵɵtemplate(1, Fieldset_ng_container_2_ng_container_3_span_2_ng_container_1_Template, 1, 0, "ng-container", 5);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r2.cx("toggleIcon"));
-    ɵɵattribute("data-pc-section", "togglericon");
+    ɵɵproperty("pBind", ctx_r2.ptm("toggleIcon"));
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r2.collapseIconTemplate || ctx_r2._collapseIconTemplate);
   }
@@ -190,7 +200,7 @@ function Fieldset_ng_container_2_ng_container_3_span_2_Template(rf, ctx) {
 function Fieldset_ng_container_2_ng_container_3_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, Fieldset_ng_container_2_ng_container_3__svg_svg_1_Template, 1, 4, "svg", 10)(2, Fieldset_ng_container_2_ng_container_3_span_2_Template, 2, 4, "span", 8);
+    ɵɵtemplate(1, Fieldset_ng_container_2_ng_container_3__svg_svg_1_Template, 1, 4, "svg", 11)(2, Fieldset_ng_container_2_ng_container_3_span_2_Template, 2, 4, "span", 9);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -210,7 +220,7 @@ function Fieldset_ng_container_2_Template(rf, ctx) {
   if (rf & 1) {
     const _r2 = ɵɵgetCurrentView();
     ɵɵelementContainerStart(0);
-    ɵɵelementStart(1, "button", 5);
+    ɵɵelementStart(1, "button", 6);
     ɵɵlistener("click", function Fieldset_ng_container_2_Template_button_click_1_listener($event) {
       ɵɵrestoreView(_r2);
       const ctx_r2 = ɵɵnextContext();
@@ -220,7 +230,7 @@ function Fieldset_ng_container_2_Template(rf, ctx) {
       const ctx_r2 = ɵɵnextContext();
       return ɵɵresetView(ctx_r2.onKeyDown($event));
     });
-    ɵɵtemplate(2, Fieldset_ng_container_2_ng_container_2_Template, 3, 2, "ng-container", 6)(3, Fieldset_ng_container_2_ng_container_3_Template, 3, 2, "ng-container", 6)(4, Fieldset_ng_container_2_ng_container_4_Template, 1, 0, "ng-container", 4);
+    ɵɵtemplate(2, Fieldset_ng_container_2_ng_container_2_Template, 3, 2, "ng-container", 7)(3, Fieldset_ng_container_2_ng_container_3_Template, 3, 2, "ng-container", 7)(4, Fieldset_ng_container_2_ng_container_4_Template, 1, 0, "ng-container", 5);
     ɵɵelementEnd();
     ɵɵelementContainerEnd();
   }
@@ -229,6 +239,7 @@ function Fieldset_ng_container_2_Template(rf, ctx) {
     const legendContent_r4 = ɵɵreference(4);
     ɵɵadvance();
     ɵɵclassMap(ctx_r2.cx("toggleButton"));
+    ɵɵproperty("pBind", ctx_r2.ptm("toggleButton"));
     ɵɵattribute("id", ctx_r2.id + "_header")("aria-controls", ctx_r2.id + "_content")("aria-expanded", !ctx_r2.collapsed)("aria-label", ctx_r2.buttonAriaLabel);
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r2.collapsed);
@@ -245,16 +256,16 @@ function Fieldset_ng_template_3_ng_container_3_Template(rf, ctx) {
 }
 function Fieldset_ng_template_3_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "span");
+    ɵɵelementStart(0, "span", 2);
     ɵɵtext(1);
     ɵɵelementEnd();
     ɵɵprojection(2, 1);
-    ɵɵtemplate(3, Fieldset_ng_template_3_ng_container_3_Template, 1, 0, "ng-container", 4);
+    ɵɵtemplate(3, Fieldset_ng_template_3_ng_container_3_Template, 1, 0, "ng-container", 5);
   }
   if (rf & 2) {
     const ctx_r2 = ɵɵnextContext();
     ɵɵclassMap(ctx_r2.cx("legendLabel"));
-    ɵɵattribute("data-pc-section", "legendtitle");
+    ɵɵproperty("pBind", ctx_r2.ptm("legendLabel"));
     ɵɵadvance();
     ɵɵtextInterpolate(ctx_r2.legend);
     ɵɵadvance(2);
@@ -266,7 +277,7 @@ function Fieldset_ng_container_8_Template(rf, ctx) {
     ɵɵelementContainer(0);
   }
 }
-var theme = (
+var style3 = (
   /*css*/
   `
     ${style2}
@@ -294,7 +305,7 @@ var classes = {
 };
 var FieldsetStyle = class _FieldsetStyle extends BaseStyle {
   name = "fieldset";
-  theme = theme;
+  style = style3;
   classes = classes;
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵFieldsetStyle_BaseFactory;
@@ -321,7 +332,24 @@ var FieldsetClasses;
   FieldsetClasses2["contentContainer"] = "p-fieldset-content-container";
   FieldsetClasses2["content"] = "p-fieldset-content";
 })(FieldsetClasses || (FieldsetClasses = {}));
+var FIELDSET_INSTANCE = new InjectionToken("FIELDSET_INSTANCE");
 var Fieldset = class _Fieldset extends BaseComponent {
+  $pcFieldset = inject(FIELDSET_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  _componentStyle = inject(FieldsetStyle);
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptm("host"));
+  }
+  get dataP() {
+    return this.cn({
+      toggleable: this.toggleable
+    });
+  }
   /**
    * Header text of the fieldset.
    * @group Props
@@ -371,14 +399,14 @@ var Fieldset = class _Fieldset extends BaseComponent {
    * @group Emits
    */
   onAfterToggle = new EventEmitter();
+  _id = s("pn_id_");
   get id() {
-    return s("pn_id_");
+    return this._id;
   }
   get buttonAriaLabel() {
     return this.legend;
   }
   animating;
-  _componentStyle = inject(FieldsetStyle);
   /**
    * Defines the header template.
    * @group Templates
@@ -441,7 +469,7 @@ var Fieldset = class _Fieldset extends BaseComponent {
   _collapseIconTemplate;
   _contentTemplate;
   templates;
-  ngAfterContentInit() {
+  onAfterContentInit() {
     this.templates.forEach((item) => {
       switch (item.getType()) {
         case "header":
@@ -498,50 +526,56 @@ var Fieldset = class _Fieldset extends BaseComponent {
       onBeforeToggle: "onBeforeToggle",
       onAfterToggle: "onAfterToggle"
     },
-    features: [ɵɵProvidersFeature([FieldsetStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([FieldsetStyle, {
+      provide: FIELDSET_INSTANCE,
+      useExisting: _Fieldset
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _Fieldset
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     ngContentSelectors: _c5,
     decls: 9,
     vars: 30,
-    consts: [["legendContent", ""], [3, "ngStyle"], [4, "ngIf", "ngIfElse"], ["role", "region"], [4, "ngTemplateOutlet"], ["tabindex", "0", "role", "button", 3, "click", "keydown"], [4, "ngIf"], ["data-p-icon", "plus", 3, "class", 4, "ngIf"], [3, "class", 4, "ngIf"], ["data-p-icon", "plus"], ["data-p-icon", "minus", 3, "class", 4, "ngIf"], ["data-p-icon", "minus"]],
+    consts: [["legendContent", ""], [3, "ngStyle", "pBind"], [3, "pBind"], [4, "ngIf", "ngIfElse"], ["role", "region", 3, "pBind"], [4, "ngTemplateOutlet"], ["tabindex", "0", "role", "button", 3, "click", "keydown", "pBind"], [4, "ngIf"], ["data-p-icon", "plus", 3, "class", "pBind", 4, "ngIf"], [3, "class", "pBind", 4, "ngIf"], ["data-p-icon", "plus", 3, "pBind"], ["data-p-icon", "minus", 3, "class", "pBind", 4, "ngIf"], ["data-p-icon", "minus", 3, "pBind"]],
     template: function Fieldset_Template(rf, ctx) {
       if (rf & 1) {
         const _r1 = ɵɵgetCurrentView();
         ɵɵprojectionDef(_c4);
-        ɵɵelementStart(0, "fieldset", 1)(1, "legend");
-        ɵɵtemplate(2, Fieldset_ng_container_2_Template, 5, 9, "ng-container", 2)(3, Fieldset_ng_template_3_Template, 4, 5, "ng-template", null, 0, ɵɵtemplateRefExtractor);
+        ɵɵelementStart(0, "fieldset", 1)(1, "legend", 2);
+        ɵɵtemplate(2, Fieldset_ng_container_2_Template, 5, 10, "ng-container", 3)(3, Fieldset_ng_template_3_Template, 4, 5, "ng-template", null, 0, ɵɵtemplateRefExtractor);
         ɵɵelementEnd();
-        ɵɵelementStart(5, "div", 3);
+        ɵɵelementStart(5, "div", 4);
         ɵɵlistener("@fieldsetContent.done", function Fieldset_Template_div_animation_fieldsetContent_done_5_listener() {
           ɵɵrestoreView(_r1);
           return ɵɵresetView(ctx.onToggleDone());
         });
-        ɵɵelementStart(6, "div");
+        ɵɵelementStart(6, "div", 2);
         ɵɵprojection(7);
-        ɵɵtemplate(8, Fieldset_ng_container_8_Template, 1, 0, "ng-container", 4);
+        ɵɵtemplate(8, Fieldset_ng_container_8_Template, 1, 0, "ng-container", 5);
         ɵɵelementEnd()()();
       }
       if (rf & 2) {
         const legendContent_r4 = ɵɵreference(4);
         ɵɵclassMap(ctx.cn(ctx.cx("root"), ctx.styleClass));
-        ɵɵproperty("ngStyle", ctx.style);
-        ɵɵattribute("id", ctx.id)("data-pc-name", "fieldset")("data-pc-section", "root");
+        ɵɵproperty("ngStyle", ctx.style)("pBind", ctx.ptm("root"));
+        ɵɵattribute("id", ctx.id)("data-p", ctx.dataP);
         ɵɵadvance();
         ɵɵclassMap(ctx.cx("legend"));
-        ɵɵattribute("data-pc-section", "legend");
+        ɵɵproperty("pBind", ctx.ptm("legend"));
         ɵɵadvance();
         ɵɵproperty("ngIf", ctx.toggleable)("ngIfElse", legendContent_r4);
         ɵɵadvance(3);
         ɵɵclassMap(ctx.cx("contentContainer"));
-        ɵɵproperty("@fieldsetContent", ctx.collapsed ? ɵɵpureFunction1(24, _c7, ɵɵpureFunction1(22, _c6, ctx.transitionOptions)) : ɵɵpureFunction1(28, _c9, ɵɵpureFunction1(26, _c8, ctx.animating ? ctx.transitionOptions : "0ms")));
-        ɵɵattribute("id", ctx.id + "_content")("aria-labelledby", ctx.id + "_header")("aria-hidden", ctx.collapsed)("data-pc-section", "toggleablecontent");
+        ɵɵproperty("pBind", ctx.ptm("contentContainer"))("@fieldsetContent", ctx.collapsed ? ɵɵpureFunction1(24, _c7, ɵɵpureFunction1(22, _c6, ctx.transitionOptions)) : ɵɵpureFunction1(28, _c9, ɵɵpureFunction1(26, _c8, ctx.animating ? ctx.transitionOptions : "0ms")));
+        ɵɵattribute("id", ctx.id + "_content")("aria-labelledby", ctx.id + "_header")("aria-hidden", ctx.collapsed);
         ɵɵadvance();
         ɵɵclassMap(ctx.cx("content"));
-        ɵɵattribute("data-pc-section", "content");
+        ɵɵproperty("pBind", ctx.ptm("content"));
         ɵɵadvance(2);
         ɵɵproperty("ngTemplateOutlet", ctx.contentTemplate || ctx._contentTemplate);
       }
     },
-    dependencies: [CommonModule, NgIf, NgTemplateOutlet, NgStyle, MinusIcon, PlusIcon, SharedModule],
+    dependencies: [CommonModule, NgIf, NgTemplateOutlet, NgStyle, MinusIcon, PlusIcon, SharedModule, BindModule, Bind],
     encapsulation: 2,
     data: {
       animation: [trigger("fieldsetContent", [state("hidden", style({
@@ -559,10 +593,10 @@ var Fieldset = class _Fieldset extends BaseComponent {
     args: [{
       selector: "p-fieldset",
       standalone: true,
-      imports: [CommonModule, MinusIcon, PlusIcon, SharedModule],
+      imports: [CommonModule, MinusIcon, PlusIcon, SharedModule, BindModule],
       template: `
-        <fieldset [attr.id]="id" [ngStyle]="style" [class]="cn(cx('root'), styleClass)" [attr.data-pc-name]="'fieldset'" [attr.data-pc-section]="'root'">
-            <legend [class]="cx('legend')" [attr.data-pc-section]="'legend'">
+        <fieldset [attr.id]="id" [ngStyle]="style" [class]="cn(cx('root'), styleClass)" [pBind]="ptm('root')" [attr.data-p]="dataP">
+            <legend [class]="cx('legend')" [pBind]="ptm('legend')">
                 <ng-container *ngIf="toggleable; else legendContent">
                     <button
                         [attr.id]="id + '_header'"
@@ -574,16 +608,17 @@ var Fieldset = class _Fieldset extends BaseComponent {
                         (click)="toggle($event)"
                         (keydown)="onKeyDown($event)"
                         [class]="cx('toggleButton')"
+                        [pBind]="ptm('toggleButton')"
                     >
                         <ng-container *ngIf="collapsed">
-                            <svg data-p-icon="plus" *ngIf="!expandIconTemplate && !_expandIconTemplate" [class]="cx('toggleIcon')" [attr.data-pc-section]="'togglericon'" />
-                            <span *ngIf="expandIconTemplate || _expandIconTemplate" [class]="cx('toggleIcon')" [attr.data-pc-section]="'togglericon'">
+                            <svg data-p-icon="plus" *ngIf="!expandIconTemplate && !_expandIconTemplate" [class]="cx('toggleIcon')" [pBind]="ptm('toggleIcon')" />
+                            <span *ngIf="expandIconTemplate || _expandIconTemplate" [class]="cx('toggleIcon')" [pBind]="ptm('toggleIcon')">
                                 <ng-container *ngTemplateOutlet="expandIconTemplate || _expandIconTemplate"></ng-container>
                             </span>
                         </ng-container>
                         <ng-container *ngIf="!collapsed">
-                            <svg data-p-icon="minus" *ngIf="!collapseIconTemplate && !_collapseIconTemplate" [class]="cx('toggleIcon')" [attr.aria-hidden]="true" [attr.data-pc-section]="'togglericon'" />
-                            <span *ngIf="collapseIconTemplate || _collapseIconTemplate" [class]="cx('toggleIcon')" [attr.data-pc-section]="'togglericon'">
+                            <svg data-p-icon="minus" *ngIf="!collapseIconTemplate && !_collapseIconTemplate" [class]="cx('toggleIcon')" [attr.aria-hidden]="true" [pBind]="ptm('toggleIcon')" />
+                            <span *ngIf="collapseIconTemplate || _collapseIconTemplate" [class]="cx('toggleIcon')" [pBind]="ptm('toggleIcon')">
                                 <ng-container *ngTemplateOutlet="collapseIconTemplate || _collapseIconTemplate"></ng-container>
                             </span>
                         </ng-container>
@@ -591,7 +626,7 @@ var Fieldset = class _Fieldset extends BaseComponent {
                     </button>
                 </ng-container>
                 <ng-template #legendContent>
-                    <span [class]="cx('legendLabel')" [attr.data-pc-section]="'legendtitle'">{{ legend }}</span>
+                    <span [class]="cx('legendLabel')" [pBind]="ptm('legendLabel')">{{ legend }}</span>
                     <ng-content select="p-header"></ng-content>
                     <ng-container *ngTemplateOutlet="headerTemplate || _headerTemplate"></ng-container>
                 </ng-template>
@@ -600,13 +635,13 @@ var Fieldset = class _Fieldset extends BaseComponent {
                 [attr.id]="id + '_content'"
                 role="region"
                 [class]="cx('contentContainer')"
+                [pBind]="ptm('contentContainer')"
                 [@fieldsetContent]="collapsed ? { value: 'hidden', params: { transitionParams: transitionOptions, height: '0' } } : { value: 'visible', params: { transitionParams: animating ? transitionOptions : '0ms', height: '*' } }"
                 [attr.aria-labelledby]="id + '_header'"
                 [attr.aria-hidden]="collapsed"
-                [attr.data-pc-section]="'toggleablecontent'"
                 (@fieldsetContent.done)="onToggleDone()"
             >
-                <div [class]="cx('content')" [attr.data-pc-section]="'content'">
+                <div [class]="cx('content')" [pBind]="ptm('content')">
                     <ng-content></ng-content>
                     <ng-container *ngTemplateOutlet="contentTemplate || _contentTemplate"></ng-container>
                 </div>
@@ -620,7 +655,14 @@ var Fieldset = class _Fieldset extends BaseComponent {
       })), transition("visible <=> hidden", [animate("{{transitionParams}}")]), transition("void => *", animate(0))])],
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
-      providers: [FieldsetStyle]
+      providers: [FieldsetStyle, {
+        provide: FIELDSET_INSTANCE,
+        useExisting: Fieldset
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: Fieldset
+      }],
+      hostDirectives: [Bind]
     }]
   }], null, {
     legend: [{
@@ -692,19 +734,19 @@ var FieldsetModule = class _FieldsetModule {
   };
   static ɵmod = ɵɵdefineNgModule({
     type: _FieldsetModule,
-    imports: [Fieldset, SharedModule],
-    exports: [Fieldset, SharedModule]
+    imports: [Fieldset, SharedModule, BindModule],
+    exports: [Fieldset, SharedModule, BindModule]
   });
   static ɵinj = ɵɵdefineInjector({
-    imports: [Fieldset, SharedModule, SharedModule]
+    imports: [Fieldset, SharedModule, BindModule, SharedModule, BindModule]
   });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(FieldsetModule, [{
     type: NgModule,
     args: [{
-      imports: [Fieldset, SharedModule],
-      exports: [Fieldset, SharedModule]
+      imports: [Fieldset, SharedModule, BindModule],
+      exports: [Fieldset, SharedModule, BindModule]
     }]
   }], null, null);
 })();
