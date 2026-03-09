@@ -378,24 +378,36 @@ export class HospitalCalendarComponent implements OnInit {
         if (!this.selectedCalendarId) return;
         this.resyncing = true;
 
-        // Delete all existing duty shifts for selected calendar
-        this.calendarService.getEvents(this.selectedCalendarId).subscribe((events) => {
-            const dutyShifts = events.filter((e) => e.description?.includes('DUTY_SHIFT'));
+        // Find the current calendar
+        const cal = this.calendarList.find((c) => c.calendarId === this.selectedCalendarId);
+        if (!cal) {
+            this.resyncing = false;
+            return;
+        }
 
-            if (dutyShifts.length === 0) {
+        // Delete the entire calendar then recreate it fresh
+        this.calendarService.deleteCalendar(this.selectedCalendarId).subscribe({
+            next: () => {
+                this.calendarService.createCalendar(cal.name, `Calendar for ${cal.name}`).subscribe({
+                    next: (newCal: any) => {
+                        // Update local state with new calendarId
+                        const newCalendarId = newCal.calendarId;
+                        this.selectedCalendarId = newCalendarId;
+                        const idx = this.calendarList.findIndex((c) => c.name === cal.name);
+                        if (idx !== -1) this.calendarList[idx] = { ...cal, calendarId: newCalendarId };
+                        // Now sync duty shifts
+                        this.runDutySync();
+                    },
+                    error: () => {
+                        this.resyncing = false;
+                    }
+                });
+            },
+            error: () => {
                 this.resyncing = false;
-                this.runDutySync();
-                return;
             }
-
-            const deletes$ = dutyShifts.map((e) => this.calendarService.deleteEvent(this.selectedCalendarId, e.eventId).pipe(catchError(() => of(null))));
-
-            forkJoin(deletes$).subscribe(() => {
-                this.runDutySync();
-            });
         });
     }
-
     private runDutySync() {
         this.doctorsService.getDoctorsPage({ pageSize: 200 }).subscribe((result) => {
             const doctor = result.data.find((d: any) => {

@@ -36,13 +36,13 @@ export class AppMenu {
                     label: 'Patients Management',
                     icon: 'pi pi-user-plus',
                     routerLink: ['/patients-management']
-                },
-                {
-                    label: 'Hospital Calendar',
-                    icon: 'pi pi-calendar',
-                    routerLink: ['/calendar']
                 }
             ]
+        },
+        {
+            label: 'Calendar',
+            icon: 'pi pi-calendar',
+            routerLink: ['/calendar']
         },
         {
             label: 'Document Control',
