@@ -5,17 +5,21 @@ import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { HospitalCalendarService, HospitalCalendar, HospitalEvent } from '../../services/hospital-calendar.service';
+import { HospitalCalendarService, HospitalCalendar } from '../../services/hospital-calendar.service';
+import { DoctorsService } from '@/pages/service/doctors.service';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { TextareaModule } from 'primeng/textarea';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-hospital-calendar',
     standalone: true,
-    imports: [CommonModule, FormsModule, DialogModule, ButtonModule, InputTextModule, SelectModule, TextareaModule],
+    imports: [CommonModule, FormsModule, DialogModule, ButtonModule, InputTextModule, SelectModule, TextareaModule, RouterModule],
     templateUrl: './hospital-calendar.html',
     styleUrl: './hospital-calendar.scss'
 })
@@ -25,6 +29,7 @@ export class HospitalCalendarComponent implements OnInit, AfterViewInit {
     calendarList: HospitalCalendar[] = [];
     selectedCalendarId = '';
     fcInstance: Calendar | null = null;
+    calendarReady = false;
 
     showEventDialog = false;
     showDetailDialog = false;
@@ -32,6 +37,7 @@ export class HospitalCalendarComponent implements OnInit, AfterViewInit {
     pendingStart = '';
     pendingEnd = '';
     selectedEvent: any = null;
+    syncing = false;
 
     newEvent = { name: '', description: '', color: '#3B82F6', recurrence: 'none' };
 
@@ -53,22 +59,65 @@ export class HospitalCalendarComponent implements OnInit, AfterViewInit {
 
     constructor(
         private calendarService: HospitalCalendarService,
+        private doctorsService: DoctorsService,
         private cd: ChangeDetectorRef
     ) {}
 
     ngOnInit() {
-        this.calendarService.getCalendars().subscribe((data) => {
-            this.calendarList = data;
-            if (data.length > 0) {
-                this.selectedCalendarId = data[0].calendarId;
-                this.loadEvents();
+        this.syncDoctorCalendars();
+    }
+
+    ngAfterViewInit() {}
+
+    syncDoctorCalendars() {
+        this.syncing = true;
+        this.cd.detectChanges();
+
+        forkJoin({
+            calendars: this.calendarService.getCalendars(),
+            doctors: this.doctorsService.getDoctorsPage({ pageSize: 200 }).pipe(catchError(() => of({ data: [] })))
+        }).subscribe(({ calendars, doctors }) => {
+            const doctorList = doctors.data || [];
+            const doctorNames = new Set(doctorList.map((d) => d.name).filter(Boolean));
+            const existingNames = new Set(calendars.map((c) => c.name));
+
+            // Calendars to create — doctor exists but no calendar yet
+            const missing = doctorList.filter((d) => d.name && !existingNames.has(d.name));
+
+            // Calendars to delete — calendar exists but doctor was deleted
+            const orphaned = calendars.filter((c) => !doctorNames.has(c.name));
+
+            const creates$ = missing.map((d) => this.calendarService.createCalendar(d.name, `Calendar for ${d.name}`).pipe(catchError(() => of(null))));
+
+            const deletes$ = orphaned.map((c) => this.calendarService.deleteCalendar(c.calendarId).pipe(catchError(() => of(null))));
+
+            const all$ = [...creates$, ...deletes$];
+
+            if (all$.length === 0) {
+                this.calendarList = calendars;
+                this.syncing = false;
+                this.selectFirst();
+                return;
             }
-            this.cd.detectChanges();
+
+            forkJoin(all$).subscribe(() => {
+                this.calendarService.getCalendars().subscribe((updated) => {
+                    this.calendarList = updated;
+                    this.syncing = false;
+                    this.selectFirst();
+                });
+            });
         });
     }
 
-    ngAfterViewInit() {
-        this.initCalendar();
+    selectFirst() {
+        if (this.calendarList.length > 0) {
+            this.selectedCalendarId = this.calendarList[0].calendarId;
+            setTimeout(() => {
+                this.initCalendar();
+            }, 0);
+        }
+        this.cd.detectChanges();
     }
 
     initCalendar() {
@@ -100,6 +149,8 @@ export class HospitalCalendarComponent implements OnInit, AfterViewInit {
             }
         });
         this.fcInstance.render();
+        this.calendarReady = true;
+        if (this.selectedCalendarId) this.loadEvents();
     }
 
     onCalendarChange() {
@@ -107,22 +158,20 @@ export class HospitalCalendarComponent implements OnInit, AfterViewInit {
     }
 
     loadEvents() {
-        if (!this.selectedCalendarId) return;
+        if (!this.selectedCalendarId || !this.fcInstance) return;
         this.calendarService.getEvents(this.selectedCalendarId).subscribe((data) => {
-            if (this.fcInstance) {
-                this.fcInstance.removeAllEvents();
-                data.forEach((e) =>
-                    this.fcInstance!.addEvent({
-                        id: e.eventId,
-                        title: e.name,
-                        start: e.startDate,
-                        end: e.endDate,
-                        backgroundColor: e.color || '#3B82F6',
-                        borderColor: e.color || '#3B82F6',
-                        extendedProps: { description: e.description, recurrence: e.recurrence }
-                    })
-                );
-            }
+            this.fcInstance!.removeAllEvents();
+            data.forEach((e) =>
+                this.fcInstance!.addEvent({
+                    id: e.eventId,
+                    title: e.name,
+                    start: e.startDate,
+                    end: e.endDate,
+                    backgroundColor: e.color || '#3B82F6',
+                    borderColor: e.color || '#3B82F6',
+                    extendedProps: { description: e.description, recurrence: e.recurrence }
+                })
+            );
             this.cd.detectChanges();
         });
     }

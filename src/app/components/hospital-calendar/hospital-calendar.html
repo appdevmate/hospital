@@ -1,22 +1,68 @@
 <div class="hospital-calendar-page">
 
-    <!-- Header -->
-    <div class="calendar-header">
-        <div class="header-left">
-            <i class="pi pi-calendar" style="font-size: 1.4rem; color: #16a34a;"></i>
-            <h2>Hospital Calendar</h2>
-        </div>
-        <div class="header-right">
-            <p-select [options]="calendarList" [(ngModel)]="selectedCalendarId" optionLabel="name"
-                optionValue="calendarId" placeholder="Select Calendar" (onChange)="onCalendarChange()"
-                [style]="{ minWidth: '220px' }" />
-        </div>
+    <!-- Syncing overlay -->
+    <div *ngIf="syncing" style="
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    gap: 1rem;
+    text-align: center;
+  ">
+        <i class="pi pi-spin pi-spinner" style="font-size: 2.5rem; color: #16a34a;"></i>
+        <p style="margin: 0; color: #6B7280; font-size: 1rem;">Syncing doctor calendars, please wait...</p>
     </div>
 
-    <!-- FullCalendar -->
-    <div class="calendar-container">
-        <div #calendarEl></div>
-    </div>
+    <!-- Main content -->
+    <ng-container *ngIf="!syncing">
+
+        <!-- Header -->
+        <div class="calendar-header">
+            <div class="header-left">
+                <i class="pi pi-calendar" style="font-size: 1.4rem; color: #16a34a;"></i>
+                <h2>Hospital Calendar</h2>
+            </div>
+            <div class="header-right" *ngIf="calendarList.length > 0">
+                <p-select [options]="calendarList" [(ngModel)]="selectedCalendarId" optionLabel="name"
+                    optionValue="calendarId" placeholder="Select Calendar" (onChange)="onCalendarChange()"
+                    [style]="{ minWidth: '220px' }" />
+            </div>
+        </div>
+
+        <!-- Empty state -->
+        <div *ngIf="calendarList.length === 0" style="
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 2rem;
+      text-align: center;
+      gap: 1rem;
+    ">
+            <i class="pi pi-users" style="font-size: 3rem; color: #D1D5DB;"></i>
+            <h3 style="margin: 0; color: #6B7280; font-weight: 600;">No Calendars Yet</h3>
+            <p style="margin: 0; color: #9CA3AF; font-size: 0.95rem;">
+                Calendars are created automatically for each doctor.<br />
+                Add doctors in <strong>Doctor Management</strong> to get started.
+            </p>
+            <a routerLink="/doctors-management" style="
+        display: inline-flex; align-items: center; gap: 0.5rem;
+        background: #16a34a; color: white;
+        padding: 0.6rem 1.2rem; border-radius: 8px;
+        text-decoration: none; font-size: 0.9rem; font-weight: 600;
+      ">
+                <i class="pi pi-arrow-right"></i>
+                Go to Doctor Management
+            </a>
+        </div>
+
+        <!-- FullCalendar -->
+        <div class="calendar-container" *ngIf="calendarList.length > 0">
+            <div #calendarEl></div>
+        </div>
+
+    </ng-container>
 
     <!-- New Event Dialog -->
     <p-dialog header="New Event" [(visible)]="showEventDialog" [style]="{ width: '460px' }" [modal]="true"

@@ -43,4 +43,8 @@ export class HospitalCalendarService {
     createEvent(calendarId: string, event: Partial<HospitalEvent>) {
         return this.http.post<HospitalEvent>(`${API_URL}/calendars/${calendarId}/events`, event, { headers });
     }
+
+    deleteCalendar(calendarId: string) {
+        return this.http.delete(`${API_URL}/calendars/${calendarId}`, { headers });
+    }
 }
