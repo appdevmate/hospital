@@ -18,11 +18,12 @@ import { ConfirmationService } from 'primeng/api';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { HelpersService } from '@/services/helpers-service';
+import { DatePickerModule } from 'primeng/datepicker';
 
 @Component({
     selector: 'app-hospital-calendar',
     standalone: true,
-    imports: [CommonModule, FormsModule, RouterModule, DialogModule, ButtonModule, InputTextModule, SelectModule, TextareaModule, ConfirmDialogModule],
+    imports: [CommonModule, FormsModule, RouterModule, DialogModule, ButtonModule, InputTextModule, SelectModule, TextareaModule, ConfirmDialogModule, DatePickerModule],
     providers: [ConfirmationService],
     templateUrl: './hospital-calendar.html',
     styleUrl: './hospital-calendar.scss'
@@ -58,8 +59,8 @@ export class HospitalCalendarComponent implements OnInit {
         sat: 6
     };
 
-    newEvent = { name: '', description: '', color: '#3B82F6', recurrence: 'none' };
-    editEvent = { name: '', description: '', color: '#3B82F6', recurrence: 'none', startDate: '', endDate: '' };
+    newEvent = { name: '', description: '', color: '#3B82F6', recurrence: 'none', startTime: null as Date | null, endTime: null as Date | null };
+    editEvent = { name: '', description: '', color: '#3B82F6', recurrence: 'none', startDate: '', endDate: '', startTime: null as Date | null, endTime: null as Date | null };
 
     colorOptions = [
         { value: '#3B82F6', label: 'Blue' },
@@ -160,7 +161,7 @@ export class HospitalCalendarComponent implements OnInit {
             select: (arg) => {
                 this.pendingStart = arg.startStr;
                 this.pendingEnd = arg.endStr;
-                this.newEvent = { name: '', description: '', color: '#3B82F6', recurrence: 'none' };
+                this.newEvent = { name: '', description: '', color: '#3B82F6', recurrence: 'none', startTime: null as Date | null, endTime: null as Date | null };
                 this.showEventDialog = true;
                 this.cd.detectChanges();
             },
@@ -213,13 +214,14 @@ export class HospitalCalendarComponent implements OnInit {
             .createEvent(this.selectedCalendarId, {
                 name: this.newEvent.name,
                 description: this.newEvent.description,
-                startDate: this.pendingStart,
-                endDate: this.pendingEnd,
+                startDate: `${this.pendingStart}T${this.helpers.toTimeStr(this.newEvent.startTime)}:00`,
+                endDate: `${this.pendingStart}T${this.helpers.toTimeStr(this.newEvent.endTime)}:00`,
                 color: this.newEvent.color,
                 recurrence: this.newEvent.recurrence
             })
             .subscribe({
                 next: () => {
+                    this.newEvent = { name: '', description: '', color: '#3B82F6', recurrence: 'none', startTime: null as Date | null, endTime: null as Date | null };
                     this.showEventDialog = false;
                     this.loading = false;
                     this.helpers.notifySuccess('Event Created');
@@ -237,13 +239,20 @@ export class HospitalCalendarComponent implements OnInit {
     // Open edit dialog from detail dialog
     openEdit() {
         if (!this.selectedEvent) return;
+        const parseTime = (dateStr: string): Date | null => {
+            if (!dateStr) return null;
+            const d = new Date(dateStr);
+            return isNaN(d.getTime()) ? null : d;
+        };
         this.editEvent = {
             name: this.selectedEvent.title,
             description: this.selectedEvent.extendedProps?.description || '',
             color: this.selectedEvent.backgroundColor || '#3B82F6',
             recurrence: this.selectedEvent.extendedProps?.recurrence || 'none',
             startDate: this.selectedEvent.startStr,
-            endDate: this.selectedEvent.endStr || ''
+            endDate: this.selectedEvent.endStr || '',
+            startTime: parseTime(this.selectedEvent.startStr),
+            endTime: parseTime(this.selectedEvent.endStr)
         };
         this.showDetailDialog = false;
         this.showEditDialog = true;
@@ -258,8 +267,8 @@ export class HospitalCalendarComponent implements OnInit {
             .updateEvent(this.selectedCalendarId, this.selectedEvent.id, {
                 name: this.editEvent.name,
                 description: this.editEvent.description,
-                startDate: this.editEvent.startDate,
-                endDate: this.editEvent.endDate,
+                startDate: `${this.editEvent.startDate.slice(0, 10)}T${this.helpers.toTimeStr(this.editEvent.startTime)}:00`,
+                endDate: `${this.editEvent.startDate.slice(0, 10)}T${this.helpers.toTimeStr(this.editEvent.endTime)}:00`,
                 color: this.editEvent.color,
                 recurrence: this.editEvent.recurrence
             })

@@ -1,4 +1,7 @@
 import {
+  transformToBoolean
+} from "./chunk-BB55NINM.js";
+import {
   Ripple
 } from "./chunk-OC77X5LN.js";
 import {
@@ -6,9 +9,6 @@ import {
   ChevronUpIcon
 } from "./chunk-RHA7RL5K.js";
 import "./chunk-YXZQJBKH.js";
-import {
-  transformToBoolean
-} from "./chunk-BB55NINM.js";
 import {
   Bind,
   BindModule

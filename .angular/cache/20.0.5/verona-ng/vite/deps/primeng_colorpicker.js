@@ -27,6 +27,9 @@ import {
   SharedModule,
   TranslationKeys
 } from "./chunk-LMEEH3AJ.js";
+import {
+  NG_VALUE_ACCESSOR
+} from "./chunk-RZEKJVYA.js";
 import "./chunk-GOP36Q47.js";
 import {
   D,
@@ -40,9 +43,6 @@ import {
   transition,
   trigger
 } from "./chunk-53DGU4C2.js";
-import {
-  NG_VALUE_ACCESSOR
-} from "./chunk-RZEKJVYA.js";
 import {
   CommonModule,
   NgIf,

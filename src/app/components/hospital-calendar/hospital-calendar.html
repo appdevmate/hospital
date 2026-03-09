@@ -83,6 +83,19 @@
                     class="w-full"></textarea>
             </div>
 
+            <div style="display: flex; gap: 1rem;">
+                <div style="display: flex; flex-direction: column; gap: 0.4rem; flex: 1;">
+                    <label class="field-label">Start Time</label>
+                    <p-datepicker [(ngModel)]="newEvent.startTime" [timeOnly]="true" hourFormat="12"
+                        placeholder="Select time" [style]="{ width: '100%' }" />
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 0.4rem; flex: 1;">
+                    <label class="field-label">End Time</label>
+                    <p-datepicker [(ngModel)]="newEvent.endTime" [timeOnly]="true" hourFormat="12"
+                        placeholder="Select time" [style]="{ width: '100%' }" />
+                </div>
+            </div>
+
             <div style="display: flex; flex-direction: column; gap: 0.6rem;">
                 <label class="field-label">Color</label>
                 <div style="display: flex; flex-direction: row; gap: 10px; align-items: center;">
@@ -129,6 +142,19 @@
             <div style="display: flex; flex-direction: column; gap: 0.4rem;">
                 <label class="field-label">Description</label>
                 <textarea pTextarea [(ngModel)]="editEvent.description" rows="2" class="w-full"></textarea>
+            </div>
+
+            <div style="display: flex; gap: 1rem;">
+                <div style="display: flex; flex-direction: column; gap: 0.4rem; flex: 1;">
+                    <label class="field-label">Start Time</label>
+                    <p-datepicker [(ngModel)]="editEvent.startTime" [timeOnly]="true" hourFormat="12"
+                        placeholder="Select time" [style]="{ width: '100%' }" />
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 0.4rem; flex: 1;">
+                    <label class="field-label">End Time</label>
+                    <p-datepicker [(ngModel)]="editEvent.endTime" [timeOnly]="true" hourFormat="12"
+                        placeholder="Select time" [style]="{ width: '100%' }" />
+                </div>
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 0.6rem;">
@@ -193,6 +219,16 @@
                 <i class="pi pi-refresh" style="color: #9CA3AF;"></i>
                 <span style="color: #4B5563; font-size: 0.9rem; text-transform: capitalize;">
                     Repeats {{ selectedEvent.extendedProps.recurrence }}
+                </span>
+            </div>
+
+            <div style="display: flex; gap: 0.7rem; align-items: center;">
+                <i class="pi pi-clock" style="color: #9CA3AF;"></i>
+                <span style="color: #4B5563; font-size: 0.9rem;">
+                    {{ selectedEvent.startStr | date:'h:mm a' }}
+                    <ng-container *ngIf="selectedEvent.endStr">
+                        — {{ selectedEvent.endStr | date:'h:mm a' }}
+                    </ng-container>
                 </span>
             </div>
 

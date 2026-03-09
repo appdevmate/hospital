@@ -7,11 +7,11 @@ import {
   DomHandler
 } from "./chunk-S73J4WE3.js";
 import {
-  Ripple
-} from "./chunk-OC77X5LN.js";
-import {
   zindexutils
 } from "./chunk-BB55NINM.js";
+import {
+  Ripple
+} from "./chunk-OC77X5LN.js";
 import {
   Badge,
   BadgeModule

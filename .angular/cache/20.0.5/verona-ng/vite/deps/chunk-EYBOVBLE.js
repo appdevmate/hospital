@@ -1,26 +1,26 @@
 import {
   Button
-} from "./chunk-PEC3X5FE.js";
+} from "./chunk-UM3VFPQ2.js";
 import {
   BaseInput
-} from "./chunk-7HI7VQB4.js";
+} from "./chunk-HYKQO3OA.js";
 import {
   InputText
-} from "./chunk-EOQSH2AZ.js";
-import {
-  zindexutils
-} from "./chunk-BB55NINM.js";
+} from "./chunk-IG3R3ILJ.js";
 import {
   AutoFocus
-} from "./chunk-NSRC7NBD.js";
-import {
-  Ripple
-} from "./chunk-ZGQMWLLM.js";
+} from "./chunk-YNLAOK3J.js";
 import {
   ConnectedOverlayScrollHandler,
   blockBodyScroll,
   unblockBodyScroll
-} from "./chunk-QVUTNZUY.js";
+} from "./chunk-S73J4WE3.js";
+import {
+  zindexutils
+} from "./chunk-BB55NINM.js";
+import {
+  Ripple
+} from "./chunk-OC77X5LN.js";
 import {
   CalendarIcon,
   ChevronDownIcon,
@@ -28,34 +28,44 @@ import {
   ChevronRightIcon,
   ChevronUpIcon,
   TimesIcon
-} from "./chunk-7J3R4TGM.js";
+} from "./chunk-RHA7RL5K.js";
+import {
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
+import {
+  PARENT_INSTANCE
+} from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
-} from "./chunk-TT45BO2Q.js";
+} from "./chunk-4ATYD752.js";
 import {
   OverlayService,
   PrimeTemplate,
   SharedModule,
   TranslationKeys
-} from "./chunk-NUKU6X6H.js";
+} from "./chunk-LMEEH3AJ.js";
+import {
+  NG_VALUE_ACCESSOR
+} from "./chunk-RZEKJVYA.js";
 import {
   D,
   Ht,
   I,
-  Kt,
+  O,
   R,
   S,
-  T,
   W,
   Y2 as Y,
   Yt,
-  b2 as b,
+  _t,
+  b,
   s,
   s3 as s2,
   ut,
   v,
   z2 as z
-} from "./chunk-RK2DVQNP.js";
+} from "./chunk-UCHM6OXG.js";
 import {
   animate,
   state,
@@ -63,9 +73,6 @@ import {
   transition,
   trigger
 } from "./chunk-53DGU4C2.js";
-import {
-  NG_VALUE_ACCESSOR
-} from "./chunk-RZEKJVYA.js";
 import {
   CommonModule,
   NgClass,
@@ -91,11 +98,14 @@ import {
   input,
   numberAttribute,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
   ɵɵattribute,
   ɵɵclassMap,
+  ɵɵconditional,
+  ɵɵconditionalCreate,
   ɵɵcontentQuery,
   ɵɵdefineComponent,
   ɵɵdefineNgModule,
@@ -128,6 +138,7 @@ import {
   ɵɵviewQuery
 } from "./chunk-EIF6IUR4.js";
 import {
+  InjectionToken,
   computed,
   forwardRef,
   inject,
@@ -139,7 +150,7 @@ import {
 } from "./chunk-LW34VNAR.js";
 
 // node_modules/@primeuix/styles/dist/datepicker/index.mjs
-var style2 = "\n    .p-datepicker {\n        display: inline-flex;\n        max-width: 100%;\n    }\n\n    .p-datepicker-input {\n        flex: 1 1 auto;\n        width: 1%;\n    }\n\n    .p-datepicker:has(.p-datepicker-dropdown) .p-datepicker-input {\n        border-start-end-radius: 0;\n        border-end-end-radius: 0;\n    }\n\n    .p-datepicker-dropdown {\n        cursor: pointer;\n        display: inline-flex;\n        user-select: none;\n        align-items: center;\n        justify-content: center;\n        overflow: hidden;\n        position: relative;\n        width: dt('datepicker.dropdown.width');\n        border-start-end-radius: dt('datepicker.dropdown.border.radius');\n        border-end-end-radius: dt('datepicker.dropdown.border.radius');\n        background: dt('datepicker.dropdown.background');\n        border: 1px solid dt('datepicker.dropdown.border.color');\n        border-inline-start: 0 none;\n        color: dt('datepicker.dropdown.color');\n        transition:\n            background dt('datepicker.transition.duration'),\n            color dt('datepicker.transition.duration'),\n            border-color dt('datepicker.transition.duration'),\n            outline-color dt('datepicker.transition.duration');\n        outline-color: transparent;\n    }\n\n    .p-datepicker-dropdown:not(:disabled):hover {\n        background: dt('datepicker.dropdown.hover.background');\n        border-color: dt('datepicker.dropdown.hover.border.color');\n        color: dt('datepicker.dropdown.hover.color');\n    }\n\n    .p-datepicker-dropdown:not(:disabled):active {\n        background: dt('datepicker.dropdown.active.background');\n        border-color: dt('datepicker.dropdown.active.border.color');\n        color: dt('datepicker.dropdown.active.color');\n    }\n\n    .p-datepicker-dropdown:focus-visible {\n        box-shadow: dt('datepicker.dropdown.focus.ring.shadow');\n        outline: dt('datepicker.dropdown.focus.ring.width') dt('datepicker.dropdown.focus.ring.style') dt('datepicker.dropdown.focus.ring.color');\n        outline-offset: dt('datepicker.dropdown.focus.ring.offset');\n    }\n\n    .p-datepicker:has(.p-datepicker-input-icon-container) {\n        position: relative;\n    }\n\n    .p-datepicker:has(.p-datepicker-input-icon-container) .p-datepicker-input {\n        padding-inline-end: calc((dt('form.field.padding.x') * 2) + dt('icon.size'));\n    }\n\n    .p-datepicker-input-icon-container {\n        cursor: pointer;\n        position: absolute;\n        top: 50%;\n        inset-inline-end: dt('form.field.padding.x');\n        margin-block-start: calc(-1 * (dt('icon.size') / 2));\n        color: dt('datepicker.input.icon.color');\n        line-height: 1;\n    }\n\n    .p-datepicker-fluid {\n        display: flex;\n    }\n\n    .p-datepicker-fluid .p-datepicker-input {\n        width: 1%;\n    }\n\n    .p-datepicker .p-datepicker-panel {\n        min-width: 100%;\n    }\n\n    .p-datepicker-panel {\n        width: auto;\n        padding: dt('datepicker.panel.padding');\n        background: dt('datepicker.panel.background');\n        color: dt('datepicker.panel.color');\n        border: 1px solid dt('datepicker.panel.border.color');\n        border-radius: dt('datepicker.panel.border.radius');\n        box-shadow: dt('datepicker.panel.shadow');\n    }\n\n    .p-datepicker-panel-inline {\n        display: inline-block;\n        overflow-x: auto;\n        box-shadow: none;\n    }\n\n    .p-datepicker-header {\n        display: flex;\n        align-items: center;\n        justify-content: space-between;\n        padding: dt('datepicker.header.padding');\n        background: dt('datepicker.header.background');\n        color: dt('datepicker.header.color');\n        border-block-end: 1px solid dt('datepicker.header.border.color');\n    }\n\n    .p-datepicker-next-button:dir(rtl) {\n        order: -1;\n    }\n\n    .p-datepicker-prev-button:dir(rtl) {\n        order: 1;\n    }\n\n    .p-datepicker-title {\n        display: flex;\n        align-items: center;\n        justify-content: space-between;\n        gap: dt('datepicker.title.gap');\n        font-weight: dt('datepicker.title.font.weight');\n    }\n\n    .p-datepicker-select-year,\n    .p-datepicker-select-month {\n        border: none;\n        background: transparent;\n        margin: 0;\n        cursor: pointer;\n        font-weight: inherit;\n        transition:\n            background dt('datepicker.transition.duration'),\n            color dt('datepicker.transition.duration'),\n            border-color dt('datepicker.transition.duration'),\n            outline-color dt('datepicker.transition.duration'),\n            box-shadow dt('datepicker.transition.duration');\n    }\n\n    .p-datepicker-select-month {\n        padding: dt('datepicker.select.month.padding');\n        color: dt('datepicker.select.month.color');\n        border-radius: dt('datepicker.select.month.border.radius');\n    }\n\n    .p-datepicker-select-year {\n        padding: dt('datepicker.select.year.padding');\n        color: dt('datepicker.select.year.color');\n        border-radius: dt('datepicker.select.year.border.radius');\n    }\n\n    .p-datepicker-select-month:enabled:hover {\n        background: dt('datepicker.select.month.hover.background');\n        color: dt('datepicker.select.month.hover.color');\n    }\n\n    .p-datepicker-select-year:enabled:hover {\n        background: dt('datepicker.select.year.hover.background');\n        color: dt('datepicker.select.year.hover.color');\n    }\n\n    .p-datepicker-select-month:focus-visible,\n    .p-datepicker-select-year:focus-visible {\n        box-shadow: dt('datepicker.date.focus.ring.shadow');\n        outline: dt('datepicker.date.focus.ring.width') dt('datepicker.date.focus.ring.style') dt('datepicker.date.focus.ring.color');\n        outline-offset: dt('datepicker.date.focus.ring.offset');\n    }\n\n    .p-datepicker-calendar-container {\n        display: flex;\n    }\n\n    .p-datepicker-calendar-container .p-datepicker-calendar {\n        flex: 1 1 auto;\n        border-inline-start: 1px solid dt('datepicker.group.border.color');\n        padding-inline-end: dt('datepicker.group.gap');\n        padding-inline-start: dt('datepicker.group.gap');\n    }\n\n    .p-datepicker-calendar-container .p-datepicker-calendar:first-child {\n        padding-inline-start: 0;\n        border-inline-start: 0 none;\n    }\n\n    .p-datepicker-calendar-container .p-datepicker-calendar:last-child {\n        padding-inline-end: 0;\n    }\n\n    .p-datepicker-day-view {\n        width: 100%;\n        border-collapse: collapse;\n        font-size: 1rem;\n        margin: dt('datepicker.day.view.margin');\n    }\n\n    .p-datepicker-weekday-cell {\n        padding: dt('datepicker.week.day.padding');\n    }\n\n    .p-datepicker-weekday {\n        font-weight: dt('datepicker.week.day.font.weight');\n        color: dt('datepicker.week.day.color');\n    }\n\n    .p-datepicker-day-cell {\n        padding: dt('datepicker.date.padding');\n    }\n\n    .p-datepicker-day {\n        display: flex;\n        justify-content: center;\n        align-items: center;\n        cursor: pointer;\n        margin: 0 auto;\n        overflow: hidden;\n        position: relative;\n        width: dt('datepicker.date.width');\n        height: dt('datepicker.date.height');\n        border-radius: dt('datepicker.date.border.radius');\n        transition:\n            background dt('datepicker.transition.duration'),\n            color dt('datepicker.transition.duration'),\n            border-color dt('datepicker.transition.duration'),\n            box-shadow dt('datepicker.transition.duration'),\n            outline-color dt('datepicker.transition.duration');\n        border: 1px solid transparent;\n        outline-color: transparent;\n        color: dt('datepicker.date.color');\n    }\n\n    .p-datepicker-day:not(.p-datepicker-day-selected):not(.p-disabled):hover {\n        background: dt('datepicker.date.hover.background');\n        color: dt('datepicker.date.hover.color');\n    }\n\n    .p-datepicker-day:focus-visible {\n        box-shadow: dt('datepicker.date.focus.ring.shadow');\n        outline: dt('datepicker.date.focus.ring.width') dt('datepicker.date.focus.ring.style') dt('datepicker.date.focus.ring.color');\n        outline-offset: dt('datepicker.date.focus.ring.offset');\n    }\n\n    .p-datepicker-day-selected {\n        background: dt('datepicker.date.selected.background');\n        color: dt('datepicker.date.selected.color');\n    }\n\n    .p-datepicker-day-selected-range {\n        background: dt('datepicker.date.range.selected.background');\n        color: dt('datepicker.date.range.selected.color');\n    }\n\n    .p-datepicker-today > .p-datepicker-day {\n        background: dt('datepicker.today.background');\n        color: dt('datepicker.today.color');\n    }\n\n    .p-datepicker-today > .p-datepicker-day-selected {\n        background: dt('datepicker.date.selected.background');\n        color: dt('datepicker.date.selected.color');\n    }\n\n    .p-datepicker-today > .p-datepicker-day-selected-range {\n        background: dt('datepicker.date.range.selected.background');\n        color: dt('datepicker.date.range.selected.color');\n    }\n\n    .p-datepicker-weeknumber {\n        text-align: center;\n    }\n\n    .p-datepicker-month-view {\n        margin: dt('datepicker.month.view.margin');\n    }\n\n    .p-datepicker-month {\n        width: 33.3%;\n        display: inline-flex;\n        align-items: center;\n        justify-content: center;\n        cursor: pointer;\n        overflow: hidden;\n        position: relative;\n        padding: dt('datepicker.month.padding');\n        transition:\n            background dt('datepicker.transition.duration'),\n            color dt('datepicker.transition.duration'),\n            border-color dt('datepicker.transition.duration'),\n            box-shadow dt('datepicker.transition.duration'),\n            outline-color dt('datepicker.transition.duration');\n        border-radius: dt('datepicker.month.border.radius');\n        outline-color: transparent;\n        color: dt('datepicker.date.color');\n    }\n\n    .p-datepicker-month:not(.p-disabled):not(.p-datepicker-month-selected):hover {\n        color: dt('datepicker.date.hover.color');\n        background: dt('datepicker.date.hover.background');\n    }\n\n    .p-datepicker-month-selected {\n        color: dt('datepicker.date.selected.color');\n        background: dt('datepicker.date.selected.background');\n    }\n\n    .p-datepicker-month:not(.p-disabled):focus-visible {\n        box-shadow: dt('datepicker.date.focus.ring.shadow');\n        outline: dt('datepicker.date.focus.ring.width') dt('datepicker.date.focus.ring.style') dt('datepicker.date.focus.ring.color');\n        outline-offset: dt('datepicker.date.focus.ring.offset');\n    }\n\n    .p-datepicker-year-view {\n        margin: dt('datepicker.year.view.margin');\n    }\n\n    .p-datepicker-year {\n        width: 50%;\n        display: inline-flex;\n        align-items: center;\n        justify-content: center;\n        cursor: pointer;\n        overflow: hidden;\n        position: relative;\n        padding: dt('datepicker.year.padding');\n        transition:\n            background dt('datepicker.transition.duration'),\n            color dt('datepicker.transition.duration'),\n            border-color dt('datepicker.transition.duration'),\n            box-shadow dt('datepicker.transition.duration'),\n            outline-color dt('datepicker.transition.duration');\n        border-radius: dt('datepicker.year.border.radius');\n        outline-color: transparent;\n        color: dt('datepicker.date.color');\n    }\n\n    .p-datepicker-year:not(.p-disabled):not(.p-datepicker-year-selected):hover {\n        color: dt('datepicker.date.hover.color');\n        background: dt('datepicker.date.hover.background');\n    }\n\n    .p-datepicker-year-selected {\n        color: dt('datepicker.date.selected.color');\n        background: dt('datepicker.date.selected.background');\n    }\n\n    .p-datepicker-year:not(.p-disabled):focus-visible {\n        box-shadow: dt('datepicker.date.focus.ring.shadow');\n        outline: dt('datepicker.date.focus.ring.width') dt('datepicker.date.focus.ring.style') dt('datepicker.date.focus.ring.color');\n        outline-offset: dt('datepicker.date.focus.ring.offset');\n    }\n\n    .p-datepicker-buttonbar {\n        display: flex;\n        justify-content: space-between;\n        align-items: center;\n        padding: dt('datepicker.buttonbar.padding');\n        border-block-start: 1px solid dt('datepicker.buttonbar.border.color');\n    }\n\n    .p-datepicker-buttonbar .p-button {\n        width: auto;\n    }\n\n    .p-datepicker-time-picker {\n        display: flex;\n        justify-content: center;\n        align-items: center;\n        border-block-start: 1px solid dt('datepicker.time.picker.border.color');\n        padding: 0;\n        gap: dt('datepicker.time.picker.gap');\n    }\n\n    .p-datepicker-calendar-container + .p-datepicker-time-picker {\n        padding: dt('datepicker.time.picker.padding');\n    }\n\n    .p-datepicker-time-picker > div {\n        display: flex;\n        align-items: center;\n        flex-direction: column;\n        gap: dt('datepicker.time.picker.button.gap');\n    }\n\n    .p-datepicker-time-picker span {\n        font-size: 1rem;\n    }\n\n    .p-datepicker-timeonly .p-datepicker-time-picker {\n        border-block-start: 0 none;\n    }\n\n    .p-datepicker-time-picker:dir(rtl) {\n        flex-direction: row-reverse;\n    }\n\n    .p-datepicker:has(.p-inputtext-sm) .p-datepicker-dropdown {\n        width: dt('datepicker.dropdown.sm.width');\n    }\n\n    .p-datepicker:has(.p-inputtext-sm) .p-datepicker-dropdown .p-icon,\n    .p-datepicker:has(.p-inputtext-sm) .p-datepicker-input-icon {\n        font-size: dt('form.field.sm.font.size');\n        width: dt('form.field.sm.font.size');\n        height: dt('form.field.sm.font.size');\n    }\n\n    .p-datepicker:has(.p-inputtext-lg) .p-datepicker-dropdown {\n        width: dt('datepicker.dropdown.lg.width');\n    }\n\n    .p-datepicker:has(.p-inputtext-lg) .p-datepicker-dropdown .p-icon,\n    .p-datepicker:has(.p-inputtext-lg) .p-datepicker-input-icon {\n        font-size: dt('form.field.lg.font.size');\n        width: dt('form.field.lg.font.size');\n        height: dt('form.field.lg.font.size');\n    }\n\n    .p-datepicker:has(.p-datepicker-dropdown) .p-datepicker-clear-icon,\n    .p-datepicker:has(.p-datepicker-input-icon-container) .p-datepicker-clear-icon {\n        inset-inline-end: calc(dt('datepicker.dropdown.width') + dt('form.field.padding.x'));\n    }\n\n    .p-datepicker-clear-icon {\n        position: absolute;\n        top: 50%;\n        margin-top: -0.5rem;\n        cursor: pointer;\n        color: dt('form.field.icon.color');\n        inset-inline-end: dt('form.field.padding.x');\n    }\n";
+var style2 = "\n    .p-datepicker {\n        display: inline-flex;\n        max-width: 100%;\n    }\n\n    .p-datepicker:has(.p-datepicker-dropdown) .p-datepicker-input {\n        border-start-end-radius: 0;\n        border-end-end-radius: 0;\n    }\n\n    .p-datepicker-dropdown {\n        cursor: pointer;\n        display: inline-flex;\n        user-select: none;\n        align-items: center;\n        justify-content: center;\n        overflow: hidden;\n        position: relative;\n        width: dt('datepicker.dropdown.width');\n        border-start-end-radius: dt('datepicker.dropdown.border.radius');\n        border-end-end-radius: dt('datepicker.dropdown.border.radius');\n        background: dt('datepicker.dropdown.background');\n        border: 1px solid dt('datepicker.dropdown.border.color');\n        border-inline-start: 0 none;\n        color: dt('datepicker.dropdown.color');\n        transition:\n            background dt('datepicker.transition.duration'),\n            color dt('datepicker.transition.duration'),\n            border-color dt('datepicker.transition.duration'),\n            outline-color dt('datepicker.transition.duration');\n        outline-color: transparent;\n    }\n\n    .p-datepicker-dropdown:not(:disabled):hover {\n        background: dt('datepicker.dropdown.hover.background');\n        border-color: dt('datepicker.dropdown.hover.border.color');\n        color: dt('datepicker.dropdown.hover.color');\n    }\n\n    .p-datepicker-dropdown:not(:disabled):active {\n        background: dt('datepicker.dropdown.active.background');\n        border-color: dt('datepicker.dropdown.active.border.color');\n        color: dt('datepicker.dropdown.active.color');\n    }\n\n    .p-datepicker-dropdown:focus-visible {\n        box-shadow: dt('datepicker.dropdown.focus.ring.shadow');\n        outline: dt('datepicker.dropdown.focus.ring.width') dt('datepicker.dropdown.focus.ring.style') dt('datepicker.dropdown.focus.ring.color');\n        outline-offset: dt('datepicker.dropdown.focus.ring.offset');\n    }\n\n    .p-datepicker:has(.p-datepicker-input-icon-container) {\n        position: relative;\n    }\n\n    .p-datepicker:has(.p-datepicker-input-icon-container) .p-datepicker-input {\n        padding-inline-end: calc((dt('form.field.padding.x') * 2) + dt('icon.size'));\n    }\n\n    .p-datepicker-input-icon-container {\n        cursor: pointer;\n        position: absolute;\n        top: 50%;\n        inset-inline-end: dt('form.field.padding.x');\n        margin-block-start: calc(-1 * (dt('icon.size') / 2));\n        color: dt('datepicker.input.icon.color');\n        line-height: 1;\n        z-index: 1;\n    }\n\n    .p-datepicker:has(.p-datepicker-input:disabled) .p-datepicker-input-icon-container {\n        cursor: default;\n    }\n\n    .p-datepicker-fluid {\n        display: flex;\n    }\n\n    .p-datepicker-fluid:has(.p-datepicker-dropdown) .p-datepicker-input {\n        flex: 1 1 auto;\n        width: 1%;\n    }\n\n    .p-datepicker .p-datepicker-panel {\n        min-width: 100%;\n    }\n\n    .p-datepicker-panel {\n        width: auto;\n        padding: dt('datepicker.panel.padding');\n        background: dt('datepicker.panel.background');\n        color: dt('datepicker.panel.color');\n        border: 1px solid dt('datepicker.panel.border.color');\n        border-radius: dt('datepicker.panel.border.radius');\n        box-shadow: dt('datepicker.panel.shadow');\n    }\n\n    .p-datepicker-panel-inline {\n        display: inline-block;\n        overflow-x: auto;\n        box-shadow: none;\n    }\n\n    .p-datepicker-header {\n        display: flex;\n        align-items: center;\n        justify-content: space-between;\n        padding: dt('datepicker.header.padding');\n        background: dt('datepicker.header.background');\n        color: dt('datepicker.header.color');\n        border-block-end: 1px solid dt('datepicker.header.border.color');\n    }\n\n    .p-datepicker-next-button:dir(rtl) {\n        order: -1;\n    }\n\n    .p-datepicker-prev-button:dir(rtl) {\n        order: 1;\n    }\n\n    .p-datepicker-title {\n        display: flex;\n        align-items: center;\n        justify-content: space-between;\n        gap: dt('datepicker.title.gap');\n        font-weight: dt('datepicker.title.font.weight');\n    }\n\n    .p-datepicker-select-year,\n    .p-datepicker-select-month {\n        border: none;\n        background: transparent;\n        margin: 0;\n        cursor: pointer;\n        font-weight: inherit;\n        transition:\n            background dt('datepicker.transition.duration'),\n            color dt('datepicker.transition.duration'),\n            border-color dt('datepicker.transition.duration'),\n            outline-color dt('datepicker.transition.duration'),\n            box-shadow dt('datepicker.transition.duration');\n    }\n\n    .p-datepicker-select-month {\n        padding: dt('datepicker.select.month.padding');\n        color: dt('datepicker.select.month.color');\n        border-radius: dt('datepicker.select.month.border.radius');\n    }\n\n    .p-datepicker-select-year {\n        padding: dt('datepicker.select.year.padding');\n        color: dt('datepicker.select.year.color');\n        border-radius: dt('datepicker.select.year.border.radius');\n    }\n\n    .p-datepicker-select-month:enabled:hover {\n        background: dt('datepicker.select.month.hover.background');\n        color: dt('datepicker.select.month.hover.color');\n    }\n\n    .p-datepicker-select-year:enabled:hover {\n        background: dt('datepicker.select.year.hover.background');\n        color: dt('datepicker.select.year.hover.color');\n    }\n\n    .p-datepicker-select-month:focus-visible,\n    .p-datepicker-select-year:focus-visible {\n        box-shadow: dt('datepicker.date.focus.ring.shadow');\n        outline: dt('datepicker.date.focus.ring.width') dt('datepicker.date.focus.ring.style') dt('datepicker.date.focus.ring.color');\n        outline-offset: dt('datepicker.date.focus.ring.offset');\n    }\n\n    .p-datepicker-calendar-container {\n        display: flex;\n    }\n\n    .p-datepicker-calendar-container .p-datepicker-calendar {\n        flex: 1 1 auto;\n        border-inline-start: 1px solid dt('datepicker.group.border.color');\n        padding-inline-end: dt('datepicker.group.gap');\n        padding-inline-start: dt('datepicker.group.gap');\n    }\n\n    .p-datepicker-calendar-container .p-datepicker-calendar:first-child {\n        padding-inline-start: 0;\n        border-inline-start: 0 none;\n    }\n\n    .p-datepicker-calendar-container .p-datepicker-calendar:last-child {\n        padding-inline-end: 0;\n    }\n\n    .p-datepicker-day-view {\n        width: 100%;\n        border-collapse: collapse;\n        font-size: 1rem;\n        margin: dt('datepicker.day.view.margin');\n    }\n\n    .p-datepicker-weekday-cell {\n        padding: dt('datepicker.week.day.padding');\n    }\n\n    .p-datepicker-weekday {\n        font-weight: dt('datepicker.week.day.font.weight');\n        color: dt('datepicker.week.day.color');\n    }\n\n    .p-datepicker-day-cell {\n        padding: dt('datepicker.date.padding');\n    }\n\n    .p-datepicker-day {\n        display: flex;\n        justify-content: center;\n        align-items: center;\n        cursor: pointer;\n        margin: 0 auto;\n        overflow: hidden;\n        position: relative;\n        width: dt('datepicker.date.width');\n        height: dt('datepicker.date.height');\n        border-radius: dt('datepicker.date.border.radius');\n        transition:\n            background dt('datepicker.transition.duration'),\n            color dt('datepicker.transition.duration'),\n            border-color dt('datepicker.transition.duration'),\n            box-shadow dt('datepicker.transition.duration'),\n            outline-color dt('datepicker.transition.duration');\n        border: 1px solid transparent;\n        outline-color: transparent;\n        color: dt('datepicker.date.color');\n    }\n\n    .p-datepicker-day:not(.p-datepicker-day-selected):not(.p-disabled):hover {\n        background: dt('datepicker.date.hover.background');\n        color: dt('datepicker.date.hover.color');\n    }\n\n    .p-datepicker-day:focus-visible {\n        box-shadow: dt('datepicker.date.focus.ring.shadow');\n        outline: dt('datepicker.date.focus.ring.width') dt('datepicker.date.focus.ring.style') dt('datepicker.date.focus.ring.color');\n        outline-offset: dt('datepicker.date.focus.ring.offset');\n    }\n\n    .p-datepicker-day-selected {\n        background: dt('datepicker.date.selected.background');\n        color: dt('datepicker.date.selected.color');\n    }\n\n    .p-datepicker-day-selected-range {\n        background: dt('datepicker.date.range.selected.background');\n        color: dt('datepicker.date.range.selected.color');\n    }\n\n    .p-datepicker-today > .p-datepicker-day {\n        background: dt('datepicker.today.background');\n        color: dt('datepicker.today.color');\n    }\n\n    .p-datepicker-today > .p-datepicker-day-selected {\n        background: dt('datepicker.date.selected.background');\n        color: dt('datepicker.date.selected.color');\n    }\n\n    .p-datepicker-today > .p-datepicker-day-selected-range {\n        background: dt('datepicker.date.range.selected.background');\n        color: dt('datepicker.date.range.selected.color');\n    }\n\n    .p-datepicker-weeknumber {\n        text-align: center;\n    }\n\n    .p-datepicker-month-view {\n        margin: dt('datepicker.month.view.margin');\n    }\n\n    .p-datepicker-month {\n        width: 33.3%;\n        display: inline-flex;\n        align-items: center;\n        justify-content: center;\n        cursor: pointer;\n        overflow: hidden;\n        position: relative;\n        padding: dt('datepicker.month.padding');\n        transition:\n            background dt('datepicker.transition.duration'),\n            color dt('datepicker.transition.duration'),\n            border-color dt('datepicker.transition.duration'),\n            box-shadow dt('datepicker.transition.duration'),\n            outline-color dt('datepicker.transition.duration');\n        border-radius: dt('datepicker.month.border.radius');\n        outline-color: transparent;\n        color: dt('datepicker.date.color');\n    }\n\n    .p-datepicker-month:not(.p-disabled):not(.p-datepicker-month-selected):hover {\n        color: dt('datepicker.date.hover.color');\n        background: dt('datepicker.date.hover.background');\n    }\n\n    .p-datepicker-month-selected {\n        color: dt('datepicker.date.selected.color');\n        background: dt('datepicker.date.selected.background');\n    }\n\n    .p-datepicker-month:not(.p-disabled):focus-visible {\n        box-shadow: dt('datepicker.date.focus.ring.shadow');\n        outline: dt('datepicker.date.focus.ring.width') dt('datepicker.date.focus.ring.style') dt('datepicker.date.focus.ring.color');\n        outline-offset: dt('datepicker.date.focus.ring.offset');\n    }\n\n    .p-datepicker-year-view {\n        margin: dt('datepicker.year.view.margin');\n    }\n\n    .p-datepicker-year {\n        width: 50%;\n        display: inline-flex;\n        align-items: center;\n        justify-content: center;\n        cursor: pointer;\n        overflow: hidden;\n        position: relative;\n        padding: dt('datepicker.year.padding');\n        transition:\n            background dt('datepicker.transition.duration'),\n            color dt('datepicker.transition.duration'),\n            border-color dt('datepicker.transition.duration'),\n            box-shadow dt('datepicker.transition.duration'),\n            outline-color dt('datepicker.transition.duration');\n        border-radius: dt('datepicker.year.border.radius');\n        outline-color: transparent;\n        color: dt('datepicker.date.color');\n    }\n\n    .p-datepicker-year:not(.p-disabled):not(.p-datepicker-year-selected):hover {\n        color: dt('datepicker.date.hover.color');\n        background: dt('datepicker.date.hover.background');\n    }\n\n    .p-datepicker-year-selected {\n        color: dt('datepicker.date.selected.color');\n        background: dt('datepicker.date.selected.background');\n    }\n\n    .p-datepicker-year:not(.p-disabled):focus-visible {\n        box-shadow: dt('datepicker.date.focus.ring.shadow');\n        outline: dt('datepicker.date.focus.ring.width') dt('datepicker.date.focus.ring.style') dt('datepicker.date.focus.ring.color');\n        outline-offset: dt('datepicker.date.focus.ring.offset');\n    }\n\n    .p-datepicker-buttonbar {\n        display: flex;\n        justify-content: space-between;\n        align-items: center;\n        padding: dt('datepicker.buttonbar.padding');\n        border-block-start: 1px solid dt('datepicker.buttonbar.border.color');\n    }\n\n    .p-datepicker-buttonbar .p-button {\n        width: auto;\n    }\n\n    .p-datepicker-time-picker {\n        display: flex;\n        justify-content: center;\n        align-items: center;\n        border-block-start: 1px solid dt('datepicker.time.picker.border.color');\n        padding: 0;\n        gap: dt('datepicker.time.picker.gap');\n    }\n\n    .p-datepicker-calendar-container + .p-datepicker-time-picker {\n        padding: dt('datepicker.time.picker.padding');\n    }\n\n    .p-datepicker-time-picker > div {\n        display: flex;\n        align-items: center;\n        flex-direction: column;\n        gap: dt('datepicker.time.picker.button.gap');\n    }\n\n    .p-datepicker-time-picker span {\n        font-size: 1rem;\n    }\n\n    .p-datepicker-timeonly .p-datepicker-time-picker {\n        border-block-start: 0 none;\n    }\n\n    .p-datepicker-time-picker:dir(rtl) {\n        flex-direction: row-reverse;\n    }\n\n    .p-datepicker:has(.p-inputtext-sm) .p-datepicker-dropdown {\n        width: dt('datepicker.dropdown.sm.width');\n    }\n\n    .p-datepicker:has(.p-inputtext-sm) .p-datepicker-dropdown .p-icon,\n    .p-datepicker:has(.p-inputtext-sm) .p-datepicker-input-icon {\n        font-size: dt('form.field.sm.font.size');\n        width: dt('form.field.sm.font.size');\n        height: dt('form.field.sm.font.size');\n    }\n\n    .p-datepicker:has(.p-inputtext-lg) .p-datepicker-dropdown {\n        width: dt('datepicker.dropdown.lg.width');\n    }\n\n    .p-datepicker:has(.p-inputtext-lg) .p-datepicker-dropdown .p-icon,\n    .p-datepicker:has(.p-inputtext-lg) .p-datepicker-input-icon {\n        font-size: dt('form.field.lg.font.size');\n        width: dt('form.field.lg.font.size');\n        height: dt('form.field.lg.font.size');\n    }\n\n    .p-datepicker-clear-icon {\n        position: absolute;\n        top: 50%;\n        margin-top: -0.5rem;\n        cursor: pointer;\n        color: dt('form.field.icon.color');\n        inset-inline-end: dt('form.field.padding.x');\n    }\n\n    .p-datepicker:has(.p-datepicker-dropdown) .p-datepicker-clear-icon {\n        inset-inline-end: calc(dt('datepicker.dropdown.width') + dt('form.field.padding.x'));\n    }\n\n    .p-datepicker:has(.p-datepicker-input-icon-container) .p-datepicker-clear-icon {\n        inset-inline-end: calc((dt('form.field.padding.x') * 2) + dt('icon.size'));\n    }\n\n    .p-datepicker:has(.p-datepicker-clear-icon) .p-datepicker-input {\n        padding-inline-end: calc((dt('form.field.padding.x') * 2) + dt('icon.size'));\n    }\n\n    .p-datepicker:has(.p-datepicker-input-icon-container):has(.p-datepicker-clear-icon) .p-datepicker-input {\n        padding-inline-end: calc((dt('form.field.padding.x') * 3) + calc(dt('icon.size') * 2));\n    }\n\n    .p-inputgroup .p-datepicker-dropdown {\n        border-radius: 0;\n    }\n\n    .p-inputgroup > .p-datepicker:last-child:has(.p-datepicker-dropdown) > .p-datepicker-input {\n        border-start-end-radius: 0;\n        border-end-end-radius: 0;\n    }\n\n    .p-inputgroup > .p-datepicker:last-child .p-datepicker-dropdown {\n        border-start-end-radius: dt('datepicker.dropdown.border.radius');\n        border-end-end-radius: dt('datepicker.dropdown.border.radius');\n    }\n";
 
 // node_modules/primeng/fesm2022/primeng-datepicker.mjs
 var _c0 = ["date"];
@@ -154,36 +165,41 @@ var _c8 = ["clearicon"];
 var _c9 = ["decrementicon"];
 var _c10 = ["incrementicon"];
 var _c11 = ["inputicon"];
-var _c12 = ["inputfield"];
-var _c13 = ["contentWrapper"];
-var _c14 = [[["p-header"]], [["p-footer"]]];
-var _c15 = ["p-header", "p-footer"];
-var _c16 = (a0) => ({
+var _c12 = ["buttonbar"];
+var _c13 = ["inputfield"];
+var _c14 = ["contentWrapper"];
+var _c15 = [[["p-header"]], [["p-footer"]]];
+var _c16 = ["p-header", "p-footer"];
+var _c17 = (a0) => ({
   clickCallBack: a0
 });
-var _c17 = (a0, a1) => ({
+var _c18 = (a0, a1) => ({
   showTransitionParams: a0,
   hideTransitionParams: a1
 });
-var _c18 = (a0) => ({
+var _c19 = (a0) => ({
   value: "visible",
   params: a0
 });
-var _c19 = (a0) => ({
+var _c20 = (a0) => ({
   visibility: a0
 });
-var _c20 = (a0) => ({
+var _c21 = (a0) => ({
   $implicit: a0
 });
-var _c21 = (a0) => ({
+var _c22 = (a0) => ({
   date: a0
 });
-var _c22 = (a0, a1) => ({
+var _c23 = (a0, a1) => ({
   month: a0,
   index: a1
 });
-var _c23 = (a0) => ({
+var _c24 = (a0) => ({
   year: a0
+});
+var _c25 = (a0, a1) => ({
+  todayCallback: a0,
+  clearCallback: a1
 });
 function DatePicker_ng_template_0_ng_container_2__svg_svg_1_Template(rf, ctx) {
   if (rf & 1) {
@@ -200,6 +216,7 @@ function DatePicker_ng_template_0_ng_container_2__svg_svg_1_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r1.cx("clearIcon"));
+    ɵɵproperty("pBind", ctx_r1.ptm("inputIcon"));
   }
 }
 function DatePicker_ng_template_0_ng_container_2_span_2_1_ng_template_0_Template(rf, ctx) {
@@ -224,6 +241,7 @@ function DatePicker_ng_template_0_ng_container_2_span_2_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r1.cx("clearIcon"));
+    ɵɵproperty("pBind", ctx_r1.ptm("inputIcon"));
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r1.clearIconTemplate || ctx_r1._clearIconTemplate);
   }
@@ -231,7 +249,7 @@ function DatePicker_ng_template_0_ng_container_2_span_2_Template(rf, ctx) {
 function DatePicker_ng_template_0_ng_container_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, DatePicker_ng_template_0_ng_container_2__svg_svg_1_Template, 1, 2, "svg", 8)(2, DatePicker_ng_template_0_ng_container_2_span_2_Template, 2, 3, "span", 9);
+    ɵɵtemplate(1, DatePicker_ng_template_0_ng_container_2__svg_svg_1_Template, 1, 3, "svg", 8)(2, DatePicker_ng_template_0_ng_container_2_span_2_Template, 2, 4, "span", 9);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -248,13 +266,17 @@ function DatePicker_ng_template_0_button_3_span_1_Template(rf, ctx) {
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
-    ɵɵproperty("ngClass", ctx_r1.icon);
+    ɵɵproperty("ngClass", ctx_r1.icon)("pBind", ctx_r1.ptm("dropdownIcon"));
   }
 }
 function DatePicker_ng_template_0_button_3_ng_container_2__svg_svg_1_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
     ɵɵelement(0, "svg", 17);
+  }
+  if (rf & 2) {
+    const ctx_r1 = ɵɵnextContext(4);
+    ɵɵproperty("pBind", ctx_r1.ptm("dropdownIcon"));
   }
 }
 function DatePicker_ng_template_0_button_3_ng_container_2_2_ng_template_0_Template(rf, ctx) {
@@ -267,7 +289,7 @@ function DatePicker_ng_template_0_button_3_ng_container_2_2_Template(rf, ctx) {
 function DatePicker_ng_template_0_button_3_ng_container_2_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, DatePicker_ng_template_0_button_3_ng_container_2__svg_svg_1_Template, 1, 0, "svg", 16)(2, DatePicker_ng_template_0_button_3_ng_container_2_2_Template, 1, 0, null, 12);
+    ɵɵtemplate(1, DatePicker_ng_template_0_button_3_ng_container_2__svg_svg_1_Template, 1, 1, "svg", 16)(2, DatePicker_ng_template_0_button_3_ng_container_2_2_Template, 1, 0, null, 12);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -289,13 +311,13 @@ function DatePicker_ng_template_0_button_3_Template(rf, ctx) {
       const ctx_r1 = ɵɵnextContext();
       return ɵɵresetView(ctx_r1.onButtonClick($event, inputfield_r6));
     });
-    ɵɵtemplate(1, DatePicker_ng_template_0_button_3_span_1_Template, 1, 1, "span", 14)(2, DatePicker_ng_template_0_button_3_ng_container_2_Template, 3, 2, "ng-container", 6);
+    ɵɵtemplate(1, DatePicker_ng_template_0_button_3_span_1_Template, 1, 2, "span", 14)(2, DatePicker_ng_template_0_button_3_ng_container_2_Template, 3, 2, "ng-container", 6);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r1.cx("dropdown"));
-    ɵɵproperty("disabled", ctx_r1.$disabled());
+    ɵɵproperty("disabled", ctx_r1.$disabled())("pBind", ctx_r1.ptm("dropdown"));
     ɵɵattribute("aria-label", ctx_r1.iconButtonAriaLabel)("aria-expanded", ctx_r1.overlayVisible ?? false)("aria-controls", ctx_r1.overlayVisible ? ctx_r1.panelId : null);
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r1.icon);
@@ -307,7 +329,7 @@ function DatePicker_ng_template_0_ng_container_4__svg_svg_2_Template(rf, ctx) {
   if (rf & 1) {
     const _r7 = ɵɵgetCurrentView();
     ɵɵnamespaceSVG();
-    ɵɵelementStart(0, "svg", 20);
+    ɵɵelementStart(0, "svg", 21);
     ɵɵlistener("click", function DatePicker_ng_template_0_ng_container_4__svg_svg_2_Template_svg_click_0_listener($event) {
       ɵɵrestoreView(_r7);
       const ctx_r1 = ɵɵnextContext(3);
@@ -318,6 +340,7 @@ function DatePicker_ng_template_0_ng_container_4__svg_svg_2_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r1.cx("inputIcon"));
+    ɵɵproperty("pBind", ctx_r1.ptm("inputIcon"));
   }
 }
 function DatePicker_ng_template_0_ng_container_4_ng_container_3_Template(rf, ctx) {
@@ -328,8 +351,8 @@ function DatePicker_ng_template_0_ng_container_4_ng_container_3_Template(rf, ctx
 function DatePicker_ng_template_0_ng_container_4_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵelementStart(1, "span");
-    ɵɵtemplate(2, DatePicker_ng_template_0_ng_container_4__svg_svg_2_Template, 1, 2, "svg", 18)(3, DatePicker_ng_template_0_ng_container_4_ng_container_3_Template, 1, 0, "ng-container", 19);
+    ɵɵelementStart(1, "span", 18);
+    ɵɵtemplate(2, DatePicker_ng_template_0_ng_container_4__svg_svg_2_Template, 1, 3, "svg", 19)(3, DatePicker_ng_template_0_ng_container_4_ng_container_3_Template, 1, 0, "ng-container", 20);
     ɵɵelementEnd();
     ɵɵelementContainerEnd();
   }
@@ -337,10 +360,11 @@ function DatePicker_ng_template_0_ng_container_4_Template(rf, ctx) {
     const ctx_r1 = ɵɵnextContext(2);
     ɵɵadvance();
     ɵɵclassMap(ctx_r1.cx("inputIconContainer"));
+    ɵɵproperty("pBind", ctx_r1.ptm("inputIconContainer"));
     ɵɵadvance();
     ɵɵproperty("ngIf", !ctx_r1.inputIconTemplate && !ctx_r1._inputIconTemplate);
     ɵɵadvance();
-    ɵɵproperty("ngTemplateOutlet", ctx_r1.inputIconTemplate || ctx_r1._inputIconTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(5, _c16, ctx_r1.onButtonClick.bind(ctx_r1)));
+    ɵɵproperty("ngTemplateOutlet", ctx_r1.inputIconTemplate || ctx_r1._inputIconTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(6, _c17, ctx_r1.onButtonClick.bind(ctx_r1)));
   }
 }
 function DatePicker_ng_template_0_Template(rf, ctx) {
@@ -369,15 +393,15 @@ function DatePicker_ng_template_0_Template(rf, ctx) {
       return ɵɵresetView(ctx_r1.onUserInput($event));
     });
     ɵɵelementEnd();
-    ɵɵtemplate(2, DatePicker_ng_template_0_ng_container_2_Template, 3, 2, "ng-container", 6)(3, DatePicker_ng_template_0_button_3_Template, 3, 8, "button", 7)(4, DatePicker_ng_template_0_ng_container_4_Template, 4, 7, "ng-container", 6);
+    ɵɵtemplate(2, DatePicker_ng_template_0_ng_container_2_Template, 3, 2, "ng-container", 6)(3, DatePicker_ng_template_0_button_3_Template, 3, 9, "button", 7)(4, DatePicker_ng_template_0_ng_container_4_Template, 4, 8, "ng-container", 6);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cn(ctx_r1.cx("pcInputText"), ctx_r1.inputStyleClass));
-    ɵɵproperty("pSize", ctx_r1.size())("value", ctx_r1.inputFieldValue)("ngStyle", ctx_r1.inputStyle)("pAutoFocus", ctx_r1.autofocus)("variant", ctx_r1.$variant())("fluid", ctx_r1.hasFluid)("invalid", ctx_r1.invalid());
+    ɵɵproperty("pSize", ctx_r1.size())("value", ctx_r1.inputFieldValue)("ngStyle", ctx_r1.inputStyle)("pAutoFocus", ctx_r1.autofocus)("variant", ctx_r1.$variant())("fluid", ctx_r1.hasFluid)("invalid", ctx_r1.invalid())("pt", ctx_r1.ptm("pcInputText"));
     ɵɵattribute("size", ctx_r1.inputSize())("id", ctx_r1.inputId)("name", ctx_r1.name())("aria-required", ctx_r1.required())("aria-expanded", ctx_r1.overlayVisible ?? false)("aria-controls", ctx_r1.overlayVisible ? ctx_r1.panelId : null)("aria-labelledby", ctx_r1.ariaLabelledBy)("aria-label", ctx_r1.ariaLabel)("required", ctx_r1.required() ? "" : void 0)("readonly", ctx_r1.readonlyInput ? "" : void 0)("disabled", ctx_r1.$disabled() ? "" : void 0)("placeholder", ctx_r1.placeholder)("tabindex", ctx_r1.tabindex)("inputmode", ctx_r1.touchUI ? "off" : null);
     ɵɵadvance(2);
-    ɵɵproperty("ngIf", ctx_r1.showClear && !ctx_r1.$disabled() && ctx_r1.value != null);
+    ɵɵproperty("ngIf", ctx_r1.showClear && !ctx_r1.$disabled() && (ctx_r1.inputfieldViewChild == null ? null : ctx_r1.inputfieldViewChild.nativeElement == null ? null : ctx_r1.inputfieldViewChild.nativeElement.value));
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r1.showIcon && ctx_r1.iconDisplay === "button");
     ɵɵadvance();
@@ -392,7 +416,7 @@ function DatePicker_div_1_ng_container_3_Template(rf, ctx) {
 function DatePicker_div_1_ng_container_4_div_2_ng_template_3__svg_svg_0_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 29);
+    ɵɵelement(0, "svg", 30);
   }
 }
 function DatePicker_div_1_ng_container_4_div_2_ng_template_3_span_1_1_ng_template_0_Template(rf, ctx) {
@@ -416,7 +440,7 @@ function DatePicker_div_1_ng_container_4_div_2_ng_template_3_span_1_Template(rf,
 }
 function DatePicker_div_1_ng_container_4_div_2_ng_template_3_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, DatePicker_div_1_ng_container_4_div_2_ng_template_3__svg_svg_0_Template, 1, 0, "svg", 28)(1, DatePicker_div_1_ng_container_4_div_2_ng_template_3_span_1_Template, 2, 1, "span", 6);
+    ɵɵtemplate(0, DatePicker_div_1_ng_container_4_div_2_ng_template_3__svg_svg_0_Template, 1, 0, "svg", 29)(1, DatePicker_div_1_ng_container_4_div_2_ng_template_3_span_1_Template, 2, 1, "span", 6);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(4);
@@ -428,7 +452,7 @@ function DatePicker_div_1_ng_container_4_div_2_ng_template_3_Template(rf, ctx) {
 function DatePicker_div_1_ng_container_4_div_2_button_6_Template(rf, ctx) {
   if (rf & 1) {
     const _r10 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "button", 30);
+    ɵɵelementStart(0, "button", 31);
     ɵɵlistener("click", function DatePicker_div_1_ng_container_4_div_2_button_6_Template_button_click_0_listener($event) {
       ɵɵrestoreView(_r10);
       const ctx_r1 = ɵɵnextContext(4);
@@ -445,7 +469,8 @@ function DatePicker_div_1_ng_container_4_div_2_button_6_Template(rf, ctx) {
     const month_r11 = ɵɵnextContext().$implicit;
     const ctx_r1 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r1.cx("selectMonth"));
-    ɵɵattribute("disabled", ctx_r1.switchViewButtonDisabled() ? "" : void 0)("aria-label", ctx_r1.getTranslation("chooseMonth"));
+    ɵɵproperty("pBind", ctx_r1.ptm("selectMonth"));
+    ɵɵattribute("disabled", ctx_r1.switchViewButtonDisabled() ? "" : void 0)("aria-label", ctx_r1.getTranslation("chooseMonth"))("data-pc-group-section", "navigator");
     ɵɵadvance();
     ɵɵtextInterpolate1(" ", ctx_r1.getMonthName(month_r11.month), " ");
   }
@@ -453,7 +478,7 @@ function DatePicker_div_1_ng_container_4_div_2_button_6_Template(rf, ctx) {
 function DatePicker_div_1_ng_container_4_div_2_button_7_Template(rf, ctx) {
   if (rf & 1) {
     const _r12 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "button", 30);
+    ɵɵelementStart(0, "button", 31);
     ɵɵlistener("click", function DatePicker_div_1_ng_container_4_div_2_button_7_Template_button_click_0_listener($event) {
       ɵɵrestoreView(_r12);
       const ctx_r1 = ɵɵnextContext(4);
@@ -470,7 +495,8 @@ function DatePicker_div_1_ng_container_4_div_2_button_7_Template(rf, ctx) {
     const month_r11 = ɵɵnextContext().$implicit;
     const ctx_r1 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r1.cx("selectYear"));
-    ɵɵattribute("disabled", ctx_r1.switchViewButtonDisabled() ? "" : void 0)("aria-label", ctx_r1.getTranslation("chooseYear"));
+    ɵɵproperty("pBind", ctx_r1.ptm("selectYear"));
+    ɵɵattribute("disabled", ctx_r1.switchViewButtonDisabled() ? "" : void 0)("aria-label", ctx_r1.getTranslation("chooseYear"))("data-pc-group-section", "navigator");
     ɵɵadvance();
     ɵɵtextInterpolate1(" ", ctx_r1.getYear(month_r11), " ");
   }
@@ -494,23 +520,24 @@ function DatePicker_div_1_ng_container_4_div_2_span_8_ng_container_2_Template(rf
 }
 function DatePicker_div_1_ng_container_4_div_2_span_8_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "span");
-    ɵɵtemplate(1, DatePicker_div_1_ng_container_4_div_2_span_8_ng_container_1_Template, 2, 2, "ng-container", 6)(2, DatePicker_div_1_ng_container_4_div_2_span_8_ng_container_2_Template, 1, 0, "ng-container", 19);
+    ɵɵelementStart(0, "span", 18);
+    ɵɵtemplate(1, DatePicker_div_1_ng_container_4_div_2_span_8_ng_container_1_Template, 2, 2, "ng-container", 6)(2, DatePicker_div_1_ng_container_4_div_2_span_8_ng_container_2_Template, 1, 0, "ng-container", 20);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(4);
     ɵɵclassMap(ctx_r1.cx("decade"));
+    ɵɵproperty("pBind", ctx_r1.ptm("decade"));
     ɵɵadvance();
     ɵɵproperty("ngIf", !ctx_r1.decadeTemplate && !ctx_r1._decadeTemplate);
     ɵɵadvance();
-    ɵɵproperty("ngTemplateOutlet", ctx_r1.decadeTemplate || ctx_r1._decadeTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(5, _c20, ctx_r1.yearPickerValues));
+    ɵɵproperty("ngTemplateOutlet", ctx_r1.decadeTemplate || ctx_r1._decadeTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(6, _c21, ctx_r1.yearPickerValues));
   }
 }
 function DatePicker_div_1_ng_container_4_div_2_ng_template_10__svg_svg_0_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 32);
+    ɵɵelement(0, "svg", 33);
   }
 }
 function DatePicker_div_1_ng_container_4_div_2_ng_template_10_ng_container_1_1_ng_template_0_Template(rf, ctx) {
@@ -534,7 +561,7 @@ function DatePicker_div_1_ng_container_4_div_2_ng_template_10_ng_container_1_Tem
 }
 function DatePicker_div_1_ng_container_4_div_2_ng_template_10_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, DatePicker_div_1_ng_container_4_div_2_ng_template_10__svg_svg_0_Template, 1, 0, "svg", 31)(1, DatePicker_div_1_ng_container_4_div_2_ng_template_10_ng_container_1_Template, 2, 1, "ng-container", 6);
+    ɵɵtemplate(0, DatePicker_div_1_ng_container_4_div_2_ng_template_10__svg_svg_0_Template, 1, 0, "svg", 32)(1, DatePicker_div_1_ng_container_4_div_2_ng_template_10_ng_container_1_Template, 2, 1, "ng-container", 6);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(4);
@@ -545,20 +572,23 @@ function DatePicker_div_1_ng_container_4_div_2_ng_template_10_Template(rf, ctx) 
 }
 function DatePicker_div_1_ng_container_4_div_2_table_12_th_3_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "th")(1, "span");
+    ɵɵelementStart(0, "th", 18)(1, "span", 18);
     ɵɵtext(2);
     ɵɵelementEnd()();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(5);
     ɵɵclassMap(ctx_r1.cx("weekHeader"));
-    ɵɵadvance(2);
+    ɵɵproperty("pBind", ctx_r1.ptm("weekHeader"));
+    ɵɵadvance();
+    ɵɵproperty("pBind", ctx_r1.ptm("weekHeaderLabel"));
+    ɵɵadvance();
     ɵɵtextInterpolate(ctx_r1.getTranslation("weekHeader"));
   }
 }
 function DatePicker_div_1_ng_container_4_div_2_table_12_th_4_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "th", 36)(1, "span");
+    ɵɵelementStart(0, "th", 37)(1, "span", 18);
     ɵɵtext(2);
     ɵɵelementEnd()();
   }
@@ -566,15 +596,17 @@ function DatePicker_div_1_ng_container_4_div_2_table_12_th_4_Template(rf, ctx) {
     const weekDay_r13 = ctx.$implicit;
     const ctx_r1 = ɵɵnextContext(5);
     ɵɵclassMap(ctx_r1.cx("weekDayCell"));
+    ɵɵproperty("pBind", ctx_r1.ptm("weekDayCell"));
     ɵɵadvance();
     ɵɵclassMap(ctx_r1.cx("weekDay"));
+    ɵɵproperty("pBind", ctx_r1.ptm("weekDay"));
     ɵɵadvance();
     ɵɵtextInterpolate(weekDay_r13);
   }
 }
 function DatePicker_div_1_ng_container_4_div_2_table_12_tr_6_td_1_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "td")(1, "span");
+    ɵɵelementStart(0, "td", 18)(1, "span", 18);
     ɵɵtext(2);
     ɵɵelementEnd()();
   }
@@ -583,8 +615,10 @@ function DatePicker_div_1_ng_container_4_div_2_table_12_tr_6_td_1_Template(rf, c
     const month_r11 = ɵɵnextContext(2).$implicit;
     const ctx_r1 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r1.cx("weekNumber"));
+    ɵɵproperty("pBind", ctx_r1.ptm("weekNumber"));
     ɵɵadvance();
     ɵɵclassMap(ctx_r1.cx("weekLabelContainer"));
+    ɵɵproperty("pBind", ctx_r1.ptm("weekLabelContainer"));
     ɵɵadvance();
     ɵɵtextInterpolate1(" ", month_r11.weekNumbers[j_r14], " ");
   }
@@ -609,14 +643,14 @@ function DatePicker_div_1_ng_container_4_div_2_table_12_tr_6_td_2_ng_container_1
 function DatePicker_div_1_ng_container_4_div_2_table_12_tr_6_td_2_ng_container_1_ng_container_3_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, DatePicker_div_1_ng_container_4_div_2_table_12_tr_6_td_2_ng_container_1_ng_container_3_ng_container_1_Template, 1, 0, "ng-container", 19);
+    ɵɵtemplate(1, DatePicker_div_1_ng_container_4_div_2_table_12_tr_6_td_2_ng_container_1_ng_container_3_ng_container_1_Template, 1, 0, "ng-container", 20);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
     const date_r16 = ɵɵnextContext(2).$implicit;
     const ctx_r1 = ɵɵnextContext(6);
     ɵɵadvance();
-    ɵɵproperty("ngTemplateOutlet", ctx_r1.dateTemplate || ctx_r1._dateTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(2, _c20, date_r16));
+    ɵɵproperty("ngTemplateOutlet", ctx_r1.dateTemplate || ctx_r1._dateTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(2, _c21, date_r16));
   }
 }
 function DatePicker_div_1_ng_container_4_div_2_table_12_tr_6_td_2_ng_container_1_ng_container_4_ng_container_1_Template(rf, ctx) {
@@ -627,19 +661,19 @@ function DatePicker_div_1_ng_container_4_div_2_table_12_tr_6_td_2_ng_container_1
 function DatePicker_div_1_ng_container_4_div_2_table_12_tr_6_td_2_ng_container_1_ng_container_4_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, DatePicker_div_1_ng_container_4_div_2_table_12_tr_6_td_2_ng_container_1_ng_container_4_ng_container_1_Template, 1, 0, "ng-container", 19);
+    ɵɵtemplate(1, DatePicker_div_1_ng_container_4_div_2_table_12_tr_6_td_2_ng_container_1_ng_container_4_ng_container_1_Template, 1, 0, "ng-container", 20);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
     const date_r16 = ɵɵnextContext(2).$implicit;
     const ctx_r1 = ɵɵnextContext(6);
     ɵɵadvance();
-    ɵɵproperty("ngTemplateOutlet", ctx_r1.disabledDateTemplate || ctx_r1._disabledDateTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(2, _c20, date_r16));
+    ɵɵproperty("ngTemplateOutlet", ctx_r1.disabledDateTemplate || ctx_r1._disabledDateTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(2, _c21, date_r16));
   }
 }
 function DatePicker_div_1_ng_container_4_div_2_table_12_tr_6_td_2_ng_container_1_div_5_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div", 39);
+    ɵɵelementStart(0, "div", 40);
     ɵɵtext(1);
     ɵɵelementEnd();
   }
@@ -653,7 +687,7 @@ function DatePicker_div_1_ng_container_4_div_2_table_12_tr_6_td_2_ng_container_1
   if (rf & 1) {
     const _r15 = ɵɵgetCurrentView();
     ɵɵelementContainerStart(0);
-    ɵɵelementStart(1, "span", 37);
+    ɵɵelementStart(1, "span", 38);
     ɵɵlistener("click", function DatePicker_div_1_ng_container_4_div_2_table_12_tr_6_td_2_ng_container_1_Template_span_click_1_listener($event) {
       ɵɵrestoreView(_r15);
       const date_r16 = ɵɵnextContext().$implicit;
@@ -668,14 +702,14 @@ function DatePicker_div_1_ng_container_4_div_2_table_12_tr_6_td_2_ng_container_1
     });
     ɵɵtemplate(2, DatePicker_div_1_ng_container_4_div_2_table_12_tr_6_td_2_ng_container_1_ng_container_2_Template, 2, 1, "ng-container", 6)(3, DatePicker_div_1_ng_container_4_div_2_table_12_tr_6_td_2_ng_container_1_ng_container_3_Template, 2, 4, "ng-container", 6)(4, DatePicker_div_1_ng_container_4_div_2_table_12_tr_6_td_2_ng_container_1_ng_container_4_Template, 2, 4, "ng-container", 6);
     ɵɵelementEnd();
-    ɵɵtemplate(5, DatePicker_div_1_ng_container_4_div_2_table_12_tr_6_td_2_ng_container_1_div_5_Template, 2, 1, "div", 38);
+    ɵɵtemplate(5, DatePicker_div_1_ng_container_4_div_2_table_12_tr_6_td_2_ng_container_1_div_5_Template, 2, 1, "div", 39);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
     const date_r16 = ɵɵnextContext().$implicit;
     const ctx_r1 = ɵɵnextContext(6);
     ɵɵadvance();
-    ɵɵproperty("ngClass", ctx_r1.dayClass(date_r16));
+    ɵɵproperty("ngClass", ctx_r1.dayClass(date_r16))("pBind", ctx_r1.ptm("day"));
     ɵɵattribute("data-date", ctx_r1.formatDateKey(ctx_r1.formatDateMetaToDate(date_r16)));
     ɵɵadvance();
     ɵɵproperty("ngIf", !ctx_r1.dateTemplate && !ctx_r1._dateTemplate && (date_r16.selectable || !ctx_r1.disabledDateTemplate && !ctx_r1._disabledDateTemplate));
@@ -689,14 +723,15 @@ function DatePicker_div_1_ng_container_4_div_2_table_12_tr_6_td_2_ng_container_1
 }
 function DatePicker_div_1_ng_container_4_div_2_table_12_tr_6_td_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "td");
-    ɵɵtemplate(1, DatePicker_div_1_ng_container_4_div_2_table_12_tr_6_td_2_ng_container_1_Template, 6, 6, "ng-container", 6);
+    ɵɵelementStart(0, "td", 18);
+    ɵɵtemplate(1, DatePicker_div_1_ng_container_4_div_2_table_12_tr_6_td_2_ng_container_1_Template, 6, 7, "ng-container", 6);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const date_r16 = ctx.$implicit;
     const ctx_r1 = ɵɵnextContext(6);
-    ɵɵclassMap(ctx_r1.cx("dayCell", ɵɵpureFunction1(4, _c21, date_r16)));
+    ɵɵclassMap(ctx_r1.cx("dayCell", ɵɵpureFunction1(5, _c22, date_r16)));
+    ɵɵproperty("pBind", ctx_r1.ptm("dayCell"));
     ɵɵattribute("aria-label", date_r16.day);
     ɵɵadvance();
     ɵɵproperty("ngIf", date_r16.otherMonth ? ctx_r1.showOtherMonths : true);
@@ -704,13 +739,14 @@ function DatePicker_div_1_ng_container_4_div_2_table_12_tr_6_td_2_Template(rf, c
 }
 function DatePicker_div_1_ng_container_4_div_2_table_12_tr_6_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "tr");
-    ɵɵtemplate(1, DatePicker_div_1_ng_container_4_div_2_table_12_tr_6_td_1_Template, 3, 5, "td", 22)(2, DatePicker_div_1_ng_container_4_div_2_table_12_tr_6_td_2_Template, 2, 6, "td", 23);
+    ɵɵelementStart(0, "tr", 18);
+    ɵɵtemplate(1, DatePicker_div_1_ng_container_4_div_2_table_12_tr_6_td_1_Template, 3, 7, "td", 23)(2, DatePicker_div_1_ng_container_4_div_2_table_12_tr_6_td_2_Template, 2, 7, "td", 24);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const week_r18 = ctx.$implicit;
     const ctx_r1 = ɵɵnextContext(5);
+    ɵɵproperty("pBind", ctx_r1.ptm("tableBodyRow"));
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r1.showWeek);
     ɵɵadvance();
@@ -719,29 +755,36 @@ function DatePicker_div_1_ng_container_4_div_2_table_12_tr_6_Template(rf, ctx) {
 }
 function DatePicker_div_1_ng_container_4_div_2_table_12_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "table", 33)(1, "thead")(2, "tr");
-    ɵɵtemplate(3, DatePicker_div_1_ng_container_4_div_2_table_12_th_3_Template, 3, 3, "th", 22)(4, DatePicker_div_1_ng_container_4_div_2_table_12_th_4_Template, 3, 5, "th", 34);
+    ɵɵelementStart(0, "table", 34)(1, "thead", 18)(2, "tr", 18);
+    ɵɵtemplate(3, DatePicker_div_1_ng_container_4_div_2_table_12_th_3_Template, 3, 5, "th", 23)(4, DatePicker_div_1_ng_container_4_div_2_table_12_th_4_Template, 3, 7, "th", 35);
     ɵɵelementEnd()();
-    ɵɵelementStart(5, "tbody");
-    ɵɵtemplate(6, DatePicker_div_1_ng_container_4_div_2_table_12_tr_6_Template, 3, 2, "tr", 35);
+    ɵɵelementStart(5, "tbody", 18);
+    ɵɵtemplate(6, DatePicker_div_1_ng_container_4_div_2_table_12_tr_6_Template, 3, 3, "tr", 36);
     ɵɵelementEnd()();
   }
   if (rf & 2) {
     const month_r11 = ɵɵnextContext().$implicit;
     const ctx_r1 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r1.cx("dayView"));
-    ɵɵadvance(3);
+    ɵɵproperty("pBind", ctx_r1.ptm("table"));
+    ɵɵadvance();
+    ɵɵproperty("pBind", ctx_r1.ptm("tableHeader"));
+    ɵɵadvance();
+    ɵɵproperty("pBind", ctx_r1.ptm("tableHeaderRow"));
+    ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r1.showWeek);
     ɵɵadvance();
     ɵɵproperty("ngForOf", ctx_r1.weekDays);
-    ɵɵadvance(2);
+    ɵɵadvance();
+    ɵɵproperty("pBind", ctx_r1.ptm("tableBody"));
+    ɵɵadvance();
     ɵɵproperty("ngForOf", month_r11.dates);
   }
 }
 function DatePicker_div_1_ng_container_4_div_2_Template(rf, ctx) {
   if (rf & 1) {
     const _r9 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "div")(1, "div")(2, "p-button", 24);
+    ɵɵelementStart(0, "div", 18)(1, "div", 18)(2, "p-button", 25);
     ɵɵlistener("keydown", function DatePicker_div_1_ng_container_4_div_2_Template_p_button_keydown_2_listener($event) {
       ɵɵrestoreView(_r9);
       const ctx_r1 = ɵɵnextContext(3);
@@ -753,10 +796,10 @@ function DatePicker_div_1_ng_container_4_div_2_Template(rf, ctx) {
     });
     ɵɵtemplate(3, DatePicker_div_1_ng_container_4_div_2_ng_template_3_Template, 2, 2, "ng-template", null, 2, ɵɵtemplateRefExtractor);
     ɵɵelementEnd();
-    ɵɵelementStart(5, "div");
-    ɵɵtemplate(6, DatePicker_div_1_ng_container_4_div_2_button_6_Template, 2, 5, "button", 25)(7, DatePicker_div_1_ng_container_4_div_2_button_7_Template, 2, 5, "button", 25)(8, DatePicker_div_1_ng_container_4_div_2_span_8_Template, 3, 7, "span", 22);
+    ɵɵelementStart(5, "div", 18);
+    ɵɵtemplate(6, DatePicker_div_1_ng_container_4_div_2_button_6_Template, 2, 7, "button", 26)(7, DatePicker_div_1_ng_container_4_div_2_button_7_Template, 2, 7, "button", 26)(8, DatePicker_div_1_ng_container_4_div_2_span_8_Template, 3, 8, "span", 23);
     ɵɵelementEnd();
-    ɵɵelementStart(9, "p-button", 26);
+    ɵɵelementStart(9, "p-button", 27);
     ɵɵlistener("keydown", function DatePicker_div_1_ng_container_4_div_2_Template_p_button_keydown_9_listener($event) {
       ɵɵrestoreView(_r9);
       const ctx_r1 = ɵɵnextContext(3);
@@ -768,19 +811,23 @@ function DatePicker_div_1_ng_container_4_div_2_Template(rf, ctx) {
     });
     ɵɵtemplate(10, DatePicker_div_1_ng_container_4_div_2_ng_template_10_Template, 2, 2, "ng-template", null, 2, ɵɵtemplateRefExtractor);
     ɵɵelementEnd()();
-    ɵɵtemplate(12, DatePicker_div_1_ng_container_4_div_2_table_12_Template, 7, 5, "table", 27);
+    ɵɵtemplate(12, DatePicker_div_1_ng_container_4_div_2_table_12_Template, 7, 9, "table", 28);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const i_r17 = ctx.index;
     const ctx_r1 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r1.cx("calendar"));
+    ɵɵproperty("pBind", ctx_r1.ptm("calendar"));
     ɵɵadvance();
     ɵɵclassMap(ctx_r1.cx("header"));
+    ɵɵproperty("pBind", ctx_r1.ptm("header"));
     ɵɵadvance();
-    ɵɵproperty("styleClass", ctx_r1.cx("pcPrevButton"))("ngStyle", ɵɵpureFunction1(16, _c19, i_r17 === 0 ? "visible" : "hidden"))("ariaLabel", ctx_r1.prevIconAriaLabel);
+    ɵɵproperty("styleClass", ctx_r1.cx("pcPrevButton"))("ngStyle", ɵɵpureFunction1(23, _c20, i_r17 === 0 ? "visible" : "hidden"))("ariaLabel", ctx_r1.prevIconAriaLabel)("pt", ctx_r1.ptm("pcPrevButton"));
+    ɵɵattribute("data-pc-group-section", "navigator");
     ɵɵadvance(3);
     ɵɵclassMap(ctx_r1.cx("title"));
+    ɵɵproperty("pBind", ctx_r1.ptm("title"));
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r1.currentView === "date");
     ɵɵadvance();
@@ -788,14 +835,15 @@ function DatePicker_div_1_ng_container_4_div_2_Template(rf, ctx) {
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r1.currentView === "year");
     ɵɵadvance();
-    ɵɵproperty("styleClass", ctx_r1.cx("pcNextButton"))("ngStyle", ɵɵpureFunction1(18, _c19, i_r17 === ctx_r1.months.length - 1 ? "visible" : "hidden"))("ariaLabel", ctx_r1.nextIconAriaLabel);
+    ɵɵproperty("styleClass", ctx_r1.cx("pcNextButton"))("ngStyle", ɵɵpureFunction1(25, _c20, i_r17 === ctx_r1.months.length - 1 ? "visible" : "hidden"))("ariaLabel", ctx_r1.nextIconAriaLabel)("pt", ctx_r1.ptm("pcNextButton"));
+    ɵɵattribute("data-pc-group-section", "navigator");
     ɵɵadvance(3);
     ɵɵproperty("ngIf", ctx_r1.currentView === "date");
   }
 }
 function DatePicker_div_1_ng_container_4_div_3_span_1_div_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div", 39);
+    ɵɵelementStart(0, "div", 40);
     ɵɵtext(1);
     ɵɵelementEnd();
   }
@@ -808,7 +856,7 @@ function DatePicker_div_1_ng_container_4_div_3_span_1_div_2_Template(rf, ctx) {
 function DatePicker_div_1_ng_container_4_div_3_span_1_Template(rf, ctx) {
   if (rf & 1) {
     const _r19 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "span", 41);
+    ɵɵelementStart(0, "span", 42);
     ɵɵlistener("click", function DatePicker_div_1_ng_container_4_div_3_span_1_Template_span_click_0_listener($event) {
       const i_r20 = ɵɵrestoreView(_r19).index;
       const ctx_r1 = ɵɵnextContext(4);
@@ -819,14 +867,15 @@ function DatePicker_div_1_ng_container_4_div_3_span_1_Template(rf, ctx) {
       return ɵɵresetView(ctx_r1.onMonthCellKeydown($event, i_r20));
     });
     ɵɵtext(1);
-    ɵɵtemplate(2, DatePicker_div_1_ng_container_4_div_3_span_1_div_2_Template, 2, 1, "div", 38);
+    ɵɵtemplate(2, DatePicker_div_1_ng_container_4_div_3_span_1_div_2_Template, 2, 1, "div", 39);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const m_r21 = ctx.$implicit;
     const i_r20 = ctx.index;
     const ctx_r1 = ɵɵnextContext(4);
-    ɵɵclassMap(ctx_r1.cx("month", ɵɵpureFunction2(4, _c22, m_r21, i_r20)));
+    ɵɵclassMap(ctx_r1.cx("month", ɵɵpureFunction2(5, _c23, m_r21, i_r20)));
+    ɵɵproperty("pBind", ctx_r1.ptm("month"));
     ɵɵadvance();
     ɵɵtextInterpolate1(" ", m_r21, " ");
     ɵɵadvance();
@@ -835,20 +884,21 @@ function DatePicker_div_1_ng_container_4_div_3_span_1_Template(rf, ctx) {
 }
 function DatePicker_div_1_ng_container_4_div_3_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div");
-    ɵɵtemplate(1, DatePicker_div_1_ng_container_4_div_3_span_1_Template, 3, 7, "span", 40);
+    ɵɵelementStart(0, "div", 18);
+    ɵɵtemplate(1, DatePicker_div_1_ng_container_4_div_3_span_1_Template, 3, 8, "span", 41);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r1.cx("monthView"));
+    ɵɵproperty("pBind", ctx_r1.ptm("monthView"));
     ɵɵadvance();
     ɵɵproperty("ngForOf", ctx_r1.monthPickerValues());
   }
 }
 function DatePicker_div_1_ng_container_4_div_4_span_1_div_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div", 39);
+    ɵɵelementStart(0, "div", 40);
     ɵɵtext(1);
     ɵɵelementEnd();
   }
@@ -861,7 +911,7 @@ function DatePicker_div_1_ng_container_4_div_4_span_1_div_2_Template(rf, ctx) {
 function DatePicker_div_1_ng_container_4_div_4_span_1_Template(rf, ctx) {
   if (rf & 1) {
     const _r22 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "span", 41);
+    ɵɵelementStart(0, "span", 42);
     ɵɵlistener("click", function DatePicker_div_1_ng_container_4_div_4_span_1_Template_span_click_0_listener($event) {
       const y_r23 = ɵɵrestoreView(_r22).$implicit;
       const ctx_r1 = ɵɵnextContext(4);
@@ -872,13 +922,14 @@ function DatePicker_div_1_ng_container_4_div_4_span_1_Template(rf, ctx) {
       return ɵɵresetView(ctx_r1.onYearCellKeydown($event, y_r23));
     });
     ɵɵtext(1);
-    ɵɵtemplate(2, DatePicker_div_1_ng_container_4_div_4_span_1_div_2_Template, 2, 1, "div", 38);
+    ɵɵtemplate(2, DatePicker_div_1_ng_container_4_div_4_span_1_div_2_Template, 2, 1, "div", 39);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const y_r23 = ctx.$implicit;
     const ctx_r1 = ɵɵnextContext(4);
-    ɵɵclassMap(ctx_r1.cx("year", ɵɵpureFunction1(4, _c23, y_r23)));
+    ɵɵclassMap(ctx_r1.cx("year", ɵɵpureFunction1(5, _c24, y_r23)));
+    ɵɵproperty("pBind", ctx_r1.ptm("year"));
     ɵɵadvance();
     ɵɵtextInterpolate1(" ", y_r23, " ");
     ɵɵadvance();
@@ -887,13 +938,14 @@ function DatePicker_div_1_ng_container_4_div_4_span_1_Template(rf, ctx) {
 }
 function DatePicker_div_1_ng_container_4_div_4_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div");
-    ɵɵtemplate(1, DatePicker_div_1_ng_container_4_div_4_span_1_Template, 3, 6, "span", 40);
+    ɵɵelementStart(0, "div", 18);
+    ɵɵtemplate(1, DatePicker_div_1_ng_container_4_div_4_span_1_Template, 3, 7, "span", 41);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r1.cx("yearView"));
+    ɵɵproperty("pBind", ctx_r1.ptm("yearView"));
     ɵɵadvance();
     ɵɵproperty("ngForOf", ctx_r1.yearPickerValues());
   }
@@ -901,16 +953,17 @@ function DatePicker_div_1_ng_container_4_div_4_Template(rf, ctx) {
 function DatePicker_div_1_ng_container_4_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵelementStart(1, "div");
-    ɵɵtemplate(2, DatePicker_div_1_ng_container_4_div_2_Template, 13, 20, "div", 23);
+    ɵɵelementStart(1, "div", 18);
+    ɵɵtemplate(2, DatePicker_div_1_ng_container_4_div_2_Template, 13, 27, "div", 24);
     ɵɵelementEnd();
-    ɵɵtemplate(3, DatePicker_div_1_ng_container_4_div_3_Template, 2, 3, "div", 22)(4, DatePicker_div_1_ng_container_4_div_4_Template, 2, 3, "div", 22);
+    ɵɵtemplate(3, DatePicker_div_1_ng_container_4_div_3_Template, 2, 4, "div", 23)(4, DatePicker_div_1_ng_container_4_div_4_Template, 2, 4, "div", 23);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
     ɵɵadvance();
     ɵɵclassMap(ctx_r1.cx("calendarContainer"));
+    ɵɵproperty("pBind", ctx_r1.ptm("calendarContainer"));
     ɵɵadvance();
     ɵɵproperty("ngForOf", ctx_r1.months);
     ɵɵadvance();
@@ -922,7 +975,11 @@ function DatePicker_div_1_ng_container_4_Template(rf, ctx) {
 function DatePicker_div_1_div_5_ng_template_3__svg_svg_0_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 45);
+    ɵɵelement(0, "svg", 46);
+  }
+  if (rf & 2) {
+    const ctx_r1 = ɵɵnextContext(4);
+    ɵɵproperty("pBind", ctx_r1.ptm("pcIncrementButton")["icon"]);
   }
 }
 function DatePicker_div_1_div_5_ng_template_3_1_ng_template_0_Template(rf, ctx) {
@@ -934,7 +991,7 @@ function DatePicker_div_1_div_5_ng_template_3_1_Template(rf, ctx) {
 }
 function DatePicker_div_1_div_5_ng_template_3_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, DatePicker_div_1_div_5_ng_template_3__svg_svg_0_Template, 1, 0, "svg", 44)(1, DatePicker_div_1_div_5_ng_template_3_1_Template, 1, 0, null, 12);
+    ɵɵtemplate(0, DatePicker_div_1_div_5_ng_template_3__svg_svg_0_Template, 1, 1, "svg", 45)(1, DatePicker_div_1_div_5_ng_template_3_1_Template, 1, 0, null, 12);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
@@ -953,7 +1010,11 @@ function DatePicker_div_1_div_5_ng_container_6_Template(rf, ctx) {
 function DatePicker_div_1_div_5_ng_template_9__svg_svg_0_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 47);
+    ɵɵelement(0, "svg", 48);
+  }
+  if (rf & 2) {
+    const ctx_r1 = ɵɵnextContext(4);
+    ɵɵproperty("pBind", ctx_r1.ptm("pcDecrementButton")["icon"]);
   }
 }
 function DatePicker_div_1_div_5_ng_template_9_1_ng_template_0_Template(rf, ctx) {
@@ -965,7 +1026,7 @@ function DatePicker_div_1_div_5_ng_template_9_1_Template(rf, ctx) {
 }
 function DatePicker_div_1_div_5_ng_template_9_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, DatePicker_div_1_div_5_ng_template_9__svg_svg_0_Template, 1, 0, "svg", 46)(1, DatePicker_div_1_div_5_ng_template_9_1_Template, 1, 0, null, 12);
+    ɵɵtemplate(0, DatePicker_div_1_div_5_ng_template_9__svg_svg_0_Template, 1, 1, "svg", 47)(1, DatePicker_div_1_div_5_ng_template_9_1_Template, 1, 0, null, 12);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
@@ -977,7 +1038,11 @@ function DatePicker_div_1_div_5_ng_template_9_Template(rf, ctx) {
 function DatePicker_div_1_div_5_ng_template_16__svg_svg_0_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 45);
+    ɵɵelement(0, "svg", 46);
+  }
+  if (rf & 2) {
+    const ctx_r1 = ɵɵnextContext(4);
+    ɵɵproperty("pBind", ctx_r1.ptm("pcIncrementButton")["icon"]);
   }
 }
 function DatePicker_div_1_div_5_ng_template_16_1_ng_template_0_Template(rf, ctx) {
@@ -989,7 +1054,7 @@ function DatePicker_div_1_div_5_ng_template_16_1_Template(rf, ctx) {
 }
 function DatePicker_div_1_div_5_ng_template_16_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, DatePicker_div_1_div_5_ng_template_16__svg_svg_0_Template, 1, 0, "svg", 44)(1, DatePicker_div_1_div_5_ng_template_16_1_Template, 1, 0, null, 12);
+    ɵɵtemplate(0, DatePicker_div_1_div_5_ng_template_16__svg_svg_0_Template, 1, 1, "svg", 45)(1, DatePicker_div_1_div_5_ng_template_16_1_Template, 1, 0, null, 12);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
@@ -1008,7 +1073,11 @@ function DatePicker_div_1_div_5_ng_container_19_Template(rf, ctx) {
 function DatePicker_div_1_div_5_ng_template_22__svg_svg_0_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 47);
+    ɵɵelement(0, "svg", 48);
+  }
+  if (rf & 2) {
+    const ctx_r1 = ɵɵnextContext(4);
+    ɵɵproperty("pBind", ctx_r1.ptm("pcDecrementButton")["icon"]);
   }
 }
 function DatePicker_div_1_div_5_ng_template_22_1_ng_template_0_Template(rf, ctx) {
@@ -1020,7 +1089,7 @@ function DatePicker_div_1_div_5_ng_template_22_1_Template(rf, ctx) {
 }
 function DatePicker_div_1_div_5_ng_template_22_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, DatePicker_div_1_div_5_ng_template_22__svg_svg_0_Template, 1, 0, "svg", 46)(1, DatePicker_div_1_div_5_ng_template_22_1_Template, 1, 0, null, 12);
+    ɵɵtemplate(0, DatePicker_div_1_div_5_ng_template_22__svg_svg_0_Template, 1, 1, "svg", 47)(1, DatePicker_div_1_div_5_ng_template_22_1_Template, 1, 0, null, 12);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
@@ -1031,21 +1100,28 @@ function DatePicker_div_1_div_5_ng_template_22_Template(rf, ctx) {
 }
 function DatePicker_div_1_div_5_div_24_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div")(1, "span");
+    ɵɵelementStart(0, "div", 18)(1, "span", 18);
     ɵɵtext(2);
     ɵɵelementEnd()();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r1.cx("separator"));
-    ɵɵadvance(2);
+    ɵɵproperty("pBind", ctx_r1.ptm("separatorContainer"));
+    ɵɵadvance();
+    ɵɵproperty("pBind", ctx_r1.ptm("separator"));
+    ɵɵadvance();
     ɵɵtextInterpolate(ctx_r1.timeSeparator);
   }
 }
 function DatePicker_div_1_div_5_div_25_ng_template_2__svg_svg_0_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 45);
+    ɵɵelement(0, "svg", 46);
+  }
+  if (rf & 2) {
+    const ctx_r1 = ɵɵnextContext(5);
+    ɵɵproperty("pBind", ctx_r1.ptm("pcIncrementButton")["icon"]);
   }
 }
 function DatePicker_div_1_div_5_div_25_ng_template_2_1_ng_template_0_Template(rf, ctx) {
@@ -1057,7 +1133,7 @@ function DatePicker_div_1_div_5_div_25_ng_template_2_1_Template(rf, ctx) {
 }
 function DatePicker_div_1_div_5_div_25_ng_template_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, DatePicker_div_1_div_5_div_25_ng_template_2__svg_svg_0_Template, 1, 0, "svg", 44)(1, DatePicker_div_1_div_5_div_25_ng_template_2_1_Template, 1, 0, null, 12);
+    ɵɵtemplate(0, DatePicker_div_1_div_5_div_25_ng_template_2__svg_svg_0_Template, 1, 1, "svg", 45)(1, DatePicker_div_1_div_5_div_25_ng_template_2_1_Template, 1, 0, null, 12);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(4);
@@ -1076,7 +1152,11 @@ function DatePicker_div_1_div_5_div_25_ng_container_5_Template(rf, ctx) {
 function DatePicker_div_1_div_5_div_25_ng_template_8__svg_svg_0_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 47);
+    ɵɵelement(0, "svg", 48);
+  }
+  if (rf & 2) {
+    const ctx_r1 = ɵɵnextContext(5);
+    ɵɵproperty("pBind", ctx_r1.ptm("pcDecrementButton")["icon"]);
   }
 }
 function DatePicker_div_1_div_5_div_25_ng_template_8_1_ng_template_0_Template(rf, ctx) {
@@ -1088,7 +1168,7 @@ function DatePicker_div_1_div_5_div_25_ng_template_8_1_Template(rf, ctx) {
 }
 function DatePicker_div_1_div_5_div_25_ng_template_8_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, DatePicker_div_1_div_5_div_25_ng_template_8__svg_svg_0_Template, 1, 0, "svg", 46)(1, DatePicker_div_1_div_5_div_25_ng_template_8_1_Template, 1, 0, null, 12);
+    ɵɵtemplate(0, DatePicker_div_1_div_5_div_25_ng_template_8__svg_svg_0_Template, 1, 1, "svg", 47)(1, DatePicker_div_1_div_5_div_25_ng_template_8_1_Template, 1, 0, null, 12);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(4);
@@ -1100,7 +1180,7 @@ function DatePicker_div_1_div_5_div_25_ng_template_8_Template(rf, ctx) {
 function DatePicker_div_1_div_5_div_25_Template(rf, ctx) {
   if (rf & 1) {
     const _r25 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "div")(1, "p-button", 42);
+    ɵɵelementStart(0, "div", 18)(1, "p-button", 43);
     ɵɵlistener("keydown", function DatePicker_div_1_div_5_div_25_Template_p_button_keydown_1_listener($event) {
       ɵɵrestoreView(_r25);
       const ctx_r1 = ɵɵnextContext(3);
@@ -1136,11 +1216,11 @@ function DatePicker_div_1_div_5_div_25_Template(rf, ctx) {
     });
     ɵɵtemplate(2, DatePicker_div_1_div_5_div_25_ng_template_2_Template, 2, 2, "ng-template", null, 2, ɵɵtemplateRefExtractor);
     ɵɵelementEnd();
-    ɵɵelementStart(4, "span");
+    ɵɵelementStart(4, "span", 18);
     ɵɵtemplate(5, DatePicker_div_1_div_5_div_25_ng_container_5_Template, 2, 0, "ng-container", 6);
     ɵɵtext(6);
     ɵɵelementEnd();
-    ɵɵelementStart(7, "p-button", 42);
+    ɵɵelementStart(7, "p-button", 43);
     ɵɵlistener("keydown", function DatePicker_div_1_div_5_div_25_Template_p_button_keydown_7_listener($event) {
       ɵɵrestoreView(_r25);
       const ctx_r1 = ɵɵnextContext(3);
@@ -1180,35 +1260,45 @@ function DatePicker_div_1_div_5_div_25_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r1.cx("secondPicker"));
+    ɵɵproperty("pBind", ctx_r1.ptm("secondPicker"));
     ɵɵadvance();
-    ɵɵproperty("styleClass", ctx_r1.cx("pcIncrementButton"));
-    ɵɵattribute("aria-label", ctx_r1.getTranslation("nextSecond"));
-    ɵɵadvance(4);
+    ɵɵproperty("styleClass", ctx_r1.cx("pcIncrementButton"))("pt", ctx_r1.ptm("pcIncrementButton"));
+    ɵɵattribute("aria-label", ctx_r1.getTranslation("nextSecond"))("data-pc-group-section", "timepickerbutton");
+    ɵɵadvance(3);
+    ɵɵproperty("pBind", ctx_r1.ptm("second"));
+    ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r1.currentSecond < 10);
     ɵɵadvance();
     ɵɵtextInterpolate(ctx_r1.currentSecond);
     ɵɵadvance();
-    ɵɵproperty("styleClass", ctx_r1.cx("pcDecrementButton"));
-    ɵɵattribute("aria-label", ctx_r1.getTranslation("prevSecond"));
+    ɵɵproperty("styleClass", ctx_r1.cx("pcDecrementButton"))("pt", ctx_r1.ptm("pcDecrementButton"));
+    ɵɵattribute("aria-label", ctx_r1.getTranslation("prevSecond"))("data-pc-group-section", "timepickerbutton");
   }
 }
 function DatePicker_div_1_div_5_div_26_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div")(1, "span");
+    ɵɵelementStart(0, "div", 18)(1, "span", 18);
     ɵɵtext(2);
     ɵɵelementEnd()();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r1.cx("separator"));
-    ɵɵadvance(2);
+    ɵɵproperty("pBind", ctx_r1.ptm("separatorContainer"));
+    ɵɵadvance();
+    ɵɵproperty("pBind", ctx_r1.ptm("separator"));
+    ɵɵadvance();
     ɵɵtextInterpolate(ctx_r1.timeSeparator);
   }
 }
 function DatePicker_div_1_div_5_div_27_ng_template_2__svg_svg_0_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 45);
+    ɵɵelement(0, "svg", 46);
+  }
+  if (rf & 2) {
+    const ctx_r1 = ɵɵnextContext(5);
+    ɵɵproperty("pBind", ctx_r1.ptm("pcIncrementButton")["icon"]);
   }
 }
 function DatePicker_div_1_div_5_div_27_ng_template_2_1_ng_template_0_Template(rf, ctx) {
@@ -1220,7 +1310,7 @@ function DatePicker_div_1_div_5_div_27_ng_template_2_1_Template(rf, ctx) {
 }
 function DatePicker_div_1_div_5_div_27_ng_template_2_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, DatePicker_div_1_div_5_div_27_ng_template_2__svg_svg_0_Template, 1, 0, "svg", 44)(1, DatePicker_div_1_div_5_div_27_ng_template_2_1_Template, 1, 0, null, 12);
+    ɵɵtemplate(0, DatePicker_div_1_div_5_div_27_ng_template_2__svg_svg_0_Template, 1, 1, "svg", 45)(1, DatePicker_div_1_div_5_div_27_ng_template_2_1_Template, 1, 0, null, 12);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(4);
@@ -1232,7 +1322,11 @@ function DatePicker_div_1_div_5_div_27_ng_template_2_Template(rf, ctx) {
 function DatePicker_div_1_div_5_div_27_ng_template_7__svg_svg_0_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵnamespaceSVG();
-    ɵɵelement(0, "svg", 47);
+    ɵɵelement(0, "svg", 48);
+  }
+  if (rf & 2) {
+    const ctx_r1 = ɵɵnextContext(5);
+    ɵɵproperty("pBind", ctx_r1.ptm("pcDecrementButton")["icon"]);
   }
 }
 function DatePicker_div_1_div_5_div_27_ng_template_7_1_ng_template_0_Template(rf, ctx) {
@@ -1244,7 +1338,7 @@ function DatePicker_div_1_div_5_div_27_ng_template_7_1_Template(rf, ctx) {
 }
 function DatePicker_div_1_div_5_div_27_ng_template_7_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, DatePicker_div_1_div_5_div_27_ng_template_7__svg_svg_0_Template, 1, 0, "svg", 46)(1, DatePicker_div_1_div_5_div_27_ng_template_7_1_Template, 1, 0, null, 12);
+    ɵɵtemplate(0, DatePicker_div_1_div_5_div_27_ng_template_7__svg_svg_0_Template, 1, 1, "svg", 47)(1, DatePicker_div_1_div_5_div_27_ng_template_7_1_Template, 1, 0, null, 12);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(4);
@@ -1256,7 +1350,7 @@ function DatePicker_div_1_div_5_div_27_ng_template_7_Template(rf, ctx) {
 function DatePicker_div_1_div_5_div_27_Template(rf, ctx) {
   if (rf & 1) {
     const _r26 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "div")(1, "p-button", 48);
+    ɵɵelementStart(0, "div", 18)(1, "p-button", 49);
     ɵɵlistener("keydown", function DatePicker_div_1_div_5_div_27_Template_p_button_keydown_1_listener($event) {
       ɵɵrestoreView(_r26);
       const ctx_r1 = ɵɵnextContext(3);
@@ -1272,10 +1366,10 @@ function DatePicker_div_1_div_5_div_27_Template(rf, ctx) {
     });
     ɵɵtemplate(2, DatePicker_div_1_div_5_div_27_ng_template_2_Template, 2, 2, "ng-template", null, 2, ɵɵtemplateRefExtractor);
     ɵɵelementEnd();
-    ɵɵelementStart(4, "span");
+    ɵɵelementStart(4, "span", 18);
     ɵɵtext(5);
     ɵɵelementEnd();
-    ɵɵelementStart(6, "p-button", 49);
+    ɵɵelementStart(6, "p-button", 50);
     ɵɵlistener("keydown", function DatePicker_div_1_div_5_div_27_Template_p_button_keydown_6_listener($event) {
       ɵɵrestoreView(_r26);
       const ctx_r1 = ɵɵnextContext(3);
@@ -1295,20 +1389,23 @@ function DatePicker_div_1_div_5_div_27_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
     ɵɵclassMap(ctx_r1.cx("ampmPicker"));
+    ɵɵproperty("pBind", ctx_r1.ptm("ampmPicker"));
     ɵɵadvance();
-    ɵɵproperty("styleClass", ctx_r1.cx("pcIncrementButton"));
-    ɵɵattribute("aria-label", ctx_r1.getTranslation("am"));
-    ɵɵadvance(4);
+    ɵɵproperty("styleClass", ctx_r1.cx("pcIncrementButton"))("pt", ctx_r1.ptm("pcIncrementButton"));
+    ɵɵattribute("aria-label", ctx_r1.getTranslation("am"))("data-pc-group-section", "timepickerbutton");
+    ɵɵadvance(3);
+    ɵɵproperty("pBind", ctx_r1.ptm("ampm"));
+    ɵɵadvance();
     ɵɵtextInterpolate(ctx_r1.pm ? "PM" : "AM");
     ɵɵadvance();
-    ɵɵproperty("styleClass", ctx_r1.cx("pcDecrementButton"));
-    ɵɵattribute("aria-label", ctx_r1.getTranslation("pm"));
+    ɵɵproperty("styleClass", ctx_r1.cx("pcDecrementButton"))("pt", ctx_r1.ptm("pcDecrementButton"));
+    ɵɵattribute("aria-label", ctx_r1.getTranslation("pm"))("data-pc-group-section", "timepickerbutton");
   }
 }
 function DatePicker_div_1_div_5_Template(rf, ctx) {
   if (rf & 1) {
     const _r24 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "div")(1, "div")(2, "p-button", 42);
+    ɵɵelementStart(0, "div", 18)(1, "div", 18)(2, "p-button", 43);
     ɵɵlistener("keydown", function DatePicker_div_1_div_5_Template_p_button_keydown_2_listener($event) {
       ɵɵrestoreView(_r24);
       const ctx_r1 = ɵɵnextContext(2);
@@ -1344,11 +1441,11 @@ function DatePicker_div_1_div_5_Template(rf, ctx) {
     });
     ɵɵtemplate(3, DatePicker_div_1_div_5_ng_template_3_Template, 2, 2, "ng-template", null, 2, ɵɵtemplateRefExtractor);
     ɵɵelementEnd();
-    ɵɵelementStart(5, "span");
+    ɵɵelementStart(5, "span", 18);
     ɵɵtemplate(6, DatePicker_div_1_div_5_ng_container_6_Template, 2, 0, "ng-container", 6);
     ɵɵtext(7);
     ɵɵelementEnd();
-    ɵɵelementStart(8, "p-button", 42);
+    ɵɵelementStart(8, "p-button", 43);
     ɵɵlistener("keydown", function DatePicker_div_1_div_5_Template_p_button_keydown_8_listener($event) {
       ɵɵrestoreView(_r24);
       const ctx_r1 = ɵɵnextContext(2);
@@ -1384,10 +1481,10 @@ function DatePicker_div_1_div_5_Template(rf, ctx) {
     });
     ɵɵtemplate(9, DatePicker_div_1_div_5_ng_template_9_Template, 2, 2, "ng-template", null, 2, ɵɵtemplateRefExtractor);
     ɵɵelementEnd()();
-    ɵɵelementStart(11, "div", 43)(12, "span");
+    ɵɵelementStart(11, "div", 44)(12, "span", 18);
     ɵɵtext(13);
     ɵɵelementEnd()();
-    ɵɵelementStart(14, "div")(15, "p-button", 42);
+    ɵɵelementStart(14, "div", 18)(15, "p-button", 43);
     ɵɵlistener("keydown", function DatePicker_div_1_div_5_Template_p_button_keydown_15_listener($event) {
       ɵɵrestoreView(_r24);
       const ctx_r1 = ɵɵnextContext(2);
@@ -1423,11 +1520,11 @@ function DatePicker_div_1_div_5_Template(rf, ctx) {
     });
     ɵɵtemplate(16, DatePicker_div_1_div_5_ng_template_16_Template, 2, 2, "ng-template", null, 2, ɵɵtemplateRefExtractor);
     ɵɵelementEnd();
-    ɵɵelementStart(18, "span");
+    ɵɵelementStart(18, "span", 18);
     ɵɵtemplate(19, DatePicker_div_1_div_5_ng_container_19_Template, 2, 0, "ng-container", 6);
     ɵɵtext(20);
     ɵɵelementEnd();
-    ɵɵelementStart(21, "p-button", 42);
+    ɵɵelementStart(21, "p-button", 43);
     ɵɵlistener("keydown", function DatePicker_div_1_div_5_Template_p_button_keydown_21_listener($event) {
       ɵɵrestoreView(_r24);
       const ctx_r1 = ɵɵnextContext(2);
@@ -1463,38 +1560,49 @@ function DatePicker_div_1_div_5_Template(rf, ctx) {
     });
     ɵɵtemplate(22, DatePicker_div_1_div_5_ng_template_22_Template, 2, 2, "ng-template", null, 2, ɵɵtemplateRefExtractor);
     ɵɵelementEnd()();
-    ɵɵtemplate(24, DatePicker_div_1_div_5_div_24_Template, 3, 3, "div", 22)(25, DatePicker_div_1_div_5_div_25_Template, 10, 8, "div", 22)(26, DatePicker_div_1_div_5_div_26_Template, 3, 3, "div", 22)(27, DatePicker_div_1_div_5_div_27_Template, 9, 7, "div", 22);
+    ɵɵtemplate(24, DatePicker_div_1_div_5_div_24_Template, 3, 5, "div", 23)(25, DatePicker_div_1_div_5_div_25_Template, 10, 14, "div", 23)(26, DatePicker_div_1_div_5_div_26_Template, 3, 5, "div", 23)(27, DatePicker_div_1_div_5_div_27_Template, 9, 13, "div", 23);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r1.cx("timePicker"));
+    ɵɵproperty("pBind", ctx_r1.ptm("timePicker"));
     ɵɵadvance();
     ɵɵclassMap(ctx_r1.cx("hourPicker"));
+    ɵɵproperty("pBind", ctx_r1.ptm("hourPicker"));
     ɵɵadvance();
-    ɵɵproperty("styleClass", ctx_r1.cx("pcIncrementButton"));
-    ɵɵattribute("aria-label", ctx_r1.getTranslation("nextHour"));
-    ɵɵadvance(4);
+    ɵɵproperty("styleClass", ctx_r1.cx("pcIncrementButton"))("pt", ctx_r1.ptm("pcIncrementButton"));
+    ɵɵattribute("aria-label", ctx_r1.getTranslation("nextHour"))("data-pc-group-section", "timepickerbutton");
+    ɵɵadvance(3);
+    ɵɵproperty("pBind", ctx_r1.ptm("hour"));
+    ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r1.currentHour < 10);
     ɵɵadvance();
     ɵɵtextInterpolate(ctx_r1.currentHour);
     ɵɵadvance();
-    ɵɵproperty("styleClass", ctx_r1.cx("pcDecrementButton"));
-    ɵɵattribute("aria-label", ctx_r1.getTranslation("prevHour"));
-    ɵɵadvance(5);
+    ɵɵproperty("styleClass", ctx_r1.cx("pcDecrementButton"))("pt", ctx_r1.ptm("pcDecrementButton"));
+    ɵɵattribute("aria-label", ctx_r1.getTranslation("prevHour"))("data-pc-group-section", "timepickerbutton");
+    ɵɵadvance(3);
+    ɵɵproperty("pBind", ctx_r1.ptm("separatorContainer"));
+    ɵɵadvance();
+    ɵɵproperty("pBind", ctx_r1.ptm("separator"));
+    ɵɵadvance();
     ɵɵtextInterpolate(ctx_r1.timeSeparator);
     ɵɵadvance();
     ɵɵclassMap(ctx_r1.cx("minutePicker"));
+    ɵɵproperty("pBind", ctx_r1.ptm("minutePicker"));
     ɵɵadvance();
-    ɵɵproperty("styleClass", ctx_r1.cx("pcIncrementButton"));
-    ɵɵattribute("aria-label", ctx_r1.getTranslation("nextMinute"));
-    ɵɵadvance(4);
+    ɵɵproperty("styleClass", ctx_r1.cx("pcIncrementButton"))("pt", ctx_r1.ptm("pcIncrementButton"));
+    ɵɵattribute("aria-label", ctx_r1.getTranslation("nextMinute"))("data-pc-group-section", "timepickerbutton");
+    ɵɵadvance(3);
+    ɵɵproperty("pBind", ctx_r1.ptm("minute"));
+    ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r1.currentMinute < 10);
     ɵɵadvance();
     ɵɵtextInterpolate(ctx_r1.currentMinute);
     ɵɵadvance();
-    ɵɵproperty("styleClass", ctx_r1.cx("pcDecrementButton"));
-    ɵɵattribute("aria-label", ctx_r1.getTranslation("prevMinute"));
+    ɵɵproperty("styleClass", ctx_r1.cx("pcDecrementButton"))("pt", ctx_r1.ptm("pcDecrementButton"));
+    ɵɵattribute("aria-label", ctx_r1.getTranslation("prevMinute"))("data-pc-group-section", "timepickerbutton");
     ɵɵadvance(3);
     ɵɵproperty("ngIf", ctx_r1.showSeconds);
     ɵɵadvance();
@@ -1505,39 +1613,67 @@ function DatePicker_div_1_div_5_Template(rf, ctx) {
     ɵɵproperty("ngIf", ctx_r1.hourFormat == "12");
   }
 }
-function DatePicker_div_1_div_6_Template(rf, ctx) {
+function DatePicker_div_1_div_6_Conditional_1_ng_container_0_Template(rf, ctx) {
+  if (rf & 1) {
+    ɵɵelementContainer(0);
+  }
+}
+function DatePicker_div_1_div_6_Conditional_1_Template(rf, ctx) {
+  if (rf & 1) {
+    ɵɵtemplate(0, DatePicker_div_1_div_6_Conditional_1_ng_container_0_Template, 1, 0, "ng-container", 20);
+  }
+  if (rf & 2) {
+    const ctx_r1 = ɵɵnextContext(3);
+    ɵɵproperty("ngTemplateOutlet", ctx_r1.buttonBarTemplate || ctx_r1._buttonBarTemplate)("ngTemplateOutletContext", ɵɵpureFunction2(2, _c25, ctx_r1.onTodayButtonClick.bind(ctx_r1), ctx_r1.onClearButtonClick.bind(ctx_r1)));
+  }
+}
+function DatePicker_div_1_div_6_Conditional_2_Template(rf, ctx) {
   if (rf & 1) {
     const _r27 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "div")(1, "p-button", 50);
-    ɵɵlistener("keydown", function DatePicker_div_1_div_6_Template_p_button_keydown_1_listener($event) {
+    ɵɵelementStart(0, "p-button", 51);
+    ɵɵlistener("keydown", function DatePicker_div_1_div_6_Conditional_2_Template_p_button_keydown_0_listener($event) {
       ɵɵrestoreView(_r27);
-      const ctx_r1 = ɵɵnextContext(2);
+      const ctx_r1 = ɵɵnextContext(3);
       return ɵɵresetView(ctx_r1.onContainerButtonKeydown($event));
-    })("onClick", function DatePicker_div_1_div_6_Template_p_button_onClick_1_listener($event) {
+    })("onClick", function DatePicker_div_1_div_6_Conditional_2_Template_p_button_onClick_0_listener($event) {
       ɵɵrestoreView(_r27);
-      const ctx_r1 = ɵɵnextContext(2);
+      const ctx_r1 = ɵɵnextContext(3);
       return ɵɵresetView(ctx_r1.onTodayButtonClick($event));
     });
     ɵɵelementEnd();
-    ɵɵelementStart(2, "p-button", 50);
-    ɵɵlistener("keydown", function DatePicker_div_1_div_6_Template_p_button_keydown_2_listener($event) {
+    ɵɵelementStart(1, "p-button", 51);
+    ɵɵlistener("keydown", function DatePicker_div_1_div_6_Conditional_2_Template_p_button_keydown_1_listener($event) {
       ɵɵrestoreView(_r27);
-      const ctx_r1 = ɵɵnextContext(2);
+      const ctx_r1 = ɵɵnextContext(3);
       return ɵɵresetView(ctx_r1.onContainerButtonKeydown($event));
-    })("onClick", function DatePicker_div_1_div_6_Template_p_button_onClick_2_listener($event) {
+    })("onClick", function DatePicker_div_1_div_6_Conditional_2_Template_p_button_onClick_1_listener($event) {
       ɵɵrestoreView(_r27);
-      const ctx_r1 = ɵɵnextContext(2);
+      const ctx_r1 = ɵɵnextContext(3);
       return ɵɵresetView(ctx_r1.onClearButtonClick($event));
     });
-    ɵɵelementEnd()();
+    ɵɵelementEnd();
+  }
+  if (rf & 2) {
+    const ctx_r1 = ɵɵnextContext(3);
+    ɵɵproperty("styleClass", ctx_r1.cx("pcTodayButton"))("label", ctx_r1.getTranslation("today"))("ngClass", ctx_r1.todayButtonStyleClass)("pt", ctx_r1.ptm("pcTodayButton"));
+    ɵɵattribute("data-pc-group-section", "button");
+    ɵɵadvance();
+    ɵɵproperty("styleClass", ctx_r1.cx("pcClearButton"))("label", ctx_r1.getTranslation("clear"))("ngClass", ctx_r1.clearButtonStyleClass)("pt", ctx_r1.ptm("pcClearButton"));
+    ɵɵattribute("data-pc-group-section", "button");
+  }
+}
+function DatePicker_div_1_div_6_Template(rf, ctx) {
+  if (rf & 1) {
+    ɵɵelementStart(0, "div", 18);
+    ɵɵconditionalCreate(1, DatePicker_div_1_div_6_Conditional_1_Template, 1, 5, "ng-container")(2, DatePicker_div_1_div_6_Conditional_2_Template, 2, 10);
+    ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(2);
     ɵɵclassMap(ctx_r1.cx("buttonbar"));
+    ɵɵproperty("pBind", ctx_r1.ptm("buttonbar"));
     ɵɵadvance();
-    ɵɵproperty("styleClass", ctx_r1.cx("pcTodayButton"))("label", ctx_r1.getTranslation("today"))("ngClass", ctx_r1.todayButtonStyleClass);
-    ɵɵadvance();
-    ɵɵproperty("styleClass", ctx_r1.cx("pcClearButton"))("label", ctx_r1.getTranslation("clear"))("ngClass", ctx_r1.clearButtonStyleClass);
+    ɵɵconditional(ctx_r1.buttonBarTemplate || ctx_r1._buttonBarTemplate ? 1 : 2);
   }
 }
 function DatePicker_div_1_ng_container_8_Template(rf, ctx) {
@@ -1548,7 +1684,7 @@ function DatePicker_div_1_ng_container_8_Template(rf, ctx) {
 function DatePicker_div_1_Template(rf, ctx) {
   if (rf & 1) {
     const _r8 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "div", 21, 1);
+    ɵɵelementStart(0, "div", 22, 1);
     ɵɵlistener("@overlayAnimation.start", function DatePicker_div_1_Template_div_animation_overlayAnimation_start_0_listener($event) {
       ɵɵrestoreView(_r8);
       const ctx_r1 = ɵɵnextContext();
@@ -1563,7 +1699,7 @@ function DatePicker_div_1_Template(rf, ctx) {
       return ɵɵresetView(ctx_r1.onOverlayClick($event));
     });
     ɵɵprojection(2);
-    ɵɵtemplate(3, DatePicker_div_1_ng_container_3_Template, 1, 0, "ng-container", 12)(4, DatePicker_div_1_ng_container_4_Template, 5, 5, "ng-container", 6)(5, DatePicker_div_1_div_5_Template, 28, 23, "div", 22)(6, DatePicker_div_1_div_6_Template, 3, 8, "div", 22);
+    ɵɵtemplate(3, DatePicker_div_1_ng_container_3_Template, 1, 0, "ng-container", 12)(4, DatePicker_div_1_ng_container_4_Template, 5, 6, "ng-container", 6)(5, DatePicker_div_1_div_5_Template, 28, 38, "div", 23)(6, DatePicker_div_1_div_6_Template, 3, 4, "div", 23);
     ɵɵprojection(7, 1);
     ɵɵtemplate(8, DatePicker_div_1_ng_container_8_Template, 1, 0, "ng-container", 12);
     ɵɵelementEnd();
@@ -1571,7 +1707,7 @@ function DatePicker_div_1_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.cn(ctx_r1.cx("panel"), ctx_r1.panelStyleClass));
-    ɵɵproperty("ngStyle", ctx_r1.panelStyle)("@overlayAnimation", ɵɵpureFunction1(17, _c18, ɵɵpureFunction2(14, _c17, ctx_r1.showTransitionOptions, ctx_r1.hideTransitionOptions)))("@.disabled", ctx_r1.inline === true);
+    ɵɵproperty("ngStyle", ctx_r1.panelStyle)("@overlayAnimation", ɵɵpureFunction1(18, _c19, ɵɵpureFunction2(15, _c18, ctx_r1.showTransitionOptions, ctx_r1.hideTransitionOptions)))("@.disabled", ctx_r1.inline === true)("pBind", ctx_r1.ptm("panel"));
     ɵɵattribute("id", ctx_r1.panelId)("aria-label", ctx_r1.getTranslation("chooseDate"))("role", ctx_r1.inline ? null : "dialog")("aria-modal", ctx_r1.inline ? null : "true");
     ɵɵadvance(3);
     ɵɵproperty("ngTemplateOutlet", ctx_r1.headerTemplate || ctx_r1._headerTemplate);
@@ -1585,7 +1721,7 @@ function DatePicker_div_1_Template(rf, ctx) {
     ɵɵproperty("ngTemplateOutlet", ctx_r1.footerTemplate || ctx_r1._footerTemplate);
   }
 }
-var theme = (
+var style3 = (
   /*css*/
   `
     ${style2}
@@ -1695,7 +1831,7 @@ var classes = {
 };
 var DatePickerStyle = class _DatePickerStyle extends BaseStyle {
   name = "datepicker";
-  theme = theme;
+  style = style3;
   classes = classes;
   inlineStyles = inlineStyles;
   static ɵfac = /* @__PURE__ */ (() => {
@@ -1761,9 +1897,17 @@ var DATEPICKER_VALUE_ACCESSOR = {
   useExisting: forwardRef(() => DatePicker),
   multi: true
 };
+var DATEPICKER_INSTANCE = new InjectionToken("DATEPICKER_INSTANCE");
 var DatePicker = class _DatePicker extends BaseInput {
   zone;
   overlayService;
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  $pcDatePicker = inject(DATEPICKER_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
   iconDisplay = "button";
   /**
    * Style class of the component.
@@ -2339,6 +2483,11 @@ var DatePicker = class _DatePicker extends BaseInput {
    * @group Templates
    */
   inputIconTemplate;
+  /**
+   * Custom template for button bar.
+   * @group Templates
+   */
+  buttonBarTemplate;
   _dateTemplate;
   _headerTemplate;
   _footerTemplate;
@@ -2351,6 +2500,7 @@ var DatePicker = class _DatePicker extends BaseInput {
   _decrementIconTemplate;
   _incrementIconTemplate;
   _inputIconTemplate;
+  _buttonBarTemplate;
   _disabledDates;
   _disabledDays;
   selectElement;
@@ -2392,8 +2542,7 @@ var DatePicker = class _DatePicker extends BaseInput {
     this.overlayService = overlayService;
     this.window = this.document.defaultView;
   }
-  ngOnInit() {
-    super.ngOnInit();
+  onInit() {
     this.attributeSelector = s2("pn_id_");
     this.panelId = this.attributeSelector + "_panel";
     const date = this.defaultDate || /* @__PURE__ */ new Date();
@@ -2414,8 +2563,7 @@ var DatePicker = class _DatePicker extends BaseInput {
     });
     this.initialized = true;
   }
-  ngAfterViewInit() {
-    super.ngAfterViewInit();
+  onAfterViewInit() {
     if (this.inline) {
       this.contentViewChild && this.contentViewChild.nativeElement.setAttribute(this.attributeSelector, "");
       if (!this.$disabled() && !this.inline) {
@@ -2428,8 +2576,11 @@ var DatePicker = class _DatePicker extends BaseInput {
       }
     }
   }
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptms(["host", "root"]));
+  }
   templates;
-  ngAfterContentInit() {
+  onAfterContentInit() {
     this.templates.forEach((item) => {
       switch (item.getType()) {
         case "date":
@@ -2446,6 +2597,9 @@ var DatePicker = class _DatePicker extends BaseInput {
           break;
         case "inputicon":
           this._inputIconTemplate = item.template;
+          break;
+        case "buttonbar":
+          this._buttonBarTemplate = item.template;
           break;
         case "previousicon":
           this._previousIconTemplate = item.template;
@@ -2606,7 +2760,7 @@ var DatePicker = class _DatePicker extends BaseInput {
     this.pm = date.getHours() > 11;
     if (this.showTime) {
       this.currentMinute = date.getMinutes();
-      this.currentSecond = date.getSeconds();
+      this.currentSecond = this.showSeconds ? date.getSeconds() : 0;
       this.setCurrentHourPM(date.getHours());
     } else if (this.timeOnly) {
       this.currentMinute = 0;
@@ -3017,12 +3171,12 @@ var DatePicker = class _DatePicker extends BaseInput {
     return false;
   }
   isDateEquals(value, dateMeta) {
-    if (value && T(value)) return value.getDate() === dateMeta.day && value.getMonth() === dateMeta.month && value.getFullYear() === dateMeta.year;
+    if (value && O(value)) return value.getDate() === dateMeta.day && value.getMonth() === dateMeta.month && value.getFullYear() === dateMeta.year;
     else return false;
   }
   isDateBetween(start, end, dateMeta) {
     let between = false;
-    if (T(start) && T(end)) {
+    if (O(start) && O(end)) {
       let date = this.formatDateMetaToDate(dateMeta);
       return start.getTime() <= date.getTime() && end.getTime() >= date.getTime();
     }
@@ -3181,7 +3335,7 @@ var DatePicker = class _DatePicker extends BaseInput {
           if (this.timeOnly) {
             return;
           } else {
-            if (element == headerElements.children[headerElements?.children?.length - 1]) {
+            if (element == headerElements?.children[headerElements?.children?.length - 1]) {
               this.initFocusableCell();
             }
           }
@@ -3717,7 +3871,7 @@ var DatePicker = class _DatePicker extends BaseInput {
   }
   constrainTime(hour, minute, second, pm) {
     let returnTimeTriple = [hour, minute, second];
-    let minHoursExceeds12;
+    let minHoursExceeds12 = false;
     let value = this.value;
     const convertedHour = this.convertTo24Hour(hour, pm);
     const isRange = this.isRangeSelection(), isMultiple = this.isMultipleSelection(), isMultiValue = isRange || isMultiple;
@@ -3756,7 +3910,7 @@ var DatePicker = class _DatePicker extends BaseInput {
         break;
       case (isMinDate && minHoursExceeds12 && this.minDate.getHours() > convertedHour && convertedHour !== 12):
         this.setCurrentHourPM(this.minDate.getHours());
-        returnTimeTriple[0] = this.currentHour;
+        returnTimeTriple[0] = this.currentHour || 0;
       case (isMinDate && this.minDate.getHours() === convertedHour && this.minDate.getMinutes() > minute):
         returnTimeTriple[1] = this.minDate.getMinutes();
       case (isMinDate && this.minDate.getHours() === convertedHour && this.minDate.getMinutes() === minute && this.minDate.getSeconds() > second):
@@ -3868,25 +4022,25 @@ var DatePicker = class _DatePicker extends BaseInput {
   incrementMinute(event2) {
     let newMinute = (this.currentMinute ?? 0) + this.stepMinute;
     newMinute = newMinute > 59 ? newMinute - 60 : newMinute;
-    [this.currentHour, this.currentMinute, this.currentSecond] = this.constrainTime(this.currentHour, newMinute, this.currentSecond, this.pm);
+    [this.currentHour, this.currentMinute, this.currentSecond] = this.constrainTime(this.currentHour || 0, newMinute, this.currentSecond, this.pm);
     event2.preventDefault();
   }
   decrementMinute(event2) {
     let newMinute = (this.currentMinute ?? 0) - this.stepMinute;
     newMinute = newMinute < 0 ? 60 + newMinute : newMinute;
-    [this.currentHour, this.currentMinute, this.currentSecond] = this.constrainTime(this.currentHour, newMinute, this.currentSecond, this.pm);
+    [this.currentHour, this.currentMinute, this.currentSecond] = this.constrainTime(this.currentHour || 0, newMinute, this.currentSecond || 0, this.pm);
     event2.preventDefault();
   }
   incrementSecond(event2) {
     let newSecond = this.currentSecond + this.stepSecond;
     newSecond = newSecond > 59 ? newSecond - 60 : newSecond;
-    [this.currentHour, this.currentMinute, this.currentSecond] = this.constrainTime(this.currentHour, this.currentMinute, newSecond, this.pm);
+    [this.currentHour, this.currentMinute, this.currentSecond] = this.constrainTime(this.currentHour || 0, this.currentMinute || 0, newSecond, this.pm);
     event2.preventDefault();
   }
   decrementSecond(event2) {
     let newSecond = this.currentSecond - this.stepSecond;
     newSecond = newSecond < 0 ? 60 + newSecond : newSecond;
-    [this.currentHour, this.currentMinute, this.currentSecond] = this.constrainTime(this.currentHour, this.currentMinute, newSecond, this.pm);
+    [this.currentHour, this.currentMinute, this.currentSecond] = this.constrainTime(this.currentHour || 0, this.currentMinute || 0, newSecond, this.pm);
     event2.preventDefault();
   }
   updateTime() {
@@ -3920,7 +4074,7 @@ var DatePicker = class _DatePicker extends BaseInput {
   toggleAMPM(event2) {
     const newPM = !this.pm;
     this.pm = newPM;
-    [this.currentHour, this.currentMinute, this.currentSecond] = this.constrainTime(this.currentHour, this.currentMinute, this.currentSecond, newPM);
+    [this.currentHour, this.currentMinute, this.currentSecond] = this.constrainTime(this.currentHour || 0, this.currentMinute || 0, this.currentSecond || 0, newPM);
     this.updateTime();
     event2.preventDefault();
   }
@@ -4006,7 +4160,7 @@ var DatePicker = class _DatePicker extends BaseInput {
     value.setSeconds(time.second);
   }
   isValidDate(date) {
-    return T(date) && s(date);
+    return O(date) && s(date);
   }
   updateUI() {
     let propValue = this.value;
@@ -4020,7 +4174,7 @@ var DatePicker = class _DatePicker extends BaseInput {
     if (this.showTime || this.timeOnly) {
       this.setCurrentHourPM(val.getHours());
       this.currentMinute = val.getMinutes();
-      this.currentSecond = val.getSeconds();
+      this.currentSecond = this.showSeconds ? val.getSeconds() : 0;
     }
   }
   showOverlay() {
@@ -4057,12 +4211,12 @@ var DatePicker = class _DatePicker extends BaseInput {
       case "visibleTouchUI":
         if (!this.inline) {
           this.overlay = event2.element;
-          this.attrSelector && this.overlay.setAttribute(this.attrSelector, "");
+          this.$attrSelector && this.overlay.setAttribute(this.$attrSelector, "");
           const styles = !this.inline ? {
             position: "absolute",
             top: "0"
           } : void 0;
-          S(this.overlay, styles);
+          S(this.overlay, styles || {});
           this.appendOverlay();
           this.updateFocus();
           if (this.autoZIndex) {
@@ -4494,6 +4648,7 @@ var DatePicker = class _DatePicker extends BaseInput {
       if (!this.responsiveStyleElement) {
         this.responsiveStyleElement = this.renderer.createElement("style");
         this.responsiveStyleElement.type = "text/css";
+        _t(this.responsiveStyleElement, "nonce", this.config?.csp()?.nonce);
         this.renderer.appendChild(this.document.body, this.responsiveStyleElement);
       }
       let innerHTML = "";
@@ -4526,7 +4681,7 @@ var DatePicker = class _DatePicker extends BaseInput {
         }
       }
       this.responsiveStyleElement.innerHTML = innerHTML;
-      Kt(this.responsiveStyleElement, "nonce", this.config?.csp()?.nonce);
+      _t(this.responsiveStyleElement, "nonce", this.config?.csp()?.nonce);
     }
   }
   destroyResponsiveStyleElement() {
@@ -4625,7 +4780,7 @@ var DatePicker = class _DatePicker extends BaseInput {
     this.updateUI();
     this.cd.markForCheck();
   }
-  ngOnDestroy() {
+  onDestroy() {
     if (this.scrollHandler) {
       this.scrollHandler.destroy();
       this.scrollHandler = null;
@@ -4640,7 +4795,6 @@ var DatePicker = class _DatePicker extends BaseInput {
     this.clearTimePickerTimer();
     this.restoreOverlayAppend();
     this.onOverlayHide();
-    super.ngOnDestroy();
   }
   static ɵfac = function DatePicker_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _DatePicker)(ɵɵdirectiveInject(NgZone), ɵɵdirectiveInject(OverlayService));
@@ -4662,34 +4816,36 @@ var DatePicker = class _DatePicker extends BaseInput {
         ɵɵcontentQuery(dirIndex, _c9, 4);
         ɵɵcontentQuery(dirIndex, _c10, 4);
         ɵɵcontentQuery(dirIndex, _c11, 4);
+        ɵɵcontentQuery(dirIndex, _c12, 4);
         ɵɵcontentQuery(dirIndex, PrimeTemplate, 4);
       }
       if (rf & 2) {
-        let _t;
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.dateTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.headerTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.footerTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.disabledDateTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.decadeTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.previousIconTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.nextIconTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.triggerIconTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.clearIconTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.decrementIconTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.incrementIconTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.inputIconTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.templates = _t);
+        let _t2;
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.dateTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.headerTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.footerTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.disabledDateTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.decadeTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.previousIconTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.nextIconTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.triggerIconTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.clearIconTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.decrementIconTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.incrementIconTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.inputIconTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.buttonBarTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.templates = _t2);
       }
     },
     viewQuery: function DatePicker_Query(rf, ctx) {
       if (rf & 1) {
-        ɵɵviewQuery(_c12, 5);
         ɵɵviewQuery(_c13, 5);
+        ɵɵviewQuery(_c14, 5);
       }
       if (rf & 2) {
-        let _t;
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.inputfieldViewChild = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.content = _t.first);
+        let _t2;
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.inputfieldViewChild = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.content = _t2.first);
       }
     },
     hostVars: 4,
@@ -4774,15 +4930,21 @@ var DatePicker = class _DatePicker extends BaseInput {
       onClickOutside: "onClickOutside",
       onShow: "onShow"
     },
-    features: [ɵɵProvidersFeature([DATEPICKER_VALUE_ACCESSOR, DatePickerStyle]), ɵɵInheritDefinitionFeature],
-    ngContentSelectors: _c15,
+    features: [ɵɵProvidersFeature([DATEPICKER_VALUE_ACCESSOR, DatePickerStyle, {
+      provide: DATEPICKER_INSTANCE,
+      useExisting: _DatePicker
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _DatePicker
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
+    ngContentSelectors: _c16,
     decls: 2,
     vars: 2,
-    consts: [["inputfield", ""], ["contentWrapper", ""], ["icon", ""], [3, "ngIf"], [3, "ngStyle", "class", "click", 4, "ngIf"], ["pInputText", "", "type", "text", "role", "combobox", "aria-autocomplete", "none", "aria-haspopup", "dialog", "autocomplete", "off", 3, "focus", "keydown", "click", "blur", "input", "pSize", "value", "ngStyle", "pAutoFocus", "variant", "fluid", "invalid"], [4, "ngIf"], ["type", "button", "aria-haspopup", "dialog", "tabindex", "0", 3, "class", "disabled", "click", 4, "ngIf"], ["data-p-icon", "times", 3, "class", "click", 4, "ngIf"], [3, "class", "click", 4, "ngIf"], ["data-p-icon", "times", 3, "click"], [3, "click"], [4, "ngTemplateOutlet"], ["type", "button", "aria-haspopup", "dialog", "tabindex", "0", 3, "click", "disabled"], [3, "ngClass", 4, "ngIf"], [3, "ngClass"], ["data-p-icon", "calendar", 4, "ngIf"], ["data-p-icon", "calendar"], ["data-p-icon", "calendar", 3, "class", "click", 4, "ngIf"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], ["data-p-icon", "calendar", 3, "click"], [3, "click", "ngStyle"], [3, "class", 4, "ngIf"], [3, "class", 4, "ngFor", "ngForOf"], ["rounded", "", "variant", "text", "severity", "secondary", "type", "button", 3, "keydown", "onClick", "styleClass", "ngStyle", "ariaLabel"], ["type", "button", "pRipple", "", 3, "class", "click", "keydown", 4, "ngIf"], ["rounded", "", "variant", "text", "severity", "secondary", 3, "keydown", "onClick", "styleClass", "ngStyle", "ariaLabel"], ["role", "grid", 3, "class", 4, "ngIf"], ["data-p-icon", "chevron-left", 4, "ngIf"], ["data-p-icon", "chevron-left"], ["type", "button", "pRipple", "", 3, "click", "keydown"], ["data-p-icon", "chevron-right", 4, "ngIf"], ["data-p-icon", "chevron-right"], ["role", "grid"], ["scope", "col", 3, "class", 4, "ngFor", "ngForOf"], [4, "ngFor", "ngForOf"], ["scope", "col"], ["draggable", "false", "pRipple", "", 3, "click", "keydown", "ngClass"], ["class", "p-hidden-accessible", "aria-live", "polite", 4, "ngIf"], ["aria-live", "polite", 1, "p-hidden-accessible"], ["pRipple", "", 3, "class", "click", "keydown", 4, "ngFor", "ngForOf"], ["pRipple", "", 3, "click", "keydown"], ["rounded", "", "variant", "text", "severity", "secondary", 3, "keydown", "keydown.enter", "keydown.space", "mousedown", "mouseup", "keyup.enter", "keyup.space", "mouseleave", "styleClass"], [1, "p-datepicker-separator"], ["data-p-icon", "chevron-up", 4, "ngIf"], ["data-p-icon", "chevron-up"], ["data-p-icon", "chevron-down", 4, "ngIf"], ["data-p-icon", "chevron-down"], ["text", "", "rounded", "", "severity", "secondary", 3, "keydown", "onClick", "keydown.enter", "styleClass"], ["text", "", "rounded", "", "severity", "secondary", 3, "keydown", "click", "keydown.enter", "styleClass"], ["size", "small", "severity", "secondary", "variant", "text", "size", "small", 3, "keydown", "onClick", "styleClass", "label", "ngClass"]],
+    consts: [["inputfield", ""], ["contentWrapper", ""], ["icon", ""], [3, "ngIf"], [3, "ngStyle", "class", "pBind", "click", 4, "ngIf"], ["pInputText", "", "type", "text", "role", "combobox", "aria-autocomplete", "none", "aria-haspopup", "dialog", "autocomplete", "off", 3, "focus", "keydown", "click", "blur", "input", "pSize", "value", "ngStyle", "pAutoFocus", "variant", "fluid", "invalid", "pt"], [4, "ngIf"], ["type", "button", "aria-haspopup", "dialog", "tabindex", "0", 3, "class", "disabled", "pBind", "click", 4, "ngIf"], ["data-p-icon", "times", 3, "class", "pBind", "click", 4, "ngIf"], [3, "class", "pBind", "click", 4, "ngIf"], ["data-p-icon", "times", 3, "click", "pBind"], [3, "click", "pBind"], [4, "ngTemplateOutlet"], ["type", "button", "aria-haspopup", "dialog", "tabindex", "0", 3, "click", "disabled", "pBind"], [3, "ngClass", "pBind", 4, "ngIf"], [3, "ngClass", "pBind"], ["data-p-icon", "calendar", 3, "pBind", 4, "ngIf"], ["data-p-icon", "calendar", 3, "pBind"], [3, "pBind"], ["data-p-icon", "calendar", 3, "class", "pBind", "click", 4, "ngIf"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"], ["data-p-icon", "calendar", 3, "click", "pBind"], [3, "click", "ngStyle", "pBind"], [3, "class", "pBind", 4, "ngIf"], [3, "class", "pBind", 4, "ngFor", "ngForOf"], ["rounded", "", "variant", "text", "severity", "secondary", "type", "button", 3, "keydown", "onClick", "styleClass", "ngStyle", "ariaLabel", "pt"], ["type", "button", "pRipple", "", 3, "class", "pBind", "click", "keydown", 4, "ngIf"], ["rounded", "", "variant", "text", "severity", "secondary", 3, "keydown", "onClick", "styleClass", "ngStyle", "ariaLabel", "pt"], ["role", "grid", 3, "class", "pBind", 4, "ngIf"], ["data-p-icon", "chevron-left", 4, "ngIf"], ["data-p-icon", "chevron-left"], ["type", "button", "pRipple", "", 3, "click", "keydown", "pBind"], ["data-p-icon", "chevron-right", 4, "ngIf"], ["data-p-icon", "chevron-right"], ["role", "grid", 3, "pBind"], ["scope", "col", 3, "class", "pBind", 4, "ngFor", "ngForOf"], [3, "pBind", 4, "ngFor", "ngForOf"], ["scope", "col", 3, "pBind"], ["draggable", "false", "pRipple", "", 3, "click", "keydown", "ngClass", "pBind"], ["class", "p-hidden-accessible", "aria-live", "polite", 4, "ngIf"], ["aria-live", "polite", 1, "p-hidden-accessible"], ["pRipple", "", 3, "class", "pBind", "click", "keydown", 4, "ngFor", "ngForOf"], ["pRipple", "", 3, "click", "keydown", "pBind"], ["rounded", "", "variant", "text", "severity", "secondary", 3, "keydown", "keydown.enter", "keydown.space", "mousedown", "mouseup", "keyup.enter", "keyup.space", "mouseleave", "styleClass", "pt"], [1, "p-datepicker-separator", 3, "pBind"], ["data-p-icon", "chevron-up", 3, "pBind", 4, "ngIf"], ["data-p-icon", "chevron-up", 3, "pBind"], ["data-p-icon", "chevron-down", 3, "pBind", 4, "ngIf"], ["data-p-icon", "chevron-down", 3, "pBind"], ["text", "", "rounded", "", "severity", "secondary", 3, "keydown", "onClick", "keydown.enter", "styleClass", "pt"], ["text", "", "rounded", "", "severity", "secondary", 3, "keydown", "click", "keydown.enter", "styleClass", "pt"], ["size", "small", "severity", "secondary", "variant", "text", "size", "small", 3, "keydown", "onClick", "styleClass", "label", "ngClass", "pt"]],
     template: function DatePicker_Template(rf, ctx) {
       if (rf & 1) {
-        ɵɵprojectionDef(_c14);
-        ɵɵtemplate(0, DatePicker_ng_template_0_Template, 5, 26, "ng-template", 3)(1, DatePicker_div_1_Template, 9, 19, "div", 4);
+        ɵɵprojectionDef(_c15);
+        ɵɵtemplate(0, DatePicker_ng_template_0_Template, 5, 27, "ng-template", 3)(1, DatePicker_div_1_Template, 9, 20, "div", 4);
       }
       if (rf & 2) {
         ɵɵproperty("ngIf", !ctx.inline);
@@ -4790,7 +4952,7 @@ var DatePicker = class _DatePicker extends BaseInput {
         ɵɵproperty("ngIf", ctx.inline || ctx.overlayVisible);
       }
     },
-    dependencies: [CommonModule, NgClass, NgForOf, NgIf, NgTemplateOutlet, NgStyle, Button, Ripple, ChevronLeftIcon, ChevronRightIcon, ChevronUpIcon, ChevronDownIcon, TimesIcon, CalendarIcon, AutoFocus, InputText, SharedModule],
+    dependencies: [CommonModule, NgClass, NgForOf, NgIf, NgTemplateOutlet, NgStyle, Button, Ripple, ChevronLeftIcon, ChevronRightIcon, ChevronUpIcon, ChevronDownIcon, TimesIcon, CalendarIcon, AutoFocus, InputText, SharedModule, BindModule, Bind],
     encapsulation: 2,
     data: {
       animation: [trigger("overlayAnimation", [state("visibleTouchUI", style({
@@ -4821,7 +4983,8 @@ var DatePicker = class _DatePicker extends BaseInput {
     args: [{
       selector: "p-datePicker, p-datepicker, p-date-picker",
       standalone: true,
-      imports: [CommonModule, Button, Ripple, ChevronLeftIcon, ChevronRightIcon, ChevronUpIcon, ChevronDownIcon, TimesIcon, CalendarIcon, AutoFocus, InputText, SharedModule],
+      imports: [CommonModule, Button, Ripple, ChevronLeftIcon, ChevronRightIcon, ChevronUpIcon, ChevronDownIcon, TimesIcon, CalendarIcon, AutoFocus, InputText, SharedModule, BindModule],
+      hostDirectives: [Bind],
       template: `
         <ng-template [ngIf]="!inline">
             <input
@@ -4859,10 +5022,11 @@ var DatePicker = class _DatePicker extends BaseInput {
                 [variant]="$variant()"
                 [fluid]="hasFluid"
                 [invalid]="invalid()"
+                [pt]="ptm('pcInputText')"
             />
-            <ng-container *ngIf="showClear && !$disabled() && value != null">
-                <svg data-p-icon="times" *ngIf="!clearIconTemplate && !_clearIconTemplate" [class]="cx('clearIcon')" (click)="clear()" />
-                <span *ngIf="clearIconTemplate || _clearIconTemplate" [class]="cx('clearIcon')" (click)="clear()">
+            <ng-container *ngIf="showClear && !$disabled() && inputfieldViewChild?.nativeElement?.value">
+                <svg data-p-icon="times" *ngIf="!clearIconTemplate && !_clearIconTemplate" [class]="cx('clearIcon')" [pBind]="ptm('inputIcon')" (click)="clear()" />
+                <span *ngIf="clearIconTemplate || _clearIconTemplate" [class]="cx('clearIcon')" [pBind]="ptm('inputIcon')" (click)="clear()">
                     <ng-template *ngTemplateOutlet="clearIconTemplate || _clearIconTemplate"></ng-template>
                 </span>
             </ng-container>
@@ -4877,16 +5041,17 @@ var DatePicker = class _DatePicker extends BaseInput {
                 [class]="cx('dropdown')"
                 [disabled]="$disabled()"
                 tabindex="0"
+                [pBind]="ptm('dropdown')"
             >
-                <span *ngIf="icon" [ngClass]="icon"></span>
+                <span *ngIf="icon" [ngClass]="icon" [pBind]="ptm('dropdownIcon')"></span>
                 <ng-container *ngIf="!icon">
-                    <svg data-p-icon="calendar" *ngIf="!triggerIconTemplate && !_triggerIconTemplate" />
+                    <svg data-p-icon="calendar" *ngIf="!triggerIconTemplate && !_triggerIconTemplate" [pBind]="ptm('dropdownIcon')" />
                     <ng-template *ngTemplateOutlet="triggerIconTemplate || _triggerIconTemplate"></ng-template>
                 </ng-container>
             </button>
             <ng-container *ngIf="iconDisplay === 'input' && showIcon">
-                <span [class]="cx('inputIconContainer')">
-                    <svg data-p-icon="calendar" (click)="onButtonClick($event)" *ngIf="!inputIconTemplate && !_inputIconTemplate" [class]="cx('inputIcon')" />
+                <span [class]="cx('inputIconContainer')" [pBind]="ptm('inputIconContainer')">
+                    <svg data-p-icon="calendar" (click)="onButtonClick($event)" *ngIf="!inputIconTemplate && !_inputIconTemplate" [class]="cx('inputIcon')" [pBind]="ptm('inputIcon')" />
 
                     <ng-container *ngTemplateOutlet="inputIconTemplate || _inputIconTemplate; context: { clickCallBack: onButtonClick.bind(this) }"></ng-container>
                 </span>
@@ -4909,13 +5074,14 @@ var DatePicker = class _DatePicker extends BaseInput {
             (@overlayAnimation.done)="onOverlayAnimationDone($event)"
             (click)="onOverlayClick($event)"
             *ngIf="inline || overlayVisible"
+            [pBind]="ptm('panel')"
         >
             <ng-content select="p-header"></ng-content>
             <ng-container *ngTemplateOutlet="headerTemplate || _headerTemplate"></ng-container>
             <ng-container *ngIf="!timeOnly">
-                <div [class]="cx('calendarContainer')">
-                    <div [class]="cx('calendar')" *ngFor="let month of months; let i = index">
-                        <div [class]="cx('header')">
+                <div [class]="cx('calendarContainer')" [pBind]="ptm('calendarContainer')">
+                    <div [class]="cx('calendar')" *ngFor="let month of months; let i = index" [pBind]="ptm('calendar')">
+                        <div [class]="cx('header')" [pBind]="ptm('header')">
                             <p-button
                                 rounded
                                 variant="text"
@@ -4926,6 +5092,8 @@ var DatePicker = class _DatePicker extends BaseInput {
                                 [ngStyle]="{ visibility: i === 0 ? 'visible' : 'hidden' }"
                                 type="button"
                                 [ariaLabel]="prevIconAriaLabel"
+                                [pt]="ptm('pcPrevButton')"
+                                [attr.data-pc-group-section]="'navigator'"
                             >
                                 <ng-template #icon>
                                     <svg data-p-icon="chevron-left" *ngIf="!previousIconTemplate && !_previousIconTemplate" />
@@ -4934,7 +5102,7 @@ var DatePicker = class _DatePicker extends BaseInput {
                                     </span>
                                 </ng-template>
                             </p-button>
-                            <div [class]="cx('title')">
+                            <div [class]="cx('title')" [pBind]="ptm('title')">
                                 <button
                                     *ngIf="currentView === 'date'"
                                     type="button"
@@ -4944,6 +5112,8 @@ var DatePicker = class _DatePicker extends BaseInput {
                                     [attr.disabled]="switchViewButtonDisabled() ? '' : undefined"
                                     [attr.aria-label]="this.getTranslation('chooseMonth')"
                                     pRipple
+                                    [pBind]="ptm('selectMonth')"
+                                    [attr.data-pc-group-section]="'navigator'"
                                 >
                                     {{ getMonthName(month.month) }}
                                 </button>
@@ -4956,10 +5126,12 @@ var DatePicker = class _DatePicker extends BaseInput {
                                     [attr.disabled]="switchViewButtonDisabled() ? '' : undefined"
                                     [attr.aria-label]="getTranslation('chooseYear')"
                                     pRipple
+                                    [pBind]="ptm('selectYear')"
+                                    [attr.data-pc-group-section]="'navigator'"
                                 >
                                     {{ getYear(month) }}
                                 </button>
-                                <span [class]="cx('decade')" *ngIf="currentView === 'year'">
+                                <span [class]="cx('decade')" *ngIf="currentView === 'year'" [pBind]="ptm('decade')">
                                     <ng-container *ngIf="!decadeTemplate && !_decadeTemplate">{{ yearPickerValues()[0] }} - {{ yearPickerValues()[yearPickerValues().length - 1] }}</ng-container>
                                     <ng-container *ngTemplateOutlet="decadeTemplate || _decadeTemplate; context: { $implicit: yearPickerValues }"></ng-container>
                                 </span>
@@ -4973,6 +5145,8 @@ var DatePicker = class _DatePicker extends BaseInput {
                                 (onClick)="onNextButtonClick($event)"
                                 [ngStyle]="{ visibility: i === months.length - 1 ? 'visible' : 'hidden' }"
                                 [ariaLabel]="nextIconAriaLabel"
+                                [pt]="ptm('pcNextButton')"
+                                [attr.data-pc-group-section]="'navigator'"
                             >
                                 <ng-template #icon>
                                     <svg data-p-icon="chevron-right" *ngIf="!nextIconTemplate && !_nextIconTemplate" />
@@ -4982,27 +5156,35 @@ var DatePicker = class _DatePicker extends BaseInput {
                                 </ng-template>
                             </p-button>
                         </div>
-                        <table [class]="cx('dayView')" role="grid" *ngIf="currentView === 'date'">
-                            <thead>
-                                <tr>
-                                    <th *ngIf="showWeek" [class]="cx('weekHeader')">
-                                        <span>{{ getTranslation('weekHeader') }}</span>
+                        <table [class]="cx('dayView')" role="grid" *ngIf="currentView === 'date'" [pBind]="ptm('table')">
+                            <thead [pBind]="ptm('tableHeader')">
+                                <tr [pBind]="ptm('tableHeaderRow')">
+                                    <th *ngIf="showWeek" [class]="cx('weekHeader')" [pBind]="ptm('weekHeader')">
+                                        <span [pBind]="ptm('weekHeaderLabel')">{{ getTranslation('weekHeader') }}</span>
                                     </th>
-                                    <th [class]="cx('weekDayCell')" scope="col" *ngFor="let weekDay of weekDays; let begin = first; let end = last">
-                                        <span [class]="cx('weekDay')">{{ weekDay }}</span>
+                                    <th [class]="cx('weekDayCell')" scope="col" *ngFor="let weekDay of weekDays; let begin = first; let end = last" [pBind]="ptm('weekDayCell')">
+                                        <span [class]="cx('weekDay')" [pBind]="ptm('weekDay')">{{ weekDay }}</span>
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr *ngFor="let week of month.dates; let j = index">
-                                    <td *ngIf="showWeek" [class]="cx('weekNumber')">
-                                        <span [class]="cx('weekLabelContainer')">
+                            <tbody [pBind]="ptm('tableBody')">
+                                <tr *ngFor="let week of month.dates; let j = index" [pBind]="ptm('tableBodyRow')">
+                                    <td *ngIf="showWeek" [class]="cx('weekNumber')" [pBind]="ptm('weekNumber')">
+                                        <span [class]="cx('weekLabelContainer')" [pBind]="ptm('weekLabelContainer')">
                                             {{ month.weekNumbers[j] }}
                                         </span>
                                     </td>
-                                    <td *ngFor="let date of week" [attr.aria-label]="date.day" [class]="cx('dayCell', { date })">
+                                    <td *ngFor="let date of week" [attr.aria-label]="date.day" [class]="cx('dayCell', { date })" [pBind]="ptm('dayCell')">
                                         <ng-container *ngIf="date.otherMonth ? showOtherMonths : true">
-                                            <span [ngClass]="dayClass(date)" (click)="onDateSelect($event, date)" draggable="false" [attr.data-date]="formatDateKey(formatDateMetaToDate(date))" (keydown)="onDateCellKeydown($event, date, i)" pRipple>
+                                            <span
+                                                [ngClass]="dayClass(date)"
+                                                (click)="onDateSelect($event, date)"
+                                                draggable="false"
+                                                [attr.data-date]="formatDateKey(formatDateMetaToDate(date))"
+                                                (keydown)="onDateCellKeydown($event, date, i)"
+                                                pRipple
+                                                [pBind]="ptm('day')"
+                                            >
                                                 <ng-container *ngIf="!dateTemplate && !_dateTemplate && (date.selectable || (!disabledDateTemplate && !_disabledDateTemplate))">{{ date.day }}</ng-container>
                                                 <ng-container *ngIf="date.selectable || (!disabledDateTemplate && !_disabledDateTemplate)">
                                                     <ng-container *ngTemplateOutlet="dateTemplate || _dateTemplate; context: { $implicit: date }"></ng-container>
@@ -5021,16 +5203,16 @@ var DatePicker = class _DatePicker extends BaseInput {
                         </table>
                     </div>
                 </div>
-                <div [class]="cx('monthView')" *ngIf="currentView === 'month'">
-                    <span *ngFor="let m of monthPickerValues(); let i = index" (click)="onMonthSelect($event, i)" (keydown)="onMonthCellKeydown($event, i)" [class]="cx('month', { month: m, index: i })" pRipple>
+                <div [class]="cx('monthView')" *ngIf="currentView === 'month'" [pBind]="ptm('monthView')">
+                    <span *ngFor="let m of monthPickerValues(); let i = index" (click)="onMonthSelect($event, i)" (keydown)="onMonthCellKeydown($event, i)" [class]="cx('month', { month: m, index: i })" pRipple [pBind]="ptm('month')">
                         {{ m }}
                         <div *ngIf="isMonthSelected(i)" class="p-hidden-accessible" aria-live="polite">
                             {{ m }}
                         </div>
                     </span>
                 </div>
-                <div [class]="cx('yearView')" *ngIf="currentView === 'year'">
-                    <span *ngFor="let y of yearPickerValues()" (click)="onYearSelect($event, y)" (keydown)="onYearCellKeydown($event, y)" [class]="cx('year', { year: y })" pRipple>
+                <div [class]="cx('yearView')" *ngIf="currentView === 'year'" [pBind]="ptm('yearView')">
+                    <span *ngFor="let y of yearPickerValues()" (click)="onYearSelect($event, y)" (keydown)="onYearCellKeydown($event, y)" [class]="cx('year', { year: y })" pRipple [pBind]="ptm('year')">
                         {{ y }}
                         <div *ngIf="isYearSelected(y)" class="p-hidden-accessible" aria-live="polite">
                             {{ y }}
@@ -5038,8 +5220,8 @@ var DatePicker = class _DatePicker extends BaseInput {
                     </span>
                 </div>
             </ng-container>
-            <div [class]="cx('timePicker')" *ngIf="(showTime || timeOnly) && currentView === 'date'">
-                <div [class]="cx('hourPicker')">
+            <div [class]="cx('timePicker')" *ngIf="(showTime || timeOnly) && currentView === 'date'" [pBind]="ptm('timePicker')">
+                <div [class]="cx('hourPicker')" [pBind]="ptm('hourPicker')">
                     <p-button
                         rounded
                         variant="text"
@@ -5054,13 +5236,15 @@ var DatePicker = class _DatePicker extends BaseInput {
                         (keyup.space)="onTimePickerElementMouseUp($event)"
                         (mouseleave)="onTimePickerElementMouseLeave()"
                         [attr.aria-label]="getTranslation('nextHour')"
+                        [pt]="ptm('pcIncrementButton')"
+                        [attr.data-pc-group-section]="'timepickerbutton'"
                     >
                         <ng-template #icon>
-                            <svg data-p-icon="chevron-up" *ngIf="!incrementIconTemplate && !_incrementIconTemplate" />
+                            <svg data-p-icon="chevron-up" *ngIf="!incrementIconTemplate && !_incrementIconTemplate" [pBind]="ptm('pcIncrementButton')['icon']" />
                             <ng-template *ngTemplateOutlet="incrementIconTemplate || _incrementIconTemplate"></ng-template>
                         </ng-template>
                     </p-button>
-                    <span><ng-container *ngIf="currentHour < 10">0</ng-container>{{ currentHour }}</span>
+                    <span [pBind]="ptm('hour')"><ng-container *ngIf="currentHour < 10">0</ng-container>{{ currentHour }}</span>
                     <p-button
                         rounded
                         variant="text"
@@ -5075,17 +5259,19 @@ var DatePicker = class _DatePicker extends BaseInput {
                         (keyup.space)="onTimePickerElementMouseUp($event)"
                         (mouseleave)="onTimePickerElementMouseLeave()"
                         [attr.aria-label]="getTranslation('prevHour')"
+                        [pt]="ptm('pcDecrementButton')"
+                        [attr.data-pc-group-section]="'timepickerbutton'"
                     >
                         <ng-template #icon>
-                            <svg data-p-icon="chevron-down" *ngIf="!decrementIconTemplate && !_decrementIconTemplate" />
+                            <svg data-p-icon="chevron-down" *ngIf="!decrementIconTemplate && !_decrementIconTemplate" [pBind]="ptm('pcDecrementButton')['icon']" />
                             <ng-template *ngTemplateOutlet="decrementIconTemplate || _decrementIconTemplate"></ng-template>
                         </ng-template>
                     </p-button>
                 </div>
-                <div class="p-datepicker-separator">
-                    <span>{{ timeSeparator }}</span>
+                <div class="p-datepicker-separator" [pBind]="ptm('separatorContainer')">
+                    <span [pBind]="ptm('separator')">{{ timeSeparator }}</span>
                 </div>
-                <div [class]="cx('minutePicker')">
+                <div [class]="cx('minutePicker')" [pBind]="ptm('minutePicker')">
                     <p-button
                         rounded
                         variant="text"
@@ -5100,13 +5286,15 @@ var DatePicker = class _DatePicker extends BaseInput {
                         (keyup.space)="onTimePickerElementMouseUp($event)"
                         (mouseleave)="onTimePickerElementMouseLeave()"
                         [attr.aria-label]="getTranslation('nextMinute')"
+                        [pt]="ptm('pcIncrementButton')"
+                        [attr.data-pc-group-section]="'timepickerbutton'"
                     >
                         <ng-template #icon>
-                            <svg data-p-icon="chevron-up" *ngIf="!incrementIconTemplate && !_incrementIconTemplate" />
+                            <svg data-p-icon="chevron-up" *ngIf="!incrementIconTemplate && !_incrementIconTemplate" [pBind]="ptm('pcIncrementButton')['icon']" />
                             <ng-template *ngTemplateOutlet="incrementIconTemplate || _incrementIconTemplate"></ng-template>
                         </ng-template>
                     </p-button>
-                    <span><ng-container *ngIf="currentMinute < 10">0</ng-container>{{ currentMinute }}</span>
+                    <span [pBind]="ptm('minute')"><ng-container *ngIf="currentMinute < 10">0</ng-container>{{ currentMinute }}</span>
                     <p-button
                         rounded
                         variant="text"
@@ -5121,17 +5309,19 @@ var DatePicker = class _DatePicker extends BaseInput {
                         (keyup.space)="onTimePickerElementMouseUp($event)"
                         (mouseleave)="onTimePickerElementMouseLeave()"
                         [attr.aria-label]="getTranslation('prevMinute')"
+                        [pt]="ptm('pcDecrementButton')"
+                        [attr.data-pc-group-section]="'timepickerbutton'"
                     >
                         <ng-template #icon>
-                            <svg data-p-icon="chevron-down" *ngIf="!decrementIconTemplate && !_decrementIconTemplate" />
+                            <svg data-p-icon="chevron-down" *ngIf="!decrementIconTemplate && !_decrementIconTemplate" [pBind]="ptm('pcDecrementButton')['icon']" />
                             <ng-template *ngTemplateOutlet="decrementIconTemplate || _decrementIconTemplate"></ng-template>
                         </ng-template>
                     </p-button>
                 </div>
-                <div [class]="cx('separator')" *ngIf="showSeconds">
-                    <span>{{ timeSeparator }}</span>
+                <div [class]="cx('separator')" *ngIf="showSeconds" [pBind]="ptm('separatorContainer')">
+                    <span [pBind]="ptm('separator')">{{ timeSeparator }}</span>
                 </div>
-                <div [class]="cx('secondPicker')" *ngIf="showSeconds">
+                <div [class]="cx('secondPicker')" *ngIf="showSeconds" [pBind]="ptm('secondPicker')">
                     <p-button
                         rounded
                         variant="text"
@@ -5146,13 +5336,15 @@ var DatePicker = class _DatePicker extends BaseInput {
                         (keyup.space)="onTimePickerElementMouseUp($event)"
                         (mouseleave)="onTimePickerElementMouseLeave()"
                         [attr.aria-label]="getTranslation('nextSecond')"
+                        [pt]="ptm('pcIncrementButton')"
+                        [attr.data-pc-group-section]="'timepickerbutton'"
                     >
                         <ng-template #icon>
-                            <svg data-p-icon="chevron-up" *ngIf="!incrementIconTemplate && !_incrementIconTemplate" />
+                            <svg data-p-icon="chevron-up" *ngIf="!incrementIconTemplate && !_incrementIconTemplate" [pBind]="ptm('pcIncrementButton')['icon']" />
                             <ng-template *ngTemplateOutlet="incrementIconTemplate || _incrementIconTemplate"></ng-template>
                         </ng-template>
                     </p-button>
-                    <span><ng-container *ngIf="currentSecond < 10">0</ng-container>{{ currentSecond }}</span>
+                    <span [pBind]="ptm('second')"><ng-container *ngIf="currentSecond < 10">0</ng-container>{{ currentSecond }}</span>
                     <p-button
                         rounded
                         variant="text"
@@ -5167,17 +5359,19 @@ var DatePicker = class _DatePicker extends BaseInput {
                         (keyup.space)="onTimePickerElementMouseUp($event)"
                         (mouseleave)="onTimePickerElementMouseLeave()"
                         [attr.aria-label]="getTranslation('prevSecond')"
+                        [pt]="ptm('pcDecrementButton')"
+                        [attr.data-pc-group-section]="'timepickerbutton'"
                     >
                         <ng-template #icon>
-                            <svg data-p-icon="chevron-down" *ngIf="!decrementIconTemplate && !_decrementIconTemplate" />
+                            <svg data-p-icon="chevron-down" *ngIf="!decrementIconTemplate && !_decrementIconTemplate" [pBind]="ptm('pcDecrementButton')['icon']" />
                             <ng-template *ngTemplateOutlet="decrementIconTemplate || _decrementIconTemplate"></ng-template>
                         </ng-template>
                     </p-button>
                 </div>
-                <div [class]="cx('separator')" *ngIf="hourFormat == '12'">
-                    <span>{{ timeSeparator }}</span>
+                <div [class]="cx('separator')" *ngIf="hourFormat == '12'" [pBind]="ptm('separatorContainer')">
+                    <span [pBind]="ptm('separator')">{{ timeSeparator }}</span>
                 </div>
-                <div [class]="cx('ampmPicker')" *ngIf="hourFormat == '12'">
+                <div [class]="cx('ampmPicker')" *ngIf="hourFormat == '12'" [pBind]="ptm('ampmPicker')">
                     <p-button
                         text
                         rounded
@@ -5187,13 +5381,15 @@ var DatePicker = class _DatePicker extends BaseInput {
                         (onClick)="toggleAMPM($event)"
                         (keydown.enter)="toggleAMPM($event)"
                         [attr.aria-label]="getTranslation('am')"
+                        [pt]="ptm('pcIncrementButton')"
+                        [attr.data-pc-group-section]="'timepickerbutton'"
                     >
                         <ng-template #icon>
-                            <svg data-p-icon="chevron-up" *ngIf="!incrementIconTemplate && !_incrementIconTemplate" />
+                            <svg data-p-icon="chevron-up" *ngIf="!incrementIconTemplate && !_incrementIconTemplate" [pBind]="ptm('pcIncrementButton')['icon']" />
                             <ng-template *ngTemplateOutlet="incrementIconTemplate || _incrementIconTemplate"></ng-template>
                         </ng-template>
                     </p-button>
-                    <span>{{ pm ? 'PM' : 'AM' }}</span>
+                    <span [pBind]="ptm('ampm')">{{ pm ? 'PM' : 'AM' }}</span>
                     <p-button
                         text
                         rounded
@@ -5203,37 +5399,47 @@ var DatePicker = class _DatePicker extends BaseInput {
                         (click)="toggleAMPM($event)"
                         (keydown.enter)="toggleAMPM($event)"
                         [attr.aria-label]="getTranslation('pm')"
+                        [pt]="ptm('pcDecrementButton')"
+                        [attr.data-pc-group-section]="'timepickerbutton'"
                     >
                         <ng-template #icon>
-                            <svg data-p-icon="chevron-down" *ngIf="!decrementIconTemplate && !_decrementIconTemplate" />
+                            <svg data-p-icon="chevron-down" *ngIf="!decrementIconTemplate && !_decrementIconTemplate" [pBind]="ptm('pcDecrementButton')['icon']" />
                             <ng-template *ngTemplateOutlet="decrementIconTemplate || _decrementIconTemplate"></ng-template>
                         </ng-template>
                     </p-button>
                 </div>
             </div>
-            <div [class]="cx('buttonbar')" *ngIf="showButtonBar">
-                <p-button
-                    size="small"
-                    [styleClass]="cx('pcTodayButton')"
-                    [label]="getTranslation('today')"
-                    (keydown)="onContainerButtonKeydown($event)"
-                    (onClick)="onTodayButtonClick($event)"
-                    [ngClass]="todayButtonStyleClass"
-                    severity="secondary"
-                    variant="text"
-                    size="small"
-                />
-                <p-button
-                    size="small"
-                    [styleClass]="cx('pcClearButton')"
-                    [label]="getTranslation('clear')"
-                    (keydown)="onContainerButtonKeydown($event)"
-                    (onClick)="onClearButtonClick($event)"
-                    [ngClass]="clearButtonStyleClass"
-                    severity="secondary"
-                    variant="text"
-                    size="small"
-                />
+            <div [class]="cx('buttonbar')" *ngIf="showButtonBar" [pBind]="ptm('buttonbar')">
+                @if (buttonBarTemplate || _buttonBarTemplate) {
+                    <ng-container *ngTemplateOutlet="buttonBarTemplate || _buttonBarTemplate; context: { todayCallback: onTodayButtonClick.bind(this), clearCallback: onClearButtonClick.bind(this) }"></ng-container>
+                } @else {
+                    <p-button
+                        size="small"
+                        [styleClass]="cx('pcTodayButton')"
+                        [label]="getTranslation('today')"
+                        (keydown)="onContainerButtonKeydown($event)"
+                        (onClick)="onTodayButtonClick($event)"
+                        [ngClass]="todayButtonStyleClass"
+                        severity="secondary"
+                        variant="text"
+                        size="small"
+                        [pt]="ptm('pcTodayButton')"
+                        [attr.data-pc-group-section]="'button'"
+                    />
+                    <p-button
+                        size="small"
+                        [styleClass]="cx('pcClearButton')"
+                        [label]="getTranslation('clear')"
+                        (keydown)="onContainerButtonKeydown($event)"
+                        (onClick)="onClearButtonClick($event)"
+                        [ngClass]="clearButtonStyleClass"
+                        severity="secondary"
+                        variant="text"
+                        size="small"
+                        [pt]="ptm('pcClearButton')"
+                        [attr.data-pc-group-section]="'button'"
+                    />
+                }
             </div>
             <ng-content select="p-footer"></ng-content>
             <ng-container *ngTemplateOutlet="footerTemplate || _footerTemplate"></ng-container>
@@ -5257,7 +5463,13 @@ var DatePicker = class _DatePicker extends BaseInput {
         opacity: 0,
         transform: "translate3d(-50%, -40%, 0) scale(0.9)"
       }))])])],
-      providers: [DATEPICKER_VALUE_ACCESSOR, DatePickerStyle],
+      providers: [DATEPICKER_VALUE_ACCESSOR, DatePickerStyle, {
+        provide: DATEPICKER_INSTANCE,
+        useExisting: DatePicker
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: DatePicker
+      }],
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
       host: {
@@ -5633,6 +5845,12 @@ var DatePicker = class _DatePicker extends BaseInput {
         descendants: false
       }]
     }],
+    buttonBarTemplate: [{
+      type: ContentChild,
+      args: ["buttonbar", {
+        descendants: false
+      }]
+    }],
     templates: [{
       type: ContentChildren,
       args: [PrimeTemplate]
@@ -5669,4 +5887,4 @@ export {
   DatePicker,
   DatePickerModule
 };
-//# sourceMappingURL=chunk-7S3SR7AW.js.map
+//# sourceMappingURL=chunk-EYBOVBLE.js.map

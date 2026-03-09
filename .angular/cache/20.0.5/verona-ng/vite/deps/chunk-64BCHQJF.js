@@ -1,44 +1,48 @@
 import {
   FocusTrap
-} from "./chunk-RSPVXXRC.js";
+} from "./chunk-PF7DN6OW.js";
 import {
   Button
-} from "./chunk-PEC3X5FE.js";
-import {
-  zindexutils
-} from "./chunk-BB55NINM.js";
+} from "./chunk-UM3VFPQ2.js";
 import {
   DomHandler,
   blockBodyScroll,
   unblockBodyScroll
-} from "./chunk-QVUTNZUY.js";
+} from "./chunk-S73J4WE3.js";
+import {
+  zindexutils
+} from "./chunk-BB55NINM.js";
 import {
   TimesIcon,
   WindowMaximizeIcon,
   WindowMinimizeIcon
-} from "./chunk-7J3R4TGM.js";
+} from "./chunk-RHA7RL5K.js";
 import {
-  BaseComponent
-} from "./chunk-LEFSMMS4.js";
+  Bind
+} from "./chunk-MLQGRGGO.js";
+import {
+  BaseComponent,
+  PARENT_INSTANCE
+} from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
-} from "./chunk-TT45BO2Q.js";
+} from "./chunk-4ATYD752.js";
 import {
   PrimeTemplate,
   SharedModule,
   TranslationKeys
-} from "./chunk-NUKU6X6H.js";
+} from "./chunk-LMEEH3AJ.js";
 import {
   C2 as C,
-  Kt,
-  O,
+  P,
   R,
   W,
-  h,
+  _t,
+  h2 as h,
   s3 as s,
   ut,
   v
-} from "./chunk-RK2DVQNP.js";
+} from "./chunk-UCHM6OXG.js";
 import {
   animate,
   animation,
@@ -72,6 +76,7 @@ import {
   input,
   numberAttribute,
   setClassMetadata,
+  ɵɵHostDirectivesFeature,
   ɵɵInheritDefinitionFeature,
   ɵɵProvidersFeature,
   ɵɵadvance,
@@ -107,6 +112,7 @@ import {
   ɵɵviewQuery
 } from "./chunk-EIF6IUR4.js";
 import {
+  InjectionToken,
   computed,
   inject,
   ɵɵdefineInjectable,
@@ -173,6 +179,7 @@ function Dialog_div_0_div_1_ng_template_3_div_0_Template(rf, ctx) {
     const ctx_r1 = ɵɵnextContext(4);
     ɵɵclassMap(ctx_r1.cx("resizeHandle"));
     ɵɵstyleProp("z-index", 90);
+    ɵɵproperty("pBind", ctx_r1.ptm("resizeHandle"));
   }
 }
 function Dialog_div_0_div_1_ng_template_3_div_1_span_2_Template(rf, ctx) {
@@ -184,7 +191,7 @@ function Dialog_div_0_div_1_ng_template_3_div_1_span_2_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(5);
     ɵɵclassMap(ctx_r1.cx("title"));
-    ɵɵproperty("id", ctx_r1.ariaLabelledBy);
+    ɵɵproperty("id", ctx_r1.ariaLabelledBy)("pBind", ctx_r1.ptm("title"));
     ɵɵadvance();
     ɵɵtextInterpolate(ctx_r1.header);
   }
@@ -300,7 +307,7 @@ function Dialog_div_0_div_1_ng_template_3_div_1_p_button_5_Template(rf, ctx) {
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(5);
-    ɵɵproperty("styleClass", ctx_r1.cx("pcMaximizeButton"))("tabindex", ctx_r1.maximizable ? "0" : "-1")("ariaLabel", ctx_r1.maximizeLabel)("buttonProps", ctx_r1.maximizeButtonProps);
+    ɵɵproperty("pt", ctx_r1.ptm("pcMaximizeButton"))("styleClass", ctx_r1.cx("pcMaximizeButton"))("ariaLabel", ctx_r1.maximized ? ctx_r1.minimizeLabel : ctx_r1.maximizeLabel)("tabindex", ctx_r1.maximizable ? "0" : "-1")("buttonProps", ctx_r1.maximizeButtonProps);
   }
 }
 function Dialog_div_0_div_1_ng_template_3_div_1_p_button_6_ng_template_1_ng_container_0_span_1_Template(rf, ctx) {
@@ -321,7 +328,7 @@ function Dialog_div_0_div_1_ng_template_3_div_1_p_button_6_ng_template_1_ng_cont
 function Dialog_div_0_div_1_ng_template_3_div_1_p_button_6_ng_template_1_ng_container_0_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementContainerStart(0);
-    ɵɵtemplate(1, Dialog_div_0_div_1_ng_template_3_div_1_p_button_6_ng_template_1_ng_container_0_span_1_Template, 1, 2, "span", 14)(2, Dialog_div_0_div_1_ng_template_3_div_1_p_button_6_ng_template_1_ng_container_0__svg_svg_2_Template, 1, 0, "svg", 29);
+    ɵɵtemplate(1, Dialog_div_0_div_1_ng_template_3_div_1_p_button_6_ng_template_1_ng_container_0_span_1_Template, 1, 2, "span", 28)(2, Dialog_div_0_div_1_ng_template_3_div_1_p_button_6_ng_template_1_ng_container_0__svg_svg_2_Template, 1, 0, "svg", 29);
     ɵɵelementContainerEnd();
   }
   if (rf & 2) {
@@ -365,7 +372,7 @@ function Dialog_div_0_div_1_ng_template_3_div_1_p_button_6_ng_template_1_Templat
 function Dialog_div_0_div_1_ng_template_3_div_1_p_button_6_Template(rf, ctx) {
   if (rf & 1) {
     const _r6 = ɵɵgetCurrentView();
-    ɵɵelementStart(0, "p-button", 28);
+    ɵɵelementStart(0, "p-button", 20);
     ɵɵlistener("onClick", function Dialog_div_0_div_1_ng_template_3_div_1_p_button_6_Template_p_button_onClick_0_listener($event) {
       ɵɵrestoreView(_r6);
       const ctx_r1 = ɵɵnextContext(5);
@@ -380,7 +387,7 @@ function Dialog_div_0_div_1_ng_template_3_div_1_p_button_6_Template(rf, ctx) {
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(5);
-    ɵɵproperty("styleClass", ctx_r1.cx("pcCloseButton"))("ariaLabel", ctx_r1.closeAriaLabel)("tabindex", ctx_r1.closeTabindex)("buttonProps", ctx_r1.closeButtonProps);
+    ɵɵproperty("pt", ctx_r1.ptm("pcCloseButton"))("styleClass", ctx_r1.cx("pcCloseButton"))("ariaLabel", ctx_r1.closeAriaLabel)("tabindex", ctx_r1.closeTabindex)("buttonProps", ctx_r1.closeButtonProps);
   }
 }
 function Dialog_div_0_div_1_ng_template_3_div_1_Template(rf, ctx) {
@@ -392,20 +399,22 @@ function Dialog_div_0_div_1_ng_template_3_div_1_Template(rf, ctx) {
       const ctx_r1 = ɵɵnextContext(4);
       return ɵɵresetView(ctx_r1.initDrag($event));
     });
-    ɵɵtemplate(2, Dialog_div_0_div_1_ng_template_3_div_1_span_2_Template, 2, 4, "span", 16)(3, Dialog_div_0_div_1_ng_template_3_div_1_ng_container_3_Template, 1, 0, "ng-container", 11);
-    ɵɵelementStart(4, "div");
-    ɵɵtemplate(5, Dialog_div_0_div_1_ng_template_3_div_1_p_button_5_Template, 3, 4, "p-button", 17)(6, Dialog_div_0_div_1_ng_template_3_div_1_p_button_6_Template, 3, 4, "p-button", 18);
+    ɵɵtemplate(2, Dialog_div_0_div_1_ng_template_3_div_1_span_2_Template, 2, 5, "span", 16)(3, Dialog_div_0_div_1_ng_template_3_div_1_ng_container_3_Template, 1, 0, "ng-container", 11);
+    ɵɵelementStart(4, "div", 17);
+    ɵɵtemplate(5, Dialog_div_0_div_1_ng_template_3_div_1_p_button_5_Template, 3, 5, "p-button", 18)(6, Dialog_div_0_div_1_ng_template_3_div_1_p_button_6_Template, 3, 5, "p-button", 18);
     ɵɵelementEnd()();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(4);
     ɵɵclassMap(ctx_r1.cx("header"));
+    ɵɵproperty("pBind", ctx_r1.ptm("header"));
     ɵɵadvance(2);
     ɵɵproperty("ngIf", !ctx_r1._headerTemplate && !ctx_r1.headerTemplate && !ctx_r1.headerT);
     ɵɵadvance();
     ɵɵproperty("ngTemplateOutlet", ctx_r1._headerTemplate || ctx_r1.headerTemplate || ctx_r1.headerT);
     ɵɵadvance();
     ɵɵclassMap(ctx_r1.cx("headerActions"));
+    ɵɵproperty("pBind", ctx_r1.ptm("headerActions"));
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r1.maximizable);
     ɵɵadvance();
@@ -424,7 +433,7 @@ function Dialog_div_0_div_1_ng_template_3_div_6_ng_container_3_Template(rf, ctx)
 }
 function Dialog_div_0_div_1_ng_template_3_div_6_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵelementStart(0, "div", null, 5);
+    ɵɵelementStart(0, "div", 17, 5);
     ɵɵprojection(2, 1);
     ɵɵtemplate(3, Dialog_div_0_div_1_ng_template_3_div_6_ng_container_3_Template, 1, 0, "ng-container", 11);
     ɵɵelementEnd();
@@ -432,18 +441,19 @@ function Dialog_div_0_div_1_ng_template_3_div_6_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(4);
     ɵɵclassMap(ctx_r1.cx("footer"));
+    ɵɵproperty("pBind", ctx_r1.ptm("footer"));
     ɵɵadvance(3);
     ɵɵproperty("ngTemplateOutlet", ctx_r1._footerTemplate || ctx_r1.footerTemplate || ctx_r1.footerT);
   }
 }
 function Dialog_div_0_div_1_ng_template_3_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, Dialog_div_0_div_1_ng_template_3_div_0_Template, 1, 4, "div", 12)(1, Dialog_div_0_div_1_ng_template_3_div_1_Template, 7, 8, "div", 13);
+    ɵɵtemplate(0, Dialog_div_0_div_1_ng_template_3_div_0_Template, 1, 5, "div", 12)(1, Dialog_div_0_div_1_ng_template_3_div_1_Template, 7, 10, "div", 13);
     ɵɵelementStart(2, "div", 7, 2);
     ɵɵprojection(4);
     ɵɵtemplate(5, Dialog_div_0_div_1_ng_template_3_ng_container_5_Template, 1, 0, "ng-container", 11);
     ɵɵelementEnd();
-    ɵɵtemplate(6, Dialog_div_0_div_1_ng_template_3_div_6_Template, 4, 3, "div", 14);
+    ɵɵtemplate(6, Dialog_div_0_div_1_ng_template_3_div_6_Template, 4, 4, "div", 14);
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext(3);
@@ -452,8 +462,7 @@ function Dialog_div_0_div_1_ng_template_3_Template(rf, ctx) {
     ɵɵproperty("ngIf", ctx_r1.showHeader);
     ɵɵadvance();
     ɵɵclassMap(ctx_r1.cn(ctx_r1.cx("content"), ctx_r1.contentStyleClass));
-    ɵɵproperty("ngStyle", ctx_r1.contentStyle);
-    ɵɵattribute("data-pc-section", "content");
+    ɵɵproperty("ngStyle", ctx_r1.contentStyle)("pBind", ctx_r1.ptm("content"));
     ɵɵadvance(3);
     ɵɵproperty("ngTemplateOutlet", ctx_r1._contentTemplate || ctx_r1.contentTemplate || ctx_r1.contentT);
     ɵɵadvance();
@@ -481,7 +490,7 @@ function Dialog_div_0_div_1_Template(rf, ctx) {
     const ctx_r1 = ɵɵnextContext(2);
     ɵɵstyleMap(ctx_r1.sx("root"));
     ɵɵclassMap(ctx_r1.cn(ctx_r1.cx("root"), ctx_r1.styleClass));
-    ɵɵproperty("ngStyle", ctx_r1.style)("pFocusTrapDisabled", ctx_r1.focusTrap === false)("@animation", ɵɵpureFunction1(15, _c11, ɵɵpureFunction2(12, _c10, ctx_r1.transformOptions, ctx_r1.transitionOptions)));
+    ɵɵproperty("ngStyle", ctx_r1.style)("pBind", ctx_r1.ptm("root"))("pFocusTrapDisabled", ctx_r1.focusTrap === false)("@animation", ɵɵpureFunction1(16, _c11, ɵɵpureFunction2(13, _c10, ctx_r1.transformOptions, ctx_r1.transitionOptions)));
     ɵɵattribute("role", ctx_r1.role)("aria-labelledby", ctx_r1.ariaLabelledBy)("aria-modal", true);
     ɵɵadvance(2);
     ɵɵproperty("ngIf", ctx_r1._headlessTemplate || ctx_r1.headlessTemplate || ctx_r1.headlessT)("ngIfElse", notHeadless_r7);
@@ -490,14 +499,14 @@ function Dialog_div_0_div_1_Template(rf, ctx) {
 function Dialog_div_0_Template(rf, ctx) {
   if (rf & 1) {
     ɵɵelementStart(0, "div", 7);
-    ɵɵtemplate(1, Dialog_div_0_div_1_Template, 5, 17, "div", 8);
+    ɵɵtemplate(1, Dialog_div_0_div_1_Template, 5, 18, "div", 8);
     ɵɵelementEnd();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext();
     ɵɵstyleMap(ctx_r1.sx("mask"));
     ɵɵclassMap(ctx_r1.cn(ctx_r1.cx("mask"), ctx_r1.maskStyleClass));
-    ɵɵproperty("ngStyle", ctx_r1.maskStyle);
+    ɵɵproperty("ngStyle", ctx_r1.maskStyle)("pBind", ctx_r1.ptm("mask"));
     ɵɵadvance();
     ɵɵproperty("ngIf", ctx_r1.visible);
   }
@@ -548,7 +557,7 @@ var classes = {
 };
 var DialogStyle = class _DialogStyle extends BaseStyle {
   name = "dialog";
-  theme = style2;
+  style = style2;
   classes = classes;
   inlineStyles = inlineStyles;
   static ɵfac = /* @__PURE__ */ (() => {
@@ -579,6 +588,7 @@ var DialogClasses;
   DialogClasses2["content"] = "p-dialog-content";
   DialogClasses2["footer"] = "p-dialog-footer";
 })(DialogClasses || (DialogClasses = {}));
+var DIALOG_INSTANCE = new InjectionToken("DIALOG_INSTANCE");
 var showAnimation = animation([style({
   transform: "{{transform}}",
   opacity: 0
@@ -588,6 +598,17 @@ var hideAnimation = animation([animate("{{transition}}", style({
   opacity: 0
 }))]);
 var Dialog = class _Dialog extends BaseComponent {
+  hostName = "";
+  $pcDialog = inject(DIALOG_INSTANCE, {
+    optional: true,
+    skipSelf: true
+  }) ?? void 0;
+  bindDirectiveInstance = inject(Bind, {
+    self: true
+  });
+  onAfterViewChecked() {
+    this.bindDirectiveInstance.setAttrs(this.ptm("host"));
+  }
   /**
    * Title text of the dialog.
    * @group Props
@@ -950,8 +971,12 @@ var Dialog = class _Dialog extends BaseComponent {
   maximizeIconT;
   minimizeIconT;
   headlessT;
+  zIndexForLayering;
   get maximizeLabel() {
     return this.config.getTranslation(TranslationKeys.ARIA)["maximizeLabel"];
+  }
+  get minimizeLabel() {
+    return this.config.getTranslation(TranslationKeys.ARIA)["minimizeLabel"];
   }
   zone = inject(NgZone);
   get maskClass() {
@@ -963,14 +988,13 @@ var Dialog = class _Dialog extends BaseComponent {
       [`p-dialog-${pos}`]: pos
     };
   }
-  ngOnInit() {
-    super.ngOnInit();
+  onInit() {
     if (this.breakpoints) {
       this.createStyle();
     }
   }
   templates;
-  ngAfterContentInit() {
+  onAfterContentInit() {
     this.templates?.forEach((item) => {
       switch (item.getType()) {
         case "header":
@@ -1034,7 +1058,7 @@ var Dialog = class _Dialog extends BaseComponent {
     }
     return false;
   }
-  focus(focusParentElement) {
+  focus(focusParentElement = this.contentViewChild?.nativeElement) {
     let focused = this._focus(focusParentElement);
     if (!focused) {
       focused = this._focus(this.footerViewChild?.nativeElement);
@@ -1099,6 +1123,8 @@ var Dialog = class _Dialog extends BaseComponent {
     if (this.autoZIndex) {
       zindexutils.set("modal", this.container, this.baseZIndex + this.config.zIndex.modal);
       this.wrapper.style.zIndex = String(parseInt(this.container.style.zIndex, 10) - 1);
+    } else {
+      this.zIndexForLayering = zindexutils.generateZIndex("modal", (this.baseZIndex ?? 0) + this.config.zIndex.modal);
     }
   }
   createStyle() {
@@ -1106,6 +1132,7 @@ var Dialog = class _Dialog extends BaseComponent {
       if (!this.styleElement) {
         this.styleElement = this.renderer.createElement("style");
         this.styleElement.type = "text/css";
+        _t(this.styleElement, "nonce", this.config?.csp()?.nonce);
         this.renderer.appendChild(this.document.head, this.styleElement);
         let innerHTML = "";
         for (let breakpoint in this.breakpoints) {
@@ -1118,12 +1145,12 @@ var Dialog = class _Dialog extends BaseComponent {
                     `;
         }
         this.renderer.setProperty(this.styleElement, "innerHTML", innerHTML);
-        Kt(this.styleElement, "nonce", this.config?.csp()?.nonce);
+        _t(this.styleElement, "nonce", this.config?.csp()?.nonce);
       }
     }
   }
   initDrag(event) {
-    if (R(event.target, "p-dialog-maximize-icon") || R(event.target, "p-dialog-header-close-icon") || R(event.target.parentElement, "p-dialog-header-icon")) {
+    if (R(event.target, "p-dialog-maximize-icon") || R(event.target, "p-dialog-header-close-icon") || R(event.target?.parentElement, "p-dialog-header-icon")) {
       return;
     }
     if (this.draggable) {
@@ -1135,7 +1162,7 @@ var Dialog = class _Dialog extends BaseComponent {
     }
   }
   onDrag(event) {
-    if (this.dragging) {
+    if (this.dragging && this.container) {
       const containerWidth = v(this.container);
       const containerHeight = C(this.container);
       const deltaX = event.pageX - this.lastPageX;
@@ -1170,7 +1197,7 @@ var Dialog = class _Dialog extends BaseComponent {
   endDrag(event) {
     if (this.dragging) {
       this.dragging = false;
-      O(this.document.body, "p-unselectable-text");
+      P(this.document.body, "p-unselectable-text");
       this.cd.detectChanges();
       this.onDragEnd.emit(event);
     }
@@ -1230,7 +1257,7 @@ var Dialog = class _Dialog extends BaseComponent {
   resizeEnd(event) {
     if (this.resizing) {
       this.resizing = false;
-      O(this.document.body, "p-unselectable-text");
+      P(this.document.body, "p-unselectable-text");
       this.onResizeEnd.emit(event);
     }
   }
@@ -1298,7 +1325,10 @@ var Dialog = class _Dialog extends BaseComponent {
     const documentTarget = this.el ? this.el.nativeElement.ownerDocument : "document";
     this.documentEscapeListener = this.renderer.listen(documentTarget, "keydown", (event) => {
       if (event.key == "Escape") {
-        this.close(event);
+        const currentZIndex = zindexutils.getCurrent();
+        if (parseInt(this.container.style.zIndex) == currentZIndex || this.zIndexForLayering == currentZIndex) {
+          this.close(event);
+        }
       }
     });
   }
@@ -1324,7 +1354,7 @@ var Dialog = class _Dialog extends BaseComponent {
       case "visible":
         this.container = event.element;
         this.wrapper = this.container?.parentElement;
-        this.attrSelector && this.container.setAttribute(this.attrSelector, "");
+        this.$attrSelector && this.container?.setAttribute(this.$attrSelector, "");
         this.appendContainer();
         this.moveOnTop();
         this.bindGlobalListeners();
@@ -1370,10 +1400,13 @@ var Dialog = class _Dialog extends BaseComponent {
       this.disableModality();
     }
     if (R(this.document.body, "p-overflow-hidden")) {
-      O(this.document.body, "p-overflow-hidden");
+      P(this.document.body, "p-overflow-hidden");
     }
     if (this.container && this.autoZIndex) {
       zindexutils.clear(this.container);
+    }
+    if (this.zIndexForLayering) {
+      zindexutils.revertZIndex(this.zIndexForLayering);
     }
     this.container = null;
     this.wrapper = null;
@@ -1385,13 +1418,12 @@ var Dialog = class _Dialog extends BaseComponent {
       this.styleElement = null;
     }
   }
-  ngOnDestroy() {
+  onDestroy() {
     if (this.container) {
       this.restoreAppend();
       this.onContainerDestroy();
     }
     this.destroyStyle();
-    super.ngOnDestroy();
   }
   static ɵfac = /* @__PURE__ */ (() => {
     let ɵDialog_BaseFactory;
@@ -1414,15 +1446,15 @@ var Dialog = class _Dialog extends BaseComponent {
         ɵɵcontentQuery(dirIndex, PrimeTemplate, 4);
       }
       if (rf & 2) {
-        let _t;
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx._headerTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx._contentTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx._footerTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx._closeiconTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx._maximizeiconTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx._minimizeiconTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx._headlessTemplate = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.templates = _t);
+        let _t2;
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx._headerTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx._contentTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx._footerTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx._closeiconTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx._maximizeiconTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx._minimizeiconTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx._headlessTemplate = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.templates = _t2);
       }
     },
     viewQuery: function Dialog_Query(rf, ctx) {
@@ -1432,13 +1464,14 @@ var Dialog = class _Dialog extends BaseComponent {
         ɵɵviewQuery(_c2, 5);
       }
       if (rf & 2) {
-        let _t;
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.headerViewChild = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.contentViewChild = _t.first);
-        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.footerViewChild = _t.first);
+        let _t2;
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.headerViewChild = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.contentViewChild = _t2.first);
+        ɵɵqueryRefresh(_t2 = ɵɵloadQuery()) && (ctx.footerViewChild = _t2.first);
       }
     },
     inputs: {
+      hostName: "hostName",
       header: "header",
       draggable: [2, "draggable", "draggable", booleanAttribute],
       resizable: [2, "resizable", "resizable", booleanAttribute],
@@ -1493,21 +1526,27 @@ var Dialog = class _Dialog extends BaseComponent {
       onDragEnd: "onDragEnd",
       onMaximize: "onMaximize"
     },
-    features: [ɵɵProvidersFeature([DialogStyle]), ɵɵInheritDefinitionFeature],
+    features: [ɵɵProvidersFeature([DialogStyle, {
+      provide: DIALOG_INSTANCE,
+      useExisting: _Dialog
+    }, {
+      provide: PARENT_INSTANCE,
+      useExisting: _Dialog
+    }]), ɵɵHostDirectivesFeature([Bind]), ɵɵInheritDefinitionFeature],
     ngContentSelectors: _c9,
     decls: 1,
     vars: 1,
-    consts: [["container", ""], ["notHeadless", ""], ["content", ""], ["titlebar", ""], ["icon", ""], ["footer", ""], [3, "class", "style", "ngStyle", 4, "ngIf"], [3, "ngStyle"], ["pFocusTrap", "", 3, "class", "style", "ngStyle", "pFocusTrapDisabled", 4, "ngIf"], ["pFocusTrap", "", 3, "ngStyle", "pFocusTrapDisabled"], [4, "ngIf", "ngIfElse"], [4, "ngTemplateOutlet"], [3, "class", "z-index", "mousedown", 4, "ngIf"], [3, "class", "mousedown", 4, "ngIf"], [3, "class", 4, "ngIf"], [3, "mousedown"], [3, "id", "class", 4, "ngIf"], [3, "styleClass", "tabindex", "ariaLabel", "buttonProps", "onClick", "keydown.enter", 4, "ngIf"], [3, "styleClass", "ariaLabel", "tabindex", "buttonProps", "onClick", "keydown.enter", 4, "ngIf"], [3, "id"], [3, "onClick", "keydown.enter", "styleClass", "tabindex", "ariaLabel", "buttonProps"], [3, "ngClass", 4, "ngIf"], [4, "ngIf"], [3, "ngClass"], ["data-p-icon", "window-maximize", 4, "ngIf"], ["data-p-icon", "window-minimize", 4, "ngIf"], ["data-p-icon", "window-maximize"], ["data-p-icon", "window-minimize"], [3, "onClick", "keydown.enter", "styleClass", "ariaLabel", "tabindex", "buttonProps"], ["data-p-icon", "times", 4, "ngIf"], ["data-p-icon", "times"]],
+    consts: [["container", ""], ["notHeadless", ""], ["content", ""], ["titlebar", ""], ["icon", ""], ["footer", ""], [3, "class", "style", "ngStyle", "pBind", 4, "ngIf"], [3, "ngStyle", "pBind"], ["pFocusTrap", "", 3, "class", "style", "ngStyle", "pBind", "pFocusTrapDisabled", 4, "ngIf"], ["pFocusTrap", "", 3, "ngStyle", "pBind", "pFocusTrapDisabled"], [4, "ngIf", "ngIfElse"], [4, "ngTemplateOutlet"], [3, "class", "pBind", "z-index", "mousedown", 4, "ngIf"], [3, "class", "pBind", "mousedown", 4, "ngIf"], [3, "class", "pBind", 4, "ngIf"], [3, "mousedown", "pBind"], [3, "id", "class", "pBind", 4, "ngIf"], [3, "pBind"], [3, "pt", "styleClass", "ariaLabel", "tabindex", "buttonProps", "onClick", "keydown.enter", 4, "ngIf"], [3, "id", "pBind"], [3, "onClick", "keydown.enter", "pt", "styleClass", "ariaLabel", "tabindex", "buttonProps"], [3, "ngClass", 4, "ngIf"], [4, "ngIf"], [3, "ngClass"], ["data-p-icon", "window-maximize", 4, "ngIf"], ["data-p-icon", "window-minimize", 4, "ngIf"], ["data-p-icon", "window-maximize"], ["data-p-icon", "window-minimize"], [3, "class", 4, "ngIf"], ["data-p-icon", "times", 4, "ngIf"], ["data-p-icon", "times"]],
     template: function Dialog_Template(rf, ctx) {
       if (rf & 1) {
         ɵɵprojectionDef(_c8);
-        ɵɵtemplate(0, Dialog_div_0_Template, 2, 6, "div", 6);
+        ɵɵtemplate(0, Dialog_div_0_Template, 2, 7, "div", 6);
       }
       if (rf & 2) {
         ɵɵproperty("ngIf", ctx.maskVisible);
       }
     },
-    dependencies: [CommonModule, NgClass, NgIf, NgTemplateOutlet, NgStyle, Button, FocusTrap, TimesIcon, WindowMaximizeIcon, WindowMinimizeIcon, SharedModule],
+    dependencies: [CommonModule, NgClass, NgIf, NgTemplateOutlet, NgStyle, Button, FocusTrap, TimesIcon, WindowMaximizeIcon, WindowMinimizeIcon, SharedModule, Bind],
     encapsulation: 2,
     data: {
       animation: [trigger("animation", [transition("void => visible", [useAnimation(showAnimation)]), transition("visible => void", [useAnimation(hideAnimation)])])]
@@ -1521,15 +1560,16 @@ var Dialog = class _Dialog extends BaseComponent {
     args: [{
       selector: "p-dialog",
       standalone: true,
-      imports: [CommonModule, Button, FocusTrap, TimesIcon, WindowMaximizeIcon, WindowMinimizeIcon, SharedModule],
+      imports: [CommonModule, Button, FocusTrap, TimesIcon, WindowMaximizeIcon, WindowMinimizeIcon, SharedModule, Bind],
       template: `
-        <div *ngIf="maskVisible" [class]="cn(cx('mask'), maskStyleClass)" [style]="sx('mask')" [ngStyle]="maskStyle">
+        <div *ngIf="maskVisible" [class]="cn(cx('mask'), maskStyleClass)" [style]="sx('mask')" [ngStyle]="maskStyle" [pBind]="ptm('mask')">
             <div
                 *ngIf="visible"
                 #container
                 [class]="cn(cx('root'), styleClass)"
                 [style]="sx('root')"
                 [ngStyle]="style"
+                [pBind]="ptm('root')"
                 pFocusTrap
                 [pFocusTrapDisabled]="focusTrap === false"
                 [@animation]="{
@@ -1547,12 +1587,21 @@ var Dialog = class _Dialog extends BaseComponent {
                 </ng-container>
 
                 <ng-template #notHeadless>
-                    <div *ngIf="resizable" [class]="cx('resizeHandle')" [style.z-index]="90" (mousedown)="initResize($event)"></div>
-                    <div #titlebar [class]="cx('header')" (mousedown)="initDrag($event)" *ngIf="showHeader">
-                        <span [id]="ariaLabelledBy" [class]="cx('title')" *ngIf="!_headerTemplate && !headerTemplate && !headerT">{{ header }}</span>
+                    <div *ngIf="resizable" [class]="cx('resizeHandle')" [pBind]="ptm('resizeHandle')" [style.z-index]="90" (mousedown)="initResize($event)"></div>
+                    <div #titlebar [class]="cx('header')" [pBind]="ptm('header')" (mousedown)="initDrag($event)" *ngIf="showHeader">
+                        <span [id]="ariaLabelledBy" [class]="cx('title')" [pBind]="ptm('title')" *ngIf="!_headerTemplate && !headerTemplate && !headerT">{{ header }}</span>
                         <ng-container *ngTemplateOutlet="_headerTemplate || headerTemplate || headerT"></ng-container>
-                        <div [class]="cx('headerActions')">
-                            <p-button *ngIf="maximizable" [styleClass]="cx('pcMaximizeButton')" (onClick)="maximize()" (keydown.enter)="maximize()" [tabindex]="maximizable ? '0' : '-1'" [ariaLabel]="maximizeLabel" [buttonProps]="maximizeButtonProps">
+                        <div [class]="cx('headerActions')" [pBind]="ptm('headerActions')">
+                            <p-button
+                                [pt]="ptm('pcMaximizeButton')"
+                                *ngIf="maximizable"
+                                [styleClass]="cx('pcMaximizeButton')"
+                                [ariaLabel]="maximized ? minimizeLabel : maximizeLabel"
+                                (onClick)="maximize()"
+                                (keydown.enter)="maximize()"
+                                [tabindex]="maximizable ? '0' : '-1'"
+                                [buttonProps]="maximizeButtonProps"
+                            >
                                 <ng-template #icon>
                                     <span *ngIf="maximizeIcon && !_maximizeiconTemplate && !_minimizeiconTemplate" [ngClass]="maximized ? minimizeIcon : maximizeIcon"></span>
                                     <ng-container *ngIf="!maximizeIcon && !maximizeButtonProps?.icon">
@@ -1567,7 +1616,16 @@ var Dialog = class _Dialog extends BaseComponent {
                                     </ng-container>
                                 </ng-template>
                             </p-button>
-                            <p-button *ngIf="closable" [styleClass]="cx('pcCloseButton')" [ariaLabel]="closeAriaLabel" (onClick)="close($event)" (keydown.enter)="close($event)" [tabindex]="closeTabindex" [buttonProps]="closeButtonProps">
+                            <p-button
+                                [pt]="ptm('pcCloseButton')"
+                                *ngIf="closable"
+                                [styleClass]="cx('pcCloseButton')"
+                                [ariaLabel]="closeAriaLabel"
+                                (onClick)="close($event)"
+                                (keydown.enter)="close($event)"
+                                [tabindex]="closeTabindex"
+                                [buttonProps]="closeButtonProps"
+                            >
                                 <ng-template #icon>
                                     <ng-container *ngIf="!_closeiconTemplate && !closeIconTemplate && !closeIconT && !closeButtonProps?.icon">
                                         <span *ngIf="closeIcon" [class]="closeIcon"></span>
@@ -1580,11 +1638,11 @@ var Dialog = class _Dialog extends BaseComponent {
                             </p-button>
                         </div>
                     </div>
-                    <div #content [class]="cn(cx('content'), contentStyleClass)" [ngStyle]="contentStyle" [attr.data-pc-section]="'content'">
+                    <div #content [class]="cn(cx('content'), contentStyleClass)" [ngStyle]="contentStyle" [pBind]="ptm('content')">
                         <ng-content></ng-content>
                         <ng-container *ngTemplateOutlet="_contentTemplate || contentTemplate || contentT"></ng-container>
                     </div>
-                    <div #footer [class]="cx('footer')" *ngIf="_footerTemplate || footerTemplate || footerT">
+                    <div #footer [class]="cx('footer')" [pBind]="ptm('footer')" *ngIf="_footerTemplate || footerTemplate || footerT">
                         <ng-content select="p-footer"></ng-content>
                         <ng-container *ngTemplateOutlet="_footerTemplate || footerTemplate || footerT"></ng-container>
                     </div>
@@ -1595,9 +1653,19 @@ var Dialog = class _Dialog extends BaseComponent {
       animations: [trigger("animation", [transition("void => visible", [useAnimation(showAnimation)]), transition("visible => void", [useAnimation(hideAnimation)])])],
       changeDetection: ChangeDetectionStrategy.OnPush,
       encapsulation: ViewEncapsulation.None,
-      providers: [DialogStyle]
+      providers: [DialogStyle, {
+        provide: DIALOG_INSTANCE,
+        useExisting: Dialog
+      }, {
+        provide: PARENT_INSTANCE,
+        useExisting: Dialog
+      }],
+      hostDirectives: [Bind]
     }]
   }], null, {
+    hostName: [{
+      type: Input
+    }],
     header: [{
       type: Input
     }],
@@ -1889,4 +1957,4 @@ export {
   Dialog,
   DialogModule
 };
-//# sourceMappingURL=chunk-DF4LSUGQ.js.map
+//# sourceMappingURL=chunk-64BCHQJF.js.map

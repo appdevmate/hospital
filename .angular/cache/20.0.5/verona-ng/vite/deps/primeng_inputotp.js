@@ -1,11 +1,11 @@
 import {
   InputText
-} from "./chunk-KXOKLPXH.js";
-import "./chunk-PJRMHEN5.js";
+} from "./chunk-IG3R3ILJ.js";
 import {
   BaseEditableHolder
 } from "./chunk-343RM6UZ.js";
 import "./chunk-2R7VQYSP.js";
+import "./chunk-PJRMHEN5.js";
 import {
   AutoFocus
 } from "./chunk-YNLAOK3J.js";
@@ -24,11 +24,11 @@ import {
   PrimeTemplate,
   SharedModule
 } from "./chunk-LMEEH3AJ.js";
-import "./chunk-GOP36Q47.js";
-import "./chunk-UCHM6OXG.js";
 import {
   NG_VALUE_ACCESSOR
 } from "./chunk-RZEKJVYA.js";
+import "./chunk-GOP36Q47.js";
+import "./chunk-UCHM6OXG.js";
 import {
   CommonModule,
   NgForOf,
