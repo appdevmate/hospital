@@ -67,6 +67,10 @@ export class PatientProfileComponent implements OnInit {
         return map[status] || 'secondary';
     }
 
+    isArray(value: any): boolean {
+        return Array.isArray(value);
+    }
+
     get age(): number | null {
         if (!this.patient?.dob) return null;
         const dob = new Date(this.patient.dob);

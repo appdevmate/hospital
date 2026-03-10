@@ -105,14 +105,27 @@
                             <p class="record-text">{{ patient.medicalHistory }}</p>
                         </div>
 
-                        <div class="info-card" *ngIf="patient.allergies">
+                        <div class="info-card" *ngIf="patient.allergies?.length">
                             <h4><i class="pi pi-exclamation-triangle mr-2" style="color:#EF4444;"></i>Allergies</h4>
-                            <p class="record-text alert-text">{{ patient.allergies }}</p>
+                            <div class="flex flex-wrap gap-2 mt-2">
+                                <ng-container *ngIf="isArray(patient.allergies)">
+                                    <p-tag *ngFor="let allergy of patient.allergies" [value]="allergy" severity="danger"
+                                        [rounded]="true" />
+                                </ng-container>
+                                <p-tag *ngIf="!isArray(patient.allergies)" [value]="$any(patient.allergies)"
+                                    severity="danger" [rounded]="true" />
+                            </div>
                         </div>
-
-                        <div class="info-card" *ngIf="patient.medications">
+                        <div class="info-card" *ngIf="patient.medications?.length">
                             <h4><i class="pi pi-plus-circle mr-2" style="color:#3B82F6;"></i>Current Medications</h4>
-                            <p class="record-text">{{ patient.medications }}</p>
+                            <div class="flex flex-wrap gap-2 mt-2">
+                                <ng-container *ngIf="isArray(patient.medications)">
+                                    <p-tag *ngFor="let med of patient.medications" [value]="med" severity="info"
+                                        [rounded]="true" />
+                                </ng-container>
+                                <p-tag *ngIf="!isArray(patient.medications)" [value]="$any(patient.medications)"
+                                    severity="info" [rounded]="true" />
+                            </div>
                         </div>
 
                         <div class="info-card" *ngIf="patient.bloodGroup">

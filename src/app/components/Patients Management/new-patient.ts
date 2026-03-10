@@ -266,17 +266,15 @@ import { Fluid } from 'primeng/fluid';
                         </div>
 
                         <div class="mb-4">
-                            <p-floatLabel variant="on">
-                                <input pInputText id="allergies" formControlName="allergies" autocomplete="off" class="w-full" />
-                                <label for="allergies"><i class="pi pi-exclamation-triangle"></i> Allergies</label>
-                            </p-floatLabel>
+                            <label class="block text-sm font-medium mb-2" style="color:#9CA3AF"> <i class="pi pi-exclamation-triangle mr-1" style="color:#EF4444"></i> Allergies </label>
+                            <p-autoComplete formControlName="allergies" [multiple]="true" [typeahead]="false" [addOnBlur]="true" placeholder="Type and press Enter" styleClass="w-full" />
+                            <small style="color:#9CA3AF">Type each allergy and press Enter to add</small>
                         </div>
 
                         <div class="mb-4">
-                            <p-floatLabel variant="on">
-                                <textarea pTextarea id="medications" formControlName="medications" autocomplete="off" class="w-full" rows="3"></textarea>
-                                <label for="medications"><i class="pi pi-file-edit"></i> Current Medications</label>
-                            </p-floatLabel>
+                            <label class="block text-sm font-medium mb-2" style="color:#9CA3AF"> <i class="pi pi-plus-circle mr-1" style="color:#3B82F6"></i> Current Medications </label>
+                            <p-autoComplete formControlName="medications" [multiple]="true" [typeahead]="false" [addOnBlur]="true" placeholder="Type and press Enter" styleClass="w-full" />
+                            <small style="color:#9CA3AF">Type each medication and press Enter to add</small>
                         </div>
                     </div>
 
@@ -296,14 +294,7 @@ import { Fluid } from 'primeng/fluid';
                         <h4 class="devider text-lg font-semibold mb-4 text-gray-700 border-b pb-2">Attachments</h4>
                         <div class="card">
                             <p-toast />
-                            <p-fileupload
-                                name="demo[]"
-                                url="https://www.primefaces.org/cdn/api/upload.php"
-                                (onUpload)="onUpload($event)"
-                                [multiple]="true"
-                                maxFileSize="1000000"
-                                mode="advanced"
-                            >
+                            <p-fileupload name="demo[]" url="https://www.primefaces.org/cdn/api/upload.php" (onUpload)="onUpload($event)" [multiple]="true" maxFileSize="1000000" mode="advanced">
                                 <ng-template #file let-file>
                                     <div class="flex align-items-center gap-2">
                                         @if (isImageFile(file)) {
@@ -370,7 +361,7 @@ export class NewPatient implements AfterViewInit, OnDestroy {
         private fb: FormBuilder,
         private helpersService: HelpersService,
         private patientService: PatientsService,
-        public ref: DynamicDialogRef,
+        public ref: DynamicDialogRef
     ) {
         this.form = this.fb.group({
             name: ['', [Validators.required, Validators.minLength(3)]],
@@ -387,8 +378,9 @@ export class NewPatient implements AfterViewInit, OnDestroy {
             bedNumber: [''],
             ward: [''],
             medicalHistory: [''],
-            allergies: [''],
-            medications: [''],
+            allergies: [[]],
+            medications: [[]],
+
             notes: [''],
             bloodGroup: ['']
         });
@@ -566,8 +558,8 @@ export class NewPatient implements AfterViewInit, OnDestroy {
             bedNumber: f.bedNumber ? f.bedNumber.trim() : null,
             ward: f.ward ? f.ward.trim() : null,
             medicalHistory: f.medicalHistory ? f.medicalHistory.trim() : null,
-            allergies: f.allergies ? f.allergies.trim() : null,
-            medications: f.medications ? f.medications.trim() : null,
+            allergies: Array.isArray(f.allergies) ? f.allergies : [],
+            medications: Array.isArray(f.medications) ? f.medications : [],
             notes: f.notes ? f.notes.trim() : null,
             bloodGroup: f.bloodGroup ? f.bloodGroup.trim() : null
         };
@@ -615,8 +607,8 @@ export class NewPatient implements AfterViewInit, OnDestroy {
                 bedNumber: '',
                 ward: '',
                 medicalHistory: '',
-                allergies: '',
-                medications: '',
+                allergies: [],
+                medications: [],
                 notes: '',
                 bloodGroup: ''
             },

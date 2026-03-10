@@ -20,8 +20,8 @@ export interface Patient {
     bedNumber?: string | null;
     ward?: string | null;
     medicalHistory?: string | null;
-    allergies?: string | null;
-    medications?: string | null;
+    allergies?: string[] | null;
+    medications?: string[] | null;
     notes?: string | null;
     bloodGroup?: string | null;
     address?: string | null;
@@ -57,8 +57,8 @@ export interface CreateUpdatePatientRequest {
     bedNumber?: string | null;
     ward?: string | null;
     medicalHistory?: string | null;
-    allergies?: string | null;
-    medications?: string | null;
+    allergies?: string[] | null;
+    medications?: string[] | null;
     notes?: string | null;
     job?: string;
     bloodGroup?: string | null;
