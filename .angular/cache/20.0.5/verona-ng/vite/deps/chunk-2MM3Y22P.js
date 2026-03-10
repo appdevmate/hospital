@@ -3,7 +3,7 @@ import {
 } from "./chunk-PF7DN6OW.js";
 import {
   Button
-} from "./chunk-UM3VFPQ2.js";
+} from "./chunk-NKFNXLXI.js";
 import {
   DomHandler,
   blockBodyScroll,
@@ -1957,4 +1957,4 @@ export {
   Dialog,
   DialogModule
 };
-//# sourceMappingURL=chunk-64BCHQJF.js.map
+//# sourceMappingURL=chunk-2MM3Y22P.js.map

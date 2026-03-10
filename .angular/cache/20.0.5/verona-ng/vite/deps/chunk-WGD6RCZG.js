@@ -6,7 +6,7 @@ import {
 } from "./chunk-BFEG2ZPT.js";
 import {
   Checkbox
-} from "./chunk-FK5NSSRY.js";
+} from "./chunk-RKFXKJ24.js";
 import {
   Scroller
 } from "./chunk-K26YQORK.js";
@@ -44,11 +44,6 @@ import {
   TreeDragDropService
 } from "./chunk-LMEEH3AJ.js";
 import {
-  FormsModule,
-  NgControlStatus,
-  NgModel
-} from "./chunk-RZEKJVYA.js";
-import {
   C2 as C,
   R,
   X,
@@ -58,6 +53,11 @@ import {
   v,
   z2 as z
 } from "./chunk-UCHM6OXG.js";
+import {
+  FormsModule,
+  NgControlStatus,
+  NgModel
+} from "./chunk-RZEKJVYA.js";
 import {
   CommonModule,
   NgClass,
@@ -3322,4 +3322,4 @@ export {
   Tree,
   TreeModule
 };
-//# sourceMappingURL=chunk-NAQUJPOA.js.map
+//# sourceMappingURL=chunk-WGD6RCZG.js.map

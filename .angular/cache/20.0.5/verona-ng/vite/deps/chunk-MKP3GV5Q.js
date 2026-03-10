@@ -31,6 +31,11 @@ import {
   SharedModule
 } from "./chunk-LMEEH3AJ.js";
 import {
+  RouterLink,
+  RouterLinkActive,
+  RouterModule
+} from "./chunk-Y35IOCZT.js";
+import {
   D,
   I,
   J,
@@ -47,11 +52,6 @@ import {
   z2 as z,
   zt
 } from "./chunk-UCHM6OXG.js";
-import {
-  RouterLink,
-  RouterLinkActive,
-  RouterModule
-} from "./chunk-EFY5GPDX.js";
 import {
   animate,
   style,
@@ -2212,4 +2212,4 @@ export {
   TieredMenu,
   TieredMenuModule
 };
-//# sourceMappingURL=chunk-7E3OK52K.js.map
+//# sourceMappingURL=chunk-MKP3GV5Q.js.map

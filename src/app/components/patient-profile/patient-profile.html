@@ -1,0 +1,184 @@
+<div class="patient-profile-page">
+    <p-toast />
+
+    <!-- Loading -->
+    <div *ngIf="loading" style="display:flex;align-items:center;justify-content:center;padding:4rem;">
+        <i class="pi pi-spin pi-spinner" style="font-size:2rem;color:#16a34a;"></i>
+    </div>
+
+    <ng-container *ngIf="!loading && patient">
+
+        <!-- Back + Header -->
+        <div class="profile-header">
+            <div class="header-left">
+                <p-button icon="pi pi-arrow-left" [text]="true" severity="secondary"
+                    routerLink="/patients-management" />
+                <div class="avatar">{{ patient.name.charAt(0).toUpperCase() }}</div>
+                <div>
+                    <h2>{{ patient.name }}</h2>
+                    <div class="meta">
+                        <span *ngIf="age">{{ age }} years old</span>
+                        <span *ngIf="patient.gender"> · {{ patient.gender | titlecase }}</span>
+                        <span *ngIf="patient.bloodGroup"> · {{ patient.bloodGroup }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="header-right">
+                <p-tag *ngIf="patient.status" [value]="patient.status | uppercase"
+                    [severity]="getStatusSeverity(patient.status)" />
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <p-tabs value="0">
+
+            <!-- Tab 1: Personal Info -->
+            <p-tablist>
+                <p-tab value="0"><i class="pi pi-user mr-2"></i>Personal Info</p-tab>
+                <p-tab value="1"><i class="pi pi-heart mr-2"></i>Medical Records</p-tab>
+                <p-tab value="2"><i class="pi pi-calendar mr-2"></i>Appointments ({{ appointments.length }})</p-tab>
+                <p-tab value="3"><i class="pi pi-file mr-2"></i>Notes</p-tab>
+            </p-tablist>
+
+            <p-tabpanels>
+
+                <!-- Personal Info -->
+                <p-tabpanel value="0">
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <h4>Contact Information</h4>
+                            <div class="info-row" *ngIf="patient.email">
+                                <i class="pi pi-envelope"></i>
+                                <div><label>Email</label><span>{{ patient.email }}</span></div>
+                            </div>
+                            <div class="info-row" *ngIf="patient.phone">
+                                <i class="pi pi-phone"></i>
+                                <div><label>Phone</label><span>{{ patient.phone }}</span></div>
+                            </div>
+                            <div class="info-row" *ngIf="patient.qid">
+                                <i class="pi pi-id-card"></i>
+                                <div><label>Qatar ID</label><span>{{ patient.qid }}</span></div>
+                            </div>
+                            <div class="info-row" *ngIf="patient.dob">
+                                <i class="pi pi-calendar"></i>
+                                <div><label>Date of Birth</label><span>{{ patient.dob | date:'MMM d, y' }}</span></div>
+                            </div>
+                            <div class="info-row" *ngIf="patient.insurance">
+                                <i class="pi pi-shield"></i>
+                                <div><label>Insurance</label><span>{{ patient.insurance }}</span></div>
+                            </div>
+                        </div>
+
+                        <div class="info-card">
+                            <h4>Hospital Information</h4>
+                            <div class="info-row" *ngIf="patient.department">
+                                <i class="pi pi-building"></i>
+                                <div><label>Department</label><span>{{ patient.department }}</span></div>
+                            </div>
+                            <div class="info-row" *ngIf="patient.specialization">
+                                <i class="pi pi-star"></i>
+                                <div><label>Specialization</label><span>{{ patient.specialization }}</span></div>
+                            </div>
+                            <div class="info-row" *ngIf="patient.admissionDate">
+                                <i class="pi pi-calendar-plus"></i>
+                                <div><label>Admission Date</label><span>{{ patient.admissionDate | date:'MMM d, y'
+                                        }}</span></div>
+                            </div>
+                            <div class="info-row" *ngIf="patient.bedNumber">
+                                <i class="pi pi-home"></i>
+                                <div><label>Bed Number</label><span>{{ patient.bedNumber }}</span></div>
+                            </div>
+                            <div class="info-row" *ngIf="patient.ward">
+                                <i class="pi pi-map-marker"></i>
+                                <div><label>Ward</label><span>{{ patient.ward }}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </p-tabpanel>
+
+                <!-- Medical Records -->
+                <p-tabpanel value="1">
+                    <div class="info-grid">
+
+                        <div class="info-card full-width" *ngIf="patient.medicalHistory">
+                            <h4><i class="pi pi-history mr-2"></i>Medical History</h4>
+                            <p class="record-text">{{ patient.medicalHistory }}</p>
+                        </div>
+
+                        <div class="info-card" *ngIf="patient.allergies">
+                            <h4><i class="pi pi-exclamation-triangle mr-2" style="color:#EF4444;"></i>Allergies</h4>
+                            <p class="record-text alert-text">{{ patient.allergies }}</p>
+                        </div>
+
+                        <div class="info-card" *ngIf="patient.medications">
+                            <h4><i class="pi pi-plus-circle mr-2" style="color:#3B82F6;"></i>Current Medications</h4>
+                            <p class="record-text">{{ patient.medications }}</p>
+                        </div>
+
+                        <div class="info-card" *ngIf="patient.bloodGroup">
+                            <h4><i class="pi pi-heart mr-2" style="color:#EF4444;"></i>Blood Group</h4>
+                            <p class="record-text blood-group">{{ patient.bloodGroup }}</p>
+                        </div>
+
+                        <div class="empty-state"
+                            *ngIf="!patient.medicalHistory && !patient.allergies && !patient.medications && !patient.bloodGroup">
+                            <i class="pi pi-file-edit"></i>
+                            <p>No medical records found. Edit patient to add medical information.</p>
+                        </div>
+
+                    </div>
+                </p-tabpanel>
+
+                <!-- Appointments -->
+                <p-tabpanel value="2">
+                    <div *ngIf="appointments.length === 0" class="empty-state">
+                        <i class="pi pi-calendar-times"></i>
+                        <p>No appointments found for this patient.</p>
+                    </div>
+
+                    <div class="appt-list" *ngIf="appointments.length > 0">
+                        <div class="appt-item" *ngFor="let appt of appointments">
+                            <div class="appt-date">
+                                <span class="appt-day">{{ appt.date | date:'d' }}</span>
+                                <span class="appt-month">{{ appt.date | date:'MMM y' }}</span>
+                            </div>
+                            <div class="appt-info">
+                                <div class="appt-title">{{ appt.type | titlecase }} with {{ appt.doctorName }}</div>
+                                <div class="appt-time">
+                                    <i class="pi pi-clock"></i>
+                                    {{ appt.startTime }} — {{ appt.endTime }} ({{ appt.duration }} min)
+                                </div>
+                                <div class="appt-notes" *ngIf="appt.notes">{{ appt.notes }}</div>
+                            </div>
+                            <div class="appt-status">
+                                <p-tag [value]="appt.status | titlecase"
+                                    [severity]="getApptStatusSeverity(appt.status)" />
+                            </div>
+                        </div>
+                    </div>
+                </p-tabpanel>
+
+                <!-- Notes -->
+                <p-tabpanel value="3">
+                    <div *ngIf="!patient.notes" class="empty-state">
+                        <i class="pi pi-file"></i>
+                        <p>No notes found for this patient.</p>
+                    </div>
+                    <div class="info-card full-width" *ngIf="patient.notes">
+                        <p class="record-text">{{ patient.notes }}</p>
+                    </div>
+                </p-tabpanel>
+
+            </p-tabpanels>
+        </p-tabs>
+
+    </ng-container>
+
+    <!-- Not found -->
+    <div *ngIf="!loading && !patient" class="empty-state" style="padding:4rem;">
+        <i class="pi pi-user-minus"></i>
+        <p>Patient not found.</p>
+        <p-button label="Back to Patients" routerLink="/patients-management" />
+    </div>
+
+</div>

@@ -5,15 +5,15 @@ import {
   AutoFocus
 } from "./chunk-YNLAOK3J.js";
 import {
+  Badge,
+  BadgeModule
+} from "./chunk-TENFQJBN.js";
+import {
   Ripple
 } from "./chunk-OC77X5LN.js";
 import {
   SpinnerIcon
 } from "./chunk-RHA7RL5K.js";
-import {
-  Badge,
-  BadgeModule
-} from "./chunk-TENFQJBN.js";
 import {
   Bind
 } from "./chunk-MLQGRGGO.js";
@@ -2081,4 +2081,4 @@ export {
   Button,
   ButtonModule
 };
-//# sourceMappingURL=chunk-UM3VFPQ2.js.map
+//# sourceMappingURL=chunk-NKFNXLXI.js.map

@@ -1,0 +1,201 @@
+.patient-profile-page {
+    padding: 1.5rem;
+
+    .profile-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+
+            .avatar {
+                width: 56px;
+                height: 56px;
+                border-radius: 50%;
+                background: #16a34a;
+                color: white;
+                font-size: 1.5rem;
+                font-weight: 700;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+            }
+
+            h2 {
+                margin: 0;
+                font-size: 1.4rem;
+                font-weight: 700;
+                color: #111827;
+            }
+
+            .meta {
+                font-size: 0.9rem;
+                color: #6B7280;
+                margin-top: 2px;
+            }
+        }
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 1.5rem;
+        padding: 1rem 0;
+    }
+
+    .info-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.25rem;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+
+        &.full-width {
+            grid-column: 1 / -1;
+        }
+
+        h4 {
+            margin: 0 0 1rem 0;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #111827;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #F3F4F6;
+        }
+    }
+
+    .info-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #F9FAFB;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        i {
+            color: #9CA3AF;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        label {
+            display: block;
+            font-size: 0.75rem;
+            color: #9CA3AF;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        span {
+            display: block;
+            font-size: 0.95rem;
+            color: #111827;
+            margin-top: 1px;
+        }
+    }
+
+    .record-text {
+        color: #374151;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin: 0;
+        white-space: pre-wrap;
+    }
+
+    .alert-text {
+        color: #EF4444;
+    }
+
+    .blood-group {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #EF4444;
+    }
+
+    .appt-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 1rem 0;
+    }
+
+    .appt-item {
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+        background: white;
+        border-radius: 10px;
+        padding: 1rem 1.25rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        border-left: 4px solid #6366F1;
+
+        .appt-date {
+            text-align: center;
+            min-width: 48px;
+
+            .appt-day {
+                display: block;
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: #111827;
+                line-height: 1;
+            }
+
+            .appt-month {
+                display: block;
+                font-size: 0.75rem;
+                color: #6B7280;
+                margin-top: 2px;
+            }
+        }
+
+        .appt-info {
+            flex: 1;
+
+            .appt-title {
+                font-weight: 600;
+                color: #111827;
+                font-size: 0.95rem;
+            }
+
+            .appt-time {
+                font-size: 0.85rem;
+                color: #6B7280;
+                margin-top: 3px;
+                display: flex;
+                align-items: center;
+                gap: 0.4rem;
+            }
+
+            .appt-notes {
+                font-size: 0.85rem;
+                color: #9CA3AF;
+                margin-top: 3px;
+            }
+        }
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: #9CA3AF;
+
+        i {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            margin: 0 0 1rem 0;
+        }
+    }
+}

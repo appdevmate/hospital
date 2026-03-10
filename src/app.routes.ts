@@ -45,6 +45,11 @@ export const appRoutes: Routes = [
                 data: { breadcrumb: 'Appointments' },
                 loadComponent: () => import('@/components/appointments/appointments').then((m) => m.AppointmentsComponent)
             },
+            {
+                path: 'patient-profile/:id',
+                data: { breadcrumb: 'Patient Profile' },
+                loadComponent: () => import('@/components/patient-profile/patient-profile').then((m) => m.PatientProfileComponent)
+            },
             { path: 'user-profile', data: { breadcrumb: 'Profile' }, component: UserProfileComponent },
             { path: '', redirectTo: 'doctors-management', pathMatch: 'full' },
             { path: 'apps', data: { breadcrumb: 'Apps' }, loadChildren: () => import('@/apps/apps.routes') },

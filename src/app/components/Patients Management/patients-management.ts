@@ -16,6 +16,7 @@ import { PatientsService } from '../../pages/service/patients.service';
 import { ConfirmationService } from 'primeng/api';
 import { HelpersService } from '@/services/helpers-service';
 import { NewPatient } from './new-patient';
+import { Router } from '@angular/router';
 
 const EditorType = {
     Text: 'text',
@@ -75,6 +76,7 @@ const STATUS_SEVERITY: Record<string, 'success' | 'info' | 'warn' | 'danger' | '
             @if (!editing) {
                 <p-button icon="pi pi-pencil" text (onClick)="beginEdit(row, rowIndex, api)" pTooltip="Edit"></p-button>
                 <p-button icon="pi pi-trash" text severity="danger" class="ml-2" (onClick)="deleteRow(row)" pTooltip="Delete"></p-button>
+                <p-button icon="pi pi-eye" text severity="info" (onClick)="viewProfile(row)" pTooltip="View Profile"></p-button>
             } @else {
                 <p-button icon="pi pi-check" text severity="success" (onClick)="saveRow(row, rowIndex, api)" pTooltip="Save"></p-button>
                 <p-button icon="pi pi-times" text severity="danger" (onClick)="cancelEdit(row, rowIndex, api)" pTooltip="Cancel"></p-button>
@@ -122,6 +124,7 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
 
     private destroyRef = inject(DestroyRef);
     private destroy$ = new Subject<void>();
+    private router = inject(Router);
 
     // signals
     private _rows = signal<Patient[]>([]);
@@ -248,6 +251,12 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
     ngOnDestroy() {
         this.destroy$.next();
         this.destroy$.complete();
+    }
+
+    viewProfile(row: Patient) {
+        // Extract just the UUID part after PATIENT#
+        const id = row.PK.includes('#') ? row.PK.split('#')[1] : row.PK;
+        this.router.navigate(['/patient-profile', id]);
     }
 
     // toolbar actions
@@ -429,21 +438,19 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
                               )
                           );
 
-                request$
-                    .pipe(finalize(() => this._loading.set(false)))
-                    .subscribe((res) => {
-                        const successCount = res.filter(Boolean).length;
+                request$.pipe(finalize(() => this._loading.set(false))).subscribe((res) => {
+                    const successCount = res.filter(Boolean).length;
 
-                        this._selected.set([]);
+                    this._selected.set([]);
 
-                        if (successCount === res.length) {
-                            this.helpers.notifySuccess('Deleted');
-                        } else {
-                            this.helpers.notifyError('Delete failed', 'Some items could not be deleted');
-                        }
+                    if (successCount === res.length) {
+                        this.helpers.notifySuccess('Deleted');
+                    } else {
+                        this.helpers.notifyError('Delete failed', 'Some items could not be deleted');
+                    }
 
-                        this.fetch();
-                    });
+                    this.fetch();
+                });
             }
         });
     }

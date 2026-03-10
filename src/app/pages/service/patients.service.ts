@@ -6,10 +6,25 @@ import { Config } from './config';
 export interface Patient {
     PK: string;
     name: string;
+    email?: string;
     gender?: string;
     insurance?: string;
     dob?: string;
     timestamp?: string | number;
+    phone?: string;
+    qid?: string;
+    admissionDate?: string | null;
+    department?: string | null;
+    specialization?: string | null;
+    status?: string | null;
+    bedNumber?: string | null;
+    ward?: string | null;
+    medicalHistory?: string | null;
+    allergies?: string | null;
+    medications?: string | null;
+    notes?: string | null;
+    bloodGroup?: string | null;
+    address?: string | null;
 }
 
 export interface PagedPatientsResponse {
