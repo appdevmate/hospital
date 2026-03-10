@@ -557,6 +557,20 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
             return;
         }
 
+        // Convert comma-separated strings to arrays for allergies and medications
+        if (typeof changedFields.allergies === 'string') {
+            changedFields.allergies = changedFields.allergies
+                .split(',')
+                .map((s: string) => s.trim())
+                .filter(Boolean);
+        }
+        if (typeof changedFields.medications === 'string') {
+            changedFields.medications = changedFields.medications
+                .split(',')
+                .map((s: string) => s.trim())
+                .filter(Boolean);
+        }
+
         console.log('📤 Sending changed fields:', changedFields);
 
         this._loading.set(true);
