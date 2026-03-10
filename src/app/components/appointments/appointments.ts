@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ChangeDetectorRef, TemplateRef, ViewChild, signal, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -8,32 +8,57 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
-import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { TooltipModule } from 'primeng/tooltip';
 import { MessageService, ConfirmationService } from 'primeng/api';
-import { AppointmentsService, Appointment, CreateAppointmentRequest } from '../../services/appointments.service';
-import { DoctorsService, Doctor } from '../../pages/service/doctors.service';
-import { PatientsService, Patient } from '../../pages/service/patients.service';
-import { HospitalCalendarService } from '../../services/hospital-calendar.service';
-import { forkJoin } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { forkJoin, finalize } from 'rxjs';
 import { catchError, of } from 'rxjs';
+
+import { GenericTableComponent } from '@/pages/uikit/generic-table';
+import type { TableColumn, TableConfig } from '@/interfaces/tableplugin.interfaces';
+import { AppointmentsService, Appointment, CreateAppointmentRequest } from '@/services/appointments.service';
+import { DoctorsService, Doctor } from '@/pages/service/doctors.service';
+import { PatientsService, Patient } from '@/pages/service/patients.service';
+import { HospitalCalendarService } from '@/services/hospital-calendar.service';
+import { HelpersService } from '@/services/helpers-service';
+
+const STATUS_SEVERITY: Record<string, 'success' | 'warn' | 'danger' | 'secondary'> = {
+    scheduled: 'warn',
+    completed: 'success',
+    cancelled: 'danger'
+};
 
 @Component({
     selector: 'app-appointments',
     standalone: true,
-    imports: [CommonModule, FormsModule, RouterModule, ButtonModule, DialogModule, InputTextModule, TextareaModule, SelectModule, DatePickerModule, TableModule, TagModule, ToastModule, ConfirmDialogModule],
-    providers: [MessageService, ConfirmationService],
+    imports: [CommonModule, FormsModule, RouterModule, ButtonModule, DialogModule, InputTextModule, TextareaModule, SelectModule, DatePickerModule, TagModule, ToastModule, ConfirmDialogModule, TooltipModule, GenericTableComponent],
+    providers: [MessageService, ConfirmationService, HelpersService],
     templateUrl: './appointments.html',
     styleUrl: './appointments.scss'
 })
-export class AppointmentsComponent implements OnInit {
-    appointments: Appointment[] = [];
+export class AppointmentsComponent implements OnInit, AfterViewInit {
+    @ViewChild(GenericTableComponent) tableCmp?: GenericTableComponent;
+    @ViewChild('statusTemplate') statusTemplate!: TemplateRef<any>;
+
+    private destroyRef = inject(DestroyRef);
+
+    // signals
+    private _rows = signal<Appointment[]>([]);
+    private _loading = signal<boolean>(false);
+    private _selected = signal<Appointment[]>([]);
+    rows = this._rows.asReadonly();
+    loading = this._loading.asReadonly();
+    selected = this._selected;
+
+    private _customTemplates = signal<{ [k: string]: TemplateRef<any> }>({});
+    customTemplates = this._customTemplates;
+
     doctors: Doctor[] = [];
     patients: Patient[] = [];
     calendars: any[] = [];
-    loading = false;
     saving = false;
 
     showCreateDialog = false;
@@ -57,6 +82,34 @@ export class AppointmentsComponent implements OnInit {
     newAppt: any = this.emptyAppt();
     editAppt: any = {};
 
+    config: TableConfig = {
+        title: 'Appointments',
+        showGlobalSearch: true,
+        showClearButton: true,
+        showToolbar: true,
+        pageSizeOptions: [10, 25, 50],
+        defaultPageSize: 10,
+        scrollHeight: '600px',
+        emptyMessage: 'No appointments found.',
+        showGridlines: true,
+        rowHover: true,
+        responsive: true,
+        showResultsSummary: true,
+        selectable: false,
+        editType: 'none'
+    };
+
+    columns: TableColumn[] = [
+        { field: 'date', header: 'Date', sortable: true, filterable: true, type: 'date', pipe: 'date', dateFormat: 'MMM d, y', width: '200px' },
+        { field: 'startTime', header: 'Time', sortable: false, filterable: false, width: '200px' },
+        { field: 'patientName', header: 'Patient', sortable: true, filterable: true, pipe: 'titlecase', width: '200px' },
+        { field: 'doctorName', header: 'Doctor', sortable: true, filterable: true, pipe: 'titlecase', width: '200px' },
+        { field: 'type', header: 'Type', sortable: true, filterable: true, pipe: 'titlecase', width: '200px' },
+        { field: 'duration', header: 'Duration', sortable: false, filterable: false, width: '200px' },
+        { field: 'status', header: 'Status', sortable: true, filterable: true, customTemplate: true, width: '200px' },
+        { field: 'notes', header: 'Notes', sortable: false, filterable: true, showTooltip: true }
+    ];
+
     constructor(
         private appointmentsService: AppointmentsService,
         private doctorsService: DoctorsService,
@@ -64,11 +117,16 @@ export class AppointmentsComponent implements OnInit {
         private calendarService: HospitalCalendarService,
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
+        private helpers: HelpersService,
         private cd: ChangeDetectorRef
     ) {}
 
     ngOnInit() {
         this.loadAll();
+    }
+
+    ngAfterViewInit() {
+        this._customTemplates.set({ status: this.statusTemplate });
     }
 
     emptyAppt() {
@@ -86,18 +144,18 @@ export class AppointmentsComponent implements OnInit {
     }
 
     loadAll() {
-        this.loading = true;
+        this._loading.set(true);
         forkJoin({
             appointments: this.appointmentsService.getAppointments().pipe(catchError(() => of([]))),
             doctors: this.doctorsService.getDoctorsPage({ pageSize: 100 }).pipe(catchError(() => of({ data: [] }))),
             patients: this.patientsService.getPatientsPage({ pageSize: 100 }).pipe(catchError(() => of({ data: [] }))),
             calendars: this.calendarService.getCalendars().pipe(catchError(() => of([])))
         }).subscribe(({ appointments, doctors, patients, calendars }) => {
-            this.appointments = appointments;
+            this._rows.set(appointments);
             this.doctors = (doctors as any).data || [];
             this.patients = (patients as any).data || [];
             this.calendars = calendars;
-            this.loading = false;
+            this._loading.set(false);
             this.cd.detectChanges();
         });
     }
@@ -128,9 +186,7 @@ export class AppointmentsComponent implements OnInit {
         const startTimeStr = this.formatTime(this.newAppt.startTime);
         const endTimeStr = this.newAppt.endTime ? this.formatTime(this.newAppt.endTime) : startTimeStr;
 
-        // Find doctor's calendar
-        const calendarName = doctor?.name || '';
-        const cal = this.calendars.find((c) => c.name === calendarName);
+        const cal = this.calendars.find((c) => c.name === doctor?.name);
 
         const createAppt = (calendarEventId: string | null, calendarId: string | null) => {
             const data: CreateAppointmentRequest = {
@@ -150,20 +206,19 @@ export class AppointmentsComponent implements OnInit {
             };
             this.appointmentsService.createAppointment(data).subscribe({
                 next: (appt) => {
-                    this.appointments = [appt, ...this.appointments];
+                    this._rows.set([appt, ...this._rows()]);
                     this.showCreateDialog = false;
                     this.saving = false;
-                    this.messageService.add({ severity: 'success', summary: 'Appointment booked', detail: `${patient?.name} with ${doctor?.name}` });
+                    this.helpers.notifySuccess(`Appointment booked: ${patient?.name} with ${doctor?.name}`);
                     this.cd.detectChanges();
                 },
                 error: () => {
                     this.saving = false;
-                    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to create appointment.' });
+                    this.helpers.notifyError('Error', 'Failed to create appointment.');
                 }
             });
         };
 
-        // Create calendar event if doctor has a calendar
         if (cal) {
             this.calendarService
                 .createEvent(cal.calendarId, {
@@ -230,17 +285,18 @@ export class AppointmentsComponent implements OnInit {
             })
             .subscribe({
                 next: (updated) => {
-                    const idx = this.appointments.findIndex((a) => a.appointmentId === updated.appointmentId);
-                    if (idx !== -1) this.appointments[idx] = updated;
-                    this.appointments = [...this.appointments];
+                    const rows = [...this._rows()];
+                    const idx = rows.findIndex((a) => a.appointmentId === updated.appointmentId);
+                    if (idx !== -1) rows[idx] = updated;
+                    this._rows.set(rows);
                     this.showEditDialog = false;
                     this.saving = false;
-                    this.messageService.add({ severity: 'success', summary: 'Updated', detail: 'Appointment updated.' });
+                    this.helpers.notifySuccess('Appointment updated.');
                     this.cd.detectChanges();
                 },
                 error: () => {
                     this.saving = false;
-                    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to update.' });
+                    this.helpers.notifyError('Error', 'Failed to update.');
                 }
             });
     }
@@ -255,12 +311,14 @@ export class AppointmentsComponent implements OnInit {
             message: `Delete appointment for ${appt.patientName}?`,
             header: 'Confirm Delete',
             icon: 'pi pi-trash',
+            rejectButtonProps: { label: 'No', severity: 'secondary', variant: 'text' },
+            acceptButtonProps: { label: 'Yes', severity: 'danger' },
             accept: () => {
                 this.appointmentsService.deleteAppointment(appt.appointmentId).subscribe({
                     next: () => {
-                        this.appointments = this.appointments.filter((a) => a.appointmentId !== appt.appointmentId);
+                        this._rows.set(this._rows().filter((a) => a.appointmentId !== appt.appointmentId));
                         this.showDetailDialog = false;
-                        this.messageService.add({ severity: 'success', summary: 'Deleted', detail: 'Appointment deleted.' });
+                        this.helpers.notifySuccess('Appointment deleted.');
                         this.cd.detectChanges();
                     }
                 });
@@ -268,17 +326,8 @@ export class AppointmentsComponent implements OnInit {
         });
     }
 
-    getStatusSeverity(status: string): 'success' | 'warn' | 'danger' | 'secondary' {
-        switch (status) {
-            case 'scheduled':
-                return 'warn';
-            case 'completed':
-                return 'success';
-            case 'cancelled':
-                return 'danger';
-            default:
-                return 'secondary';
-        }
+    getStatusSeverity(status: string) {
+        return STATUS_SEVERITY[status] || 'secondary';
     }
 
     private formatDate(date: Date): string {
