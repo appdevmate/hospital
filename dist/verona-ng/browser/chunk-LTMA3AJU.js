@@ -1,0 +1,1 @@
+var t=class{static baseUrl="https://xy829e3qw2.execute-api.us-east-1.amazonaws.com";static environment="development";static getBaseUrl(){return this.baseUrl}static getEnvironment(){return this.environment}static buildUrl(e){return`${this.baseUrl}/${e}`}};export{t as a};

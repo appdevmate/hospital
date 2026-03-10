@@ -1,0 +1,1 @@
+import"./chunk-GAL4ENT6.js";var a=[{path:"list",loadComponent:()=>import("./chunk-JYIGVOS3.js").then(t=>t.List),data:{breadcrumb:"List"}},{path:"detail",loadComponent:()=>import("./chunk-5XQLRHC5.js").then(t=>t.Detail),data:{breadcrumb:"Detail"}},{path:"edit",loadComponent:()=>import("./chunk-6NUXWOYI.js").then(t=>t.Edit),data:{breadcrumb:"Edit"}}];export{a as default};
