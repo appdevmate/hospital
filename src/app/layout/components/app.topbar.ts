@@ -297,9 +297,7 @@ export class AppTopbar implements OnInit {
 
     toggleNotifications(event: Event) {
         this.notifPanel.toggle(event);
-        if (!this.notifPanel.overlayVisible) {
-            this.loadNotifications();
-        }
+        this.loadNotifications(); // always reload on every toggle
     }
 
     onNotifClick(n: Notification) {
