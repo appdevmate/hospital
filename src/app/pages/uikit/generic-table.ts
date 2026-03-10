@@ -206,7 +206,7 @@ import { CheckboxModule } from 'primeng/checkbox';
             </ng-template>
           </ng-container>
 
-          <th pResizableColumn style="min-width: 8rem; width: 8rem" *ngIf="showActionsCol()">
+          <th pResizableColumn style="min-width: 10rem; width: 10rem" *ngIf="showActionsCol()">
             <ng-container *ngIf="actionsHeaderTemplate; else defaultActionsHeader" [ngTemplateOutlet]="actionsHeaderTemplate" [ngTemplateOutletContext]="{ api: publicApi }"></ng-container>
             <ng-template #defaultActionsHeader>Actions</ng-template>
           </th>

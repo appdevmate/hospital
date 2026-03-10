@@ -17,6 +17,7 @@ import { ConfirmationService } from 'primeng/api';
 import { HelpersService } from '@/services/helpers-service';
 import { NewPatient } from './new-patient';
 import { Router } from '@angular/router';
+import { EditPatient } from './edit-patient';
 
 const EditorType = {
     Text: 'text',
@@ -74,7 +75,8 @@ const STATUS_SEVERITY: Record<string, 'success' | 'info' | 'warn' | 'danger' | '
 
         <ng-template #rowActions let-row let-editing="editing" let-api="api" let-rowIndex="rowIndex">
             @if (!editing) {
-                <p-button icon="pi pi-pencil" text (onClick)="beginEdit(row, rowIndex, api)" pTooltip="Edit"></p-button>
+                <!-- <p-button icon="pi pi-pencil" text (onClick)="beginEdit(row, rowIndex, api)" pTooltip="Edit"></p-button> -->
+                <p-button icon="pi pi-pencil" text (onClick)="openEdit(row)" pTooltip="Edit Patient"></p-button>
                 <p-button icon="pi pi-trash" text severity="danger" class="ml-2" (onClick)="deleteRow(row)" pTooltip="Delete"></p-button>
                 <p-button icon="pi pi-eye" text severity="info" (onClick)="viewProfile(row)" pTooltip="View Profile"></p-button>
             } @else {
@@ -981,5 +983,24 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
 
         // Last resort: return as-is
         return pk;
+    }
+
+    openEdit(row: Patient) {
+        const ref = this.dialog.open(EditPatient, {
+            width: '90vw',
+            height: '100vh',
+            modal: true,
+            dismissableMask: true,
+            data: { patient: row },
+            focusOnShow: false
+        });
+        if (ref) {
+            ref.onClose.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((r) => {
+                if (r) {
+                    this.helpers.notifySuccess('Patient updated');
+                    this.fetch();
+                }
+            });
+        }
     }
 }
