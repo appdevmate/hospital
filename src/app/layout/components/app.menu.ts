@@ -44,6 +44,7 @@ export class AppMenu {
             icon: 'pi pi-calendar',
             routerLink: ['/calendar']
         },
+        { label: 'Appointments', icon: 'pi pi-calendar-plus', routerLink: ['/appointments'] },
         {
             label: 'Document Control',
             icon: 'pi pi-folder',
