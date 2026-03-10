@@ -24,12 +24,12 @@ import { CheckboxModule } from 'primeng/checkbox';
     template: `
   <div class="card">
     <!-- Title -->
-    <div class="font-semibold text-xl mb-4" *ngIf="config?.title">
+    <div class="font-semibold text-xl mb-4" *ngIf="config.title">
       {{ config.title }}
     </div>
 
     <!-- Toolbar -->
-    <p-toolbar class="mb-6" *ngIf="config?.showToolbar">
+    <p-toolbar class="mb-6" *ngIf="config.showToolbar">
       <ng-template #start>
         <ng-container *ngIf="toolbarStart" [ngTemplateOutlet]="toolbarStart" [ngTemplateOutletContext]="toolbarCtx"></ng-container>
       </ng-template>
@@ -142,13 +142,13 @@ import { CheckboxModule } from 'primeng/checkbox';
       <ng-template pTemplate="header">
         <tr>
           <th
-  *ngIf="config?.selectable"
+  *ngIf="config.selectable"
   class="gt-sticky"
   [style.left.px]="0"
   style="width:5rem;min-width:5rem"
 >
   <p-tableHeaderCheckbox
-    *ngIf="config?.selectionMode === 'multiple' && config?.showSelectAll !== false">
+    *ngIf="config.selectionMode === 'multiple' && config.showSelectAll !== false">
   </p-tableHeaderCheckbox>
 </th>
 
@@ -217,7 +217,7 @@ import { CheckboxModule } from 'primeng/checkbox';
       <ng-template pTemplate="body" let-row let-editing="editing" let-ri="rowIndex">
         <tr [pEditableRow]="row">
           <td
-  *ngIf="config?.selectable"
+  *ngIf="config.selectable"
   class="gt-sticky"
   [style.left.px]="0"
   style="width:5rem;min-width:5rem"
@@ -359,7 +359,7 @@ import { CheckboxModule } from 'primeng/checkbox';
     <div class="mt-4 text-sm text-gray-600" *ngIf="!loading && config.showResultsSummary !== false">
       <div class="flex justify-between items-center">
         <span>Showing {{ data.length || 0 }} of {{ totalRecords | number }} records</span>
-        <span *ngIf="config?.selectable && selectedRows?.length">{{ selectedRows.length }} item(s) selected</span>
+        <span *ngIf="config.selectable && selectedRows.length">{{ selectedRows.length }} item(s) selected</span>
       </div>
     </div>
   </div>

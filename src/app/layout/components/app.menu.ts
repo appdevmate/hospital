@@ -67,6 +67,11 @@ export class AppMenu {
             ]
         },
         {
+            label: 'Notifications',
+            icon: 'pi pi-bell',
+            routerLink: ['/notifications']
+        },
+        {
             label: 'UI Kit',
             icon: 'pi pi-star',
             items: [
