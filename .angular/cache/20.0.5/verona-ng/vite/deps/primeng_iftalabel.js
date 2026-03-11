@@ -12,11 +12,11 @@ import {
 import {
   SharedModule
 } from "./chunk-LMEEH3AJ.js";
-import "./chunk-GOP36Q47.js";
-import "./chunk-UCHM6OXG.js";
 import {
   RouterModule
 } from "./chunk-EFY5GPDX.js";
+import "./chunk-GOP36Q47.js";
+import "./chunk-UCHM6OXG.js";
 import "./chunk-J5N23VJV.js";
 import "./chunk-3XGGEXNB.js";
 import "./chunk-L26I7UJA.js";

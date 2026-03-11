@@ -17,9 +17,21 @@ export class AuthService {
         if (this._user) return this._user;
         try {
             const raw = localStorage.getItem('userData');
-            if (!raw) return this.fallback();
-            const data = JSON.parse(raw);
-            const role = this.parseRole(data.role, data['cognito:groups']);
+            const data = raw ? JSON.parse(raw) : {};
+
+            // Always read groups from access token (more reliable than userData.role)
+            let groups: string[] = [];
+            const accessToken = sessionStorage.getItem('accessToken') || '';
+            if (accessToken && accessToken.split('.').length === 3) {
+                try {
+                    const part = accessToken.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+                    const pad = part + '='.repeat((4 - (part.length % 4)) % 4);
+                    const payload = JSON.parse(atob(pad));
+                    groups = payload['cognito:groups'] ?? [];
+                } catch {}
+            }
+
+            const role = this.parseRole(data.role, groups);
             this._user = {
                 role,
                 name: (data.name || '').toLowerCase().trim(),

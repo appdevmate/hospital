@@ -24,6 +24,7 @@ import { TableColumn, TableConfig } from '@/interfaces/tableplugin.interfaces';
 import { DoctorsService } from '@/pages/service/doctors.service';
 import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { AuthService } from '@/services/auth.service';
 
 @Component({
     selector: 'app-invoices',
@@ -113,13 +114,10 @@ import { of } from 'rxjs';
                             </p-autoComplete>
                             <label for="patient">Patient</label>
                         </p-floatLabel>
-                        <p-floatLabel variant="on">
-                            <p-floatLabel variant="on">
-                                <p-autoComplete inputId="doctorName" formControlName="doctorName" [suggestions]="filteredDoctorNames" (completeMethod)="searchDoctor($event)" [dropdown]="true" styleClass="w-full" (onSelect)="onDoctorSelect($event)">
-                                </p-autoComplete>
-                                <label for="doctorName">Doctor</label>
-                            </p-floatLabel>
-                            <label for="doctorName">Doctor Name</label>
+                        <p-floatLabel variant="on" *ngIf="auth.isAdmin">
+                            <p-autoComplete inputId="doctorName" formControlName="doctorName" [suggestions]="filteredDoctorNames" (completeMethod)="searchDoctor($event)" [dropdown]="true" styleClass="w-full" (onSelect)="onDoctorSelect($event)">
+                            </p-autoComplete>
+                            <label for="doctorName">Doctor</label>
                         </p-floatLabel>
                     </div>
                     <div class="form-grid mt-3">
@@ -368,6 +366,7 @@ export class InvoicesComponent implements OnInit {
     private confirmationService = inject(ConfirmationService);
     filteredPatientNames: string[] = [];
     private doctorsService = inject(DoctorsService);
+    auth = inject(AuthService);
     @ViewChild('statusTemplate') statusTemplateTpl!: TemplateRef<any>;
 
     filteredStatuses: string[] = [];
@@ -498,10 +497,12 @@ export class InvoicesComponent implements OnInit {
         }
         const all: Payment[] = [];
         let done = 0;
+        const doctorEmail = this.auth.isDoctor ? this.auth.current.email : undefined;
+        console.log('isDoctor:', this.auth.isDoctor, 'isAdmin:', this.auth.isAdmin, 'role:', this.auth.current.role);
         patients.forEach((p) => {
             const id = p.PK.includes('#') ? p.PK.split('#')[1] : p.PK;
             this.paymentsService
-                .getPayments(id)
+                .getPayments(id, doctorEmail)
                 .pipe(
                     catchError(() => of({ data: [], count: 0 })),
                     finalize(() => {
@@ -641,7 +642,13 @@ export class InvoicesComponent implements OnInit {
         const payload: CreateUpdatePaymentRequest = {
             invoiceNumber: f.invoiceNumber || `INV-${Date.now()}`,
             patientName: f.patientName,
-            doctorName: f.doctorName,
+            doctorEmail: this.auth.isDoctor
+                ? this.auth.current.email
+                : this._doctors()
+                      .find((d) => d.name === f.doctorName)
+                      ?.email?.toLowerCase()
+                      .trim() || null,
+            doctorName: this.auth.isDoctor ? this.auth.current.name : f.doctorName,
             items: f.items,
             amount: f.amount,
             status: f.status,

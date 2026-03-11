@@ -3,6 +3,10 @@ import {
   TooltipModule
 } from "./chunk-NG66ICPZ.js";
 import {
+  Badge,
+  BadgeModule
+} from "./chunk-TENFQJBN.js";
+import {
   DomHandler
 } from "./chunk-S73J4WE3.js";
 import {
@@ -15,10 +19,6 @@ import {
   AngleRightIcon
 } from "./chunk-RHA7RL5K.js";
 import "./chunk-YXZQJBKH.js";
-import {
-  Badge,
-  BadgeModule
-} from "./chunk-TENFQJBN.js";
 import {
   Bind,
   BindModule
@@ -35,6 +35,10 @@ import {
   PrimeTemplate,
   SharedModule
 } from "./chunk-LMEEH3AJ.js";
+import {
+  RouterLink,
+  RouterModule
+} from "./chunk-EFY5GPDX.js";
 import "./chunk-GOP36Q47.js";
 import {
   $t,
@@ -61,10 +65,6 @@ import {
   transition,
   trigger
 } from "./chunk-53DGU4C2.js";
-import {
-  RouterLink,
-  RouterModule
-} from "./chunk-EFY5GPDX.js";
 import "./chunk-J5N23VJV.js";
 import "./chunk-3XGGEXNB.js";
 import "./chunk-L26I7UJA.js";

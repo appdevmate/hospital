@@ -2,6 +2,10 @@ import {
   Tooltip,
   TooltipModule
 } from "./chunk-NG66ICPZ.js";
+import {
+  Badge,
+  BadgeModule
+} from "./chunk-TENFQJBN.js";
 import "./chunk-S73J4WE3.js";
 import {
   zindexutils
@@ -15,10 +19,6 @@ import {
   BarsIcon
 } from "./chunk-RHA7RL5K.js";
 import "./chunk-YXZQJBKH.js";
-import {
-  Badge,
-  BadgeModule
-} from "./chunk-TENFQJBN.js";
 import {
   Bind,
   BindModule
@@ -34,6 +34,11 @@ import {
   PrimeTemplate,
   SharedModule
 } from "./chunk-LMEEH3AJ.js";
+import {
+  RouterLink,
+  RouterLinkActive,
+  RouterModule
+} from "./chunk-EFY5GPDX.js";
 import "./chunk-GOP36Q47.js";
 import {
   J,
@@ -46,11 +51,6 @@ import {
   s3 as s2,
   z2 as z
 } from "./chunk-UCHM6OXG.js";
-import {
-  RouterLink,
-  RouterLinkActive,
-  RouterModule
-} from "./chunk-EFY5GPDX.js";
 import "./chunk-J5N23VJV.js";
 import "./chunk-3XGGEXNB.js";
 import "./chunk-L26I7UJA.js";

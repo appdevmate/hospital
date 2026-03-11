@@ -125,6 +125,8 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
     ) {}
 
     ngOnInit() {
+        this.auth.invalidate(); // force re-read token on every load
+        this.currentUser = this.auth.current;
         this.loadAll();
     }
 
@@ -149,6 +151,7 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
     loadAll() {
         this._loading.set(true);
         const doctorEmail = this.auth.isDoctor ? this.currentUser.email : undefined;
+        console.log('role:', this.currentUser.role, 'doctorEmail:', doctorEmail);
         forkJoin({
             appointments: this.appointmentsService.getAppointments(doctorEmail).pipe(catchError(() => of([]))),
             doctors: this.doctorsService.getDoctorsPage({ pageSize: 100 }).pipe(catchError(() => of({ data: [] }))),

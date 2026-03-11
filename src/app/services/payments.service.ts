@@ -40,6 +40,7 @@ export interface CreateUpdatePaymentRequest {
     status: string;
     invoiceNumber?: string;
     patientName?: string;
+    doctorEmail?: string | null;
     doctorId?: string;
     doctorName?: string;
     appointmentId?: string;
@@ -66,8 +67,10 @@ export class PaymentsService {
         return `${Config.getBaseUrl()}/patients/${encodeURIComponent(patientId)}/payments`;
     }
 
-    getPayments(patientId: string): Observable<{ data: Payment[]; count: number }> {
-        return this.http.get<any>(this.patientUrl(patientId), { headers: this.authHeaders() }).pipe(
+    getPayments(patientId: string, doctorEmail?: string): Observable<{ data: Payment[]; count: number }> {
+        const params: any = {};
+        if (doctorEmail) params['doctorEmail'] = doctorEmail.toLowerCase().trim();
+        return this.http.get<any>(this.patientUrl(patientId), { headers: this.authHeaders(), params }).pipe(
             map((res: any) => ({
                 data: res.data || res.items || [],
                 count: res.count || 0
