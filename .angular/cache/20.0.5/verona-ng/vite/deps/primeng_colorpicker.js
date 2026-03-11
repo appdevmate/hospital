@@ -14,9 +14,6 @@ import {
   zindexutils
 } from "./chunk-BB55NINM.js";
 import {
-  Bind
-} from "./chunk-MLQGRGGO.js";
-import {
   PARENT_INSTANCE
 } from "./chunk-YNJ5GKCH.js";
 import {
@@ -27,15 +24,15 @@ import {
   SharedModule,
   TranslationKeys
 } from "./chunk-LMEEH3AJ.js";
+import {
+  Bind
+} from "./chunk-MLQGRGGO.js";
 import "./chunk-GOP36Q47.js";
 import {
   D,
   I,
   Yt
 } from "./chunk-UCHM6OXG.js";
-import {
-  NG_VALUE_ACCESSOR
-} from "./chunk-RZEKJVYA.js";
 import "./chunk-6QGHQEN4.js";
 import {
   animate,
@@ -43,6 +40,9 @@ import {
   transition,
   trigger
 } from "./chunk-53DGU4C2.js";
+import {
+  NG_VALUE_ACCESSOR
+} from "./chunk-RZEKJVYA.js";
 import {
   CommonModule,
   NgIf,

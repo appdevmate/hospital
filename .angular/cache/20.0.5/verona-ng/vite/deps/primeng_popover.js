@@ -5,9 +5,6 @@ import {
   zindexutils
 } from "./chunk-BB55NINM.js";
 import {
-  Bind
-} from "./chunk-MLQGRGGO.js";
-import {
   BaseComponent,
   PARENT_INSTANCE
 } from "./chunk-YNJ5GKCH.js";
@@ -19,6 +16,9 @@ import {
   PrimeTemplate,
   SharedModule
 } from "./chunk-LMEEH3AJ.js";
+import {
+  Bind
+} from "./chunk-MLQGRGGO.js";
 import {
   rr
 } from "./chunk-GOP36Q47.js";

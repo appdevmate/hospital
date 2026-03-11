@@ -7,6 +7,7 @@ import { Config } from './config';
 export interface Doctor {
     PK: string;
     name: string;
+    email?: string;
     gender?: string;
     insurance?: string;
     dob?: string;

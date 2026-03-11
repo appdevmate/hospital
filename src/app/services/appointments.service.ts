@@ -28,6 +28,7 @@ export interface CreateAppointmentRequest {
     doctorName: string;
     patientId: string;
     patientName: string;
+    doctorEmail?: string | null;
     date: string;
     startTime: string;
     endTime: string;
@@ -43,8 +44,10 @@ export interface CreateAppointmentRequest {
 export class AppointmentsService {
     constructor(private http: HttpClient) {}
 
-    getAppointments() {
-        return this.http.get<Appointment[]>(`${API_URL}/appointments`, { headers });
+    getAppointments(doctorEmail?: string) {
+        const params: any = {};
+        if (doctorEmail) params['doctorEmail'] = doctorEmail.toLowerCase().trim();
+        return this.http.get<Appointment[]>(`${API_URL}/appointments`, { headers, params });
     }
 
     createAppointment(data: CreateAppointmentRequest) {

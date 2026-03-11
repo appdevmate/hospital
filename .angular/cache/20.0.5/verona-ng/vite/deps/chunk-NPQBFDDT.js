@@ -5,10 +5,6 @@ import {
   AutoFocus
 } from "./chunk-YNLAOK3J.js";
 import {
-  Bind,
-  BindModule
-} from "./chunk-MLQGRGGO.js";
-import {
   PARENT_INSTANCE
 } from "./chunk-YNJ5GKCH.js";
 import {
@@ -17,6 +13,10 @@ import {
 import {
   SharedModule
 } from "./chunk-LMEEH3AJ.js";
+import {
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
 import {
   NG_VALUE_ACCESSOR,
   NgControl
@@ -533,4 +533,4 @@ export {
   RadioButton,
   RadioButtonModule
 };
-//# sourceMappingURL=chunk-NF5TSPNM.js.map
+//# sourceMappingURL=chunk-NPQBFDDT.js.map

@@ -50,6 +50,7 @@ export class AppMenu {
             icon: 'pi pi-folder',
             routerLink: ['/documents']
         },
+        { label: 'Invoices', icon: 'pi pi-file-edit', routerLink: ['/invoices'] },
         {
             label: 'Dashboard',
             icon: 'pi pi-home',

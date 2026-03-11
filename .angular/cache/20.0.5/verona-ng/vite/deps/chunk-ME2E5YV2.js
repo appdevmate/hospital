@@ -1,9 +1,9 @@
 import {
   BaseInput
-} from "./chunk-HYKQO3OA.js";
+} from "./chunk-3NL2AYPD.js";
 import {
   InputText
-} from "./chunk-IG3R3ILJ.js";
+} from "./chunk-GI2QMI3P.js";
 import {
   AutoFocus
 } from "./chunk-YNLAOK3J.js";
@@ -12,10 +12,6 @@ import {
   AngleUpIcon,
   TimesIcon
 } from "./chunk-RHA7RL5K.js";
-import {
-  Bind,
-  BindModule
-} from "./chunk-MLQGRGGO.js";
 import {
   PARENT_INSTANCE
 } from "./chunk-YNJ5GKCH.js";
@@ -26,6 +22,10 @@ import {
   PrimeTemplate,
   SharedModule
 } from "./chunk-LMEEH3AJ.js";
+import {
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
 import {
   Mt
 } from "./chunk-UCHM6OXG.js";
@@ -2156,4 +2156,4 @@ export {
   InputNumber,
   InputNumberModule
 };
-//# sourceMappingURL=chunk-C3FS5ITR.js.map
+//# sourceMappingURL=chunk-ME2E5YV2.js.map

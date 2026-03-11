@@ -51,6 +51,11 @@ export const appRoutes: Routes = [
                 loadComponent: () => import('@/components/patient-profile/patient-profile').then((m) => m.PatientProfileComponent)
             },
             {
+                path: 'invoices',
+                data: { breadcrumb: 'Invoices' },
+                loadComponent: () => import('@/components/invoices/invoices').then((m) => m.InvoicesComponent)
+            },
+            {
                 path: 'notifications',
                 data: { breadcrumb: 'Notifications' },
                 loadComponent: () => import('@/components/notifications/notifications').then((m) => m.NotificationsComponent)

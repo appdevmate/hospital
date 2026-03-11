@@ -278,6 +278,8 @@ export class AppTopbar implements OnInit {
 
         this.oidc.userData$.pipe(take(10)).subscribe(({ userData }) => {
             userData.role = this.role;
+            console.log(userData);
+
             localStorage.setItem('userData', JSON.stringify(userData));
             window.dispatchEvent(new CustomEvent('userDataChanged', { detail: userData }));
             this.username = userData?.username;

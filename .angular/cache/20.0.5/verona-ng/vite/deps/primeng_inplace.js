@@ -1,11 +1,11 @@
 import {
   Button,
   ButtonModule
-} from "./chunk-NKFNXLXI.js";
-import "./chunk-PJRMHEN5.js";
+} from "./chunk-6BBSNAFS.js";
+import "./chunk-T47RI6IU.js";
 import "./chunk-YNLAOK3J.js";
+import "./chunk-ICEVV523.js";
 import "./chunk-S73J4WE3.js";
-import "./chunk-TENFQJBN.js";
 import {
   Ripple
 } from "./chunk-OC77X5LN.js";
@@ -13,9 +13,6 @@ import {
   TimesIcon
 } from "./chunk-RHA7RL5K.js";
 import "./chunk-YXZQJBKH.js";
-import {
-  Bind
-} from "./chunk-MLQGRGGO.js";
 import {
   BaseComponent,
   PARENT_INSTANCE
@@ -27,6 +24,9 @@ import {
   PrimeTemplate,
   SharedModule
 } from "./chunk-LMEEH3AJ.js";
+import {
+  Bind
+} from "./chunk-MLQGRGGO.js";
 import "./chunk-GOP36Q47.js";
 import "./chunk-UCHM6OXG.js";
 import {

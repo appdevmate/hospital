@@ -24,6 +24,7 @@ import { DoctorsService, Doctor } from '@/pages/service/doctors.service';
 import { PatientsService, Patient } from '@/pages/service/patients.service';
 import { HospitalCalendarService } from '@/services/hospital-calendar.service';
 import { HelpersService } from '@/services/helpers-service';
+import { AuthService } from '@/services/auth.service';
 
 const STATUS_SEVERITY: Record<string, 'success' | 'warn' | 'danger' | 'secondary'> = {
     scheduled: 'warn',
@@ -42,6 +43,8 @@ const STATUS_SEVERITY: Record<string, 'success' | 'warn' | 'danger' | 'secondary
 export class AppointmentsComponent implements OnInit, AfterViewInit {
     @ViewChild(GenericTableComponent) tableCmp?: GenericTableComponent;
     @ViewChild('statusTemplate') statusTemplate!: TemplateRef<any>;
+    private auth = inject(AuthService);
+    currentUser = this.auth.current;
 
     private destroyRef = inject(DestroyRef);
 
@@ -145,8 +148,9 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
 
     loadAll() {
         this._loading.set(true);
+        const doctorEmail = this.auth.isDoctor ? this.currentUser.email : undefined;
         forkJoin({
-            appointments: this.appointmentsService.getAppointments().pipe(catchError(() => of([]))),
+            appointments: this.appointmentsService.getAppointments(doctorEmail).pipe(catchError(() => of([]))),
             doctors: this.doctorsService.getDoctorsPage({ pageSize: 100 }).pipe(catchError(() => of({ data: [] }))),
             patients: this.patientsService.getPatientsPage({ pageSize: 100 }).pipe(catchError(() => of({ data: [] }))),
             calendars: this.calendarService.getCalendars().pipe(catchError(() => of([])))
@@ -192,6 +196,7 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
             const data: CreateAppointmentRequest = {
                 doctorId: this.newAppt.doctorId,
                 doctorName: doctor?.name || '',
+                doctorEmail: doctor?.email || null,
                 patientId: this.newAppt.patientId,
                 patientName: patient?.name || '',
                 date: dateStr,
