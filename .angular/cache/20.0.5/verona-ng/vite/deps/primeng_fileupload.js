@@ -1,17 +1,14 @@
 import {
   ProgressBar
-} from "./chunk-SQS63WD7.js";
+} from "./chunk-I7OCNQD5.js";
 import {
   Message
-} from "./chunk-SZ2ODCNZ.js";
+} from "./chunk-Y23KUKGM.js";
 import {
   Button
-} from "./chunk-6BBSNAFS.js";
-import {
-  Badge
-} from "./chunk-T47RI6IU.js";
+} from "./chunk-UM3VFPQ2.js";
+import "./chunk-PJRMHEN5.js";
 import "./chunk-YNLAOK3J.js";
-import "./chunk-ICEVV523.js";
 import "./chunk-S73J4WE3.js";
 import "./chunk-OC77X5LN.js";
 import {
@@ -20,6 +17,12 @@ import {
   UploadIcon
 } from "./chunk-RHA7RL5K.js";
 import "./chunk-YXZQJBKH.js";
+import {
+  Badge
+} from "./chunk-TENFQJBN.js";
+import {
+  Bind
+} from "./chunk-MLQGRGGO.js";
 import {
   BaseComponent,
   PARENT_INSTANCE
@@ -32,9 +35,6 @@ import {
   SharedModule,
   TranslationKeys
 } from "./chunk-LMEEH3AJ.js";
-import {
-  Bind
-} from "./chunk-MLQGRGGO.js";
 import "./chunk-GOP36Q47.js";
 import {
   P,

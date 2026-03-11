@@ -12,6 +12,10 @@ import {
 } from "./chunk-RHA7RL5K.js";
 import "./chunk-YXZQJBKH.js";
 import {
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
+import {
   PARENT_INSTANCE
 } from "./chunk-YNJ5GKCH.js";
 import {
@@ -22,18 +26,14 @@ import {
   SharedModule
 } from "./chunk-LMEEH3AJ.js";
 import {
-  Bind,
-  BindModule
-} from "./chunk-MLQGRGGO.js";
+  NG_VALUE_ACCESSOR
+} from "./chunk-RZEKJVYA.js";
 import "./chunk-GOP36Q47.js";
 import {
   bt,
   s3 as s,
   vt
 } from "./chunk-UCHM6OXG.js";
-import {
-  NG_VALUE_ACCESSOR
-} from "./chunk-RZEKJVYA.js";
 import {
   CommonModule,
   NgClass,

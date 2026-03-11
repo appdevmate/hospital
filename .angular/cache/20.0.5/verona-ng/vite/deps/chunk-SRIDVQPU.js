@@ -7,6 +7,9 @@ import {
   zindexutils
 } from "./chunk-BB55NINM.js";
 import {
+  Bind
+} from "./chunk-MLQGRGGO.js";
+import {
   BaseComponent,
   PARENT_INSTANCE
 } from "./chunk-YNJ5GKCH.js";
@@ -18,9 +21,6 @@ import {
   PrimeTemplate,
   SharedModule
 } from "./chunk-LMEEH3AJ.js";
-import {
-  Bind
-} from "./chunk-MLQGRGGO.js";
 import {
   P,
   W,
@@ -1082,4 +1082,4 @@ var OverlayModule = class _OverlayModule {
 export {
   Overlay
 };
-//# sourceMappingURL=chunk-DFXHA2LV.js.map
+//# sourceMappingURL=chunk-SRIDVQPU.js.map

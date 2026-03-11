@@ -6,6 +6,10 @@ import {
   MinusIcon
 } from "./chunk-YXZQJBKH.js";
 import {
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
+import {
   PARENT_INSTANCE
 } from "./chunk-YNJ5GKCH.js";
 import {
@@ -16,17 +20,13 @@ import {
   SharedModule
 } from "./chunk-LMEEH3AJ.js";
 import {
-  Bind,
-  BindModule
-} from "./chunk-MLQGRGGO.js";
+  NG_VALUE_ACCESSOR,
+  NgControl
+} from "./chunk-RZEKJVYA.js";
 import {
   k,
   q
 } from "./chunk-UCHM6OXG.js";
-import {
-  NG_VALUE_ACCESSOR,
-  NgControl
-} from "./chunk-RZEKJVYA.js";
 import {
   CommonModule,
   NgClass,
@@ -732,4 +732,4 @@ export {
   Checkbox,
   CheckboxModule
 };
-//# sourceMappingURL=chunk-XTAYNXBZ.js.map
+//# sourceMappingURL=chunk-FK5NSSRY.js.map
