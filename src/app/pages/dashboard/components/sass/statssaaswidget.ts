@@ -72,7 +72,7 @@ import { forkJoin } from 'rxjs';
 import { catchError, of } from 'rxjs';
 import { DoctorsService } from '@/pages/service/doctors.service';
 import { PatientsService } from '@/pages/service/patients.service';
-import { AppointmentsService } from '@/services/appointments.service';
+import { AppointmentsService } from '@/pages/service/appointments.service';
 
 @Component({
     standalone: true,

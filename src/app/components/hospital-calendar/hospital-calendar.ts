@@ -6,7 +6,7 @@ import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { HospitalCalendarService, HospitalCalendar } from '../../services/hospital-calendar.service';
+import { HospitalCalendarService, HospitalCalendar } from '../../pages/service/hospital-calendar.service';
 import { DoctorsService } from '@/pages/service/doctors.service';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
@@ -17,7 +17,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { HelpersService } from '@/services/helpers-service';
+import { HelpersService } from '@/pages/service/helpers-service';
 import { DatePickerModule } from 'primeng/datepicker';
 
 @Component({

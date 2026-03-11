@@ -16,15 +16,15 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { DividerModule } from 'primeng/divider';
-import { PaymentsService, Payment, CreateUpdatePaymentRequest, PaymentItem } from '@/services/payments.service';
+import { PaymentsService, Payment, CreateUpdatePaymentRequest, PaymentItem } from '@/pages/service/payments.service';
 import { PatientsService, Patient } from '@/pages/service/patients.service';
-import { HelpersService } from '@/services/helpers-service';
+import { HelpersService } from '@/pages/service/helpers-service';
 import { GenericTableComponent } from '@/pages/uikit/generic-table';
 import { TableColumn, TableConfig } from '@/interfaces/tableplugin.interfaces';
 import { DoctorsService } from '@/pages/service/doctors.service';
 import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { AuthService } from '@/services/auth.service';
+import { AuthService } from '@/pages/service/auth.service';
 
 @Component({
     selector: 'app-invoices',

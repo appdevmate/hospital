@@ -18,7 +18,7 @@ import { FileUploadModule, FileUploadEvent } from 'primeng/fileupload';
 import { MessageService } from 'primeng/api';
 
 import { PatientsService, CreateUpdatePatientRequest } from '@/pages/service/patients.service';
-import { HelpersService } from '@/services/helpers-service';
+import { HelpersService } from '@/pages/service/helpers-service';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { Fluid } from 'primeng/fluid';

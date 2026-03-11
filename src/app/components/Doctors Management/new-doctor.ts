@@ -16,7 +16,7 @@ import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FileUploadModule, FileSelectEvent } from 'primeng/fileupload';
 
 import { DoctorsService, Department, Specialization, CreateUpdateDoctorRequest } from '@/pages/service/doctors.service';
-import { HelpersService } from '@/services/helpers-service';
+import { HelpersService } from '@/pages/service/helpers-service';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { Fluid } from 'primeng/fluid';
@@ -524,7 +524,7 @@ export class NewDoctor implements AfterViewInit {
         private fb: FormBuilder,
         private helpersService: HelpersService,
         private doctorService: DoctorsService,
-        public ref: DynamicDialogRef,
+        public ref: DynamicDialogRef
     ) {
         this.form = this.fb.group({
             name: ['', [Validators.required, Validators.minLength(3)]],

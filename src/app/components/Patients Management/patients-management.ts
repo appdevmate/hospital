@@ -14,7 +14,7 @@ import type { TableColumn, TableConfig, RowEditEvent, FilterControl } from '../.
 import type { Patient, GetPatientsPageOpts, CreateUpdatePatientRequest } from '../../pages/service/patients.service';
 import { PatientsService } from '../../pages/service/patients.service';
 import { ConfirmationService } from 'primeng/api';
-import { HelpersService } from '@/services/helpers-service';
+import { HelpersService } from '@/pages/service/helpers-service';
 import { NewPatient } from './new-patient';
 import { Router } from '@angular/router';
 import { EditPatient } from './edit-patient';

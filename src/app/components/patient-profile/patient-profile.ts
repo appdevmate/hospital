@@ -8,7 +8,7 @@ import { CardModule } from 'primeng/card';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { PatientsService, Patient } from '../../pages/service/patients.service';
-import { AppointmentsService, Appointment } from '../../services/appointments.service';
+import { AppointmentsService, Appointment } from '../../pages/service/appointments.service';
 import { forkJoin } from 'rxjs';
 import { catchError, of } from 'rxjs';
 

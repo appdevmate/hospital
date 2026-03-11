@@ -14,7 +14,7 @@ import type { TableColumn, TableConfig, RowEditEvent, FilterControl } from '../.
 import type { Patient as DoctorLike, GetPatientsPageOpts } from '../../pages/service/patients.service'; // reuse shape
 import { DoctorsService } from '@/pages/service/doctors.service';
 import { ConfirmationService } from 'primeng/api';
-import { HelpersService } from '@/services/helpers-service';
+import { HelpersService } from '@/pages/service/helpers-service';
 import { NewDoctor } from './new-doctor';
 
 const EditorType = {
@@ -310,7 +310,27 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
 
         const changedFields: any = {};
 
-        const allFields = ['name', 'dob', 'gender', 'phone', 'qid', 'licenseNumber', 'job', 'insurance', 'department', 'specialization', 'status', 'hiringDate', 'experienceYears', 'experienceMonths', 'notes', 'education', 'dutyDays', 'dutyStart', 'dutyEnd'];
+        const allFields = [
+            'name',
+            'dob',
+            'gender',
+            'phone',
+            'qid',
+            'licenseNumber',
+            'job',
+            'insurance',
+            'department',
+            'specialization',
+            'status',
+            'hiringDate',
+            'experienceYears',
+            'experienceMonths',
+            'notes',
+            'education',
+            'dutyDays',
+            'dutyStart',
+            'dutyEnd'
+        ];
 
         let hasChanges = false;
 
@@ -609,21 +629,19 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
                               )
                           );
 
-                request$
-                    .pipe(finalize(() => this._loading.set(false)))
-                    .subscribe((res) => {
-                        const successCount = res.filter(Boolean).length;
+                request$.pipe(finalize(() => this._loading.set(false))).subscribe((res) => {
+                    const successCount = res.filter(Boolean).length;
 
-                        this._selected.set([]);
+                    this._selected.set([]);
 
-                        if (successCount === res.length) {
-                            this.helpers.notifySuccess('Deleted');
-                        } else {
-                            this.helpers.notifyError('Delete failed', 'Some items could not be deleted');
-                        }
+                    if (successCount === res.length) {
+                        this.helpers.notifySuccess('Deleted');
+                    } else {
+                        this.helpers.notifyError('Delete failed', 'Some items could not be deleted');
+                    }
 
-                        this.fetch();
-                    });
+                    this.fetch();
+                });
             }
         });
     }

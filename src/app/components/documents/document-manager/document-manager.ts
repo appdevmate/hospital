@@ -18,7 +18,7 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { CardModule } from 'primeng/card';
 import { SelectModule } from 'primeng/select';
 import { ConfirmationService } from 'primeng/api';
-import { HelpersService } from '@/services/helpers-service';
+import { HelpersService } from '@/pages/service/helpers-service';
 
 @Component({
     selector: 'app-document-manager',
@@ -246,7 +246,7 @@ export class DocumentManagerComponent implements OnInit, AfterViewInit {
     constructor(
         public documentService: DocumentService,
         private helpers: HelpersService,
-        private confirmationService: ConfirmationService,
+        private confirmationService: ConfirmationService
     ) {
         const token = sessionStorage.getItem('accessToken') || '';
         if (this.isJwt(token)) {

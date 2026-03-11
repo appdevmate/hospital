@@ -1,28 +1,24 @@
-// config.ts
 export class Config {
-    // Static constants (change values as needed)
-    private static readonly baseUrl = 'https://xy829e3qw2.execute-api.us-east-1.amazonaws.com';
-    private static readonly environment = 'development'; // or 'development'
+    private static readonly tiryaqUrl = 'https://xy829e3qw2.execute-api.us-east-1.amazonaws.com';
+    private static readonly calendarUrl = 'https://od8gx8kld8.execute-api.us-east-1.amazonaws.com';
+    private static readonly environment = 'development';
 
-    /**
-     * Returns the base API URL.
-     */
-    static getBaseUrl(): string {
-        return this.baseUrl;
-    }
-
-    /**
-     * Returns the current environment.
-     */
     static getEnvironment(): string {
         return this.environment;
     }
 
-    /**
-     * Builds a complete endpoint URL.
-     * @param path Endpoint path without leading slash
-     */
+    /** Builds a Tiryaq API endpoint URL */
+    static getBaseUrl(): string {
+        return this.tiryaqUrl;
+    }
+
+    /** Builds a full Tiryaq API URL for a given path */
     static buildUrl(path: string): string {
-        return `${this.baseUrl}/${path}`;
+        return `${this.tiryaqUrl}/${path}`;
+    }
+
+    /** Builds a SaaS Calendar API endpoint URL */
+    static buildCalendarUrl(path: string): string {
+        return `${this.calendarUrl}/${path}`;
     }
 }
