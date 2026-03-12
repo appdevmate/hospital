@@ -1,11 +1,7 @@
 import {
   Tooltip,
   TooltipModule
-} from "./chunk-OLS4C5IP.js";
-import {
-  Badge,
-  BadgeModule
-} from "./chunk-T47RI6IU.js";
+} from "./chunk-NG66ICPZ.js";
 import "./chunk-S73J4WE3.js";
 import {
   zindexutils
@@ -20,6 +16,13 @@ import {
 } from "./chunk-RHA7RL5K.js";
 import "./chunk-YXZQJBKH.js";
 import {
+  Badge,
+  BadgeModule
+} from "./chunk-TENFQJBN.js";
+import {
+  Bind
+} from "./chunk-MLQGRGGO.js";
+import {
   BaseComponent,
   PARENT_INSTANCE
 } from "./chunk-YNJ5GKCH.js";
@@ -31,8 +34,10 @@ import {
   SharedModule
 } from "./chunk-LMEEH3AJ.js";
 import {
-  Bind
-} from "./chunk-MLQGRGGO.js";
+  RouterLink,
+  RouterLinkActive,
+  RouterModule
+} from "./chunk-Y35IOCZT.js";
 import "./chunk-GOP36Q47.js";
 import {
   J,
@@ -45,14 +50,9 @@ import {
   s3 as s2,
   z2 as z
 } from "./chunk-UCHM6OXG.js";
-import {
-  RouterLink,
-  RouterLinkActive,
-  RouterModule
-} from "./chunk-EFY5GPDX.js";
-import "./chunk-J5N23VJV.js";
-import "./chunk-3XGGEXNB.js";
+import "./chunk-SRUCT75H.js";
 import "./chunk-L26I7UJA.js";
+import "./chunk-3XGGEXNB.js";
 import {
   CommonModule,
   NgForOf,

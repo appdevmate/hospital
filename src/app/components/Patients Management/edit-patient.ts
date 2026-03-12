@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, AfterViewInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
@@ -7,40 +7,19 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { InputMaskModule } from 'primeng/inputmask';
 import { ButtonModule } from 'primeng/button';
-import { ToastModule } from 'primeng/toast';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { TextareaModule } from 'primeng/textarea';
-import { DialogModule } from 'primeng/dialog';
 import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
-import { MessageService } from 'primeng/api';
+import { Fluid } from 'primeng/fluid';
+
 import { PatientsService, CreateUpdatePatientRequest, Patient } from '@/pages/service/patients.service';
 import { HelpersService } from '@/pages/service/helpers-service';
-import { MultiSelectModule } from 'primeng/multiselect';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { Fluid } from 'primeng/fluid';
 
 @Component({
     selector: 'app-edit-patient',
     standalone: true,
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        FormsModule,
-        CardModule,
-        InputTextModule,
-        DatePickerModule,
-        AutoCompleteModule,
-        InputMaskModule,
-        ButtonModule,
-        ToastModule,
-        FloatLabelModule,
-        TextareaModule,
-        DialogModule,
-        MultiSelectModule,
-        InputNumberModule,
-        Fluid
-    ],
-    providers: [HelpersService, MessageService],
+    imports: [CommonModule, ReactiveFormsModule, FormsModule, CardModule, InputTextModule, DatePickerModule, AutoCompleteModule, InputMaskModule, ButtonModule, FloatLabelModule, TextareaModule, Fluid],
+    providers: [HelpersService],
     template: `
         <div class="patient-form-container">
             <p-card>
@@ -57,14 +36,16 @@ import { Fluid } from 'primeng/fluid';
                 <form [formGroup]="form" (ngSubmit)="submit()" class="form-content" autocomplete="off">
                     <!-- Personal Information -->
                     <div class="mb-6">
-                        <h4 class="devider text-lg font-semibold mb-4 text-gray-700 border-b pb-2">Personal Information</h4>
+                        <h4 class="section-title">Personal Information</h4>
 
                         <div class="mb-4">
                             <p-floatLabel variant="on">
                                 <input pInputText id="name" formControlName="name" autocomplete="off" [class.p-invalid]="invalid('name')" class="w-full" />
-                                <label for="name"><i class="pi pi-user"></i> Full Name</label>
+                                <label for="name"><i class="pi pi-user"></i> Full Name *</label>
                             </p-floatLabel>
-                            <small class="p-error" *ngIf="invalid('name')">Valid name is required</small>
+                            @if (invalid('name')) {
+                                <small class="p-error">Valid name is required</small>
+                            }
                         </div>
 
                         <div class="mb-4">
@@ -72,10 +53,12 @@ import { Fluid } from 'primeng/fluid';
                                 <input pInputText id="email" type="email" formControlName="email" autocomplete="off" class="w-full" [class.p-invalid]="invalid('email')" />
                                 <label for="email"><i class="pi pi-envelope"></i> Email Address</label>
                             </p-floatLabel>
-                            <small class="p-error" *ngIf="invalid('email')">Valid email is required</small>
+                            @if (invalid('email')) {
+                                <small class="p-error">Valid email is required</small>
+                            }
                         </div>
 
-                        <p-fluid class="flex flex-wrap gap-4 mb-6">
+                        <p-fluid class="flex flex-wrap gap-4 mb-4">
                             <div class="flex-1 md:flex-[2]">
                                 <p-floatLabel variant="on">
                                     <p-inputMask inputId="qid" formControlName="qid" mask="99999999999" [unmask]="true" [slotChar]="' '" inputmode="numeric" styleClass="w-full"></p-inputMask>
@@ -115,7 +98,7 @@ import { Fluid } from 'primeng/fluid';
                             </div>
                         </p-fluid>
 
-                        <p-fluid class="flex flex-wrap gap-4 mb-6">
+                        <p-fluid class="flex flex-wrap gap-4 mb-4">
                             <div class="flex-1 md:flex-[1.5]">
                                 <p-floatLabel variant="on">
                                     <p-datepicker inputId="dob" formControlName="dob" [showIcon]="true" dateFormat="dd/MM/yy" [maxDate]="today" [showOnFocus]="false" [readonlyInput]="true" class="w-full"></p-datepicker>
@@ -139,7 +122,7 @@ import { Fluid } from 'primeng/fluid';
 
                     <!-- Medical Information -->
                     <div class="mb-6">
-                        <h4 class="devider text-lg font-semibold mb-4 text-gray-700 border-b pb-2">Medical Information</h4>
+                        <h4 class="section-title">Medical Information</h4>
 
                         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
                             <div>
@@ -197,7 +180,7 @@ import { Fluid } from 'primeng/fluid';
 
                     <!-- Health Details -->
                     <div class="mb-6">
-                        <h4 class="devider text-lg font-semibold mb-4 text-gray-700 border-b pb-2">Health Details</h4>
+                        <h4 class="section-title">Health Details</h4>
 
                         <div class="mb-4">
                             <p-floatLabel variant="on">
@@ -228,31 +211,31 @@ import { Fluid } from 'primeng/fluid';
                         </div>
 
                         <div class="mb-4">
-                            <label class="block text-sm font-medium mb-2" style="color:#9CA3AF"> <i class="pi pi-exclamation-triangle mr-1" style="color:#EF4444"></i> Allergies </label>
+                            <label class="block text-sm font-medium mb-2 text-surface-400"> <i class="pi pi-exclamation-triangle mr-1 text-red-500"></i> Allergies </label>
                             <p-autoComplete formControlName="allergies" [multiple]="true" [typeahead]="false" [addOnBlur]="true" placeholder="Type and press Enter" styleClass="w-full" />
-                            <small style="color:#9CA3AF">Type each allergy and press Enter to add</small>
+                            <small class="text-surface-400">Type each allergy and press Enter to add</small>
                         </div>
 
                         <div class="mb-4">
-                            <label class="block text-sm font-medium mb-2" style="color:#9CA3AF"> <i class="pi pi-plus-circle mr-1" style="color:#3B82F6"></i> Current Medications </label>
+                            <label class="block text-sm font-medium mb-2 text-surface-400"> <i class="pi pi-plus-circle mr-1 text-blue-500"></i> Current Medications </label>
                             <p-autoComplete formControlName="medications" [multiple]="true" [typeahead]="false" [addOnBlur]="true" placeholder="Type and press Enter" styleClass="w-full" />
-                            <small style="color:#9CA3AF">Type each medication and press Enter to add</small>
+                            <small class="text-surface-400">Type each medication and press Enter to add</small>
                         </div>
                     </div>
 
                     <!-- Notes -->
                     <div class="mb-6">
-                        <h4 class="devider text-lg font-semibold mb-4 text-gray-700 border-b pb-2">Notes</h4>
+                        <h4 class="section-title">Notes</h4>
                         <div class="mb-4">
                             <p-floatLabel variant="on">
                                 <input pInputText id="notes" formControlName="notes" autocomplete="off" class="w-full" />
-                                <label for="notes"><i class="pi pi-file-edit"></i> Write your notes here...</label>
+                                <label for="notes"><i class="pi pi-file-edit"></i> Notes</label>
                             </p-floatLabel>
                         </div>
                     </div>
 
                     <!-- Actions -->
-                    <div class="devider flex justify-end gap-3 pt-4">
+                    <div class="flex justify-end gap-3 pt-4 border-t">
                         <p-button type="button" label="Close" icon="pi pi-times" severity="secondary" (click)="ref.close()"></p-button>
                         <p-button type="submit" label="Save Changes" icon="pi pi-save" [loading]="isSubmitting"></p-button>
                     </div>
@@ -262,8 +245,13 @@ import { Fluid } from 'primeng/fluid';
     `,
     styles: [
         `
-            .devider {
+            .section-title {
                 color: #10b981;
+                font-size: 1.1rem;
+                font-weight: 600;
+                margin-bottom: 1rem;
+                padding-bottom: 0.5rem;
+                border-bottom: 1px solid var(--p-surface-200);
             }
             .header {
                 background: var(--p-primary-50);
@@ -271,9 +259,15 @@ import { Fluid } from 'primeng/fluid';
         `
     ]
 })
-export class EditPatient implements OnInit, AfterViewInit, OnDestroy {
-    private messageService = inject(MessageService);
+export class EditPatient implements OnInit, AfterViewInit {
+    // ── Services ──────────────────────────────────────────────────────────
+    private fb = inject(FormBuilder);
+    private helpersService = inject(HelpersService);
+    private patientService = inject(PatientsService);
+    private dialogConfig = inject(DynamicDialogConfig);
+    ref = inject(DynamicDialogRef);
 
+    // ── State ─────────────────────────────────────────────────────────────
     form: FormGroup;
     today = new Date();
     isSubmitting = false;
@@ -291,13 +285,7 @@ export class EditPatient implements OnInit, AfterViewInit, OnDestroy {
     bloodGroupOptions: string[] = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
     filteredBloodGroupOptions: string[] = [];
 
-    constructor(
-        private fb: FormBuilder,
-        private helpersService: HelpersService,
-        private patientService: PatientsService,
-        public ref: DynamicDialogRef,
-        private config: DynamicDialogConfig
-    ) {
+    constructor() {
         this.form = this.fb.group({
             name: ['', [Validators.required, Validators.minLength(3)]],
             email: ['', [Validators.email]],
@@ -321,10 +309,8 @@ export class EditPatient implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.patient = this.config.data?.patient as Patient;
-        if (this.patient) {
-            this.populateForm(this.patient);
-        }
+        this.patient = this.dialogConfig.data?.patient as Patient;
+        if (this.patient) this.populateForm(this.patient);
     }
 
     ngAfterViewInit() {
@@ -334,17 +320,13 @@ export class EditPatient implements OnInit, AfterViewInit, OnDestroy {
         }, 0);
     }
 
-    ngOnDestroy() {}
-
+    // ── Form population ───────────────────────────────────────────────────
     private populateForm(p: Patient) {
-        // parse gender object back to value string
-        const genderVal = this.genderOptions.find((g) => g.value === p.gender) || p.gender || '';
-
         this.form.patchValue({
             name: p.name || '',
             email: p.email || '',
             dob: p.dob ? new Date(p.dob) : null,
-            gender: genderVal,
+            gender: p.gender || '',
             phone: p.phone || '',
             qid: p.qid || '',
             insurance: p.insurance || '',
@@ -362,6 +344,7 @@ export class EditPatient implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
+    // ── Autocomplete ──────────────────────────────────────────────────────
     filterGender(event: any): void {
         const q = String(event?.query || '').toLowerCase();
         this.filteredGenderOptions = this.genderOptions.filter((o) => o.label.toLowerCase().includes(q));
@@ -377,10 +360,10 @@ export class EditPatient implements OnInit, AfterViewInit, OnDestroy {
         this.filteredBloodGroupOptions = this.bloodGroupOptions.filter((x) => x.toLowerCase().includes(q));
     }
 
-    invalid(fieldName: string): boolean {
-        const c = this.form.get(fieldName);
-        if (!c || !(c.dirty || c.touched)) return false;
-        return c.invalid;
+    // ── Validation ────────────────────────────────────────────────────────
+    invalid(field: string): boolean {
+        const c = this.form.get(field);
+        return !!c && c.invalid && (c.dirty || c.touched);
     }
 
     getGenderIcon(gender: string): string {
@@ -393,20 +376,7 @@ export class EditPatient implements OnInit, AfterViewInit, OnDestroy {
         return map[gender] || 'pi-user';
     }
 
-    sanitizePhone(x: any): string | undefined {
-        if (typeof x !== 'string') return undefined;
-        const s = x.trim();
-        if (!s) return undefined;
-        let sign = '';
-        let body = s;
-        if (body.startsWith('+')) {
-            sign = '+';
-            body = body.slice(1);
-        }
-        const digits = body.replace(/\D+/g, '');
-        return digits ? sign + digits : undefined;
-    }
-
+    // ── Submit ────────────────────────────────────────────────────────────
     submit() {
         if (this.form.invalid) {
             this.form.markAllAsTouched();
@@ -422,17 +392,13 @@ export class EditPatient implements OnInit, AfterViewInit, OnDestroy {
         this.isSubmitting = true;
         const f = this.form.getRawValue();
         const lc = (x: any) => (typeof x === 'string' ? x.toLowerCase().trim() : (x ?? null));
-
-        // extract gender value if it's an object
-        const genderValue = typeof f.gender === 'object' && f.gender?.value ? f.gender.value : lc(f.gender);
-
-        const patientId = this.patient.PK.includes('#') ? this.patient.PK.split('#')[1] : this.patient.PK;
+        const id = this.patient.PK.includes('#') ? this.patient.PK.split('#')[1] : this.patient.PK;
 
         const payload: CreateUpdatePatientRequest = {
             name: lc(f.name) ?? '',
             email: lc(f.email) ?? '',
             dob: f.dob ? new Date(f.dob).toISOString().slice(0, 10) : '',
-            gender: genderValue ?? '',
+            gender: lc(f.gender) ?? '',
             phone: this.sanitizePhone(f.phone),
             qid: lc(f.qid),
             insurance: lc(f.insurance),
@@ -449,7 +415,7 @@ export class EditPatient implements OnInit, AfterViewInit, OnDestroy {
             bloodGroup: f.bloodGroup ? f.bloodGroup.trim() : null
         };
 
-        this.patientService.updatePatient(patientId, payload).subscribe({
+        this.patientService.updatePatient(id, payload).subscribe({
             next: (res: any) => {
                 this.isSubmitting = false;
                 this.helpersService.notifySuccess('Patient updated successfully');
@@ -457,8 +423,22 @@ export class EditPatient implements OnInit, AfterViewInit, OnDestroy {
             },
             error: (err) => {
                 this.isSubmitting = false;
+                if (err?.error?.message === 'Unauthorized') {
+                    this.helpersService.redirectToLogin();
+                    return;
+                }
                 this.helpersService.notifyError('Error', err?.error?.message || 'Failed to update patient');
             }
         });
+    }
+
+    // ── Private helpers ───────────────────────────────────────────────────
+    private sanitizePhone(x: any): string | undefined {
+        if (typeof x !== 'string') return undefined;
+        const s = x.trim();
+        if (!s) return undefined;
+        const sign = s.startsWith('+') ? '+' : '';
+        const digits = s.slice(sign ? 1 : 0).replace(/\D+/g, '');
+        return digits ? sign + digits : undefined;
     }
 }

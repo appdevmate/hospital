@@ -1,57 +1,57 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { TabsModule } from 'primeng/tabs';
 import { CardModule } from 'primeng/card';
-import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+
 import { PatientsService, Patient } from '../../pages/service/patients.service';
 import { AppointmentsService, Appointment } from '../../pages/service/appointments.service';
-import { forkJoin } from 'rxjs';
-import { catchError, of } from 'rxjs';
 
 @Component({
     selector: 'app-patient-profile',
     standalone: true,
-    imports: [CommonModule, RouterModule, ButtonModule, TagModule, TabsModule, CardModule, ToastModule],
-    providers: [MessageService],
+    imports: [CommonModule, RouterModule, ButtonModule, TagModule, TabsModule, CardModule],
     templateUrl: './patient-profile.html',
     styleUrl: './patient-profile.scss'
 })
 export class PatientProfileComponent implements OnInit {
+    private route = inject(ActivatedRoute);
+    private patientsService = inject(PatientsService);
+    private appointmentsService = inject(AppointmentsService);
+
     patient: Patient | null = null;
     appointments: Appointment[] = [];
     loading = true;
 
-    constructor(
-        private route: ActivatedRoute,
-        private patientsService: PatientsService,
-        private appointmentsService: AppointmentsService,
-        private messageService: MessageService,
-        private cd: ChangeDetectorRef
-    ) {}
-
     ngOnInit() {
         const id = this.route.snapshot.paramMap.get('id');
-        if (!id) return;
+        if (!id) {
+            this.loading = false;
+            return;
+        }
 
         forkJoin({
             patient: this.patientsService.getPatientById(id).pipe(catchError(() => of(null))),
             appointments: this.appointmentsService.getAppointments().pipe(catchError(() => of([])))
         }).subscribe(({ patient, appointments }) => {
-            console.log('patient response:', patient);
             this.patient = (patient as any)?.data || patient;
+
+            // PK is PATIENT#uuid — extract plain uuid to match appointment.patientId
             const patientPK = this.patient?.PK || '';
-            this.appointments = (appointments as Appointment[]).filter((a) => a.patientId === patientPK);
+            const patientId = patientPK.includes('#') ? patientPK.split('#')[1] : patientPK;
+            this.appointments = (appointments as Appointment[]).filter((a) => a.patientId === patientId);
+
             this.loading = false;
-            this.cd.detectChanges();
         });
     }
 
+    // ── Severity helpers ──────────────────────────────────────────────────
     getStatusSeverity(status: string): 'success' | 'warn' | 'danger' | 'secondary' | 'info' | 'contrast' {
-        const map: any = {
+        const map: Record<string, any> = {
             admitted: 'info',
             stable: 'success',
             'under treatment': 'warn',
@@ -63,10 +63,15 @@ export class PatientProfileComponent implements OnInit {
     }
 
     getApptStatusSeverity(status: string): 'success' | 'warn' | 'danger' | 'secondary' {
-        const map: any = { scheduled: 'warn', completed: 'success', cancelled: 'danger' };
+        const map: Record<string, any> = {
+            scheduled: 'warn',
+            completed: 'success',
+            cancelled: 'danger'
+        };
         return map[status] || 'secondary';
     }
 
+    // ── Helpers ───────────────────────────────────────────────────────────
     isArray(value: any): boolean {
         return Array.isArray(value);
     }

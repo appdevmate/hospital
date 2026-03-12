@@ -11,7 +11,7 @@ export const appRoutes: Routes = [
         component: AppLayout,
         canActivate: [authGuard],
         children: [
-            { path: '', data: { breadcrumb: 'Saas Dashboard' }, loadComponent: () => import('@/pages/dashboard/saasdashboard').then((c) => c.SaasDashboard) },
+            { path: '', data: { breadcrumb: 'Dashboard' }, loadComponent: () => import('@/components/dashboard/dashboard').then((c) => c.DashboardComponent) },
             { path: 'dashboard-sales', data: { breadcrumb: 'Sales Dashboard' }, loadComponent: () => import('@/pages/dashboard/salesdashboard').then((c) => c.SalesDashboard) },
             { path: 'uikit', data: { breadcrumb: 'UI Kit' }, loadChildren: () => import('@/pages/uikit/uikit.routes') },
             { path: 'documentation', data: { breadcrumb: 'Documentation' }, loadComponent: () => import('@/pages/documentation/documentation').then((c) => c.Documentation) },
@@ -61,8 +61,7 @@ export const appRoutes: Routes = [
                 loadComponent: () => import('@/components/notifications/notifications').then((m) => m.NotificationsComponent)
             },
             { path: 'user-profile', data: { breadcrumb: 'Profile' }, component: UserProfileComponent },
-            { path: '', redirectTo: 'doctors-management', pathMatch: 'full' },
-            { path: 'apps', data: { breadcrumb: 'Apps' }, loadChildren: () => import('@/apps/apps.routes') },
+{ path: 'apps', data: { breadcrumb: 'Apps' }, loadChildren: () => import('@/apps/apps.routes') },
             { path: 'ecommerce', data: { breadcrumb: 'E-Commerce' }, loadChildren: () => import('@/pages/ecommerce/ecommerce.routes') },
             { path: 'blocks', data: { breadcrumb: 'Prime Blocks' }, loadChildren: () => import('@/pages/blocks/blocks.routes') },
             { path: 'profile', data: { breadcrumb: 'User Management' }, loadChildren: () => import('@/pages/usermanagement/usermanagement.routes') }
