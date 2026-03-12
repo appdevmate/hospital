@@ -6,6 +6,7 @@ import { TagModule } from 'primeng/tag';
 import { CardModule } from 'primeng/card';
 import { TabsModule } from 'primeng/tabs';
 import { NotificationsService, Notification } from '@/pages/service/notifications.service';
+import { AuthService } from '@/pages/service/auth.service';
 
 @Component({
     selector: 'app-notifications',
@@ -183,6 +184,7 @@ export class NotificationsComponent implements OnInit {
     activeType: string | null = null;
     private notificationsService = inject(NotificationsService);
     private route = inject(ActivatedRoute);
+    private auth = inject(AuthService);
 
     ngOnInit() {
         this.activeType = this.route.snapshot.queryParamMap.get('type');
@@ -191,7 +193,7 @@ export class NotificationsComponent implements OnInit {
 
     load() {
         this.loading = true;
-        this.notificationsService.getNotifications().subscribe({
+        this.notificationsService.getNotifications(this.auth.isAdmin, this.auth.isDoctor ? this.auth.current.email : undefined).subscribe({
             next: (notifications) => {
                 this.notifications = notifications;
                 const todayN = notifications.find((n) => n.type === 'today');

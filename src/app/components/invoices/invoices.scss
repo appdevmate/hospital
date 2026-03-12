@@ -1,0 +1,95 @@
+.stat-card {
+    background: white;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    text-align: center;
+
+    .stat-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+    .stat-label {
+        font-size: 0.8rem;
+        color: #6b7280;
+        margin-top: 4px;
+    }
+}
+
+.form-section {
+    margin-bottom: 1rem;
+}
+
+.section-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #10b981;
+    margin: 0 0 0.75rem 0;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.mt-3 {
+    margin-top: 0.75rem;
+}
+
+.invoice-view {
+    padding: 0.5rem;
+}
+
+.inv-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+
+    .inv-number {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #111827;
+    }
+    .inv-date {
+        font-size: 0.85rem;
+        color: #6b7280;
+        margin-top: 4px;
+    }
+}
+
+.inv-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.inv-label {
+    display: block;
+    font-size: 0.75rem;
+    color: #9ca3af;
+    margin-bottom: 2px;
+}
+
+.inv-totals {
+    background: #f9fafb;
+    border-radius: 8px;
+    padding: 1rem;
+
+    .inv-total-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.25rem 0;
+        font-size: 0.95rem;
+
+        &.total {
+            font-weight: 700;
+            font-size: 1.05rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+        }
+    }
+}

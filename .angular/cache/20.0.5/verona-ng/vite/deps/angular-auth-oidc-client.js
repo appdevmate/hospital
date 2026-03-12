@@ -1,10 +1,11 @@
 import {
   Router
-} from "./chunk-EFY5GPDX.js";
+} from "./chunk-Y35IOCZT.js";
 import {
   toSignal
 } from "./chunk-QRYP7MHI.js";
-import "./chunk-J5N23VJV.js";
+import "./chunk-SRUCT75H.js";
+import "./chunk-L26I7UJA.js";
 import {
   HttpClient,
   HttpErrorResponse,
@@ -14,7 +15,6 @@ import {
   provideHttpClient,
   withInterceptorsFromDi
 } from "./chunk-3XGGEXNB.js";
-import "./chunk-L26I7UJA.js";
 import {
   CommonModule,
   isPlatformBrowser
@@ -39,10 +39,10 @@ import {
   ɵɵdefineInjectable,
   ɵɵdefineInjector
 } from "./chunk-LW34VNAR.js";
+import "./chunk-YVXMBCE5.js";
 import {
   forkJoin
 } from "./chunk-G6ECYYJH.js";
-import "./chunk-YVXMBCE5.js";
 import {
   BehaviorSubject,
   Observable,

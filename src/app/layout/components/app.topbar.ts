@@ -18,6 +18,7 @@ import { PopoverModule } from 'primeng/popover';
 import { TagModule } from 'primeng/tag';
 import { Router } from '@angular/router';
 import { NotificationsService, Notification } from '@/pages/service/notifications.service';
+import { AuthService } from '@/pages/service/auth.service';
 
 @Component({
     selector: '[app-topbar]',
@@ -250,6 +251,7 @@ export class AppTopbar implements OnInit {
     role = '';
     menu: MenuItem[] = [];
     notifications: Notification[] = [];
+    private auth = inject(AuthService);
 
     @ViewChild('searchinput') searchInput!: ElementRef;
     @ViewChild('menubutton') menuButton!: ElementRef;
@@ -291,7 +293,8 @@ export class AppTopbar implements OnInit {
     }
 
     loadNotifications() {
-        this.notificationsService.getNotifications().subscribe({
+        const doctorEmail = this.auth.isDoctor ? this.auth.current.email : undefined;
+        this.notificationsService.getNotifications(this.auth.isAdmin, doctorEmail).subscribe({
             next: (n: Notification[]) => (this.notifications = n),
             error: () => (this.notifications = [])
         });

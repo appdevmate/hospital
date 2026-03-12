@@ -1,11 +1,10 @@
 import {
+  Ripple
+} from "./chunk-OC77X5LN.js";
+import {
   Tooltip,
   TooltipModule
 } from "./chunk-NG66ICPZ.js";
-import {
-  Badge,
-  BadgeModule
-} from "./chunk-TENFQJBN.js";
 import {
   ConnectedOverlayScrollHandler,
   DomHandler
@@ -14,8 +13,9 @@ import {
   zindexutils
 } from "./chunk-BB55NINM.js";
 import {
-  Ripple
-} from "./chunk-OC77X5LN.js";
+  Badge,
+  BadgeModule
+} from "./chunk-TENFQJBN.js";
 import {
   Bind,
   BindModule
@@ -36,7 +36,7 @@ import {
   RouterLink,
   RouterLinkActive,
   RouterModule
-} from "./chunk-EFY5GPDX.js";
+} from "./chunk-Y35IOCZT.js";
 import "./chunk-GOP36Q47.js";
 import {
   D,
@@ -56,9 +56,9 @@ import {
 } from "./chunk-53DGU4C2.js";
 import {
   DomSanitizer
-} from "./chunk-J5N23VJV.js";
-import "./chunk-3XGGEXNB.js";
+} from "./chunk-SRUCT75H.js";
 import "./chunk-L26I7UJA.js";
+import "./chunk-3XGGEXNB.js";
 import {
   CommonModule,
   NgForOf,
@@ -137,8 +137,8 @@ import {
   ɵɵresetView,
   ɵɵrestoreView
 } from "./chunk-LW34VNAR.js";
-import "./chunk-G6ECYYJH.js";
 import "./chunk-YVXMBCE5.js";
+import "./chunk-G6ECYYJH.js";
 import "./chunk-RTGP7ALM.js";
 import "./chunk-4MWRP73S.js";
 

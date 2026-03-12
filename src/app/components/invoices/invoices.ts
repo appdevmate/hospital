@@ -1,10 +1,8 @@
-import { Component, OnInit, inject, signal, computed, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, inject, signal, computed, ViewChild, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
-import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -16,27 +14,34 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { DividerModule } from 'primeng/divider';
-import { PaymentsService, Payment, CreateUpdatePaymentRequest, PaymentItem } from '@/pages/service/payments.service';
+import { SelectModule } from 'primeng/select';
+
+import { PaymentsService, Payment, CreateUpdatePaymentRequest } from '@/pages/service/payments.service';
 import { PatientsService, Patient } from '@/pages/service/patients.service';
+import { DoctorsService } from '@/pages/service/doctors.service';
 import { HelpersService } from '@/pages/service/helpers-service';
+import { AuthService } from '@/pages/service/auth.service';
 import { GenericTableComponent } from '@/pages/uikit/generic-table';
 import { TableColumn, TableConfig } from '@/interfaces/tableplugin.interfaces';
-import { DoctorsService } from '@/pages/service/doctors.service';
-import { catchError, finalize } from 'rxjs/operators';
-import { of } from 'rxjs';
-import { AuthService } from '@/pages/service/auth.service';
+
+/** Status → PrimeNG severity map */
+const STATUS_SEVERITY: Record<string, string> = {
+    paid: 'success',
+    pending: 'warn',
+    partial: 'info',
+    cancelled: 'danger',
+    'health-insurance': 'secondary'
+};
 
 @Component({
     selector: 'app-invoices',
     standalone: true,
     imports: [
         CommonModule,
-        RouterModule,
         FormsModule,
         ReactiveFormsModule,
         ButtonModule,
         TagModule,
-        CardModule,
         DialogModule,
         InputTextModule,
         InputNumberModule,
@@ -47,330 +52,47 @@ import { AuthService } from '@/pages/service/auth.service';
         ToastModule,
         ConfirmDialogModule,
         DividerModule,
+        SelectModule,
         GenericTableComponent
     ],
     providers: [MessageService, ConfirmationService, HelpersService],
-    template: `
-        <p-toast />
-        <p-confirmDialog />
-
-        <div style="padding: 1.5rem;">
-            <!-- Header -->
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem;">
-                <div style="display:flex; align-items:center; gap:1rem;">
-                    <i class="pi pi-file-edit" style="font-size:1.5rem; color:#10b981;"></i>
-                    <h2 style="margin:0; font-size:1.4rem; font-weight:700;">Invoices & Payments</h2>
-                </div>
-            </div>
-
-            <!-- Stats -->
-            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr)); gap:1rem; margin-bottom:1.5rem;">
-                <div class="stat-card" *ngFor="let s of stats()">
-                    <div class="stat-value" [style.color]="s.color">{{ s.value }}</div>
-                    <div class="stat-label">{{ s.label }}</div>
-                </div>
-            </div>
-
-            <!-- Table -->
-            <app-generic-table [columns]="columns" [config]="config" [data]="filtered()" [loading]="loading()" [actionsTemplate]="rowActions" [toolbarStart]="tbStart" dataKey="paymentId" [customTemplates]="customTemplates()">
-                <ng-template #statusTemplate let-value="value">
-                    <p-tag [value]="value || '' | titlecase" [severity]="getStatusSeverity(value)"></p-tag>
-                </ng-template>
-            </app-generic-table>
-
-            <ng-template #tbStart>
-                <p-button label="New Invoice" icon="pi pi-plus" (onClick)="openCreate()"></p-button>
-            </ng-template>
-
-            <ng-template #rowActions let-row>
-                <p-button icon="pi pi-eye" text severity="info" (onClick)="viewInvoice(row)" pTooltip="View"></p-button>
-                <p-button icon="pi pi-pencil" text (onClick)="openEdit(row)" pTooltip="Edit"></p-button>
-                <p-button icon="pi pi-trash" text severity="danger" (onClick)="confirmDelete(row)" pTooltip="Delete"></p-button>
-            </ng-template>
-
-            <ng-template #statusTemplate let-row>
-                <p-tag [value]="row.status | titlecase" [severity]="getStatusSeverity(row.status)" />
-            </ng-template>
-        </div>
-
-        <!-- Create/Edit Dialog -->
-        <p-dialog [(visible)]="showForm" [modal]="true" [style]="{ width: '750px' }" [closable]="true" [header]="editingPayment ? 'Edit Invoice' : 'New Invoice'" [draggable]="false">
-            <form [formGroup]="form" (ngSubmit)="submit()">
-                <!-- Patient & Doctor -->
-                <div class="form-section">
-                    <h4 class="section-title">Basic Info</h4>
-                    <div class="form-grid">
-                        <p-floatLabel variant="on">
-                            <p-autoComplete
-                                inputId="patient"
-                                formControlName="patientObj"
-                                [suggestions]="filteredPatientNames"
-                                (completeMethod)="searchPatient($event)"
-                                [dropdown]="true"
-                                styleClass="w-full"
-                                (onSelect)="onPatientSelect($event)"
-                                (onClear)="form.patchValue({ patientId: '', patientName: '' })"
-                            >
-                            </p-autoComplete>
-                            <label for="patient">Patient</label>
-                        </p-floatLabel>
-                        <p-floatLabel variant="on" *ngIf="auth.isAdmin">
-                            <p-autoComplete inputId="doctorName" formControlName="doctorName" [suggestions]="filteredDoctorNames" (completeMethod)="searchDoctor($event)" [dropdown]="true" styleClass="w-full" (onSelect)="onDoctorSelect($event)">
-                            </p-autoComplete>
-                            <label for="doctorName">Doctor</label>
-                        </p-floatLabel>
-                    </div>
-                    <div class="form-grid mt-3">
-                        <p-floatLabel variant="on">
-                            <input pInputText id="invoiceNumber" formControlName="invoiceNumber" class="w-full" />
-                            <label for="invoiceNumber">Invoice Number</label>
-                        </p-floatLabel>
-                        <p-floatLabel variant="on">
-                            <p-datepicker inputId="dueDate" formControlName="dueDate" dateFormat="yy-mm-dd" [showIcon]="true" styleClass="w-full"></p-datepicker>
-                            <label for="dueDate">Due Date</label>
-                        </p-floatLabel>
-                    </div>
-                </div>
-
-                <p-divider />
-
-                <!-- Items -->
-                <div class="form-section">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
-                        <h4 class="section-title" style="margin:0;">Items</h4>
-                        <p-button label="Add Item" icon="pi pi-plus" size="small" text (onClick)="addItem()"></p-button>
-                    </div>
-                    <div formArrayName="items">
-                        <div *ngFor="let item of itemsArray.controls; let i = index" [formGroupName]="i" style="display:grid; grid-template-columns:2fr 1fr 1fr 1fr auto; gap:0.5rem; align-items:center; margin-bottom:0.5rem;">
-                            <input pInputText formControlName="description" placeholder="Description" class="w-full" />
-                            <p-inputNumber formControlName="quantity" placeholder="Qty" [min]="1" styleClass="w-full"></p-inputNumber>
-                            <p-inputNumber formControlName="unitPrice" placeholder="Price" [minFractionDigits]="2" styleClass="w-full" (onInput)="recalcItem(i)"></p-inputNumber>
-                            <input pInputText [value]="'QAR ' + getItemTotal(i)" readonly class="w-full" style="background:#F9FAFB;" />
-                            <p-button icon="pi pi-times" text severity="danger" (onClick)="removeItem(i)"></p-button>
-                        </div>
-                    </div>
-                </div>
-
-                <p-divider />
-
-                <!-- Amounts -->
-                <div class="form-section">
-                    <h4 class="section-title">Payment Details</h4>
-                    <div class="form-grid">
-                        <p-floatLabel variant="on">
-                            <p-inputNumber inputId="amount" formControlName="amount" [minFractionDigits]="2" styleClass="w-full" (onInput)="recalcOwes()"></p-inputNumber>
-                            <label for="amount">Total Amount (QAR)</label>
-                        </p-floatLabel>
-                        <p-floatLabel variant="on">
-                            <p-floatLabel variant="on">
-                                <p-autoComplete inputId="status" formControlName="status" [suggestions]="filteredStatuses" (completeMethod)="filterStatuses($event)" [dropdown]="true" [forceSelection]="true" styleClass="w-full"> </p-autoComplete>
-                                <label for="status">Status</label>
-                            </p-floatLabel>
-                            <label for="status">Status</label>
-                        </p-floatLabel>
-                    </div>
-                    <div class="form-grid mt-3">
-                        <p-floatLabel variant="on">
-                            <input pInputText inputId="insuranceProvider" formControlName="insuranceProvider" class="w-full" />
-                            <label for="insuranceProvider">Insurance Provider</label>
-                        </p-floatLabel>
-                        <p-floatLabel variant="on">
-                            <p-inputNumber inputId="insuranceCoverage" formControlName="insuranceCoverage" [min]="0" [max]="100" suffix="%" styleClass="w-full" (onInput)="recalcOwes()"></p-inputNumber>
-                            <label for="insuranceCoverage">Insurance Coverage %</label>
-                        </p-floatLabel>
-                    </div>
-                    <div class="form-grid mt-3">
-                        <p-floatLabel variant="on">
-                            <p-inputNumber inputId="insuranceAmount" formControlName="insuranceAmount" [minFractionDigits]="2" styleClass="w-full" [readonly]="true"></p-inputNumber>
-                            <label for="insuranceAmount">Insurance Pays (QAR)</label>
-                        </p-floatLabel>
-                        <p-floatLabel variant="on">
-                            <p-inputNumber inputId="patientOwes" formControlName="patientOwes" [minFractionDigits]="2" styleClass="w-full" [readonly]="true"></p-inputNumber>
-                            <label for="patientOwes">Patient Owes (QAR)</label>
-                        </p-floatLabel>
-                    </div>
-                </div>
-
-                <p-divider />
-
-                <!-- Notes -->
-                <div class="form-section">
-                    <p-floatLabel variant="on">
-                        <textarea pTextarea inputId="notes" formControlName="notes" class="w-full" rows="3"></textarea>
-                        <label for="notes">Notes</label>
-                    </p-floatLabel>
-                </div>
-
-                <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">
-                    <p-button type="button" label="Cancel" severity="secondary" (onClick)="showForm = false"></p-button>
-                    <p-button type="submit" [label]="editingPayment ? 'Save Changes' : 'Create Invoice'" icon="pi pi-save" [loading]="submitting"></p-button>
-                </div>
-            </form>
-        </p-dialog>
-
-        <!-- View Dialog -->
-        <p-dialog [(visible)]="showView" [modal]="true" [style]="{ width: '600px' }" header="Invoice Details" [draggable]="false">
-            <div *ngIf="viewingPayment" class="invoice-view">
-                <div class="inv-header">
-                    <div>
-                        <div class="inv-number">{{ viewingPayment.invoiceNumber }}</div>
-                        <div class="inv-date">Created: {{ viewingPayment.createdAt | date: 'mediumDate' }}</div>
-                    </div>
-                    <p-tag [value]="viewingPayment.status | titlecase" [severity]="getStatusSeverity(viewingPayment.status)" styleClass="text-lg" />
-                </div>
-
-                <div class="inv-grid">
-                    <div>
-                        <span class="inv-label">Patient</span><span>{{ viewingPayment.patientName | titlecase }}</span>
-                    </div>
-                    <div>
-                        <span class="inv-label">Doctor</span><span>{{ viewingPayment.doctorName | titlecase }}</span>
-                    </div>
-                    <div>
-                        <span class="inv-label">Due Date</span><span>{{ viewingPayment.dueDate || '—' }}</span>
-                    </div>
-                    <div>
-                        <span class="inv-label">Payment Type</span><span>{{ viewingPayment.paymentType || '—' }}</span>
-                    </div>
-                </div>
-
-                <p-divider />
-
-                <div *ngIf="viewingPayment.items && viewingPayment.items.length > 0">
-                    <h4 style="margin:0 0 0.75rem 0;">Items</h4>
-                    <div style="border:1px solid #E5E7EB; border-radius:8px; overflow:hidden;">
-                        <div style="display:grid; grid-template-columns:2fr 1fr 1fr 1fr; background:#F9FAFB; padding:0.5rem 1rem; font-weight:600; font-size:0.85rem; color:#6B7280;">
-                            <span>Description</span><span>Qty</span><span>Unit Price</span><span>Total</span>
-                        </div>
-                        <div *ngFor="let item of viewingPayment.items; let i = index" style="display:grid; grid-template-columns:2fr 1fr 1fr 1fr; padding:0.5rem 1rem; font-size:0.9rem;" [style.background]="i % 2 === 0 ? 'white' : '#F9FAFB'">
-                            <span>{{ item.description }}</span>
-                            <span>{{ item.quantity }}</span>
-                            <span>QAR {{ item.unitPrice | number: '1.2-2' }}</span>
-                            <span>QAR {{ item.total | number: '1.2-2' }}</span>
-                        </div>
-                    </div>
-                    <p-divider />
-                </div>
-
-                <div class="inv-totals">
-                    <div class="inv-total-row">
-                        <span>Total Amount</span><span>QAR {{ viewingPayment.amount | number: '1.2-2' }}</span>
-                    </div>
-                    <div class="inv-total-row" *ngIf="viewingPayment.insuranceProvider">
-                        <span>Insurance ({{ viewingPayment.insuranceProvider }} {{ viewingPayment.insuranceCoverage }}%)</span>
-                        <span>- QAR {{ viewingPayment.insuranceAmount | number: '1.2-2' }}</span>
-                    </div>
-                    <div class="inv-total-row total">
-                        <span>Patient Owes</span><span>QAR {{ viewingPayment.patientOwes | number: '1.2-2' }}</span>
-                    </div>
-                </div>
-
-                <div *ngIf="viewingPayment.notes" style="margin-top:1rem; color:#6B7280; font-size:0.9rem;"><strong>Notes:</strong> {{ viewingPayment.notes }}</div>
-            </div>
-        </p-dialog>
-    `,
-    styles: [
-        `
-            .stat-card {
-                background: white;
-                border-radius: 10px;
-                padding: 1rem 1.25rem;
-                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-                text-align: center;
-            }
-            .stat-value {
-                font-size: 1.5rem;
-                font-weight: 700;
-            }
-            .stat-label {
-                font-size: 0.8rem;
-                color: #6b7280;
-                margin-top: 4px;
-            }
-
-            .form-section {
-                margin-bottom: 1rem;
-            }
-            .section-title {
-                font-size: 0.95rem;
-                font-weight: 700;
-                color: #10b981;
-                margin: 0 0 0.75rem 0;
-            }
-            .form-grid {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 1rem;
-            }
-            .mt-3 {
-                margin-top: 0.75rem;
-            }
-
-            .invoice-view {
-                padding: 0.5rem;
-            }
-            .inv-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: flex-start;
-                margin-bottom: 1rem;
-            }
-            .inv-number {
-                font-size: 1.2rem;
-                font-weight: 700;
-                color: #111827;
-            }
-            .inv-date {
-                font-size: 0.85rem;
-                color: #6b7280;
-                margin-top: 4px;
-            }
-            .inv-grid {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 0.75rem;
-                margin-bottom: 1rem;
-            }
-            .inv-label {
-                display: block;
-                font-size: 0.75rem;
-                color: #9ca3af;
-                margin-bottom: 2px;
-            }
-            .inv-totals {
-                background: #f9fafb;
-                border-radius: 8px;
-                padding: 1rem;
-            }
-            .inv-total-row {
-                display: flex;
-                justify-content: space-between;
-                padding: 0.25rem 0;
-                font-size: 0.95rem;
-            }
-            .inv-total-row.total {
-                font-weight: 700;
-                font-size: 1.05rem;
-                border-top: 1px solid #e5e7eb;
-                margin-top: 0.5rem;
-                padding-top: 0.5rem;
-            }
-        `
-    ]
+    templateUrl: './invoices.html',
+    styleUrl: './invoices.scss'
 })
-export class InvoicesComponent implements OnInit {
+export class InvoicesComponent implements OnInit, AfterViewInit {
+    @ViewChild('statusTemplate') statusTemplateTpl!: TemplateRef<any>;
+
+    // ── Services ─────────────────────────────────────────────────────────────
     private paymentsService = inject(PaymentsService);
     private patientsService = inject(PatientsService);
+    private doctorsService = inject(DoctorsService);
     private helpers = inject(HelpersService);
     private fb = inject(FormBuilder);
     private confirmationService = inject(ConfirmationService);
-    filteredPatientNames: string[] = [];
-    private doctorsService = inject(DoctorsService);
-    auth = inject(AuthService);
-    @ViewChild('statusTemplate') statusTemplateTpl!: TemplateRef<any>;
+    auth = inject(AuthService); // public — used in template
 
+    // ── State signals ─────────────────────────────────────────────────────────
+    _allInvoices = signal<Payment[]>([]);
+    private _patients = signal<Patient[]>([]);
+    private _doctors = signal<any[]>([]);
+    loading = signal(false);
+    customTemplates = signal<Record<string, any>>({});
+
+    // ── Dialog state ──────────────────────────────────────────────────────────
+    submitting = false;
+    showForm = false;
+    showView = false;
+    editingPayment: Payment | null = null;
+    viewingPayment: Payment | null = null;
+
+    // ── Autocomplete suggestions ──────────────────────────────────────────────
+    filteredPatientNames: string[] = [];
+    filteredDoctorNames: string[] = [];
     filteredStatuses: string[] = [];
 
+    statusOptions = ['pending', 'paid', 'partial', 'cancelled', 'health-insurance'];
+
+    // ── Table config ──────────────────────────────────────────────────────────
     columns: TableColumn[] = [
         { field: 'invoiceNumber', header: 'Invoice #', sortable: true, filterable: true, width: '130px' },
         { field: 'patientName', header: 'Patient', sortable: true, filterable: true, pipe: 'titlecase' },
@@ -398,23 +120,23 @@ export class InvoicesComponent implements OnInit {
         showColumnPicker: true
     };
 
-    customTemplates = signal<Record<string, any>>({});
+    // ── Computed ──────────────────────────────────────────────────────────────
 
-    _allInvoices = signal<Payment[]>([]);
-    _patients = signal<Patient[]>([]);
-    loading = signal(false);
-    submitting = false;
-    showForm = false;
-    showView = false;
-    editingPayment: Payment | null = null;
-    viewingPayment: Payment | null = null;
-    filterStatus: string | null = null;
-    filterPatient: string | null = null;
-    _doctors = signal<any[]>([]);
-    filteredDoctorNames: string[] = [];
+    /** Stats cards above table */
+    stats = computed(() => {
+        const all = this._allInvoices();
+        const total = all.reduce((s, i) => s + (i.amount || 0), 0);
+        const owes = all.reduce((s, i) => s + (i.patientOwes || 0), 0);
+        return [
+            { label: 'Total Invoices', value: all.length, color: '#6366F1' },
+            { label: 'Total Amount', value: `QAR ${total.toFixed(0)}`, color: '#10B981' },
+            { label: 'Pending', value: all.filter((i) => i.status === 'pending').length, color: '#F59E0B' },
+            { label: 'Paid', value: all.filter((i) => i.status === 'paid').length, color: '#10B981' },
+            { label: 'Patient Owes', value: `QAR ${owes.toFixed(0)}`, color: '#EF4444' }
+        ];
+    });
 
-    statusOptions = ['pending', 'paid', 'partial', 'cancelled', 'health-insurance'];
-
+    // ── Reactive Form ─────────────────────────────────────────────────────────
     form: FormGroup = this.fb.group({
         patientObj: [null],
         patientId: ['', Validators.required],
@@ -436,111 +158,46 @@ export class InvoicesComponent implements OnInit {
         return this.form.get('items') as FormArray;
     }
 
-    patientOptions = computed(() =>
-        this._patients().map((p) => ({
-            label: p.name,
-            value: p.PK.includes('#') ? p.PK.split('#')[1] : p.PK
-        }))
-    );
-
-    filtered = computed(() => {
-        let list = this._allInvoices();
-        if (this.filterStatus) list = list.filter((i) => i.status === this.filterStatus);
-        if (this.filterPatient) list = list.filter((i) => i.patientId === this.filterPatient);
-        return list;
-    });
-
-    stats = computed(() => {
-        const all = this._allInvoices();
-        const total = all.reduce((s, i) => s + (i.amount || 0), 0);
-        const owes = all.reduce((s, i) => s + (i.patientOwes || 0), 0);
-        return [
-            { label: 'Total Invoices', value: all.length, color: '#6366F1' },
-            { label: 'Total Amount', value: `QAR ${total.toFixed(0)}`, color: '#10B981' },
-            { label: 'Pending', value: all.filter((i) => i.status === 'pending').length, color: '#F59E0B' },
-            { label: 'Paid', value: all.filter((i) => i.status === 'paid').length, color: '#10B981' },
-            { label: 'Patient Owes', value: `QAR ${owes.toFixed(0)}`, color: '#EF4444' }
-        ];
-    });
-
+    // ── Lifecycle ─────────────────────────────────────────────────────────────
     ngOnInit() {
-        this.loadDoctors();
-        this.loadPatients();
+        this.auth.invalidate();
+        console.log('isAdmin:', this.auth.isAdmin, 'isDoctor:', this.auth.isDoctor, 'role:', this.auth.current.role);
+        if (this.auth.isAdmin) {
+            this.loadReferenceData();
+        }
+        this.loadInvoices();
     }
 
     ngAfterViewInit() {
         this.customTemplates.set({ status: this.statusTemplateTpl });
     }
 
-    loadDoctors() {
+    // ── Data loading ──────────────────────────────────────────────────────────
+
+    /** Load doctors and patients for dropdowns */
+    loadReferenceData() {
         this.doctorsService.getDoctorsPage({ pageSize: 200 }).subscribe({
-            next: (res) => this._doctors.set(res.data || []),
-            error: () => {}
+            next: (res) => this._doctors.set(res.data || [])
+        });
+        this.patientsService.getPatientsPage({ pageSize: 200 }).subscribe({
+            next: (res) => this._patients.set(res.data || [])
         });
     }
 
-    loadPatients() {
+    /** Single request to GET /invoices — filtered by doctorEmail for doctors */
+    loadInvoices() {
         this.loading.set(true);
-        this.patientsService.getPatientsPage({ pageSize: 200 }).subscribe({
+        const doctorEmail = this.auth.isDoctor ? this.auth.current.email : undefined;
+        this.paymentsService.getAllInvoices(doctorEmail).subscribe({
             next: (res) => {
-                this._patients.set(res.data);
-                this.loadAllInvoices(res.data);
+                this._allInvoices.set(res.data || []);
+                this.loading.set(false);
             },
             error: () => this.loading.set(false)
         });
     }
 
-    loadAllInvoices(patients: Patient[]) {
-        if (patients.length === 0) {
-            this.loading.set(false);
-            return;
-        }
-        const all: Payment[] = [];
-        let done = 0;
-        const doctorEmail = this.auth.isDoctor ? this.auth.current.email : undefined;
-        console.log('isDoctor:', this.auth.isDoctor, 'isAdmin:', this.auth.isAdmin, 'role:', this.auth.current.role);
-        patients.forEach((p) => {
-            const id = p.PK.includes('#') ? p.PK.split('#')[1] : p.PK;
-            this.paymentsService
-                .getPayments(id, doctorEmail)
-                .pipe(
-                    catchError(() => of({ data: [], count: 0 })),
-                    finalize(() => {
-                        done++;
-                        if (done === patients.length) {
-                            this._allInvoices.set(all);
-                            this.loading.set(false);
-                        }
-                    })
-                )
-                .subscribe({
-                    next: (res) => all.push(...(res.data || []))
-                });
-        });
-    }
-
-    applyFilter() {}
-    clearFilter() {
-        this.filterStatus = null;
-        this.filterPatient = null;
-    }
-
-    searchPatient(event: any) {
-        const q = (event.query || '').toLowerCase();
-        this.filteredPatientNames = this._patients()
-            .filter((p) => p.name.toLowerCase().includes(q))
-            .map((p) => p.name);
-    }
-
-    onPatientSelect(event: any) {
-        const name = event.value as string;
-        const patient = this._patients().find((p) => p.name === name);
-        if (patient) {
-            const id = patient.PK.includes('#') ? patient.PK.split('#')[1] : patient.PK;
-            this.form.patchValue({ patientId: id, patientName: name });
-        }
-    }
-
+    // ── Create ────────────────────────────────────────────────────────────────
     openCreate() {
         this.editingPayment = null;
         this.form.reset({ status: 'pending', insuranceCoverage: 0, insuranceAmount: 0, patientOwes: 0, amount: 0 });
@@ -548,9 +205,9 @@ export class InvoicesComponent implements OnInit {
         this.showForm = true;
     }
 
+    // ── Edit ──────────────────────────────────────────────────────────────────
     openEdit(p: Payment) {
         this.editingPayment = p;
-        const patient = this._patients().find((pt) => pt.PK.includes(p.patientId));
         this.form.patchValue({
             patientObj: p.patientName || '',
             patientId: p.patientId,
@@ -580,11 +237,13 @@ export class InvoicesComponent implements OnInit {
         this.showForm = true;
     }
 
+    // ── View ──────────────────────────────────────────────────────────────────
     viewInvoice(p: Payment) {
         this.viewingPayment = p;
         this.showView = true;
     }
 
+    // ── Items ─────────────────────────────────────────────────────────────────
     addItem() {
         this.itemsArray.push(
             this.fb.group({
@@ -627,6 +286,7 @@ export class InvoicesComponent implements OnInit {
         return ((g.value.quantity || 0) * (g.value.unitPrice || 0)).toFixed(2);
     }
 
+    // ── Submit ────────────────────────────────────────────────────────────────
     submit() {
         if (this.form.invalid) {
             this.form.markAllAsTouched();
@@ -634,14 +294,16 @@ export class InvoicesComponent implements OnInit {
         }
         const f = this.form.getRawValue();
         if (!f.patientId) {
-            this.helpers.notifyError('Error', 'Please select a patient');
+            this.helpers.notifyError('Error', 'Please select a patient.');
             return;
         }
 
         this.submitting = true;
+
         const payload: CreateUpdatePaymentRequest = {
             invoiceNumber: f.invoiceNumber || `INV-${Date.now()}`,
             patientName: f.patientName,
+            // Doctors use their own email; admins pick from dropdown
             doctorEmail: this.auth.isDoctor
                 ? this.auth.current.email
                 : this._doctors()
@@ -665,12 +327,12 @@ export class InvoicesComponent implements OnInit {
                 next: () => {
                     this.submitting = false;
                     this.showForm = false;
-                    this.helpers.notifySuccess('Invoice updated');
-                    this.loadPatients();
+                    this.helpers.notifySuccess('Invoice updated.');
+                    this.loadInvoices();
                 },
                 error: (e) => {
                     this.submitting = false;
-                    this.helpers.notifyError('Error', e?.error?.message || 'Failed');
+                    this.helpers.notifyError('Error', e?.error?.message || 'Failed.');
                 }
             });
         } else {
@@ -678,48 +340,51 @@ export class InvoicesComponent implements OnInit {
                 next: () => {
                     this.submitting = false;
                     this.showForm = false;
-                    this.helpers.notifySuccess('Invoice created');
-                    this.loadPatients();
+                    this.helpers.notifySuccess('Invoice created.');
+                    this.loadInvoices();
                 },
                 error: (e) => {
                     this.submitting = false;
-                    this.helpers.notifyError('Error', e?.error?.message || 'Failed');
+                    this.helpers.notifyError('Error', e?.error?.message || 'Failed.');
                 }
             });
         }
     }
 
+    // ── Delete ────────────────────────────────────────────────────────────────
     confirmDelete(p: Payment) {
         this.confirmationService.confirm({
             message: `Delete invoice ${p.invoiceNumber}?`,
             header: 'Confirm Delete',
             icon: 'pi pi-exclamation-triangle',
+            rejectButtonProps: { label: 'No', severity: 'secondary', variant: 'text' },
+            acceptButtonProps: { label: 'Yes', severity: 'danger' },
             accept: () => {
                 this.paymentsService.deletePayment(p.patientId, p.paymentId).subscribe({
                     next: () => {
-                        this.helpers.notifySuccess('Invoice deleted');
-                        this.loadPatients();
+                        this.helpers.notifySuccess('Invoice deleted.');
+                        this.loadInvoices();
                     },
-                    error: (e) => this.helpers.notifyError('Error', e?.error?.message || 'Failed')
+                    error: (e) => this.helpers.notifyError('Error', e?.error?.message || 'Failed.')
                 });
             }
         });
     }
 
-    getStatusSeverity(status: string): any {
-        const map: any = {
-            paid: 'success',
-            pending: 'warn',
-            partial: 'info',
-            cancelled: 'danger',
-            'health-insurance': 'secondary'
-        };
-        return map[status] || 'secondary';
+    // ── Autocomplete ──────────────────────────────────────────────────────────
+    searchPatient(event: any) {
+        const q = (event.query || '').toLowerCase();
+        this.filteredPatientNames = this._patients()
+            .filter((p) => p.name.toLowerCase().includes(q))
+            .map((p) => p.name);
     }
 
-    filterStatuses(event: any) {
-        const q = (event.query || '').toLowerCase();
-        this.filteredStatuses = this.statusOptions.filter((s) => s.includes(q));
+    onPatientSelect(event: any) {
+        const patient = this._patients().find((p) => p.name === event.value);
+        if (patient) {
+            const id = patient.PK.includes('#') ? patient.PK.split('#')[1] : patient.PK;
+            this.form.patchValue({ patientId: id, patientName: patient.name });
+        }
     }
 
     searchDoctor(event: any) {
@@ -730,10 +395,16 @@ export class InvoicesComponent implements OnInit {
     }
 
     onDoctorSelect(event: any) {
-        const name = event.value as string;
-        const doctor = this._doctors().find((d) => d.name === name);
-        if (doctor) {
-            this.form.patchValue({ doctorName: name });
-        }
+        this.form.patchValue({ doctorName: event.value });
+    }
+
+    filterStatuses(event: any) {
+        const q = (event.query || '').toLowerCase();
+        this.filteredStatuses = this.statusOptions.filter((s) => s.includes(q));
+    }
+
+    // ── Helpers ───────────────────────────────────────────────────────────────
+    getStatusSeverity(status: string): any {
+        return STATUS_SEVERITY[status] || 'secondary';
     }
 }

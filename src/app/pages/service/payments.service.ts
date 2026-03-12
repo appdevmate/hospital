@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Config } from '@/pages/service/config';
 import { map } from 'rxjs/operators';
+import { Config } from './config';
 
 export interface PaymentItem {
     description: string;
@@ -20,6 +20,7 @@ export interface Payment {
     patientName?: string;
     doctorId?: string;
     doctorName?: string;
+    doctorEmail?: string;
     appointmentId?: string;
     items?: PaymentItem[];
     amount: number;
@@ -45,13 +46,20 @@ export interface CreateUpdatePaymentRequest {
     doctorName?: string;
     appointmentId?: string;
     items?: PaymentItem[];
-    insuranceProvider?: string;
+    insuranceProvider?: string | null;
     insuranceCoverage?: number;
     insuranceAmount?: number;
     patientOwes?: number;
     paymentType?: string;
     dueDate?: string;
-    notes?: string;
+    notes?: string | null;
+}
+
+export interface GetInvoicesResponse {
+    data: Payment[];
+    count: number;
+    lastKey?: string | null;
+    hasMore?: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -63,14 +71,18 @@ export class PaymentsService {
         return new HttpHeaders({ Authorization: `Bearer ${jwt}` });
     }
 
-    private patientUrl(patientId: string): string {
-        return `${Config.getBaseUrl()}/patients/${encodeURIComponent(patientId)}/payments`;
+    /** GET /invoices — single request for all invoices (admin or doctor filtered) */
+    getAllInvoices(doctorEmail?: string): Observable<GetInvoicesResponse> {
+        let params = new HttpParams();
+        if (doctorEmail) params = params.set('doctorEmail', doctorEmail.toLowerCase().trim());
+        return this.http.get<GetInvoicesResponse>(Config.buildUrl('invoices'), { headers: this.authHeaders(), params });
     }
 
+    /** GET /patients/:id/payments — per-patient payments (used in patient profile) */
     getPayments(patientId: string, doctorEmail?: string): Observable<{ data: Payment[]; count: number }> {
-        const params: any = {};
-        if (doctorEmail) params['doctorEmail'] = doctorEmail.toLowerCase().trim();
-        return this.http.get<any>(this.patientUrl(patientId), { headers: this.authHeaders(), params }).pipe(
+        let params = new HttpParams();
+        if (doctorEmail) params = params.set('doctorEmail', doctorEmail.toLowerCase().trim());
+        return this.http.get<any>(Config.buildUrl(`patients/${encodeURIComponent(patientId)}/payments`), { headers: this.authHeaders(), params }).pipe(
             map((res: any) => ({
                 data: res.data || res.items || [],
                 count: res.count || 0
@@ -79,14 +91,14 @@ export class PaymentsService {
     }
 
     createPayment(patientId: string, payload: CreateUpdatePaymentRequest): Observable<{ data: Payment }> {
-        return this.http.post<{ data: Payment }>(this.patientUrl(patientId), payload, { headers: this.authHeaders() });
+        return this.http.post<{ data: Payment }>(Config.buildUrl(`patients/${encodeURIComponent(patientId)}/payments`), payload, { headers: this.authHeaders() });
     }
 
     updatePayment(patientId: string, paymentId: string, payload: Partial<CreateUpdatePaymentRequest>): Observable<{ updatedData: Payment }> {
-        return this.http.patch<{ updatedData: Payment }>(`${this.patientUrl(patientId)}/${encodeURIComponent(paymentId)}`, payload, { headers: this.authHeaders() });
+        return this.http.patch<{ updatedData: Payment }>(Config.buildUrl(`patients/${encodeURIComponent(patientId)}/payments/${encodeURIComponent(paymentId)}`), payload, { headers: this.authHeaders() });
     }
 
-    deletePayment(patientId: string, paymentId: string): Observable<any> {
-        return this.http.delete(`${this.patientUrl(patientId)}/${encodeURIComponent(paymentId)}`, { headers: this.authHeaders() });
+    deletePayment(patientId: string, paymentId: string): Observable<void> {
+        return this.http.delete<void>(Config.buildUrl(`patients/${encodeURIComponent(patientId)}/payments/${encodeURIComponent(paymentId)}`), { headers: this.authHeaders() });
     }
 }

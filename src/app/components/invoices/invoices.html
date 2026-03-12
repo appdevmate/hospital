@@ -1,0 +1,239 @@
+<p-toast />
+<p-confirmDialog />
+
+<!-- Stats -->
+<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr)); gap:1rem; margin-bottom:1.5rem;">
+    <div class="stat-card" *ngFor="let s of stats()">
+        <div class="stat-value" [style.color]="s.color">{{ s.value }}</div>
+        <div class="stat-label">{{ s.label }}</div>
+    </div>
+</div>
+
+<!-- Toolbar: New Invoice for admins only -->
+<ng-template #tbStart>
+    <p-button *ngIf="auth.isAdmin" label="New Invoice" icon="pi pi-plus" (onClick)="openCreate()" />
+</ng-template>
+
+<!-- Row actions: doctors can only view -->
+<ng-template #rowActions let-row>
+    <p-button icon="pi pi-eye" text severity="info" (onClick)="viewInvoice(row)" pTooltip="View" />
+    <ng-container *ngIf="auth.isAdmin">
+        <p-button icon="pi pi-pencil" text (onClick)="openEdit(row)" pTooltip="Edit" />
+        <p-button icon="pi pi-trash" text severity="danger" (onClick)="confirmDelete(row)" pTooltip="Delete" />
+    </ng-container>
+</ng-template>
+
+<!-- Status custom template -->
+<ng-template #statusTemplate let-value="value">
+    <p-tag [value]="value | titlecase" [severity]="getStatusSeverity(value)" />
+</ng-template>
+
+<app-generic-table [columns]="columns" [config]="config" [data]="_allInvoices()" [loading]="loading()"
+    [actionsTemplate]="rowActions" [toolbarStart]="tbStart" [customTemplates]="customTemplates()" dataKey="paymentId">
+</app-generic-table>
+
+<!-- ── Create / Edit Dialog ───────────────────────────────────────────────── -->
+<p-dialog [(visible)]="showForm" [modal]="true" [style]="{ width: '750px' }"
+    [header]="editingPayment ? 'Edit Invoice' : 'New Invoice'" [draggable]="false" [resizable]="false">
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+
+        <!-- Basic Info -->
+        <div class="form-section">
+            <h4 class="section-title">Basic Info</h4>
+            <div class="form-grid">
+                <p-floatLabel variant="on">
+                    <p-autoComplete inputId="patient" formControlName="patientObj" [suggestions]="filteredPatientNames"
+                        (completeMethod)="searchPatient($event)" (onSelect)="onPatientSelect($event)"
+                        (onClear)="form.patchValue({ patientId: '', patientName: '' })" [dropdown]="true"
+                        styleClass="w-full" />
+                    <label for="patient">Patient *</label>
+                </p-floatLabel>
+
+                <!-- Doctor field: hidden for doctors, they use their own account -->
+                <p-floatLabel variant="on" *ngIf="auth.isAdmin">
+                    <p-autoComplete inputId="doctorName" formControlName="doctorName"
+                        [suggestions]="filteredDoctorNames" (completeMethod)="searchDoctor($event)"
+                        (onSelect)="onDoctorSelect($event)" [dropdown]="true" styleClass="w-full" />
+                    <label for="doctorName">Doctor</label>
+                </p-floatLabel>
+            </div>
+
+            <div class="form-grid mt-3">
+                <p-floatLabel variant="on">
+                    <input pInputText id="invoiceNumber" formControlName="invoiceNumber" class="w-full" />
+                    <label for="invoiceNumber">Invoice Number</label>
+                </p-floatLabel>
+                <p-floatLabel variant="on">
+                    <p-datepicker inputId="dueDate" formControlName="dueDate" dateFormat="yy-mm-dd" [showIcon]="true"
+                        styleClass="w-full" />
+                    <label for="dueDate">Due Date</label>
+                </p-floatLabel>
+            </div>
+        </div>
+
+        <p-divider />
+
+        <!-- Items -->
+        <div class="form-section">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+                <h4 class="section-title" style="margin:0;">Items</h4>
+                <p-button label="Add Item" icon="pi pi-plus" size="small" text (onClick)="addItem()" />
+            </div>
+            <div formArrayName="items">
+                <div *ngFor="let item of itemsArray.controls; let i = index" [formGroupName]="i"
+                    style="display:grid; grid-template-columns:2fr 1fr 1fr 1fr auto; gap:0.5rem; align-items:center; margin-bottom:0.5rem;">
+                    <input pInputText formControlName="description" placeholder="Description" class="w-full" />
+                    <p-inputNumber formControlName="quantity" placeholder="Qty" [min]="1" styleClass="w-full"
+                        (onInput)="recalcItem(i)" />
+                    <p-inputNumber formControlName="unitPrice" placeholder="Price" [minFractionDigits]="2"
+                        styleClass="w-full" (onInput)="recalcItem(i)" />
+                    <input pInputText [value]="'QAR ' + getItemTotal(i)" readonly class="w-full"
+                        style="background:#F9FAFB;" />
+                    <p-button icon="pi pi-times" text severity="danger" (onClick)="removeItem(i)" />
+                </div>
+            </div>
+        </div>
+
+        <p-divider />
+
+        <!-- Payment Details -->
+        <div class="form-section">
+            <h4 class="section-title">Payment Details</h4>
+            <div class="form-grid">
+                <p-floatLabel variant="on">
+                    <p-inputNumber inputId="amount" formControlName="amount" [minFractionDigits]="2" styleClass="w-full"
+                        (onInput)="recalcOwes()" />
+                    <label for="amount">Total Amount (QAR)</label>
+                </p-floatLabel>
+                <p-floatLabel variant="on">
+                    <p-autoComplete inputId="status" formControlName="status" [suggestions]="filteredStatuses"
+                        (completeMethod)="filterStatuses($event)" [dropdown]="true" [forceSelection]="true"
+                        styleClass="w-full" />
+                    <label for="status">Status</label>
+                </p-floatLabel>
+            </div>
+
+            <div class="form-grid mt-3">
+                <p-floatLabel variant="on">
+                    <input pInputText id="insuranceProvider" formControlName="insuranceProvider" class="w-full" />
+                    <label for="insuranceProvider">Insurance Provider</label>
+                </p-floatLabel>
+                <p-floatLabel variant="on">
+                    <p-inputNumber inputId="insuranceCoverage" formControlName="insuranceCoverage" [min]="0" [max]="100"
+                        suffix="%" styleClass="w-full" (onInput)="recalcOwes()" />
+                    <label for="insuranceCoverage">Insurance Coverage %</label>
+                </p-floatLabel>
+            </div>
+
+            <div class="form-grid mt-3">
+                <p-floatLabel variant="on">
+                    <p-inputNumber inputId="insuranceAmount" formControlName="insuranceAmount" [minFractionDigits]="2"
+                        styleClass="w-full" [readonly]="true" />
+                    <label for="insuranceAmount">Insurance Pays (QAR)</label>
+                </p-floatLabel>
+                <p-floatLabel variant="on">
+                    <p-inputNumber inputId="patientOwes" formControlName="patientOwes" [minFractionDigits]="2"
+                        styleClass="w-full" [readonly]="true" />
+                    <label for="patientOwes">Patient Owes (QAR)</label>
+                </p-floatLabel>
+            </div>
+        </div>
+
+        <p-divider />
+
+        <!-- Notes -->
+        <div class="form-section">
+            <p-floatLabel variant="on">
+                <textarea pTextarea inputId="notes" formControlName="notes" class="w-full" rows="3"></textarea>
+                <label for="notes">Notes</label>
+            </p-floatLabel>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1rem;">
+            <p-button type="button" label="Cancel" severity="secondary" [outlined]="true"
+                (onClick)="showForm = false" />
+            <p-button type="submit" [label]="editingPayment ? 'Save Changes' : 'Create Invoice'" icon="pi pi-save"
+                [loading]="submitting" />
+        </div>
+    </form>
+</p-dialog>
+
+<!-- ── View Dialog ────────────────────────────────────────────────────────── -->
+<p-dialog [(visible)]="showView" [modal]="true" [style]="{ width: '600px' }" header="Invoice Details"
+    [draggable]="false" [resizable]="false">
+
+    <div *ngIf="viewingPayment" class="invoice-view">
+
+        <div class="inv-header">
+            <div>
+                <div class="inv-number">{{ viewingPayment.invoiceNumber }}</div>
+                <div class="inv-date">Created: {{ viewingPayment.createdAt | date:'mediumDate' }}</div>
+            </div>
+            <p-tag [value]="viewingPayment.status | titlecase" [severity]="getStatusSeverity(viewingPayment.status)" />
+        </div>
+
+        <div class="inv-grid">
+            <div><span class="inv-label">Patient</span><span>{{ viewingPayment.patientName | titlecase }}</span></div>
+            <div><span class="inv-label">Doctor</span><span>{{ viewingPayment.doctorName | titlecase }}</span></div>
+            <div><span class="inv-label">Due Date</span><span>{{ viewingPayment.dueDate || '—' }}</span></div>
+            <div><span class="inv-label">Payment Type</span><span>{{ viewingPayment.paymentType || '—' }}</span></div>
+        </div>
+
+        <p-divider />
+
+        <!-- Items table -->
+        <div *ngIf="viewingPayment.items && viewingPayment.items.length > 0">
+            <h4 style="margin:0 0 0.75rem 0;">Items</h4>
+            <div style="border:1px solid #E5E7EB; border-radius:8px; overflow:hidden;">
+                <div
+                    style="display:grid; grid-template-columns:2fr 1fr 1fr 1fr; background:#F9FAFB; padding:0.5rem 1rem; font-weight:600; font-size:0.85rem; color:#6B7280;">
+                    <span>Description</span><span>Qty</span><span>Unit Price</span><span>Total</span>
+                </div>
+                <div *ngFor="let item of viewingPayment.items; let i = index"
+                    style="display:grid; grid-template-columns:2fr 1fr 1fr 1fr; padding:0.5rem 1rem; font-size:0.9rem;"
+                    [style.background]="i % 2 === 0 ? 'white' : '#F9FAFB'">
+                    <span>{{ item.description }}</span>
+                    <span>{{ item.quantity }}</span>
+                    <span>QAR {{ item.unitPrice | number:'1.2-2' }}</span>
+                    <span>QAR {{ item.total | number:'1.2-2' }}</span>
+                </div>
+            </div>
+            <p-divider />
+        </div>
+
+        <!-- Totals -->
+        <div class="inv-totals">
+            <div class="inv-total-row">
+                <span>Total Amount</span>
+                <span>QAR {{ viewingPayment.amount | number:'1.2-2' }}</span>
+            </div>
+            <div class="inv-total-row" *ngIf="viewingPayment.insuranceProvider">
+                <span>Insurance ({{ viewingPayment.insuranceProvider }} {{ viewingPayment.insuranceCoverage }}%)</span>
+                <span>- QAR {{ viewingPayment.insuranceAmount | number:'1.2-2' }}</span>
+            </div>
+            <div class="inv-total-row total">
+                <span>Patient Owes</span>
+                <span>QAR {{ viewingPayment.patientOwes | number:'1.2-2' }}</span>
+            </div>
+        </div>
+
+        <div *ngIf="viewingPayment.notes" style="margin-top:1rem; color:#6B7280; font-size:0.9rem;">
+            <strong>Notes:</strong> {{ viewingPayment.notes }}
+        </div>
+
+        <!-- Action buttons: edit/delete for admins only -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1.5rem;"
+            *ngIf="auth.isAdmin">
+            <p-button label="Delete" severity="danger" [outlined]="true" icon="pi pi-trash"
+                (click)="confirmDelete(viewingPayment!)" />
+            <div style="display:flex; gap:10px;">
+                <p-button label="Close" severity="secondary" [outlined]="true" (click)="showView = false" />
+                <p-button label="Edit" icon="pi pi-pencil" (click)="openEdit(viewingPayment!); showView = false" />
+            </div>
+        </div>
+        <div style="display:flex; justify-content:flex-end; margin-top:1.5rem;" *ngIf="!auth.isAdmin">
+            <p-button label="Close" severity="secondary" [outlined]="true" (click)="showView = false" />
+        </div>
+    </div>
+</p-dialog>
