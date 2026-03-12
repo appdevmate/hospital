@@ -1,0 +1,6 @@
+ng build --configuration production
+aws s3 sync "dist\verona-ng\browser" s3://tiryaq-bucket --delete
+aws cloudfront create-invalidation --distribution-id E3J3D3EMIOIACT --paths "/*"
+git add .
+git commit -m "invoices: new getAllInvoices Lambda, GSI, role-based filtering, clean module"
+git push
