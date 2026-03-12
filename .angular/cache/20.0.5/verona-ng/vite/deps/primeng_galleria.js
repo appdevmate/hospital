@@ -2,15 +2,15 @@ import {
   FocusTrap
 } from "./chunk-PF7DN6OW.js";
 import {
-  Ripple
-} from "./chunk-OC77X5LN.js";
-import {
   blockBodyScroll,
   unblockBodyScroll
 } from "./chunk-S73J4WE3.js";
 import {
   zindexutils
 } from "./chunk-BB55NINM.js";
+import {
+  Ripple
+} from "./chunk-OC77X5LN.js";
 import {
   ChevronDownIcon,
   ChevronLeftIcon,
@@ -19,10 +19,6 @@ import {
   TimesIcon
 } from "./chunk-RHA7RL5K.js";
 import "./chunk-YXZQJBKH.js";
-import {
-  Bind,
-  BindModule
-} from "./chunk-MLQGRGGO.js";
 import {
   BaseComponent,
   PARENT_INSTANCE
@@ -34,6 +30,10 @@ import {
   PrimeTemplate,
   SharedModule
 } from "./chunk-LMEEH3AJ.js";
+import {
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
 import "./chunk-GOP36Q47.js";
 import {
   P,

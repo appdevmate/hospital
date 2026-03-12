@@ -1,15 +1,11 @@
 import {
-  AutoFocus
-} from "./chunk-YNLAOK3J.js";
-import {
   BaseEditableHolder
 } from "./chunk-343RM6UZ.js";
 import "./chunk-2R7VQYSP.js";
-import "./chunk-S73J4WE3.js";
 import {
-  Bind,
-  BindModule
-} from "./chunk-MLQGRGGO.js";
+  AutoFocus
+} from "./chunk-YNLAOK3J.js";
+import "./chunk-S73J4WE3.js";
 import {
   PARENT_INSTANCE
 } from "./chunk-YNJ5GKCH.js";
@@ -20,6 +16,10 @@ import {
   PrimeTemplate,
   SharedModule
 } from "./chunk-LMEEH3AJ.js";
+import {
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
 import "./chunk-GOP36Q47.js";
 import "./chunk-UCHM6OXG.js";
 import {

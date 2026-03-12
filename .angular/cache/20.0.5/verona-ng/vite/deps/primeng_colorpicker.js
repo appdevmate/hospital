@@ -1,11 +1,11 @@
 import {
-  AutoFocus,
-  AutoFocusModule
-} from "./chunk-YNLAOK3J.js";
-import {
   BaseEditableHolder
 } from "./chunk-343RM6UZ.js";
 import "./chunk-2R7VQYSP.js";
+import {
+  AutoFocus,
+  AutoFocusModule
+} from "./chunk-YNLAOK3J.js";
 import {
   ConnectedOverlayScrollHandler,
   DomHandler
@@ -13,9 +13,6 @@ import {
 import {
   zindexutils
 } from "./chunk-BB55NINM.js";
-import {
-  Bind
-} from "./chunk-MLQGRGGO.js";
 import {
   PARENT_INSTANCE
 } from "./chunk-YNJ5GKCH.js";
@@ -27,6 +24,9 @@ import {
   SharedModule,
   TranslationKeys
 } from "./chunk-LMEEH3AJ.js";
+import {
+  Bind
+} from "./chunk-MLQGRGGO.js";
 import "./chunk-GOP36Q47.js";
 import {
   D,

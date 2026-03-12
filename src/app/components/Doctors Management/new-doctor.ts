@@ -1,8 +1,7 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-// PrimeNG v20
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -14,12 +13,12 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { DialogModule } from 'primeng/dialog';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FileUploadModule, FileSelectEvent } from 'primeng/fileupload';
-
-import { DoctorsService, Department, Specialization, CreateUpdateDoctorRequest } from '@/pages/service/doctors.service';
-import { HelpersService } from '@/pages/service/helpers-service';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { Fluid } from 'primeng/fluid';
+
+import { DoctorsService, Department, Specialization, CreateUpdateDoctorRequest } from '@/pages/service/doctors.service';
+import { HelpersService } from '@/pages/service/helpers-service';
 
 @Component({
     selector: 'app-new-doctor',
@@ -49,7 +48,7 @@ import { Fluid } from 'primeng/fluid';
                 <ng-template pTemplate="header">
                     <div class="header flex items-center justify-between px-6 py-4">
                         <div class="flex items-center gap-3">
-                            <i class="pi pi-user-plus text-6xl text-primary" style="font-size: 2rem;"></i>
+                            <i class="pi pi-user-plus text-primary" style="font-size: 2rem;"></i>
                             <h3 class="text-xl font-semibold m-0">New Doctor</h3>
                         </div>
                         <p-button icon="pi pi-times" text severity="secondary" pTooltip="Close" (click)="ref.close()"></p-button>
@@ -57,11 +56,10 @@ import { Fluid } from 'primeng/fluid';
                 </ng-template>
 
                 <form [formGroup]="form" (ngSubmit)="submit()" class="form-content" autocomplete="off">
-                    <!-- Personal Information Section -->
+                    <!-- Personal Information -->
                     <div class="mb-6">
                         <h4 class="devider text-lg font-semibold mb-4 text-gray-700 border-b pb-2">Personal Information</h4>
 
-                        <!-- Full Name - Takes full width as it's usually long -->
                         <div class="mb-4">
                             <p-floatLabel variant="on">
                                 <input pInputText id="name" formControlName="name" autocomplete="off" [class.p-invalid]="invalid('name')" class="w-full" />
@@ -70,16 +68,14 @@ import { Fluid } from 'primeng/fluid';
                             <small class="p-error" *ngIf="invalid('name')">Valid name is required</small>
                         </div>
 
-                        <!-- Email -->
                         <div class="mb-4">
                             <p-floatLabel variant="on">
                                 <input pInputText id="email" type="email" formControlName="email" autocomplete="off" class="w-full" [class.p-invalid]="invalid('email')" />
-                                <label for="email"> <i class="pi pi-envelope"></i> Email Address </label>
+                                <label for="email"><i class="pi pi-envelope"></i> Email Address</label>
                             </p-floatLabel>
-                            <small class="p-error" *ngIf="invalid('email')"> Valid email is required </small>
+                            <small class="p-error" *ngIf="invalid('email')">Valid email is required</small>
                         </div>
 
-                        <!-- QID, Phone, Gender - Single row -->
                         <p-fluid class="flex flex-wrap gap-4 mb-6">
                             <div class="flex-1 md:flex-[2]">
                                 <p-floatLabel variant="on">
@@ -114,7 +110,7 @@ import { Fluid } from 'primeng/fluid';
                                         autocomplete="off"
                                     >
                                         <ng-template pTemplate="item" let-option>
-                                            <div class="gender-item">
+                                            <div class="flex items-center gap-2">
                                                 <i class="pi" [class]="getGenderIcon(option.value)"></i>
                                                 <span>{{ option.label }}</span>
                                             </div>
@@ -126,8 +122,6 @@ import { Fluid } from 'primeng/fluid';
                             </div>
                         </p-fluid>
 
-                        <!-- Date of Birth and Insurance -->
-
                         <p-fluid class="flex flex-wrap gap-4 mb-6">
                             <div class="flex-1 md:flex-[2]">
                                 <p-floatLabel variant="on">
@@ -137,7 +131,6 @@ import { Fluid } from 'primeng/fluid';
                                 <small class="p-error" *ngIf="invalid('insurance')">Insurance is required</small>
                             </div>
 
-                            <!-- Hiring Date: 30% width -->
                             <div class="flex-1 md:flex-[1.5]">
                                 <p-floatLabel variant="on">
                                     <p-datepicker
@@ -150,18 +143,25 @@ import { Fluid } from 'primeng/fluid';
                                         [showOnFocus]="false"
                                         [class.p-invalid]="invalid('hiringDate')"
                                         [readonlyInput]="true"
-                                    >
-                                    </p-datepicker>
+                                    ></p-datepicker>
                                     <label for="hiringDate"><i class="pi pi-calendar"></i> Hiring Date</label>
                                 </p-floatLabel>
                                 <small class="p-error" *ngIf="invalid('hiringDate')">Hiring Date is required</small>
                             </div>
 
-                            <!-- DOB: 30% width -->
                             <div class="flex-1 md:flex-[1.5]">
                                 <p-floatLabel variant="on">
-                                    <p-datepicker inputId="dob" formControlName="dob" [showIcon]="true" dateFormat="dd/MM/yy" [maxDate]="today" [showOnFocus]="false" [class.p-invalid]="invalid('dob')" [readonlyInput]="true" class="w-full">
-                                    </p-datepicker>
+                                    <p-datepicker
+                                        inputId="dob"
+                                        formControlName="dob"
+                                        [showIcon]="true"
+                                        dateFormat="dd/MM/yy"
+                                        [maxDate]="today"
+                                        [showOnFocus]="false"
+                                        [class.p-invalid]="invalid('dob')"
+                                        [readonlyInput]="true"
+                                        class="w-full"
+                                    ></p-datepicker>
                                     <label for="dob"><i class="pi pi-calendar"></i> Date of Birth</label>
                                 </p-floatLabel>
                                 <small class="p-error" *ngIf="invalid('dob')">Date of birth is required</small>
@@ -189,80 +189,73 @@ import { Fluid } from 'primeng/fluid';
                             </p-floatLabel>
                         </div>
                     </div>
-                    <!-- Date & Time Information Section -->
 
-                    <!-- Professional Information Section -->
+                    <!-- Professional Information -->
                     <div class="mb-6">
                         <h4 class="devider text-lg font-semibold mb-4 text-gray-700 border-b pb-2">Professional Information</h4>
 
-                        <!-- Department and Specialization -->
                         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
-                            <div>
-                                <div class="flex gap-2 items-start">
-                                    <p-floatLabel variant="on" class="flex-1">
-                                        <p-autoComplete
-                                            inputId="department"
-                                            formControlName="department"
-                                            [suggestions]="filteredDepartmentOptions"
-                                            (completeMethod)="searchRefData('department', $event)"
-                                            field="name"
-                                            [forceSelection]="true"
-                                            [dropdown]="true"
-                                            styleClass="w-full"
-                                            autocomplete="off"
-                                            (onSelect)="onDepartmentSelect($event)"
-                                            (onClear)="onDepartmentClear()"
-                                        >
-                                            <ng-template pTemplate="item" let-option>
-                                                <div class="flex items-center justify-between w-full">
-                                                    <span>{{ option.name }}</span>
-                                                    @if (option.code) {
-                                                        <small class="opacity-70">{{ option.code }}</small>
-                                                    }
-                                                </div>
-                                            </ng-template>
-                                        </p-autoComplete>
-                                        <label for="department"><i class="pi pi-sitemap"></i> Department</label>
-                                    </p-floatLabel>
-                                    <p-button type="button" icon="pi pi-plus" [text]="true" [rounded]="true" size="small" pTooltip="Add Department" (click)="openAddDepartment()"></p-button>
-                                    <p-button type="button" icon="pi pi-upload" [text]="true" [rounded]="true" size="small" pTooltip="Bulk import departments" (click)="openBulk('department')"></p-button>
-                                </div>
+                            <div class="flex gap-2 items-start">
+                                <p-floatLabel variant="on" class="flex-1">
+                                    <p-autoComplete
+                                        inputId="department"
+                                        formControlName="department"
+                                        [suggestions]="filteredDepartmentOptions"
+                                        (completeMethod)="searchRefData('department', $event)"
+                                        field="name"
+                                        [forceSelection]="true"
+                                        [dropdown]="true"
+                                        styleClass="w-full"
+                                        autocomplete="off"
+                                        (onSelect)="onDepartmentSelect($event)"
+                                        (onClear)="onDepartmentClear()"
+                                    >
+                                        <ng-template pTemplate="item" let-option>
+                                            <div class="flex items-center justify-between w-full">
+                                                <span>{{ option.name }}</span>
+                                                @if (option.code) {
+                                                    <small class="opacity-70">{{ option.code }}</small>
+                                                }
+                                            </div>
+                                        </ng-template>
+                                    </p-autoComplete>
+                                    <label for="department"><i class="pi pi-sitemap"></i> Department</label>
+                                </p-floatLabel>
+                                <p-button type="button" icon="pi pi-plus" [text]="true" [rounded]="true" size="small" pTooltip="Add Department" (click)="openAddDepartment()"></p-button>
+                                <p-button type="button" icon="pi pi-upload" [text]="true" [rounded]="true" size="small" pTooltip="Bulk import departments" (click)="openBulk('department')"></p-button>
                             </div>
 
-                            <div>
-                                <div class="flex gap-2 items-start">
-                                    <p-floatLabel variant="on" class="flex-1">
-                                        <p-autoComplete
-                                            inputId="specialization"
-                                            formControlName="specialization"
-                                            [suggestions]="filteredSpecializationOptions"
-                                            (completeMethod)="searchRefData('specialization', $event)"
-                                            field="name"
-                                            [forceSelection]="true"
-                                            [dropdown]="true"
-                                            styleClass="w-full"
-                                            autocomplete="off"
-                                            (onSelect)="onSpecializationSelect($event)"
-                                            (onClear)="onSpecializationClear()"
-                                        >
-                                            <ng-template pTemplate="item" let-option>
-                                                <div class="flex items-center justify-between w-full">
-                                                    <span>{{ option.name }}</span>
-                                                    @if (option.code) {
-                                                        <small class="opacity-70">{{ option.code }}</small>
-                                                    }
-                                                </div>
-                                            </ng-template>
-                                        </p-autoComplete>
-                                        <label for="specialization"><i class="pi pi-sparkles"></i> Specialization</label>
-                                    </p-floatLabel>
-                                    <p-button type="button" icon="pi pi-plus" [text]="true" [rounded]="true" size="small" pTooltip="Add Specialization" (click)="openAddSpec()"></p-button>
-                                    <p-button type="button" icon="pi pi-upload" [text]="true" [rounded]="true" size="small" pTooltip="Bulk import specializations" (click)="openBulk('specialization')"></p-button>
-                                </div>
+                            <div class="flex gap-2 items-start">
+                                <p-floatLabel variant="on" class="flex-1">
+                                    <p-autoComplete
+                                        inputId="specialization"
+                                        formControlName="specialization"
+                                        [suggestions]="filteredSpecializationOptions"
+                                        (completeMethod)="searchRefData('specialization', $event)"
+                                        field="name"
+                                        [forceSelection]="true"
+                                        [dropdown]="true"
+                                        styleClass="w-full"
+                                        autocomplete="off"
+                                        (onSelect)="onSpecializationSelect($event)"
+                                        (onClear)="onSpecializationClear()"
+                                    >
+                                        <ng-template pTemplate="item" let-option>
+                                            <div class="flex items-center justify-between w-full">
+                                                <span>{{ option.name }}</span>
+                                                @if (option.code) {
+                                                    <small class="opacity-70">{{ option.code }}</small>
+                                                }
+                                            </div>
+                                        </ng-template>
+                                    </p-autoComplete>
+                                    <label for="specialization"><i class="pi pi-sparkles"></i> Specialization</label>
+                                </p-floatLabel>
+                                <p-button type="button" icon="pi pi-plus" [text]="true" [rounded]="true" size="small" pTooltip="Add Specialization" (click)="openAddSpec()"></p-button>
+                                <p-button type="button" icon="pi pi-upload" [text]="true" [rounded]="true" size="small" pTooltip="Bulk import specializations" (click)="openBulk('specialization')"></p-button>
                             </div>
                         </div>
 
-                        <!-- Education and Status -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div>
                                 <p-floatLabel variant="on">
@@ -318,15 +311,13 @@ import { Fluid } from 'primeng/fluid';
                             </div>
                         </div>
 
-                        <!-- Experience (Years and Months side by side, compact) -->
-                        <div class="grid grid-cols-2 md:grid-cols-2 gap-4 mb-4">
+                        <div class="grid grid-cols-2 gap-4 mb-4">
                             <div>
                                 <p-floatLabel variant="on">
                                     <p-inputNumber inputId="experienceYears" formControlName="experienceYears" [showButtons]="true" [min]="0" styleClass="w-full"></p-inputNumber>
-                                    <label for="experienceYears"><i class="pi pi-hourglass"></i>Years of Experience</label>
+                                    <label for="experienceYears"><i class="pi pi-hourglass"></i> Years of Experience</label>
                                 </p-floatLabel>
                             </div>
-
                             <div>
                                 <p-floatLabel variant="on">
                                     <p-inputNumber inputId="experienceMonths" formControlName="experienceMonths" [showButtons]="true" [min]="0" [max]="11" styleClass="w-full"></p-inputNumber>
@@ -336,43 +327,39 @@ import { Fluid } from 'primeng/fluid';
                         </div>
                     </div>
 
-                    <!-- Duty Schedule Section -->
-                    <div class="mb-40">
+                    <!-- Duty Schedule -->
+                    <div class="mb-6">
                         <h4 class="devider text-lg font-semibold mb-4 text-gray-700 border-b pb-2">Duty Schedule</h4>
                         <p-fluid class="flex flex-wrap gap-4 mb-6">
                             <div class="flex-1 md:flex-[3]">
                                 <p-floatLabel variant="on">
-                                    <p-multiSelect inputId="dutyDays" formControlName="dutyDays" [options]="weekDays" optionLabel="label" optionValue="value" display="chip" selectedItemsLabel="{0}" class="w-full"> </p-multiSelect>
+                                    <p-multiSelect inputId="dutyDays" formControlName="dutyDays" [options]="weekDays" optionLabel="label" optionValue="value" display="chip" class="w-full"></p-multiSelect>
                                     <label for="dutyDays"><i class="pi pi-calendar"></i> Duty Days</label>
                                 </p-floatLabel>
                             </div>
-
                             <div class="flex-1 md:flex-[1]">
                                 <p-floatLabel variant="on">
-                                    <p-datepicker inputId="dutyStart" formControlName="dutyStart" [timeOnly]="true" [showIcon]="true" [showOnFocus]="false" styleClass="w-full"> </p-datepicker>
+                                    <p-datepicker inputId="dutyStart" formControlName="dutyStart" [timeOnly]="true" [showIcon]="true" [showOnFocus]="false" styleClass="w-full"></p-datepicker>
                                     <label for="dutyStart"><i class="pi pi-clock"></i> Start Time</label>
                                 </p-floatLabel>
                             </div>
-
                             <div class="flex-1 md:flex-[1]">
                                 <p-floatLabel variant="on">
-                                    <p-datepicker inputId="dutyEnd" formControlName="dutyEnd" [timeOnly]="true" [showIcon]="true" [showOnFocus]="false" styleClass="w-full"> </p-datepicker>
+                                    <p-datepicker inputId="dutyEnd" formControlName="dutyEnd" [timeOnly]="true" [showIcon]="true" [showOnFocus]="false" styleClass="w-full"></p-datepicker>
                                     <label for="dutyEnd"><i class="pi pi-clock"></i> End Time</label>
                                 </p-floatLabel>
                             </div>
                         </p-fluid>
                     </div>
 
+                    <!-- Notes -->
                     <div class="mb-6">
                         <h4 class="devider text-lg font-semibold mb-4 text-gray-700 border-b pb-2">Notes</h4>
-                        <div class="mb-6">
-                            <!-- Notes - Takes full width as it's usually long -->
-                            <div class="mb-4">
-                                <p-floatLabel variant="on">
-                                    <input pInputText id="notes" formControlName="notes" autocomplete="off" [class.p-invalid]="invalid('notes')" class="w-full" />
-                                    <label for="notes"><i class="pi pi-file-edit"></i> Write your notes here...</label>
-                                </p-floatLabel>
-                            </div>
+                        <div class="mb-4">
+                            <p-floatLabel variant="on">
+                                <input pInputText id="notes" formControlName="notes" autocomplete="off" class="w-full" />
+                                <label for="notes"><i class="pi pi-file-edit"></i> Write your notes here...</label>
+                            </p-floatLabel>
                         </div>
                     </div>
 
@@ -398,7 +385,7 @@ import { Fluid } from 'primeng/fluid';
                     <input id="newDeptCode" pInputText [(ngModel)]="newDeptCode" autocomplete="off" class="w-full" />
                 </div>
                 <div class="flex justify-end gap-2 mt-3">
-                    <p-button label="Cancel" icon="pi pi-times" severity="secondary" (click)="addDeptVisible = false"></p-button>
+                    <p-button label="Cancel" severity="secondary" (click)="addDeptVisible = false"></p-button>
                     <p-button label="Add" icon="pi pi-check" [disabled]="isSavingDept || !newDept.trim() || !newDeptCode.trim()" [loading]="isSavingDept" (click)="saveDepartment()"></p-button>
                 </div>
             </div>
@@ -416,13 +403,13 @@ import { Fluid } from 'primeng/fluid';
                     <input id="newSpecCode" pInputText [(ngModel)]="newSpecCode" autocomplete="off" class="w-full" />
                 </div>
                 <div class="flex justify-end gap-2 mt-3">
-                    <p-button label="Cancel" icon="pi pi-times" severity="secondary" (click)="addSpecVisible = false"></p-button>
-                    <p-button label="Add" icon="pi pi-check" (click)="saveSpecialization()" [disabled]="!newSpec.trim()"></p-button>
+                    <p-button label="Cancel" severity="secondary" (click)="addSpecVisible = false"></p-button>
+                    <p-button label="Add" icon="pi pi-check" [disabled]="!newSpec.trim()" (click)="saveSpecialization()"></p-button>
                 </div>
             </div>
         </p-dialog>
 
-        <!-- Unified Bulk Dialog -->
+        <!-- Bulk Dialog -->
         <p-dialog [(visible)]="bulkVisible" [modal]="true" [header]="bulkType === 'department' ? 'Bulk Import Departments' : 'Bulk Import Specializations'" [style]="{ width: '36rem' }" [draggable]="false" [resizable]="false">
             <div class="space-y-4">
                 <div class="text-sm">
@@ -433,31 +420,27 @@ import { Fluid } from 'primeng/fluid';
                         }
                         .
                     </p>
-                    <p-button size="small" icon="pi pi-download" label="Download template" (click)="downloadTemplate(bulkType)"></p-button>
+                    <p-button size="small" icon="pi pi-download" label="Download template" (click)="downloadBulkTemplate(bulkType)"></p-button>
                 </div>
-
                 <div class="text-sm">
                     <div class="mb-2">Step 2: Upload the filled CSV or Excel file.</div>
                     <p-fileUpload mode="basic" [showUploadButton]="false" [showCancelButton]="false" accept=".csv,.xlsx,.xls" chooseLabel="Choose file" (onSelect)="onBulkFiles($event)"></p-fileUpload>
                 </div>
-
                 <div class="text-sm">
                     <div>Parsed: {{ bulkPreview.length }} rows</div>
                     @if (bulkInvalid.length) {
                         <div>Invalid: {{ bulkInvalid.length }}</div>
                     }
                 </div>
-
                 <div class="flex justify-end gap-2">
-                    <p-button label="Cancel" icon="pi pi-times" severity="secondary" (click)="bulkVisible = false"></p-button>
-                    <p-button label="Upload" icon="pi pi-check" (click)="saveBulk()" [disabled]="isUploadingBulk || !bulkPreview.length" [loading]="isUploadingBulk"></p-button>
+                    <p-button label="Cancel" severity="secondary" (click)="bulkVisible = false"></p-button>
+                    <p-button label="Upload" icon="pi pi-check" [disabled]="isUploadingBulk || !bulkPreview.length" [loading]="isUploadingBulk" (click)="saveBulk()"></p-button>
                 </div>
             </div>
         </p-dialog>
     `,
     styles: [
         `
-            /* make p-datepicker take full width inside p-floatLabel or grid column */
             .devider {
                 color: #10b981;
             }
@@ -468,22 +451,24 @@ import { Fluid } from 'primeng/fluid';
     ]
 })
 export class NewDoctor implements AfterViewInit {
+    private fb = inject(FormBuilder);
+    private helpersService = inject(HelpersService);
+    private doctorService = inject(DoctorsService);
+    ref = inject(DynamicDialogRef);
+
     form: FormGroup;
     today = new Date();
     isSubmitting = false;
 
-    // Dialog state
     addDeptVisible = false;
     addSpecVisible = false;
     newDept = '';
     newDeptCode = '';
     newSpec = '';
     newSpecCode = '';
-
     isSavingDept = false;
     isSavingSpec = false;
 
-    // Unified bulk dialog state
     bulkVisible = false;
     bulkType: 'department' | 'specialization' = 'department';
     isUploadingBulk = false;
@@ -498,7 +483,6 @@ export class NewDoctor implements AfterViewInit {
     ];
     filteredGenderOptions: any[] = [];
 
-    // Server-backed options
     filteredDepartmentOptions: Department[] = [];
     filteredSpecializationOptions: Specialization[] = [];
     statusOptions: string[] = ['senior', 'junior', 'under development', 'associate'];
@@ -520,15 +504,10 @@ export class NewDoctor implements AfterViewInit {
     bloodGroupOptions: string[] = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
     filteredBloodGroupOptions: string[] = [];
 
-    constructor(
-        private fb: FormBuilder,
-        private helpersService: HelpersService,
-        private doctorService: DoctorsService,
-        public ref: DynamicDialogRef
-    ) {
+    constructor() {
         this.form = this.fb.group({
             name: ['', [Validators.required, Validators.minLength(3)]],
-            email: ['', [Validators.required, Validators.email]], // ✅ ADDED
+            email: ['', [Validators.required, Validators.email]],
             dob: ['', Validators.required],
             gender: ['', Validators.required],
             phone: ['', Validators.required],
@@ -548,7 +527,6 @@ export class NewDoctor implements AfterViewInit {
             dutyEnd: [null],
             bloodGroup: ['']
         });
-
         this.resetFormState();
     }
 
@@ -570,7 +548,6 @@ export class NewDoctor implements AfterViewInit {
         this.form.markAsUntouched();
     }
 
-    // ===== Autocomplete handlers =====
     filterGender(event: any): void {
         const q = String(event?.query || '').toLowerCase();
         this.filteredGenderOptions = this.genderOptions.filter((o) => o.label.toLowerCase().includes(q));
@@ -581,7 +558,6 @@ export class NewDoctor implements AfterViewInit {
         this.filteredEducationOptions = this.educationOptions.filter((x) => x.name.toLowerCase().includes(q));
     }
 
-    // Unified search for departments/specializations
     searchRefData(kind: 'department' | 'specialization', e: { query: string }) {
         const q = e?.query ?? '';
         const obs = kind === 'department' ? this.doctorService.searchDepartments(q) : this.doctorService.searchSpecializations(q);
@@ -591,7 +567,7 @@ export class NewDoctor implements AfterViewInit {
                 else this.filteredSpecializationOptions = items || [];
             },
             error: (err) => {
-                if (err?.error?.message == 'Unauthorized') {
+                if (err?.error?.message === 'Unauthorized') {
                     this.helpersService.redirectToLogin();
                     return;
                 }
@@ -602,27 +578,20 @@ export class NewDoctor implements AfterViewInit {
     }
 
     onDepartmentSelect(e: { value: Department }) {
-        const name = e?.value?.name ?? '';
-        this.form.get('department')?.setValue(name);
+        this.form.get('department')?.setValue(e?.value?.name ?? '');
     }
     onDepartmentClear() {
         this.form.get('department')?.setValue('');
     }
-
     onSpecializationSelect(e: { value: Specialization }) {
-        const name = e?.value?.name ?? '';
-        this.form.get('specialization')?.setValue(name);
+        this.form.get('specialization')?.setValue(e?.value?.name ?? '');
     }
-
-    onEducationSelect(e: { value: Specialization }) {
-        const name = e?.value?.name ?? '';
-        this.form.get('education')?.setValue(name);
-    }
-
     onSpecializationClear() {
         this.form.get('specialization')?.setValue('');
     }
-
+    onEducationSelect(e: { value: any }) {
+        this.form.get('education')?.setValue(e?.value?.name ?? '');
+    }
     onEducationClear() {
         this.form.get('education')?.setValue('');
     }
@@ -637,7 +606,6 @@ export class NewDoctor implements AfterViewInit {
         this.filteredBloodGroupOptions = this.bloodGroupOptions.filter((x) => x.toLowerCase().includes(q));
     }
 
-    // ===== Validation helpers =====
     validateQID(field: string): boolean {
         const c = this.form.get(field);
         return !!c && c.invalid && (c.dirty || c.touched);
@@ -647,8 +615,7 @@ export class NewDoctor implements AfterViewInit {
         const c = this.form.get(fieldName);
         if (!c || !(c.dirty || c.touched)) return false;
         if (fieldName === 'phone') {
-            const val: string = c.value || '';
-            const digits = val.replace(/\D/g, '');
+            const digits = (c.value || '').replace(/\D/g, '');
             return digits.length < 8 || digits.length > 15;
         }
         return c.invalid;
@@ -657,40 +624,32 @@ export class NewDoctor implements AfterViewInit {
     validatePhoneNumber(fieldName: string): boolean {
         const c = this.form.get(fieldName);
         if (!c || !(c.dirty || c.touched)) return false;
-        const val: string = c.value || '';
-        const digits = val.replace(/\D/g, '');
+        const digits = (c.value || '').replace(/\D/g, '');
         return digits.length < 8 || digits.length > 15;
     }
 
     getGenderIcon(gender: string): string {
-        switch (gender) {
-            case 'male':
-                return 'pi-mars';
-            case 'female':
-                return 'pi-venus';
-            case 'non-binary':
-                return 'pi-circle';
-            case 'prefer-not-to-say':
-                return 'pi-question-circle';
-            default:
-                return 'pi-user';
-        }
+        const icons: Record<string, string> = {
+            male: 'pi-mars',
+            female: 'pi-venus',
+            'non-binary': 'pi-circle',
+            'prefer-not-to-say': 'pi-question-circle'
+        };
+        return icons[gender] || 'pi-user';
     }
 
-    // ===== Submit / Reset =====
-    // add above submit()
     sanitizePhone(x: any): string | null {
         if (typeof x !== 'string') return x ?? null;
         const s = x.trim();
         if (!s) return null;
-        let sign = '';
-        let body = s;
-        if (body.startsWith('+')) {
-            sign = '+';
-            body = body.slice(1);
-        }
-        const digits = body.replace(/\D+/g, ''); // drops spaces, underscores, etc.
+        const sign = s.startsWith('+') ? '+' : '';
+        const digits = s.replace(/\D+/g, '');
         return digits ? sign + digits : null;
+    }
+
+    validateEmail(email: string): boolean {
+        if (!email) return false;
+        return /^[a-zA-Z0-9._-]+@tiryaq\.com$/i.test(email.trim());
     }
 
     submit(): void {
@@ -702,28 +661,24 @@ export class NewDoctor implements AfterViewInit {
 
         const email = this.form.get('email')?.value;
         if (!this.validateEmail(email)) {
-            this.helpersService.notifyError('Validation Error', 'Email must be a valid @tiryaq.com address with only ., _, or -');
+            this.helpersService.notifyError('Validation Error', 'Email must be a valid @tiryaq.com address');
             return;
         }
 
         this.isSubmitting = true;
         const f = this.form.getRawValue();
-
         const lc = (x: any) => (typeof x === 'string' ? x.toLowerCase().trim() : (x ?? null));
 
-        // Helper to format time from Date object to HH:mm string
         const formatTime = (dateVal: any): string | null => {
             if (!dateVal) return null;
             const d = new Date(dateVal);
             if (isNaN(d.getTime())) return null;
-            const hh = String(d.getHours()).padStart(2, '0');
-            const mm = String(d.getMinutes()).padStart(2, '0');
-            return `${hh}:${mm}`;
+            return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
         };
 
         const payload: CreateUpdateDoctorRequest = {
             name: lc(f.name),
-            email: lc(f.email), // ✅ ADDED
+            email: lc(f.email),
             dob: f.dob ? new Date(f.dob).toISOString().slice(0, 10) : null,
             gender: lc(f.gender),
             phone: this.sanitizePhone(f.phone),
@@ -733,9 +688,7 @@ export class NewDoctor implements AfterViewInit {
             specialization: lc(f.specialization),
             status: lc(f.status),
             hiringDate: f.hiringDate ? new Date(f.hiringDate).toISOString().slice(0, 10) : null,
-
             job: lc(f.job),
-
             experienceYears: f.experienceYears ?? 0,
             experienceMonths: f.experienceMonths ?? 0,
             notes: f.notes ? f.notes.trim() : null,
@@ -746,8 +699,6 @@ export class NewDoctor implements AfterViewInit {
             bloodGroup: f.bloodGroup ? f.bloodGroup.trim() : null
         };
 
-        console.log('Submitting payload:', payload);
-
         this.doctorService.createDoctor(payload).subscribe({
             next: (res: any) => {
                 this.isSubmitting = false;
@@ -755,21 +706,14 @@ export class NewDoctor implements AfterViewInit {
                 this.ref.close(res?.data ?? res);
             },
             error: (err) => {
-                console.error('Error creating doctor:', err);
-                if (err.error.message == 'Unauthorized') {
+                this.isSubmitting = false;
+                if (err?.error?.message === 'Unauthorized') {
                     this.helpersService.redirectToLogin();
                     return;
-                } else {
-                    this.helpersService.notifyError('Error', err?.error?.message || 'Failed to create doctor profile');
-                    this.isSubmitting = false;
                 }
+                this.helpersService.notifyError('Error', err?.error?.message || 'Failed to create doctor profile');
             }
         });
-    }
-
-    validateEmail(email: string): boolean {
-        if (!email) return false;
-        return /^[a-zA-Z0-9._-]+@tiryaq\.com$/i.test(email.trim());
     }
 
     reset(): void {
@@ -801,7 +745,6 @@ export class NewDoctor implements AfterViewInit {
         this.resetFormState();
     }
 
-    // ===== Dept dialog =====
     openAddDepartment() {
         this.newDept = '';
         this.newDeptCode = '';
@@ -809,10 +752,9 @@ export class NewDoctor implements AfterViewInit {
     }
 
     saveDepartment() {
-        const name = (this.newDept || '').trim();
-        const code = (this.newDeptCode || '').trim();
+        const name = this.newDept.trim();
+        const code = this.newDeptCode.trim();
         if (!name || !code) return;
-
         this.isSavingDept = true;
         this.doctorService.createDepartment({ name, code }).subscribe({
             next: () => {
@@ -823,19 +765,16 @@ export class NewDoctor implements AfterViewInit {
                 this.isSavingDept = false;
             },
             error: (err) => {
-                console.error('Error creating department:', err);
-                if (err.error.message == 'Unauthorized') {
+                this.isSavingDept = false;
+                if (err?.error?.message === 'Unauthorized') {
                     this.helpersService.redirectToLogin();
                     return;
-                } else {
-                    this.helpersService.notifyError('Error', 'Failed to add department');
-                    this.isSavingDept = false;
                 }
+                this.helpersService.notifyError('Error', 'Failed to add department');
             }
         });
     }
 
-    // ===== Specialization dialog =====
     openAddSpec() {
         this.newSpec = '';
         this.newSpecCode = '';
@@ -843,10 +782,9 @@ export class NewDoctor implements AfterViewInit {
     }
 
     saveSpecialization() {
-        const name = (this.newSpec || '').trim();
-        const code = (this.newSpecCode || '').trim() || undefined;
+        const name = this.newSpec.trim();
+        const code = this.newSpecCode.trim() || undefined;
         if (!name) return;
-
         this.isSavingSpec = true;
         this.doctorService.createSpecialization({ name, code }).subscribe({
             next: () => {
@@ -857,19 +795,16 @@ export class NewDoctor implements AfterViewInit {
                 this.isSavingSpec = false;
             },
             error: (err) => {
-                console.error('Error creating specialization:', err);
-                if (err.error.message == 'Unauthorized') {
+                this.isSavingSpec = false;
+                if (err?.error?.message === 'Unauthorized') {
                     this.helpersService.redirectToLogin();
                     return;
-                } else {
-                    this.helpersService.notifyError('Error', 'Failed to add specialization');
-                    this.isSavingSpec = false;
                 }
+                this.helpersService.notifyError('Error', 'Failed to add specialization');
             }
         });
     }
 
-    // ===== Unified bulk flow =====
     openBulk(type: 'department' | 'specialization') {
         this.bulkType = type;
         this.bulkPreview = [];
@@ -880,8 +815,7 @@ export class NewDoctor implements AfterViewInit {
     onBulkFiles(ev: FileSelectEvent) {
         const f = ev.files?.[0];
         if (!f) return;
-        const codeOptional = this.bulkType === 'specialization';
-        this.parseTwoColFile(f, codeOptional).then(({ ok, rows, invalid, error }) => {
+        this.parseTwoColFile(f, this.bulkType === 'specialization').then(({ ok, rows, invalid, error }) => {
             if (!ok) {
                 this.helpersService.notifyError('Parse error', error || 'Unable to read file');
                 return;
@@ -894,7 +828,6 @@ export class NewDoctor implements AfterViewInit {
     saveBulk() {
         if (!this.bulkPreview.length) return;
         this.isUploadingBulk = true;
-
         const obs = this.bulkType === 'department' ? this.doctorService.bulkCreateDepartments(this.bulkPreview as { name: string; code: string }[]) : this.doctorService.bulkCreateSpecializations(this.bulkPreview as { name: string; code?: string }[]);
 
         obs.subscribe({
@@ -903,25 +836,21 @@ export class NewDoctor implements AfterViewInit {
                 this.helpersService.notifySuccess(`Imported ${imported} ${this.bulkType === 'department' ? 'departments' : 'specializations'}`);
                 this.isUploadingBulk = false;
                 this.bulkVisible = false;
-                // refresh suggestions
                 this.searchRefData(this.bulkType, { query: '' });
             },
             error: (err) => {
-                console.error(err);
-                if (err.error.message == 'Unauthorized') {
+                this.isUploadingBulk = false;
+                if (err?.error?.message === 'Unauthorized') {
                     this.helpersService.redirectToLogin();
                     return;
-                } else {
-                    this.helpersService.notifyError('Upload failed', `Could not import ${this.bulkType}s`);
-                    this.isUploadingBulk = false;
                 }
+                this.helpersService.notifyError('Upload failed', `Could not import ${this.bulkType}s`);
             }
         });
     }
 
-    downloadTemplate(kind: 'department' | 'specialization') {
-        const header = 'name,code\n';
-        const blob = new Blob([header], { type: 'text/csv;charset=utf-8;' });
+    downloadBulkTemplate(kind: 'department' | 'specialization') {
+        const blob = new Blob(['name,code\n'], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
@@ -932,21 +861,15 @@ export class NewDoctor implements AfterViewInit {
         URL.revokeObjectURL(url);
     }
 
-    // ===== Parser for CSV/XLSX with headers: name, code =====
     private async parseTwoColFile(file: File, codeOptional = false): Promise<{ ok: boolean; rows: any[]; invalid: any[]; error?: string }> {
         try {
             const ext = file.name.toLowerCase().split('.').pop() || '';
-            if (ext === 'csv') {
-                const text = await file.text();
-                return this.parseCsvText(text, codeOptional);
-            }
+            if (ext === 'csv') return this.parseCsvText(await file.text(), codeOptional);
             if (ext === 'xlsx' || ext === 'xls') {
-                const buf = await file.arrayBuffer();
-                const XLSX = await import('xlsx'); // ensure `npm i xlsx`
-                const wb = XLSX.read(buf, { type: 'array' });
+                const XLSX = await import('xlsx');
+                const wb = XLSX.read(await file.arrayBuffer(), { type: 'array' });
                 const ws = wb.Sheets[wb.SheetNames[0]];
-                const json = XLSX.utils.sheet_to_json<any>(ws, { defval: '' });
-                return this.normalizeRows(json, codeOptional);
+                return this.normalizeRows(XLSX.utils.sheet_to_json<any>(ws, { defval: '' }), codeOptional);
             }
             return { ok: false, rows: [], invalid: [], error: 'Unsupported file type' };
         } catch (e: any) {
@@ -987,8 +910,7 @@ export class NewDoctor implements AfterViewInit {
         const invalid: any[] = [];
         for (const r of json) {
             const name = String(r.name ?? r.Name ?? r.NAME ?? '').trim();
-            const codeRaw = r.code ?? r.Code ?? r.CODE ?? '';
-            const code = codeRaw === undefined || codeRaw === null ? '' : String(codeRaw).trim();
+            const code = String(r.code ?? r.Code ?? r.CODE ?? '').trim();
             if (!name || (!codeOptional && !code)) {
                 invalid.push(r);
                 continue;

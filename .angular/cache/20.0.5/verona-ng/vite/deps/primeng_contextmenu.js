@@ -1,10 +1,11 @@
 import {
-  Ripple
-} from "./chunk-OC77X5LN.js";
-import {
   Tooltip,
   TooltipModule
-} from "./chunk-NG66ICPZ.js";
+} from "./chunk-OLS4C5IP.js";
+import {
+  Badge,
+  BadgeModule
+} from "./chunk-T47RI6IU.js";
 import {
   DomHandler
 } from "./chunk-S73J4WE3.js";
@@ -12,17 +13,12 @@ import {
   zindexutils
 } from "./chunk-BB55NINM.js";
 import {
+  Ripple
+} from "./chunk-OC77X5LN.js";
+import {
   AngleRightIcon
 } from "./chunk-RHA7RL5K.js";
 import "./chunk-YXZQJBKH.js";
-import {
-  Badge,
-  BadgeModule
-} from "./chunk-TENFQJBN.js";
-import {
-  Bind,
-  BindModule
-} from "./chunk-MLQGRGGO.js";
 import {
   BaseComponent,
   PARENT_INSTANCE
@@ -36,9 +32,9 @@ import {
   SharedModule
 } from "./chunk-LMEEH3AJ.js";
 import {
-  RouterLink,
-  RouterModule
-} from "./chunk-Y35IOCZT.js";
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
 import "./chunk-GOP36Q47.js";
 import {
   $t,
@@ -65,9 +61,13 @@ import {
   transition,
   trigger
 } from "./chunk-53DGU4C2.js";
-import "./chunk-SRUCT75H.js";
-import "./chunk-L26I7UJA.js";
+import {
+  RouterLink,
+  RouterModule
+} from "./chunk-EFY5GPDX.js";
+import "./chunk-J5N23VJV.js";
 import "./chunk-3XGGEXNB.js";
+import "./chunk-L26I7UJA.js";
 import {
   CommonModule,
   NgForOf,

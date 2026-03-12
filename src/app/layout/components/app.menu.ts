@@ -32,22 +32,19 @@ export class AppMenu implements OnInit {
 
         const adminItems: MenuItem[] = [
             {
+                label: 'Dashboard',
+                icon: 'pi pi-desktop',
+                routerLink: ['/']
+            },
+            {
                 label: 'Management',
                 icon: 'pi pi-users',
                 items: [
-                    { label: 'Doctor Management', icon: 'pi pi-briefcase', routerLink: ['/doctors-management'] },
+                    { label: 'Doctors Management', icon: 'pi pi-briefcase', routerLink: ['/doctors-management'] },
                     { label: 'Patients Management', icon: 'pi pi-user-plus', routerLink: ['/patients-management'] }
                 ]
             },
-            { label: 'Notifications', icon: 'pi pi-bell', routerLink: ['/notifications'] },
-            {
-                label: 'Dashboard',
-                icon: 'pi pi-home',
-                items: [
-                    { label: 'SaaS', icon: 'pi pi-desktop', routerLink: ['/'] },
-                    { label: 'Sales', icon: 'pi pi-chart-bar', routerLink: ['/dashboard-sales'] }
-                ]
-            }
+            { label: 'Notifications', icon: 'pi pi-bell', routerLink: ['/notifications'] }
         ];
 
         const sharedItems: MenuItem[] = [
