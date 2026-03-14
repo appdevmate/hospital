@@ -1,7 +1,11 @@
 import {
   Tooltip,
   TooltipModule
-} from "./chunk-NG66ICPZ.js";
+} from "./chunk-OLS4C5IP.js";
+import {
+  Badge,
+  BadgeModule
+} from "./chunk-T47RI6IU.js";
 import {
   ConnectedOverlayScrollHandler,
   DomHandler
@@ -12,14 +16,6 @@ import {
 import {
   Ripple
 } from "./chunk-OC77X5LN.js";
-import {
-  Badge,
-  BadgeModule
-} from "./chunk-TENFQJBN.js";
-import {
-  Bind,
-  BindModule
-} from "./chunk-MLQGRGGO.js";
 import {
   BaseComponent,
   PARENT_INSTANCE
@@ -33,10 +29,9 @@ import {
   SharedModule
 } from "./chunk-LMEEH3AJ.js";
 import {
-  RouterLink,
-  RouterLinkActive,
-  RouterModule
-} from "./chunk-Y35IOCZT.js";
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
 import "./chunk-GOP36Q47.js";
 import {
   D,
@@ -54,6 +49,11 @@ import {
   transition,
   trigger
 } from "./chunk-53DGU4C2.js";
+import {
+  RouterLink,
+  RouterLinkActive,
+  RouterModule
+} from "./chunk-Y35IOCZT.js";
 import {
   DomSanitizer
 } from "./chunk-SRUCT75H.js";

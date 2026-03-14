@@ -1,10 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Config } from './config';
 
-const API_URL = 'https://od8gx8kld8.execute-api.us-east-1.amazonaws.com';
-const API_KEY = 'tiryaq-hospital-001';
-
-const headers = new HttpHeaders({ 'x-api-key': API_KEY });
+const CALENDAR_API_KEY = 'tiryaq-hospital-001';
 
 export interface HospitalCalendar {
     calendarId: string;
@@ -26,33 +25,37 @@ export interface HospitalEvent {
 
 @Injectable({ providedIn: 'root' })
 export class HospitalCalendarService {
-    constructor(private http: HttpClient) {}
+    private http = inject(HttpClient);
 
-    getCalendars() {
-        return this.http.get<HospitalCalendar[]>(`${API_URL}/calendars`, { headers });
+    private headers(): HttpHeaders {
+        return new HttpHeaders({ 'x-api-key': CALENDAR_API_KEY });
     }
 
-    createCalendar(name: string, description: string) {
-        return this.http.post<HospitalCalendar>(`${API_URL}/calendars`, { name, description }, { headers });
+    getCalendars(): Observable<HospitalCalendar[]> {
+        return this.http.get<HospitalCalendar[]>(Config.buildCalendarUrl('calendars'), { headers: this.headers() });
     }
 
-    getEvents(calendarId: string) {
-        return this.http.get<HospitalEvent[]>(`${API_URL}/calendars/${calendarId}/events`, { headers });
+    createCalendar(name: string, description: string): Observable<HospitalCalendar> {
+        return this.http.post<HospitalCalendar>(Config.buildCalendarUrl('calendars'), { name, description }, { headers: this.headers() });
     }
 
-    createEvent(calendarId: string, event: Partial<HospitalEvent>) {
-        return this.http.post<HospitalEvent>(`${API_URL}/calendars/${calendarId}/events`, event, { headers });
+    deleteCalendar(calendarId: string): Observable<void> {
+        return this.http.delete<void>(Config.buildCalendarUrl(`calendars/${calendarId}`), { headers: this.headers() });
     }
 
-    deleteCalendar(calendarId: string) {
-        return this.http.delete(`${API_URL}/calendars/${calendarId}`, { headers });
+    getEvents(calendarId: string): Observable<HospitalEvent[]> {
+        return this.http.get<HospitalEvent[]>(Config.buildCalendarUrl(`calendars/${calendarId}/events`), { headers: this.headers() });
     }
 
-    updateEvent(calendarId: string, eventId: string, event: Partial<HospitalEvent>) {
-        return this.http.patch(`${API_URL}/calendars/${calendarId}/events/${eventId}`, event, { headers });
+    createEvent(calendarId: string, event: Partial<HospitalEvent>): Observable<HospitalEvent> {
+        return this.http.post<HospitalEvent>(Config.buildCalendarUrl(`calendars/${calendarId}/events`), event, { headers: this.headers() });
     }
 
-    deleteEvent(calendarId: string, eventId: string) {
-        return this.http.delete(`${API_URL}/calendars/${calendarId}/events/${eventId}`, { headers });
+    updateEvent(calendarId: string, eventId: string, event: Partial<HospitalEvent>): Observable<HospitalEvent> {
+        return this.http.patch<HospitalEvent>(Config.buildCalendarUrl(`calendars/${calendarId}/events/${eventId}`), event, { headers: this.headers() });
+    }
+
+    deleteEvent(calendarId: string, eventId: string): Observable<void> {
+        return this.http.delete<void>(Config.buildCalendarUrl(`calendars/${calendarId}/events/${eventId}`), { headers: this.headers() });
     }
 }

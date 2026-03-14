@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -6,19 +6,20 @@ import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { HospitalCalendarService, HospitalCalendar } from '../../pages/service/hospital-calendar.service';
-import { DoctorsService } from '@/pages/service/doctors.service';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { TextareaModule } from 'primeng/textarea';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DatePickerModule } from 'primeng/datepicker';
 import { ConfirmationService } from 'primeng/api';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+
+import { HospitalCalendarService, HospitalCalendar } from '../../pages/service/hospital-calendar.service';
+import { DoctorsService } from '@/pages/service/doctors.service';
 import { HelpersService } from '@/pages/service/helpers-service';
-import { DatePickerModule } from 'primeng/datepicker';
 
 @Component({
     selector: 'app-hospital-calendar',
@@ -31,25 +32,30 @@ import { DatePickerModule } from 'primeng/datepicker';
 export class HospitalCalendarComponent implements OnInit {
     @ViewChild('calendarEl') calendarEl!: ElementRef;
 
+    // ── Services ─────────────────────────────────────────────────────────
+    private calendarService = inject(HospitalCalendarService);
+    private doctorsService = inject(DoctorsService);
+    private confirmationService = inject(ConfirmationService);
+    private helpers = inject(HelpersService);
+    private cdr = inject(ChangeDetectorRef);
+
+    // ── State ─────────────────────────────────────────────────────────────
     calendarList: HospitalCalendar[] = [];
     selectedCalendarId = '';
     fcInstance: Calendar | null = null;
     syncing = false;
+    loading = false;
+    resyncing = false;
 
-    // create dialog
     showEventDialog = false;
-    // edit dialog
     showEditDialog = false;
-    // detail dialog
     showDetailDialog = false;
 
-    loading = false;
     pendingStart = '';
     pendingEnd = '';
     selectedEvent: any = null;
-    resyncing = false;
 
-    private dayNameToNumber: Record<string, number> = {
+    private readonly dayNameToNumber: Record<string, number> = {
         sun: 0,
         mon: 1,
         tue: 2,
@@ -78,27 +84,21 @@ export class HospitalCalendarComponent implements OnInit {
         { label: 'Monthly', value: 'monthly' }
     ];
 
-    constructor(
-        private calendarService: HospitalCalendarService,
-        private doctorsService: DoctorsService,
-        private confirmationService: ConfirmationService,
-        private helpers: HelpersService,
-        private cd: ChangeDetectorRef
-    ) {}
-
+    // ── Lifecycle ─────────────────────────────────────────────────────────
     ngOnInit() {
         this.syncDoctorCalendars();
     }
 
+    // ── Sync ──────────────────────────────────────────────────────────────
     syncDoctorCalendars() {
         this.syncing = true;
-        this.cd.detectChanges();
+        this.cdr.detectChanges();
 
         forkJoin({
             calendars: this.calendarService.getCalendars(),
             doctors: this.doctorsService.getDoctorsPage({ pageSize: 200 }).pipe(catchError(() => of({ data: [] })))
         }).subscribe(({ calendars, doctors }) => {
-            const doctorList = doctors.data || [];
+            const doctorList = (doctors as any).data || [];
             const doctorNames = new Set(doctorList.map((d: any) => d.name).filter(Boolean));
             const existingNames = new Set(calendars.map((c) => c.name));
 
@@ -106,9 +106,7 @@ export class HospitalCalendarComponent implements OnInit {
             const orphaned = calendars.filter((c) => !doctorNames.has(c.name));
 
             const creates$ = missing.map((d: any) => this.calendarService.createCalendar(d.name, `Calendar for ${d.name}`).pipe(catchError(() => of(null))));
-
-            const deletes$ = orphaned.map((c) => this.calendarService.deleteCalendar(c.calendarId).pipe(catchError(() => of(null))));
-
+            const deletes$ = orphaned.map((c: any) => this.calendarService.deleteCalendar(c.calendarId).pipe(catchError(() => of(null))));
             const all$ = [...creates$, ...deletes$];
 
             if (all$.length === 0) {
@@ -135,9 +133,10 @@ export class HospitalCalendarComponent implements OnInit {
             this.selectedCalendarId = this.calendarList[0].calendarId;
             setTimeout(() => this.initCalendar(), 0);
         }
-        this.cd.detectChanges();
+        this.cdr.detectChanges();
     }
 
+    // ── FullCalendar ──────────────────────────────────────────────────────
     initCalendar() {
         if (this.fcInstance) {
             this.fcInstance.destroy();
@@ -147,11 +146,7 @@ export class HospitalCalendarComponent implements OnInit {
         this.fcInstance = new Calendar(this.calendarEl.nativeElement, {
             plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
             initialView: 'dayGridMonth',
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay'
-            },
+            headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek,timeGridDay' },
             editable: true,
             selectable: true,
             selectMirror: true,
@@ -161,14 +156,14 @@ export class HospitalCalendarComponent implements OnInit {
             select: (arg) => {
                 this.pendingStart = arg.startStr;
                 this.pendingEnd = arg.endStr;
-                this.newEvent = { name: '', description: '', color: '#3B82F6', recurrence: 'none', startTime: null as Date | null, endTime: null as Date | null };
+                this.newEvent = { name: '', description: '', color: '#3B82F6', recurrence: 'none', startTime: null, endTime: null };
                 this.showEventDialog = true;
-                this.cd.detectChanges();
+                this.cdr.detectChanges();
             },
             eventClick: (arg) => {
                 this.selectedEvent = arg.event;
                 this.showDetailDialog = true;
-                this.cd.detectChanges();
+                this.cdr.detectChanges();
             },
             eventDrop: (arg) => {
                 this.saveEventDrop(arg);
@@ -202,11 +197,11 @@ export class HospitalCalendarComponent implements OnInit {
                     extendedProps: { description: e.description, recurrence: e.recurrence }
                 })
             );
-            this.cd.detectChanges();
+            this.cdr.detectChanges();
         });
     }
 
-    // Create
+    // ── CRUD ──────────────────────────────────────────────────────────────
     onCreate() {
         if (!this.newEvent.name) return;
         this.loading = true;
@@ -221,22 +216,20 @@ export class HospitalCalendarComponent implements OnInit {
             })
             .subscribe({
                 next: () => {
-                    this.newEvent = { name: '', description: '', color: '#3B82F6', recurrence: 'none', startTime: null as Date | null, endTime: null as Date | null };
+                    this.newEvent = { name: '', description: '', color: '#3B82F6', recurrence: 'none', startTime: null, endTime: null };
                     this.showEventDialog = false;
                     this.loading = false;
                     this.helpers.notifySuccess('Event Created');
                     this.loadEvents();
-                    this.cd.detectChanges();
+                    this.cdr.detectChanges();
                 },
-                error: (err) => {
-                    console.error(err);
+                error: () => {
                     this.loading = false;
                     this.helpers.notifyError('Failed', 'Could not create event');
                 }
             });
     }
 
-    // Open edit dialog from detail dialog
     openEdit() {
         if (!this.selectedEvent) return;
         const parseTime = (dateStr: string): Date | null => {
@@ -256,10 +249,9 @@ export class HospitalCalendarComponent implements OnInit {
         };
         this.showDetailDialog = false;
         this.showEditDialog = true;
-        this.cd.detectChanges();
+        this.cdr.detectChanges();
     }
 
-    // Save edit
     onUpdate() {
         if (!this.editEvent.name || !this.selectedEvent) return;
         this.loading = true;
@@ -278,17 +270,15 @@ export class HospitalCalendarComponent implements OnInit {
                     this.loading = false;
                     this.helpers.notifySuccess('Event Updated');
                     this.loadEvents();
-                    this.cd.detectChanges();
+                    this.cdr.detectChanges();
                 },
-                error: (err) => {
-                    console.error(err);
+                error: () => {
                     this.loading = false;
                     this.helpers.notifyError('Failed', 'Could not update event');
                 }
             });
     }
 
-    // Delete from detail dialog
     onDelete() {
         if (!this.selectedEvent) return;
         this.confirmationService.confirm({
@@ -303,10 +293,9 @@ export class HospitalCalendarComponent implements OnInit {
                         this.showDetailDialog = false;
                         this.helpers.notifySuccess('Event Deleted');
                         this.loadEvents();
-                        this.cd.detectChanges();
+                        this.cdr.detectChanges();
                     },
-                    error: (err) => {
-                        console.error(err);
+                    error: () => {
                         this.helpers.notifyError('Failed', 'Could not delete event');
                     }
                 });
@@ -314,7 +303,6 @@ export class HospitalCalendarComponent implements OnInit {
         });
     }
 
-    // Save drag-and-drop
     saveEventDrop(arg: any) {
         this.calendarService
             .updateEvent(this.selectedCalendarId, arg.event.id, {
@@ -325,11 +313,10 @@ export class HospitalCalendarComponent implements OnInit {
                 color: arg.event.backgroundColor || '#3B82F6',
                 recurrence: arg.event.extendedProps?.recurrence || 'none'
             })
-            .subscribe({
-                error: () => arg.revert()
-            });
+            .subscribe({ error: () => arg.revert() });
     }
 
+    // ── Duty Shifts ───────────────────────────────────────────────────────
     syncDutyShifts(doctors: any[], calendars: HospitalCalendar[]) {
         const today = new Date();
         const threeMonthsLater = new Date();
@@ -341,43 +328,15 @@ export class HospitalCalendarComponent implements OnInit {
             const cal = calendars.find((c) => c.name === doctor.name);
             if (!cal) return;
 
-            // Check if duty shifts already exist
             this.calendarService.getEvents(cal.calendarId).subscribe((existingEvents) => {
-                const hasDutyShifts = existingEvents.some((e) => e.description?.includes('DUTY_SHIFT'));
-                if (hasDutyShifts) return;
+                if (existingEvents.some((e) => e.description?.includes('DUTY_SHIFT'))) return;
 
-                // Generate events for next 3 months
-                const creates: any[] = [];
-                const cursor = new Date(today);
+                const creates = this.buildDutyEvents(doctor, today, threeMonthsLater);
+                if (!creates.length) return;
 
-                while (cursor <= threeMonthsLater) {
-                    const dayNum = cursor.getDay();
-                    const dayName = Object.keys(this.dayNameToNumber).find((k) => this.dayNameToNumber[k] === dayNum);
-
-                    if (dayName && doctor.dutyDays.includes(dayName)) {
-                        const dateStr = `${cursor.getFullYear()}-${String(cursor.getMonth() + 1).padStart(2, '0')}-${String(cursor.getDate()).padStart(2, '0')}`;
-                        creates.push({
-                            name: `${doctor.name} - Duty Shift`,
-                            description: 'DUTY_SHIFT',
-                            startDate: `${dateStr}T${doctor.dutyStart}:00`,
-                            endDate: `${dateStr}T${doctor.dutyEnd}:00`,
-                            color: '#10B981',
-                            recurrence: 'none'
-                        });
-                    }
-                    cursor.setDate(cursor.getDate() + 1);
-                }
-
-                if (creates.length === 0) return;
-
-                // Create all events sequentially using forkJoin
                 const creates$ = creates.map((e) => this.calendarService.createEvent(cal.calendarId, e).pipe(catchError(() => of(null))));
-
                 forkJoin(creates$).subscribe(() => {
-                    // Reload if this is the currently selected calendar
-                    if (this.selectedCalendarId === cal.calendarId) {
-                        this.loadEvents();
-                    }
+                    if (this.selectedCalendarId === cal.calendarId) this.loadEvents();
                 });
             });
         });
@@ -387,24 +346,19 @@ export class HospitalCalendarComponent implements OnInit {
         if (!this.selectedCalendarId) return;
         this.resyncing = true;
 
-        // Find the current calendar
         const cal = this.calendarList.find((c) => c.calendarId === this.selectedCalendarId);
         if (!cal) {
             this.resyncing = false;
             return;
         }
 
-        // Delete the entire calendar then recreate it fresh
         this.calendarService.deleteCalendar(this.selectedCalendarId).subscribe({
             next: () => {
                 this.calendarService.createCalendar(cal.name, `Calendar for ${cal.name}`).subscribe({
                     next: (newCal: any) => {
-                        // Update local state with new calendarId
-                        const newCalendarId = newCal.calendarId;
-                        this.selectedCalendarId = newCalendarId;
+                        this.selectedCalendarId = newCal.calendarId;
                         const idx = this.calendarList.findIndex((c) => c.name === cal.name);
-                        if (idx !== -1) this.calendarList[idx] = { ...cal, calendarId: newCalendarId };
-                        // Now sync duty shifts
+                        if (idx !== -1) this.calendarList[idx] = { ...cal, calendarId: newCal.calendarId };
                         this.runDutySync();
                     },
                     error: () => {
@@ -417,6 +371,7 @@ export class HospitalCalendarComponent implements OnInit {
             }
         });
     }
+
     private runDutySync() {
         this.doctorsService.getDoctorsPage({ pageSize: 200 }).subscribe((result) => {
             const doctor = result.data.find((d: any) => {
@@ -424,7 +379,7 @@ export class HospitalCalendarComponent implements OnInit {
                 return cal && d.name === cal.name;
             });
 
-            if (!doctor || !doctor.dutyDays?.length || !doctor.dutyStart || !doctor.dutyEnd) {
+            if (!doctor?.dutyDays?.length || !doctor.dutyStart || !doctor.dutyEnd) {
                 this.resyncing = false;
                 this.helpers.notifyWarning('No duty schedule found for this doctor');
                 return;
@@ -433,28 +388,9 @@ export class HospitalCalendarComponent implements OnInit {
             const today = new Date();
             const threeMonthsLater = new Date();
             threeMonthsLater.setMonth(threeMonthsLater.getMonth() + 3);
-            const cursor = new Date(today);
-            const creates: any[] = [];
 
-            while (cursor <= threeMonthsLater) {
-                const dayNum = cursor.getDay();
-                const dayName = Object.keys(this.dayNameToNumber).find((k) => this.dayNameToNumber[k] === dayNum);
-
-                if (dayName && doctor.dutyDays.includes(dayName)) {
-                    const dateStr = `${cursor.getFullYear()}-${String(cursor.getMonth() + 1).padStart(2, '0')}-${String(cursor.getDate()).padStart(2, '0')}`;
-                    creates.push({
-                        name: `${doctor.name} - Duty Shift`,
-                        description: 'DUTY_SHIFT',
-                        startDate: `${dateStr}T${doctor.dutyStart}:00`,
-                        endDate: `${dateStr}T${doctor.dutyEnd}:00`,
-                        color: '#10B981',
-                        recurrence: 'none'
-                    });
-                }
-                cursor.setDate(cursor.getDate() + 1);
-            }
-
-            if (creates.length === 0) {
+            const creates = this.buildDutyEvents(doctor, today, threeMonthsLater);
+            if (!creates.length) {
                 this.resyncing = false;
                 this.helpers.notifyWarning('No duty days to sync');
                 return;
@@ -462,6 +398,30 @@ export class HospitalCalendarComponent implements OnInit {
 
             this.createInBatches(creates, 0);
         });
+    }
+
+    private buildDutyEvents(doctor: any, from: Date, to: Date): any[] {
+        const events: any[] = [];
+        const cursor = new Date(from);
+
+        while (cursor <= to) {
+            const dayNum = cursor.getDay();
+            const dayName = Object.keys(this.dayNameToNumber).find((k) => this.dayNameToNumber[k] === dayNum);
+
+            if (dayName && doctor.dutyDays.includes(dayName)) {
+                const dateStr = `${cursor.getFullYear()}-${String(cursor.getMonth() + 1).padStart(2, '0')}-${String(cursor.getDate()).padStart(2, '0')}`;
+                events.push({
+                    name: `${doctor.name} - Duty Shift`,
+                    description: 'DUTY_SHIFT',
+                    startDate: `${dateStr}T${doctor.dutyStart}:00`,
+                    endDate: `${dateStr}T${doctor.dutyEnd}:00`,
+                    color: '#10B981',
+                    recurrence: 'none'
+                });
+            }
+            cursor.setDate(cursor.getDate() + 1);
+        }
+        return events;
     }
 
     private createInBatches(events: any[], index: number) {
@@ -472,12 +432,11 @@ export class HospitalCalendarComponent implements OnInit {
             this.resyncing = false;
             this.helpers.notifySuccess('Duty schedule synced');
             this.loadEvents();
-            this.cd.detectChanges();
+            this.cdr.detectChanges();
             return;
         }
 
         const batch$ = batch.map((e) => this.calendarService.createEvent(this.selectedCalendarId, e).pipe(catchError(() => of(null))));
-
         forkJoin(batch$).subscribe(() => {
             setTimeout(() => this.createInBatches(events, index + batchSize), 300);
         });

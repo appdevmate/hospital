@@ -1,12 +1,9 @@
 import {
-  Fluid
-} from "./chunk-PJRMHEN5.js";
-import {
   BaseModelHolder
 } from "./chunk-2R7VQYSP.js";
 import {
-  Bind
-} from "./chunk-MLQGRGGO.js";
+  Fluid
+} from "./chunk-ICEVV523.js";
 import {
   PARENT_INSTANCE
 } from "./chunk-YNJ5GKCH.js";
@@ -14,11 +11,14 @@ import {
   BaseStyle
 } from "./chunk-4ATYD752.js";
 import "./chunk-LMEEH3AJ.js";
-import "./chunk-GOP36Q47.js";
-import "./chunk-UCHM6OXG.js";
+import {
+  Bind
+} from "./chunk-MLQGRGGO.js";
 import {
   NgControl
 } from "./chunk-RZEKJVYA.js";
+import "./chunk-GOP36Q47.js";
+import "./chunk-UCHM6OXG.js";
 import "./chunk-FHZAWWEY.js";
 import "./chunk-5KK3G4LL.js";
 import {

@@ -11,9 +11,6 @@ import {
   CheckIcon
 } from "./chunk-YXZQJBKH.js";
 import {
-  Bind
-} from "./chunk-MLQGRGGO.js";
-import {
   BaseComponent,
   PARENT_INSTANCE
 } from "./chunk-YNJ5GKCH.js";
@@ -25,6 +22,9 @@ import {
   PrimeTemplate,
   SharedModule
 } from "./chunk-LMEEH3AJ.js";
+import {
+  Bind
+} from "./chunk-MLQGRGGO.js";
 import "./chunk-GOP36Q47.js";
 import {
   _t,

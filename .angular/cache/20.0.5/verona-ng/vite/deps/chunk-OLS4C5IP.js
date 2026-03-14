@@ -5,15 +5,15 @@ import {
   zindexutils
 } from "./chunk-BB55NINM.js";
 import {
-  BindModule
-} from "./chunk-MLQGRGGO.js";
-import {
   BaseComponent,
   PARENT_INSTANCE
 } from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
 } from "./chunk-4ATYD752.js";
+import {
+  BindModule
+} from "./chunk-MLQGRGGO.js";
 import {
   $,
   C2 as C,
@@ -924,4 +924,4 @@ export {
   Tooltip,
   TooltipModule
 };
-//# sourceMappingURL=chunk-NG66ICPZ.js.map
+//# sourceMappingURL=chunk-OLS4C5IP.js.map

@@ -1,8 +1,4 @@
 import {
-  Bind,
-  BindModule
-} from "./chunk-MLQGRGGO.js";
-import {
   BaseComponent,
   PARENT_INSTANCE
 } from "./chunk-YNJ5GKCH.js";
@@ -13,10 +9,14 @@ import {
   SharedModule
 } from "./chunk-LMEEH3AJ.js";
 import {
-  RouterModule
-} from "./chunk-Y35IOCZT.js";
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
 import "./chunk-GOP36Q47.js";
 import "./chunk-UCHM6OXG.js";
+import {
+  RouterModule
+} from "./chunk-Y35IOCZT.js";
 import "./chunk-SRUCT75H.js";
 import "./chunk-L26I7UJA.js";
 import "./chunk-3XGGEXNB.js";
