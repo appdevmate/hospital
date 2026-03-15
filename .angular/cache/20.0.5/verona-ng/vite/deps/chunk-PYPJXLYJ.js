@@ -5,15 +5,15 @@ import {
   Ripple
 } from "./chunk-OC77X5LN.js";
 import {
-  Bind,
-  BindModule
-} from "./chunk-MLQGRGGO.js";
-import {
   PARENT_INSTANCE
 } from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
 } from "./chunk-4ATYD752.js";
+import {
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
 import {
   PrimeTemplate,
   SharedModule
@@ -613,4 +613,4 @@ export {
   ToggleButton,
   ToggleButtonModule
 };
-//# sourceMappingURL=chunk-KSJPIM5O.js.map
+//# sourceMappingURL=chunk-PYPJXLYJ.js.map

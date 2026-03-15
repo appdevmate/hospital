@@ -1,19 +1,19 @@
 import {
   ToggleButton
-} from "./chunk-KSJPIM5O.js";
+} from "./chunk-PYPJXLYJ.js";
 import {
   BaseEditableHolder
 } from "./chunk-343RM6UZ.js";
-import {
-  Bind,
-  BindModule
-} from "./chunk-MLQGRGGO.js";
 import {
   PARENT_INSTANCE
 } from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
 } from "./chunk-4ATYD752.js";
+import {
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
 import {
   PrimeTemplate,
   SharedModule
@@ -640,4 +640,4 @@ export {
   SelectButton,
   SelectButtonModule
 };
-//# sourceMappingURL=chunk-I5H6KKMG.js.map
+//# sourceMappingURL=chunk-T3FYM3HW.js.map

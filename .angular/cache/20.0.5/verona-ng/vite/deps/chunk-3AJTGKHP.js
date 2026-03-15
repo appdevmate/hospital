@@ -3,7 +3,7 @@ import {
 } from "./chunk-PF7DN6OW.js";
 import {
   Button
-} from "./chunk-BBQZWDGO.js";
+} from "./chunk-KNNPWIIW.js";
 import {
   DomHandler,
   blockBodyScroll,
@@ -18,15 +18,15 @@ import {
   WindowMinimizeIcon
 } from "./chunk-RHA7RL5K.js";
 import {
-  Bind
-} from "./chunk-MLQGRGGO.js";
-import {
   BaseComponent,
   PARENT_INSTANCE
 } from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
 } from "./chunk-4ATYD752.js";
+import {
+  Bind
+} from "./chunk-MLQGRGGO.js";
 import {
   PrimeTemplate,
   SharedModule,
@@ -1957,4 +1957,4 @@ export {
   Dialog,
   DialogModule
 };
-//# sourceMappingURL=chunk-F6TT5MUY.js.map
+//# sourceMappingURL=chunk-3AJTGKHP.js.map

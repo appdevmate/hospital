@@ -1,18 +1,14 @@
 import {
-  transformToBoolean
-} from "./chunk-BB55NINM.js";
-import {
   Ripple
 } from "./chunk-OC77X5LN.js";
+import {
+  transformToBoolean
+} from "./chunk-BB55NINM.js";
 import {
   ChevronDownIcon,
   ChevronUpIcon
 } from "./chunk-RHA7RL5K.js";
 import "./chunk-YXZQJBKH.js";
-import {
-  Bind,
-  BindModule
-} from "./chunk-MLQGRGGO.js";
 import {
   BaseComponent,
   PARENT_INSTANCE
@@ -20,6 +16,10 @@ import {
 import {
   BaseStyle
 } from "./chunk-4ATYD752.js";
+import {
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
 import {
   SharedModule
 } from "./chunk-LMEEH3AJ.js";
@@ -96,8 +96,8 @@ import {
   ɵɵdefineInjector,
   ɵɵnamespaceSVG
 } from "./chunk-LW34VNAR.js";
-import "./chunk-YVXMBCE5.js";
 import "./chunk-G6ECYYJH.js";
+import "./chunk-YVXMBCE5.js";
 import "./chunk-RTGP7ALM.js";
 import "./chunk-4MWRP73S.js";
 

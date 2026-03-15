@@ -1,14 +1,14 @@
 import {
-  Bind,
-  BindModule
-} from "./chunk-MLQGRGGO.js";
-import {
   BaseComponent,
   PARENT_INSTANCE
 } from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
 } from "./chunk-4ATYD752.js";
+import {
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
 import {
   SharedModule
 } from "./chunk-LMEEH3AJ.js";
@@ -554,4 +554,4 @@ export {
   Badge,
   BadgeModule
 };
-//# sourceMappingURL=chunk-TENFQJBN.js.map
+//# sourceMappingURL=chunk-B6BBOHQM.js.map

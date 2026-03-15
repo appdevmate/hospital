@@ -1,7 +1,10 @@
 import {
+  Ripple
+} from "./chunk-OC77X5LN.js";
+import {
   Tooltip,
   TooltipModule
-} from "./chunk-NG66ICPZ.js";
+} from "./chunk-OLS4C5IP.js";
 import {
   ConnectedOverlayScrollHandler
 } from "./chunk-S73J4WE3.js";
@@ -9,15 +12,8 @@ import {
   zindexutils
 } from "./chunk-BB55NINM.js";
 import {
-  Ripple
-} from "./chunk-OC77X5LN.js";
-import {
   AngleRightIcon
 } from "./chunk-RHA7RL5K.js";
-import {
-  Bind,
-  BindModule
-} from "./chunk-MLQGRGGO.js";
 import {
   BaseComponent,
   PARENT_INSTANCE
@@ -25,6 +21,10 @@ import {
 import {
   BaseStyle
 } from "./chunk-4ATYD752.js";
+import {
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
 import {
   OverlayService,
   PrimeTemplate,
@@ -2212,4 +2212,4 @@ export {
   TieredMenu,
   TieredMenuModule
 };
-//# sourceMappingURL=chunk-NEA7JF6H.js.map
+//# sourceMappingURL=chunk-F5FBCIMV.js.map

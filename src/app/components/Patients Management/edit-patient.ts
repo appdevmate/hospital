@@ -275,9 +275,7 @@ export class EditPatient implements OnInit, AfterViewInit {
 
     genderOptions = [
         { label: 'Male', value: 'male' },
-        { label: 'Female', value: 'female' },
-        { label: 'Non-binary', value: 'non-binary' },
-        { label: 'Prefer not to say', value: 'prefer-not-to-say' }
+        { label: 'Female', value: 'female' }
     ];
     filteredGenderOptions: any[] = [];
     statusOptions: string[] = ['admitted', 'stable', 'under treatment', 'discharged', 'critical', 'dead'];
@@ -369,9 +367,7 @@ export class EditPatient implements OnInit, AfterViewInit {
     getGenderIcon(gender: string): string {
         const map: Record<string, string> = {
             male: 'pi-mars',
-            female: 'pi-venus',
-            'non-binary': 'pi-circle',
-            'prefer-not-to-say': 'pi-question-circle'
+            female: 'pi-venus'
         };
         return map[gender] || 'pi-user';
     }
