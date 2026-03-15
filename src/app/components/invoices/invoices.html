@@ -3,24 +3,28 @@
 
 <!-- Stats -->
 <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr)); gap:1rem; margin-bottom:1.5rem;">
-    <div class="stat-card" *ngFor="let s of stats()">
+    @for (s of stats(); track s.label) {
+    <div class="stat-card">
         <div class="stat-value" [style.color]="s.color">{{ s.value }}</div>
         <div class="stat-label">{{ s.label }}</div>
     </div>
+    }
 </div>
 
 <!-- Toolbar: New Invoice for admins only -->
 <ng-template #tbStart>
-    <p-button *ngIf="auth.isAdmin" label="New Invoice" icon="pi pi-plus" (onClick)="openCreate()" />
+    @if (auth.isAdmin) {
+    <p-button label="New Invoice" icon="pi pi-plus" (onClick)="openCreate()" />
+    }
 </ng-template>
 
-<!-- Row actions: doctors can only view -->
+<!-- Row actions -->
 <ng-template #rowActions let-row>
     <p-button icon="pi pi-eye" text severity="info" (onClick)="viewInvoice(row)" pTooltip="View" />
-    <ng-container *ngIf="auth.isAdmin">
-        <p-button icon="pi pi-pencil" text (onClick)="openEdit(row)" pTooltip="Edit" />
-        <p-button icon="pi pi-trash" text severity="danger" (onClick)="confirmDelete(row)" pTooltip="Delete" />
-    </ng-container>
+    @if (auth.isAdmin) {
+    <p-button icon="pi pi-pencil" text (onClick)="openEdit(row)" pTooltip="Edit" />
+    <p-button icon="pi pi-trash" text severity="danger" (onClick)="confirmDelete(row)" pTooltip="Delete" />
+    }
 </ng-template>
 
 <!-- Status custom template -->
@@ -32,7 +36,7 @@
     [actionsTemplate]="rowActions" [toolbarStart]="tbStart" [customTemplates]="customTemplates()" dataKey="paymentId">
 </app-generic-table>
 
-<!-- ── Create / Edit Dialog ───────────────────────────────────────────────── -->
+<!-- ── Create / Edit Dialog ── -->
 <p-dialog [(visible)]="showForm" [modal]="true" [style]="{ width: '750px' }"
     [header]="editingPayment ? 'Edit Invoice' : 'New Invoice'" [draggable]="false" [resizable]="false">
 
@@ -50,13 +54,14 @@
                     <label for="patient">Patient *</label>
                 </p-floatLabel>
 
-                <!-- Doctor field: hidden for doctors, they use their own account -->
-                <p-floatLabel variant="on" *ngIf="auth.isAdmin">
+                @if (auth.isAdmin) {
+                <p-floatLabel variant="on">
                     <p-autoComplete inputId="doctorName" formControlName="doctorName"
                         [suggestions]="filteredDoctorNames" (completeMethod)="searchDoctor($event)"
                         (onSelect)="onDoctorSelect($event)" [dropdown]="true" styleClass="w-full" />
                     <label for="doctorName">Doctor</label>
                 </p-floatLabel>
+                }
             </div>
 
             <div class="form-grid mt-3">
@@ -81,7 +86,8 @@
                 <p-button label="Add Item" icon="pi pi-plus" size="small" text (onClick)="addItem()" />
             </div>
             <div formArrayName="items">
-                <div *ngFor="let item of itemsArray.controls; let i = index" [formGroupName]="i"
+                @for (item of itemsArray.controls; track $index; let i = $index) {
+                <div [formGroupName]="i"
                     style="display:grid; grid-template-columns:2fr 1fr 1fr 1fr auto; gap:0.5rem; align-items:center; margin-bottom:0.5rem;">
                     <input pInputText formControlName="description" placeholder="Description" class="w-full" />
                     <p-inputNumber formControlName="quantity" placeholder="Qty" [min]="1" styleClass="w-full"
@@ -92,6 +98,7 @@
                         style="background:#F9FAFB;" />
                     <p-button icon="pi pi-times" text severity="danger" (onClick)="removeItem(i)" />
                 </div>
+                }
             </div>
         </div>
 
@@ -156,14 +163,16 @@
             <p-button type="submit" [label]="editingPayment ? 'Save Changes' : 'Create Invoice'" icon="pi pi-save"
                 [loading]="submitting" />
         </div>
+
     </form>
 </p-dialog>
 
-<!-- ── View Dialog ────────────────────────────────────────────────────────── -->
+<!-- ── View Dialog ── -->
 <p-dialog [(visible)]="showView" [modal]="true" [style]="{ width: '600px' }" header="Invoice Details"
     [draggable]="false" [resizable]="false">
 
-    <div *ngIf="viewingPayment" class="invoice-view">
+    @if (viewingPayment) {
+    <div class="invoice-view">
 
         <div class="inv-header">
             <div>
@@ -183,24 +192,25 @@
         <p-divider />
 
         <!-- Items table -->
-        <div *ngIf="viewingPayment.items && viewingPayment.items.length > 0">
-            <h4 style="margin:0 0 0.75rem 0;">Items</h4>
-            <div style="border:1px solid #E5E7EB; border-radius:8px; overflow:hidden;">
-                <div
-                    style="display:grid; grid-template-columns:2fr 1fr 1fr 1fr; background:#F9FAFB; padding:0.5rem 1rem; font-weight:600; font-size:0.85rem; color:#6B7280;">
-                    <span>Description</span><span>Qty</span><span>Unit Price</span><span>Total</span>
-                </div>
-                <div *ngFor="let item of viewingPayment.items; let i = index"
-                    style="display:grid; grid-template-columns:2fr 1fr 1fr 1fr; padding:0.5rem 1rem; font-size:0.9rem;"
-                    [style.background]="i % 2 === 0 ? 'white' : '#F9FAFB'">
-                    <span>{{ item.description }}</span>
-                    <span>{{ item.quantity }}</span>
-                    <span>QAR {{ item.unitPrice | number:'1.2-2' }}</span>
-                    <span>QAR {{ item.total | number:'1.2-2' }}</span>
-                </div>
+        @if (viewingPayment.items && viewingPayment.items.length > 0) {
+        <h4 style="margin:0 0 0.75rem 0;">Items</h4>
+        <div style="border:1px solid #E5E7EB; border-radius:8px; overflow:hidden;">
+            <div
+                style="display:grid; grid-template-columns:2fr 1fr 1fr 1fr; background:#F9FAFB; padding:0.5rem 1rem; font-weight:600; font-size:0.85rem; color:#6B7280;">
+                <span>Description</span><span>Qty</span><span>Unit Price</span><span>Total</span>
             </div>
-            <p-divider />
+            @for (item of viewingPayment.items; track $index; let i = $index) {
+            <div style="display:grid; grid-template-columns:2fr 1fr 1fr 1fr; padding:0.5rem 1rem; font-size:0.9rem;"
+                [style.background]="i % 2 === 0 ? 'white' : '#F9FAFB'">
+                <span>{{ item.description }}</span>
+                <span>{{ item.quantity }}</span>
+                <span>QAR {{ item.unitPrice | number:'1.2-2' }}</span>
+                <span>QAR {{ item.total | number:'1.2-2' }}</span>
+            </div>
+            }
         </div>
+        <p-divider />
+        }
 
         <!-- Totals -->
         <div class="inv-totals">
@@ -208,23 +218,27 @@
                 <span>Total Amount</span>
                 <span>QAR {{ viewingPayment.amount | number:'1.2-2' }}</span>
             </div>
-            <div class="inv-total-row" *ngIf="viewingPayment.insuranceProvider">
+            @if (viewingPayment.insuranceProvider) {
+            <div class="inv-total-row">
                 <span>Insurance ({{ viewingPayment.insuranceProvider }} {{ viewingPayment.insuranceCoverage }}%)</span>
                 <span>- QAR {{ viewingPayment.insuranceAmount | number:'1.2-2' }}</span>
             </div>
+            }
             <div class="inv-total-row total">
                 <span>Patient Owes</span>
                 <span>QAR {{ viewingPayment.patientOwes | number:'1.2-2' }}</span>
             </div>
         </div>
 
-        <div *ngIf="viewingPayment.notes" style="margin-top:1rem; color:#6B7280; font-size:0.9rem;">
+        @if (viewingPayment.notes) {
+        <div style="margin-top:1rem; color:#6B7280; font-size:0.9rem;">
             <strong>Notes:</strong> {{ viewingPayment.notes }}
         </div>
+        }
 
-        <!-- Action buttons: edit/delete for admins only -->
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1.5rem;"
-            *ngIf="auth.isAdmin">
+        <!-- Action buttons -->
+        @if (auth.isAdmin) {
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1.5rem;">
             <p-button label="Delete" severity="danger" [outlined]="true" icon="pi pi-trash"
                 (click)="confirmDelete(viewingPayment!)" />
             <div style="display:flex; gap:10px;">
@@ -232,8 +246,12 @@
                 <p-button label="Edit" icon="pi pi-pencil" (click)="openEdit(viewingPayment!); showView = false" />
             </div>
         </div>
-        <div style="display:flex; justify-content:flex-end; margin-top:1.5rem;" *ngIf="!auth.isAdmin">
+        } @else {
+        <div style="display:flex; justify-content:flex-end; margin-top:1.5rem;">
             <p-button label="Close" severity="secondary" [outlined]="true" (click)="showView = false" />
         </div>
+        }
+
     </div>
+    }
 </p-dialog>

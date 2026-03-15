@@ -9,14 +9,19 @@ import { AuthService } from '@/pages/service/auth.service';
     selector: '[app-menu]',
     standalone: true,
     imports: [CommonModule, AppMenuitem, RouterModule],
-    template: `<div class="layout-menu-container" #menuContainer>
-        <ul class="layout-menu">
-            <ng-container *ngFor="let item of model; let i = index">
-                <li app-menuitem *ngIf="!item.separator" [item]="item" [index]="i" [root]="true"></li>
-                <li *ngIf="item.separator" class="menu-separator"></li>
-            </ng-container>
-        </ul>
-    </div>`
+    template: `
+        <div class="layout-menu-container" #menuContainer>
+            <ul class="layout-menu">
+                @for (item of model; track $index; let i = $index) {
+                    @if (!item.separator) {
+                        <li app-menuitem [item]="item" [index]="i" [root]="true"></li>
+                    } @else {
+                        <li class="menu-separator"></li>
+                    }
+                }
+            </ul>
+        </div>
+    `
 })
 export class AppMenu implements OnInit {
     el: ElementRef = inject(ElementRef);
@@ -28,14 +33,9 @@ export class AppMenu implements OnInit {
     ngOnInit() {
         this.auth.invalidate();
         const isAdmin = this.auth.isAdmin;
-        const isDoctor = this.auth.isDoctor;
 
         const adminItems: MenuItem[] = [
-            {
-                label: 'Dashboard',
-                icon: 'pi pi-desktop',
-                routerLink: ['/']
-            },
+            { label: 'Dashboard', icon: 'pi pi-desktop', routerLink: ['/'] },
             {
                 label: 'Management',
                 icon: 'pi pi-users',
@@ -54,7 +54,6 @@ export class AppMenu implements OnInit {
             { label: 'Document Control', icon: 'pi pi-folder', routerLink: ['/documents'] }
         ];
 
-        if (isAdmin) this.model = [...adminItems, ...sharedItems];
-        else this.model = sharedItems;
+        this.model = isAdmin ? [...adminItems, ...sharedItems] : sharedItems;
     }
 }

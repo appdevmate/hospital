@@ -3,18 +3,21 @@
 
 <!-- Toolbar: New Appointment only visible to admins -->
 <ng-template #tbStart>
-    <p-button *ngIf="auth.isAdmin" label="New Appointment" icon="pi pi-plus" (onClick)="openCreate()" />
+    @if (auth.isAdmin) {
+    <p-button label="New Appointment" icon="pi pi-plus" (onClick)="openCreate()" />
+    }
 </ng-template>
 
-<!-- Row actions: doctors can only view -->
+<!-- Row actions -->
 <ng-template #rowActions let-row>
     <p-button icon="pi pi-eye" text severity="info" (onClick)="openDetail(row)" pTooltip="View" />
-    <ng-container *ngIf="auth.isAdmin">
-        <p-button icon="pi pi-pencil" text (onClick)="openEdit(row)" pTooltip="Edit" />
-        <p-button icon="pi pi-trash" text severity="danger" (onClick)="onDelete(row)" pTooltip="Delete" />
-    </ng-container>
+    @if (auth.isAdmin) {
+    <p-button icon="pi pi-pencil" text (onClick)="openEdit(row)" pTooltip="Edit" />
+    <p-button icon="pi pi-trash" text severity="danger" (onClick)="onDelete(row)" pTooltip="Delete" />
+    }
 </ng-template>
 
+<!-- Status custom template -->
 <ng-template #statusTemplate let-value="value">
     <p-tag [value]="value | titlecase" [severity]="getStatusSeverity(value)" />
 </ng-template>
@@ -24,7 +27,7 @@
     dataKey="appointmentId">
 </app-generic-table>
 
-<!-- Create Dialog -->
+<!-- ── Create Dialog ── -->
 <p-dialog header="New Appointment" [(visible)]="showCreateDialog" [style]="{ width: '500px' }" [modal]="true"
     [draggable]="false" [resizable]="false">
     <div style="display:flex; flex-direction:column; gap:1.2rem; padding:0.5rem 0;">
@@ -88,7 +91,7 @@
     </div>
 </p-dialog>
 
-<!-- Edit Dialog -->
+<!-- ── Edit Dialog ── -->
 <p-dialog header="Edit Appointment" [(visible)]="showEditDialog" [style]="{ width: '500px' }" [modal]="true"
     [draggable]="false" [resizable]="false">
     <div style="display:flex; flex-direction:column; gap:1.2rem; padding:0.5rem 0;">
@@ -150,10 +153,11 @@
     </div>
 </p-dialog>
 
-<!-- Detail Dialog -->
+<!-- ── Detail Dialog ── -->
 <p-dialog header="Appointment Details" [(visible)]="showDetailDialog" [style]="{ width: '420px' }" [modal]="true"
     [draggable]="false" [resizable]="false">
-    <div style="display:flex; flex-direction:column; gap:1rem; padding:0.5rem 0;" *ngIf="selectedAppointment">
+    @if (selectedAppointment) {
+    <div style="display:flex; flex-direction:column; gap:1rem; padding:0.5rem 0;">
         <div style="display:flex; align-items:center; gap:0.8rem;">
             <p-tag [value]="selectedAppointment.status | titlecase"
                 [severity]="getStatusSeverity(selectedAppointment.status)" />
@@ -179,21 +183,27 @@
             <span style="color:#4B5563;">{{ selectedAppointment.startTime }} — {{ selectedAppointment.endTime }} ({{
                 selectedAppointment.duration }} min)</span>
         </div>
-        <div *ngIf="selectedAppointment.notes" style="display:flex; gap:0.7rem;">
+        @if (selectedAppointment.notes) {
+        <div style="display:flex; gap:0.7rem;">
             <i class="pi pi-align-left" style="color:#9CA3AF; margin-top:2px;"></i>
             <span style="color:#4B5563;">{{ selectedAppointment.notes }}</span>
         </div>
+        }
         <hr style="border:none; border-top:1px solid #F3F4F6; margin:0;" />
         <div style="display:flex; justify-content:space-between; align-items:center;">
-            <!-- Delete only for admins -->
-            <p-button *ngIf="auth.isAdmin" label="Delete" severity="danger" [outlined]="true" icon="pi pi-trash"
+            @if (auth.isAdmin) {
+            <p-button label="Delete" severity="danger" [outlined]="true" icon="pi pi-trash"
                 (click)="onDelete(selectedAppointment!)" />
+            } @else {
+            <span></span>
+            }
             <div style="display:flex; gap:10px;">
                 <p-button label="Close" severity="secondary" [outlined]="true" (click)="showDetailDialog = false" />
-                <!-- Edit only for admins -->
-                <p-button *ngIf="auth.isAdmin" label="Edit" icon="pi pi-pencil"
-                    (click)="openEdit(selectedAppointment!)" />
+                @if (auth.isAdmin) {
+                <p-button label="Edit" icon="pi pi-pencil" (click)="openEdit(selectedAppointment!)" />
+                }
             </div>
         </div>
     </div>
+    }
 </p-dialog>

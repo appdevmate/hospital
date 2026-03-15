@@ -18,7 +18,7 @@ import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { HospitalCalendarService, HospitalCalendar } from '../../pages/service/hospital-calendar.service';
-import { DoctorsService } from '@/pages/service/doctors.service';
+import { DoctorsService, Doctor } from '@/pages/service/doctors.service';
 import { HelpersService } from '@/pages/service/helpers-service';
 
 @Component({
@@ -55,6 +55,9 @@ export class HospitalCalendarComponent implements OnInit {
     pendingEnd = '';
     selectedEvent: any = null;
 
+    // ── Cache: doctor list fetched once on load, reused everywhere ────────
+    private cachedDoctors: Doctor[] = [];
+
     private readonly dayNameToNumber: Record<string, number> = {
         sun: 0,
         mon: 1,
@@ -89,7 +92,7 @@ export class HospitalCalendarComponent implements OnInit {
         this.syncDoctorCalendars();
     }
 
-    // ── Sync ──────────────────────────────────────────────────────────────
+    // ── Initial sync — fetches doctors ONCE and caches them ───────────────
     syncDoctorCalendars() {
         this.syncing = true;
         this.cdr.detectChanges();
@@ -98,22 +101,24 @@ export class HospitalCalendarComponent implements OnInit {
             calendars: this.calendarService.getCalendars(),
             doctors: this.doctorsService.getDoctorsPage({ pageSize: 200 }).pipe(catchError(() => of({ data: [] })))
         }).subscribe(({ calendars, doctors }) => {
-            const doctorList = (doctors as any).data || [];
-            const doctorNames = new Set(doctorList.map((d: any) => d.name).filter(Boolean));
+            // Cache doctor list — used by all subsequent duty shift operations
+            this.cachedDoctors = (doctors as any).data || [];
+
+            const doctorNames = new Set(this.cachedDoctors.map((d) => d.name).filter(Boolean));
             const existingNames = new Set(calendars.map((c) => c.name));
 
-            const missing = doctorList.filter((d: any) => d.name && !existingNames.has(d.name));
+            const missing = this.cachedDoctors.filter((d) => d.name && !existingNames.has(d.name));
             const orphaned = calendars.filter((c) => !doctorNames.has(c.name));
 
-            const creates$ = missing.map((d: any) => this.calendarService.createCalendar(d.name, `Calendar for ${d.name}`).pipe(catchError(() => of(null))));
-            const deletes$ = orphaned.map((c: any) => this.calendarService.deleteCalendar(c.calendarId).pipe(catchError(() => of(null))));
+            const creates$ = missing.map((d) => this.calendarService.createCalendar(d.name, `Calendar for ${d.name}`).pipe(catchError(() => of(null))));
+            const deletes$ = orphaned.map((c) => this.calendarService.deleteCalendar(c.calendarId).pipe(catchError(() => of(null))));
             const all$ = [...creates$, ...deletes$];
 
             if (all$.length === 0) {
                 this.calendarList = calendars;
                 this.syncing = false;
                 this.selectFirst();
-                this.syncDutyShifts(doctorList, calendars);
+                this.syncDutyShifts(this.cachedDoctors, calendars);
                 return;
             }
 
@@ -122,7 +127,7 @@ export class HospitalCalendarComponent implements OnInit {
                     this.calendarList = updated;
                     this.syncing = false;
                     this.selectFirst();
-                    this.syncDutyShifts(doctorList, calendars);
+                    this.syncDutyShifts(this.cachedDoctors, calendars);
                 });
             });
         });
@@ -174,12 +179,38 @@ export class HospitalCalendarComponent implements OnInit {
         this.loadEvents();
     }
 
+    // ── On dropdown change — load events + sync duty shifts using cached doctors ──
     onCalendarChange() {
         if (this.fcInstance) {
             this.loadEvents();
+            this.syncDutyShiftsForSelected();
         } else {
             setTimeout(() => this.initCalendar(), 0);
         }
+    }
+
+    // Uses cachedDoctors — no API call needed
+    private syncDutyShiftsForSelected() {
+        const cal = this.calendarList.find((c) => c.calendarId === this.selectedCalendarId);
+        if (!cal) return;
+
+        const doctor = this.cachedDoctors.find((d) => d.name === cal.name);
+        if (!doctor?.dutyDays?.length || !doctor.dutyStart || !doctor.dutyEnd) return;
+
+        this.calendarService.getEvents(this.selectedCalendarId).subscribe((existingEvents) => {
+            // Already has duty shifts — nothing to do
+            if (existingEvents.some((e) => e.description?.includes('DUTY_SHIFT'))) return;
+
+            const today = new Date();
+            const threeMonthsLater = new Date();
+            threeMonthsLater.setMonth(threeMonthsLater.getMonth() + 3);
+
+            const creates = this.buildDutyEvents(doctor, today, threeMonthsLater);
+            if (!creates.length) return;
+
+            const creates$ = creates.map((e) => this.calendarService.createEvent(this.selectedCalendarId, e).pipe(catchError(() => of(null))));
+            forkJoin(creates$).subscribe(() => this.loadEvents());
+        });
     }
 
     loadEvents() {
@@ -316,8 +347,8 @@ export class HospitalCalendarComponent implements OnInit {
             .subscribe({ error: () => arg.revert() });
     }
 
-    // ── Duty Shifts ───────────────────────────────────────────────────────
-    syncDutyShifts(doctors: any[], calendars: HospitalCalendar[]) {
+    // ── Duty Shifts — all use cachedDoctors, no extra API calls ──────────
+    syncDutyShifts(doctors: Doctor[], calendars: HospitalCalendar[]) {
         const today = new Date();
         const threeMonthsLater = new Date();
         threeMonthsLater.setMonth(threeMonthsLater.getMonth() + 3);
@@ -342,65 +373,50 @@ export class HospitalCalendarComponent implements OnInit {
         });
     }
 
+    // ── Re-sync: delete only DUTY_SHIFT events then regenerate from cache ──
     resyncDutySchedule() {
         if (!this.selectedCalendarId) return;
-        this.resyncing = true;
 
         const cal = this.calendarList.find((c) => c.calendarId === this.selectedCalendarId);
-        if (!cal) {
-            this.resyncing = false;
+        const doctor = this.cachedDoctors.find((d) => cal && d.name === cal.name);
+
+        if (!doctor?.dutyDays?.length || !doctor.dutyStart || !doctor.dutyEnd) {
+            this.helpers.notifyWarning('No duty schedule found for this doctor');
             return;
         }
 
-        this.calendarService.deleteCalendar(this.selectedCalendarId).subscribe({
-            next: () => {
-                this.calendarService.createCalendar(cal.name, `Calendar for ${cal.name}`).subscribe({
-                    next: (newCal: any) => {
-                        this.selectedCalendarId = newCal.calendarId;
-                        const idx = this.calendarList.findIndex((c) => c.name === cal.name);
-                        if (idx !== -1) this.calendarList[idx] = { ...cal, calendarId: newCal.calendarId };
-                        this.runDutySync();
-                    },
-                    error: () => {
+        this.resyncing = true;
+
+        // Step 1: fetch events, delete only DUTY_SHIFT ones
+        this.calendarService.getEvents(this.selectedCalendarId).subscribe({
+            next: (events) => {
+                const dutyEvents = events.filter((e) => e.description?.includes('DUTY_SHIFT'));
+                const deleteOrSkip = dutyEvents.length > 0 ? forkJoin(dutyEvents.map((e) => this.calendarService.deleteEvent(this.selectedCalendarId, e.eventId).pipe(catchError(() => of(null))))) : of([]);
+
+                // Step 2: regenerate duty shifts from cached doctor data
+                deleteOrSkip.subscribe(() => {
+                    const today = new Date();
+                    const threeMonthsLater = new Date();
+                    threeMonthsLater.setMonth(threeMonthsLater.getMonth() + 3);
+
+                    const creates = this.buildDutyEvents(doctor, today, threeMonthsLater);
+                    if (!creates.length) {
                         this.resyncing = false;
+                        this.helpers.notifyWarning('No duty days to sync');
+                        return;
                     }
+
+                    this.createInBatches(creates, 0);
                 });
             },
             error: () => {
                 this.resyncing = false;
+                this.helpers.notifyError('Failed', 'Could not load events for resync');
             }
         });
     }
 
-    private runDutySync() {
-        this.doctorsService.getDoctorsPage({ pageSize: 200 }).subscribe((result) => {
-            const doctor = result.data.find((d: any) => {
-                const cal = this.calendarList.find((c) => c.calendarId === this.selectedCalendarId);
-                return cal && d.name === cal.name;
-            });
-
-            if (!doctor?.dutyDays?.length || !doctor.dutyStart || !doctor.dutyEnd) {
-                this.resyncing = false;
-                this.helpers.notifyWarning('No duty schedule found for this doctor');
-                return;
-            }
-
-            const today = new Date();
-            const threeMonthsLater = new Date();
-            threeMonthsLater.setMonth(threeMonthsLater.getMonth() + 3);
-
-            const creates = this.buildDutyEvents(doctor, today, threeMonthsLater);
-            if (!creates.length) {
-                this.resyncing = false;
-                this.helpers.notifyWarning('No duty days to sync');
-                return;
-            }
-
-            this.createInBatches(creates, 0);
-        });
-    }
-
-    private buildDutyEvents(doctor: any, from: Date, to: Date): any[] {
+    private buildDutyEvents(doctor: Doctor, from: Date, to: Date): any[] {
         const events: any[] = [];
         const cursor = new Date(from);
 
@@ -408,7 +424,7 @@ export class HospitalCalendarComponent implements OnInit {
             const dayNum = cursor.getDay();
             const dayName = Object.keys(this.dayNameToNumber).find((k) => this.dayNameToNumber[k] === dayNum);
 
-            if (dayName && doctor.dutyDays.includes(dayName)) {
+            if (dayName && doctor.dutyDays!.includes(dayName)) {
                 const dateStr = `${cursor.getFullYear()}-${String(cursor.getMonth() + 1).padStart(2, '0')}-${String(cursor.getDate()).padStart(2, '0')}`;
                 events.push({
                     name: `${doctor.name} - Duty Shift`,

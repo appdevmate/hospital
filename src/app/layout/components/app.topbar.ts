@@ -72,40 +72,48 @@ import { AuthService } from '@/pages/service/auth.service';
 
                 <!-- Bell Notification -->
                 <div class="relative" style="position:relative; display:inline-flex;">
-                    <p-button [rounded]="true" severity="secondary" icon="pi pi-bell" (onClick)="toggleNotifications($event)"> </p-button>
-                    <span
-                        *ngIf="notifications.length > 0"
-                        style="position:absolute; top:-4px; right:-4px; background:#EF4444; color:white; border-radius:50%; width:18px; height:18px; font-size:11px; display:flex; align-items:center; justify-content:center; font-weight:700; pointer-events:none;"
-                    >
-                        {{ notifications.length }}
-                    </span>
+                    <p-button [rounded]="true" severity="secondary" icon="pi pi-bell" (onClick)="toggleNotifications($event)"></p-button>
+                    @if (notifications.length > 0) {
+                        <span
+                            style="position:absolute; top:-4px; right:-4px; background:#EF4444; color:white; border-radius:50%; width:18px; height:18px; font-size:11px; display:flex; align-items:center; justify-content:center; font-weight:700; pointer-events:none;"
+                        >
+                            {{ notifications.length }}
+                        </span>
+                    }
                     <p-popover #notifPanel [style]="{ width: '360px' }">
                         <div class="notif-header">
                             <span class="notif-title">Notifications</span>
-                            <p-tag *ngIf="notifications.length > 0" [value]="notifications.length + ' new'" severity="danger" />
+                            @if (notifications.length > 0) {
+                                <p-tag [value]="notifications.length + ' new'" severity="danger" />
+                            }
                         </div>
 
-                        <div *ngIf="notifications.length === 0" class="notif-empty">
-                            <i class="pi pi-check-circle"></i>
-                            <p>All clear! No notifications.</p>
-                        </div>
-
-                        <div class="notif-list" *ngIf="notifications.length > 0">
-                            <div class="notif-item" *ngFor="let n of notifications" (click)="onNotifClick(n)">
-                                <div class="notif-icon" [ngClass]="'notif-' + n.severity">
-                                    <i [class]="n.icon"></i>
-                                </div>
-                                <div class="notif-body">
-                                    <div class="notif-item-title">{{ n.title }}</div>
-                                    <div class="notif-item-msg">{{ n.message }}</div>
-                                </div>
-                                <i class="pi pi-chevron-right notif-arrow"></i>
+                        @if (notifications.length === 0) {
+                            <div class="notif-empty">
+                                <i class="pi pi-check-circle"></i>
+                                <p>All clear! No notifications.</p>
                             </div>
-                        </div>
+                        }
 
-                        <div class="notif-footer" *ngIf="notifications.length > 0">
-                            <button pButton text label="View All Notifications" icon="pi pi-arrow-right" iconPos="right" (click)="goToNotifications()"></button>
-                        </div>
+                        @if (notifications.length > 0) {
+                            <div class="notif-list">
+                                @for (n of notifications; track n.type) {
+                                    <div class="notif-item" (click)="onNotifClick(n)">
+                                        <div class="notif-icon" [ngClass]="'notif-' + n.severity">
+                                            <i [class]="n.icon"></i>
+                                        </div>
+                                        <div class="notif-body">
+                                            <div class="notif-item-title">{{ n.title }}</div>
+                                            <div class="notif-item-msg">{{ n.message }}</div>
+                                        </div>
+                                        <i class="pi pi-chevron-right notif-arrow"></i>
+                                    </div>
+                                }
+                            </div>
+                            <div class="notif-footer">
+                                <button pButton text label="View All Notifications" icon="pi pi-arrow-right" iconPos="right" (click)="goToNotifications()"></button>
+                            </div>
+                        }
                     </p-popover>
                 </div>
 
@@ -247,41 +255,27 @@ import { AuthService } from '@/pages/service/auth.service';
     host: { class: 'layout-topbar' }
 })
 export class AppTopbar implements OnInit {
-    username = '';
-    role = '';
-    menu: MenuItem[] = [];
-    notifications: Notification[] = [];
+    // ── Services ──────────────────────────────────────────────────────────
+    layoutService = inject(LayoutService);
     private auth = inject(AuthService);
+    private notificationsService = inject(NotificationsService);
+    private oidc = inject(OidcSecurityService);
+    private http = inject(HttpClient);
+    private router = inject(Router);
 
+    // ── ViewChildren ──────────────────────────────────────────────────────
     @ViewChild('searchinput') searchInput!: ElementRef;
     @ViewChild('menubutton') menuButton!: ElementRef;
     @ViewChild('notifPanel') notifPanel: any;
 
-    private notificationsService = inject(NotificationsService);
-
+    // ── State ─────────────────────────────────────────────────────────────
+    notifications: Notification[] = [];
     searchActive = false;
+    username = '';
 
-    constructor(
-        public layoutService: LayoutService,
-        private oidc: OidcSecurityService,
-        private http: HttpClient,
-        private router: Router
-    ) {
-        const token = sessionStorage.getItem('accessToken') || '';
-        if (this.isJwt(token)) {
-            try {
-                const payload = JSON.parse(this.b64url(token.split('.')[1]));
-                const groups: string[] = payload['cognito:groups'] ?? [];
-                if (groups.includes('Patients')) this.role = 'patient';
-                else if (groups.includes('Doctors')) this.role = 'doctor';
-                else if (groups.includes('Developers')) this.role = 'developer';
-            } catch {}
-        }
-
+    // ── Lifecycle ─────────────────────────────────────────────────────────
+    constructor() {
         this.oidc.userData$.pipe(take(10)).subscribe(({ userData }) => {
-            userData.role = this.role;
-            console.log(userData);
-
             localStorage.setItem('userData', JSON.stringify(userData));
             window.dispatchEvent(new CustomEvent('userDataChanged', { detail: userData }));
             this.username = userData?.username;
@@ -292,17 +286,18 @@ export class AppTopbar implements OnInit {
         this.loadNotifications();
     }
 
+    // ── Notifications ─────────────────────────────────────────────────────
     loadNotifications() {
         const doctorEmail = this.auth.isDoctor ? this.auth.current.email : undefined;
         this.notificationsService.getNotifications(this.auth.isAdmin, doctorEmail).subscribe({
-            next: (n: Notification[]) => (this.notifications = n),
+            next: (n) => (this.notifications = n),
             error: () => (this.notifications = [])
         });
     }
 
     toggleNotifications(event: Event) {
         this.notifPanel.toggle(event);
-        this.loadNotifications(); // always reload on every toggle
+        this.loadNotifications();
     }
 
     onNotifClick(n: Notification) {
@@ -315,18 +310,17 @@ export class AppTopbar implements OnInit {
         this.router.navigate(['/notifications']);
     }
 
+    // ── Profile ───────────────────────────────────────────────────────────
     get userData() {
-        const userDataStr = localStorage.getItem('userData');
-        if (userDataStr) {
-            try {
-                return JSON.parse(userDataStr);
-            } catch {
-                return null;
-            }
+        try {
+            const s = localStorage.getItem('userData');
+            return s ? JSON.parse(s) : null;
+        } catch {
+            return null;
         }
-        return null;
     }
 
+    // ── Layout helpers ────────────────────────────────────────────────────
     onMenuButtonClick() {
         this.layoutService.onMenuToggle();
     }
@@ -345,48 +339,34 @@ export class AppTopbar implements OnInit {
         event.preventDefault();
     }
 
-    get layoutTheme(): string | undefined {
-        return this.layoutService.layoutConfig().layoutTheme;
-    }
-    set layoutTheme(value: string) {
-        this.layoutService.layoutConfig.update((state) => ({ ...state, layoutTheme: value }));
-    }
-
     get logo(): string {
         return '/layout/images/tiryaq_logo_v5.png';
     }
-
     get tabs(): MenuItem[] {
         return this.layoutService.tabs;
     }
 
+    // ── Logout ────────────────────────────────────────────────────────────
     logout() {
         const clientId = '4n7mna6irf5vjfg770l46aldij';
         const authority = 'https://us-east-1k2smci5zb.auth.us-east-1.amazoncognito.com';
-        const revokeUrl = `${authority}/oauth2/revoke`;
         const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
+
         const finish = () => {
             this.oidc.logoffLocal();
             window.location.href = `${authority}/logout?client_id=${encodeURIComponent(clientId)}&logout_uri=${encodeURIComponent(window.location.origin + '/')}`;
         };
+
         this.oidc.getRefreshToken().subscribe({
             next: (refreshToken) => {
                 if (refreshToken) {
                     const body = new URLSearchParams({ token: refreshToken, token_type_hint: 'refresh_token', client_id: clientId }).toString();
-                    this.http.post(revokeUrl, body, { headers }).subscribe({ next: finish, error: finish });
+                    this.http.post(`${authority}/oauth2/revoke`, body, { headers }).subscribe({ next: finish, error: finish });
                 } else {
                     finish();
                 }
             },
             error: () => finish()
         });
-    }
-
-    private isJwt(t: string) {
-        return !!t && t.split('.').length === 3;
-    }
-    private b64url(s: string) {
-        const pad = s.length % 4 ? '='.repeat(4 - (s.length % 4)) : '';
-        return atob(s.replace(/-/g, '+').replace(/_/g, '/') + pad);
     }
 }
