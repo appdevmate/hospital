@@ -6,10 +6,6 @@ import {
   MinusIcon
 } from "./chunk-YXZQJBKH.js";
 import {
-  Bind,
-  BindModule
-} from "./chunk-MLQGRGGO.js";
-import {
   PARENT_INSTANCE
 } from "./chunk-YNJ5GKCH.js";
 import {
@@ -19,6 +15,10 @@ import {
   PrimeTemplate,
   SharedModule
 } from "./chunk-LMEEH3AJ.js";
+import {
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
 import {
   k,
   q
@@ -732,4 +732,4 @@ export {
   Checkbox,
   CheckboxModule
 };
-//# sourceMappingURL=chunk-RKFXKJ24.js.map
+//# sourceMappingURL=chunk-XTAYNXBZ.js.map

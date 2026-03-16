@@ -10,6 +10,7 @@ import { catchError } from 'rxjs/operators';
 
 import { PatientsService, Patient } from '../../pages/service/patients.service';
 import { AppointmentsService, Appointment } from '../../pages/service/appointments.service';
+import { PaymentsService, Payment } from '../../pages/service/payments.service';
 
 @Component({
     selector: 'app-patient-profile',
@@ -22,9 +23,11 @@ export class PatientProfileComponent implements OnInit {
     private route = inject(ActivatedRoute);
     private patientsService = inject(PatientsService);
     private appointmentsService = inject(AppointmentsService);
+    private paymentsService = inject(PaymentsService);
 
     patient: Patient | null = null;
     appointments: Appointment[] = [];
+    invoices: Payment[] = [];
     loading = true;
 
     ngOnInit() {
@@ -36,14 +39,21 @@ export class PatientProfileComponent implements OnInit {
 
         forkJoin({
             patient: this.patientsService.getPatientById(id).pipe(catchError(() => of(null))),
-            appointments: this.appointmentsService.getAppointments().pipe(catchError(() => of([])))
-        }).subscribe(({ patient, appointments }) => {
+            appointments: this.appointmentsService.getAppointments().pipe(catchError(() => of([]))),
+            invoices: this.paymentsService.getAllInvoices().pipe(catchError(() => of({ data: [] })))
+        }).subscribe(({ patient, appointments, invoices }) => {
             this.patient = (patient as any)?.data || patient;
 
-            // PK is PATIENT#uuid — extract plain uuid to match appointment.patientId
+            // patientId in appointments may be stored as full 'PATIENT#uuid' or just 'uuid'
+            // match against both to be safe
             const patientPK = this.patient?.PK || '';
-            const patientId = patientPK.includes('#') ? patientPK.split('#')[1] : patientPK;
-            this.appointments = (appointments as Appointment[]).filter((a) => a.patientId === patientId);
+            const plainId = patientPK.includes('#') ? patientPK.split('#')[1] : patientPK;
+            const fullId = patientPK.startsWith('PATIENT#') ? patientPK : `PATIENT#${plainId}`;
+
+            this.appointments = (appointments as Appointment[]).filter((a) => a.patientId === plainId || a.patientId === fullId);
+
+            const allInvoices = ((invoices as any)?.data || []) as Payment[];
+            this.invoices = allInvoices.filter((inv) => inv.patientId === plainId || inv.patientId === fullId);
 
             this.loading = false;
         });
@@ -69,6 +79,15 @@ export class PatientProfileComponent implements OnInit {
             cancelled: 'danger'
         };
         return map[status] || 'secondary';
+    }
+
+    getInvoiceStatusSeverity(status: string): 'success' | 'warn' | 'danger' | 'secondary' {
+        const map: Record<string, any> = {
+            paid: 'success',
+            pending: 'warn',
+            overdue: 'danger'
+        };
+        return map[status?.toLowerCase()] || 'secondary';
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────

@@ -1,12 +1,9 @@
 import {
   Fluid
-} from "./chunk-PJRMHEN5.js";
+} from "./chunk-ICEVV523.js";
 import {
   BaseModelHolder
 } from "./chunk-2R7VQYSP.js";
-import {
-  Bind
-} from "./chunk-MLQGRGGO.js";
 import {
   PARENT_INSTANCE
 } from "./chunk-YNJ5GKCH.js";
@@ -14,6 +11,9 @@ import {
   BaseStyle
 } from "./chunk-4ATYD752.js";
 import "./chunk-LMEEH3AJ.js";
+import {
+  Bind
+} from "./chunk-MLQGRGGO.js";
 import "./chunk-GOP36Q47.js";
 import "./chunk-UCHM6OXG.js";
 import {

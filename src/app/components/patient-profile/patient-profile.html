@@ -37,12 +37,13 @@
             <p-tab value="0"><i class="pi pi-user mr-2"></i>Personal Info</p-tab>
             <p-tab value="1"><i class="pi pi-heart mr-2"></i>Medical Records</p-tab>
             <p-tab value="2"><i class="pi pi-calendar mr-2"></i>Appointments ({{ appointments.length }})</p-tab>
-            <p-tab value="3"><i class="pi pi-file mr-2"></i>Notes</p-tab>
+            <p-tab value="3"><i class="pi pi-file-invoice mr-2"></i>Invoices ({{ invoices.length }})</p-tab>
+            <p-tab value="4"><i class="pi pi-file mr-2"></i>Notes</p-tab>
         </p-tablist>
 
         <p-tabpanels>
 
-            <!-- ── Tab 1: Personal Info ── -->
+            <!-- ── Tab 0: Personal Info ── -->
             <p-tabpanel value="0">
                 <div class="info-grid">
 
@@ -82,26 +83,6 @@
 
                     <div class="info-card">
                         <h4>Hospital Information</h4>
-                        @if (patient.department) {
-                        <div class="info-row">
-                            <i class="pi pi-building"></i>
-                            <div><label>Department</label><span>{{ patient.department | titlecase }}</span></div>
-                        </div>
-                        }
-                        @if (patient.specialization) {
-                        <div class="info-row">
-                            <i class="pi pi-star"></i>
-                            <div><label>Specialization</label><span>{{ patient.specialization | titlecase }}</span>
-                            </div>
-                        </div>
-                        }
-                        @if (patient.admissionDate) {
-                        <div class="info-row">
-                            <i class="pi pi-calendar-plus"></i>
-                            <div><label>Admission Date</label><span>{{ patient.admissionDate | date:'MMM d, y' }}</span>
-                            </div>
-                        </div>
-                        }
                         @if (patient.bedNumber) {
                         <div class="info-row">
                             <i class="pi pi-home"></i>
@@ -119,7 +100,7 @@
                 </div>
             </p-tabpanel>
 
-            <!-- ── Tab 2: Medical Records ── -->
+            <!-- ── Tab 1: Medical Records ── -->
             <p-tabpanel value="1">
                 <div class="info-grid">
 
@@ -178,7 +159,7 @@
                 </div>
             </p-tabpanel>
 
-            <!-- ── Tab 3: Appointments ── -->
+            <!-- ── Tab 2: Appointments ── -->
             <p-tabpanel value="2">
                 @if (appointments.length === 0) {
                 <div class="empty-state">
@@ -194,7 +175,8 @@
                             <span class="appt-month">{{ appt.date | date:'MMM y' }}</span>
                         </div>
                         <div class="appt-info">
-                            <div class="appt-title">{{ appt.type | titlecase }} with {{ appt.doctorName }}</div>
+                            <div class="appt-title">{{ appt.type | titlecase }} with {{ appt.doctorName | titlecase }}
+                            </div>
                             <div class="appt-time">
                                 <i class="pi pi-clock"></i>
                                 {{ appt.startTime }} — {{ appt.endTime }} ({{ appt.duration }} min)
@@ -212,8 +194,45 @@
                 }
             </p-tabpanel>
 
-            <!-- ── Tab 4: Notes ── -->
+            <!-- ── Tab 3: Invoices ── -->
             <p-tabpanel value="3">
+                @if (invoices.length === 0) {
+                <div class="empty-state">
+                    <i class="pi pi-file-invoice"></i>
+                    <p>No invoices found for this patient.</p>
+                </div>
+                } @else {
+                <div class="appt-list">
+                    @for (inv of invoices; track inv.paymentId) {
+                    <div class="appt-item">
+                        <div class="appt-date">
+                            <span class="appt-day">{{ inv.createdAt | date:'d' }}</span>
+                            <span class="appt-month">{{ inv.createdAt | date:'MMM y' }}</span>
+                        </div>
+                        <div class="appt-info">
+                            <div class="appt-title">{{ inv.invoiceNumber }}</div>
+                            <div class="appt-time">
+                                <i class="pi pi-dollar"></i>
+                                QAR {{ inv.amount | number:'1.2-2' }}
+                                @if (inv.doctorName) {
+                                · {{ inv.doctorName | titlecase }}
+                                }
+                            </div>
+                            @if (inv.notes) {
+                            <div class="appt-notes">{{ inv.notes }}</div>
+                            }
+                        </div>
+                        <div class="appt-status">
+                            <p-tag [value]="inv.status | titlecase" [severity]="getInvoiceStatusSeverity(inv.status)" />
+                        </div>
+                    </div>
+                    }
+                </div>
+                }
+            </p-tabpanel>
+
+            <!-- ── Tab 4: Notes ── -->
+            <p-tabpanel value="4">
                 @if (!patient.notes) {
                 <div class="empty-state">
                     <i class="pi pi-file"></i>

@@ -5,9 +5,6 @@ import {
   TimesIcon
 } from "./chunk-RHA7RL5K.js";
 import {
-  Bind
-} from "./chunk-MLQGRGGO.js";
-import {
   BaseComponent,
   PARENT_INSTANCE
 } from "./chunk-YNJ5GKCH.js";
@@ -18,6 +15,9 @@ import {
   PrimeTemplate,
   SharedModule
 } from "./chunk-LMEEH3AJ.js";
+import {
+  Bind
+} from "./chunk-MLQGRGGO.js";
 import {
   animate,
   style,
@@ -752,4 +752,4 @@ export {
   Message,
   MessageModule
 };
-//# sourceMappingURL=chunk-Y23KUKGM.js.map
+//# sourceMappingURL=chunk-SZ2ODCNZ.js.map

@@ -2,9 +2,6 @@ import {
   TimesCircleIcon
 } from "./chunk-RHA7RL5K.js";
 import {
-  Bind
-} from "./chunk-MLQGRGGO.js";
-import {
   BaseComponent,
   PARENT_INSTANCE
 } from "./chunk-YNJ5GKCH.js";
@@ -16,6 +13,9 @@ import {
   SharedModule,
   TranslationKeys
 } from "./chunk-LMEEH3AJ.js";
+import {
+  Bind
+} from "./chunk-MLQGRGGO.js";
 import {
   CommonModule,
   NgClass,
@@ -638,4 +638,4 @@ export {
   Chip,
   ChipModule
 };
-//# sourceMappingURL=chunk-ZQAYUNRD.js.map
+//# sourceMappingURL=chunk-KSYLIVPN.js.map

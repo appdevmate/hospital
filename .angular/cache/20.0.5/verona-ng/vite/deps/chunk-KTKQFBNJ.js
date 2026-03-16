@@ -2,9 +2,6 @@ import {
   SpinnerIcon
 } from "./chunk-RHA7RL5K.js";
 import {
-  Bind
-} from "./chunk-MLQGRGGO.js";
-import {
   BaseComponent,
   PARENT_INSTANCE
 } from "./chunk-YNJ5GKCH.js";
@@ -15,6 +12,9 @@ import {
   PrimeTemplate,
   SharedModule
 } from "./chunk-LMEEH3AJ.js";
+import {
+  Bind
+} from "./chunk-MLQGRGGO.js";
 import {
   Rt,
   Tt,
@@ -1793,4 +1793,4 @@ export {
   Scroller,
   ScrollerModule
 };
-//# sourceMappingURL=chunk-K26YQORK.js.map
+//# sourceMappingURL=chunk-KTKQFBNJ.js.map

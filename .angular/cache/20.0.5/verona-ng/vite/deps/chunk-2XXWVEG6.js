@@ -5,10 +5,6 @@ import {
   BaseEditableHolder
 } from "./chunk-343RM6UZ.js";
 import {
-  Bind,
-  BindModule
-} from "./chunk-MLQGRGGO.js";
-import {
   PARENT_INSTANCE
 } from "./chunk-YNJ5GKCH.js";
 import {
@@ -17,6 +13,10 @@ import {
 import {
   SharedModule
 } from "./chunk-LMEEH3AJ.js";
+import {
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
 import {
   NG_VALUE_ACCESSOR,
   NgControl
@@ -533,4 +533,4 @@ export {
   RadioButton,
   RadioButtonModule
 };
-//# sourceMappingURL=chunk-SVGUMCBI.js.map
+//# sourceMappingURL=chunk-2XXWVEG6.js.map

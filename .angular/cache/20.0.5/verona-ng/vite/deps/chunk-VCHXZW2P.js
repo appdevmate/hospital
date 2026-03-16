@@ -1,6 +1,6 @@
 import {
   Fluid
-} from "./chunk-PJRMHEN5.js";
+} from "./chunk-ICEVV523.js";
 import {
   AutoFocus
 } from "./chunk-YNLAOK3J.js";
@@ -13,10 +13,7 @@ import {
 import {
   Badge,
   BadgeModule
-} from "./chunk-TENFQJBN.js";
-import {
-  Bind
-} from "./chunk-MLQGRGGO.js";
+} from "./chunk-T47RI6IU.js";
 import {
   BaseComponent,
   PARENT_INSTANCE
@@ -28,6 +25,9 @@ import {
   PrimeTemplate,
   SharedModule
 } from "./chunk-LMEEH3AJ.js";
+import {
+  Bind
+} from "./chunk-MLQGRGGO.js";
 import {
   U,
   W,
@@ -2081,4 +2081,4 @@ export {
   Button,
   ButtonModule
 };
-//# sourceMappingURL=chunk-UM3VFPQ2.js.map
+//# sourceMappingURL=chunk-VCHXZW2P.js.map
