@@ -486,6 +486,7 @@ import { catchError } from 'rxjs/operators';
 import { HospitalCalendarService, HospitalCalendar } from '../../pages/service/hospital-calendar.service';
 import { DoctorsService, Doctor } from '@/pages/service/doctors.service';
 import { HelpersService } from '@/pages/service/helpers-service';
+import { AuthService } from '@/pages/service/auth.service';
 
 @Component({
     selector: 'app-hospital-calendar',
@@ -503,6 +504,7 @@ export class HospitalCalendarComponent implements OnInit {
     private confirmationService = inject(ConfirmationService);
     private helpers = inject(HelpersService);
     private cdr = inject(ChangeDetectorRef);
+    auth = inject(AuthService);
 
     calendarList: HospitalCalendar[] = [];
     selectedCalendarId = '';
@@ -518,7 +520,6 @@ export class HospitalCalendarComponent implements OnInit {
     pendingEnd = '';
     selectedEvent: any = null;
 
-    // Cache doctors fetched on page load — reused for resync without extra API calls
     private cachedDoctors: Doctor[] = [];
 
     private readonly dayNameToNumber: Record<string, number> = {
@@ -551,10 +552,64 @@ export class HospitalCalendarComponent implements OnInit {
     ];
 
     ngOnInit() {
-        this.syncDoctorCalendars();
+        if (this.auth.isAdmin) {
+            this.syncDoctorCalendars();
+        } else {
+            this.loadDoctorOwnCalendar();
+        }
     }
 
-    // ── Initial sync ──────────────────────────────────────────────────────
+    // ── DOCTOR: Load only their own calendar ─────────────────────────────
+    private loadDoctorOwnCalendar() {
+        this.syncing = true;
+        this.cdr.detectChanges();
+
+        const doctorEmail = this.auth.current?.email?.toLowerCase().trim();
+        if (!doctorEmail) {
+            this.syncing = false;
+            this.helpers.notifyError('Error', 'Could not determine your identity');
+            return;
+        }
+
+        forkJoin({
+            calendars: this.calendarService.getCalendars(),
+            doctors: this.doctorsService.getDoctorsPage({ pageSize: 200 }).pipe(catchError(() => of({ data: [] })))
+        }).subscribe(({ calendars, doctors }) => {
+            this.cachedDoctors = (doctors as any).data || [];
+
+            // Find this doctor's record by email
+            const myDoctor = this.cachedDoctors.find((d) => d.email?.toLowerCase().trim() === doctorEmail);
+
+            if (!myDoctor) {
+                this.syncing = false;
+                this.helpers.notifyWarning('No doctor profile found for your account');
+                this.cdr.detectChanges();
+                return;
+            }
+
+            // Find their calendar by name
+            const myCal = calendars.find((c) => c.name === myDoctor.name);
+            if (!myCal) {
+                this.syncing = false;
+                this.helpers.notifyWarning('No calendar found for your account');
+                this.cdr.detectChanges();
+                return;
+            }
+
+            // Only expose their own calendar — no dropdown needed
+            this.calendarList = [myCal];
+            this.selectedCalendarId = myCal.calendarId;
+            this.syncing = false;
+
+            setTimeout(() => this.initCalendar(), 0);
+            this.cdr.detectChanges();
+
+            // Seed duty shifts if empty
+            this.seedDutyShiftsIfEmpty([myDoctor], [myCal]);
+        });
+    }
+
+    // ── ADMIN: Full sync of all doctor calendars ──────────────────────────
     syncDoctorCalendars() {
         this.syncing = true;
         this.cdr.detectChanges();
@@ -661,7 +716,7 @@ export class HospitalCalendarComponent implements OnInit {
         setTimeout(() => this.loadEvents(), 100);
     }
 
-    // On dropdown change: just load events. If no duty shifts exist yet, seed them.
+    // On dropdown change (admin only — doctor has no dropdown)
     onCalendarChange() {
         if (!this.fcInstance) {
             setTimeout(() => this.initCalendar(), 0);
@@ -832,11 +887,10 @@ export class HospitalCalendarComponent implements OnInit {
             .subscribe({ error: () => arg.revert() });
     }
 
-    // ── Re-sync: DELETE calendar → CREATE new calendar → CREATE duty events ──
+    // ── Re-sync (admin only) ──────────────────────────────────────────────
     resyncDutySchedule() {
         if (!this.selectedCalendarId) return;
 
-        // Find doctor name from current local state
         const localCal = this.calendarList.find((c) => c.calendarId === this.selectedCalendarId);
         if (!localCal) {
             this.helpers.notifyWarning('Calendar not found');
@@ -852,16 +906,13 @@ export class HospitalCalendarComponent implements OnInit {
         this.resyncing = true;
         const calName = localCal.name;
 
-        // Always re-fetch calendars from API to get the real current calendarId
         this.calendarService.getCalendars().subscribe({
             next: (freshCalendars) => {
                 const freshCal = freshCalendars.find((c) => c.name === calName);
                 if (!freshCal) {
-                    // Calendar doesn't exist at all — just create it
                     this.createCalendarAndSeedDutyShifts(calName, doctor!);
                     return;
                 }
-                // Use the real current ID from the API
                 this.deleteAndRecreateCalendar(freshCal.calendarId, calName, doctor!);
             },
             error: () => {
@@ -872,20 +923,15 @@ export class HospitalCalendarComponent implements OnInit {
     }
 
     private deleteAndRecreateCalendar(calendarId: string, calName: string, doctor: Doctor) {
-        // Step 1: Delete the entire calendar
         this.calendarService.deleteCalendar(calendarId).subscribe({
             next: () => {
-                // Step 2: Recreate calendar with same name
                 this.calendarService.createCalendar(calName, `Calendar for ${calName}`).subscribe({
                     next: (newCal) => {
                         const newCalId = newCal.calendarId;
-
-                        // Update local state
                         this.calendarList = this.calendarList.map((c) => (c.name === calName ? { ...c, calendarId: newCalId } : c));
                         this.selectedCalendarId = newCalId;
                         this.fcInstance?.removeAllEvents();
 
-                        // Step 3: Create fresh duty shifts in new calendar
                         const creates = this.buildDutyEvents(doctor!);
                         if (!creates.length) {
                             this.resyncing = false;
@@ -927,6 +973,7 @@ export class HospitalCalendarComponent implements OnInit {
                     this.helpers.notifyWarning('No duty days to sync');
                     return;
                 }
+
                 this.createInBatches(newCalId, creates, 0, () => {
                     this.resyncing = false;
                     this.helpers.notifySuccess('Duty schedule synced');
@@ -941,7 +988,6 @@ export class HospitalCalendarComponent implements OnInit {
         });
     }
 
-    // Build events from 1st of current month → 3 months forward
     private buildDutyEvents(doctor: Doctor): any[] {
         const events: any[] = [];
         const from = new Date();

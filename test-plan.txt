@@ -1,0 +1,65 @@
+Step 1 — Login ✅
+
+Login as admin
+Dashboard loads, all counters show 0
+
+Step 2 — Create Doctors ✅
+
+Create Omar Rashidi: duty days mon, tue — 10:15–11:15
+Create Dr. Layla Hassan: duty days mon, wed, fri — 09:00–17:00
+Verify both appear in doctors list
+Verify DynamoDB locks are created then released
+
+Step 3 — Hospital Calendar ✅
+
+Navigate to Hospital Calendar
+Both doctor calendars auto-created
+Duty shifts generated for full month (from 1st)
+Switch dropdown between doctors — correct events load
+Click Re-sync — old calendar deleted, new one created, duty shifts regenerated, no duplicates, no CORS errors
+
+Step 4 — Create Patient
+
+Navigate to Patient Management
+Create a new patient with full details
+Verify patient appears in list
+Verify DynamoDB record created
+
+Step 5 — Create Appointment for Today
+
+Navigate to Appointments
+Create appointment for today, assign to one of the doctors
+Verify appointment appears in list
+Verify calendar event created in doctor's calendar
+
+Step 6 — Create Invoice
+
+Navigate to Invoices
+Create invoice linked to the patient from Step 4
+Verify invoice appears in list
+Verify status is unpaid
+
+Step 7 — Notifications
+
+Verify notifications appear for relevant actions (appointment created, invoice created)
+Mark as read, verify badge updates
+
+Step 8 — Patient Profile
+
+Navigate to the patient created in Step 4
+Verify profile shows correct details
+Verify appointments tab shows the appointment from Step 5
+Verify invoices tab shows the invoice from Step 6
+
+Step 9 — Dashboard
+
+Navigate to Dashboard
+Verify counters reflect: 2 doctors, 1 patient, 1 appointment, 1 invoice
+
+Step 10 — Doctor Role
+
+Login as Omar Rashidi (doctor account)
+Verify dashboard loads
+Verify doctor can only see their own appointments
+Verify doctor cannot access Patient Management, Doctor Management, or Invoices
+Verify hospital calendar shows only their own calendar

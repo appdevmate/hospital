@@ -5,7 +5,7 @@
     <div
         style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4rem 2rem;gap:1rem;text-align:center;">
         <i class="pi pi-spin pi-spinner" style="font-size:2.5rem;color:#16a34a;"></i>
-        <p style="margin:0;color:#6B7280;font-size:1rem;">Syncing doctor calendars, please wait...</p>
+        <p style="margin:0;color:#6B7280;font-size:1rem;">Syncing calendar, please wait...</p>
     </div>
     }
 
@@ -18,13 +18,28 @@
             <i class="pi pi-calendar" style="font-size:1.4rem;color:#16a34a;"></i>
             <h2>Hospital Calendar</h2>
         </div>
+
         @if (calendarList.length > 0) {
         <div class="header-right">
+
+            <!-- Admin: show doctor selector dropdown + re-sync button -->
+            @if (auth.isAdmin) {
             <p-select [options]="calendarList" [(ngModel)]="selectedCalendarId" optionLabel="name"
                 optionValue="calendarId" placeholder="Select Calendar" (onChange)="onCalendarChange()"
                 [style]="{ minWidth: '220px' }" />
             <p-button class="ml-2" label="Re-sync Duty Schedule" icon="pi pi-refresh" severity="success"
                 [loading]="resyncing" (click)="resyncDutySchedule()" />
+            }
+
+            <!-- Doctor: just show their own calendar name (read-only) -->
+            @if (auth.isDoctor) {
+            <div
+                style="display:flex;align-items:center;gap:0.5rem;background:var(--p-surface-100);padding:0.5rem 1rem;border-radius:8px;">
+                <i class="pi pi-user" style="color:#16a34a;"></i>
+                <span style="font-weight:600;color:var(--p-surface-700);">{{ calendarList[0]?.name | titlecase }}</span>
+            </div>
+            }
+
         </div>
         }
     </div>
@@ -33,17 +48,24 @@
     @if (calendarList.length === 0) {
     <div
         style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4rem 2rem;text-align:center;gap:1rem;">
-        <i class="pi pi-users" style="font-size:3rem;color:#D1D5DB;"></i>
-        <h3 style="margin:0;color:#6B7280;font-weight:600;">No Calendars Yet</h3>
+        <i class="pi pi-calendar-times" style="font-size:3rem;color:#D1D5DB;"></i>
+        <h3 style="margin:0;color:#6B7280;font-weight:600;">No Calendar Found</h3>
         <p style="margin:0;color:#9CA3AF;font-size:0.95rem;">
+            @if (auth.isAdmin) {
             Calendars are created automatically for each doctor.<br />
             Add doctors in <strong>Doctor Management</strong> to get started.
+            } @else {
+            No calendar has been set up for your account yet.<br />
+            Please contact the administrator.
+            }
         </p>
+        @if (auth.isAdmin) {
         <a routerLink="/doctors-management"
             style="display:inline-flex;align-items:center;gap:0.5rem;background:#16a34a;color:white;padding:0.6rem 1.2rem;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:600;">
             <i class="pi pi-arrow-right"></i>
             Go to Doctor Management
         </a>
+        }
     </div>
     }
 

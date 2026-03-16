@@ -7,15 +7,15 @@ import {
   zindexutils
 } from "./chunk-BB55NINM.js";
 import {
+  Bind
+} from "./chunk-MLQGRGGO.js";
+import {
   BaseComponent,
   PARENT_INSTANCE
 } from "./chunk-YNJ5GKCH.js";
 import {
   BaseStyle
 } from "./chunk-4ATYD752.js";
-import {
-  Bind
-} from "./chunk-MLQGRGGO.js";
 import {
   OverlayService,
   PrimeTemplate,
@@ -1082,4 +1082,4 @@ var OverlayModule = class _OverlayModule {
 export {
   Overlay
 };
-//# sourceMappingURL=chunk-ULVCUHVW.js.map
+//# sourceMappingURL=chunk-SRIDVQPU.js.map
