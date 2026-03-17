@@ -28,7 +28,7 @@
                 [severity]="exam!.status === 'completed' ? 'success' : 'warn'"
                 [style]="{'font-size':'0.9rem','padding':'0.4rem 0.8rem'}" />
             @if (exam!.status === 'draft' && auth.isDoctor) {
-            <p-button label="Sign Off" icon="pi pi-check" severity="success" [disabled]="!canSignOff" [loading]="saving"
+            <p-button label="Close Consultation" icon="pi pi-check" severity="success" [disabled]="!canSignOff" [loading]="saving"
                 (onClick)="signOff()" pTooltip="Requires: Chief Complaint + at least 1 primary diagnosis" />
             }
         </div>

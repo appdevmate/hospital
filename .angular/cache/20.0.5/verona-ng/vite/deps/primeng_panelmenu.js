@@ -24,6 +24,11 @@ import {
   PrimeTemplate,
   SharedModule
 } from "./chunk-LMEEH3AJ.js";
+import {
+  RouterLink,
+  RouterLinkActive,
+  RouterModule
+} from "./chunk-EFY5GPDX.js";
 import "./chunk-GOP36Q47.js";
 import {
   J,
@@ -45,11 +50,6 @@ import {
   transition,
   trigger
 } from "./chunk-53DGU4C2.js";
-import {
-  RouterLink,
-  RouterLinkActive,
-  RouterModule
-} from "./chunk-EFY5GPDX.js";
 import "./chunk-J5N23VJV.js";
 import "./chunk-3XGGEXNB.js";
 import "./chunk-L26I7UJA.js";

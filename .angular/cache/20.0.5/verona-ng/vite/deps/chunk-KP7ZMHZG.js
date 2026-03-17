@@ -1,7 +1,4 @@
 import {
-  Ripple
-} from "./chunk-OC77X5LN.js";
-import {
   Tooltip,
   TooltipModule
 } from "./chunk-NG66ICPZ.js";
@@ -11,6 +8,9 @@ import {
 import {
   zindexutils
 } from "./chunk-BB55NINM.js";
+import {
+  Ripple
+} from "./chunk-OC77X5LN.js";
 import {
   AngleRightIcon
 } from "./chunk-RHA7RL5K.js";
@@ -30,6 +30,11 @@ import {
   PrimeTemplate,
   SharedModule
 } from "./chunk-LMEEH3AJ.js";
+import {
+  RouterLink,
+  RouterLinkActive,
+  RouterModule
+} from "./chunk-EFY5GPDX.js";
 import {
   D,
   I,
@@ -53,11 +58,6 @@ import {
   transition,
   trigger
 } from "./chunk-53DGU4C2.js";
-import {
-  RouterLink,
-  RouterLinkActive,
-  RouterModule
-} from "./chunk-EFY5GPDX.js";
 import {
   CommonModule,
   NgForOf,
@@ -2212,4 +2212,4 @@ export {
   TieredMenu,
   TieredMenuModule
 };
-//# sourceMappingURL=chunk-HZLYCVW2.js.map
+//# sourceMappingURL=chunk-KP7ZMHZG.js.map

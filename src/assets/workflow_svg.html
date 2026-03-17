@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.3.1/mermaid.min.js"></script>
+</head>
+<body>
+    <div class="mermaid">
+        graph TD;
+            A[User Authentication] -->|Login| B{Role-Based Access};
+            B -->|Admin| C[Admin Dashboard];
+            B -->|Doctor| D[Doctor Dashboard];
+            B -->|Nurse| F[Nurse Dashboard];
+            B -->|Receptionist| E[Receptionist Dashboard];
+
+            subgraph Emergency Room Workflow
+                E -->|Register Patient| G[ER Check-in];
+                G -->|Assign Triage Level| H{Triage Levels};
+                H -->|Critical| I[Immediate Consultation];
+                H -->|Serious| J[Fast-track Queue];
+                H -->|Moderate| K[Standard Queue];
+                H -->|Minor| L[Low-priority Queue];
+                I & J & K & L --> M[Doctor Consultation];
+                M -->|Diagnosis| N[Prescribe Treatment or Tests];
+                N -->|Needs Admission| O[Assign Bed & Admit];
+                O -->|Monitor Patient| F[Nurse Monitoring];
+                N -->|Discharge| P[Generate Bill & Payment];
+            end
+
+            subgraph Clinic Department Workflow
+                E -->|Schedule Appointment| Q[Appointment System];
+                Q -->|Check Doctor Availability| R[Doctor Schedule];
+                R -->|Confirm Booking| S[Appointment Confirmed];
+                S --> T[Clinic Consultation];
+                T -->|Diagnosis & Prescription| U[Update Medical Records];
+                U -->|Specialist Referral?| V{Yes/No};
+                V -->|Yes| W[Refer to Specialist Clinic];
+                V -->|No| X[Billing & Payment];
+                T -->|Requires Nursing Care| F[Nurse Assistance];
+            end
+
+            subgraph Doctor Workflow
+                D --> C1[Review Patient Records];
+                C1 --> C2[Consult Patient];
+                C2 --> C3[Diagnosis];
+                C3 --> C4[Prescribe Treatment or Tests];
+                C4 --> C5[Patient Admission or Discharge];
+                C5 --> C6[Monitor Patient Progress];
+                C5 --> C7[Refer to Specialist if Needed];
+                C6 --> C8[Update Medical Records];
+            end
+
+            subgraph Nurse Workflow
+                F --> N1[Review Patient Records];
+                N1 --> N2[Monitor Vital Signs];
+                N2 --> N3[Administer Medication];
+                N3 --> N4[Assist with Procedures];
+                N4 --> N5[Record Patient Interventions];
+                N5 --> N6[Monitor Patient Progress];
+                N6 --> N7[Update Medical Records];
+                N7 --> N8[Alert Doctor if Needed];
+            end
+
+            subgraph Admin & Reporting
+                C -->|Manage Users| Y[User Management];
+                C -->|Track Logs| Z[System Logs];
+                C -->|Generate Reports| AA[Analytics & Reports];
+            end
+    </div>
+</body>
+</html>
