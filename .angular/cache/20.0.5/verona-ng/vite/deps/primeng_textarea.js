@@ -1,9 +1,12 @@
 import {
-  Fluid
-} from "./chunk-ICEVV523.js";
-import {
   BaseModelHolder
 } from "./chunk-2R7VQYSP.js";
+import {
+  Fluid
+} from "./chunk-PJRMHEN5.js";
+import {
+  Bind
+} from "./chunk-MLQGRGGO.js";
 import {
   PARENT_INSTANCE
 } from "./chunk-YNJ5GKCH.js";
@@ -11,9 +14,6 @@ import {
   BaseStyle
 } from "./chunk-4ATYD752.js";
 import "./chunk-LMEEH3AJ.js";
-import {
-  Bind
-} from "./chunk-MLQGRGGO.js";
 import "./chunk-GOP36Q47.js";
 import "./chunk-UCHM6OXG.js";
 import {
@@ -48,8 +48,8 @@ import {
   ɵɵdefineInjectable,
   ɵɵdefineInjector
 } from "./chunk-LW34VNAR.js";
-import "./chunk-YVXMBCE5.js";
 import "./chunk-G6ECYYJH.js";
+import "./chunk-YVXMBCE5.js";
 import "./chunk-RTGP7ALM.js";
 import "./chunk-4MWRP73S.js";
 

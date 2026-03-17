@@ -2,5 +2,5 @@ ng build --configuration production
 aws s3 sync "dist\verona-ng\browser" s3://tiryaq-bucket --delete
 aws cloudfront create-invalidation --distribution-id E3J3D3EMIOIACT --paths "/*"
 git add .
-git commit -m "Addin Profile Features"
+git commit -m "Adding examination featues v2"
 git push

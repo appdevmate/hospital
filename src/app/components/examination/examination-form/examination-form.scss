@@ -1,0 +1,205 @@
+.exam-form-page {
+    padding: 1.5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.exam-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--p-surface-200);
+    h2 { font-size: 1.4rem; font-weight: 700; }
+}
+
+.readonly-banner {
+    display: flex;
+    align-items: center;
+    background: #f0fdf4;
+    border: 1px solid #16a34a;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    color: #15803d;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+}
+
+/* ── Custom SOAP Step Navigation ── */
+.soap-nav {
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+}
+
+.soap-steps {
+    display: flex;
+    gap: 0.25rem;
+    min-width: max-content;
+}
+
+.soap-step {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--p-surface-200);
+    background: var(--p-surface-0);
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--p-surface-500);
+    transition: all 0.15s;
+    white-space: nowrap;
+
+    &:hover {
+        background: var(--p-surface-50);
+        border-color: #16a34a;
+        color: #16a34a;
+    }
+
+    &.active {
+        background: #16a34a;
+        border-color: #16a34a;
+        color: white;
+        .soap-step-num { background: rgba(255,255,255,0.25); color: white; }
+    }
+
+    &.done:not(.active) {
+        border-color: #16a34a;
+        color: #16a34a;
+        background: #f0fdf4;
+    }
+}
+
+.soap-step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--p-surface-100);
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.soap-step-label { font-weight: 600; }
+.soap-step-check { font-size: 0.75rem; margin-left: 0.2rem; }
+
+/* ── Panel content ── */
+.soap-panels {
+    background: var(--p-surface-0);
+    border: 1px solid var(--p-surface-200);
+    border-radius: 10px;
+    padding: 1.5rem;
+}
+
+.step-body { }
+
+.form-section { margin-bottom: 1.5rem; }
+
+.section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #16a34a;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--p-surface-200);
+}
+
+.field-label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--p-surface-500);
+    margin-bottom: 0.35rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.form-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    @media (max-width: 700px) { grid-template-columns: 1fr; }
+}
+
+.vitals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem;
+}
+
+.vital-card {
+    background: var(--p-surface-50);
+    border: 1px solid var(--p-surface-200);
+    border-radius: 8px;
+    padding: 0.75rem;
+}
+
+.bmi-display {
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    border: 1px solid var(--p-surface-200);
+    &.bmi-ok     { background: #f0fdf4; color: #16a34a; }
+    &.bmi-warn   { background: #fffbeb; color: #d97706; }
+    &.bmi-danger { background: #fef2f2; color: #dc2626; }
+}
+
+.add-item-form {
+    background: var(--p-surface-50);
+    border: 1px dashed var(--p-surface-300);
+    border-radius: 10px;
+    padding: 1rem;
+}
+
+.item-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid var(--p-surface-200);
+    margin-bottom: 0.5rem;
+    background: var(--p-surface-0);
+    &:hover { background: var(--p-surface-50); }
+}
+
+.empty-hint {
+    text-align: center;
+    color: var(--p-surface-400);
+    font-style: italic;
+    padding: 1.5rem;
+    border: 1px dashed var(--p-surface-300);
+    border-radius: 8px;
+}
+
+.prereq-warning {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    background: #fffbeb;
+    border: 1px solid #f59e0b;
+    border-radius: 8px;
+    padding: 1rem;
+    color: #92400e;
+    font-weight: 500;
+}

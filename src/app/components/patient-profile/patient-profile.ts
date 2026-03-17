@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
-import { TabsModule } from 'primeng/tabs';
+import { Tabs, TabList, Tab, TabPanels, TabPanel } from 'primeng/tabs';
 import { CardModule } from 'primeng/card';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -11,11 +11,12 @@ import { catchError } from 'rxjs/operators';
 import { PatientsService, Patient } from '../../pages/service/patients.service';
 import { AppointmentsService, Appointment } from '../../pages/service/appointments.service';
 import { PaymentsService, Payment } from '../../pages/service/payments.service';
+import { ExaminationListComponent } from '../examination/examination-list/examination-list';
 
 @Component({
     selector: 'app-patient-profile',
     standalone: true,
-    imports: [CommonModule, RouterModule, ButtonModule, TagModule, TabsModule, CardModule],
+    imports: [CommonModule, RouterModule, ButtonModule, TagModule, Tabs, TabList, Tab, TabPanels, TabPanel, CardModule, ExaminationListComponent],
     templateUrl: './patient-profile.html',
     styleUrl: './patient-profile.scss'
 })
@@ -29,6 +30,10 @@ export class PatientProfileComponent implements OnInit {
     appointments: Appointment[] = [];
     invoices: Payment[] = [];
     loading = true;
+
+    // plain uuid extracted from PK — used for examination-list and profile queries
+    plainId = '';
+    patientName = '';
 
     ngOnInit() {
         const id = this.route.snapshot.paramMap.get('id');
@@ -44,20 +49,25 @@ export class PatientProfileComponent implements OnInit {
         }).subscribe(({ patient, appointments, invoices }) => {
             this.patient = (patient as any)?.data || patient;
 
-            // patientId in appointments may be stored as full 'PATIENT#uuid' or just 'uuid'
-            // match against both to be safe
             const patientPK = this.patient?.PK || '';
-            const plainId = patientPK.includes('#') ? patientPK.split('#')[1] : patientPK;
-            const fullId = patientPK.startsWith('PATIENT#') ? patientPK : `PATIENT#${plainId}`;
+            this.plainId = patientPK.includes('#') ? patientPK.split('#')[1] : patientPK;
+            this.patientName = this.patient?.name || '';
 
-            this.appointments = (appointments as Appointment[]).filter((a) => a.patientId === plainId || a.patientId === fullId);
+            const fullId = patientPK.startsWith('PATIENT#') ? patientPK : `PATIENT#${this.plainId}`;
+
+            this.appointments = (appointments as Appointment[]).filter((a) => a.patientId === this.plainId || a.patientId === fullId);
 
             const allInvoices = ((invoices as any)?.data || []) as Payment[];
-            this.invoices = allInvoices.filter((inv) => inv.patientId === plainId || inv.patientId === fullId);
+            this.invoices = allInvoices.filter((inv) => inv.patientId === this.plainId || inv.patientId === fullId);
 
             this.loading = false;
         });
     }
+
+    // ── Computed helpers ──────────────────────────────────────────────────
+    get examCount(): number {
+        return 0;
+    } // examination-list manages its own count internally
 
     // ── Severity helpers ──────────────────────────────────────────────────
     getStatusSeverity(status: string): 'success' | 'warn' | 'danger' | 'secondary' | 'info' | 'contrast' {
@@ -73,24 +83,15 @@ export class PatientProfileComponent implements OnInit {
     }
 
     getApptStatusSeverity(status: string): 'success' | 'warn' | 'danger' | 'secondary' {
-        const map: Record<string, any> = {
-            scheduled: 'warn',
-            completed: 'success',
-            cancelled: 'danger'
-        };
+        const map: Record<string, any> = { scheduled: 'warn', completed: 'success', cancelled: 'danger' };
         return map[status] || 'secondary';
     }
 
     getInvoiceStatusSeverity(status: string): 'success' | 'warn' | 'danger' | 'secondary' {
-        const map: Record<string, any> = {
-            paid: 'success',
-            pending: 'warn',
-            overdue: 'danger'
-        };
+        const map: Record<string, any> = { paid: 'success', pending: 'warn', overdue: 'danger' };
         return map[status?.toLowerCase()] || 'secondary';
     }
 
-    // ── Helpers ───────────────────────────────────────────────────────────
     isArray(value: any): boolean {
         return Array.isArray(value);
     }

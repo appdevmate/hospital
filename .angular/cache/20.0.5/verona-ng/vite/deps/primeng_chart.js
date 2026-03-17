@@ -1,4 +1,8 @@
 import {
+  Bind,
+  BindModule
+} from "./chunk-MLQGRGGO.js";
+import {
   BaseComponent
 } from "./chunk-YNJ5GKCH.js";
 import {
@@ -7,10 +11,6 @@ import {
 import {
   SharedModule
 } from "./chunk-LMEEH3AJ.js";
-import {
-  Bind,
-  BindModule
-} from "./chunk-MLQGRGGO.js";
 import "./chunk-GOP36Q47.js";
 import "./chunk-UCHM6OXG.js";
 import {
@@ -52,8 +52,8 @@ import {
   ɵɵdefineInjectable,
   ɵɵdefineInjector
 } from "./chunk-LW34VNAR.js";
-import "./chunk-YVXMBCE5.js";
 import "./chunk-G6ECYYJH.js";
+import "./chunk-YVXMBCE5.js";
 import "./chunk-RTGP7ALM.js";
 import {
   __spreadProps,

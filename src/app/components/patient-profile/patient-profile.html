@@ -39,6 +39,7 @@
             <p-tab value="2"><i class="pi pi-calendar mr-2"></i>Appointments ({{ appointments.length }})</p-tab>
             <p-tab value="3"><i class="pi pi-file-invoice mr-2"></i>Invoices ({{ invoices.length }})</p-tab>
             <p-tab value="4"><i class="pi pi-file mr-2"></i>Notes</p-tab>
+            <p-tab value="5"><i class="pi pi-file-medical mr-2"></i>Examinations</p-tab>
         </p-tablist>
 
         <p-tabpanels>
@@ -214,9 +215,7 @@
                             <div class="appt-time">
                                 <i class="pi pi-dollar"></i>
                                 QAR {{ inv.amount | number:'1.2-2' }}
-                                @if (inv.doctorName) {
-                                · {{ inv.doctorName | titlecase }}
-                                }
+                                @if (inv.doctorName) { · {{ inv.doctorName | titlecase }} }
                             </div>
                             @if (inv.notes) {
                             <div class="appt-notes">{{ inv.notes }}</div>
@@ -243,6 +242,11 @@
                     <p class="record-text">{{ patient.notes }}</p>
                 </div>
                 }
+            </p-tabpanel>
+
+            <!-- ── Tab 5: Examinations ── -->
+            <p-tabpanel value="5">
+                <app-examination-list [patientId]="plainId" [patientName]="patientName" />
             </p-tabpanel>
 
         </p-tabpanels>

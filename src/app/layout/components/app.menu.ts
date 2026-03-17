@@ -38,15 +38,13 @@ export class AppMenu implements OnInit {
             {
                 label: 'Management',
                 icon: 'pi pi-users',
-                items: [
-                    { label: 'Doctors Management', icon: 'pi pi-briefcase', routerLink: ['/doctors-management'] },
-                    { label: 'Patients Management', icon: 'pi pi-user-plus', routerLink: ['/patients-management'] }
-                ]
+                items: [{ label: 'Doctors Management', icon: 'pi pi-briefcase', routerLink: ['/doctors-management'] }]
             }
         ];
 
         const sharedItems: MenuItem[] = [
             { label: 'Dashboard', icon: 'pi pi-desktop', routerLink: ['/'] },
+            { label: 'Patients', icon: 'pi pi-user-plus', routerLink: ['/patients-management'] },
             { label: 'Calendar', icon: 'pi pi-calendar', routerLink: ['/calendar'] },
             { label: 'Appointments', icon: 'pi pi-calendar-plus', routerLink: ['/appointments'] },
             { label: 'Invoices', icon: 'pi pi-file-edit', routerLink: ['/invoices'] },
