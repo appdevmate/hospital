@@ -21,7 +21,7 @@
             </div>
         </div>
         <div class="flex items-center gap-2">
-            <p-tag [value]="exam.status === 'completed' ? '✓ Signed Off' : 'Draft'"
+            <p-tag [value]="exam.status === 'completed' ? '✓ Consultation Closed' : 'Draft'"
                 [severity]="exam.status === 'completed' ? 'success' : 'warn'" />
             @if (exam.status === 'draft' && auth.isDoctor) {
             <p-button label="Continue Editing" icon="pi pi-pencil" severity="success" (onClick)="editExam()" />
@@ -33,7 +33,7 @@
     @if (exam.signedOffAt) {
     <div class="signoff-banner">
         <i class="pi pi-check-circle mr-2"></i>
-        Signed off by Dr. {{ exam.doctorName | titlecase }} on {{ exam.signedOffAt | date:'MMM d, y, h:mm a' }}
+        Consultation closed by Dr. {{ exam.doctorName | titlecase }} on {{ exam.signedOffAt | date:'MMM d, y, h:mm a' }}
     </div>
     }
 

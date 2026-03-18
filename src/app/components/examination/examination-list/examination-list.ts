@@ -62,7 +62,7 @@ import { HelpersService } from '@/pages/service/helpers-service';
                             <!-- Middle: info -->
                             <div class="exam-info flex-1 min-w-0">
                                 <div class="flex items-center gap-2 mb-1 flex-wrap">
-                                    <p-tag [value]="exam.status === 'completed' ? 'Signed Off' : 'Draft'" [severity]="exam.status === 'completed' ? 'success' : 'warn'" />
+                                    <p-tag [value]="exam.status === 'completed' ? 'Closed Consultation' : 'Draft'" [severity]="exam.status === 'completed' ? 'success' : 'warn'" />
                                     @if (exam.diagnosis && exam.diagnosis.length > 0) {
                                         <span class="text-sm font-medium text-surface-700 dark:text-surface-200"> {{ exam.diagnosis[0].icdCode }} — {{ exam.diagnosis[0].icdDescription }} </span>
                                     } @else {

@@ -24,12 +24,13 @@
             </div>
         </div>
         <div class="flex items-center gap-3">
-            <p-tag [value]="exam!.status === 'completed' ? '✓ Signed Off' : 'Draft'"
+            <p-tag [value]="exam!.status === 'completed' ? '✓ Closed Consultation' : 'Draft'"
                 [severity]="exam!.status === 'completed' ? 'success' : 'warn'"
                 [style]="{'font-size':'0.9rem','padding':'0.4rem 0.8rem'}" />
             @if (exam!.status === 'draft' && auth.isDoctor) {
-            <p-button label="Close Consultation" icon="pi pi-check" severity="success" [disabled]="!canSignOff" [loading]="saving"
-                (onClick)="signOff()" pTooltip="Requires: Chief Complaint + at least 1 primary diagnosis" />
+            <p-button label="Close Consultation" icon="pi pi-check" severity="success" [disabled]="!canSignOff"
+                [loading]="saving" (onClick)="signOff()"
+                pTooltip="Requires: Chief Complaint + at least 1 primary diagnosis" />
             }
         </div>
     </div>
@@ -37,7 +38,7 @@
     @if (isReadOnly) {
     <div class="readonly-banner">
         <i class="pi pi-lock mr-2"></i>
-        This examination has been signed off and is read-only.
+        This consultation has been closed and is read-only.
     </div>
     }
 

@@ -334,12 +334,12 @@ export class ExaminationFormComponent implements OnInit {
                         this.exam = updated;
                         this.saving = false;
                         this.cdr.markForCheck();
-                        this.helpers.notifySuccess('Examination signed off successfully');
+                        this.helpers.notifySuccess('Consultation closed successfully');
                     },
                     error: (err) => {
                         this.saving = false;
                         this.cdr.markForCheck();
-                        this.helpers.notifyError('Cannot Sign Off', err?.error?.message || err?.error?.error || 'Validation failed');
+                        this.helpers.notifyError('Cannot close consultation', err?.error?.message || err?.error?.error || 'Validation failed');
                     }
                 });
             }
