@@ -1,0 +1,318 @@
+<p-confirmDialog appendTo="body" />
+
+<div class="admin-page">
+
+    <!-- Header -->
+    <div class="admin-header">
+        <div class="flex items-center gap-3">
+            <i class="pi pi-shield-check admin-header-icon"></i>
+            <div>
+                <h2 class="m-0">Admin Panel</h2>
+                <div class="text-sm text-surface-400">System administration and user management</div>
+            </div>
+        </div>
+    </div>
+
+    <p-tabs value="0">
+        <p-tablist>
+            <p-tab value="0"><i class="pi pi-chart-bar mr-2"></i>Overview</p-tab>
+            <p-tab value="1"><i class="pi pi-users mr-2"></i>User Management</p-tab>
+            <p-tab value="2"><i class="pi pi-list mr-2"></i>Audit Log</p-tab>
+            <p-tab value="3"><i class="pi pi-shield mr-2"></i>GDPR Tools</p-tab>
+        </p-tablist>
+
+        <p-tabpanels>
+
+            <!-- ── Tab 0: Overview / Stats ── -->
+            <p-tabpanel value="0">
+                <div class="tab-body">
+                    @if (statsLoading) {
+                    <div class="flex justify-center py-8">
+                        <i class="pi pi-spin pi-spinner text-3xl" style="color:#16a34a;"></i>
+                    </div>
+                    } @else {
+                    <div class="stats-grid">
+                        <div class="stat-card stat-green">
+                            <div class="stat-icon"><i class="pi pi-user-plus"></i></div>
+                            <div class="stat-info">
+                                <div class="stat-value">{{ stats.totalPatients | number }}</div>
+                                <div class="stat-label">Total Patients</div>
+                            </div>
+                        </div>
+                        <div class="stat-card stat-blue">
+                            <div class="stat-icon"><i class="pi pi-briefcase"></i></div>
+                            <div class="stat-info">
+                                <div class="stat-value">{{ stats.totalDoctors | number }}</div>
+                                <div class="stat-label">Total Doctors</div>
+                            </div>
+                        </div>
+                        <div class="stat-card stat-purple">
+                            <div class="stat-icon"><i class="pi pi-file-medical"></i></div>
+                            <div class="stat-info">
+                                <div class="stat-value">{{ stats.totalExams | number }}</div>
+                                <div class="stat-label">Total Examinations</div>
+                            </div>
+                        </div>
+                        <div class="stat-card stat-orange">
+                            <div class="stat-icon"><i class="pi pi-file-invoice"></i></div>
+                            <div class="stat-info">
+                                <div class="stat-value">{{ stats.totalInvoices | number }}</div>
+                                <div class="stat-label">Total Invoices</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end mt-4">
+                        <p-button label="Refresh" icon="pi pi-refresh" severity="secondary" outlined
+                            (onClick)="loadStats()" />
+                    </div>
+                    }
+                </div>
+            </p-tabpanel>
+
+            <!-- ── Tab 1: User Management ── -->
+            <p-tabpanel value="1">
+                <div class="tab-body">
+                    <!-- Search -->
+                    <div class="flex gap-2 mb-4">
+                        <p-iconfield class="flex-1">
+                            <p-inputicon><i class="pi pi-search"></i></p-inputicon>
+                            <input pInputText [(ngModel)]="userFilter" placeholder="Search by email or name..."
+                                class="w-full" (keydown.enter)="loadUsers()" />
+                        </p-iconfield>
+                        <p-button label="Search" icon="pi pi-search" (onClick)="loadUsers()" />
+                        <p-button label="All Users" icon="pi pi-list" severity="secondary" outlined
+                            (onClick)="userFilter = ''; loadUsers()" />
+                    </div>
+
+                    <!-- Table -->
+                    <p-table [value]="users" [loading]="usersLoading" [rowHover]="true" [showGridlines]="true"
+                        emptyMessage="No users found.">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width:220px">Name</th>
+                                <th>Email</th>
+                                <th style="width:180px">Groups</th>
+                                <th style="width:140px">Status</th>
+                                <th style="width:160px">Created</th>
+                                <th style="width:180px">Actions</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-user>
+                            <tr>
+                                <td>
+                                    <div class="font-medium">{{ user.name || '—' | titlecase }}</div>
+                                    <div class="text-xs text-surface-400">{{ user.username }}</div>
+                                </td>
+                                <td>{{ user.email }}</td>
+                                <td>
+                                    <div class="flex gap-1 flex-wrap">
+                                        @for (g of user.groups; track g) {
+                                        <p-tag [value]="g" [severity]="groupSeverity(g)" styleClass="text-xs" />
+                                        }
+                                        @if (!user.groups?.length) { <span class="text-surface-400 text-xs">No
+                                            group</span> }
+                                    </div>
+                                </td>
+                                <td>
+                                    <p-tag [value]="userStatusLabel(user)" [severity]="userStatusSeverity(user)" />
+                                </td>
+                                <td class="text-sm text-surface-500">
+                                    {{ user.created | date:'MMM d, y' }}
+                                </td>
+                                <td>
+                                    <div class="flex gap-1">
+                                        @if (user.enabled) {
+                                        <p-button icon="pi pi-ban" text severity="danger" size="small"
+                                            pTooltip="Disable User" [loading]="actionLoading[user.username]"
+                                            (onClick)="disableUser(user)" />
+                                        } @else {
+                                        <p-button icon="pi pi-check-circle" text severity="success" size="small"
+                                            pTooltip="Enable User" [loading]="actionLoading[user.username]"
+                                            (onClick)="enableUser(user)" />
+                                        }
+                                        <p-button icon="pi pi-key" text severity="warn" size="small"
+                                            pTooltip="Reset Password" [loading]="actionLoading[user.username]"
+                                            (onClick)="resetPassword(user)" />
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+
+                    <div class="text-sm text-surface-400 mt-2">{{ users.length }} users loaded</div>
+                </div>
+            </p-tabpanel>
+
+            <!-- ── Tab 2: Audit Log ── -->
+            <p-tabpanel value="2">
+                <div class="tab-body">
+
+                    <!-- Filters -->
+                    <div class="audit-filters">
+                        <div>
+                            <label class="field-label">Date</label>
+                            <p-datepicker [(ngModel)]="auditDate" [showIcon]="true" dateFormat="yy-mm-dd"
+                                appendTo="body" styleClass="w-full" (onSelect)="loadAudit()" />
+                        </div>
+                        <div>
+                            <label class="field-label">Entity Type</label>
+                            <p-select [options]="entityTypeOptions" [(ngModel)]="auditEntityType" optionLabel="label"
+                                optionValue="value" appendTo="body" styleClass="w-full" (onChange)="loadAudit()" />
+                        </div>
+                        <div>
+                            <label class="field-label">Action</label>
+                            <p-select [options]="actionOptions" [(ngModel)]="auditAction" optionLabel="label"
+                                optionValue="value" appendTo="body" styleClass="w-full" (onChange)="loadAudit()" />
+                        </div>
+                        <div>
+                            <label class="field-label">Actor Email</label>
+                            <input pInputText [(ngModel)]="auditActor" class="w-full"
+                                placeholder="e.g. doctor@tiryaq.com" (keydown.enter)="loadAudit()" />
+                        </div>
+                        <div class="flex items-end gap-2">
+                            <p-button label="Search" icon="pi pi-search" (onClick)="loadAudit()" />
+                            <p-button label="Clear" icon="pi pi-times" severity="secondary" outlined
+                                (onClick)="clearAuditFilters()" />
+                        </div>
+                    </div>
+
+                    <!-- Results -->
+                    @if (auditLoading) {
+                    <div class="flex justify-center py-8">
+                        <i class="pi pi-spin pi-spinner text-3xl" style="color:#16a34a;"></i>
+                    </div>
+                    } @else {
+                    <div class="text-sm text-surface-500 mb-3">
+                        {{ auditItems.length }} records found for {{ auditDate | date:'MMM d, y' }}
+                    </div>
+
+                    <p-table [value]="auditItems" [rowHover]="true" [showGridlines]="true" [scrollable]="true"
+                        scrollHeight="500px" emptyMessage="No audit records found for this date and filters.">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width:140px">Time</th>
+                                <th style="width:120px">Action</th>
+                                <th style="width:140px">Entity Type</th>
+                                <th>Actor</th>
+                                <th>Summary</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-item>
+                            <tr>
+                                <td class="text-sm">{{ item.timestamp | date:'HH:mm:ss' }}</td>
+                                <td>
+                                    <p-tag [value]="item.action" [severity]="actionSeverity(item.action)" />
+                                </td>
+                                <td class="text-sm font-medium">{{ item.entityType }}</td>
+                                <td>
+                                    <div class="text-sm font-medium">{{ item.actorName || '—' | titlecase }}</div>
+                                    <div class="text-xs text-surface-400">{{ item.actorEmail }}</div>
+                                </td>
+                                <td class="text-sm text-surface-600">{{ item.changeSummary }}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                    }
+                </div>
+            </p-tabpanel>
+
+            <!-- ── Tab 3: GDPR Tools ── -->
+            <p-tabpanel value="3">
+                <div class="tab-body">
+
+                    <!-- Info banner -->
+                    <div class="gdpr-info-banner">
+                        <i class="pi pi-info-circle mr-2"></i>
+                        <span>
+                            GDPR tools allow you to export or soft-delete patient data.
+                            Soft delete hides the patient from all normal views while preserving data for legal and
+                            audit purposes.
+                            This action can be reversed.
+                        </span>
+                    </div>
+
+                    <!-- Search -->
+                    <div class="flex gap-2 mb-4 mt-4">
+                        <p-iconfield class="flex-1">
+                            <p-inputicon><i class="pi pi-search"></i></p-inputicon>
+                            <input pInputText [(ngModel)]="gdprSearchTerm"
+                                placeholder="Search patient by name or QID..." class="w-full"
+                                (keydown.enter)="searchGdprPatients()" />
+                        </p-iconfield>
+                        <p-button label="Search" icon="pi pi-search" [loading]="gdprLoading"
+                            (onClick)="searchGdprPatients()" />
+                    </div>
+
+                    <!-- Results -->
+                    @if (gdprPatients.length > 0) {
+                    <p-table [value]="gdprPatients" [rowHover]="true" [showGridlines]="true"
+                        emptyMessage="No patients found.">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th>Patient</th>
+                                <th style="width:120px">QID</th>
+                                <th style="width:130px">Status</th>
+                                <th style="width:120px">GDPR Status</th>
+                                <th style="width:220px">Actions</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-patient>
+                            <tr [class.gdpr-deleted-row]="patient.gdprDeleted">
+                                <td>
+                                    <div class="font-medium">{{ patient.name | titlecase }}</div>
+                                    <div class="text-xs text-surface-400">{{ patient.email }}</div>
+                                </td>
+                                <td class="text-sm font-mono">{{ patient.qid }}</td>
+                                <td>
+                                    <p-tag [value]="(patient.status || 'unknown') | uppercase" severity="secondary" />
+                                </td>
+                                <td>
+                                    @if (patient.gdprDeleted) {
+                                    <p-tag value="GDPR Deleted" severity="danger" />
+                                    } @else {
+                                    <p-tag value="Active" severity="success" />
+                                    }
+                                </td>
+                                <td>
+                                    <div class="flex gap-1">
+                                        <p-button label="Export" icon="pi pi-download" size="small" severity="info"
+                                            outlined [loading]="gdprExporting"
+                                            pTooltip="Download all patient data as Excel"
+                                            (onClick)="exportGdpr(patient)" />
+                                        @if (!patient.gdprDeleted) {
+                                        <p-button label="Soft Delete" icon="pi pi-eye-slash" size="small"
+                                            severity="danger" outlined pTooltip="Hide from all views (reversible)"
+                                            (onClick)="gdprSoftDelete(patient)" />
+                                        } @else {
+                                        <p-button label="Restore" icon="pi pi-eye" size="small" severity="success"
+                                            outlined pTooltip="Restore visibility" (onClick)="gdprRestore(patient)" />
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                    }
+
+                    @if (!gdprLoading && gdprSearchTerm && gdprPatients.length === 0) {
+                    <div class="empty-state">
+                        <i class="pi pi-search text-3xl mb-2" style="color:#CBD5E1;"></i>
+                        <p>No patients found for "{{ gdprSearchTerm }}"</p>
+                    </div>
+                    }
+
+                    @if (!gdprSearchTerm) {
+                    <div class="empty-state">
+                        <i class="pi pi-shield text-3xl mb-2" style="color:#CBD5E1;"></i>
+                        <p>Search for a patient above to manage their GDPR rights</p>
+                    </div>
+                    }
+
+                </div>
+            </p-tabpanel>
+
+        </p-tabpanels>
+    </p-tabs>
+
+</div>

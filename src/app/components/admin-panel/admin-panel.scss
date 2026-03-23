@@ -1,0 +1,129 @@
+.admin-page {
+    padding: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.admin-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--p-surface-200);
+
+    h2 { font-size: 1.4rem; font-weight: 700; margin: 0; }
+
+    .admin-header-icon {
+        font-size: 1.8rem;
+        color: #16a34a;
+    }
+}
+
+.tab-body {
+    padding: 1.5rem 0;
+}
+
+/* ── Stats ── */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.25rem;
+}
+
+.stat-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--p-surface-200);
+    background: var(--p-surface-0);
+}
+
+.stat-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+}
+
+.stat-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--p-surface-900);
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--p-surface-500);
+    margin-top: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.stat-green .stat-icon { background: #f0fdf4; color: #16a34a; }
+.stat-blue  .stat-icon { background: #eff6ff; color: #3b82f6; }
+.stat-purple.stat-icon { background: #faf5ff; color: #9333ea; }
+.stat-orange.stat-icon { background: #fff7ed; color: #f97316; }
+
+/* ── Audit filters ── */
+.audit-filters {
+    display: grid;
+    grid-template-columns: 160px 1fr 1fr 1fr auto;
+    gap: 1rem;
+    align-items: end;
+    margin-bottom: 1.25rem;
+    padding: 1rem;
+    background: var(--p-surface-50);
+    border-radius: 10px;
+    border: 1px solid var(--p-surface-200);
+
+    @media (max-width: 900px) {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.field-label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--p-surface-500);
+    margin-bottom: 0.35rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+/* ── GDPR ── */
+.gdpr-info-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    background: #eff6ff;
+    border: 1px solid #3b82f6;
+    border-radius: 8px;
+    padding: 0.875rem 1rem;
+    color: #1e40af;
+    font-size: 0.875rem;
+
+    i { flex-shrink: 0; margin-top: 2px; }
+}
+
+.gdpr-deleted-row {
+    opacity: 0.6;
+    background: #fef2f2 !important;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--p-surface-400);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

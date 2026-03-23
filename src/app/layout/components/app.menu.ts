@@ -34,14 +34,6 @@ export class AppMenu implements OnInit {
         this.auth.invalidate();
         const isAdmin = this.auth.isAdmin;
 
-        const adminOnlyItems: MenuItem[] = [
-            {
-                label: 'Management',
-                icon: 'pi pi-users',
-                items: [{ label: 'Doctors Management', icon: 'pi pi-briefcase', routerLink: ['/doctors-management'] }]
-            }
-        ];
-
         const sharedItems: MenuItem[] = [
             { label: 'Dashboard', icon: 'pi pi-desktop', routerLink: ['/'] },
             { label: 'Patients', icon: 'pi pi-user-plus', routerLink: ['/patients-management'] },
@@ -49,6 +41,18 @@ export class AppMenu implements OnInit {
             { label: 'Appointments', icon: 'pi pi-calendar-plus', routerLink: ['/appointments'] },
             { label: 'Invoices', icon: 'pi pi-file-edit', routerLink: ['/invoices'] },
             { label: 'Notifications', icon: 'pi pi-bell', routerLink: ['/notifications'] }
+        ];
+
+        const adminOnlyItems: MenuItem[] = [
+            { separator: true },
+            {
+                label: 'Administration',
+                icon: 'pi pi-shield',
+                items: [
+                    { label: 'Admin Panel', icon: 'pi pi-shield-check', routerLink: ['/admin-panel'] },
+                    { label: 'Doctors Management', icon: 'pi pi-briefcase', routerLink: ['/doctors-management'] }
+                ]
+            }
         ];
 
         this.model = isAdmin ? [...sharedItems, ...adminOnlyItems] : sharedItems;

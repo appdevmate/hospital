@@ -6,6 +6,7 @@ import { UserProfileComponent } from '@/components/user-profile/user-profile';
 import { authGuard } from './app/guards/auth.guard';
 import { ExaminationDetailComponent } from '@/components/examination/examination-detail/examination-detail';
 import { ExaminationFormComponent } from '@/components/examination/examination-form/examination-form';
+import { AdminPanelComponent } from '@/components/admin-panel/admin-panel';
 
 export const appRoutes: Routes = [
     {
@@ -68,7 +69,8 @@ export const appRoutes: Routes = [
             { path: 'blocks', data: { breadcrumb: 'Prime Blocks' }, loadChildren: () => import('@/pages/blocks/blocks.routes') },
             { path: 'profile', data: { breadcrumb: 'User Management' }, loadChildren: () => import('@/pages/usermanagement/usermanagement.routes') },
             { path: 'examination/:examId', component: ExaminationFormComponent },
-            { path: 'examination/:examId/view', component: ExaminationDetailComponent }
+            { path: 'examination/:examId/view', component: ExaminationDetailComponent },
+            { path: 'admin-panel', component: AdminPanelComponent }
         ]
     },
     { path: 'auth', loadChildren: () => import('@/pages/auth/auth.routes') },
