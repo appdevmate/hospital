@@ -7,6 +7,7 @@ import { authGuard } from './app/guards/auth.guard';
 import { ExaminationDetailComponent } from '@/components/examination/examination-detail/examination-detail';
 import { ExaminationFormComponent } from '@/components/examination/examination-form/examination-form';
 import { AdminPanelComponent } from '@/components/admin-panel/admin-panel';
+import { PharmacyComponent } from '@/components/pharmacy/pharmacy';
 
 export const appRoutes: Routes = [
     {
@@ -70,7 +71,8 @@ export const appRoutes: Routes = [
             { path: 'profile', data: { breadcrumb: 'User Management' }, loadChildren: () => import('@/pages/usermanagement/usermanagement.routes') },
             { path: 'examination/:examId', component: ExaminationFormComponent },
             { path: 'examination/:examId/view', component: ExaminationDetailComponent },
-            { path: 'admin-panel', component: AdminPanelComponent }
+            { path: 'admin-panel', component: AdminPanelComponent },
+            { path: 'pharmacy', component: PharmacyComponent }
         ]
     },
     { path: 'auth', loadChildren: () => import('@/pages/auth/auth.routes') },

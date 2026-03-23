@@ -1,0 +1,741 @@
+<p-confirmDialog appendTo="body" />
+
+<div class="pharmacy-page">
+
+    <!-- Header -->
+    <div class="pharm-header">
+        <div class="flex items-center gap-3">
+            <i class="pi pi-heart-fill pharm-header-icon"></i>
+            <div>
+                <h2 class="m-0">Pharmacy</h2>
+                <div class="text-sm text-surface-400">Medication management, dispensing, and stock control</div>
+            </div>
+        </div>
+        @if (criticalAlerts.length > 0) {
+        <div class="alert-badge-header">
+            <i class="pi pi-exclamation-triangle mr-1"></i>
+            {{ criticalAlerts.length }} critical alert(s)
+        </div>
+        }
+    </div>
+
+    <p-tabs value="0">
+        <p-tablist>
+            <p-tab value="0">
+                <i class="pi pi-chart-bar mr-2"></i>Dashboard
+                @if (criticalAlerts.length > 0) {
+                <span class="tab-alert-badge">{{ criticalAlerts.length }}</span>
+                }
+            </p-tab>
+            <p-tab value="1"><i class="pi pi-book mr-2"></i>Catalog</p-tab>
+            <p-tab value="2">
+                <i class="pi pi-box mr-2"></i>Inventory
+                @if (hasInventoryAlerts) {
+                <span class="tab-warn-badge">!</span>
+                }
+            </p-tab>
+            <p-tab value="3">
+                <i class="pi pi-file-edit mr-2"></i>Prescriptions
+                @if (prescriptions.length > 0) {
+                <span class="tab-badge">{{ prescriptions.length }}</span>
+                }
+            </p-tab>
+            <p-tab value="4"><i class="pi pi-history mr-2"></i>History</p-tab>
+            <p-tab value="5"><i class="pi pi-truck mr-2"></i>Purchase Orders</p-tab>
+        </p-tablist>
+
+        <p-tabpanels>
+
+            <!-- ── Tab 0: Dashboard ── -->
+            <p-tabpanel value="0">
+                <div class="tab-body">
+                    <!-- Stats row -->
+                    <div class="stats-row">
+                        <div class="stat-mini stat-blue">
+                            <div class="stat-mini-val">{{ medications.length }}</div>
+                            <div class="stat-mini-label">Medications</div>
+                        </div>
+                        <div class="stat-mini stat-green">
+                            <div class="stat-mini-val">{{ inventory.length }}</div>
+                            <div class="stat-mini-label">In Inventory</div>
+                        </div>
+                        <div class="stat-mini stat-orange">
+                            <div class="stat-mini-val">{{ prescriptions.length }}</div>
+                            <div class="stat-mini-label">Pending Rx</div>
+                        </div>
+                        <div class="stat-mini stat-red">
+                            <div class="stat-mini-val">{{ criticalAlerts.length }}</div>
+                            <div class="stat-mini-label">Critical Alerts</div>
+                        </div>
+                        <div class="stat-mini stat-yellow">
+                            <div class="stat-mini-val">{{ warningAlerts.length }}</div>
+                            <div class="stat-mini-label">Warnings</div>
+                        </div>
+                    </div>
+
+                    @if (alertsLoading) {
+                    <div class="flex justify-center py-6">
+                        <i class="pi pi-spin pi-spinner text-2xl" style="color:#16a34a;"></i>
+                    </div>
+                    }
+
+                    <!-- Critical alerts -->
+                    @if (criticalAlerts.length > 0) {
+                    <div class="alert-section">
+                        <h3 class="alert-section-title alert-critical-title">
+                            <i class="pi pi-exclamation-circle mr-2"></i>Critical Alerts ({{ criticalAlerts.length }})
+                        </h3>
+                        @for (alert of criticalAlerts; track alert.medId + alert.type) {
+                        <div class="alert-item alert-critical">
+                            <i
+                                class="pi {{ alert.type === 'out_of_stock' ? 'pi-times-circle' : 'pi-calendar-times' }} alert-icon"></i>
+                            <div class="flex-1">
+                                <div class="font-semibold">{{ alert.medName }}</div>
+                                <div class="text-sm">{{ alert.message }}</div>
+                            </div>
+                            <p-tag [value]="alert.type === 'out_of_stock' ? 'Out of Stock' : 'Expired'"
+                                severity="danger" />
+                        </div>
+                        }
+                    </div>
+                    }
+
+                    <!-- Warning alerts -->
+                    @if (warningAlerts.length > 0) {
+                    <div class="alert-section">
+                        <h3 class="alert-section-title alert-warning-title">
+                            <i class="pi pi-exclamation-triangle mr-2"></i>Warnings ({{ warningAlerts.length }})
+                        </h3>
+                        @for (alert of warningAlerts; track alert.medId + alert.type) {
+                        <div class="alert-item alert-warning">
+                            <i class="pi {{ alert.type === 'low_stock' ? 'pi-box' : 'pi-clock' }} alert-icon"></i>
+                            <div class="flex-1">
+                                <div class="font-semibold">{{ alert.medName }}</div>
+                                <div class="text-sm">{{ alert.message }}</div>
+                            </div>
+                            <p-tag [value]="alert.type === 'low_stock' ? 'Low Stock' : 'Expiring Soon'"
+                                severity="warn" />
+                        </div>
+                        }
+                    </div>
+                    }
+
+                    @if (!alertsLoading && alerts.length === 0) {
+                    <div class="empty-state">
+                        <i class="pi pi-check-circle text-4xl mb-2" style="color:#16a34a;"></i>
+                        <p>All clear — no alerts at this time</p>
+                    </div>
+                    }
+
+                    <div class="flex justify-end mt-4">
+                        <p-button label="Refresh Alerts" icon="pi pi-refresh" severity="secondary" outlined
+                            (onClick)="loadAlerts()" />
+                    </div>
+                </div>
+            </p-tabpanel>
+
+            <!-- ── Tab 1: Medication Catalog ── -->
+            <p-tabpanel value="1">
+                <div class="tab-body">
+                    @if (auth.isAdmin || auth.isPharmacist) {
+                    <div class="flex justify-end mb-4">
+                        <p-button label="Add Medication" icon="pi pi-plus" severity="success"
+                            (onClick)="openNewMed()" />
+                    </div>
+                    }
+
+                    <p-table [value]="medications" [loading]="medsLoading" [rowHover]="true" [showGridlines]="true"
+                        [globalFilterFields]="['name','genericName','category','form']"
+                        emptyMessage="No medications in the catalog yet.">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th pSortableColumn="name">Name <p-sortIcon field="name" /></th>
+                                <th>Generic Name</th>
+                                <th style="width:130px">Category</th>
+                                <th style="width:100px">Form</th>
+                                <th style="width:100px">Strength</th>
+                                <th style="width:80px">Rx Req.</th>
+                                <th style="width:80px">Reorder</th>
+                                @if (auth.isAdmin || auth.isPharmacist) {
+                                <th style="width:120px">Actions</th>
+                                }
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-med>
+                            <tr>
+                                <td class="font-medium">{{ med.name }}</td>
+                                <td class="text-sm text-surface-500">{{ med.genericName || '—' }}</td>
+                                <td><p-tag [value]="med.category" severity="info" styleClass="text-xs" /></td>
+                                <td class="text-sm">{{ med.form || '—' }}</td>
+                                <td class="text-sm font-mono">{{ med.strength || '—' }}</td>
+                                <td class="text-center">
+                                    <i
+                                        class="pi {{ med.requiresPrescription ? 'pi-check text-green-600' : 'pi-times text-surface-400' }}"></i>
+                                </td>
+                                <td class="text-center text-sm">{{ med.reorderPoint }}</td>
+                                @if (auth.isAdmin || auth.isPharmacist) {
+                                <td>
+                                    <div class="flex gap-1">
+                                        <p-button icon="pi pi-pencil" text size="small" severity="info" pTooltip="Edit"
+                                            (onClick)="openEditMed(med)" />
+                                        <p-button icon="pi pi-trash" text size="small" severity="danger"
+                                            pTooltip="Delete" (onClick)="deleteMed(med)" />
+                                    </div>
+                                </td>
+                                }
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </p-tabpanel>
+
+            <!-- ── Tab 2: Inventory ── -->
+            <p-tabpanel value="2">
+                <div class="tab-body">
+                    <div class="flex gap-2 mb-4 items-center">
+                        <p-iconfield class="flex-1">
+                            <p-inputicon><i class="pi pi-search"></i></p-inputicon>
+                            <input pInputText [(ngModel)]="invFilter" placeholder="Filter by name or category..."
+                                class="w-full" />
+                        </p-iconfield>
+                        <p-button label="Refresh" icon="pi pi-refresh" severity="secondary" outlined
+                            (onClick)="loadInventory()" />
+                    </div>
+
+                    <p-table [value]="filteredInventory" [loading]="invLoading" [rowHover]="true" [showGridlines]="true"
+                        [scrollable]="true" scrollHeight="600px" emptyMessage="No inventory items found.">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th pSortableColumn="medName">Medication <p-sortIcon field="medName" /></th>
+                                <th style="width:110px">Category</th>
+                                <th style="width:120px">Stock</th>
+                                <th style="width:120px">Batch No.</th>
+                                <th style="width:120px">Expiry</th>
+                                <th style="width:100px">Location</th>
+                                <th style="width:100px">Status</th>
+                                <th style="width:120px">Actions</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-item>
+                            <tr [class.inv-row-danger]="item.stockQty === 0 || item.isExpired"
+                                [class.inv-row-warn]="(item.isLowStock || item.isExpiringSoon) && !item.isExpired && item.stockQty > 0">
+                                <td>
+                                    <div class="font-medium">{{ item.medName }}</div>
+                                    @if (item.genericName) {
+                                    <div class="text-xs text-surface-400">{{ item.genericName }}</div>
+                                    }
+                                    @if (item.strength) {
+                                    <div class="text-xs text-surface-400">{{ item.form }} · {{ item.strength }}</div>
+                                    }
+                                </td>
+                                <td><p-tag [value]="item.category || '—'" severity="secondary" styleClass="text-xs" />
+                                </td>
+                                <td>
+                                    <span class="stock-qty" [class.stock-zero]="item.stockQty === 0"
+                                        [class.stock-low]="item.isLowStock && item.stockQty > 0">
+                                        {{ item.stockQty }} {{ item.unit || 'units' }}
+                                    </span>
+                                    <div class="text-xs text-surface-400">reorder at {{ item.reorderPoint }}</div>
+                                </td>
+                                <td class="text-sm font-mono">{{ item.batchNumber || '—' }}</td>
+                                <td class="text-sm">
+                                    @if (item.expiryDate) {
+                                    <span [class.text-red-600]="item.isExpired"
+                                        [class.text-yellow-600]="item.isExpiringSoon && !item.isExpired">
+                                        {{ item.expiryDate }}
+                                        @if (item.isExpired) { <span class="text-xs ml-1">(Expired)</span> }
+                                        @else if (item.isExpiringSoon) { <span class="text-xs ml-1">({{
+                                            item.daysToExpiry }}d)</span> }
+                                    </span>
+                                    } @else { <span class="text-surface-400">—</span> }
+                                </td>
+                                <td class="text-sm">{{ item.location || '—' }}</td>
+                                <td>
+                                    <p-tag
+                                        [value]="item.stockQty === 0 ? 'Out of Stock' : item.isExpired ? 'Expired' : item.isLowStock ? 'Low Stock' : 'OK'"
+                                        [severity]="stockSeverity(item)" styleClass="text-xs" />
+                                </td>
+                                <td>
+                                    <p-button icon="pi pi-sliders-v" text size="small" severity="info"
+                                        pTooltip="Adjust Stock" (onClick)="openAdjust(item)" />
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </p-tabpanel>
+
+            <!-- ── Tab 3: Prescriptions Queue ── -->
+            <p-tabpanel value="3">
+                <div class="tab-body">
+                    <div class="flex gap-2 mb-4">
+                        <p-select [options]="rxStatusOptions" [(ngModel)]="rxFilter" optionLabel="label"
+                            optionValue="value" appendTo="body" styleClass="w-48" (onChange)="loadPrescriptions()" />
+                        <p-button label="Refresh" icon="pi pi-refresh" severity="secondary" outlined
+                            (onClick)="loadPrescriptions()" />
+                    </div>
+
+                    @if (rxLoading) {
+                    <div class="flex justify-center py-8">
+                        <i class="pi pi-spin pi-spinner text-3xl" style="color:#16a34a;"></i>
+                    </div>
+                    } @else if (prescriptions.length === 0) {
+                    <div class="empty-state">
+                        <i class="pi pi-check-circle text-4xl mb-2" style="color:#16a34a;"></i>
+                        <p>No {{ rxFilter }} prescriptions</p>
+                    </div>
+                    } @else {
+                    <div class="rx-list">
+                        @for (rx of prescriptions; track rx.examId + rx.prescription.id) {
+                        <div class="rx-card" [class.rx-card-allergy]="rx.hasAllergyAlert">
+
+                            @if (rx.hasAllergyAlert) {
+                            <div class="allergy-banner">
+                                <i class="pi pi-exclamation-triangle mr-2"></i>
+                                <strong>Allergy Alert:</strong>&nbsp;{{ rx.allergyWarnings.join(' | ') }}
+                            </div>
+                            }
+
+                            <div class="rx-card-body">
+                                <div class="rx-patient">
+                                    <div class="font-semibold text-lg">{{ rx.prescription.medication | titlecase }}
+                                    </div>
+                                    <div class="text-sm text-surface-500">
+                                        {{ rx.prescription.dose }} · {{ rx.prescription.frequency }}
+                                        @if (rx.prescription.duration) { · {{ rx.prescription.duration }} }
+                                        · Route: {{ rx.prescription.route | titlecase }}
+                                        @if (rx.prescription.refills) { · {{ rx.prescription.refills }} refill(s) }
+                                    </div>
+                                    @if (rx.prescription.instructions) {
+                                    <div class="text-xs text-surface-400 mt-0.5">{{ rx.prescription.instructions }}
+                                    </div>
+                                    }
+                                </div>
+                                <div class="rx-meta">
+                                    <div class="text-sm"><i class="pi pi-user mr-1"></i>{{ rx.patientName | titlecase }}
+                                    </div>
+                                    <div class="text-sm"><i class="pi pi-user-plus mr-1"></i>Dr. {{ rx.doctorName |
+                                        titlecase }}</div>
+                                    <div class="text-xs text-surface-400"><i class="pi pi-calendar mr-1"></i>{{
+                                        rx.examDate }}</div>
+                                </div>
+                                @if (rxFilter === 'ordered') {
+                                <p-button label="Dispense" icon="pi pi-check" severity="success"
+                                    [class]="rx.hasAllergyAlert ? 'p-button-warning' : ''"
+                                    (onClick)="openDispense(rx)" />
+                                }
+                            </div>
+                        </div>
+                        }
+                    </div>
+                    }
+                </div>
+            </p-tabpanel>
+
+            <!-- ── Tab 4: Dispense History ── -->
+            <p-tabpanel value="4">
+                <div class="tab-body">
+                    <div class="flex justify-end mb-4">
+                        <p-button label="Refresh" icon="pi pi-refresh" severity="secondary" outlined
+                            (onClick)="loadDispenseHistory()" />
+                    </div>
+
+                    <p-table [value]="dispenseHistory" [loading]="histLoading" [rowHover]="true" [showGridlines]="true"
+                        [scrollable]="true" scrollHeight="600px" emptyMessage="No dispense records yet.">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th pSortableColumn="dispensedAt">Date/Time <p-sortIcon field="dispensedAt" /></th>
+                                <th>Patient</th>
+                                <th>Medication</th>
+                                <th style="width:120px">Qty</th>
+                                <th style="width:140px">Batch / Expiry</th>
+                                <th>Dispensed By</th>
+                                <th style="width:80px">Alert</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-d>
+                            <tr>
+                                <td class="text-sm">{{ d.dispensedAt | date:'MMM d, y HH:mm' }}</td>
+                                <td>
+                                    <div class="font-medium">{{ d.patientName | titlecase }}</div>
+                                    <div class="text-xs text-surface-400">Dr. {{ d.doctorName | titlecase }}</div>
+                                </td>
+                                <td>
+                                    <div class="font-medium">{{ d.medName }}</div>
+                                    @if (d.prescription) {
+                                    <div class="text-xs text-surface-400">{{ d.prescription.dose }} · {{
+                                        d.prescription.frequency }}</div>
+                                    }
+                                </td>
+                                <td class="text-center">{{ d.quantityDispensed }} {{ d.unit || 'units' }}</td>
+                                <td class="text-xs">
+                                    @if (d.batchNumber) { <div>Batch: {{ d.batchNumber }}</div> }
+                                    @if (d.expiryDate) { <div>Exp: {{ d.expiryDate }}</div> }
+                                    @if (!d.batchNumber && !d.expiryDate) { <span class="text-surface-400">—</span> }
+                                </td>
+                                <td>
+                                    <div class="text-sm">{{ d.dispensedByName | titlecase }}</div>
+                                    <div class="text-xs text-surface-400">{{ d.dispensedBy }}</div>
+                                </td>
+                                <td class="text-center">
+                                    @if (d.allergyOverridden) {
+                                    <p-tag value="Override" severity="warn"
+                                        pTooltip="{{ d.allergyWarnings?.join(', ') }}" styleClass="text-xs" />
+                                    } @else {
+                                    <i class="pi pi-check text-green-500"></i>
+                                    }
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </p-tabpanel>
+
+            <!-- ── Tab 5: Purchase Orders ── -->
+            <p-tabpanel value="5">
+                <div class="tab-body">
+                    <div class="flex justify-end mb-4">
+                        <p-button label="New Purchase Order" icon="pi pi-plus" severity="success"
+                            (onClick)="openNewPo()" />
+                    </div>
+
+                    <p-table [value]="purchaseOrders" [loading]="poLoading" [rowHover]="true" [showGridlines]="true"
+                        emptyMessage="No purchase orders yet.">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th>PO Number</th>
+                                <th>Supplier</th>
+                                <th style="width:120px">Status</th>
+                                <th style="width:100px">Items</th>
+                                <th style="width:120px">Total</th>
+                                <th style="width:120px">Expected</th>
+                                <th style="width:120px">Created</th>
+                                <th style="width:160px">Actions</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-po>
+                            <tr>
+                                <td class="font-mono font-medium">{{ po.poNumber }}</td>
+                                <td>{{ po.supplier || '—' }}</td>
+                                <td>
+                                    <p-tag [value]="po.status | titlecase" [severity]="poStatusSeverity(po.status)" />
+                                </td>
+                                <td class="text-center">{{ po.items?.length || 0 }}</td>
+                                <td class="font-medium">{{ po.currency }} {{ po.totalCost | number:'1.2-2' }}</td>
+                                <td class="text-sm">{{ po.expectedDate || '—' }}</td>
+                                <td class="text-sm">{{ po.createdAt | date:'MMM d, y' }}</td>
+                                <td>
+                                    <div class="flex gap-1 flex-wrap">
+                                        <p-button icon="pi pi-pencil" text size="small" severity="info" pTooltip="Edit"
+                                            [disabled]="po.status === 'received' || po.status === 'cancelled'"
+                                            (onClick)="openEditPo(po)" />
+                                        @if (po.status === 'draft') {
+                                        <p-button label="Submit" text size="small" severity="success"
+                                            (onClick)="updatePoStatus(po, 'submitted')" />
+                                        }
+                                        @if (po.status === 'submitted') {
+                                        <p-button label="Mark Ordered" text size="small" severity="warn"
+                                            (onClick)="updatePoStatus(po, 'ordered')" />
+                                        }
+                                        @if (po.status === 'ordered') {
+                                        <p-button label="Received" text size="small" severity="success"
+                                            (onClick)="updatePoStatus(po, 'received')" />
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </p-tabpanel>
+
+        </p-tabpanels>
+    </p-tabs>
+
+</div>
+
+<!-- ── Medication Dialog ── -->
+<p-dialog [(visible)]="showMedDialog" [modal]="true" [closable]="true"
+    [header]="editingMed ? 'Edit Medication' : 'Add Medication'" [style]="{'width':'640px'}" appendTo="body">
+    <div class="dialog-form">
+        <div class="form-grid mb-3">
+            <div>
+                <label class="field-label">Medication Name *</label>
+                <input pInputText [(ngModel)]="medForm.name" class="w-full" placeholder="e.g. Amoxicillin" />
+            </div>
+            <div>
+                <label class="field-label">Generic Name</label>
+                <input pInputText [(ngModel)]="medForm.genericName" class="w-full"
+                    placeholder="e.g. Amoxicillin trihydrate" />
+            </div>
+        </div>
+        <div class="form-grid mb-3">
+            <div>
+                <label class="field-label">Category *</label>
+                <p-select [options]="categoryOptions" [(ngModel)]="medForm.category" optionLabel="label"
+                    optionValue="value" placeholder="Select" appendTo="body" styleClass="w-full" />
+            </div>
+            <div>
+                <label class="field-label">Form</label>
+                <p-select [options]="formOptions" [(ngModel)]="medForm.form" optionLabel="label" optionValue="value"
+                    placeholder="Select" appendTo="body" styleClass="w-full" />
+            </div>
+        </div>
+        <div class="form-grid-3 mb-3">
+            <div>
+                <label class="field-label">Strength</label>
+                <input pInputText [(ngModel)]="medForm.strength" class="w-full" placeholder="e.g. 500mg" />
+            </div>
+            <div>
+                <label class="field-label">Unit</label>
+                <input pInputText [(ngModel)]="medForm.unit" class="w-full" placeholder="e.g. mg, ml, tablet" />
+            </div>
+            <div>
+                <label class="field-label">Reorder Point</label>
+                <p-inputnumber [(ngModel)]="medForm.reorderPoint" [min]="0" styleClass="w-full" />
+            </div>
+        </div>
+        <div class="form-grid mb-3">
+            <div>
+                <label class="field-label">Manufacturer</label>
+                <input pInputText [(ngModel)]="medForm.manufacturer" class="w-full" placeholder="e.g. Pfizer" />
+            </div>
+            @if (!editingMed) {
+            <div>
+                <label class="field-label">Storage Location</label>
+                <input pInputText [(ngModel)]="medForm.location" class="w-full"
+                    placeholder="e.g. Shelf A-3, Fridge 2" />
+            </div>
+            }
+        </div>
+        <div class="mb-3">
+            <label class="field-label">Description</label>
+            <textarea pTextarea [(ngModel)]="medForm.description" class="w-full" rows="2"
+                placeholder="Optional notes about this medication"></textarea>
+        </div>
+        <div class="flex items-center gap-2">
+            <input type="checkbox" [(ngModel)]="medForm.requiresPrescription" id="rxReq" />
+            <label for="rxReq" class="text-sm">Requires prescription</label>
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button label="Cancel" severity="secondary" outlined (onClick)="showMedDialog = false" />
+        <p-button [label]="editingMed ? 'Save Changes' : 'Add Medication'" icon="pi pi-save" severity="success"
+            [loading]="medSaving" (onClick)="saveMed()" />
+    </ng-template>
+</p-dialog>
+
+<!-- ── Stock Adjustment Dialog ── -->
+<p-dialog [(visible)]="showAdjustDialog" [modal]="true" [closable]="true" header="Adjust Stock"
+    [style]="{'width':'480px'}" appendTo="body">
+    @if (adjustingItem) {
+    <div class="dialog-form">
+        <div class="adjust-med-info">
+            <div class="font-semibold text-lg">{{ adjustingItem.medName }}</div>
+            <div class="text-sm text-surface-500">Current stock: <strong>{{ adjustingItem.stockQty }} {{
+                    adjustingItem.unit || 'units' }}</strong></div>
+        </div>
+        <p-divider />
+        <div class="mb-3">
+            <label class="field-label">Adjustment Type *</label>
+            <p-select [options]="adjustTypeOptions" [(ngModel)]="adjustForm.adjustmentType" optionLabel="label"
+                optionValue="value" appendTo="body" styleClass="w-full" />
+        </div>
+        <div class="mb-3">
+            <label class="field-label">Quantity *</label>
+            <p-inputnumber [(ngModel)]="adjustForm.quantity" [min]="1" styleClass="w-full" />
+        </div>
+        <div class="form-grid mb-3">
+            <div>
+                <label class="field-label">Batch Number</label>
+                <input pInputText [(ngModel)]="adjustForm.batchNumber" class="w-full" placeholder="e.g. LOT-2024-001" />
+            </div>
+            <div>
+                <label class="field-label">Expiry Date</label>
+                <input pInputText [(ngModel)]="adjustForm.expiryDate" class="w-full" placeholder="YYYY-MM-DD" />
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="field-label">Storage Location</label>
+            <input pInputText [(ngModel)]="adjustForm.location" class="w-full" placeholder="e.g. Shelf B-2" />
+        </div>
+        <div class="mb-3">
+            <label class="field-label">Reason</label>
+            <input pInputText [(ngModel)]="adjustForm.reason" class="w-full"
+                placeholder="e.g. Monthly stock count, supplier delivery" />
+        </div>
+    </div>
+    }
+    <ng-template pTemplate="footer">
+        <p-button label="Cancel" severity="secondary" outlined (onClick)="showAdjustDialog = false" />
+        <p-button label="Save Adjustment" icon="pi pi-check" severity="success" [loading]="adjustSaving"
+            (onClick)="saveAdjust()" />
+    </ng-template>
+</p-dialog>
+
+<!-- ── Dispense Dialog ── -->
+<p-dialog [(visible)]="showDispenseDialog" [modal]="true" [closable]="true" header="Dispense Medication"
+    [style]="{'width':'540px'}" appendTo="body">
+    @if (dispensingRx) {
+    <div class="dialog-form">
+
+        @if (dispensingRx.hasAllergyAlert && !allergyOverride) {
+        <div class="allergy-dialog-banner">
+            <i class="pi pi-exclamation-triangle text-xl mr-2"></i>
+            <div>
+                <div class="font-bold mb-1">Allergy Alert</div>
+                @for (w of dispensingRx.allergyWarnings; track w) {
+                <div class="text-sm">{{ w }}</div>
+                }
+            </div>
+        </div>
+        }
+
+        @if (allergyOverride) {
+        <div class="allergy-override-banner">
+            <i class="pi pi-exclamation-triangle text-xl mr-2"></i>
+            <div>
+                <div class="font-bold mb-1">⚠ Allergy Override Required</div>
+                @for (w of allergyWarnings; track w) {
+                <div class="text-sm">{{ w }}</div>
+                }
+                <div class="text-sm mt-2 font-medium">Click "Override & Dispense" to proceed with clinical judgment.
+                </div>
+            </div>
+        </div>
+        }
+
+        <div class="dispense-rx-info">
+            <div class="font-semibold">{{ dispensingRx.prescription.medication | titlecase }}</div>
+            <div class="text-sm text-surface-500">
+                {{ dispensingRx.prescription.dose }} · {{ dispensingRx.prescription.frequency }}
+                @if (dispensingRx.prescription.duration) { · {{ dispensingRx.prescription.duration }} }
+            </div>
+            <div class="text-xs text-surface-400 mt-1">
+                Patient: {{ dispensingRx.patientName | titlecase }} ·
+                Dr. {{ dispensingRx.doctorName | titlecase }}
+            </div>
+        </div>
+        <p-divider />
+        <div class="mb-3">
+            <label class="field-label">Select Inventory Medication *</label>
+            <p-select [options]="inventoryMedOptions" [(ngModel)]="dispenseForm.medId" optionLabel="label"
+                optionValue="value" placeholder="Select medication from inventory..." appendTo="body"
+                styleClass="w-full" />
+        </div>
+        <div class="mb-3">
+            <label class="field-label">Quantity to Dispense *</label>
+            <p-inputnumber [(ngModel)]="dispenseForm.quantityDispensed" [min]="1" styleClass="w-full" />
+        </div>
+        <div class="mb-3">
+            <label class="field-label">Notes (optional)</label>
+            <input pInputText [(ngModel)]="dispenseForm.notes" class="w-full"
+                placeholder="e.g. Patient counselled on side effects" />
+        </div>
+    </div>
+    }
+    <ng-template pTemplate="footer">
+        <p-button label="Cancel" severity="secondary" outlined (onClick)="showDispenseDialog = false" />
+        @if (allergyOverride) {
+        <p-button label="Override & Dispense" icon="pi pi-exclamation-triangle" severity="danger"
+            [loading]="dispenseSaving" (onClick)="confirmAllergyOverride()" />
+        } @else {
+        <p-button label="Dispense" icon="pi pi-check" severity="success" [loading]="dispenseSaving"
+            (onClick)="doDispense()" />
+        }
+    </ng-template>
+</p-dialog>
+
+<!-- ── Purchase Order Dialog ── -->
+<p-dialog [(visible)]="showPoDialog" [modal]="true" [closable]="true"
+    [header]="editingPo ? 'Edit Purchase Order' : 'New Purchase Order'" [style]="{'width':'720px'}" appendTo="body">
+    <div class="dialog-form">
+        <div class="form-grid mb-3">
+            <div>
+                <label class="field-label">Supplier</label>
+                <input pInputText [(ngModel)]="poForm.supplier" class="w-full" placeholder="Supplier name" />
+            </div>
+            <div>
+                <label class="field-label">Expected Delivery Date</label>
+                <input pInputText [(ngModel)]="poForm.expectedDate" class="w-full" placeholder="YYYY-MM-DD" />
+            </div>
+        </div>
+        <div class="mb-4">
+            <label class="field-label">Notes</label>
+            <input pInputText [(ngModel)]="poForm.notes" class="w-full" placeholder="Optional notes" />
+        </div>
+
+        <p-divider />
+        <h4 class="section-title">Order Items</h4>
+
+        <!-- Add item form -->
+        <div class="add-po-item-form mb-3">
+            <div class="form-grid mb-2" style="grid-template-columns: 1fr 1fr">
+                <div>
+                    <label class="field-label">Medication Name *</label>
+                    <input pInputText [(ngModel)]="newPoItem.medName" class="w-full" placeholder="Medication name" />
+                </div>
+                <div>
+                    <label class="field-label">Linked Inventory Item</label>
+                    <p-select [options]="inventoryMedOptions" [(ngModel)]="newPoItem.medId" optionLabel="label"
+                        optionValue="value" placeholder="Optional — link to inventory" appendTo="body"
+                        styleClass="w-full" />
+                </div>
+            </div>
+            <div class="form-grid-3 mb-2">
+                <div>
+                    <label class="field-label">Quantity *</label>
+                    <p-inputnumber [(ngModel)]="newPoItem.quantity" [min]="1" styleClass="w-full" />
+                </div>
+                <div>
+                    <label class="field-label">Unit Cost ({{ poForm.currency }}) *</label>
+                    <p-inputnumber [(ngModel)]="newPoItem.unitCost" [min]="0" [minFractionDigits]="2"
+                        styleClass="w-full" />
+                </div>
+                <div class="flex items-end">
+                    <p-button label="Add Item" icon="pi pi-plus" severity="success" outlined class="w-full"
+                        (onClick)="addPoItem()" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Items table -->
+        @if (poForm.items.length > 0) {
+        <p-table [value]="poForm.items" [showGridlines]="true" styleClass="mb-3">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Medication</th>
+                    <th style="width:80px">Qty</th>
+                    <th style="width:120px">Unit Cost</th>
+                    <th style="width:120px">Total</th>
+                    <th style="width:60px"></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-item let-i="rowIndex">
+                <tr>
+                    <td>{{ item.medName }}</td>
+                    <td class="text-center">{{ item.quantity }}</td>
+                    <td class="text-right">{{ poForm.currency }} {{ item.unitCost | number:'1.2-2' }}</td>
+                    <td class="text-right font-medium">{{ poForm.currency }} {{ (item.quantity * item.unitCost) |
+                        number:'1.2-2' }}</td>
+                    <td class="text-center">
+                        <p-button icon="pi pi-times" text severity="danger" size="small" (onClick)="removePoItem(i)" />
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <tr>
+                    <td colspan="3" class="text-right font-bold">Total:</td>
+                    <td class="text-right font-bold">{{ poForm.currency }} {{ poTotal | number:'1.2-2' }}</td>
+                    <td></td>
+                </tr>
+            </ng-template>
+        </p-table>
+        }
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button label="Cancel" severity="secondary" outlined (onClick)="showPoDialog = false" />
+        <p-button [label]="editingPo ? 'Save Changes' : 'Create Purchase Order'" icon="pi pi-save" severity="success"
+            [loading]="poSaving" (onClick)="savePo()" />
+    </ng-template>
+</p-dialog>

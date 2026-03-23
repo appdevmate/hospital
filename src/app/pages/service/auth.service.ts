@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-export type UserRole = 'developer' | 'admin' | 'doctor' | 'patient' | 'unknown';
+export type UserRole = 'developer' | 'admin' | 'doctor' | 'pharmacist' | 'patient' | 'unknown';
 
 export interface CurrentUser {
     role: UserRole;
@@ -12,6 +12,7 @@ export interface CurrentUser {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
     private _user: CurrentUser | null = null;
+    private _groups: string[] = [];
 
     get current(): CurrentUser {
         if (this._user) return this._user;
@@ -19,7 +20,7 @@ export class AuthService {
             const raw = localStorage.getItem('userData');
             const data = raw ? JSON.parse(raw) : {};
 
-            // Always read groups from access token (more reliable than userData.role)
+            // Read groups from access token
             let groups: string[] = [];
             const accessToken = sessionStorage.getItem('accessToken') || '';
             if (accessToken && accessToken.split('.').length === 3) {
@@ -31,6 +32,7 @@ export class AuthService {
                 } catch {}
             }
 
+            this._groups = groups;
             const role = this.parseRole(data.role, groups);
             this._user = {
                 role,
@@ -52,14 +54,22 @@ export class AuthService {
         return this.current.role === 'doctor';
     }
 
+    get isPharmacist(): boolean {
+        // Ensure current is loaded so _groups is populated
+        void this.current;
+        return this._groups.includes('Pharmacists');
+    }
+
     invalidate() {
         this._user = null;
+        this._groups = [];
     }
 
     private parseRole(role: string, groups: string[] = []): UserRole {
         if (role === 'developer' || groups.includes('Developers')) return 'developer';
         if (role === 'admin' || groups.includes('Admin')) return 'admin';
         if (role === 'doctor' || groups.includes('Doctors')) return 'doctor';
+        if (role === 'pharmacist' || groups.includes('Pharmacists')) return 'pharmacist';
         if (role === 'patient' || groups.includes('Patients')) return 'patient';
         return 'unknown';
     }

@@ -40,7 +40,8 @@ export class AppMenu implements OnInit {
             { label: 'Calendar', icon: 'pi pi-calendar', routerLink: ['/calendar'] },
             { label: 'Appointments', icon: 'pi pi-calendar-plus', routerLink: ['/appointments'] },
             { label: 'Invoices', icon: 'pi pi-file-edit', routerLink: ['/invoices'] },
-            { label: 'Notifications', icon: 'pi pi-bell', routerLink: ['/notifications'] }
+            { label: 'Notifications', icon: 'pi pi-bell', routerLink: ['/notifications'] },
+            { label: 'Pharmacy', icon: 'pi pi-heart-fill', routerLink: ['/pharmacy'] }
         ];
 
         const adminOnlyItems: MenuItem[] = [
