@@ -35,14 +35,6 @@ export interface AuditItem {
     after: string | null;
 }
 
-export interface GdprExport {
-    exportedAt: string;
-    patientId: string;
-    patient: any;
-    exams: any[];
-    invoices: any[];
-}
-
 @Injectable({ providedIn: 'root' })
 export class AdminPanelService {
     private http = inject(HttpClient);
@@ -76,8 +68,8 @@ export class AdminPanelService {
         return this.http.post(Config.buildUrl(`admin/users/${encodeURIComponent(username)}/enable`), {}, { headers: this.headers() });
     }
 
-    resetPassword(username: string): Observable<any> {
-        return this.http.post(Config.buildUrl(`admin/users/${encodeURIComponent(username)}/reset-password`), {}, { headers: this.headers() });
+    setPassword(username: string, password: string): Observable<any> {
+        return this.http.post(Config.buildUrl(`admin/users/${encodeURIComponent(username)}/set-password`), { password }, { headers: this.headers() });
     }
 
     // ── Audit ─────────────────────────────────────────────────────────────────
@@ -90,19 +82,5 @@ export class AdminPanelService {
         if (params.actor) p = p.set('actor', params.actor);
         if (params.limit) p = p.set('limit', String(params.limit));
         return this.http.get<any>(Config.buildUrl('admin/audit'), { headers: this.headers(), params: p });
-    }
-
-    // ── GDPR ──────────────────────────────────────────────────────────────────
-    gdprExport(patientId: string): Observable<GdprExport> {
-        const params = new HttpParams().set('patientId', patientId);
-        return this.http.get<GdprExport>(Config.buildUrl('admin/gdpr/export'), { headers: this.headers(), params });
-    }
-
-    gdprSoftDelete(patientId: string): Observable<any> {
-        return this.http.post(Config.buildUrl('admin/gdpr/soft-delete'), { patientId }, { headers: this.headers() });
-    }
-
-    gdprRestore(patientId: string): Observable<any> {
-        return this.http.post(Config.buildUrl('admin/gdpr/restore'), { patientId }, { headers: this.headers() });
     }
 }

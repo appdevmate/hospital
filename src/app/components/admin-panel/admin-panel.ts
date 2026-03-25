@@ -10,6 +10,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { Dialog } from 'primeng/dialog';
 import { ConfirmationService } from 'primeng/api';
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from 'primeng/tabs';
 import { DividerModule } from 'primeng/divider';
@@ -17,8 +18,7 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { catchError, of, finalize } from 'rxjs';
 
-import { AdminPanelService, AdminStats, CognitoUser, AuditItem, GdprExport } from '@/pages/service/admin-panel.service';
-import { PatientsService, Patient } from '@/pages/service/patients.service';
+import { AdminPanelService, AdminStats, CognitoUser, AuditItem } from '@/pages/service/admin-panel.service';
 import { HelpersService } from '@/pages/service/helpers-service';
 import { AuthService } from '@/pages/service/auth.service';
 
@@ -37,6 +37,7 @@ import { AuthService } from '@/pages/service/auth.service';
         TableModule,
         TooltipModule,
         ConfirmDialogModule,
+        Dialog,
         DividerModule,
         IconFieldModule,
         InputIconModule,
@@ -52,7 +53,6 @@ import { AuthService } from '@/pages/service/auth.service';
 })
 export class AdminPanelComponent implements OnInit {
     private adminService = inject(AdminPanelService);
-    private patientsService = inject(PatientsService);
     private helpers = inject(HelpersService);
     private confirm = inject(ConfirmationService);
     private cdr = inject(ChangeDetectorRef);
@@ -67,6 +67,10 @@ export class AdminPanelComponent implements OnInit {
     usersLoading = false;
     userFilter = '';
     actionLoading: Record<string, boolean> = {};
+    showPasswordDialog = false;
+    passwordTarget: CognitoUser | null = null;
+    newPassword = '';
+    passwordSaving = false;
 
     // ── Audit ─────────────────────────────────────────────────────────────────
     auditItems: AuditItem[] = [];
@@ -93,14 +97,6 @@ export class AdminPanelComponent implements OnInit {
         { label: 'SIGNOFF', value: 'SIGNOFF' },
         { label: 'VIEW', value: 'VIEW' }
     ];
-
-    // ── GDPR ──────────────────────────────────────────────────────────────────
-    gdprSearchTerm = '';
-    gdprPatients: Patient[] = [];
-    gdprLoading = false;
-    gdprExportData: GdprExport | null = null;
-    gdprExporting = false;
-    showGdprDeleted = false;
 
     ngOnInit() {
         this.loadStats();
@@ -177,23 +173,32 @@ export class AdminPanelComponent implements OnInit {
         });
     }
 
-    resetPassword(user: CognitoUser) {
-        this.confirm.confirm({
-            message: `Send password reset email to ${user.email}?`,
-            header: 'Confirm Password Reset',
-            icon: 'pi pi-key',
-            acceptButtonProps: { label: 'Send Reset Email', severity: 'warn' },
-            rejectButtonProps: { label: 'Cancel', severity: 'secondary', outlined: true },
-            accept: () => {
-                this.actionLoading[user.username] = true;
-                this.adminService.resetPassword(user.username).subscribe({
-                    next: () => this.helpers.notifySuccess(`Reset email sent to ${user.email}`),
-                    error: (e) => this.helpers.notifyError('Error', e?.error?.message || 'Could not reset password'),
-                    complete: () => {
-                        delete this.actionLoading[user.username];
-                        this.cdr.markForCheck();
-                    }
-                });
+    openSetPassword(user: CognitoUser) {
+        this.passwordTarget = user;
+        this.newPassword = '';
+        this.showPasswordDialog = true;
+    }
+
+    savePassword() {
+        if (!this.passwordTarget || !this.newPassword) return;
+        if (this.newPassword.length < 8) {
+            this.helpers.notifyError('Validation', 'Password must be at least 8 characters');
+            return;
+        }
+        this.passwordSaving = true;
+        this.adminService.setPassword(this.passwordTarget.username, this.newPassword).subscribe({
+            next: () => {
+                this.helpers.notifySuccess(`Temporary password set for ${this.passwordTarget!.email}`);
+                this.showPasswordDialog = false;
+                this.newPassword = '';
+                this.passwordTarget = null;
+                this.passwordSaving = false;
+                this.cdr.markForCheck();
+            },
+            error: (e) => {
+                this.helpers.notifyError('Error', e?.error?.message || 'Could not set password');
+                this.passwordSaving = false;
+                this.cdr.markForCheck();
             }
         });
     }
@@ -232,113 +237,6 @@ export class AdminPanelComponent implements OnInit {
         this.loadAudit();
     }
 
-    // ── GDPR ──────────────────────────────────────────────────────────────────
-    searchGdprPatients() {
-        if (!this.gdprSearchTerm.trim()) return;
-        this.gdprLoading = true;
-        this.patientsService
-            .getPatientsPage({ pageSize: 20, search: this.gdprSearchTerm })
-            .pipe(
-                catchError(() => of({ data: [], totalCount: 0 })),
-                finalize(() => {
-                    this.gdprLoading = false;
-                    this.cdr.markForCheck();
-                })
-            )
-            .subscribe((r) => {
-                this.gdprPatients = r.data || [];
-            });
-    }
-
-    exportGdpr(patient: Patient) {
-        const id = patient.PK.includes('#') ? patient.PK.split('#')[1] : patient.PK;
-        this.gdprExporting = true;
-        this.adminService
-            .gdprExport(id)
-            .pipe(
-                finalize(() => {
-                    this.gdprExporting = false;
-                    this.cdr.markForCheck();
-                })
-            )
-            .subscribe({
-                next: async (data) => {
-                    const XLSX = await import('xlsx');
-                    const wb = XLSX.utils.book_new();
-
-                    // Patient sheet
-                    const patientRow = [{ ...data.patient, PK: undefined, SK: undefined }];
-                    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(patientRow), 'Patient');
-
-                    // Exams sheet
-                    if (data.exams.length > 0) {
-                        const examRows = data.exams.map((e) => ({
-                            examId: e.examId,
-                            date: e.date,
-                            status: e.status,
-                            doctorName: e.doctorName,
-                            chiefComplaint: e.chiefComplaint?.cc || '',
-                            signedOffAt: e.signedOffAt || ''
-                        }));
-                        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(examRows), 'Examinations');
-                    }
-
-                    // Invoices sheet
-                    if (data.invoices.length > 0) {
-                        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(data.invoices), 'Invoices');
-                    }
-
-                    const ts = new Date().toISOString().slice(0, 10);
-                    const name = (data.patient.name || id).replace(/\s+/g, '_');
-                    XLSX.writeFile(wb, `GDPR_Export_${name}_${ts}.xlsx`);
-                    this.helpers.notifySuccess('GDPR export downloaded');
-                },
-                error: (e) => this.helpers.notifyError('Export failed', e?.error?.message || 'Could not export')
-            });
-    }
-
-    gdprSoftDelete(patient: Patient) {
-        const id = patient.PK.includes('#') ? patient.PK.split('#')[1] : patient.PK;
-        const name = patient.name || id;
-        this.confirm.confirm({
-            message: `Mark ${name} as GDPR deleted? Their data will be hidden from all normal views but preserved in the database. This can be reversed.`,
-            header: 'GDPR Soft Delete',
-            icon: 'pi pi-shield',
-            acceptButtonProps: { label: 'Mark as Deleted', severity: 'danger' },
-            rejectButtonProps: { label: 'Cancel', severity: 'secondary', outlined: true },
-            accept: () => {
-                this.adminService.gdprSoftDelete(id).subscribe({
-                    next: () => {
-                        this.helpers.notifySuccess(`${name} marked as GDPR deleted`);
-                        this.searchGdprPatients();
-                    },
-                    error: (e) => this.helpers.notifyError('Error', e?.error?.message || 'Could not mark as deleted')
-                });
-            }
-        });
-    }
-
-    gdprRestore(patient: Patient) {
-        const id = patient.PK.includes('#') ? patient.PK.split('#')[1] : patient.PK;
-        const name = patient.name || id;
-        this.confirm.confirm({
-            message: `Restore ${name}? Their data will become visible again in all normal views.`,
-            header: 'Restore GDPR Deleted Patient',
-            icon: 'pi pi-undo',
-            acceptButtonProps: { label: 'Restore', severity: 'success' },
-            rejectButtonProps: { label: 'Cancel', severity: 'secondary', outlined: true },
-            accept: () => {
-                this.adminService.gdprRestore(id).subscribe({
-                    next: () => {
-                        this.helpers.notifySuccess(`${name} restored`);
-                        this.searchGdprPatients();
-                    },
-                    error: (e) => this.helpers.notifyError('Error', e?.error?.message || 'Could not restore')
-                });
-            }
-        });
-    }
-
     // ── Helpers ───────────────────────────────────────────────────────────────
     userStatusSeverity(u: CognitoUser): 'success' | 'danger' | 'warn' | 'secondary' {
         if (!u.enabled) return 'danger';
@@ -366,9 +264,5 @@ export class AdminPanelComponent implements OnInit {
             VIEW: 'secondary'
         };
         return m[a] || 'secondary';
-    }
-
-    patientPk(p: Patient): string {
-        return p.PK.includes('#') ? p.PK.split('#')[1] : p.PK;
     }
 }

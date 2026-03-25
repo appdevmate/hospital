@@ -18,7 +18,6 @@
             <p-tab value="0"><i class="pi pi-chart-bar mr-2"></i>Overview</p-tab>
             <p-tab value="1"><i class="pi pi-users mr-2"></i>User Management</p-tab>
             <p-tab value="2"><i class="pi pi-list mr-2"></i>Audit Log</p-tab>
-            <p-tab value="3"><i class="pi pi-shield mr-2"></i>GDPR Tools</p-tab>
         </p-tablist>
 
         <p-tabpanels>
@@ -110,8 +109,9 @@
                                         @for (g of user.groups; track g) {
                                         <p-tag [value]="g" [severity]="groupSeverity(g)" styleClass="text-xs" />
                                         }
-                                        @if (!user.groups?.length) { <span class="text-surface-400 text-xs">No
-                                            group</span> }
+                                        @if (!user.groups?.length) {
+                                        <span class="text-surface-400 text-xs">No group</span>
+                                        }
                                     </div>
                                 </td>
                                 <td>
@@ -132,8 +132,8 @@
                                             (onClick)="enableUser(user)" />
                                         }
                                         <p-button icon="pi pi-key" text severity="warn" size="small"
-                                            pTooltip="Reset Password" [loading]="actionLoading[user.username]"
-                                            (onClick)="resetPassword(user)" />
+                                            pTooltip="Set Temporary Password" [loading]="actionLoading[user.username]"
+                                            (onClick)="openSetPassword(user)" />
                                     </div>
                                 </td>
                             </tr>
@@ -217,102 +217,32 @@
                 </div>
             </p-tabpanel>
 
-            <!-- ── Tab 3: GDPR Tools ── -->
-            <p-tabpanel value="3">
-                <div class="tab-body">
-
-                    <!-- Info banner -->
-                    <div class="gdpr-info-banner">
-                        <i class="pi pi-info-circle mr-2"></i>
-                        <span>
-                            GDPR tools allow you to export or soft-delete patient data.
-                            Soft delete hides the patient from all normal views while preserving data for legal and
-                            audit purposes.
-                            This action can be reversed.
-                        </span>
-                    </div>
-
-                    <!-- Search -->
-                    <div class="flex gap-2 mb-4 mt-4">
-                        <p-iconfield class="flex-1">
-                            <p-inputicon><i class="pi pi-search"></i></p-inputicon>
-                            <input pInputText [(ngModel)]="gdprSearchTerm"
-                                placeholder="Search patient by name or QID..." class="w-full"
-                                (keydown.enter)="searchGdprPatients()" />
-                        </p-iconfield>
-                        <p-button label="Search" icon="pi pi-search" [loading]="gdprLoading"
-                            (onClick)="searchGdprPatients()" />
-                    </div>
-
-                    <!-- Results -->
-                    @if (gdprPatients.length > 0) {
-                    <p-table [value]="gdprPatients" [rowHover]="true" [showGridlines]="true"
-                        emptyMessage="No patients found.">
-                        <ng-template pTemplate="header">
-                            <tr>
-                                <th>Patient</th>
-                                <th style="width:120px">QID</th>
-                                <th style="width:130px">Status</th>
-                                <th style="width:120px">GDPR Status</th>
-                                <th style="width:220px">Actions</th>
-                            </tr>
-                        </ng-template>
-                        <ng-template pTemplate="body" let-patient>
-                            <tr [class.gdpr-deleted-row]="patient.gdprDeleted">
-                                <td>
-                                    <div class="font-medium">{{ patient.name | titlecase }}</div>
-                                    <div class="text-xs text-surface-400">{{ patient.email }}</div>
-                                </td>
-                                <td class="text-sm font-mono">{{ patient.qid }}</td>
-                                <td>
-                                    <p-tag [value]="(patient.status || 'unknown') | uppercase" severity="secondary" />
-                                </td>
-                                <td>
-                                    @if (patient.gdprDeleted) {
-                                    <p-tag value="GDPR Deleted" severity="danger" />
-                                    } @else {
-                                    <p-tag value="Active" severity="success" />
-                                    }
-                                </td>
-                                <td>
-                                    <div class="flex gap-1">
-                                        <p-button label="Export" icon="pi pi-download" size="small" severity="info"
-                                            outlined [loading]="gdprExporting"
-                                            pTooltip="Download all patient data as Excel"
-                                            (onClick)="exportGdpr(patient)" />
-                                        @if (!patient.gdprDeleted) {
-                                        <p-button label="Soft Delete" icon="pi pi-eye-slash" size="small"
-                                            severity="danger" outlined pTooltip="Hide from all views (reversible)"
-                                            (onClick)="gdprSoftDelete(patient)" />
-                                        } @else {
-                                        <p-button label="Restore" icon="pi pi-eye" size="small" severity="success"
-                                            outlined pTooltip="Restore visibility" (onClick)="gdprRestore(patient)" />
-                                        }
-                                    </div>
-                                </td>
-                            </tr>
-                        </ng-template>
-                    </p-table>
-                    }
-
-                    @if (!gdprLoading && gdprSearchTerm && gdprPatients.length === 0) {
-                    <div class="empty-state">
-                        <i class="pi pi-search text-3xl mb-2" style="color:#CBD5E1;"></i>
-                        <p>No patients found for "{{ gdprSearchTerm }}"</p>
-                    </div>
-                    }
-
-                    @if (!gdprSearchTerm) {
-                    <div class="empty-state">
-                        <i class="pi pi-shield text-3xl mb-2" style="color:#CBD5E1;"></i>
-                        <p>Search for a patient above to manage their GDPR rights</p>
-                    </div>
-                    }
-
-                </div>
-            </p-tabpanel>
-
         </p-tabpanels>
     </p-tabs>
 
 </div>
+
+<!-- ── Set Password Dialog ── -->
+<p-dialog [(visible)]="showPasswordDialog" [modal]="true" [closable]="true" header="Set Temporary Password"
+    [style]="{'width':'420px'}" appendTo="body">
+    @if (passwordTarget) {
+    <div style="padding: 0.5rem 0;">
+        <div class="mb-4"
+            style="background:var(--p-surface-50);border:1px solid var(--p-surface-200);border-radius:8px;padding:0.875rem 1rem;">
+            <div class="font-semibold">{{ passwordTarget.name || passwordTarget.username | titlecase }}</div>
+            <div class="text-sm text-surface-400">{{ passwordTarget.email }}</div>
+        </div>
+        <label class="field-label">New Temporary Password</label>
+        <input pInputText [(ngModel)]="newPassword" class="w-full mb-2" type="text" placeholder="Min. 8 characters" />
+        <div class="text-xs text-surface-400 mt-1">
+            <i class="pi pi-info-circle mr-1"></i>
+            The user will be required to change this password on their next login.
+        </div>
+    </div>
+    }
+    <ng-template pTemplate="footer">
+        <p-button label="Cancel" severity="secondary" outlined (onClick)="showPasswordDialog = false" />
+        <p-button label="Set Password" icon="pi pi-key" severity="warn" [loading]="passwordSaving"
+            (onClick)="savePassword()" />
+    </ng-template>
+</p-dialog>

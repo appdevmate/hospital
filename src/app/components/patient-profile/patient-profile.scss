@@ -1,201 +1,272 @@
+// ── Layout ────────────────────────────────────────────────────────────────────
 .patient-profile-page {
     padding: 1.5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+}
 
-    .profile-header {
+// ── Header ────────────────────────────────────────────────────────────────────
+.profile-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--p-surface-200);
+
+    .header-left {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        margin-bottom: 1.5rem;
+        gap: 1rem;
 
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-
-            .avatar {
-                width: 56px;
-                height: 56px;
-                border-radius: 50%;
-                background: #16a34a;
-                color: white;
-                font-size: 1.5rem;
-                font-weight: 700;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                flex-shrink: 0;
-            }
-
-            h2 {
-                margin: 0;
-                font-size: 1.4rem;
-                font-weight: 700;
-                color: #111827;
-            }
-
-            .meta {
-                font-size: 0.9rem;
-                color: #6B7280;
-                margin-top: 2px;
-            }
-        }
-    }
-
-    .info-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: 1.5rem;
-        padding: 1rem 0;
-    }
-
-    .info-card {
-        background: white;
-        border-radius: 12px;
-        padding: 1.25rem;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
-
-        &.full-width {
-            grid-column: 1 / -1;
-        }
-
-        h4 {
-            margin: 0 0 1rem 0;
-            font-size: 1rem;
+        h2 {
+            margin: 0;
+            font-size: 1.4rem;
             font-weight: 700;
-            color: #111827;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid #F3F4F6;
+            color: var(--p-surface-900);
         }
     }
 
-    .info-row {
+    .header-right {
         display: flex;
-        align-items: flex-start;
+        align-items: center;
         gap: 0.75rem;
-        padding: 0.5rem 0;
-        border-bottom: 1px solid #F9FAFB;
+    }
+}
 
-        &:last-child {
-            border-bottom: none;
-        }
+.avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #16a34a, #15803d);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
 
-        i {
-            color: #9CA3AF;
-            margin-top: 2px;
+.meta {
+    font-size: 0.875rem;
+    color: var(--p-surface-500);
+    margin-top: 0.2rem;
+}
+
+// ── Deactivated banner ────────────────────────────────────────────────────────
+.deactivated-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    background: #fef2f2;
+    border: 1px solid #fca5a5;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.25rem;
+
+    .deactivated-banner-left {
+        display: flex;
+        align-items: center;
+        gap: 0.875rem;
+
+        >i {
+            font-size: 1.5rem;
+            color: #dc2626;
             flex-shrink: 0;
         }
-
-        label {
-            display: block;
-            font-size: 0.75rem;
-            color: #9CA3AF;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        span {
-            display: block;
-            font-size: 0.95rem;
-            color: #111827;
-            margin-top: 1px;
-        }
     }
 
-    .record-text {
-        color: #374151;
+    .deactivated-banner-title {
+        font-weight: 600;
+        color: #991b1b;
         font-size: 0.95rem;
-        line-height: 1.6;
-        margin: 0;
-        white-space: pre-wrap;
     }
 
-    .alert-text {
-        color: #EF4444;
+    .deactivated-banner-sub {
+        font-size: 0.8rem;
+        color: #b91c1c;
+        margin-top: 0.2rem;
+    }
+}
+
+// ── Info grid ─────────────────────────────────────────────────────────────────
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.25rem;
+    padding: 1rem 0;
+}
+
+.info-card {
+    background: var(--p-surface-0);
+    border: 1px solid var(--p-surface-200);
+    border-radius: 10px;
+    padding: 1.25rem;
+
+    &.full-width {
+        grid-column: 1 / -1;
     }
 
-    .blood-group {
-        font-size: 2rem;
-        font-weight: 700;
-        color: #EF4444;
+    h4 {
+        margin: 0 0 1rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--p-surface-700);
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--p-surface-100);
+    }
+}
+
+.info-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--p-surface-50);
+
+    &:last-child {
+        border-bottom: none;
     }
 
-    .appt-list {
+    >i {
+        font-size: 0.95rem;
+        color: #16a34a;
+        margin-top: 0.2rem;
+        flex-shrink: 0;
+        width: 16px;
+    }
+
+    >div {
         display: flex;
         flex-direction: column;
-        gap: 0.75rem;
-        padding: 1rem 0;
+        gap: 0.1rem;
     }
 
-    .appt-item {
+    label {
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: var(--p-surface-400);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    span {
+        font-size: 0.9rem;
+        color: var(--p-surface-800);
+    }
+}
+
+// ── Record text ───────────────────────────────────────────────────────────────
+.record-text {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--p-surface-700);
+    line-height: 1.6;
+    white-space: pre-wrap;
+
+    &.blood-group {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #dc2626;
+        margin-top: 0.25rem;
+    }
+}
+
+// ── Appointments / Invoices list ──────────────────────────────────────────────
+.appt-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem 0;
+}
+
+.appt-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.875rem 1rem;
+    background: var(--p-surface-0);
+    border: 1px solid var(--p-surface-200);
+    border-radius: 8px;
+    transition: box-shadow 0.15s;
+
+    &:hover {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+}
+
+.appt-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 48px;
+    background: var(--p-surface-50);
+    border-radius: 8px;
+    padding: 0.4rem 0.5rem;
+
+    .appt-day {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--p-surface-800);
+        line-height: 1;
+    }
+
+    .appt-month {
+        font-size: 0.65rem;
+        color: var(--p-surface-400);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+}
+
+.appt-info {
+    flex: 1;
+
+    .appt-title {
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: var(--p-surface-800);
+    }
+
+    .appt-time {
+        font-size: 0.8rem;
+        color: var(--p-surface-500);
+        margin-top: 0.2rem;
         display: flex;
         align-items: center;
-        gap: 1.25rem;
-        background: white;
-        border-radius: 10px;
-        padding: 1rem 1.25rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-        border-left: 4px solid #6366F1;
-
-        .appt-date {
-            text-align: center;
-            min-width: 48px;
-
-            .appt-day {
-                display: block;
-                font-size: 1.5rem;
-                font-weight: 700;
-                color: #111827;
-                line-height: 1;
-            }
-
-            .appt-month {
-                display: block;
-                font-size: 0.75rem;
-                color: #6B7280;
-                margin-top: 2px;
-            }
-        }
-
-        .appt-info {
-            flex: 1;
-
-            .appt-title {
-                font-weight: 600;
-                color: #111827;
-                font-size: 0.95rem;
-            }
-
-            .appt-time {
-                font-size: 0.85rem;
-                color: #6B7280;
-                margin-top: 3px;
-                display: flex;
-                align-items: center;
-                gap: 0.4rem;
-            }
-
-            .appt-notes {
-                font-size: 0.85rem;
-                color: #9CA3AF;
-                margin-top: 3px;
-            }
-        }
+        gap: 0.3rem;
     }
 
-    .empty-state {
-        text-align: center;
-        padding: 3rem;
-        color: #9CA3AF;
+    .appt-notes {
+        font-size: 0.8rem;
+        color: var(--p-surface-400);
+        margin-top: 0.25rem;
+        font-style: italic;
+    }
+}
 
-        i {
-            font-size: 2.5rem;
-            display: block;
-            margin-bottom: 1rem;
-        }
+.appt-status {
+    flex-shrink: 0;
+}
 
-        p {
-            margin: 0 0 1rem 0;
-        }
+// ── Empty state ───────────────────────────────────────────────────────────────
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3rem 1rem;
+    color: var(--p-surface-400);
+    text-align: center;
+
+    i {
+        font-size: 2.5rem;
+        margin-bottom: 0.75rem;
+    }
+
+    p {
+        margin: 0 0 1rem;
+        font-size: 0.9rem;
     }
 }

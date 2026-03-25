@@ -25,6 +25,7 @@ export interface Patient {
     notes?: string | null;
     bloodGroup?: string | null;
     address?: string | null;
+    deletedAt?: string | null;
 }
 
 export interface PagedPatientsResponse {
@@ -38,7 +39,7 @@ export interface PagedPatientsResponse {
 
 export interface FilterOption {
     value: string;
-    matchMode: string; // contains | startsWith | equals ...
+    matchMode: string;
     operator: 'and' | 'or';
 }
 
@@ -68,6 +69,7 @@ export interface GetPatientsPageOpts {
     pageSize?: number;
     lastKey?: string | null;
     offset?: number;
+    showDeleted?: boolean;
 
     // filters
     search?: string;
@@ -89,6 +91,7 @@ export interface GetPatientsPageOpts {
 export class PatientsService {
     path = 'patients';
     deletePath = 'patients/delete';
+
     constructor(private http: HttpClient) {}
 
     private authHeaders(): HttpHeaders {
@@ -109,14 +112,10 @@ export class PatientsService {
             if (!f) return;
             const raw = typeof f.value === 'string' ? f.value.trim() : f.value;
             if (raw === '' || raw === undefined || raw === null) return;
-
-            // dobFrom/dobTo must be plain keys
             if (key === 'dobFrom' || key === 'dobTo') {
                 params = params.set(String(key), String(raw));
                 return;
             }
-
-            // equals -> plain key, others -> key.matchMode
             if (f.matchMode === 'equals') {
                 params = params.set(String(key), String(raw));
             } else {
@@ -133,6 +132,9 @@ export class PatientsService {
         setIf('sortField', opts.sortField ?? null);
         setIf('sortOrder', opts.sortOrder ?? null);
 
+        // deactivated view — only sent when true so default Lambda behaviour is untouched
+        if (opts.showDeleted) params = params.set('showDeleted', 'true');
+
         // global search
         if (opts.search && opts.search.trim()) params = params.set('search', opts.search.trim());
 
@@ -143,34 +145,25 @@ export class PatientsService {
         addFilter('dobFrom', opts.dobFrom);
         addFilter('dobTo', opts.dobTo);
 
-        // -------- pass-through for arbitrary quick filters --------
-        // Anything not handled above (e.g., "status.notEquals": "dead,discharged")
-        const knownKeys = new Set(['pageSize', 'lastKey', 'offset', 'sortField', 'sortOrder', 'search', 'name', 'gender', 'insurance', 'dobFrom', 'dobTo']);
+        // pass-through for arbitrary quick filters (status.notEquals etc.)
+        const knownKeys = new Set(['pageSize', 'lastKey', 'offset', 'sortField', 'sortOrder', 'search', 'name', 'gender', 'insurance', 'dobFrom', 'dobTo', 'showDeleted']);
 
         Object.entries(opts).forEach(([k, v]) => {
             if (knownKeys.has(k)) return;
             if (v === null || v === undefined) return;
-
-            // If caller passes arrays (e.g., ['dead','discharged']), join them.
             if (Array.isArray(v)) {
                 if (v.length === 0) return;
                 params = params.set(k, v.map((x) => String(x)).join(','));
                 return;
             }
-
-            // If key already contains a dot, send as-is (status.notEquals, etc.)
             if (k.includes('.')) {
                 params = params.set(k, String(v));
                 return;
             }
-
-            // Primitive passthrough
             if (typeof v !== 'object') {
                 params = params.set(k, String(v));
                 return;
             }
-
-            // If someone passed an ad-hoc FilterOption-like object, serialize similar to addFilter.
             const maybe = v as Partial<FilterOption>;
             if (maybe && 'value' in maybe && 'matchMode' in maybe) {
                 const raw = typeof maybe.value === 'string' ? maybe.value.trim() : maybe.value;
@@ -180,7 +173,6 @@ export class PatientsService {
                 }
             }
         });
-        // ----------------------------------------------------------
 
         const url = Config.buildUrl(this.path);
         console.log('GET /patients query ->', params.toString());
@@ -208,15 +200,11 @@ export class PatientsService {
     }
 
     updatePatient(patientID: string, patientData: CreateUpdatePatientRequest): Observable<{ data: Patient }> {
-        return this.http.patch<{ data: Patient }>(Config.buildUrl(this.path + '/' + patientID), patientData, {
-            headers: this.authHeaders()
-        });
+        return this.http.patch<{ data: Patient }>(Config.buildUrl(`${this.path}/${patientID}`), patientData, { headers: this.authHeaders() });
     }
 
     deletePatient(patientID: string): Observable<{ data: Patient }> {
-        return this.http.delete<{ data: Patient }>(Config.buildUrl(this.path + '/' + patientID), {
-            headers: this.authHeaders()
-        });
+        return this.http.delete<{ data: Patient }>(Config.buildUrl(`${this.path}/${patientID}`), { headers: this.authHeaders() });
     }
 
     hardDeletePatient(idList: string[]): Observable<{ data: Patient }> {
@@ -224,5 +212,12 @@ export class PatientsService {
             headers: this.authHeaders(),
             body: { ids: idList }
         });
+    }
+
+    // ── Restore a deactivated patient ─────────────────────────────────────────
+    // Calls PATCH /patients/{id}/restore — clears deletedAt and increments
+    // the patient counter back by 1 (mirrors the deletePatient transaction)
+    restorePatient(patientID: string): Observable<any> {
+        return this.http.patch(Config.buildUrl(`${this.path}/${encodeURIComponent(patientID)}/restore`), {}, { headers: this.authHeaders() });
     }
 }

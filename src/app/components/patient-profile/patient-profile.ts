@@ -5,18 +5,23 @@ import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from 'primeng/tabs';
 import { CardModule } from 'primeng/card';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { PatientsService, Patient } from '../../pages/service/patients.service';
 import { AppointmentsService, Appointment } from '../../pages/service/appointments.service';
 import { PaymentsService, Payment } from '../../pages/service/payments.service';
+import { HelpersService } from '@/pages/service/helpers-service';
+import { AuthService } from '@/pages/service/auth.service';
 import { ExaminationListComponent } from '../examination/examination-list/examination-list';
 
 @Component({
     selector: 'app-patient-profile',
     standalone: true,
-    imports: [CommonModule, RouterModule, ButtonModule, TagModule, Tabs, TabList, Tab, TabPanels, TabPanel, CardModule, ExaminationListComponent],
+    imports: [CommonModule, RouterModule, ButtonModule, TagModule, Tabs, TabList, Tab, TabPanels, TabPanel, CardModule, ConfirmDialogModule, ExaminationListComponent],
+    providers: [ConfirmationService],
     templateUrl: './patient-profile.html',
     styleUrl: './patient-profile.scss'
 })
@@ -25,11 +30,15 @@ export class PatientProfileComponent implements OnInit {
     private patientsService = inject(PatientsService);
     private appointmentsService = inject(AppointmentsService);
     private paymentsService = inject(PaymentsService);
+    private confirm = inject(ConfirmationService);
+    private helpers = inject(HelpersService);
+    auth = inject(AuthService);
 
     patient: Patient | null = null;
     appointments: Appointment[] = [];
     invoices: Payment[] = [];
     loading = true;
+    restoring = false;
 
     // plain uuid extracted from PK — used for examination-list and profile queries
     plainId = '';
@@ -64,10 +73,45 @@ export class PatientProfileComponent implements OnInit {
         });
     }
 
+    // ── Restore ───────────────────────────────────────────────────────────
+    restorePatient() {
+        if (!this.patient) return;
+        const name = this.patient.name;
+
+        this.confirm.confirm({
+            message: `Restore ${name}? They will become visible again in all normal views.`,
+            header: 'Restore Patient',
+            icon: 'pi pi-undo',
+            acceptButtonProps: { label: 'Restore', severity: 'success' },
+            rejectButtonProps: { label: 'Cancel', severity: 'secondary', outlined: true },
+            accept: () => {
+                this.restoring = true;
+                this.patientsService.restorePatient(this.plainId).subscribe({
+                    next: () => {
+                        this.helpers.notifySuccess(`${name} restored successfully`);
+                        // refresh patient to clear the deletedAt value
+                        this.patientsService
+                            .getPatientById(this.plainId)
+                            .pipe(catchError(() => of(null)))
+                            .subscribe((res) => {
+                                this.patient = (res as any)?.data || res;
+                                this.restoring = false;
+                            });
+                    },
+                    error: (e: any) => {
+                        this.helpers.notifyError('Error', e?.error?.message || 'Could not restore patient');
+                        this.restoring = false;
+                    }
+                });
+            }
+        });
+    }
+
     // ── Computed helpers ──────────────────────────────────────────────────
-    get examCount(): number {
-        return 0;
-    } // examination-list manages its own count internally
+    get isDeactivated(): boolean {
+        const d = this.patient?.deletedAt;
+        return !!d && d !== '' && d !== 'null' && d !== '<empty>';
+    }
 
     // ── Severity helpers ──────────────────────────────────────────────────
     getStatusSeverity(status: string): 'success' | 'warn' | 'danger' | 'secondary' | 'info' | 'contrast' {

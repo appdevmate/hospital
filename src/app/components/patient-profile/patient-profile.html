@@ -1,3 +1,5 @@
+<p-confirmDialog appendTo="body" />
+
 <div class="patient-profile-page">
 
     <!-- Loading -->
@@ -30,6 +32,24 @@
             }
         </div>
     </div>
+
+    <!-- ── Deactivated patient banner ── -->
+    @if (isDeactivated) {
+    <div class="deactivated-banner">
+        <div class="deactivated-banner-left">
+            <i class="pi pi-eye-slash"></i>
+            <div>
+                <div class="deactivated-banner-title">This patient record has been deactivated</div>
+                <div class="deactivated-banner-sub">
+                    Hidden from all normal views since {{ patient.deletedAt | date:'MMM d, y' }}.
+                    Restore to make them active again.
+                </div>
+            </div>
+        </div>
+        <p-button label="Restore Patient" icon="pi pi-undo" severity="success" [loading]="restoring"
+            (onClick)="restorePatient()" />
+    </div>
+    }
 
     <!-- Tabs -->
     <p-tabs value="0">
