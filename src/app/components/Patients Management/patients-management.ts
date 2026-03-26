@@ -82,7 +82,7 @@ const STATUS_SEVERITY: Record<string, 'success' | 'info' | 'warn' | 'danger' | '
             @if (auth.isAdmin) {
                 <p-button
                     class="mr-2"
-                    [label]="showDeleted() ? 'Back to Active Patients' : 'Deactivated Patients'"
+                    [label]="showDeleted() ? 'Show Active Patients' : 'Show Deactivated Patients'"
                     [icon]="showDeleted() ? 'pi pi-users' : 'pi pi-eye-slash'"
                     [severity]="showDeleted() ? 'warn' : 'secondary'"
                     [outlined]="true"

@@ -167,7 +167,9 @@
                                 <td class="text-sm text-surface-500">{{ med.genericName || '—' }}</td>
                                 <td><p-tag [value]="med.category" severity="info" styleClass="text-xs" /></td>
                                 <td class="text-sm">{{ med.form || '—' }}</td>
-                                <td class="text-sm font-mono">{{ med.strength || '—' }}</td>
+                                <td class="text-sm font-mono">
+                                    {{ med.strength ? (med.strength + (med.unit ? ' ' + med.unit : '')) : '—' }}
+                                </td>
                                 <td class="text-center">
                                     <i
                                         class="pi {{ med.requiresPrescription ? 'pi-check text-green-600' : 'pi-times text-surface-400' }}"></i>
@@ -552,7 +554,9 @@
             </div>
             <div>
                 <label class="field-label">Expiry Date</label>
-                <input pInputText [(ngModel)]="adjustForm.expiryDate" class="w-full" placeholder="YYYY-MM-DD" />
+                <p-datepicker [(ngModel)]="adjustForm.expiryDate" dateFormat="yy-mm-dd" [showIcon]="true"
+                    [readonlyInput]="true" [showOnFocus]="false" appendTo="body" styleClass="w-full"
+                    placeholder="Select expiry date" />
             </div>
         </div>
         <div class="mb-3">

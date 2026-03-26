@@ -108,7 +108,7 @@ export class PharmacyComponent implements OnInit {
     invLoading = false;
     showAdjustDialog = false;
     adjustingItem: InventoryItem | null = null;
-    adjustForm = { adjustmentType: 'received', quantity: 0, reason: '', batchNumber: '', expiryDate: '', location: '' };
+    adjustForm = { adjustmentType: 'received', quantity: 0, reason: '', batchNumber: '', expiryDate: null as Date | null, location: '' };
     adjustSaving = false;
     invFilter = '';
 
@@ -306,7 +306,14 @@ export class PharmacyComponent implements OnInit {
 
     openAdjust(item: InventoryItem) {
         this.adjustingItem = item;
-        this.adjustForm = { adjustmentType: 'received', quantity: 0, reason: '', batchNumber: '', expiryDate: '', location: '' };
+        this.adjustForm = {
+            adjustmentType: 'received',
+            quantity: 0,
+            reason: '',
+            batchNumber: item.batchNumber || '',
+            expiryDate: item.expiryDate ? new Date(item.expiryDate) : null,
+            location: item.location || ''
+        };
         this.showAdjustDialog = true;
     }
 
@@ -323,7 +330,7 @@ export class PharmacyComponent implements OnInit {
                 quantity: this.adjustForm.quantity,
                 reason: this.adjustForm.reason || undefined,
                 batchNumber: this.adjustForm.batchNumber || undefined,
-                expiryDate: this.adjustForm.expiryDate || undefined,
+                expiryDate: this.adjustForm.expiryDate ? new Date(this.adjustForm.expiryDate).toISOString().slice(0, 10) : undefined,
                 location: this.adjustForm.location || undefined
             })
             .pipe(

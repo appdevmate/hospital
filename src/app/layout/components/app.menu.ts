@@ -36,7 +36,6 @@ export class AppMenu implements OnInit {
 
         const sharedItems: MenuItem[] = [
             { label: 'Dashboard', icon: 'pi pi-desktop', routerLink: ['/'] },
-            { label: 'Patients', icon: 'pi pi-user-plus', routerLink: ['/patients-management'] },
             { label: 'Calendar', icon: 'pi pi-calendar', routerLink: ['/calendar'] },
             { label: 'Appointments', icon: 'pi pi-calendar-plus', routerLink: ['/appointments'] },
             { label: 'Invoices', icon: 'pi pi-file-edit', routerLink: ['/invoices'] },
@@ -46,6 +45,7 @@ export class AppMenu implements OnInit {
 
         const adminOnlyItems: MenuItem[] = [
             { separator: true },
+            { label: 'Patients', icon: 'pi pi-user-plus', routerLink: ['/patients-management'] },
             {
                 label: 'Administration',
                 icon: 'pi pi-shield',
