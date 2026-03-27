@@ -33,6 +33,7 @@ export class AppMenu implements OnInit {
     ngOnInit() {
         this.auth.invalidate();
         const isAdmin = this.auth.isAdmin;
+        const isDoctor = this.auth.isDoctor;
 
         const sharedItems: MenuItem[] = [
             { label: 'Dashboard', icon: 'pi pi-desktop', routerLink: ['/'] },
@@ -56,6 +57,9 @@ export class AppMenu implements OnInit {
             }
         ];
 
+        const doctorOnlyItems: MenuItem[] = [{ separator: true }, { label: 'Patients', icon: 'pi pi-user-plus', routerLink: ['/patients-management'] }];
+
         this.model = isAdmin ? [...sharedItems, ...adminOnlyItems] : sharedItems;
+        this.model = isDoctor ? [...sharedItems, ...doctorOnlyItems] : sharedItems;
     }
 }

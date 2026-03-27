@@ -12,7 +12,7 @@ import { AdminPanelComponent } from '@/components/admin-panel/admin-panel';
 import { PharmacyComponent } from '@/components/pharmacy/pharmacy';
 
 // Roles allowed to access the patients module
-const PATIENTS_ROLES: UserRole[] = ['admin', 'developer'];
+const PATIENTS_ROLES: UserRole[] = ['admin', 'developer', 'doctor'];
 
 export const appRoutes: Routes = [
     {

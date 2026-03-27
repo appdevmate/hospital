@@ -2,6 +2,6 @@ ng build --configuration production
 aws s3 sync "dist\verona-ng\browser" s3://tiryaq-bucket --delete
 aws cloudfront create-invalidation --distribution-id E3J3D3EMIOIACT --paths "/*"
 git add .
-git commit -m "fixing pharmacy and admin modules"
+git commit -m "open patients tab for doctor role"
 git push
 Remove-Item -Recurse -Force .angular\cache
