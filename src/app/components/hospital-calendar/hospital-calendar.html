@@ -23,7 +23,7 @@
         <div class="header-right">
 
             <!-- Admin: show doctor selector dropdown + re-sync button -->
-            @if (auth.isAdmin) {
+            @if (auth.isAdmin || auth.isDeveloper) {
             <p-select [options]="calendarList" [(ngModel)]="selectedCalendarId" optionLabel="name"
                 optionValue="calendarId" placeholder="Select Calendar" (onChange)="onCalendarChange()"
                 [style]="{ minWidth: '220px' }" />
@@ -32,7 +32,7 @@
             }
 
             <!-- Doctor: just show their own calendar name (read-only) -->
-            @if (auth.isDoctor) {
+            @if (auth.isDoctor || auth.isDeveloper) {
             <div
                 style="display:flex;align-items:center;gap:0.5rem;background:var(--p-surface-100);padding:0.5rem 1rem;border-radius:8px;">
                 <i class="pi pi-user" style="color:#16a34a;"></i>
@@ -51,7 +51,7 @@
         <i class="pi pi-calendar-times" style="font-size:3rem;color:#D1D5DB;"></i>
         <h3 style="margin:0;color:#6B7280;font-weight:600;">No Calendar Found</h3>
         <p style="margin:0;color:#9CA3AF;font-size:0.95rem;">
-            @if (auth.isAdmin) {
+            @if (auth.isAdmin || auth.isDeveloper) {
             Calendars are created automatically for each doctor.<br />
             Add doctors in <strong>Doctor Management</strong> to get started.
             } @else {
@@ -59,7 +59,7 @@
             Please contact the administrator.
             }
         </p>
-        @if (auth.isAdmin) {
+        @if (auth.isAdmin || auth.isDeveloper) {
         <a routerLink="/doctors-management"
             style="display:inline-flex;align-items:center;gap:0.5rem;background:#16a34a;color:white;padding:0.6rem 1.2rem;border-radius:8px;text-decoration:none;font-size:0.9rem;font-weight:600;">
             <i class="pi pi-arrow-right"></i>

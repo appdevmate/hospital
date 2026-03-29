@@ -137,7 +137,7 @@
             <!-- ── Tab 1: Medication Catalog ── -->
             <p-tabpanel value="1">
                 <div class="tab-body">
-                    @if (auth.isAdmin || auth.isPharmacist) {
+                    @if (auth.isAdmin || auth.isDeveloper || auth.isPharmacist) {
                     <div class="flex justify-end mb-4">
                         <p-button label="Add Medication" icon="pi pi-plus" severity="success"
                             (onClick)="openNewMed()" />
@@ -156,7 +156,7 @@
                                 <th style="width:100px">Strength</th>
                                 <th style="width:80px">Rx Req.</th>
                                 <th style="width:80px">Reorder</th>
-                                @if (auth.isAdmin || auth.isPharmacist) {
+                                @if (auth.isAdmin || auth.isDeveloper || auth.isPharmacist) {
                                 <th style="width:120px">Actions</th>
                                 }
                             </tr>
@@ -175,7 +175,7 @@
                                         class="pi {{ med.requiresPrescription ? 'pi-check text-green-600' : 'pi-times text-surface-400' }}"></i>
                                 </td>
                                 <td class="text-center text-sm">{{ med.reorderPoint }}</td>
-                                @if (auth.isAdmin || auth.isPharmacist) {
+                                @if (auth.isAdmin || auth.isDeveloper || auth.isPharmacist) {
                                 <td>
                                     <div class="flex gap-1">
                                         <p-button icon="pi pi-pencil" text size="small" severity="info" pTooltip="Edit"

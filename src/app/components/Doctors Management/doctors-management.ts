@@ -61,10 +61,10 @@ const STATUS_SEVERITY: Record<string, 'success' | 'info' | 'warn' | 'danger' | '
     providers: [DialogService, ConfirmationService],
     template: `
         <ng-template #tbStart let-api="api" let-selected="selected">
-            @if (auth.isAdmin) {
+            @if (auth.isAdmin || auth.isDeveloper) {
                 <p-button class="mr-2" [disabled]="loading()" label="New Doctor" icon="pi pi-plus" (onClick)="openNew()"></p-button>
                 <p-button class="mr-2" [disabled]="!selected?.length" label="Delete Selected" icon="pi pi-trash" severity="danger" (onClick)="deleteSelected('soft')"></p-button>
-                @if (auth.isAdmin) {
+                @if (auth.isAdmin || auth.isDeveloper) {
                     <p-button class="mr-2" [disabled]="!selected?.length" label="Hard Delete Selected" icon="pi pi-trash" severity="contrast" (onClick)="deleteSelected('hard')"></p-button>
                 }
                 <input type="file" #fileInput accept=".xlsx,.xls,.csv" (change)="onImportFromFileInput($event)" hidden />
@@ -78,7 +78,7 @@ const STATUS_SEVERITY: Record<string, 'success' | 'info' | 'warn' | 'danger' | '
         </ng-template>
 
         <ng-template #rowActions let-row let-editing="editing" let-api="api" let-rowIndex="rowIndex">
-            @if (auth.isAdmin) {
+            @if (auth.isAdmin || auth.isDeveloper) {
                 @if (!editing) {
                     <p-button icon="pi pi-pencil" text (onClick)="beginEdit(row, rowIndex, api)" pTooltip="Edit"></p-button>
                     <p-button icon="pi pi-trash" text severity="danger" class="ml-2" (onClick)="deleteRow(row)" pTooltip="Delete"></p-button>

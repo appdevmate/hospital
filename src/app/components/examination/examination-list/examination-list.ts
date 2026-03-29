@@ -25,7 +25,7 @@ import { HelpersService } from '@/pages/service/helpers-service';
                     <i class="pi pi-file-medical" style="color:#16a34a;font-size:1.2rem;"></i>
                     <span class="font-semibold text-lg">Examinations ({{ exams.length }})</span>
                 </div>
-                @if (auth.isDoctor) {
+                @if (auth.isDoctor || auth.isDeveloper) {
                     <p-button label="New Examination" icon="pi pi-plus" severity="success" size="small" [loading]="creating" (onClick)="createNew()" />
                 }
             </div>
@@ -42,7 +42,7 @@ import { HelpersService } from '@/pages/service/helpers-service';
                 <div class="empty-state">
                     <i class="pi pi-file-medical text-4xl mb-3" style="color:#D1D5DB;"></i>
                     <p>No examinations recorded yet.</p>
-                    @if (auth.isDoctor) {
+                    @if (auth.isDoctor || auth.isDeveloper) {
                         <p class="text-sm text-surface-400">Click "New Examination" to start a SOAP note.</p>
                     }
                 </div>
@@ -93,7 +93,7 @@ import { HelpersService } from '@/pages/service/helpers-service';
                                     <p-button icon="pi pi-pencil" text severity="success" pTooltip="Continue Examination" (onClick)="openForm(exam.examId)" />
                                 }
                                 <p-button icon="pi pi-eye" text severity="info" pTooltip="View Details" (onClick)="openDetail(exam.examId)" />
-                                @if (auth.isAdmin) {
+                                @if (auth.isAdmin || auth.isDeveloper) {
                                     <p-button icon="pi pi-trash" text severity="danger" pTooltip="Delete (Admin)" (onClick)="confirmDelete(exam)" />
                                 }
                             </div>

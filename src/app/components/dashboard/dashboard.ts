@@ -90,7 +90,7 @@ interface StatCard {
                                     <div class="text-sm text-surface-500 flex items-center gap-2 mt-0.5">
                                         <i class="pi pi-clock text-xs"></i>
                                         <span>{{ appt.startTime }} – {{ appt.endTime }}</span>
-                                        @if (auth.isAdmin) {
+                                        @if (auth.isAdmin || auth.isDeveloper) {
                                             <span class="mx-1">·</span>
                                             <i class="pi pi-user-plus text-xs"></i>
                                             <span class="truncate">{{ appt.doctorName | titlecase }}</span>
@@ -152,7 +152,7 @@ interface StatCard {
         </div>
 
         <!-- ════════════════════════════════ INVOICES SUMMARY (admin only) ══ -->
-        @if (auth.isAdmin) {
+        @if (auth.isAdmin || auth.isDeveloper) {
             <div class="col-span-12 xl:col-span-6">
                 <div class="card h-full">
                     <div class="flex items-center justify-between mb-6">
@@ -248,7 +248,7 @@ interface StatCard {
         }
 
         <!-- ════════════════════════════════ DOCTOR: PENDING INVOICES ══ -->
-        @if (auth.isDoctor) {
+        @if (auth.isDoctor || auth.isDeveloper) {
             <div class="col-span-12">
                 <div class="card">
                     <div class="flex items-center justify-between mb-6">
@@ -324,7 +324,7 @@ export class DashboardComponent implements OnInit {
     ngOnInit() {
         const doctorEmail = this.auth.isDoctor ? this.auth.current.email : undefined;
 
-        if (this.auth.isAdmin) {
+        if (this.auth.isAdmin || this.auth.isAdmin) {
             this.loadAdminDashboard();
         } else {
             this.loadDoctorDashboard(doctorEmail!);

@@ -71,7 +71,7 @@ const STATUS_SEVERITY: Record<string, 'success' | 'info' | 'warn' | 'danger' | '
             @if (!showDeleted()) {
                 <p-button class="mr-2" [disabled]="loading()" label="New Patient" icon="pi pi-plus" (onClick)="openNew()"></p-button>
                 <p-button class="mr-2" [disabled]="!selected().length" label="Delete Selected" icon="pi pi-trash" severity="danger" (onClick)="deleteSelected('soft')"></p-button>
-                @if (auth.isAdmin) {
+                @if (auth.isAdmin || auth.isDeveloper) {
                     <p-button class="mr-2" [disabled]="!selected().length" label="Hard Delete Selected" icon="pi pi-trash" severity="contrast" (onClick)="deleteSelected('hard')"></p-button>
                 }
                 <input type="file" #fileInput accept=".xlsx,.xls,.csv" (change)="onImportFromFileInput($event)" hidden />
@@ -79,7 +79,7 @@ const STATUS_SEVERITY: Record<string, 'success' | 'info' | 'warn' | 'danger' | '
                 <p-button class="mr-2" label="Download Template" icon="pi pi-file-excel" severity="secondary" (onClick)="downloadTemplate()"></p-button>
             }
             <!-- Toggle deactivated view — admin and developer only -->
-            @if (auth.isAdmin) {
+            @if (auth.isAdmin || auth.isDeveloper) {
                 <p-button
                     class="mr-2"
                     [label]="showDeleted() ? 'Show Active Patients' : 'Show Deactivated Patients'"

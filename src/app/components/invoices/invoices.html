@@ -13,7 +13,7 @@
 
 <!-- Toolbar: New Invoice for admins only -->
 <ng-template #tbStart>
-    @if (auth.isAdmin) {
+    @if (auth.isAdmin || auth.isDeveloper) {
     <p-button label="New Invoice" icon="pi pi-plus" (onClick)="openCreate()" />
     }
 </ng-template>
@@ -21,7 +21,7 @@
 <!-- Row actions -->
 <ng-template #rowActions let-row>
     <p-button icon="pi pi-eye" text severity="info" (onClick)="viewInvoice(row)" pTooltip="View" />
-    @if (auth.isAdmin) {
+    @if (auth.isAdmin || auth.isDeveloper) {
     <p-button icon="pi pi-pencil" text (onClick)="openEdit(row)" pTooltip="Edit" />
     <p-button icon="pi pi-trash" text severity="danger" (onClick)="confirmDelete(row)" pTooltip="Delete" />
     }
@@ -54,7 +54,7 @@
                     <label for="patient">Patient *</label>
                 </p-floatLabel>
 
-                @if (auth.isAdmin) {
+                @if (auth.isAdmin || auth.isDeveloper) {
                 <p-floatLabel variant="on">
                     <p-autoComplete inputId="doctorName" formControlName="doctorName"
                         [suggestions]="filteredDoctorNames" (completeMethod)="searchDoctor($event)"
@@ -237,7 +237,7 @@
         }
 
         <!-- Action buttons -->
-        @if (auth.isAdmin) {
+        @if (auth.isAdmin || auth.isDeveloper) {
         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1.5rem;">
             <p-button label="Delete" severity="danger" [outlined]="true" icon="pi pi-trash"
                 (click)="confirmDelete(viewingPayment!)" />

@@ -3,7 +3,7 @@
 
 <!-- Toolbar: New Appointment only visible to admins -->
 <ng-template #tbStart>
-    @if (auth.isAdmin) {
+    @if (auth.isAdmin || auth.isDeveloper) {
     <p-button label="New Appointment" icon="pi pi-plus" (onClick)="openCreate()" />
     }
 </ng-template>
@@ -11,7 +11,7 @@
 <!-- Row actions -->
 <ng-template #rowActions let-row>
     <p-button icon="pi pi-eye" text severity="info" (onClick)="openDetail(row)" pTooltip="View" />
-    @if (auth.isAdmin) {
+    @if (auth.isAdmin || auth.isDeveloper) {
     <p-button icon="pi pi-pencil" text (onClick)="openEdit(row)" pTooltip="Edit" />
     <p-button icon="pi pi-trash" text severity="danger" (onClick)="onDelete(row)" pTooltip="Delete" />
     }
@@ -191,7 +191,7 @@
         }
         <hr style="border:none; border-top:1px solid #F3F4F6; margin:0;" />
         <div style="display:flex; justify-content:space-between; align-items:center;">
-            @if (auth.isAdmin) {
+            @if (auth.isAdmin || auth.isDeveloper) {
             <p-button label="Delete" severity="danger" [outlined]="true" icon="pi pi-trash"
                 (click)="onDelete(selectedAppointment!)" />
             } @else {
@@ -199,7 +199,7 @@
             }
             <div style="display:flex; gap:10px;">
                 <p-button label="Close" severity="secondary" [outlined]="true" (click)="showDetailDialog = false" />
-                @if (auth.isAdmin) {
+                @if (auth.isAdmin || auth.isDeveloper) {
                 <p-button label="Edit" icon="pi pi-pencil" (click)="openEdit(selectedAppointment!)" />
                 }
             </div>

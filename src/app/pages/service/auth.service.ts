@@ -47,7 +47,11 @@ export class AuthService {
     }
 
     get isAdmin(): boolean {
-        return this.current.role === 'developer' || this.current.role === 'admin';
+        return this.current.role === 'admin';
+    }
+
+    get isDeveloper(): boolean {
+        return this.current.role === 'developer';
     }
 
     get isDoctor(): boolean {

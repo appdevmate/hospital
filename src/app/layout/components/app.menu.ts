@@ -34,6 +34,23 @@ export class AppMenu implements OnInit {
         this.auth.invalidate();
         const isAdmin = this.auth.isAdmin;
         const isDoctor = this.auth.isDoctor;
+        const isDeveloper = this.auth.isDeveloper;
+
+        const developerItems: MenuItem[] = [
+            { label: 'Dashboard', icon: 'pi pi-desktop', routerLink: ['/'] },
+            { label: 'Calendar', icon: 'pi pi-calendar', routerLink: ['/calendar'] },
+            { label: 'Appointments', icon: 'pi pi-calendar-plus', routerLink: ['/appointments'] },
+            { label: 'Invoices', icon: 'pi pi-file-edit', routerLink: ['/invoices'] },
+            { label: 'Notifications', icon: 'pi pi-bell', routerLink: ['/notifications'] },
+            { label: 'Pharmacy', icon: 'pi pi-heart-fill', routerLink: ['/pharmacy'] },
+            { label: 'Patients', icon: 'pi pi-user-plus', routerLink: ['/patients-management'] },
+            { label: 'Doctors Management', icon: 'pi pi-briefcase', routerLink: ['/doctors-management'] },
+            {
+                label: 'Administration',
+                icon: 'pi pi-shield',
+                routerLink: ['/admin-panel']
+            }
+        ];
 
         const sharedItems: MenuItem[] = [
             { label: 'Dashboard', icon: 'pi pi-desktop', routerLink: ['/'] },
@@ -59,7 +76,14 @@ export class AppMenu implements OnInit {
 
         const doctorOnlyItems: MenuItem[] = [{ separator: true }, { label: 'Patients', icon: 'pi pi-user-plus', routerLink: ['/patients-management'] }];
 
-        this.model = isAdmin ? [...sharedItems, ...adminOnlyItems] : sharedItems;
-        this.model = isDoctor ? [...sharedItems, ...doctorOnlyItems] : sharedItems;
+        if (isAdmin) {
+            this.model = [...sharedItems, ...adminOnlyItems];
+        } else if (isDoctor) {
+            this.model = [...sharedItems, ...doctorOnlyItems];
+        } else if (isDeveloper) {
+            this.model = [...developerItems];
+        } else {
+            this.model = [...sharedItems];
+        }
     }
 }
