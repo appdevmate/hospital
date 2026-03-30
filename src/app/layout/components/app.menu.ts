@@ -57,20 +57,18 @@ export class AppMenu implements OnInit {
             { label: 'Calendar', icon: 'pi pi-calendar', routerLink: ['/calendar'] },
             { label: 'Appointments', icon: 'pi pi-calendar-plus', routerLink: ['/appointments'] },
             { label: 'Invoices', icon: 'pi pi-file-edit', routerLink: ['/invoices'] },
-            { label: 'Notifications', icon: 'pi pi-bell', routerLink: ['/notifications'] },
-            { label: 'Pharmacy', icon: 'pi pi-heart-fill', routerLink: ['/pharmacy'] }
+            { label: 'Notifications', icon: 'pi pi-bell', routerLink: ['/notifications'] }
         ];
 
         const adminOnlyItems: MenuItem[] = [
             { separator: true },
             { label: 'Patients', icon: 'pi pi-user-plus', routerLink: ['/patients-management'] },
+            { label: 'Pharmacy', icon: 'pi pi-heart-fill', routerLink: ['/pharmacy'] },
+            { label: 'Doctors Management', icon: 'pi pi-briefcase', routerLink: ['/doctors-management'] },
             {
                 label: 'Administration',
                 icon: 'pi pi-shield',
-                items: [
-                    { label: 'Admin Panel', icon: 'pi pi-shield-check', routerLink: ['/admin-panel'] },
-                    { label: 'Doctors Management', icon: 'pi pi-briefcase', routerLink: ['/doctors-management'] }
-                ]
+                routerLink: ['/admin-panel']
             }
         ];
 
