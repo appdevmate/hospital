@@ -36,7 +36,7 @@
             </p-tab>
             <p-tab value="3">
                 <i class="pi pi-file-edit mr-2"></i>Prescriptions
-                @if (prescriptions.length > 0) {
+                @if (rxFilter === 'ordered' && prescriptions.length > 0) {
                 <span class="tab-badge">{{ prescriptions.length }}</span>
                 }
             </p-tab>
@@ -227,7 +227,8 @@
                                     <div class="text-xs text-surface-400">{{ item.genericName }}</div>
                                     }
                                     @if (item.strength) {
-                                    <div class="text-xs text-surface-400">{{ item.form }} · {{ item.strength }}</div>
+                                    <div class="text-xs text-surface-400">{{ item.form }} · {{ item.strength }}{{
+                                        item.unit ? ' ' + item.unit : '' }}</div>
                                     }
                                 </td>
                                 <td><p-tag [value]="item.category || '—'" severity="secondary" styleClass="text-xs" />
@@ -369,7 +370,7 @@
                                         d.prescription.frequency }}</div>
                                     }
                                 </td>
-                                <td class="text-center">{{ d.quantityDispensed }} {{ d.unit || 'units' }}</td>
+                                <td class="text-center">{{ d.quantityDispensed }}</td>
                                 <td class="text-xs">
                                     @if (d.batchNumber) { <div>Batch: {{ d.batchNumber }}</div> }
                                     @if (d.expiryDate) { <div>Exp: {{ d.expiryDate }}</div> }
@@ -381,7 +382,7 @@
                                 </td>
                                 <td class="text-center">
                                     @if (d.allergyOverridden) {
-                                    <p-tag value="Override" severity="warn"
+                                    <p-tag value="Allergy Override" severity="warn"
                                         pTooltip="{{ d.allergyWarnings?.join(', ') }}" styleClass="text-xs" />
                                     } @else {
                                     <i class="pi pi-check text-green-500"></i>
@@ -661,7 +662,9 @@
             </div>
             <div>
                 <label class="field-label">Expected Delivery Date</label>
-                <input pInputText [(ngModel)]="poForm.expectedDate" class="w-full" placeholder="YYYY-MM-DD" />
+                <p-datepicker [(ngModel)]="poForm.expectedDate" dateFormat="yy-mm-dd" [showIcon]="true"
+                    [readonlyInput]="true" [showOnFocus]="false" appendTo="body" styleClass="w-full"
+                    placeholder="Select delivery date" />
             </div>
         </div>
         <div class="mb-4">

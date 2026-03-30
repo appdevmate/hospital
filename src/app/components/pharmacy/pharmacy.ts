@@ -146,7 +146,7 @@ export class PharmacyComponent implements OnInit {
     poLoading = false;
     showPoDialog = false;
     editingPo: PurchaseOrder | null = null;
-    poForm = { supplier: '', notes: '', expectedDate: '', currency: 'QAR', items: [] as Partial<POItem>[] };
+    poForm = { supplier: '', notes: '', expectedDate: null as Date | null, currency: 'QAR', items: [] as Partial<POItem>[] };
     poSaving = false;
     newPoItem = { medId: '', medName: '', quantity: 1, unitCost: 0 };
 
@@ -457,14 +457,14 @@ export class PharmacyComponent implements OnInit {
 
     openNewPo() {
         this.editingPo = null;
-        this.poForm = { supplier: '', notes: '', expectedDate: '', currency: 'QAR', items: [] };
+        this.poForm = { supplier: '', notes: '', expectedDate: null, currency: 'QAR', items: [] };
         this.newPoItem = { medId: '', medName: '', quantity: 1, unitCost: 0 };
         this.showPoDialog = true;
     }
 
     openEditPo(po: PurchaseOrder) {
         this.editingPo = po;
-        this.poForm = { supplier: po.supplier || '', notes: po.notes || '', expectedDate: po.expectedDate || '', currency: po.currency, items: [...po.items] };
+        this.poForm = { supplier: po.supplier || '', notes: po.notes || '', expectedDate: po.expectedDate ? new Date(po.expectedDate) : null, currency: po.currency, items: [...po.items] };
         this.showPoDialog = true;
     }
 
@@ -491,7 +491,11 @@ export class PharmacyComponent implements OnInit {
             return;
         }
         this.poSaving = true;
-        const obs = this.editingPo ? this.pharmService.updatePurchaseOrder(this.editingPo.poId, { ...this.poForm }) : this.pharmService.createPurchaseOrder({ ...this.poForm });
+        const payload = {
+            ...this.poForm,
+            expectedDate: this.poForm.expectedDate ? new Date(this.poForm.expectedDate).toISOString().slice(0, 10) : undefined
+        };
+        const obs = this.editingPo ? this.pharmService.updatePurchaseOrder(this.editingPo.poId, payload) : this.pharmService.createPurchaseOrder(payload);
 
         obs.pipe(
             finalize(() => {
