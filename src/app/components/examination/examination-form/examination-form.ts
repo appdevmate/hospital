@@ -321,7 +321,7 @@ export class ExaminationFormComponent implements OnInit {
     // ── Sign off ──────────────────────────────────────────────────────────────
     signOff() {
         this.confirm.confirm({
-            message: 'Sign off this examination? It will become read-only and cannot be edited.',
+            message: 'Sign off this consultation? It will become read-only and cannot be edited.',
             header: 'Confirm Sign Off',
             icon: 'pi pi-check-circle',
             acceptButtonProps: { label: 'Sign Off', severity: 'success' },
