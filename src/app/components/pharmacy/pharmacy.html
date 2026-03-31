@@ -36,7 +36,7 @@
             </p-tab>
             <p-tab value="3">
                 <i class="pi pi-file-edit mr-2"></i>Prescriptions
-                @if (rxFilter === 'ordered' && prescriptions.length > 0) {
+                @if (rxFilter === 'ordered' && prescriptions.length > 0 && !rxLoading) {
                 <span class="tab-badge">{{ prescriptions.length }}</span>
                 }
             </p-tab>
@@ -236,7 +236,7 @@
                                 <td>
                                     <span class="stock-qty" [class.stock-zero]="item.stockQty === 0"
                                         [class.stock-low]="item.isLowStock && item.stockQty > 0">
-                                        {{ item.stockQty }} {{ item.unit || 'units' }}
+                                        {{ item.stockQty }} {{ item.packUnit || 'units' }}
                                     </span>
                                     <div class="text-xs text-surface-400">reorder at {{ item.reorderPoint }}</div>
                                 </td>
@@ -370,7 +370,7 @@
                                         d.prescription.frequency }}</div>
                                     }
                                 </td>
-                                <td class="text-center">{{ d.quantityDispensed }}</td>
+                                <td class="text-center">{{ d.quantityDispensed }} {{ d.packUnit || 'units' }}</td>
                                 <td class="text-xs">
                                     @if (d.batchNumber) { <div>Batch: {{ d.batchNumber }}</div> }
                                     @if (d.expiryDate) { <div>Exp: {{ d.expiryDate }}</div> }
@@ -487,16 +487,21 @@
         <div class="form-grid-3 mb-3">
             <div>
                 <label class="field-label">Strength</label>
-                <input pInputText [(ngModel)]="medForm.strength" class="w-full" placeholder="e.g. 500mg" />
+                <input pInputText [(ngModel)]="medForm.strength" class="w-full" placeholder="e.g. 500" />
             </div>
             <div>
                 <label class="field-label">Unit</label>
-                <input pInputText [(ngModel)]="medForm.unit" class="w-full" placeholder="e.g. mg, ml, tablet" />
+                <input pInputText [(ngModel)]="medForm.unit" class="w-full" placeholder="e.g. mg, ml" />
             </div>
             <div>
                 <label class="field-label">Reorder Point</label>
                 <p-inputnumber [(ngModel)]="medForm.reorderPoint" [min]="0" styleClass="w-full" />
             </div>
+        </div>
+        <div class="mb-3">
+            <label class="field-label">Pack Unit *</label>
+            <p-select [options]="packUnitOptions" [(ngModel)]="medForm.packUnit" optionLabel="label" optionValue="value"
+                placeholder="Select pack unit (Box, Vial, Bottle...)" appendTo="body" styleClass="w-full" />
         </div>
         <div class="form-grid mb-3">
             <div>

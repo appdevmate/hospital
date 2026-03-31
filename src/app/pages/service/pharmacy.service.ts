@@ -17,6 +17,7 @@ export interface Medication {
     description?: string;
     requiresPrescription: boolean;
     reorderPoint: number;
+    packUnit?: string;
     createdAt: string;
     updatedAt: string | null;
 }
@@ -39,6 +40,7 @@ export interface InventoryItem {
     category?: string;
     form?: string;
     strength?: string;
+    packUnit?: string;
     genericName?: string;
     adjustments: StockAdjustment[];
 }
@@ -181,7 +183,7 @@ export class PharmacyService {
     }
 
     // Dispense
-    dispense(data: { examId: string; prescriptionId: string; medId: string; quantityDispensed: number; notes?: string; allergyOverrideConfirmed?: boolean }): Observable<any> {
+    dispense(data: { examId: string; prescriptionId: string; medId: string; quantityDispensed: number; notes?: string; allergyOverrideConfirmed?: boolean; dispensedByName?: string; dispensedByEmail?: string }): Observable<any> {
         return this.http.post(Config.buildUrl('pharmacy/dispense'), data, { headers: this.headers() });
     }
     getDispenseHistory(patientId?: string): Observable<DispenseRecord[]> {

@@ -33,12 +33,15 @@ function getClaims(event) {
 
 function getActor(event) {
     const claims = getClaims(event);
-    const email = (claims.email || claims['cognito:username'] || '').toLowerCase().trim();
+    const username = claims.username || claims['cognito:username'] || 'unknown';
+    const email = claims.email || username;
     return {
         email,
-        name: claims.name || email || 'unknown'
+        name: claims.name || username
     };
 }
+
+
 
 
 function getUserGroups(event) {
@@ -134,7 +137,8 @@ exports.handler = async (event) => {
             category:          body.category.trim(),
             form:              body.form     || null,   // tablet, capsule, injection, syrup, etc.
             strength:          body.strength || null,   // e.g. 500mg
-            unit:              body.unit     || null,   // e.g. mg, ml
+            unit: body.unit || null,   // e.g. mg, ml
+            packUnit:          body.packUnit || null, // e.g. box, strip, vial
             manufacturer:      body.manufacturer || null,
             description:       body.description  || null,
             requiresPrescription: body.requiresPrescription !== false,
@@ -154,7 +158,8 @@ exports.handler = async (event) => {
             medName:     med.name,
             stockQty:    0,
             reservedQty: 0,
-            unit:        body.unit || null,
+            unit: body.unit || null,
+            packUnit:    body.packUnit || null,
             location:    body.location    || null,
             batchNumber: null,
             expiryDate:  null,
@@ -173,7 +178,7 @@ exports.handler = async (event) => {
         const medId = params.medId;
         const now   = new Date().toISOString();
 
-        const allowed = ['name','genericName','category','form','strength','unit','manufacturer','description','requiresPrescription','reorderPoint'];
+        const allowed = ['name','genericName','category','form','strength','unit','packUnit','manufacturer','description','requiresPrescription','reorderPoint'];
         const expParts = ['#updatedAt = :ua'];
         const names    = { '#updatedAt': 'updatedAt' };
         const values   = { ':ua': now };
@@ -240,7 +245,8 @@ exports.handler = async (event) => {
                 category:       med.Item?.category || null,
                 form:           med.Item?.form     || null,
                 strength:       med.Item?.strength || null,
-                genericName:    med.Item?.genericName || null
+                genericName:    med.Item?.genericName || null,
+                packUnit:       med.Item?.packUnit    || null
             };
         }));
 
@@ -397,37 +403,41 @@ exports.handler = async (event) => {
         }
 
         // Create dispense record
-        const dispenseId = randomUUID();
-        const dispense = {
-            PK:                  `DISPENSE#${dispenseId}`,
-            SK:                  'PROFILE',
-            EntityType:          'DISPENSE',
-            dispenseId,
-            examId:              body.examId,
-            prescriptionId:      body.prescriptionId,
-            patientId:           exam.Item.patientId,
-            patientName:         exam.Item.patientName,
-            doctorName:          exam.Item.doctorName,
-            medId:               body.medId,
-            medName:             inv.Item.medName,
-            quantityDispensed:   body.quantityDispensed,
-            unit:                inv.Item.unit,
-            batchNumber:         inv.Item.batchNumber || null,
-            expiryDate:          inv.Item.expiryDate  || null,
-            notes:               body.notes           || null,
-            allergyWarnings:     allergyWarnings,
-            allergyOverridden:   allergyWarnings.length > 0 && body.allergyOverrideConfirmed,
-            dispensedBy:         actor.email,
-            dispensedByName:     actor.name,
-            dispensedAt:         now,
-            prescription: {
-                medication: rx.medication,
-                dose:       rx.dose,
-                frequency:  rx.frequency,
-                route:      rx.route,
-                duration:   rx.duration
-            }
-        };
+const dispenseId = randomUUID();
+const dispensedByEmail = body.dispensedByEmail || actor.email;
+const dispensedByName  = body.dispensedByName  || actor.name;
+
+const dispense = {
+    PK:                  `DISPENSE#${dispenseId}`,
+    SK:                  'PROFILE',
+    EntityType:          'DISPENSE',
+    dispenseId,
+    examId:              body.examId,
+    prescriptionId:      body.prescriptionId,
+    patientId:           exam.Item.patientId,
+    patientName:         exam.Item.patientName,
+    doctorName:          exam.Item.doctorName,
+    medId:               body.medId,
+    medName:             inv.Item.medName,
+    quantityDispensed:   body.quantityDispensed,
+    unit: inv.Item.unit,
+    packUnit:            inv.Item.packUnit || null,
+    batchNumber:         inv.Item.batchNumber || null,
+    expiryDate:          inv.Item.expiryDate  || null,
+    notes:               body.notes           || null,
+    allergyWarnings:     allergyWarnings,
+    allergyOverridden:   allergyWarnings.length > 0 && body.allergyOverrideConfirmed,
+    dispensedBy:         dispensedByEmail,
+    dispensedByName:     dispensedByName,
+    dispensedAt:         now,
+    prescription: {
+        medication: rx.medication,
+        dose:       rx.dose,
+        frequency:  rx.frequency,
+        route:      rx.route,
+        duration:   rx.duration
+    }
+};
 
         await db.send(new PutCommand({ TableName: TABLE_NAME, Item: dispense }));
 

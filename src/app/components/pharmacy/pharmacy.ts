@@ -76,6 +76,7 @@ export class PharmacyComponent implements OnInit {
         form: '',
         strength: '',
         unit: '',
+        packUnit: '',
         manufacturer: '',
         description: '',
         requiresPrescription: true,
@@ -102,7 +103,7 @@ export class PharmacyComponent implements OnInit {
         'Other'
     ].map((v) => ({ label: v, value: v }));
     formOptions = ['Tablet', 'Capsule', 'Syrup', 'Injection', 'Cream', 'Ointment', 'Drops', 'Inhaler', 'Patch', 'Suppository', 'Powder', 'Solution', 'Other'].map((v) => ({ label: v, value: v }));
-
+    packUnitOptions = ['Box', 'Strip', 'Vial', 'Bottle', 'Ampoule', 'Sachet', 'Tube', 'Unit'].map((v) => ({ label: v, value: v }));
     // ── Inventory ─────────────────────────────────────────────────────────────
     inventory: InventoryItem[] = [];
     invLoading = false;
@@ -215,7 +216,7 @@ export class PharmacyComponent implements OnInit {
 
     openNewMed() {
         this.editingMed = null;
-        this.medForm = { name: '', genericName: '', category: '', form: '', strength: '', unit: '', manufacturer: '', description: '', requiresPrescription: true, reorderPoint: 10, location: '' };
+        this.medForm = { name: '', genericName: '', category: '', form: '', strength: '', unit: '', packUnit: '', manufacturer: '', description: '', requiresPrescription: true, reorderPoint: 10, location: '' };
         this.showMedDialog = true;
     }
 
@@ -228,6 +229,7 @@ export class PharmacyComponent implements OnInit {
             form: med.form || '',
             strength: med.strength || '',
             unit: med.unit || '',
+            packUnit: med.packUnit || '',
             manufacturer: med.manufacturer || '',
             description: med.description || '',
             requiresPrescription: med.requiresPrescription,
@@ -388,7 +390,9 @@ export class PharmacyComponent implements OnInit {
                 medId: this.dispenseForm.medId,
                 quantityDispensed: this.dispenseForm.quantityDispensed,
                 notes: this.dispenseForm.notes || undefined,
-                allergyOverrideConfirmed: overrideAllergy || undefined
+                allergyOverrideConfirmed: overrideAllergy || undefined,
+                dispensedByName: this.auth.current.name,
+                dispensedByEmail: this.auth.current.email
             })
             .pipe(
                 finalize(() => {
@@ -544,6 +548,6 @@ export class PharmacyComponent implements OnInit {
     }
 
     get inventoryMedOptions() {
-        return this.inventory.map((i) => ({ label: `${i.medName} (${i.stockQty} ${i.unit || 'units'} available)`, value: i.medId }));
+        return this.inventory.map((i) => ({ label: `${i.medName} (${i.stockQty} ${i.packUnit || 'units'} available)`, value: i.medId }));
     }
 }
