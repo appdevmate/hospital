@@ -33,11 +33,10 @@ function getClaims(event) {
 
 function getActor(event) {
     const claims = getClaims(event);
-    const username = claims.username || claims['cognito:username'] || 'unknown';
-    const email = claims.email || username;
+    const email = (claims.email || claims.username || 'unknown').toLowerCase().trim();
     return {
         email,
-        name: claims.name || username
+        name: claims.name || email
     };
 }
 

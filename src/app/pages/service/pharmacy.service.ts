@@ -86,7 +86,6 @@ export interface DispenseRecord {
     allergyWarnings: string[];
     allergyOverridden: boolean;
     dispensedBy: string;
-    dispensedByName: string;
     dispensedAt: string;
     prescription: any;
 }
@@ -183,7 +182,7 @@ export class PharmacyService {
     }
 
     // Dispense
-    dispense(data: { examId: string; prescriptionId: string; medId: string; quantityDispensed: number; notes?: string; allergyOverrideConfirmed?: boolean; dispensedByName?: string; dispensedByEmail?: string }): Observable<any> {
+    dispense(data: { examId: string; prescriptionId: string; medId: string; quantityDispensed: number; notes?: string; allergyOverrideConfirmed?: boolean; dispensedByName?: string }): Observable<any> {
         return this.http.post(Config.buildUrl('pharmacy/dispense'), data, { headers: this.headers() });
     }
     getDispenseHistory(patientId?: string): Observable<DispenseRecord[]> {

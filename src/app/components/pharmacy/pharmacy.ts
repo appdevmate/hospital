@@ -391,8 +391,6 @@ export class PharmacyComponent implements OnInit {
                 quantityDispensed: this.dispenseForm.quantityDispensed,
                 notes: this.dispenseForm.notes || undefined,
                 allergyOverrideConfirmed: overrideAllergy || undefined,
-                dispensedByName: this.auth.current.name,
-                dispensedByEmail: this.auth.current.email
             })
             .pipe(
                 finalize(() => {
