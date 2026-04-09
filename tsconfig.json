@@ -19,7 +19,7 @@
         "importHelpers": true,
         "target": "ES2022",
         "module": "ES2022",
-        "ignoreDeprecations": "5.0",
+        "ignoreDeprecations": "6.0",
         "baseUrl": "./",
         "paths": {
             "@/*": [
@@ -32,5 +32,10 @@
         "strictInjectionParameters": true,
         "strictInputAccessModifiers": true,
         "strictTemplates": true
-    }
+    },
+
+    "exclude": [
+        "node_modules",
+        "tiryaq-cdk"
+    ]
 }
