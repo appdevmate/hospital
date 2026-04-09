@@ -7,3 +7,5 @@ node_modules
 tiryaq-deploy_credentials.csv
 tiryaq-deploy_accessKeys.csv
 *.csv
+
+dist/
