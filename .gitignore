@@ -3,3 +3,7 @@ node_modules
 .cursor\rules\nx-rules.mdc
 .github\instructions\nx.instructions.md
 .angular/cache/
+
+tiryaq-deploy_credentials.csv
+tiryaq-deploy_accessKeys.csv
+*.csv
