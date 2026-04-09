@@ -1,0 +1,349 @@
+import { __decorate } from "tslib";
+import { Component, ChangeDetectorRef, ViewChild, signal, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { TextareaModule } from 'primeng/textarea';
+import { SelectModule } from 'primeng/select';
+import { DatePickerModule } from 'primeng/datepicker';
+import { TagModule } from 'primeng/tag';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { TooltipModule } from 'primeng/tooltip';
+import { MessageService, ConfirmationService } from 'primeng/api';
+import { forkJoin } from 'rxjs';
+import { catchError, of } from 'rxjs';
+import { GenericTableComponent } from '@/pages/uikit/generic-table';
+import { AppointmentsService } from '@/pages/service/appointments.service';
+import { DoctorsService } from '@/pages/service/doctors.service';
+import { PatientsService } from '@/pages/service/patients.service';
+import { HospitalCalendarService } from '@/pages/service/hospital-calendar.service';
+import { HelpersService } from '@/pages/service/helpers-service';
+import { AuthService } from '@/pages/service/auth.service';
+/** Tag severity map for appointment statuses */
+const STATUS_SEVERITY = {
+    scheduled: 'warn',
+    completed: 'success',
+    cancelled: 'danger'
+};
+let AppointmentsComponent = class AppointmentsComponent {
+    tableCmp;
+    statusTemplate;
+    // ── Services ────────────────────────────────────────────────────────────
+    appointmentsService = inject(AppointmentsService);
+    doctorsService = inject(DoctorsService);
+    patientsService = inject(PatientsService);
+    calendarService = inject(HospitalCalendarService);
+    helpers = inject(HelpersService);
+    confirmationService = inject(ConfirmationService);
+    cd = inject(ChangeDetectorRef);
+    auth = inject(AuthService); // public — used in template
+    // ── State signals ────────────────────────────────────────────────────────
+    _rows = signal([]);
+    _loading = signal(false);
+    _customTemplates = signal({});
+    rows = this._rows.asReadonly();
+    loading = this._loading.asReadonly();
+    customTemplates = this._customTemplates;
+    // ── Reference data ───────────────────────────────────────────────────────
+    doctors = [];
+    patients = [];
+    calendars = [];
+    // ── Dialog state ─────────────────────────────────────────────────────────
+    saving = false;
+    showCreateDialog = false;
+    showEditDialog = false;
+    showDetailDialog = false;
+    selectedAppointment = null;
+    newAppt = this.emptyAppt();
+    editAppt = {};
+    // ── Dropdown options ─────────────────────────────────────────────────────
+    typeOptions = [
+        { label: 'Consultation', value: 'consultation' },
+        { label: 'Follow-up', value: 'follow-up' },
+        { label: 'Emergency', value: 'emergency' },
+        { label: 'Check-up', value: 'check-up' }
+    ];
+    statusOptions = [
+        { label: 'Scheduled', value: 'scheduled' },
+        { label: 'Completed', value: 'completed' },
+        { label: 'Cancelled', value: 'cancelled' }
+    ];
+    // ── Table config ──────────────────────────────────────────────────────────
+    config = {
+        title: 'Appointments',
+        showGlobalSearch: true,
+        showClearButton: true,
+        showToolbar: true,
+        pageSizeOptions: [10, 25, 50],
+        defaultPageSize: 10,
+        scrollHeight: '600px',
+        emptyMessage: 'No appointments found.',
+        showGridlines: true,
+        rowHover: true,
+        responsive: true,
+        showResultsSummary: true,
+        selectable: false,
+        editType: 'none'
+    };
+    columns = [
+        { field: 'date', header: 'Date', sortable: true, filterable: true, type: 'date', pipe: 'date', dateFormat: 'MMM d, y', width: '130px' },
+        { field: 'startTime', header: 'Time', sortable: false, filterable: false, width: '90px' },
+        { field: 'patientName', header: 'Patient', sortable: true, filterable: true, pipe: 'titlecase' },
+        { field: 'doctorName', header: 'Doctor', sortable: true, filterable: true, pipe: 'titlecase' },
+        { field: 'type', header: 'Type', sortable: true, filterable: true, pipe: 'titlecase', width: '120px' },
+        { field: 'duration', header: 'Duration', sortable: false, filterable: false, width: '90px' },
+        { field: 'status', header: 'Status', sortable: true, filterable: true, customTemplate: true, width: '120px' },
+        { field: 'notes', header: 'Notes', sortable: false, filterable: true, showTooltip: true }
+    ];
+    // ── Lifecycle ─────────────────────────────────────────────────────────────
+    ngOnInit() {
+        // Invalidate cached user so role is re-read from latest token
+        this.auth.invalidate();
+        this.loadAll();
+    }
+    ngAfterViewInit() {
+        this._customTemplates.set({ status: this.statusTemplate });
+    }
+    // ── Data loading ──────────────────────────────────────────────────────────
+    /** Load appointments + reference data (doctors, patients, calendars) in parallel */
+    loadAll() {
+        this._loading.set(true);
+        // Doctors only see their own appointments via doctorEmail filter
+        const doctorEmail = this.auth.isDoctor ? this.auth.current.email : undefined;
+        forkJoin({
+            appointments: this.appointmentsService.getAppointments(doctorEmail).pipe(catchError(() => of([]))),
+            doctors: this.doctorsService.getDoctorsPage({ pageSize: 200 }).pipe(catchError(() => of({ data: [] }))),
+            patients: this.patientsService.getPatientsPage({ pageSize: 200 }).pipe(catchError(() => of({ data: [] }))),
+            calendars: this.calendarService.getCalendars().pipe(catchError(() => of([])))
+        }).subscribe(({ appointments, doctors, patients, calendars }) => {
+            this._rows.set(appointments);
+            this.doctors = doctors.data || [];
+            this.patients = patients.data || [];
+            this.calendars = calendars;
+            this._loading.set(false);
+            this.cd.detectChanges();
+        });
+    }
+    // ── Dropdown option builders ───────────────────────────────────────────────
+    get doctorOptions() {
+        return this.doctors.map((d) => ({ label: d.name, value: d.PK }));
+    }
+    get patientOptions() {
+        return this.patients.map((p) => ({ label: p.name, value: p.PK }));
+    }
+    // ── Create ────────────────────────────────────────────────────────────────
+    openCreate() {
+        this.newAppt = this.emptyAppt();
+        this.showCreateDialog = true;
+    }
+    onCreate() {
+        if (!this.newAppt.doctorId || !this.newAppt.patientId || !this.newAppt.date || !this.newAppt.startTime) {
+            this.helpers.notifyError('Required', 'Please fill doctor, patient, date and start time.');
+            return;
+        }
+        this.saving = true;
+        const doctor = this.doctors.find((d) => d.PK === this.newAppt.doctorId);
+        const patient = this.patients.find((p) => p.PK === this.newAppt.patientId);
+        const dateStr = this.formatDate(this.newAppt.date);
+        const startTimeStr = this.formatTime(this.newAppt.startTime);
+        const endTimeStr = this.newAppt.endTime ? this.formatTime(this.newAppt.endTime) : startTimeStr;
+        // Auto-calculate duration from start/end time if both provided
+        if (this.newAppt.startTime && this.newAppt.endTime) {
+            const diff = (this.newAppt.endTime.getTime() - this.newAppt.startTime.getTime()) / 60000;
+            if (diff > 0)
+                this.newAppt.duration = diff;
+        }
+        // Try to find matching calendar for this doctor
+        const cal = this.calendars.find((c) => c.name === doctor?.name);
+        const createAppt = (calendarEventId, calendarId) => {
+            const data = {
+                doctorId: this.newAppt.doctorId,
+                doctorName: doctor?.name || '',
+                doctorEmail: doctor?.email || null,
+                patientId: this.newAppt.patientId,
+                patientName: patient?.name || '',
+                date: dateStr,
+                startTime: startTimeStr,
+                endTime: endTimeStr,
+                duration: this.newAppt.duration,
+                type: this.newAppt.type,
+                status: this.newAppt.status,
+                notes: this.newAppt.notes,
+                calendarEventId,
+                calendarId
+            };
+            this.appointmentsService.createAppointment(data).subscribe({
+                next: (appt) => {
+                    this._rows.set([appt, ...this._rows()]);
+                    this.showCreateDialog = false;
+                    this.saving = false;
+                    this.helpers.notifySuccess(`Appointment booked: ${patient?.name} with ${doctor?.name}`);
+                    this.cd.detectChanges();
+                },
+                error: () => {
+                    this.saving = false;
+                    this.helpers.notifyError('Error', 'Failed to create appointment.');
+                }
+            });
+        };
+        // Create calendar event first if doctor has a calendar
+        if (cal) {
+            this.calendarService
+                .createEvent(cal.calendarId, {
+                name: `${patient?.name} - ${this.newAppt.type}`,
+                description: `Appointment | ${this.newAppt.notes}`,
+                startDate: `${dateStr}T${startTimeStr}:00`,
+                endDate: `${dateStr}T${endTimeStr}:00`,
+                color: '#6366F1'
+            })
+                .subscribe({
+                next: (ev) => createAppt(ev.eventId, cal.calendarId),
+                error: () => createAppt(null, null)
+            });
+        }
+        else {
+            createAppt(null, null);
+        }
+    }
+    // ── Edit ──────────────────────────────────────────────────────────────────
+    openEdit(appt) {
+        this.selectedAppointment = appt;
+        this.editAppt = {
+            doctorId: appt.doctorId,
+            patientId: appt.patientId,
+            date: new Date(appt.date),
+            startTime: this.parseTime(appt.startTime),
+            endTime: this.parseTime(appt.endTime),
+            duration: appt.duration,
+            type: appt.type,
+            status: appt.status,
+            notes: appt.notes
+        };
+        this.showDetailDialog = false;
+        this.showEditDialog = true;
+    }
+    onUpdate() {
+        if (!this.selectedAppointment)
+            return;
+        this.saving = true;
+        const doctor = this.doctors.find((d) => d.PK === this.editAppt.doctorId);
+        const patient = this.patients.find((p) => p.PK === this.editAppt.patientId);
+        const dateStr = this.formatDate(this.editAppt.date);
+        const startTimeStr = this.formatTime(this.editAppt.startTime);
+        const endTimeStr = this.editAppt.endTime ? this.formatTime(this.editAppt.endTime) : startTimeStr;
+        // Auto-calculate duration from start/end time if both provided
+        if (this.editAppt.startTime && this.editAppt.endTime) {
+            const diff = (this.editAppt.endTime.getTime() - this.editAppt.startTime.getTime()) / 60000;
+            if (diff > 0)
+                this.editAppt.duration = diff;
+        }
+        this.appointmentsService
+            .updateAppointment(this.selectedAppointment.appointmentId, {
+            doctorId: this.editAppt.doctorId,
+            doctorName: doctor?.name || '',
+            doctorEmail: doctor?.email || null,
+            patientId: this.editAppt.patientId,
+            patientName: patient?.name || '',
+            date: dateStr,
+            startTime: startTimeStr,
+            endTime: endTimeStr,
+            duration: this.editAppt.duration,
+            type: this.editAppt.type,
+            status: this.editAppt.status,
+            notes: this.editAppt.notes
+        })
+            .subscribe({
+            next: (updated) => {
+                // Update row in-place without full reload
+                const rows = [...this._rows()];
+                const idx = rows.findIndex((a) => a.appointmentId === updated.appointmentId);
+                if (idx !== -1)
+                    rows[idx] = updated;
+                this._rows.set(rows);
+                this.showEditDialog = false;
+                this.saving = false;
+                this.helpers.notifySuccess('Appointment updated.');
+                this.cd.detectChanges();
+            },
+            error: () => {
+                this.saving = false;
+                this.helpers.notifyError('Error', 'Failed to update.');
+            }
+        });
+    }
+    // ── View ──────────────────────────────────────────────────────────────────
+    openDetail(appt) {
+        this.selectedAppointment = appt;
+        this.showDetailDialog = true;
+    }
+    // ── Delete ────────────────────────────────────────────────────────────────
+    onDelete(appt) {
+        this.confirmationService.confirm({
+            message: `Delete appointment for ${appt.patientName}?`,
+            header: 'Confirm Delete',
+            icon: 'pi pi-trash',
+            rejectButtonProps: { label: 'No', severity: 'secondary', variant: 'text' },
+            acceptButtonProps: { label: 'Yes', severity: 'danger' },
+            accept: () => {
+                this.appointmentsService.deleteAppointment(appt.appointmentId).subscribe({
+                    next: () => {
+                        this._rows.set(this._rows().filter((a) => a.appointmentId !== appt.appointmentId));
+                        this.showDetailDialog = false;
+                        this.helpers.notifySuccess('Appointment deleted.');
+                        this.cd.detectChanges();
+                    },
+                    error: () => this.helpers.notifyError('Error', 'Failed to delete appointment.')
+                });
+            }
+        });
+    }
+    // ── Helpers ───────────────────────────────────────────────────────────────
+    getStatusSeverity(status) {
+        return STATUS_SEVERITY[status] || 'secondary';
+    }
+    emptyAppt() {
+        return {
+            doctorId: null,
+            patientId: null,
+            date: null,
+            startTime: null,
+            endTime: null,
+            duration: 30,
+            type: 'consultation',
+            status: 'scheduled',
+            notes: ''
+        };
+    }
+    parseTime(timeStr) {
+        const d = new Date();
+        const [h, m] = timeStr.split(':');
+        d.setHours(+h, +m, 0, 0);
+        return d;
+    }
+    formatDate(date) {
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    }
+    formatTime(date) {
+        return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+    }
+};
+__decorate([
+    ViewChild(GenericTableComponent)
+], AppointmentsComponent.prototype, "tableCmp", void 0);
+__decorate([
+    ViewChild('statusTemplate')
+], AppointmentsComponent.prototype, "statusTemplate", void 0);
+AppointmentsComponent = __decorate([
+    Component({
+        selector: 'app-appointments',
+        standalone: true,
+        imports: [CommonModule, FormsModule, ButtonModule, DialogModule, InputTextModule, TextareaModule, SelectModule, DatePickerModule, TagModule, ToastModule, ConfirmDialogModule, TooltipModule, GenericTableComponent],
+        providers: [MessageService, ConfirmationService, HelpersService],
+        templateUrl: './appointments.html',
+        styleUrl: './appointments.scss'
+    })
+], AppointmentsComponent);
+export { AppointmentsComponent };
