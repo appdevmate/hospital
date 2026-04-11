@@ -348,25 +348,25 @@ export class AppTopbar implements OnInit {
 
     // ── Logout ────────────────────────────────────────────────────────────
     logout() {
-        const clientId = '4n7mna6irf5vjfg770l46aldij';
-        const authority = 'https://us-east-1k2smci5zb.auth.us-east-1.amazoncognito.com';
-        const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
+    const clientId = '7ftudt79e20b6j7qnle0mcmb4u';
+    const authority = 'https://tiryaq-hospital.auth.us-east-1.amazoncognito.com';
+    const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
 
-        const finish = () => {
-            this.oidc.logoffLocal();
-            window.location.href = `${authority}/logout?client_id=${encodeURIComponent(clientId)}&logout_uri=${encodeURIComponent(window.location.origin + '/')}`;
-        };
+    const finish = () => {
+        this.oidc.logoffLocal();
+        window.location.href = `${authority}/logout?client_id=${encodeURIComponent(clientId)}&logout_uri=${encodeURIComponent(window.location.origin + '/')}`;
+    };
 
-        this.oidc.getRefreshToken().subscribe({
-            next: (refreshToken) => {
-                if (refreshToken) {
-                    const body = new URLSearchParams({ token: refreshToken, token_type_hint: 'refresh_token', client_id: clientId }).toString();
-                    this.http.post(`${authority}/oauth2/revoke`, body, { headers }).subscribe({ next: finish, error: finish });
-                } else {
-                    finish();
-                }
-            },
-            error: () => finish()
-        });
-    }
+    this.oidc.getRefreshToken().subscribe({
+        next: (refreshToken) => {
+            if (refreshToken) {
+                const body = new URLSearchParams({ token: refreshToken, token_type_hint: 'refresh_token', client_id: clientId }).toString();
+                this.http.post(`${authority}/oauth2/revoke`, body, { headers }).subscribe({ next: finish, error: finish });
+            } else {
+                finish();
+            }
+        },
+        error: () => finish()
+    });
+}
 }
