@@ -74,6 +74,8 @@ export class AppMenu implements OnInit {
 
         const doctorOnlyItems: MenuItem[] = [{ separator: true }, { label: 'Patients', icon: 'pi pi-user-plus', routerLink: ['/patients-management'] }];
 
+        const pharmacistItems: MenuItem[] = [{ separator: true }, { label: 'Pharmacy', icon: 'pi pi-heart-fill', routerLink: ['/pharmacy'] }];
+
         if (isAdmin) {
             this.model = [...sharedItems, ...adminOnlyItems];
         } else if (isDoctor) {
@@ -81,7 +83,7 @@ export class AppMenu implements OnInit {
         } else if (isDeveloper) {
             this.model = [...developerItems];
         } else {
-            this.model = [...sharedItems];
+            this.model = [...sharedItems, ...pharmacistItems];
         }
     }
 }
