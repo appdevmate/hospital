@@ -7,8 +7,45 @@ const COUNTER_SK = 'TOTAL';
 const ddb = DynamoDBDocumentClient.from(new DynamoDBClient({ region: REGION }));
 const VALID_OPERATORS = ['contains', 'startsWith', 'endsWith', 'notContains', 'equals', 'notEquals'];
 const ALLOWED_SORT_FIELDS = new Set(['name', 'gender', 'insurance', 'status', 'dob', 'timestamp']);
+const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
+const { DynamoDBDocumentClient, ScanCommand, GetCommand, QueryCommand, BatchGetCommand } = require('@aws-sdk/lib-dynamodb');
 
 exports.handler = async (event) => {
+  const doctorEmail = event?.queryStringParameters?.doctorEmail;
+
+if (doctorEmail) {
+    // 1. Get all DOCTOR_PATIENT relationship items for this doctor
+    const relResult = await ddb.send(new QueryCommand({
+        TableName: TABLE_NAME,
+        KeyConditionExpression: 'PK = :pk',
+        ExpressionAttributeValues: { ':pk': `DOCTOR#${doctorEmail.toLowerCase().trim()}` }
+    }));
+
+    const items = relResult.Items || [];
+    if (items.length === 0) {
+        return ok({ message: 'Patients retrieved successfully', data: [], lastKey: null, hasMore: false, count: 0, totalCount: 0, pageSize: 25 });
+    }
+
+    // 2. Batch get the actual patient records
+    // DynamoDB BatchGet limit is 100 items per call
+    const keys = items.map(i => ({ PK: `PATIENT#${i.patientId}`, SK: 'PROFILE' }));
+    const batches = [];
+    for (let i = 0; i < keys.length; i += 100) batches.push(keys.slice(i, i + 100));
+
+    const patients = [];
+    for (const batch of batches) {
+        const batchResult = await ddb.send(new BatchGetCommand({
+            RequestItems: { [TABLE_NAME]: { Keys: batch } }
+        }));
+        const batchItems = batchResult.Responses?.[TABLE_NAME] || [];
+        // Filter out soft-deleted patients
+        batchItems.filter(p => !p.deletedAt || p.deletedAt === '' || p.deletedAt === 'null' || p.deletedAt === '<empty>')
+                  .forEach(p => patients.push(normalizePatient(p)));
+    }
+
+    patients.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+    return ok({ message: 'Patients retrieved successfully', data: patients, lastKey: null, hasMore: false, count: patients.length, totalCount: patients.length, pageSize: patients.length });
+}
   try {
     const qp = event?.queryStringParameters || {};
     const pageSize = clampInt(qp.pageSize, 25, 1, 100);

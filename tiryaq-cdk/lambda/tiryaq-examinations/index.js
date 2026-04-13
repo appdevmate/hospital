@@ -247,34 +247,68 @@ exports.handler = async (event) => {
         };
 
         await db.send(new PutCommand({ TableName: TABLE_NAME, Item: exam }));
+        // Write DOCTOR_PATIENT relationship item (idempotent)
+try {
+    await db.send(new PutCommand({
+        TableName: TABLE_NAME,
+        Item: {
+            PK:          `DOCTOR#${exam.doctorEmail}`,
+            SK:          `PATIENT#${exam.patientId}`,
+            EntityType:  'DOCTOR_PATIENT',
+            doctorEmail: exam.doctorEmail,
+            patientId:   exam.patientId,
+            patientName: exam.patientName,
+            assignedAt:  now
+        },
+        ConditionExpression: 'attribute_not_exists(PK) AND attribute_not_exists(SK)'
+    }));
+} catch (e) {
+    if (e.name !== 'ConditionalCheckFailedException') throw e;
+    // Already exists — safe to ignore
+}
         await writeAudit('CREATE', 'EXAMINATION', id, body.doctorEmail, body.doctorName, null, exam, ipAddress);
 
         return res(201, exam);
     }
 
     // ── GET /examinations?patientId=x ── LIST ────────────────────────────────
-    if (method === 'GET' && !examId) {
-        const patientId  = event.queryStringParameters?.patientId;
-        const doctorEmail = event.queryStringParameters?.doctorEmail;
-        if (!patientId) return err(400, 'patientId is required');
+    // ── GET /examinations?patientId=x OR ?doctorEmail=x ── LIST ─────────────
+if (method === 'GET' && !examId) {
+    const patientId   = event.queryStringParameters?.patientId;
+    const doctorEmail = event.queryStringParameters?.doctorEmail;
 
-        const filterExp   = doctorEmail
-            ? 'patientId = :pid AND doctorEmail = :de'
-            : 'patientId = :pid';
-        const filterVals  = { ':et': 'EXAMINATION', ':pid': patientId };
-        if (doctorEmail) filterVals[':de'] = doctorEmail.toLowerCase().trim();
-
+    // Query by doctorEmail using GSI — returns all exams for this doctor
+    if (doctorEmail && !patientId) {
         const result = await db.send(new QueryCommand({
             TableName:                 TABLE_NAME,
-            IndexName:                 'EntityType-index',
-            KeyConditionExpression:    'EntityType = :et',
-            FilterExpression:          filterExp,
-            ExpressionAttributeValues: filterVals
+            IndexName:                 'doctorEmail-createdAt-index',
+            KeyConditionExpression:    'doctorEmail = :de',
+            ExpressionAttributeValues: { ':de': doctorEmail.toLowerCase().trim() }
         }));
-
         const items = (result.Items || []).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
         return res(200, items);
     }
+
+    // Query by patientId using EntityType-index (existing behaviour)
+    if (!patientId) return err(400, 'patientId is required');
+
+    const filterExp  = doctorEmail
+        ? 'patientId = :pid AND doctorEmail = :de'
+        : 'patientId = :pid';
+    const filterVals = { ':et': 'EXAMINATION', ':pid': patientId };
+    if (doctorEmail) filterVals[':de'] = doctorEmail.toLowerCase().trim();
+
+    const result = await db.send(new QueryCommand({
+        TableName:                 TABLE_NAME,
+        IndexName:                 'EntityType-index',
+        KeyConditionExpression:    'EntityType = :et',
+        FilterExpression:          filterExp,
+        ExpressionAttributeValues: filterVals
+    }));
+
+    const items = (result.Items || []).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    return res(200, items);
+}
 
     // ── GET /examinations/{examId} ── GET ONE ────────────────────────────────
     if (method === 'GET' && examId) {
