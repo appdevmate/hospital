@@ -40,8 +40,10 @@ export class NotificationsService {
             sources['appointments'] = this.appointmentsService.getAppointments(isDoctor && !isAdmin && !isDeveloper ? doctorEmail : undefined).pipe(catchError(() => of([])));
         }
 
-        // Critical patients — admin and developer only
+        // Critical patients — admin, developer, and doctor (own patients)
         if (isAdmin || isDeveloper) {
+            sources['patients'] = this.patientsService.getPatientsPage({ pageSize: 200 }).pipe(catchError(() => of({ data: [] })));
+        } else if (isDoctor) {
             sources['patients'] = this.patientsService.getPatientsPage({ pageSize: 200 }).pipe(catchError(() => of({ data: [] })));
         }
 
@@ -55,15 +57,16 @@ export class NotificationsService {
             sources['pendingPrescriptions'] = this.pharmacyService.getPrescriptions('ordered').pipe(catchError(() => of([])));
         }
 
-        // Pending examination sign-offs — doctor only (their own drafts)
+        // For doctors — fetch their exams by doctorEmail using the GSI
         if (isDoctor && !isAdmin && !isDeveloper) {
-            sources['examinations'] = this.examinationService.listExaminations('').pipe(catchError(() => of([])));
+            sources['examinations'] = this.examinationService.listExaminations('', doctorEmail).pipe(catchError(() => of([])));
         }
 
         // ── Build admin/developer examination sign-offs ─────────────────────
         // Admin and developer see ALL draft examinations awaiting sign-off
-        if (isAdmin || isDeveloper) {
-            sources['examinations'] = this.examinationService.listExaminations('').pipe(catchError(() => of([])));
+        // Critical patients source — always fetch for admin/developer/doctor
+        if (isAdmin || isDeveloper || isDoctor) {
+            sources['patients'] = this.patientsService.getPatientsPage({ pageSize: 200 }).pipe(catchError(() => of({ data: [] })));
         }
 
         return forkJoin(sources).pipe(
@@ -109,6 +112,22 @@ export class NotificationsService {
                 // ── Critical patients (admin + developer) ─────────────────
                 if (isAdmin || isDeveloper) {
                     const criticalPatients = allPatients.filter((p) => p.status?.toLowerCase() === 'critical');
+                    if (criticalPatients.length > 0) {
+                        notifications.push({
+                            id: 'critical-patients',
+                            type: 'critical',
+                            title: 'Critical Patients',
+                            message: `${criticalPatients.length} patient${criticalPatients.length > 1 ? 's' : ''} in critical condition`,
+                            icon: 'pi pi-exclamation-triangle',
+                            severity: 'danger',
+                            routerLink: '/notifications',
+                            data: criticalPatients
+                        });
+                    }
+                } else if (isDoctor) {
+                    // Extract patient IDs from this doctor's exams (already filtered by doctorEmail via GSI)
+                    const myPatientIds = new Set(examinations.map((e) => e.patientId));
+                    const criticalPatients = allPatients.filter((p) => p.status?.toLowerCase() === 'critical' && myPatientIds.has(p.PK.replace('PATIENT#', '')));
                     if (criticalPatients.length > 0) {
                         notifications.push({
                             id: 'critical-patients',

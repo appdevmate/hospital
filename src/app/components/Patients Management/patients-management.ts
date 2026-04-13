@@ -514,6 +514,11 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
         const opts: GetPatientsPageOpts = { ...this.filters };
         if (this.showDeleted()) opts.showDeleted = true;
 
+        // Scope to doctor's own patients only
+        if (this.auth.isDoctor && !this.auth.isAdmin && !this.auth.isDeveloper) {
+            opts['doctorEmail'] = this.auth.current.email;
+        }
+
         this.patients.getPatientsPage(opts).subscribe({
             next: (r) => {
                 this._rows.set(r.data || []);

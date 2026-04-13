@@ -167,8 +167,10 @@ export class ExaminationService {
         return this.http.post<Examination>(Config.buildUrl('examinations'), data, { headers: this.headers() });
     }
 
-    listExaminations(patientId: string): Observable<Examination[]> {
-        const params = new HttpParams().set('patientId', patientId);
+    listExaminations(patientId: string, doctorEmail?: string): Observable<Examination[]> {
+        let params = new HttpParams();
+        if (patientId) params = params.set('patientId', patientId);
+        if (doctorEmail) params = params.set('doctorEmail', doctorEmail);
         return this.http.get<Examination[]>(Config.buildUrl('examinations'), { headers: this.headers(), params });
     }
 
