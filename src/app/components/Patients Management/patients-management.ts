@@ -13,10 +13,10 @@ import { ConfirmationService } from 'primeng/api';
 
 import { GenericTableComponent } from '../generic-table/generic-table';
 import type { TableColumn, TableConfig, RowEditEvent, FilterControl } from '../../interfaces/tableplugin.interfaces';
-import type { Patient, GetPatientsPageOpts, CreateUpdatePatientRequest } from '../../service/patients.service';
-import { PatientsService } from '../../service/patients.service';
-import { HelpersService } from '@/service/helpers-service';
-import { AuthService } from '@/service/auth.service';
+import type { Patient, GetPatientsPageOpts, CreateUpdatePatientRequest } from '../../services/patients.service';
+import { PatientsService } from '../../services/patients.service';
+import { HelpersService } from '@/services/helpers-service';
+import { AuthService } from '@/services/auth.service';
 import { NewPatient } from './new-patient';
 import { EditPatient } from './edit-patient';
 

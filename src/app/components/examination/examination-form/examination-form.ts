@@ -17,9 +17,9 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { catchError, of } from 'rxjs';
 
-import { ExaminationService, Examination, ChiefComplaint, VitalSigns, PhysicalExam, Diagnosis, Prescription, LabOrder, RadiologyOrder, TreatmentPlan } from '@/service/examination.service';
-import { AuthService } from '@/service/auth.service';
-import { HelpersService } from '@/service/helpers-service';
+import { ExaminationService, Examination, ChiefComplaint, VitalSigns, PhysicalExam, Diagnosis, Prescription, LabOrder, RadiologyOrder, TreatmentPlan } from '@/services/examination.service';
+import { AuthService } from '@/services/auth.service';
+import { HelpersService } from '@/services/helpers-service';
 
 // Embedded ICD-10 and LOINC data (loaded lazily)
 import ICD10_CODES from './icd10-codes.json';

@@ -11,11 +11,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { GenericTableComponent } from '../generic-table/generic-table';
 import type { TableColumn, TableConfig, RowEditEvent, FilterControl } from '../../interfaces/tableplugin.interfaces';
-import type { Patient as DoctorLike, GetPatientsPageOpts } from '../../service/patients.service';
-import { DoctorsService } from '@/service/doctors.service';
+import type { Patient as DoctorLike, GetPatientsPageOpts } from '../../services/patients.service';
+import { DoctorsService } from '@/services/doctors.service';
 import { ConfirmationService } from 'primeng/api';
-import { HelpersService } from '@/service/helpers-service';
-import { AuthService } from '@/service/auth.service';
+import { HelpersService } from '@/services/helpers-service';
+import { AuthService } from '@/services/auth.service';
 import { NewDoctor } from './new-doctor';
 
 const EditorType = {

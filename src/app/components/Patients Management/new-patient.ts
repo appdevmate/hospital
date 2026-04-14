@@ -507,8 +507,8 @@ import { TextareaModule } from 'primeng/textarea';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Fluid } from 'primeng/fluid';
 
-import { PatientsService, CreateUpdatePatientRequest } from '@/service/patients.service';
-import { HelpersService } from '@/service/helpers-service';
+import { PatientsService, CreateUpdatePatientRequest } from '@/services/patients.service';
+import { HelpersService } from '@/services/helpers-service';
 
 @Component({
     selector: 'app-new-patient',

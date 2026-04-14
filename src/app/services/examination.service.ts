@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Config } from '@/service/config';
+import { Config } from '@/services/config';
 
 // ── Interfaces ────────────────────────────────────────────────────────────────
 

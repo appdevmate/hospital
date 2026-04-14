@@ -10,11 +10,11 @@ import { ConfirmationService } from 'primeng/api';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { PatientsService, Patient } from '../../service/patients.service';
-import { AppointmentsService, Appointment } from '../../service/appointments.service';
-import { PaymentsService, Payment } from '../../service/payments.service';
-import { HelpersService } from '@/service/helpers-service';
-import { AuthService } from '@/service/auth.service';
+import { PatientsService, Patient } from '../../services/patients.service';
+import { AppointmentsService, Appointment } from '../../services/appointments.service';
+import { PaymentsService, Payment } from '../../services/payments.service';
+import { HelpersService } from '@/services/helpers-service';
+import { AuthService } from '@/services/auth.service';
 import { ExaminationListComponent } from '../examination/examination-list/examination-list';
 
 @Component({

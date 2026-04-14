@@ -17,8 +17,8 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { Fluid } from 'primeng/fluid';
 
-import { DoctorsService, Department, Specialization, CreateUpdateDoctorRequest } from '@/service/doctors.service';
-import { HelpersService } from '@/service/helpers-service';
+import { DoctorsService, Department, Specialization, CreateUpdateDoctorRequest } from '@/services/doctors.service';
+import { HelpersService } from '@/services/helpers-service';
 
 @Component({
     selector: 'app-new-doctor',

@@ -17,8 +17,8 @@ import { BadgeModule } from 'primeng/badge';
 import { PopoverModule } from 'primeng/popover';
 import { TagModule } from 'primeng/tag';
 import { Router } from '@angular/router';
-import { NotificationsService, Notification } from '@/service/notifications.service';
-import { AuthService } from '@/service/auth.service';
+import { NotificationsService, Notification } from '@/services/notifications.service';
+import { AuthService } from '@/services/auth.service';
 
 @Component({
     selector: '[app-topbar]',

@@ -16,11 +16,11 @@ import { MessageService, ConfirmationService } from 'primeng/api';
 import { DividerModule } from 'primeng/divider';
 import { SelectModule } from 'primeng/select';
 
-import { PaymentsService, Payment, CreateUpdatePaymentRequest } from '@/service/payments.service';
-import { PatientsService, Patient } from '@/service/patients.service';
-import { DoctorsService } from '@/service/doctors.service';
-import { HelpersService } from '@/service/helpers-service';
-import { AuthService } from '@/service/auth.service';
+import { PaymentsService, Payment, CreateUpdatePaymentRequest } from '@/services/payments.service';
+import { PatientsService, Patient } from '@/services/patients.service';
+import { DoctorsService } from '@/services/doctors.service';
+import { HelpersService } from '@/services/helpers-service';
+import { AuthService } from '@/services/auth.service';
 import { GenericTableComponent } from '@/components/generic-table/generic-table';
 import { TableColumn, TableConfig } from '@/interfaces/tableplugin.interfaces';
 

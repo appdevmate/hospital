@@ -1,10 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { AppointmentsService, Appointment } from '@/service/appointments.service';
-import { PatientsService, Patient } from '@/service/patients.service';
-import { PharmacyService, PharmacyAlert } from '@/service/pharmacy.service';
-import { ExaminationService, Examination } from '@/service/examination.service';
+import { AppointmentsService, Appointment } from '@/services/appointments.service';
+import { PatientsService, Patient } from '@/services/patients.service';
+import { PharmacyService, PharmacyAlert } from '@/services/pharmacy.service';
+import { ExaminationService, Examination } from '@/services/examination.service';
 
 export interface Notification {
     id: string;

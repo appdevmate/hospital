@@ -4,7 +4,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { UserProfileComponent } from '@/components/user-profile/user-profile';
 import { authGuard } from './app/guards/auth.guard';
 import { roleGuard } from './app/guards/role.guard';
-import { UserRole } from '@/service/auth.service';
+import { UserRole } from '@/services/auth.service';
 import { ExaminationDetailComponent } from '@/components/examination/examination-detail/examination-detail';
 import { ExaminationFormComponent } from '@/components/examination/examination-form/examination-form';
 import { AdminPanelComponent } from '@/components/admin-panel/admin-panel';
