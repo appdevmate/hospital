@@ -483,10 +483,10 @@ import { ConfirmationService } from 'primeng/api';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { HospitalCalendarService, HospitalCalendar } from '../../pages/service/hospital-calendar.service';
-import { DoctorsService, Doctor } from '@/pages/service/doctors.service';
-import { HelpersService } from '@/pages/service/helpers-service';
-import { AuthService } from '@/pages/service/auth.service';
+import { HospitalCalendarService, HospitalCalendar } from '../../service/hospital-calendar.service';
+import { DoctorsService, Doctor } from '@/service/doctors.service';
+import { HelpersService } from '@/service/helpers-service';
+import { AuthService } from '@/service/auth.service';
 
 @Component({
     selector: 'app-hospital-calendar',

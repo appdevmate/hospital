@@ -5,8 +5,8 @@ import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { CardModule } from 'primeng/card';
 import { TabsModule } from 'primeng/tabs';
-import { NotificationsService, Notification } from '@/pages/service/notifications.service';
-import { AuthService } from '@/pages/service/auth.service';
+import { NotificationsService, Notification } from '@/service/notifications.service';
+import { AuthService } from '@/service/auth.service';
 
 @Component({
     selector: 'app-notifications',

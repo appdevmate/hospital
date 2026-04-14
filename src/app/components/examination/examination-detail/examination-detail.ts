@@ -7,9 +7,9 @@ import { DividerModule } from 'primeng/divider';
 import { TabsModule } from 'primeng/tabs';
 import { catchError, of } from 'rxjs';
 
-import { ExaminationService, Examination } from '@/pages/service/examination.service';
-import { AuthService } from '@/pages/service/auth.service';
-import { HelpersService } from '@/pages/service/helpers-service';
+import { ExaminationService, Examination } from '@/service/examination.service';
+import { AuthService } from '@/service/auth.service';
+import { HelpersService } from '@/service/helpers-service';
 
 @Component({
     selector: 'app-examination-detail',

@@ -4,7 +4,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { UserProfileComponent } from '@/components/user-profile/user-profile';
 import { authGuard } from './app/guards/auth.guard';
 import { roleGuard } from './app/guards/role.guard';
-import { UserRole } from '@/pages/service/auth.service';
+import { UserRole } from '@/service/auth.service';
 import { ExaminationDetailComponent } from '@/components/examination/examination-detail/examination-detail';
 import { ExaminationFormComponent } from '@/components/examination/examination-form/examination-form';
 import { AdminPanelComponent } from '@/components/admin-panel/admin-panel';
@@ -21,12 +21,6 @@ export const appRoutes: Routes = [
         canActivate: [authGuard],
         children: [
             { path: '', data: { breadcrumb: 'Dashboard' }, loadComponent: () => import('@/components/dashboard/dashboard').then((c) => c.DashboardComponent) },
-            { path: 'dashboard-sales', data: { breadcrumb: 'Sales Dashboard' }, loadComponent: () => import('@/pages/dashboard/salesdashboard').then((c) => c.SalesDashboard) },
-            { path: 'uikit', data: { breadcrumb: 'UI Kit' }, loadChildren: () => import('@/pages/uikit/uikit.routes') },
-            { path: 'documentation', data: { breadcrumb: 'Documentation' }, loadComponent: () => import('@/pages/documentation/documentation').then((c) => c.Documentation) },
-            { path: 'pages', data: { breadcrumb: 'Pages' }, loadChildren: () => import('@/pages/pages.routes') },
-
-            // Doctors Management — admin and developer only
             {
                 path: 'doctors-management',
                 data: { breadcrumb: 'Doctors Management' },
@@ -86,15 +80,10 @@ export const appRoutes: Routes = [
                 data: { breadcrumb: 'Notifications' },
                 loadComponent: () => import('@/components/notifications/notifications').then((m) => m.NotificationsComponent)
             },
-            { path: 'user-profile', data: { breadcrumb: 'Profile' }, component: UserProfileComponent },
-            { path: 'apps', data: { breadcrumb: 'Apps' }, loadChildren: () => import('@/apps/apps.routes') },
-            { path: 'ecommerce', data: { breadcrumb: 'E-Commerce' }, loadChildren: () => import('@/pages/ecommerce/ecommerce.routes') },
-            { path: 'blocks', data: { breadcrumb: 'Prime Blocks' }, loadChildren: () => import('@/pages/blocks/blocks.routes') },
-            { path: 'profile', data: { breadcrumb: 'User Management' }, loadChildren: () => import('@/pages/usermanagement/usermanagement.routes') }
+            { path: 'user-profile', data: { breadcrumb: 'Profile' }, component: UserProfileComponent }
+            // { path: 'apps', data: { breadcrumb: 'Apps' }, loadChildren: () => import('@/apps/apps.routes').then(m => m.default) },
         ]
     },
-    { path: 'auth', loadChildren: () => import('@/pages/auth/auth.routes') },
-    { path: 'landing', loadComponent: () => import('@/pages/landing/landing').then((c) => c.Landing) },
-    { path: 'notfound', loadComponent: () => import('@/pages/notfound/notfound').then((c) => c.Notfound) },
+    { path: 'notfound', loadComponent: () => import('@/components/notfound/notfound').then((c) => c.Notfound) },
     { path: '**', redirectTo: '/notfound' }
 ];

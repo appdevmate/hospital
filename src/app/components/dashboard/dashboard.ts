@@ -10,11 +10,11 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { TooltipModule } from 'primeng/tooltip';
 
 import { LayoutService } from '@/layout/service/layout.service';
-import { AuthService } from '@/pages/service/auth.service';
-import { DoctorsService } from '@/pages/service/doctors.service';
-import { PatientsService } from '@/pages/service/patients.service';
-import { AppointmentsService, Appointment } from '@/pages/service/appointments.service';
-import { PaymentsService, Payment } from '@/pages/service/payments.service';
+import { AuthService } from '@/service/auth.service';
+import { DoctorsService } from '@/service/doctors.service';
+import { PatientsService } from '@/service/patients.service';
+import { AppointmentsService, Appointment } from '@/service/appointments.service';
+import { PaymentsService, Payment } from '@/service/payments.service';
 
 interface StatCard {
     label: string;

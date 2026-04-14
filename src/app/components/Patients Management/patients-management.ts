@@ -11,12 +11,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 
-import { GenericTableComponent } from '../../pages/uikit/generic-table';
+import { GenericTableComponent } from '../generic-table/generic-table';
 import type { TableColumn, TableConfig, RowEditEvent, FilterControl } from '../../interfaces/tableplugin.interfaces';
-import type { Patient, GetPatientsPageOpts, CreateUpdatePatientRequest } from '../../pages/service/patients.service';
-import { PatientsService } from '../../pages/service/patients.service';
-import { HelpersService } from '@/pages/service/helpers-service';
-import { AuthService } from '@/pages/service/auth.service';
+import type { Patient, GetPatientsPageOpts, CreateUpdatePatientRequest } from '../../service/patients.service';
+import { PatientsService } from '../../service/patients.service';
+import { HelpersService } from '@/service/helpers-service';
+import { AuthService } from '@/service/auth.service';
 import { NewPatient } from './new-patient';
 import { EditPatient } from './edit-patient';
 
@@ -513,11 +513,7 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
         this._loading.set(true);
         const opts: GetPatientsPageOpts = { ...this.filters };
         if (this.showDeleted()) opts.showDeleted = true;
-
-        // Scope to doctor's own patients only
-        if (this.auth.isDoctor && !this.auth.isAdmin && !this.auth.isDeveloper) {
-            opts['doctorEmail'] = this.auth.current.email;
-        }
+        // No doctorEmail param — backend handles scoping from JWT
 
         this.patients.getPatientsPage(opts).subscribe({
             next: (r) => {
@@ -536,7 +532,6 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
             }
         });
     }
-
     // ── Import ───────────────────────────────────────────────────────────
     onImportFromFileInput(ev: Event) {
         const list = (ev.target as HTMLInputElement).files;

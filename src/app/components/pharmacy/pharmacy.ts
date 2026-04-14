@@ -19,9 +19,9 @@ import { Tabs, TabList, Tab, TabPanels, TabPanel } from 'primeng/tabs';
 import { ConfirmationService } from 'primeng/api';
 import { catchError, of, finalize } from 'rxjs';
 
-import { PharmacyService, Medication, InventoryItem, PrescriptionQueueItem, DispenseRecord, PurchaseOrder, POItem, PharmacyAlert } from '@/pages/service/pharmacy.service';
-import { HelpersService } from '@/pages/service/helpers-service';
-import { AuthService } from '@/pages/service/auth.service';
+import { PharmacyService, Medication, InventoryItem, PrescriptionQueueItem, DispenseRecord, PurchaseOrder, POItem, PharmacyAlert } from '@/service/pharmacy.service';
+import { HelpersService } from '@/service/helpers-service';
+import { AuthService } from '@/service/auth.service';
 
 @Component({
     selector: 'app-pharmacy',
@@ -390,7 +390,7 @@ export class PharmacyComponent implements OnInit {
                 medId: this.dispenseForm.medId,
                 quantityDispensed: this.dispenseForm.quantityDispensed,
                 notes: this.dispenseForm.notes || undefined,
-                allergyOverrideConfirmed: overrideAllergy || undefined,
+                allergyOverrideConfirmed: overrideAllergy || undefined
             })
             .pipe(
                 finalize(() => {

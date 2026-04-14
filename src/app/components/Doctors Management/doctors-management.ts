@@ -9,13 +9,13 @@ import { TooltipModule } from 'primeng/tooltip';
 import { DialogService } from 'primeng/dynamicdialog';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { GenericTableComponent } from '../../pages/uikit/generic-table';
+import { GenericTableComponent } from '../generic-table/generic-table';
 import type { TableColumn, TableConfig, RowEditEvent, FilterControl } from '../../interfaces/tableplugin.interfaces';
-import type { Patient as DoctorLike, GetPatientsPageOpts } from '../../pages/service/patients.service';
-import { DoctorsService } from '@/pages/service/doctors.service';
+import type { Patient as DoctorLike, GetPatientsPageOpts } from '../../service/patients.service';
+import { DoctorsService } from '@/service/doctors.service';
 import { ConfirmationService } from 'primeng/api';
-import { HelpersService } from '@/pages/service/helpers-service';
-import { AuthService } from '@/pages/service/auth.service';
+import { HelpersService } from '@/service/helpers-service';
+import { AuthService } from '@/service/auth.service';
 import { NewDoctor } from './new-doctor';
 
 const EditorType = {

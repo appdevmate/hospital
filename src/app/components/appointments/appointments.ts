@@ -15,14 +15,14 @@ import { MessageService, ConfirmationService } from 'primeng/api';
 import { forkJoin } from 'rxjs';
 import { catchError, of } from 'rxjs';
 
-import { GenericTableComponent } from '@/pages/uikit/generic-table';
+import { GenericTableComponent } from '@/components/generic-table/generic-table';
 import type { TableColumn, TableConfig } from '@/interfaces/tableplugin.interfaces';
-import { AppointmentsService, Appointment, CreateAppointmentRequest } from '@/pages/service/appointments.service';
-import { DoctorsService, Doctor } from '@/pages/service/doctors.service';
-import { PatientsService, Patient } from '@/pages/service/patients.service';
-import { HospitalCalendarService } from '@/pages/service/hospital-calendar.service';
-import { HelpersService } from '@/pages/service/helpers-service';
-import { AuthService } from '@/pages/service/auth.service';
+import { AppointmentsService, Appointment, CreateAppointmentRequest } from '@/service/appointments.service';
+import { DoctorsService, Doctor } from '@/service/doctors.service';
+import { PatientsService, Patient } from '@/service/patients.service';
+import { HospitalCalendarService } from '@/service/hospital-calendar.service';
+import { HelpersService } from '@/service/helpers-service';
+import { AuthService } from '@/service/auth.service';
 
 /** Tag severity map for appointment statuses */
 const STATUS_SEVERITY: Record<string, 'success' | 'warn' | 'danger' | 'secondary'> = {

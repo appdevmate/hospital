@@ -33,13 +33,6 @@ function err(statusCode, message) {
     return res(statusCode, { error: message, message });
 }
 
-// Extract group membership from Cognito claims (passed by API GW JWT authorizer)
-function getClaims(event) {
-    return event.requestContext?.authorizer?.jwt?.claims
-        || event.requestContext?.authorizer?.claims
-        || {};
-}
-
 function isAdmin(event) {
     const claims = event.requestContext?.authorizer?.jwt?.claims
                 || event.requestContext?.authorizer?.claims || {};
@@ -57,19 +50,19 @@ async function writeAudit(action, entityType, entityId, actorEmail, actorName, b
         await db.send(new PutCommand({
             TableName: TABLE_NAME,
             Item: {
-                PK:           `AUDIT#${now.slice(0, 10)}`,
-                SK:           `AUDIT#${now}#${auditId}`,
+                PK:            `AUDIT#${now.slice(0, 10)}`,
+                SK:            `AUDIT#${now}#${auditId}`,
                 auditId,
-                EntityType:   'AUDIT',
+                EntityType:    'AUDIT',
                 action,
                 entityType,
                 entityId,
-                actorEmail:   actorEmail || 'unknown',
-                actorName:    actorName  || 'unknown',
-                ipAddress:    ipAddress  || 'unknown',
-                timestamp:    now,
-                before:       before ? JSON.stringify(before) : null,
-                after:        after  ? JSON.stringify(after)  : null,
+                actorEmail:    actorEmail || 'unknown',
+                actorName:     actorName  || 'unknown',
+                ipAddress:     ipAddress  || 'unknown',
+                timestamp:     now,
+                before:        before ? JSON.stringify(before) : null,
+                after:         after  ? JSON.stringify(after)  : null,
                 changeSummary: buildChangeSummary(before, after)
             }
         }));
@@ -105,15 +98,15 @@ function validateSection(sectionName, exam, body) {
         }
         case 'vitalSigns': {
             const v = body.vitalSigns || {};
-            if (v.systolic    != null && (v.systolic    < 50  || v.systolic    > 300)) errors.push('Systolic BP must be 50–300 mmHg');
-            if (v.diastolic   != null && (v.diastolic   < 30  || v.diastolic   > 200)) errors.push('Diastolic BP must be 30–200 mmHg');
-            if (v.heartRate   != null && (v.heartRate   < 20  || v.heartRate   > 300)) errors.push('Heart rate must be 20–300 bpm');
-            if (v.temperature != null && (v.temperature < 30  || v.temperature > 45))  errors.push('Temperature must be 30–45 °C');
-            if (v.weight      != null && (v.weight      < 0.5 || v.weight      > 500)) errors.push('Weight must be 0.5–500 kg');
-            if (v.height      != null && (v.height      < 30  || v.height      > 250)) errors.push('Height must be 30–250 cm');
-            if (v.oxygenSaturation != null && (v.oxygenSaturation < 50 || v.oxygenSaturation > 100)) errors.push('SpO₂ must be 50–100%');
-            if (v.respiratoryRate  != null && (v.respiratoryRate  < 4  || v.respiratoryRate  > 60))  errors.push('Respiratory rate must be 4–60 bpm');
-            if (v.painScale   != null && (v.painScale   < 0   || v.painScale   > 10))  errors.push('Pain scale must be 0–10');
+            if (v.systolic         != null && (v.systolic         < 50  || v.systolic         > 300)) errors.push('Systolic BP must be 50–300 mmHg');
+            if (v.diastolic        != null && (v.diastolic        < 30  || v.diastolic        > 200)) errors.push('Diastolic BP must be 30–200 mmHg');
+            if (v.heartRate        != null && (v.heartRate        < 20  || v.heartRate        > 300)) errors.push('Heart rate must be 20–300 bpm');
+            if (v.temperature      != null && (v.temperature      < 30  || v.temperature      > 45))  errors.push('Temperature must be 30–45 °C');
+            if (v.weight           != null && (v.weight           < 0.5 || v.weight           > 500)) errors.push('Weight must be 0.5–500 kg');
+            if (v.height           != null && (v.height           < 30  || v.height           > 250)) errors.push('Height must be 30–250 cm');
+            if (v.oxygenSaturation != null && (v.oxygenSaturation < 50  || v.oxygenSaturation > 100)) errors.push('SpO₂ must be 50–100%');
+            if (v.respiratoryRate  != null && (v.respiratoryRate  < 4   || v.respiratoryRate  > 60))  errors.push('Respiratory rate must be 4–60 bpm');
+            if (v.painScale        != null && (v.painScale        < 0   || v.painScale        > 10))  errors.push('Pain scale must be 0–10');
             break;
         }
         case 'diagnosis': {
@@ -247,68 +240,71 @@ exports.handler = async (event) => {
         };
 
         await db.send(new PutCommand({ TableName: TABLE_NAME, Item: exam }));
-        // Write DOCTOR_PATIENT relationship item (idempotent)
-try {
-    await db.send(new PutCommand({
-        TableName: TABLE_NAME,
-        Item: {
-            PK:          `DOCTOR#${exam.doctorEmail}`,
-            SK:          `PATIENT#${exam.patientId}`,
-            EntityType:  'DOCTOR_PATIENT',
-            doctorEmail: exam.doctorEmail,
-            patientId:   exam.patientId,
-            patientName: exam.patientName,
-            assignedAt:  now
-        },
-        ConditionExpression: 'attribute_not_exists(PK) AND attribute_not_exists(SK)'
-    }));
-} catch (e) {
-    if (e.name !== 'ConditionalCheckFailedException') throw e;
-    // Already exists — safe to ignore
-}
+
+        // ── Write DOCTOR_PATIENT relationship item ────────────────────────────
+        // This allows O(1) lookup of a doctor's patients without scanning exams.
+        // ConditionExpression makes this idempotent — safe to call multiple times.
+        try {
+            await db.send(new PutCommand({
+                TableName: TABLE_NAME,
+                Item: {
+                    PK:          `DOCTOR#${exam.doctorEmail}`,
+                    SK:          `PATIENT#${exam.patientId}`,
+                    EntityType:  'DOCTOR_PATIENT',
+                    doctorEmail: exam.doctorEmail,
+                    patientId:   exam.patientId,
+                    patientName: exam.patientName,
+                    assignedAt:  now
+                },
+                ConditionExpression: 'attribute_not_exists(PK) AND attribute_not_exists(SK)'
+            }));
+        } catch (e) {
+            // ConditionalCheckFailedException means the relationship already exists — safe to ignore
+            if (e.name !== 'ConditionalCheckFailedException') throw e;
+        }
+
         await writeAudit('CREATE', 'EXAMINATION', id, body.doctorEmail, body.doctorName, null, exam, ipAddress);
 
         return res(201, exam);
     }
 
-    // ── GET /examinations?patientId=x ── LIST ────────────────────────────────
     // ── GET /examinations?patientId=x OR ?doctorEmail=x ── LIST ─────────────
-if (method === 'GET' && !examId) {
-    const patientId   = event.queryStringParameters?.patientId;
-    const doctorEmail = event.queryStringParameters?.doctorEmail;
+    if (method === 'GET' && !examId) {
+        const patientId   = event.queryStringParameters?.patientId;
+        const doctorEmail = event.queryStringParameters?.doctorEmail;
 
-    // Query by doctorEmail using GSI — returns all exams for this doctor
-    if (doctorEmail && !patientId) {
+        // Query by doctorEmail using GSI — returns all exams for this doctor
+        if (doctorEmail && !patientId) {
+            const result = await db.send(new QueryCommand({
+                TableName:                 TABLE_NAME,
+                IndexName:                 'doctorEmail-createdAt-index',
+                KeyConditionExpression:    'doctorEmail = :de',
+                ExpressionAttributeValues: { ':de': doctorEmail.toLowerCase().trim() }
+            }));
+            const items = (result.Items || []).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+            return res(200, items);
+        }
+
+        // Query by patientId using EntityType-index (existing behaviour)
+        if (!patientId) return err(400, 'patientId is required');
+
+        const filterExp  = doctorEmail
+            ? 'patientId = :pid AND doctorEmail = :de'
+            : 'patientId = :pid';
+        const filterVals = { ':et': 'EXAMINATION', ':pid': patientId };
+        if (doctorEmail) filterVals[':de'] = doctorEmail.toLowerCase().trim();
+
         const result = await db.send(new QueryCommand({
             TableName:                 TABLE_NAME,
-            IndexName:                 'doctorEmail-createdAt-index',
-            KeyConditionExpression:    'doctorEmail = :de',
-            ExpressionAttributeValues: { ':de': doctorEmail.toLowerCase().trim() }
+            IndexName:                 'EntityType-index',
+            KeyConditionExpression:    'EntityType = :et',
+            FilterExpression:          filterExp,
+            ExpressionAttributeValues: filterVals
         }));
+
         const items = (result.Items || []).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
         return res(200, items);
     }
-
-    // Query by patientId using EntityType-index (existing behaviour)
-    if (!patientId) return err(400, 'patientId is required');
-
-    const filterExp  = doctorEmail
-        ? 'patientId = :pid AND doctorEmail = :de'
-        : 'patientId = :pid';
-    const filterVals = { ':et': 'EXAMINATION', ':pid': patientId };
-    if (doctorEmail) filterVals[':de'] = doctorEmail.toLowerCase().trim();
-
-    const result = await db.send(new QueryCommand({
-        TableName:                 TABLE_NAME,
-        IndexName:                 'EntityType-index',
-        KeyConditionExpression:    'EntityType = :et',
-        FilterExpression:          filterExp,
-        ExpressionAttributeValues: filterVals
-    }));
-
-    const items = (result.Items || []).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-    return res(200, items);
-}
 
     // ── GET /examinations/{examId} ── GET ONE ────────────────────────────────
     if (method === 'GET' && examId) {

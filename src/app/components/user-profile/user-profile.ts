@@ -19,7 +19,7 @@ import { MessageService } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { RatingModule } from 'primeng/rating';
 import { PanelModule } from 'primeng/panel';
-import { DoctorsService } from '@/pages/service/doctors.service';
+import { DoctorsService } from '@/service/doctors.service';
 
 interface UserProfile {
     id: string;

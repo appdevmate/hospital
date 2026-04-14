@@ -18,9 +18,9 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { catchError, of, finalize } from 'rxjs';
 
-import { AdminPanelService, AdminStats, CognitoUser, AuditItem } from '@/pages/service/admin-panel.service';
-import { HelpersService } from '@/pages/service/helpers-service';
-import { AuthService } from '@/pages/service/auth.service';
+import { AdminPanelService, AdminStats, CognitoUser, AuditItem } from '@/service/admin-panel.service';
+import { HelpersService } from '@/service/helpers-service';
+import { AuthService } from '@/service/auth.service';
 
 @Component({
     selector: 'app-admin-panel',

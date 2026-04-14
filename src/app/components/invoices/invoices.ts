@@ -16,12 +16,12 @@ import { MessageService, ConfirmationService } from 'primeng/api';
 import { DividerModule } from 'primeng/divider';
 import { SelectModule } from 'primeng/select';
 
-import { PaymentsService, Payment, CreateUpdatePaymentRequest } from '@/pages/service/payments.service';
-import { PatientsService, Patient } from '@/pages/service/patients.service';
-import { DoctorsService } from '@/pages/service/doctors.service';
-import { HelpersService } from '@/pages/service/helpers-service';
-import { AuthService } from '@/pages/service/auth.service';
-import { GenericTableComponent } from '@/pages/uikit/generic-table';
+import { PaymentsService, Payment, CreateUpdatePaymentRequest } from '@/service/payments.service';
+import { PatientsService, Patient } from '@/service/patients.service';
+import { DoctorsService } from '@/service/doctors.service';
+import { HelpersService } from '@/service/helpers-service';
+import { AuthService } from '@/service/auth.service';
+import { GenericTableComponent } from '@/components/generic-table/generic-table';
 import { TableColumn, TableConfig } from '@/interfaces/tableplugin.interfaces';
 
 /** Status → PrimeNG severity map */

@@ -2,8 +2,8 @@ import { Component, OnInit, AfterViewInit, ViewChild, TemplateRef } from '@angul
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
-import { DocumentService, DocumentFile, DocumentFolder } from '@/pages/service/document.service';
-import { GenericTableComponent } from '@/pages/uikit/generic-table';
+import { DocumentService, DocumentFile, DocumentFolder } from '@/service/document.service';
+import { GenericTableComponent } from '@/components/generic-table/generic-table';
 import { TableColumn, TableConfig } from '@/interfaces/tableplugin.interfaces';
 
 // PrimeNG imports
@@ -18,7 +18,7 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { CardModule } from 'primeng/card';
 import { SelectModule } from 'primeng/select';
 import { ConfirmationService } from 'primeng/api';
-import { HelpersService } from '@/pages/service/helpers-service';
+import { HelpersService } from '@/service/helpers-service';
 
 @Component({
     selector: 'app-document-manager',
