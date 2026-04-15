@@ -17,15 +17,14 @@ exports.handler = async (event) => {
 
     // ── Identify caller from JWT token ────────────────────────────────────
     const claims       = event.requestContext?.authorizer?.jwt?.claims || {};
-      console.log('DEBUG claims:', JSON.stringify(claims));
-      console.log('DEBUG parsed:', JSON.stringify({ isAdminOrDev, isDoctor, callerEmail }));
     const groups       = claims['cognito:groups'] || '';
     const groupArr     = Array.isArray(groups) ? groups
         : String(groups).trim().replace(/^\[/, '').replace(/\]$/, '').split(/[, ]+/).filter(Boolean);
     const isAdminOrDev = groupArr.some(g => ['Admin', 'Developers'].includes(g.trim()));
     const isDoctor     = groupArr.some(g => g.trim() === 'Doctors');
     const callerEmail  = (claims['email'] || claims['username'] || '').toLowerCase().trim();
-
+console.log('DEBUG claims:', JSON.stringify(claims));
+      console.log('DEBUG parsed:', JSON.stringify({ isAdminOrDev, isDoctor, callerEmail }));
     // ── DOCTOR PATH — scoped to own patients via DOCTOR_PATIENT items ──────
     if (isDoctor && !isAdminOrDev && callerEmail) {
         const doctorEmail = callerEmail;
@@ -35,6 +34,7 @@ exports.handler = async (event) => {
                 KeyConditionExpression:    'PK = :pk',
                 ExpressionAttributeValues: { ':pk': `DOCTOR#${doctorEmail}` }
             }));
+console.log('DEBUG relItems:', JSON.stringify(relResult.Items));
 
             const relItems = (relResult.Items || []).filter(i => i.SK?.startsWith('PATIENT#'));
 
@@ -43,7 +43,10 @@ exports.handler = async (event) => {
             }
 
             // 2. Batch get patient records — DynamoDB limit is 100 per call
-            const keys    = relItems.map(i => ({ PK: `PATIENT#${i.patientId}`, SK: 'PROFILE' }));
+            const keys = relItems.map(i => ({
+    PK: i.patientId.startsWith('PATIENT#') ? i.patientId : `PATIENT#${i.patientId}`,
+    SK: 'PROFILE'
+}));
             const batches = [];
             for (let i = 0; i < keys.length; i += 100) batches.push(keys.slice(i, i + 100));
 

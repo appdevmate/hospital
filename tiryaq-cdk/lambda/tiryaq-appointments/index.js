@@ -201,7 +201,7 @@ exports.handler = async (event) => {
         // Write DOCTOR_PATIENT relationship — this is the assignment mechanism
         await writeDoctorPatientRelation(
             appointment.doctorEmail,
-            appointment.patientId,
+            appointment.patientId.replace('PATIENT#', ''),
             appointment.patientName,
             now
         );
