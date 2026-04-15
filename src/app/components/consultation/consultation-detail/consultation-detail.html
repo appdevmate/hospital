@@ -12,7 +12,7 @@
         <div class="flex items-center gap-3">
             <p-button icon="pi pi-arrow-left" text severity="secondary" (onClick)="goBack()" />
             <div>
-                <h2 class="m-0">Examination Report</h2>
+                <h2 class="m-0">Consultation Report</h2>
                 <div class="text-sm text-surface-500">
                     {{ exam.patientName | titlecase }} ·
                     {{ exam.date | date:'EEEE, MMMM d, y' }} ·
@@ -21,10 +21,10 @@
             </div>
         </div>
         <div class="flex items-center gap-2">
-            <p-tag [value]="exam.status === 'completed' ? '✓ Consultation Closed' : 'Draft'"
+            <p-tag [value]="exam.status === 'completed' ? '✓ Closed' : 'Draft'"
                 [severity]="exam.status === 'completed' ? 'success' : 'warn'" />
             @if (exam.status === 'draft' && auth.isDoctor) {
-            <p-button label="Continue Editing" icon="pi pi-pencil" severity="success" (onClick)="editExam()" />
+            <p-button label="Continue Editing" icon="pi pi-pencil" severity="success" (onClick)="editConsultation()" />
             }
             <p-button label="Print" icon="pi pi-print" severity="secondary" (onClick)="print()" />
         </div>
@@ -56,134 +56,90 @@
                 <div class="detail-section">
                     <h4 class="detail-section-title">Chief Complaint</h4>
                     <div class="detail-row"><label>Main Complaint</label><span>{{ exam.chiefComplaint.cc }}</span></div>
-                    @if (exam.chiefComplaint.duration) {
-                    <div class="detail-row"><label>Duration</label><span>{{ exam.chiefComplaint.duration }}</span></div>
-                    }
-                    @if (exam.chiefComplaint.onset) {
-                    <div class="detail-row"><label>Onset</label><span>{{ exam.chiefComplaint.onset | titlecase }}</span>
-                    </div>
-                    }
-                    @if (exam.chiefComplaint.severity) {
-                    <div class="detail-row"><label>Severity</label><span>{{ exam.chiefComplaint.severity | titlecase
-                            }}</span></div>
-                    }
-                    @if (exam.chiefComplaint.location) {
-                    <div class="detail-row"><label>Location</label><span>{{ exam.chiefComplaint.location }}</span></div>
-                    }
-                    @if (exam.chiefComplaint.radiation) {
-                    <div class="detail-row"><label>Radiation</label><span>{{ exam.chiefComplaint.radiation }}</span>
-                    </div>
-                    }
-                    @if (exam.chiefComplaint.quality) {
-                    <div class="detail-row"><label>Quality</label><span>{{ exam.chiefComplaint.quality }}</span></div>
-                    }
-                    @if (exam.chiefComplaint.associatedSx) {
-                    <div class="detail-row"><label>Associated Symptoms</label><span>{{ exam.chiefComplaint.associatedSx
-                            }}</span></div>
-                    }
-                    @if (exam.chiefComplaint.hpi) {
-                    <div class="detail-block"><label>HPI</label>
+                    @if (exam.chiefComplaint.duration) { <div class="detail-row"><label>Duration</label><span>{{
+                            exam.chiefComplaint.duration }}</span></div> }
+                    @if (exam.chiefComplaint.onset) { <div class="detail-row"><label>Onset</label><span>{{
+                            exam.chiefComplaint.onset | titlecase }}</span></div> }
+                    @if (exam.chiefComplaint.severity) { <div class="detail-row"><label>Severity</label><span>{{
+                            exam.chiefComplaint.severity | titlecase }}</span></div> }
+                    @if (exam.chiefComplaint.location) { <div class="detail-row"><label>Location</label><span>{{
+                            exam.chiefComplaint.location }}</span></div> }
+                    @if (exam.chiefComplaint.radiation){ <div class="detail-row"><label>Radiation</label><span>{{
+                            exam.chiefComplaint.radiation }}</span></div> }
+                    @if (exam.chiefComplaint.quality) { <div class="detail-row"><label>Quality</label><span>{{
+                            exam.chiefComplaint.quality }}</span></div> }
+                    @if (exam.chiefComplaint.associatedSx) { <div class="detail-row"><label>Associated
+                            Symptoms</label><span>{{ exam.chiefComplaint.associatedSx }}</span></div> }
+                    @if (exam.chiefComplaint.hpi) { <div class="detail-block"><label>HPI</label>
                         <p>{{ exam.chiefComplaint.hpi }}</p>
-                    </div>
-                    }
+                    </div> }
 
                     @if (exam.chiefComplaint.ros && $any(exam.chiefComplaint.ros | keyvalue).length > 0) {
                     <p-divider />
                     <h4 class="detail-section-title">Review of Systems</h4>
                     @for (entry of (exam.chiefComplaint.ros | keyvalue); track entry.key) {
-                    @if (entry.value) {
-                    <div class="detail-row">
-                        <label>{{ entry.key | titlecase }}</label>
-                        <span>{{ entry.value }}</span>
-                    </div>
-                    }
+                    @if (entry.value) { <div class="detail-row"><label>{{ entry.key | titlecase }}</label><span>{{
+                            entry.value }}</span></div> }
                     }
                     }
 
                     <p-divider />
                     <h4 class="detail-section-title">Past History</h4>
-                    @if (exam.chiefComplaint.pmh) {
-                    <div class="detail-block"><label>Past Medical History</label>
+                    @if (exam.chiefComplaint.pmh) { <div class="detail-block"><label>Past Medical History</label>
                         <p>{{ exam.chiefComplaint.pmh }}</p>
-                    </div>
-                    }
-                    @if (exam.chiefComplaint.psh) {
-                    <div class="detail-block"><label>Past Surgical History</label>
+                    </div> }
+                    @if (exam.chiefComplaint.psh) { <div class="detail-block"><label>Past Surgical History</label>
                         <p>{{ exam.chiefComplaint.psh }}</p>
-                    </div>
-                    }
-                    @if (exam.chiefComplaint.familyHistory) {
-                    <div class="detail-block"><label>Family History</label>
+                    </div> }
+                    @if (exam.chiefComplaint.familyHistory){ <div class="detail-block"><label>Family History</label>
                         <p>{{ exam.chiefComplaint.familyHistory }}</p>
-                    </div>
-                    }
-                    @if (exam.chiefComplaint.socialHistory) {
-                    <div class="detail-block"><label>Social History</label>
+                    </div> }
+                    @if (exam.chiefComplaint.socialHistory){ <div class="detail-block"><label>Social History</label>
                         <p>{{ exam.chiefComplaint.socialHistory }}</p>
-                    </div>
-                    }
-                    @if (exam.chiefComplaint.allergies) {
-                    <div class="detail-row"><label>Allergies</label><span class="text-red-600 font-medium">{{
-                            exam.chiefComplaint.allergies }}</span></div>
-                    }
-                    @if (exam.chiefComplaint.currentMeds) {
-                    <div class="detail-row"><label>Current Medications</label><span>{{ exam.chiefComplaint.currentMeds
-                            }}</span></div>
-                    }
+                    </div> }
+                    @if (exam.chiefComplaint.allergies) { <div class="detail-row"><label>Allergies</label><span
+                            class="text-red-600 font-medium">{{ exam.chiefComplaint.allergies }}</span></div> }
+                    @if (exam.chiefComplaint.currentMeds) { <div class="detail-row"><label>Current
+                            Medications</label><span>{{ exam.chiefComplaint.currentMeds }}</span></div> }
                 </div>
                 }
             </p-tabpanel>
 
             <!-- ── O: Objective ── -->
             <p-tabpanel value="1">
-                <!-- Vital Signs -->
                 @if (exam.vitalSigns) {
                 <div class="detail-section">
                     <h4 class="detail-section-title">Vital Signs</h4>
                     <div class="vitals-display-grid">
-                        @if (exam.vitalSigns.systolic && exam.vitalSigns.diastolic) {
-                        <div class="vital-display-card">
+                        @if (exam.vitalSigns.systolic && exam.vitalSigns.diastolic) { <div class="vital-display-card">
                             <div class="vital-value">{{ exam.vitalSigns.systolic }}/{{ exam.vitalSigns.diastolic }}
                             </div>
                             <div class="vital-unit">mmHg — BP</div>
-                        </div>
-                        }
-                        @if (exam.vitalSigns.heartRate) {
-                        <div class="vital-display-card">
+                        </div> }
+                        @if (exam.vitalSigns.heartRate) { <div class="vital-display-card">
                             <div class="vital-value">{{ exam.vitalSigns.heartRate }}</div>
                             <div class="vital-unit">bpm — HR</div>
-                        </div>
-                        }
-                        @if (exam.vitalSigns.temperature) {
-                        <div class="vital-display-card">
+                        </div> }
+                        @if (exam.vitalSigns.temperature) { <div class="vital-display-card">
                             <div class="vital-value">{{ exam.vitalSigns.temperature }}°C</div>
                             <div class="vital-unit">Temperature</div>
-                        </div>
-                        }
-                        @if (exam.vitalSigns.oxygenSaturation) {
-                        <div class="vital-display-card">
+                        </div> }
+                        @if (exam.vitalSigns.oxygenSaturation){ <div class="vital-display-card">
                             <div class="vital-value">{{ exam.vitalSigns.oxygenSaturation }}%</div>
                             <div class="vital-unit">SpO₂</div>
-                        </div>
-                        }
-                        @if (exam.vitalSigns.respiratoryRate) {
-                        <div class="vital-display-card">
+                        </div> }
+                        @if (exam.vitalSigns.respiratoryRate){ <div class="vital-display-card">
                             <div class="vital-value">{{ exam.vitalSigns.respiratoryRate }}</div>
                             <div class="vital-unit">RR (bpm)</div>
-                        </div>
-                        }
-                        @if (exam.vitalSigns.weight) {
-                        <div class="vital-display-card">
+                        </div> }
+                        @if (exam.vitalSigns.weight) { <div class="vital-display-card">
                             <div class="vital-value">{{ exam.vitalSigns.weight }}kg</div>
                             <div class="vital-unit">Weight</div>
-                        </div>
-                        }
-                        @if (exam.vitalSigns.height) {
-                        <div class="vital-display-card">
+                        </div> }
+                        @if (exam.vitalSigns.height) { <div class="vital-display-card">
                             <div class="vital-value">{{ exam.vitalSigns.height }}cm</div>
                             <div class="vital-unit">Height</div>
-                        </div>
-                        }
+                        </div> }
                         @if (exam.vitalSigns.bmi) {
                         <div class="vital-display-card"
                             [class.vital-ok]="exam.vitalSigns.bmi >= 18.5 && exam.vitalSigns.bmi < 25"
@@ -206,29 +162,15 @@
                 <p-divider />
                 }
 
-                <!-- Physical Exam -->
                 @if (exam.physicalExam) {
                 <div class="detail-section">
                     <h4 class="detail-section-title">Physical Examination</h4>
-                    @for (entry of ([
-                    {k:'generalAppearance', l:'General Appearance'},
-                    {k:'heent', l:'HEENT'},
-                    {k:'neck', l:'Neck'},
-                    {k:'chest', l:'Chest / Lungs'},
-                    {k:'cardiovascular', l:'Cardiovascular'},
-                    {k:'abdomen', l:'Abdomen'},
-                    {k:'extremities', l:'Extremities'},
-                    {k:'neurological', l:'Neurological'},
-                    {k:'skin', l:'Skin'},
-                    {k:'musculoskeletal', l:'Musculoskeletal'},
-                    {k:'notes', l:'Additional Notes'}
-                    ]); track entry.k) {
-                    @if (exam.physicalExam[entry.k]) {
-                    <div class="detail-row">
-                        <label>{{ entry.l }}</label>
-                        <span>{{ exam.physicalExam[entry.k] }}</span>
-                    </div>
-                    }
+                    @for (entry of ([{k:'generalAppearance',l:'General
+                    Appearance'},{k:'heent',l:'HEENT'},{k:'neck',l:'Neck'},{k:'chest',l:'Chest /
+                    Lungs'},{k:'cardiovascular',l:'Cardiovascular'},{k:'abdomen',l:'Abdomen'},{k:'extremities',l:'Extremities'},{k:'neurological',l:'Neurological'},{k:'skin',l:'Skin'},{k:'musculoskeletal',l:'Musculoskeletal'},{k:'notes',l:'Additional
+                    Notes'}]); track entry.k) {
+                    @if (exam.physicalExam[entry.k]) { <div class="detail-row"><label>{{ entry.l }}</label><span>{{
+                            exam.physicalExam[entry.k] }}</span></div> }
                     }
                 </div>
                 }
@@ -261,25 +203,19 @@
 
             <!-- ── P: Plan ── -->
             <p-tabpanel value="3">
-                <!-- Prescriptions -->
                 @if (exam.prescriptions && exam.prescriptions.length > 0) {
                 <div class="detail-section">
                     <h4 class="detail-section-title"><i class="pi pi-heart mr-2"></i>Prescriptions ({{
                         exam.prescriptions.length }})</h4>
                     @for (rx of exam.prescriptions; track rx.id) {
                     <div class="plan-card">
-                        <div class="flex items-center justify-between mb-1">
-                            <span class="font-semibold">{{ rx.medication }}</span>
-                            <p-tag [value]="rx.status | titlecase" [severity]="statusSeverity(rx.status)" />
-                        </div>
-                        <div class="text-sm text-surface-500">
-                            {{ rx.dose }} · {{ rx.frequency }}
-                            @if (rx.duration) { · {{ rx.duration }} }
-                            · Route: {{ rx.route | titlecase }}
-                            @if (rx.refills) { · {{ rx.refills }} refill(s) }
-                        </div>
-                        @if (rx.instructions) {
-                        <div class="text-xs text-surface-400 mt-0.5">{{ rx.instructions }}</div>
+                        <div class="flex items-center justify-between mb-1"><span class="font-semibold">{{ rx.medication
+                                }}</span><p-tag [value]="rx.status | titlecase"
+                                [severity]="statusSeverity(rx.status)" /></div>
+                        <div class="text-sm text-surface-500">{{ rx.dose }} · {{ rx.frequency }} @if (rx.duration) { ·
+                            {{ rx.duration }} } · Route: {{ rx.route | titlecase }} @if (rx.refills) { · {{ rx.refills
+                            }} refill(s) }</div>
+                        @if (rx.instructions) { <div class="text-xs text-surface-400 mt-0.5">{{ rx.instructions }}</div>
                         }
                     </div>
                     }
@@ -287,28 +223,23 @@
                 <p-divider />
                 }
 
-                <!-- Lab Orders -->
                 @if (exam.labOrders && exam.labOrders.length > 0) {
                 <div class="detail-section">
                     <h4 class="detail-section-title"><i class="pi pi-flask mr-2"></i>Lab Orders ({{
                         exam.labOrders.length }})</h4>
                     @for (lab of exam.labOrders; track lab.id) {
                     <div class="plan-card">
-                        <div class="flex items-center justify-between mb-1">
-                            <span class="font-semibold">{{ lab.testName }}</span>
-                            <div class="flex items-center gap-2">
-                                <p-tag [value]="lab.urgency | titlecase" [severity]="urgencySeverity(lab.urgency)"
-                                    styleClass="text-xs" />
-                                <p-tag [value]="lab.status | titlecase" [severity]="statusSeverity(lab.status)"
-                                    styleClass="text-xs" />
-                            </div>
+                        <div class="flex items-center justify-between mb-1"><span class="font-semibold">{{ lab.testName
+                                }}</span>
+                            <div class="flex items-center gap-2"><p-tag [value]="lab.urgency | titlecase"
+                                    [severity]="urgencySeverity(lab.urgency)" styleClass="text-xs" /><p-tag
+                                    [value]="lab.status | titlecase" [severity]="statusSeverity(lab.status)"
+                                    styleClass="text-xs" /></div>
                         </div>
                         @if (lab.loincCode) { <div class="text-xs text-surface-400">LOINC: {{ lab.loincCode }}</div> }
                         @if (lab.result) { <div class="text-sm font-medium mt-0.5">Result: {{ lab.result }} {{ lab.unit
-                            }}
-                            @if (lab.referenceRange) { <span class="text-surface-400">(ref: {{ lab.referenceRange
-                                }})</span> }
-                        </div> }
+                            }} @if (lab.referenceRange) { <span class="text-surface-400">(ref: {{ lab.referenceRange
+                                }})</span> }</div> }
                         @if (lab.clinicalReason) { <div class="text-xs text-surface-400">Reason: {{ lab.clinicalReason
                             }}</div> }
                     </div>
@@ -317,21 +248,18 @@
                 <p-divider />
                 }
 
-                <!-- Radiology Orders -->
                 @if (exam.radiologyOrders && exam.radiologyOrders.length > 0) {
                 <div class="detail-section">
                     <h4 class="detail-section-title"><i class="pi pi-image mr-2"></i>Radiology Orders ({{
                         exam.radiologyOrders.length }})</h4>
                     @for (rad of exam.radiologyOrders; track rad.id) {
                     <div class="plan-card">
-                        <div class="flex items-center justify-between mb-1">
-                            <span class="font-semibold">{{ rad.studyType }} — {{ rad.bodyPart | titlecase }}</span>
-                            <div class="flex items-center gap-2">
-                                <p-tag [value]="rad.urgency | titlecase" [severity]="urgencySeverity(rad.urgency)"
-                                    styleClass="text-xs" />
-                                <p-tag [value]="rad.status | titlecase" [severity]="statusSeverity(rad.status)"
-                                    styleClass="text-xs" />
-                            </div>
+                        <div class="flex items-center justify-between mb-1"><span class="font-semibold">{{ rad.studyType
+                                }} — {{ rad.bodyPart | titlecase }}</span>
+                            <div class="flex items-center gap-2"><p-tag [value]="rad.urgency | titlecase"
+                                    [severity]="urgencySeverity(rad.urgency)" styleClass="text-xs" /><p-tag
+                                    [value]="rad.status | titlecase" [severity]="statusSeverity(rad.status)"
+                                    styleClass="text-xs" /></div>
                         </div>
                         @if (rad.clinicalInfo) { <div class="text-sm text-surface-500">{{ rad.clinicalInfo }}</div> }
                         @if (rad.findings) { <div class="text-sm mt-0.5"><strong>Findings:</strong> {{ rad.findings }}
@@ -344,48 +272,34 @@
                 <p-divider />
                 }
 
-                <!-- Treatment Plan -->
                 @if (exam.treatmentPlan) {
                 <div class="detail-section">
                     <h4 class="detail-section-title"><i class="pi pi-list-check mr-2"></i>Treatment Plan</h4>
                     <div class="detail-block"><label>Plan</label>
                         <p>{{ exam.treatmentPlan.plan }}</p>
                     </div>
-                    @if (exam.treatmentPlan.goals) {
-                    <div class="detail-block"><label>Goals</label>
+                    @if (exam.treatmentPlan.goals) { <div class="detail-block"><label>Goals</label>
                         <p>{{ exam.treatmentPlan.goals }}</p>
-                    </div>
-                    }
-                    @if (exam.treatmentPlan.followUpDate) {
-                    <div class="detail-row"><label>Follow-up Date</label><span>{{ exam.treatmentPlan.followUpDate
-                            }}</span></div>
-                    }
-                    @if (exam.treatmentPlan.followUpNotes) {
-                    <div class="detail-row"><label>Follow-up Notes</label><span>{{ exam.treatmentPlan.followUpNotes
-                            }}</span></div>
-                    }
-                    @if (exam.treatmentPlan.referrals) {
-                    <div class="detail-row"><label>Referrals</label><span>{{ exam.treatmentPlan.referrals }}</span>
-                    </div>
-                    }
-                    @if (exam.treatmentPlan.restrictions) {
-                    <div class="detail-row"><label>Restrictions</label><span>{{ exam.treatmentPlan.restrictions
-                            }}</span></div>
-                    }
-                    @if (exam.treatmentPlan.patientEducation) {
-                    <div class="detail-block"><label>Patient Education</label>
+                    </div> }
+                    @if (exam.treatmentPlan.followUpDate) { <div class="detail-row"><label>Follow-up
+                            Date</label><span>{{ exam.treatmentPlan.followUpDate }}</span></div> }
+                    @if (exam.treatmentPlan.followUpNotes) { <div class="detail-row"><label>Follow-up
+                            Notes</label><span>{{ exam.treatmentPlan.followUpNotes }}</span></div> }
+                    @if (exam.treatmentPlan.referrals) { <div class="detail-row"><label>Referrals</label><span>{{
+                            exam.treatmentPlan.referrals }}</span></div> }
+                    @if (exam.treatmentPlan.restrictions) { <div class="detail-row"><label>Restrictions</label><span>{{
+                            exam.treatmentPlan.restrictions }}</span></div> }
+                    @if (exam.treatmentPlan.patientEducation){ <div class="detail-block"><label>Patient
+                            Education</label>
                         <p>{{ exam.treatmentPlan.patientEducation }}</p>
-                    </div>
-                    }
-                    @if (exam.treatmentPlan.prognosis) {
-                    <div class="detail-row"><label>Prognosis</label><span>{{ exam.treatmentPlan.prognosis }}</span>
-                    </div>
-                    }
+                    </div> }
+                    @if (exam.treatmentPlan.prognosis) { <div class="detail-row"><label>Prognosis</label><span>{{
+                            exam.treatmentPlan.prognosis }}</span></div> }
                 </div>
                 }
 
-                @if (!exam.prescriptions?.length && !exam.labOrders?.length
-                && !exam.radiologyOrders?.length && !exam.treatmentPlan) {
+                @if (!exam.prescriptions?.length && !exam.labOrders?.length && !exam.radiologyOrders?.length &&
+                !exam.treatmentPlan) {
                 <div class="empty-section">No plan items recorded.</div>
                 }
             </p-tabpanel>
@@ -393,12 +307,9 @@
         </p-tabpanels>
     </p-tabs>
 
-    <!-- Footer metadata -->
     <div class="detail-footer">
         <span>Created: {{ exam.createdAt | date:'MMM d, y, h:mm a' }}</span>
-        @if (exam.updatedAt) {
-        <span>Last updated: {{ exam.updatedAt | date:'MMM d, y, h:mm a' }}</span>
-        }
+        @if (exam.updatedAt) { <span>Last updated: {{ exam.updatedAt | date:'MMM d, y, h:mm a' }}</span> }
     </div>
 
 </div>

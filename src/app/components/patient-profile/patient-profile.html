@@ -2,17 +2,14 @@
 
 <div class="patient-profile-page">
 
-    <!-- Loading -->
     @if (loading) {
     <div style="display:flex;align-items:center;justify-content:center;padding:4rem;">
         <i class="pi pi-spin pi-spinner" style="font-size:2rem;color:#16a34a;"></i>
     </div>
     }
 
-    <!-- Profile -->
     @if (!loading && patient) {
 
-    <!-- Back + Header -->
     <div class="profile-header">
         <div class="header-left">
             <p-button icon="pi pi-arrow-left" [text]="true" severity="secondary" routerLink="/patients-management" />
@@ -33,7 +30,6 @@
         </div>
     </div>
 
-    <!-- ── Deactivated patient banner ── -->
     @if (isDeactivated) {
     <div class="deactivated-banner">
         <div class="deactivated-banner-left">
@@ -51,7 +47,6 @@
     </div>
     }
 
-    <!-- Tabs -->
     <p-tabs value="0">
         <p-tablist>
             <p-tab value="0"><i class="pi pi-user mr-2"></i>Personal Info</p-tab>
@@ -59,7 +54,7 @@
             <p-tab value="2"><i class="pi pi-calendar mr-2"></i>Appointments ({{ appointments.length }})</p-tab>
             <p-tab value="3"><i class="pi pi-file-invoice mr-2"></i>Invoices ({{ invoices.length }})</p-tab>
             <p-tab value="4"><i class="pi pi-file mr-2"></i>Notes</p-tab>
-            <p-tab value="5"><i class="pi pi-file-medical mr-2"></i>Examinations</p-tab>
+            <p-tab value="5"><i class="pi pi-file-medical mr-2"></i>Consultations</p-tab>
         </p-tablist>
 
         <p-tabpanels>
@@ -67,116 +62,77 @@
             <!-- ── Tab 0: Personal Info ── -->
             <p-tabpanel value="0">
                 <div class="info-grid">
-
                     <div class="info-card">
                         <h4>Contact Information</h4>
-                        @if (patient.email) {
-                        <div class="info-row">
-                            <i class="pi pi-envelope"></i>
+                        @if (patient.email) { <div class="info-row"><i class="pi pi-envelope"></i>
                             <div><label>Email</label><span>{{ patient.email }}</span></div>
-                        </div>
-                        }
-                        @if (patient.phone) {
-                        <div class="info-row">
-                            <i class="pi pi-phone"></i>
+                        </div> }
+                        @if (patient.phone) { <div class="info-row"><i class="pi pi-phone"></i>
                             <div><label>Phone</label><span>{{ patient.phone }}</span></div>
-                        </div>
-                        }
-                        @if (patient.qid) {
-                        <div class="info-row">
-                            <i class="pi pi-id-card"></i>
+                        </div> }
+                        @if (patient.qid) { <div class="info-row"><i class="pi pi-id-card"></i>
                             <div><label>Qatar ID</label><span>{{ patient.qid }}</span></div>
-                        </div>
-                        }
-                        @if (patient.dob) {
-                        <div class="info-row">
-                            <i class="pi pi-calendar"></i>
+                        </div> }
+                        @if (patient.dob) { <div class="info-row"><i class="pi pi-calendar"></i>
                             <div><label>Date of Birth</label><span>{{ patient.dob | date:'MMM d, y' }}</span></div>
-                        </div>
-                        }
-                        @if (patient.insurance) {
-                        <div class="info-row">
-                            <i class="pi pi-shield"></i>
+                        </div> }
+                        @if (patient.insurance) { <div class="info-row"><i class="pi pi-shield"></i>
                             <div><label>Insurance</label><span>{{ patient.insurance | titlecase }}</span></div>
-                        </div>
-                        }
+                        </div> }
                     </div>
-
                     <div class="info-card">
                         <h4>Hospital Information</h4>
-                        @if (patient.bedNumber) {
-                        <div class="info-row">
-                            <i class="pi pi-home"></i>
+                        @if (patient.bedNumber) { <div class="info-row"><i class="pi pi-home"></i>
                             <div><label>Bed Number</label><span>{{ patient.bedNumber }}</span></div>
-                        </div>
-                        }
-                        @if (patient.ward) {
-                        <div class="info-row">
-                            <i class="pi pi-map-marker"></i>
+                        </div> }
+                        @if (patient.ward) { <div class="info-row"><i class="pi pi-map-marker"></i>
                             <div><label>Ward</label><span>{{ patient.ward | titlecase }}</span></div>
-                        </div>
-                        }
+                        </div> }
                     </div>
-
                 </div>
             </p-tabpanel>
 
             <!-- ── Tab 1: Medical Records ── -->
             <p-tabpanel value="1">
                 <div class="info-grid">
-
                     @if (patient.medicalHistory) {
                     <div class="info-card full-width">
                         <h4><i class="pi pi-history mr-2"></i>Medical History</h4>
                         <p class="record-text">{{ patient.medicalHistory }}</p>
                     </div>
                     }
-
                     @if (patient.allergies?.length) {
                     <div class="info-card">
                         <h4><i class="pi pi-exclamation-triangle mr-2" style="color:#EF4444;"></i>Allergies</h4>
                         <div class="flex flex-wrap gap-2 mt-2">
-                            @if (isArray(patient.allergies)) {
-                            @for (allergy of $any(patient.allergies); track allergy) {
-                            <p-tag [value]="allergy" severity="danger" [rounded]="true" />
-                            }
-                            } @else {
-                            <p-tag [value]="$any(patient.allergies)" severity="danger" [rounded]="true" />
-                            }
+                            @if (isArray(patient.allergies)) { @for (allergy of $any(patient.allergies); track allergy)
+                            { <p-tag [value]="allergy" severity="danger" [rounded]="true" /> } }
+                            @else { <p-tag [value]="$any(patient.allergies)" severity="danger" [rounded]="true" /> }
                         </div>
                     </div>
                     }
-
                     @if (patient.medications?.length) {
                     <div class="info-card">
                         <h4><i class="pi pi-plus-circle mr-2" style="color:#3B82F6;"></i>Current Medications</h4>
                         <div class="flex flex-wrap gap-2 mt-2">
-                            @if (isArray(patient.medications)) {
-                            @for (med of $any(patient.medications); track med) {
-                            <p-tag [value]="med" severity="info" [rounded]="true" />
-                            }
-                            } @else {
-                            <p-tag [value]="$any(patient.medications)" severity="info" [rounded]="true" />
-                            }
+                            @if (isArray(patient.medications)) { @for (med of $any(patient.medications); track med) {
+                            <p-tag [value]="med" severity="info" [rounded]="true" /> } }
+                            @else { <p-tag [value]="$any(patient.medications)" severity="info" [rounded]="true" /> }
                         </div>
                     </div>
                     }
-
                     @if (patient.bloodGroup) {
                     <div class="info-card">
                         <h4><i class="pi pi-heart mr-2" style="color:#EF4444;"></i>Blood Group</h4>
                         <p class="record-text blood-group">{{ patient.bloodGroup }}</p>
                     </div>
                     }
-
                     @if (!patient.medicalHistory && !patient.allergies?.length && !patient.medications?.length &&
                     !patient.bloodGroup) {
-                    <div class="empty-state">
-                        <i class="pi pi-file-edit"></i>
+                    <div class="empty-state"><i class="pi pi-file-edit"></i>
                         <p>No medical records found. Edit patient to add medical information.</p>
                     </div>
                     }
-
                 </div>
             </p-tabpanel>
 
@@ -197,18 +153,22 @@
                         </div>
                         <div class="appt-info">
                             <div class="appt-title">{{ appt.visitType | titlecase }} with {{ appt.doctorName | titlecase
-                                }}
-                            </div>
+                                }}</div>
                             <div class="appt-time">
                                 <i class="pi pi-clock"></i>
                                 {{ appt.startTime }} — {{ appt.endTime }} ({{ appt.duration }} min)
                             </div>
-                            @if (appt.notes) {
-                            <div class="appt-notes">{{ appt.notes }}</div>
-                            }
+                            @if (appt.chiefComplaint) { <div class="appt-notes">{{ appt.chiefComplaint }}</div> }
+                            @if (appt.notes) { <div class="appt-notes">{{ appt.notes }}</div> }
                         </div>
-                        <div class="appt-status">
+                        <div class="appt-status"
+                            style="display:flex;flex-direction:column;align-items:flex-end;gap:0.5rem;">
                             <p-tag [value]="appt.status | titlecase" [severity]="getApptStatusSeverity(appt.status)" />
+                            @if (auth.isDoctor && appt.status === 'in-progress') {
+                            <p-button label="Start Consultation" icon="pi pi-file-medical" severity="success"
+                                size="small" [loading]="startingConsultation === appt.appointmentId"
+                                (onClick)="startConsultation(appt)" />
+                            }
                         </div>
                     </div>
                     }
@@ -219,8 +179,7 @@
             <!-- ── Tab 3: Invoices ── -->
             <p-tabpanel value="3">
                 @if (invoices.length === 0) {
-                <div class="empty-state">
-                    <i class="pi pi-file-invoice"></i>
+                <div class="empty-state"><i class="pi pi-file-invoice"></i>
                     <p>No invoices found for this patient.</p>
                 </div>
                 } @else {
@@ -233,18 +192,12 @@
                         </div>
                         <div class="appt-info">
                             <div class="appt-title">{{ inv.invoiceNumber }}</div>
-                            <div class="appt-time">
-                                <i class="pi pi-dollar"></i>
-                                QAR {{ inv.amount | number:'1.2-2' }}
-                                @if (inv.doctorName) { · {{ inv.doctorName | titlecase }} }
-                            </div>
-                            @if (inv.notes) {
-                            <div class="appt-notes">{{ inv.notes }}</div>
-                            }
+                            <div class="appt-time"><i class="pi pi-dollar"></i> QAR {{ inv.amount | number:'1.2-2' }}
+                                @if (inv.doctorName) { · {{ inv.doctorName | titlecase }} }</div>
+                            @if (inv.notes) { <div class="appt-notes">{{ inv.notes }}</div> }
                         </div>
-                        <div class="appt-status">
-                            <p-tag [value]="inv.status | titlecase" [severity]="getInvoiceStatusSeverity(inv.status)" />
-                        </div>
+                        <div class="appt-status"><p-tag [value]="inv.status | titlecase"
+                                [severity]="getInvoiceStatusSeverity(inv.status)" /></div>
                     </div>
                     }
                 </div>
@@ -254,8 +207,7 @@
             <!-- ── Tab 4: Notes ── -->
             <p-tabpanel value="4">
                 @if (!patient.notes) {
-                <div class="empty-state">
-                    <i class="pi pi-file"></i>
+                <div class="empty-state"><i class="pi pi-file"></i>
                     <p>No notes found for this patient.</p>
                 </div>
                 } @else {
@@ -265,9 +217,9 @@
                 }
             </p-tabpanel>
 
-            <!-- ── Tab 5: Examinations ── -->
+            <!-- ── Tab 5: Consultations ── -->
             <p-tabpanel value="5">
-                <app-examination-list [patientId]="plainId" [patientName]="patientName" />
+                <app-consultation-list [patientId]="plainId" [patientName]="patientName" />
             </p-tabpanel>
 
         </p-tabpanels>
@@ -275,7 +227,6 @@
 
     }
 
-    <!-- Not found -->
     @if (!loading && !patient) {
     <div class="empty-state" style="padding:4rem;">
         <i class="pi pi-user-minus"></i>

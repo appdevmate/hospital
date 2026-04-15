@@ -81,8 +81,6 @@ const batchDelete = async (pks) => {
 
 /* ── handler ── */
 exports.handler = async (event) => {
-  console.log('📥 Event:', JSON.stringify(event));
-
   try {
     const body   = JSON.parse(event.body || '{}');
     const rawIds = body.ids;
@@ -98,7 +96,6 @@ exports.handler = async (event) => {
     }
 
     const pks = ids.map(toPK);
-    console.log(`🗑️ Attempting to delete ${pks.length} doctor(s):`, pks);
 
     // ── check existence ──
     const existenceResults = await Promise.all(
@@ -121,8 +118,6 @@ exports.handler = async (event) => {
     }
 
     const failedIds = failedPKs.map(pk => pk.replace('DOCTOR#', ''));
-
-    console.log(`✅ Deleted: ${deletedCount} | Not found: ${notFound.length} | Failed: ${failedIds.length}`);
 
     const statusCode = deletedCount === 0   ? 500
                      : failedIds.length > 0 ? 207
@@ -148,7 +143,6 @@ exports.handler = async (event) => {
     };
 
   } catch (err) {
-    console.error('❌ Error:', err);
     return fail(500, err?.message || 'Internal Server Error');
   }
 };

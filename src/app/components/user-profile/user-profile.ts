@@ -85,7 +85,7 @@ class UserProfileStore {
             try {
                 userData = JSON.parse(userDataStr);
             } catch (e) {
-                console.error('Failed to parse userData from localStorage', e);
+                // ignore invalid localStorage data
             }
         }
 
@@ -140,7 +140,7 @@ class UserProfileStore {
                     return;
                 }
             } catch (error) {
-                console.error('Failed to fetch doctor profile from API', error);
+                // ignore API fetch failure
             } finally {
                 this.apiCallInProgress = false;
             }

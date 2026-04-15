@@ -6,8 +6,6 @@ const client = new DynamoDBClient({ region: 'eu-north-1' });
 const dynamo = DynamoDBDocumentClient.from(client);
 
 exports.handler = async (event) => {
-  console.log('Incoming event:', JSON.stringify(event));
-
   try {
     const body = JSON.parse(event.body || '{}');
     const name = String(body.name || '').trim();
@@ -33,14 +31,12 @@ exports.handler = async (event) => {
     };
 
     await dynamo.send(new PutCommand(params));
-    console.log('✅ Specialization record inserted');
 
     return {
       statusCode: 201,
       body: JSON.stringify({ message: 'Specialization created successfully', specializationID })
     };
   } catch (error) {
-    console.error('❌ Error creating specialization:', error);
     return { statusCode: 500, body: JSON.stringify({ message: 'Failed to create specialization', error: error.message }) };
   }
 };

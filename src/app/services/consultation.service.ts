@@ -15,7 +15,7 @@ export interface ROS {
     neurological?: string;
     psychiatric?: string;
     other?: string;
-    [key: string]: string | undefined; // ← index signature
+    [key: string]: string | undefined;
 }
 
 export interface ChiefComplaint {
@@ -64,7 +64,7 @@ export interface PhysicalExam {
     skin?: string;
     musculoskeletal?: string;
     notes?: string;
-    [key: string]: string | undefined; // ← index signature
+    [key: string]: string | undefined;
 }
 
 export interface Diagnosis {
@@ -125,10 +125,12 @@ export interface TreatmentPlan {
     prognosis?: string;
 }
 
-export interface Examination {
+export interface Consultation {
     PK: string;
     SK: string;
-    examId: string;
+    consultationId: string;
+    /** @deprecated use consultationId */
+    examId?: string;
     patientId: string;
     patientName: string;
     doctorId: string;
@@ -149,10 +151,13 @@ export interface Examination {
     treatmentPlan: TreatmentPlan | null;
 }
 
+/** Backward-compatible alias — remove once Lambda is renamed */
+export type Examination = Consultation;
+
 // ── Service ───────────────────────────────────────────────────────────────────
 
 @Injectable({ providedIn: 'root' })
-export class ExaminationService {
+export class ConsultationService {
     private http = inject(HttpClient);
 
     private headers(): HttpHeaders {
@@ -163,30 +168,45 @@ export class ExaminationService {
         });
     }
 
-    createExamination(data: { patientId: string; patientName: string; doctorEmail: string; doctorName?: string; date?: string }): Observable<Examination> {
-        return this.http.post<Examination>(Config.buildUrl('examinations'), data, { headers: this.headers() });
+    createConsultation(data: { patientId: string; patientName: string; doctorEmail: string; doctorName?: string; date?: string; appointmentId?: string }): Observable<Consultation> {
+        return this.http.post<Consultation>(Config.buildUrl('examinations'), data, { headers: this.headers() });
     }
 
-    listExaminations(patientId: string, doctorEmail?: string): Observable<Examination[]> {
+    /** @deprecated use createConsultation */
+    createExamination = this.createConsultation.bind(this);
+
+    listConsultations(patientId: string, doctorEmail?: string): Observable<Consultation[]> {
         let params = new HttpParams();
         if (patientId) params = params.set('patientId', patientId);
         if (doctorEmail) params = params.set('doctorEmail', doctorEmail);
-        return this.http.get<Examination[]>(Config.buildUrl('examinations'), { headers: this.headers(), params });
+        return this.http.get<Consultation[]>(Config.buildUrl('examinations'), { headers: this.headers(), params });
     }
 
-    getExamination(examId: string): Observable<Examination> {
-        return this.http.get<Examination>(Config.buildUrl(`examinations/${examId}`), { headers: this.headers() });
+    /** @deprecated use listConsultations */
+    listExaminations = this.listConsultations.bind(this);
+
+    getConsultation(consultationId: string): Observable<Consultation> {
+        return this.http.get<Consultation>(Config.buildUrl(`examinations/${consultationId}`), { headers: this.headers() });
     }
 
-    updateSection(examId: string, section: string, data: any): Observable<Examination> {
-        return this.http.patch<Examination>(Config.buildUrl(`examinations/${examId}`), { [section]: data }, { headers: this.headers() });
+    /** @deprecated use getConsultation */
+    getExamination = this.getConsultation.bind(this);
+
+    updateSection(consultationId: string, section: string, data: any): Observable<Consultation> {
+        return this.http.patch<Consultation>(Config.buildUrl(`examinations/${consultationId}`), { [section]: data }, { headers: this.headers() });
     }
 
-    signOff(examId: string): Observable<Examination> {
-        return this.http.post<Examination>(Config.buildUrl(`examinations/${examId}/signoff`), {}, { headers: this.headers() });
+    signOff(consultationId: string): Observable<Consultation> {
+        return this.http.post<Consultation>(Config.buildUrl(`examinations/${consultationId}/signoff`), {}, { headers: this.headers() });
     }
 
-    deleteExamination(examId: string): Observable<any> {
-        return this.http.delete(Config.buildUrl(`examinations/${examId}`), { headers: this.headers() });
+    deleteConsultation(consultationId: string): Observable<any> {
+        return this.http.delete(Config.buildUrl(`examinations/${consultationId}`), { headers: this.headers() });
     }
+
+    /** @deprecated use deleteConsultation */
+    deleteExamination = this.deleteConsultation.bind(this);
 }
+
+/** @deprecated import ConsultationService instead */
+export { ConsultationService as ExaminationService };

@@ -46,7 +46,6 @@ exports.handler = async (event) => {
       })
     };
   } catch (err) {
-    console.error(err);
     return { statusCode: 500, body: JSON.stringify({ message: 'Failed to list payments.' }) };
   }
 };

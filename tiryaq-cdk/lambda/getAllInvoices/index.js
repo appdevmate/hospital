@@ -76,7 +76,6 @@ exports.handler = async (event) => {
         };
 
     } catch (err) {
-        console.error('getAllInvoices error:', err);
         return {
             statusCode: 500,
             body: JSON.stringify({ message: 'Failed to fetch invoices.', error: err.message })

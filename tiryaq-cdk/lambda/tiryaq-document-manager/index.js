@@ -256,7 +256,6 @@ exports.handler = async (event) => {
         return errResp(404, 'Route not found');
 
     } catch (err) {
-        console.error('Error:', err);
         return errResp(500, err?.message || 'Internal Server Error');
     }
 };

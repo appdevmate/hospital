@@ -15,7 +15,7 @@
         <div class="flex items-center gap-3">
             <p-button icon="pi pi-arrow-left" text severity="secondary" (onClick)="goBack()" />
             <div>
-                <h2 class="m-0">Clinical Examination</h2>
+                <h2 class="m-0">Consultation</h2>
                 <div class="text-sm text-surface-500">
                     {{ exam!.patientName | titlecase }} ·
                     {{ exam!.date | date:'MMM d, y' }} ·
@@ -24,7 +24,7 @@
             </div>
         </div>
         <div class="flex items-center gap-3">
-            <p-tag [value]="exam!.status === 'completed' ? '✓ Closed Consultation' : 'Draft'"
+            <p-tag [value]="exam!.status === 'completed' ? '✓ Closed' : 'Draft'"
                 [severity]="exam!.status === 'completed' ? 'success' : 'warn'"
                 [style]="{'font-size':'0.9rem','padding':'0.4rem 0.8rem'}" />
             @if (exam!.status === 'draft' && auth.isDoctor) {
@@ -99,11 +99,9 @@
     <!-- ── SOAP Panels ── -->
     <div class="soap-panels">
 
-
         <!-- ─── S: Chief Complaint & History ─── -->
         @if (step === 0) {
         <div class="step-body">
-
             <div class="form-section">
                 <h4 class="section-title">Chief Complaint *</h4>
                 <div class="mb-3">
@@ -163,9 +161,7 @@
                         placeholder="Full narrative of the current illness..." [disabled]="isReadOnly"></textarea>
                 </div>
             </div>
-
             <p-divider />
-
             <div class="form-section">
                 <h4 class="section-title">Review of Systems (ROS)</h4>
                 <div class="form-grid">
@@ -180,9 +176,7 @@
                     }
                 </div>
             </div>
-
             <p-divider />
-
             <div class="form-section">
                 <h4 class="section-title">Past History</h4>
                 <div class="form-grid mb-3">
@@ -222,7 +216,6 @@
                     </div>
                 </div>
             </div>
-
             @if (!isReadOnly) {
             <div class="flex justify-end mt-4">
                 <p-button label="Save Chief Complaint" icon="pi pi-save" severity="success" [loading]="saving"
@@ -238,59 +231,39 @@
             <div class="form-section">
                 <h4 class="section-title">Vital Signs</h4>
                 <div class="vitals-grid">
-                    <div class="vital-card">
-                        <label class="field-label">Systolic BP (mmHg)</label>
-                        <p-inputnumber [(ngModel)]="vs.systolic" [min]="50" [max]="300" styleClass="w-full"
-                            [disabled]="isReadOnly" />
-                    </div>
-                    <div class="vital-card">
-                        <label class="field-label">Diastolic BP (mmHg)</label>
-                        <p-inputnumber [(ngModel)]="vs.diastolic" [min]="30" [max]="200" styleClass="w-full"
-                            [disabled]="isReadOnly" />
-                    </div>
-                    <div class="vital-card">
-                        <label class="field-label">Heart Rate (bpm)</label>
-                        <p-inputnumber [(ngModel)]="vs.heartRate" [min]="20" [max]="300" styleClass="w-full"
-                            [disabled]="isReadOnly" />
-                    </div>
-                    <div class="vital-card">
-                        <label class="field-label">Temperature (°C)</label>
-                        <p-inputnumber [(ngModel)]="vs.temperature" [min]="30" [max]="45" [minFractionDigits]="1"
-                            styleClass="w-full" [disabled]="isReadOnly" />
-                    </div>
-                    <div class="vital-card">
-                        <label class="field-label">Weight (kg)</label>
-                        <p-inputnumber [(ngModel)]="vs.weight" [min]="0.5" [max]="500" [minFractionDigits]="1"
-                            styleClass="w-full" [disabled]="isReadOnly" />
-                    </div>
-                    <div class="vital-card">
-                        <label class="field-label">Height (cm)</label>
-                        <p-inputnumber [(ngModel)]="vs.height" [min]="30" [max]="250" styleClass="w-full"
-                            [disabled]="isReadOnly" />
-                    </div>
+                    <div class="vital-card"><label class="field-label">Systolic BP (mmHg)</label><p-inputnumber
+                            [(ngModel)]="vs.systolic" [min]="50" [max]="300" styleClass="w-full"
+                            [disabled]="isReadOnly" /></div>
+                    <div class="vital-card"><label class="field-label">Diastolic BP (mmHg)</label><p-inputnumber
+                            [(ngModel)]="vs.diastolic" [min]="30" [max]="200" styleClass="w-full"
+                            [disabled]="isReadOnly" /></div>
+                    <div class="vital-card"><label class="field-label">Heart Rate (bpm)</label><p-inputnumber
+                            [(ngModel)]="vs.heartRate" [min]="20" [max]="300" styleClass="w-full"
+                            [disabled]="isReadOnly" /></div>
+                    <div class="vital-card"><label class="field-label">Temperature (°C)</label><p-inputnumber
+                            [(ngModel)]="vs.temperature" [min]="30" [max]="45" [minFractionDigits]="1"
+                            styleClass="w-full" [disabled]="isReadOnly" /></div>
+                    <div class="vital-card"><label class="field-label">Weight (kg)</label><p-inputnumber
+                            [(ngModel)]="vs.weight" [min]="0.5" [max]="500" [minFractionDigits]="1" styleClass="w-full"
+                            [disabled]="isReadOnly" /></div>
+                    <div class="vital-card"><label class="field-label">Height (cm)</label><p-inputnumber
+                            [(ngModel)]="vs.height" [min]="30" [max]="250" styleClass="w-full"
+                            [disabled]="isReadOnly" /></div>
                     <div class="vital-card">
                         <label class="field-label">BMI (auto-calculated)</label>
                         <div class="bmi-display" [class.bmi-ok]="bmi && bmi >= 18.5 && bmi < 25"
                             [class.bmi-warn]="bmi && (bmi < 18.5 || (bmi >= 25 && bmi < 30))"
-                            [class.bmi-danger]="bmi && bmi >= 30">
-                            {{ bmi ?? '—' }}
-                        </div>
+                            [class.bmi-danger]="bmi && bmi >= 30">{{ bmi ?? '—' }}</div>
                     </div>
-                    <div class="vital-card">
-                        <label class="field-label">O₂ Saturation (%)</label>
-                        <p-inputnumber [(ngModel)]="vs.oxygenSaturation" [min]="50" [max]="100" styleClass="w-full"
-                            [disabled]="isReadOnly" />
-                    </div>
-                    <div class="vital-card">
-                        <label class="field-label">Respiratory Rate (bpm)</label>
-                        <p-inputnumber [(ngModel)]="vs.respiratoryRate" [min]="4" [max]="60" styleClass="w-full"
-                            [disabled]="isReadOnly" />
-                    </div>
-                    <div class="vital-card">
-                        <label class="field-label">Pain Scale (0–10)</label>
-                        <p-inputnumber [(ngModel)]="vs.painScale" [min]="0" [max]="10" styleClass="w-full"
-                            [disabled]="isReadOnly" />
-                    </div>
+                    <div class="vital-card"><label class="field-label">O₂ Saturation (%)</label><p-inputnumber
+                            [(ngModel)]="vs.oxygenSaturation" [min]="50" [max]="100" styleClass="w-full"
+                            [disabled]="isReadOnly" /></div>
+                    <div class="vital-card"><label class="field-label">Respiratory Rate (bpm)</label><p-inputnumber
+                            [(ngModel)]="vs.respiratoryRate" [min]="4" [max]="60" styleClass="w-full"
+                            [disabled]="isReadOnly" /></div>
+                    <div class="vital-card"><label class="field-label">Pain Scale (0–10)</label><p-inputnumber
+                            [(ngModel)]="vs.painScale" [min]="0" [max]="10" styleClass="w-full"
+                            [disabled]="isReadOnly" /></div>
                 </div>
             </div>
             @if (!isReadOnly) {
@@ -308,18 +281,10 @@
             <div class="form-section">
                 <h4 class="section-title">Physical Examination Findings</h4>
                 <div class="form-grid">
-                    @for (system of [
-                    {key:'generalAppearance', label:'General Appearance'},
-                    {key:'heent', label:'HEENT (Head, Eyes, Ears, Nose, Throat)'},
-                    {key:'neck', label:'Neck'},
-                    {key:'chest', label:'Chest / Lungs'},
-                    {key:'cardiovascular', label:'Cardiovascular'},
-                    {key:'abdomen', label:'Abdomen'},
-                    {key:'extremities', label:'Extremities'},
-                    {key:'neurological', label:'Neurological'},
-                    {key:'skin', label:'Skin'},
-                    {key:'musculoskeletal', label:'Musculoskeletal'}
-                    ]; track system.key) {
+                    @for (system of [{key:'generalAppearance',label:'General Appearance'},{key:'heent',label:'HEENT
+                    (Head, Eyes, Ears, Nose, Throat)'},{key:'neck',label:'Neck'},{key:'chest',label:'Chest /
+                    Lungs'},{key:'cardiovascular',label:'Cardiovascular'},{key:'abdomen',label:'Abdomen'},{key:'extremities',label:'Extremities'},{key:'neurological',label:'Neurological'},{key:'skin',label:'Skin'},{key:'musculoskeletal',label:'Musculoskeletal'}];
+                    track system.key) {
                     <div>
                         <label class="field-label">{{ system.label }}</label>
                         <textarea pTextarea [(ngModel)]="$any(pe)[system.key]" class="w-full" rows="2"
@@ -347,8 +312,8 @@
         <div class="step-body">
             <div class="form-section">
                 <h4 class="section-title">Diagnoses *</h4>
-                <p class="text-sm text-surface-500 mb-3">At least 1 primary diagnosis is required to sign off.</p>
-
+                <p class="text-sm text-surface-500 mb-3">At least 1 primary diagnosis is required to close the
+                    consultation.</p>
                 @if (!isReadOnly) {
                 <div class="add-item-form mb-4">
                     <div class="form-grid-3 mb-2">
@@ -374,10 +339,7 @@
                         [disabled]="!newDiag.icdCode" (onClick)="addDiagnosis()" />
                 </div>
                 }
-
-                @if (diagnoses.length === 0) {
-                <div class="empty-hint">No diagnoses added yet.</div>
-                }
+                @if (diagnoses.length === 0) { <div class="empty-hint">No diagnoses added yet.</div> }
                 @for (dx of diagnoses; track $index; let i = $index) {
                 <div class="item-row">
                     <div class="flex-1 min-w-0">
@@ -386,16 +348,12 @@
                             <span class="font-mono font-semibold text-sm">{{ dx.icdCode }}</span>
                             <span class="text-sm">{{ dx.icdDescription }}</span>
                         </div>
-                        @if (dx.notes) {
-                        <div class="text-xs text-surface-500">{{ dx.notes }}</div>
-                        }
+                        @if (dx.notes) { <div class="text-xs text-surface-500">{{ dx.notes }}</div> }
                     </div>
-                    @if (!isReadOnly) {
-                    <p-button icon="pi pi-times" text severity="danger" size="small" (onClick)="removeDiagnosis(i)" />
-                    }
+                    @if (!isReadOnly) { <p-button icon="pi pi-times" text severity="danger" size="small"
+                        (onClick)="removeDiagnosis(i)" /> }
                 </div>
                 }
-
                 @if (!isReadOnly && diagnoses.length > 0) {
                 <div class="flex justify-end mt-4">
                     <p-button label="Save Diagnoses" icon="pi pi-save" severity="success" [loading]="saving"
@@ -410,89 +368,58 @@
         @if (step === 4) {
         <div class="step-body">
             @if ((exam?.diagnosis?.length ?? 0) === 0) {
-            <div class="prereq-warning">
-                <i class="pi pi-exclamation-triangle mr-2"></i>
-                A diagnosis is required before adding prescriptions.
-                <p-button label="Go to Diagnosis" text size="small" (onClick)="goToStep(3)" />
+            <div class="prereq-warning"><i class="pi pi-exclamation-triangle mr-2"></i>A diagnosis is required before
+                adding prescriptions.<p-button label="Go to Diagnosis" text size="small" (onClick)="goToStep(3)" />
             </div>
             } @else {
             <div class="form-section">
                 <h4 class="section-title">Prescriptions / Medications</h4>
-
                 @if (!isReadOnly) {
                 <div class="add-item-form mb-4">
                     <div class="form-grid-3 mb-2">
-                        <div>
-                            <label class="field-label">Medication *</label>
-                            <input pInputText [(ngModel)]="newRx.medication" class="w-full"
-                                placeholder="e.g. Amoxicillin" />
-                        </div>
-                        <div>
-                            <label class="field-label">Dose *</label>
-                            <input pInputText [(ngModel)]="newRx.dose" class="w-full" placeholder="e.g. 500mg" />
-                        </div>
-                        <div>
-                            <label class="field-label">Frequency *</label>
-                            <input pInputText [(ngModel)]="newRx.frequency" class="w-full"
-                                placeholder="e.g. Twice daily" />
-                        </div>
+                        <div><label class="field-label">Medication *</label><input pInputText
+                                [(ngModel)]="newRx.medication" class="w-full" placeholder="e.g. Amoxicillin" /></div>
+                        <div><label class="field-label">Dose *</label><input pInputText [(ngModel)]="newRx.dose"
+                                class="w-full" placeholder="e.g. 500mg" /></div>
+                        <div><label class="field-label">Frequency *</label><input pInputText
+                                [(ngModel)]="newRx.frequency" class="w-full" placeholder="e.g. Twice daily" /></div>
                     </div>
                     <div class="form-grid-3 mb-2">
-                        <div>
-                            <label class="field-label">Duration</label>
-                            <input pInputText [(ngModel)]="newRx.duration" class="w-full" placeholder="e.g. 7 days" />
-                        </div>
-                        <div>
-                            <label class="field-label">Route *</label>
-                            <p-select [options]="routeOptions" [(ngModel)]="newRx.route" optionLabel="label"
-                                optionValue="value" appendTo="body" styleClass="w-full" />
-                        </div>
-                        <div>
-                            <label class="field-label">Refills</label>
-                            <p-inputnumber [(ngModel)]="newRx.refills" [min]="0" [max]="12" styleClass="w-full" />
-                        </div>
+                        <div><label class="field-label">Duration</label><input pInputText [(ngModel)]="newRx.duration"
+                                class="w-full" placeholder="e.g. 7 days" /></div>
+                        <div><label class="field-label">Route *</label><p-select [options]="routeOptions"
+                                [(ngModel)]="newRx.route" optionLabel="label" optionValue="value" appendTo="body"
+                                styleClass="w-full" /></div>
+                        <div><label class="field-label">Refills</label><p-inputnumber [(ngModel)]="newRx.refills"
+                                [min]="0" [max]="12" styleClass="w-full" /></div>
                     </div>
-                    <div class="mb-2">
-                        <label class="field-label">Instructions</label>
-                        <input pInputText [(ngModel)]="newRx.instructions" class="w-full"
-                            placeholder="e.g. Take with food, avoid sunlight" />
-                    </div>
+                    <div class="mb-2"><label class="field-label">Instructions</label><input pInputText
+                            [(ngModel)]="newRx.instructions" class="w-full"
+                            placeholder="e.g. Take with food, avoid sunlight" /></div>
                     <p-button label="Add Prescription" icon="pi pi-plus" severity="success" outlined
                         [disabled]="!newRx.medication || !newRx.dose || !newRx.frequency"
                         (onClick)="addPrescription()" />
                 </div>
                 }
-
-                @if (prescriptions.length === 0) {
-                <div class="empty-hint">No prescriptions added yet.</div>
-                }
+                @if (prescriptions.length === 0) { <div class="empty-hint">No prescriptions added yet.</div> }
                 @for (rx of prescriptions; track $index; let i = $index) {
                 <div class="item-row">
                     <div class="flex-1 min-w-0">
                         <div class="font-semibold">{{ rx.medication }}</div>
-                        <div class="text-sm text-surface-500">
-                            {{ rx.dose }} · {{ rx.frequency }}
-                            @if (rx.duration) { · {{ rx.duration }} }
-                            · Route: {{ rx.route | titlecase }}
-                            @if (rx.refills) { · {{ rx.refills }} refill(s) }
-                        </div>
-                        @if (rx.instructions) {
-                        <div class="text-xs text-surface-400 mt-0.5">{{ rx.instructions }}</div>
+                        <div class="text-sm text-surface-500">{{ rx.dose }} · {{ rx.frequency }} @if (rx.duration) { ·
+                            {{ rx.duration }} } · Route: {{ rx.route | titlecase }} @if (rx.refills) { · {{ rx.refills
+                            }} refill(s) }</div>
+                        @if (rx.instructions) { <div class="text-xs text-surface-400 mt-0.5">{{ rx.instructions }}</div>
                         }
                     </div>
                     <p-tag [value]="rx.status | titlecase" [severity]="statusClass(rx.status)" />
-                    @if (!isReadOnly) {
-                    <p-button icon="pi pi-times" text severity="danger" size="small" (onClick)="removeRx(i)" />
-                    }
+                    @if (!isReadOnly) { <p-button icon="pi pi-times" text severity="danger" size="small"
+                        (onClick)="removeRx(i)" /> }
                 </div>
                 }
-
-                @if (!isReadOnly && prescriptions.length > 0) {
-                <div class="flex justify-end mt-4">
-                    <p-button label="Save Prescriptions" icon="pi pi-save" severity="success" [loading]="saving"
-                        (onClick)="saveRx()" />
-                </div>
-                }
+                @if (!isReadOnly && prescriptions.length > 0) { <div class="flex justify-end mt-4"><p-button
+                        label="Save Prescriptions" icon="pi pi-save" severity="success" [loading]="saving"
+                        (onClick)="saveRx()" /></div> }
             </div>
             }
         </div>
@@ -502,77 +429,52 @@
         @if (step === 5) {
         <div class="step-body">
             @if ((exam?.diagnosis?.length ?? 0) === 0) {
-            <div class="prereq-warning">
-                <i class="pi pi-exclamation-triangle mr-2"></i>
-                A diagnosis is required before ordering lab tests.
-                <p-button label="Go to Diagnosis" text size="small" (onClick)="goToStep(3)" />
-            </div>
+            <div class="prereq-warning"><i class="pi pi-exclamation-triangle mr-2"></i>A diagnosis is required before
+                ordering lab tests.<p-button label="Go to Diagnosis" text size="small" (onClick)="goToStep(3)" /></div>
             } @else {
             <div class="form-section">
                 <h4 class="section-title">Laboratory Orders</h4>
-
                 @if (!isReadOnly) {
                 <div class="add-item-form mb-4">
                     <div class="form-grid mb-2">
-                        <div>
-                            <label class="field-label">Search LOINC / Test Name *</label>
-                            <p-autoComplete [(ngModel)]="loincSelected" [suggestions]="loincSuggestions"
+                        <div><label class="field-label">Search LOINC / Test Name *</label><p-autoComplete
+                                [(ngModel)]="loincSelected" [suggestions]="loincSuggestions"
                                 (completeMethod)="searchLoinc($event)" (onSelect)="onLoincSelect($event.value)"
                                 field="label" [dropdown]="true" placeholder="Type test name..." styleClass="w-full"
-                                appendTo="body" />
-                        </div>
-                        <div>
-                            <label class="field-label">Urgency</label>
-                            <p-select [options]="urgencyOptions" [(ngModel)]="newLab.urgency" optionLabel="label"
-                                optionValue="value" appendTo="body" styleClass="w-full" />
-                        </div>
+                                appendTo="body" /></div>
+                        <div><label class="field-label">Urgency</label><p-select [options]="urgencyOptions"
+                                [(ngModel)]="newLab.urgency" optionLabel="label" optionValue="value" appendTo="body"
+                                styleClass="w-full" /></div>
                     </div>
-                    <div class="mb-2">
-                        <label class="field-label">Clinical Reason</label>
-                        <input pInputText [(ngModel)]="newLab.clinicalReason" class="w-full"
-                            placeholder="e.g. Monitoring diabetes management" />
-                    </div>
+                    <div class="mb-2"><label class="field-label">Clinical Reason</label><input pInputText
+                            [(ngModel)]="newLab.clinicalReason" class="w-full"
+                            placeholder="e.g. Monitoring diabetes management" /></div>
                     <p-button label="Add Lab Order" icon="pi pi-plus" severity="success" outlined
                         [disabled]="!newLab.testName" (onClick)="addLabOrder()" />
                 </div>
                 }
-
-                @if (labOrders.length === 0) {
-                <div class="empty-hint">No lab orders added yet.</div>
-                }
+                @if (labOrders.length === 0) { <div class="empty-hint">No lab orders added yet.</div> }
                 @for (lab of labOrders; track $index; let i = $index) {
                 <div class="item-row">
                     <div class="flex-1 min-w-0">
                         <div class="font-semibold">{{ lab.testName }}</div>
-                        <div class="text-sm text-surface-500">
-                            @if (lab.loincCode) { LOINC: {{ lab.loincCode }} · }
-                            Urgency:
-                            <p-tag [value]="lab.urgency | titlecase" [severity]="urgencyClass(lab.urgency)"
-                                styleClass="text-xs" />
-                            @if (lab.referenceRange) { · Ref: {{ lab.referenceRange }} }
+                        <div class="text-sm text-surface-500">@if (lab.loincCode) { LOINC: {{ lab.loincCode }} ·
+                            }Urgency:<p-tag [value]="lab.urgency | titlecase" [severity]="urgencyClass(lab.urgency)"
+                                styleClass="text-xs" />@if (lab.referenceRange) { · Ref: {{ lab.referenceRange }} }
                         </div>
-                        @if (lab.result) {
-                        <div class="text-sm font-medium mt-0.5">
-                            Result: {{ lab.result }} {{ lab.unit }}
-                        </div>
-                        }
-                        @if (lab.clinicalReason) {
-                        <div class="text-xs text-surface-400">{{ lab.clinicalReason }}</div>
+                        @if (lab.result) { <div class="text-sm font-medium mt-0.5">Result: {{ lab.result }} {{ lab.unit
+                            }}</div> }
+                        @if (lab.clinicalReason) { <div class="text-xs text-surface-400">{{ lab.clinicalReason }}</div>
                         }
                     </div>
                     <p-tag [value]="lab.status | titlecase" [severity]="statusClass(lab.status)" />
-                    @if (!isReadOnly) {
-                    <p-button icon="pi pi-times" text severity="danger" size="small" (onClick)="removeLab(i)" />
-                    }
+                    @if (!isReadOnly) { <p-button icon="pi pi-times" text severity="danger" size="small"
+                        (onClick)="removeLab(i)" /> }
                 </div>
                 }
-
-                @if (!isReadOnly && labOrders.length > 0) {
-                <div class="flex justify-end mt-4">
-                    <p-button label="Save Lab Orders" icon="pi pi-save" severity="success" [loading]="saving"
-                        (onClick)="saveLabs()" />
-                </div>
-                }
+                @if (!isReadOnly && labOrders.length > 0) { <div class="flex justify-end mt-4"><p-button
+                        label="Save Lab Orders" icon="pi pi-save" severity="success" [loading]="saving"
+                        (onClick)="saveLabs()" /></div> }
             </div>
             }
         </div>
@@ -582,77 +484,53 @@
         @if (step === 6) {
         <div class="step-body">
             @if ((exam?.diagnosis?.length ?? 0) === 0) {
-            <div class="prereq-warning">
-                <i class="pi pi-exclamation-triangle mr-2"></i>
-                A diagnosis is required before ordering radiology studies.
-                <p-button label="Go to Diagnosis" text size="small" (onClick)="goToStep(3)" />
-            </div>
+            <div class="prereq-warning"><i class="pi pi-exclamation-triangle mr-2"></i>A diagnosis is required before
+                ordering radiology studies.<p-button label="Go to Diagnosis" text size="small"
+                    (onClick)="goToStep(3)" /></div>
             } @else {
             <div class="form-section">
                 <h4 class="section-title">Radiology / Imaging Orders</h4>
-
                 @if (!isReadOnly) {
                 <div class="add-item-form mb-4">
                     <div class="form-grid-3 mb-2">
-                        <div>
-                            <label class="field-label">Study Type *</label>
-                            <p-select [options]="studyTypes" [(ngModel)]="newRad.studyType" optionLabel="label"
-                                optionValue="value" placeholder="Select" appendTo="body" styleClass="w-full" />
+                        <div><label class="field-label">Study Type *</label><p-select [options]="studyTypes"
+                                [(ngModel)]="newRad.studyType" optionLabel="label" optionValue="value"
+                                placeholder="Select" appendTo="body" styleClass="w-full" /></div>
+                        <div><label class="field-label">Body Part *</label><input pInputText
+                                [(ngModel)]="newRad.bodyPart" class="w-full" placeholder="e.g. Chest, Left knee" />
                         </div>
-                        <div>
-                            <label class="field-label">Body Part *</label>
-                            <input pInputText [(ngModel)]="newRad.bodyPart" class="w-full"
-                                placeholder="e.g. Chest, Left knee" />
-                        </div>
-                        <div>
-                            <label class="field-label">Urgency</label>
-                            <p-select [options]="urgencyOptions" [(ngModel)]="newRad.urgency" optionLabel="label"
-                                optionValue="value" appendTo="body" styleClass="w-full" />
-                        </div>
+                        <div><label class="field-label">Urgency</label><p-select [options]="urgencyOptions"
+                                [(ngModel)]="newRad.urgency" optionLabel="label" optionValue="value" appendTo="body"
+                                styleClass="w-full" /></div>
                     </div>
-                    <div class="mb-2">
-                        <label class="field-label">Clinical Information</label>
-                        <input pInputText [(ngModel)]="newRad.clinicalInfo" class="w-full"
-                            placeholder="e.g. Rule out pneumonia, query fracture" />
-                    </div>
+                    <div class="mb-2"><label class="field-label">Clinical Information</label><input pInputText
+                            [(ngModel)]="newRad.clinicalInfo" class="w-full"
+                            placeholder="e.g. Rule out pneumonia, query fracture" /></div>
                     <p-button label="Add Radiology Order" icon="pi pi-plus" severity="success" outlined
                         [disabled]="!newRad.studyType || !newRad.bodyPart" (onClick)="addRadOrder()" />
                 </div>
                 }
-
-                @if (radOrders.length === 0) {
-                <div class="empty-hint">No radiology orders added yet.</div>
-                }
+                @if (radOrders.length === 0) { <div class="empty-hint">No radiology orders added yet.</div> }
                 @for (rad of radOrders; track $index; let i = $index) {
                 <div class="item-row">
                     <div class="flex-1 min-w-0">
                         <div class="font-semibold">{{ rad.studyType }} — {{ rad.bodyPart | titlecase }}</div>
-                        <div class="text-sm text-surface-500">
-                            Urgency:
-                            <p-tag [value]="rad.urgency | titlecase" [severity]="urgencyClass(rad.urgency)"
-                                styleClass="text-xs" />
-                            @if (rad.clinicalInfo) { · {{ rad.clinicalInfo }} }
-                        </div>
-                        @if (rad.findings) {
-                        <div class="text-sm mt-0.5"><strong>Findings:</strong> {{ rad.findings }}</div>
-                        }
-                        @if (rad.impression) {
-                        <div class="text-sm"><strong>Impression:</strong> {{ rad.impression }}</div>
-                        }
+                        <div class="text-sm text-surface-500">Urgency:<p-tag [value]="rad.urgency | titlecase"
+                                [severity]="urgencyClass(rad.urgency)" styleClass="text-xs" />@if (rad.clinicalInfo) { ·
+                            {{ rad.clinicalInfo }} }</div>
+                        @if (rad.findings) { <div class="text-sm mt-0.5"><strong>Findings:</strong> {{ rad.findings }}
+                        </div> }
+                        @if (rad.impression) { <div class="text-sm"><strong>Impression:</strong> {{ rad.impression }}
+                        </div> }
                     </div>
                     <p-tag [value]="rad.status | titlecase" [severity]="statusClass(rad.status)" />
-                    @if (!isReadOnly) {
-                    <p-button icon="pi pi-times" text severity="danger" size="small" (onClick)="removeRad(i)" />
-                    }
+                    @if (!isReadOnly) { <p-button icon="pi pi-times" text severity="danger" size="small"
+                        (onClick)="removeRad(i)" /> }
                 </div>
                 }
-
-                @if (!isReadOnly && radOrders.length > 0) {
-                <div class="flex justify-end mt-4">
-                    <p-button label="Save Radiology Orders" icon="pi pi-save" severity="success" [loading]="saving"
-                        (onClick)="saveRads()" />
-                </div>
-                }
+                @if (!isReadOnly && radOrders.length > 0) { <div class="flex justify-end mt-4"><p-button
+                        label="Save Radiology Orders" icon="pi pi-save" severity="success" [loading]="saving"
+                        (onClick)="saveRads()" /></div> }
             </div>
             }
         </div>
@@ -662,65 +540,45 @@
         @if (step === 7) {
         <div class="step-body">
             @if ((exam?.diagnosis?.length ?? 0) === 0) {
-            <div class="prereq-warning">
-                <i class="pi pi-exclamation-triangle mr-2"></i>
-                A diagnosis is required before adding a treatment plan.
-                <p-button label="Go to Diagnosis" text size="small" (onClick)="goToStep(3)" />
+            <div class="prereq-warning"><i class="pi pi-exclamation-triangle mr-2"></i>A diagnosis is required before
+                adding a treatment plan.<p-button label="Go to Diagnosis" text size="small" (onClick)="goToStep(3)" />
             </div>
             } @else {
             <div class="form-section">
                 <h4 class="section-title">Treatment Plan & Follow-up</h4>
-                <div class="mb-3">
-                    <label class="field-label">Treatment Plan *</label>
-                    <textarea pTextarea [(ngModel)]="tp.plan" class="w-full" rows="4"
-                        placeholder="Detailed treatment plan..." [disabled]="isReadOnly"></textarea>
-                </div>
-                <div class="mb-3">
-                    <label class="field-label">Treatment Goals</label>
-                    <textarea pTextarea [(ngModel)]="tp.goals" class="w-full" rows="2"
-                        placeholder="e.g. Achieve HbA1c < 7%, reduce pain..." [disabled]="isReadOnly"></textarea>
+                <div class="mb-3"><label class="field-label">Treatment Plan *</label><textarea pTextarea
+                        [(ngModel)]="tp.plan" class="w-full" rows="4" placeholder="Detailed treatment plan..."
+                        [disabled]="isReadOnly"></textarea></div>
+                <div class="mb-3"><label class="field-label">Treatment Goals</label><textarea pTextarea
+                        [(ngModel)]="tp.goals" class="w-full" rows="2"
+                        placeholder="e.g. Achieve HbA1c < 7%, reduce pain..." [disabled]="isReadOnly"></textarea></div>
+                <div class="form-grid mb-3">
+                    <div><label class="field-label">Follow-up Date</label><p-datepicker [(ngModel)]="tp.followUpDate"
+                            dateFormat="yy-mm-dd" [showIcon]="true" appendTo="body" styleClass="w-full"
+                            [disabled]="isReadOnly" /></div>
+                    <div><label class="field-label">Follow-up Notes</label><input pInputText
+                            [(ngModel)]="tp.followUpNotes" class="w-full" placeholder="e.g. Repeat CBC in 2 weeks"
+                            [disabled]="isReadOnly" /></div>
                 </div>
                 <div class="form-grid mb-3">
-                    <div>
-                        <label class="field-label">Follow-up Date</label>
-                        <p-datepicker [(ngModel)]="tp.followUpDate" dateFormat="yy-mm-dd" [showIcon]="true"
-                            appendTo="body" styleClass="w-full" [disabled]="isReadOnly" />
-                    </div>
-                    <div>
-                        <label class="field-label">Follow-up Notes</label>
-                        <input pInputText [(ngModel)]="tp.followUpNotes" class="w-full"
-                            placeholder="e.g. Repeat CBC in 2 weeks" [disabled]="isReadOnly" />
-                    </div>
+                    <div><label class="field-label">Referrals</label><input pInputText [(ngModel)]="tp.referrals"
+                            class="w-full" placeholder="e.g. Refer to cardiologist" [disabled]="isReadOnly" /></div>
+                    <div><label class="field-label">Activity Restrictions</label><input pInputText
+                            [(ngModel)]="tp.restrictions" class="w-full" placeholder="e.g. Bed rest for 3 days"
+                            [disabled]="isReadOnly" /></div>
                 </div>
-                <div class="form-grid mb-3">
-                    <div>
-                        <label class="field-label">Referrals</label>
-                        <input pInputText [(ngModel)]="tp.referrals" class="w-full"
-                            placeholder="e.g. Refer to cardiologist" [disabled]="isReadOnly" />
-                    </div>
-                    <div>
-                        <label class="field-label">Activity Restrictions</label>
-                        <input pInputText [(ngModel)]="tp.restrictions" class="w-full"
-                            placeholder="e.g. Bed rest for 3 days" [disabled]="isReadOnly" />
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label class="field-label">Patient Education</label>
-                    <textarea pTextarea [(ngModel)]="tp.patientEducation" class="w-full" rows="2"
-                        placeholder="Topics discussed with patient..." [disabled]="isReadOnly"></textarea>
-                </div>
-                <div class="mb-3">
-                    <label class="field-label">Prognosis</label>
-                    <input pInputText [(ngModel)]="tp.prognosis" class="w-full"
-                        placeholder="e.g. Good with adherence to treatment" [disabled]="isReadOnly" />
-                </div>
-
+                <div class="mb-3"><label class="field-label">Patient Education</label><textarea pTextarea
+                        [(ngModel)]="tp.patientEducation" class="w-full" rows="2"
+                        placeholder="Topics discussed with patient..." [disabled]="isReadOnly"></textarea></div>
+                <div class="mb-3"><label class="field-label">Prognosis</label><input pInputText
+                        [(ngModel)]="tp.prognosis" class="w-full" placeholder="e.g. Good with adherence to treatment"
+                        [disabled]="isReadOnly" /></div>
                 @if (!isReadOnly) {
                 <div class="flex justify-between items-center mt-4">
                     <p-button label="Save Treatment Plan" icon="pi pi-save" severity="success" [loading]="saving"
                         (onClick)="saveTp()" />
-                    <p-button label="Sign Off Examination" icon="pi pi-check" severity="success"
-                        [disabled]="!canSignOff" [loading]="saving" (onClick)="signOff()"
+                    <p-button label="Close Consultation" icon="pi pi-check" severity="success" [disabled]="!canSignOff"
+                        [loading]="saving" (onClick)="signOff()"
                         pTooltip="Requires Chief Complaint + Primary Diagnosis" />
                 </div>
                 }
@@ -730,6 +588,5 @@
         }
 
     </div>
-
 </div>
 }

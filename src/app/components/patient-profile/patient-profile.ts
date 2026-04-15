@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from 'primeng/tabs';
@@ -12,23 +12,26 @@ import { catchError } from 'rxjs/operators';
 
 import { PatientsService, Patient } from '../../services/patients.service';
 import { AppointmentsService, Appointment } from '../../services/appointments.service';
+import { ConsultationService } from '@/services/consultation.service';
 import { PaymentsService, Payment } from '../../services/payments.service';
 import { HelpersService } from '@/services/helpers-service';
 import { AuthService } from '@/services/auth.service';
-import { ExaminationListComponent } from '../examination/examination-list/examination-list';
+import { ConsultationListComponent } from '../consultation/consultation-list/consultation-list';
 
 @Component({
     selector: 'app-patient-profile',
     standalone: true,
-    imports: [CommonModule, RouterModule, ButtonModule, TagModule, Tabs, TabList, Tab, TabPanels, TabPanel, CardModule, ConfirmDialogModule, ExaminationListComponent],
+    imports: [CommonModule, RouterModule, ButtonModule, TagModule, Tabs, TabList, Tab, TabPanels, TabPanel, CardModule, ConfirmDialogModule, ConsultationListComponent],
     providers: [ConfirmationService],
     templateUrl: './patient-profile.html',
     styleUrl: './patient-profile.scss'
 })
 export class PatientProfileComponent implements OnInit {
     private route = inject(ActivatedRoute);
+    private router = inject(Router);
     private patientsService = inject(PatientsService);
     private appointmentsService = inject(AppointmentsService);
+    private consultationService = inject(ConsultationService);
     private paymentsService = inject(PaymentsService);
     private confirm = inject(ConfirmationService);
     private helpers = inject(HelpersService);
@@ -39,8 +42,8 @@ export class PatientProfileComponent implements OnInit {
     invoices: Payment[] = [];
     loading = true;
     restoring = false;
+    startingConsultation: string | null = null;
 
-    // plain uuid extracted from PK — used for examination-list and profile queries
     plainId = '';
     patientName = '';
 
@@ -73,11 +76,39 @@ export class PatientProfileComponent implements OnInit {
         });
     }
 
+    // ── Start Consultation from appointment ───────────────────────────────
+    startConsultation(appt: Appointment) {
+        this.startingConsultation = appt.appointmentId;
+
+        this.appointmentsService
+            .startConsultation(appt.appointmentId)
+            .pipe(catchError(() => of(null)))
+            .subscribe(() => {
+                this.consultationService
+                    .createConsultation({
+                        patientId: this.plainId,
+                        patientName: this.patientName,
+                        doctorEmail: this.auth.current?.email || '',
+                        doctorName: this.auth.current?.name || '',
+                        appointmentId: appt.appointmentId
+                    })
+                    .subscribe({
+                        next: (c) => {
+                            this.startingConsultation = null;
+                            this.router.navigate(['/consultation', c.consultationId]);
+                        },
+                        error: (err) => {
+                            this.startingConsultation = null;
+                            this.helpers.notifyError('Error', err?.error?.message || 'Could not create consultation');
+                        }
+                    });
+            });
+    }
+
     // ── Restore ───────────────────────────────────────────────────────────
     restorePatient() {
         if (!this.patient) return;
         const name = this.patient.name;
-
         this.confirm.confirm({
             message: `Restore ${name}? They will become visible again in all normal views.`,
             header: 'Restore Patient',
@@ -89,7 +120,6 @@ export class PatientProfileComponent implements OnInit {
                 this.patientsService.restorePatient(this.plainId).subscribe({
                     next: () => {
                         this.helpers.notifySuccess(`${name} restored successfully`);
-                        // refresh patient to clear the deletedAt value
                         this.patientsService
                             .getPatientById(this.plainId)
                             .pipe(catchError(() => of(null)))
@@ -107,27 +137,19 @@ export class PatientProfileComponent implements OnInit {
         });
     }
 
-    // ── Computed helpers ──────────────────────────────────────────────────
+    // ── Helpers ───────────────────────────────────────────────────────────
     get isDeactivated(): boolean {
         const d = this.patient?.deletedAt;
         return !!d && d !== '' && d !== 'null' && d !== '<empty>';
     }
 
-    // ── Severity helpers ──────────────────────────────────────────────────
     getStatusSeverity(status: string): 'success' | 'warn' | 'danger' | 'secondary' | 'info' | 'contrast' {
-        const map: Record<string, any> = {
-            admitted: 'info',
-            stable: 'success',
-            'under treatment': 'warn',
-            discharged: 'secondary',
-            critical: 'danger',
-            dead: 'contrast'
-        };
+        const map: Record<string, any> = { admitted: 'info', stable: 'success', 'under treatment': 'warn', discharged: 'secondary', critical: 'danger', dead: 'contrast' };
         return map[status?.toLowerCase()] || 'secondary';
     }
 
-    getApptStatusSeverity(status: string): 'success' | 'warn' | 'danger' | 'secondary' {
-        const map: Record<string, any> = { scheduled: 'warn', completed: 'success', cancelled: 'danger' };
+    getApptStatusSeverity(status: string): 'success' | 'warn' | 'danger' | 'secondary' | 'info' | 'contrast' {
+        const map: Record<string, any> = { scheduled: 'warn', 'checked-in': 'info', 'in-progress': 'info', completed: 'success', cancelled: 'danger', 'no-show': 'contrast' };
         return map[status] || 'secondary';
     }
 

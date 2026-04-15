@@ -91,8 +91,6 @@ function checkAllergies(medicationName, genericName, patientAllergies) {
 
 // ── Handler ──────────────────────────────────────────────────────────────────
 exports.handler = async (event) => {
-    console.log('Pharmacy event:', JSON.stringify(event));
-
     const method = event.requestContext?.http?.method || event.httpMethod;
     const path   = event.rawPath || event.path || '';
     const qs     = event.queryStringParameters || {};

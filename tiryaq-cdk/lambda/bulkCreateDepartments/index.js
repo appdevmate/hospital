@@ -77,7 +77,6 @@ exports.handler = async (event) => {
       })
     };
   } catch (err) {
-    console.error('bulkCreateDepartments error:', err);
     return { statusCode: 500, body: JSON.stringify({ message: 'Failed to create departments', error: err.message }) };
   }
 };

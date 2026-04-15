@@ -109,7 +109,6 @@ exports.handler = async (event, context) => {
       return { statusCode: 500, headers: HDRS, body: JSON.stringify({ message: 'Table not found' }) };
     }
 
-    console.error('Tx delete error:', err?.name, err?.message);
     return { statusCode: 500, headers: HDRS, body: JSON.stringify({ message: 'Internal Server Error' }) };
   }
 };

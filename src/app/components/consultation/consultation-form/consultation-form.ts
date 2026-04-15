@@ -17,16 +17,15 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { catchError, of } from 'rxjs';
 
-import { ExaminationService, Examination, ChiefComplaint, VitalSigns, PhysicalExam, Diagnosis, Prescription, LabOrder, RadiologyOrder, TreatmentPlan } from '@/services/examination.service';
+import { ConsultationService, Consultation, ChiefComplaint, VitalSigns, PhysicalExam, Diagnosis, Prescription, LabOrder, RadiologyOrder, TreatmentPlan } from '@/services/consultation.service';
 import { AuthService } from '@/services/auth.service';
 import { HelpersService } from '@/services/helpers-service';
 
-// Embedded ICD-10 and LOINC data (loaded lazily)
 import ICD10_CODES from './icd10-codes.json';
 import LOINC_CODES from './loinc-codes.json';
 
 @Component({
-    selector: 'app-examination-form',
+    selector: 'app-consultation-form',
     standalone: true,
     imports: [
         CommonModule,
@@ -47,19 +46,19 @@ import LOINC_CODES from './loinc-codes.json';
         ToastModule
     ],
     providers: [ConfirmationService, MessageService],
-    templateUrl: './examination-form.html',
-    styleUrl: './examination-form.scss'
+    templateUrl: './consultation-form.html',
+    styleUrl: './consultation-form.scss'
 })
-export class ExaminationFormComponent implements OnInit {
+export class ConsultationFormComponent implements OnInit {
     private route = inject(ActivatedRoute);
     private router = inject(Router);
-    private examService = inject(ExaminationService);
+    private consultationService = inject(ConsultationService);
     private helpers = inject(HelpersService);
     private confirm = inject(ConfirmationService);
     auth = inject(AuthService);
     private cdr = inject(ChangeDetectorRef);
 
-    exam: Examination | null = null;
+    consultation: Consultation | null = null;
     loading = true;
     saving = false;
     step = 0;
@@ -112,18 +111,13 @@ export class ExaminationFormComponent implements OnInit {
     radOrders: RadiologyOrder[] = [];
     tp: TreatmentPlan = { plan: '', goals: '', followUpDate: '', followUpNotes: '', referrals: '', restrictions: '', patientEducation: '', prognosis: '' };
 
-    // Temp ICD selection for the diagnosis form
     newDiag: Partial<Diagnosis> = { type: 'primary' };
     icdSelected: any = null;
-
-    // Temp LOINC selection for lab orders
     newLab: Partial<LabOrder> = { urgency: 'routine', status: 'ordered' };
     loincSelected: any = null;
-
     newRad: Partial<RadiologyOrder> = { urgency: 'routine', status: 'ordered' };
     newRx: Partial<Prescription> = { route: 'oral', status: 'ordered', refills: 0 };
 
-    // Options
     onsetOptions = ['sudden', 'gradual', 'unknown'].map((v) => ({ label: v, value: v }));
     severityOptions = ['mild', 'moderate', 'severe'].map((v) => ({ label: v, value: v }));
     routeOptions = ['oral', 'iv', 'im', 'topical', 'inhaled', 'sublingual', 'other'].map((v) => ({ label: v, value: v }));
@@ -131,10 +125,9 @@ export class ExaminationFormComponent implements OnInit {
     studyTypes = ['X-Ray', 'CT', 'MRI', 'Ultrasound', 'PET', 'Mammography', 'Other'].map((v) => ({ label: v, value: v }));
     diagTypeOptions = ['primary', 'secondary', 'differential'].map((v) => ({ label: v, value: v }));
 
-    // Computed: step completion state (for stepper indicators)
     get stepDone(): boolean[] {
-        const e = this.exam;
-        if (!e) return [false, false, false, false, false, false, false, false];
+        const e = this.consultation;
+        if (!e) return Array(8).fill(false);
         return [
             !!e.chiefComplaint?.cc,
             !!(e.vitalSigns?.heartRate || e.vitalSigns?.systolic),
@@ -147,18 +140,16 @@ export class ExaminationFormComponent implements OnInit {
         ];
     }
 
-    // Computed: can sign off?
     get canSignOff(): boolean {
-        const e = this.exam;
+        const e = this.consultation;
         if (!e || e.status === 'completed') return false;
         return !!e.chiefComplaint?.cc && (e.diagnosis?.length ?? 0) > 0 && e.diagnosis.some((d) => d.type === 'primary');
     }
 
     get isReadOnly(): boolean {
-        return this.exam?.status === 'completed';
+        return this.consultation?.status === 'completed';
     }
 
-    // Auto-calc BMI
     get bmi(): number | null {
         const w = this.vs.weight,
             h = this.vs.height;
@@ -166,53 +157,56 @@ export class ExaminationFormComponent implements OnInit {
         return parseFloat((w / (h / 100) ** 2).toFixed(1));
     }
 
+    // Expose consultation as exam for template backward compat
+    get exam() {
+        return this.consultation;
+    }
+
     ngOnInit() {
-        const examId = this.route.snapshot.paramMap.get('examId');
-        if (!examId) {
+        const consultationId = this.route.snapshot.paramMap.get('consultationId');
+        if (!consultationId) {
             this.router.navigate(['/']);
             return;
         }
 
-        this.examService
-            .getExamination(examId)
+        this.consultationService
+            .getConsultation(consultationId)
             .pipe(
                 catchError((err) => {
-                    this.helpers.notifyError('Error', err?.error?.message || 'Could not load examination');
+                    this.helpers.notifyError('Error', err?.error?.message || 'Could not load consultation');
                     this.router.navigate(['/']);
                     return of(null);
                 })
             )
-            .subscribe((exam) => {
-                if (!exam) return;
-                this.exam = exam as Examination;
+            .subscribe((c) => {
+                if (!c) return;
+                this.consultation = c as Consultation;
                 this.cdr.markForCheck();
-                this.populateForms(exam as Examination);
+                this.populateForms(c as Consultation);
                 this.loading = false;
                 this.cdr.markForCheck();
             });
     }
 
-    populateForms(exam: Examination) {
-        if (exam.chiefComplaint) this.cc = { ...this.cc, ...exam.chiefComplaint };
-        if (exam.vitalSigns) this.vs = { ...exam.vitalSigns };
-        if (exam.physicalExam) this.pe = { ...exam.physicalExam };
-        if (exam.diagnosis?.length) this.diagnoses = [...exam.diagnosis];
-        if (exam.prescriptions?.length) this.prescriptions = [...exam.prescriptions];
-        if (exam.labOrders?.length) this.labOrders = [...exam.labOrders];
-        if (exam.radiologyOrders?.length) this.radOrders = [...exam.radiologyOrders];
-        if (exam.treatmentPlan) this.tp = { ...this.tp, ...exam.treatmentPlan };
+    populateForms(c: Consultation) {
+        if (c.chiefComplaint) this.cc = { ...this.cc, ...c.chiefComplaint };
+        if (c.vitalSigns) this.vs = { ...c.vitalSigns };
+        if (c.physicalExam) this.pe = { ...c.physicalExam };
+        if (c.diagnosis?.length) this.diagnoses = [...c.diagnosis];
+        if (c.prescriptions?.length) this.prescriptions = [...c.prescriptions];
+        if (c.labOrders?.length) this.labOrders = [...c.labOrders];
+        if (c.radiologyOrders?.length) this.radOrders = [...c.radiologyOrders];
+        if (c.treatmentPlan) this.tp = { ...this.tp, ...c.treatmentPlan };
     }
 
-    // ── Save section ─────────────────────────────────────────────────────────
     saveSection(sectionName: string, data: any) {
-        const examId = this.exam?.examId;
-        if (!examId) return;
+        const id = this.consultation?.consultationId;
+        if (!id) return;
         this.saving = true;
         this.cdr.markForCheck();
-
-        this.examService.updateSection(examId, sectionName, data).subscribe({
+        this.consultationService.updateSection(id, sectionName, data).subscribe({
             next: (updated) => {
-                this.exam = updated;
+                this.consultation = updated;
                 this.saving = false;
                 this.cdr.markForCheck();
                 this.helpers.notifySuccess('Saved');
@@ -252,86 +246,67 @@ export class ExaminationFormComponent implements OnInit {
         this.saveSection('treatmentPlan', this.tp);
     }
 
-    // ── Diagnosis management ─────────────────────────────────────────────────
     onIcdSelect(item: any) {
         this.newDiag.icdCode = item.value;
         this.newDiag.icdDescription = item.desc;
     }
-
     addDiagnosis() {
         if (!this.newDiag.icdCode || !this.newDiag.icdDescription) return;
-        this.diagnoses = [
-            ...this.diagnoses,
-            {
-                icdCode: this.newDiag.icdCode!,
-                icdDescription: this.newDiag.icdDescription!,
-                type: this.newDiag.type || 'primary',
-                notes: this.newDiag.notes || ''
-            }
-        ];
+        this.diagnoses = [...this.diagnoses, { icdCode: this.newDiag.icdCode!, icdDescription: this.newDiag.icdDescription!, type: this.newDiag.type || 'primary', notes: this.newDiag.notes || '' }];
         this.newDiag = { type: 'primary' };
         this.icdSelected = null;
     }
-
     removeDiagnosis(i: number) {
         this.diagnoses = this.diagnoses.filter((_, idx) => idx !== i);
     }
 
-    // ── Prescription management ───────────────────────────────────────────────
     addPrescription() {
         if (!this.newRx.medication || !this.newRx.dose || !this.newRx.frequency) return;
         this.prescriptions = [...this.prescriptions, { ...this.newRx } as Prescription];
         this.newRx = { route: 'oral', status: 'ordered', refills: 0 };
     }
-
     removeRx(i: number) {
         this.prescriptions = this.prescriptions.filter((_, idx) => idx !== i);
     }
 
-    // ── Lab order management ──────────────────────────────────────────────────
     onLoincSelect(item: any) {
         this.newLab.testName = item.name;
         this.newLab.loincCode = item.value;
         this.newLab.referenceRange = item.ref;
         this.newLab.unit = item.unit;
     }
-
     addLabOrder() {
         if (!this.newLab.testName) return;
         this.labOrders = [...this.labOrders, { ...this.newLab } as LabOrder];
         this.newLab = { urgency: 'routine', status: 'ordered' };
         this.loincSelected = null;
     }
-
     removeLab(i: number) {
         this.labOrders = this.labOrders.filter((_, idx) => idx !== i);
     }
 
-    // ── Radiology order management ────────────────────────────────────────────
     addRadOrder() {
         if (!this.newRad.studyType || !this.newRad.bodyPart) return;
         this.radOrders = [...this.radOrders, { ...this.newRad } as RadiologyOrder];
         this.newRad = { urgency: 'routine', status: 'ordered' };
     }
-
     removeRad(i: number) {
         this.radOrders = this.radOrders.filter((_, idx) => idx !== i);
     }
 
-    // ── Sign off ──────────────────────────────────────────────────────────────
     signOff() {
         this.confirm.confirm({
-            message: 'Sign off this consultation? It will become read-only and cannot be edited.',
-            header: 'Confirm Sign Off',
+            message: 'Close this consultation? It will become read-only and cannot be edited.',
+            header: 'Confirm Close Consultation',
             icon: 'pi pi-check-circle',
-            acceptButtonProps: { label: 'Sign Off', severity: 'success' },
+            acceptButtonProps: { label: 'Close Consultation', severity: 'success' },
             rejectButtonProps: { label: 'Cancel', severity: 'secondary', outlined: true },
             accept: () => {
                 this.saving = true;
                 this.cdr.markForCheck();
-                this.examService.signOff(this.exam!.examId).subscribe({
+                this.consultationService.signOff(this.consultation!.consultationId).subscribe({
                     next: (updated) => {
-                        this.exam = updated;
+                        this.consultation = updated;
                         this.saving = false;
                         this.cdr.markForCheck();
                         this.helpers.notifySuccess('Consultation closed successfully');
@@ -347,7 +322,7 @@ export class ExaminationFormComponent implements OnInit {
     }
 
     goBack() {
-        this.router.navigate(['/patient-profile', this.exam?.patientId]);
+        this.router.navigate(['/patient-profile', this.consultation?.patientId]);
     }
     goToStep(n: number) {
         this.step = n;

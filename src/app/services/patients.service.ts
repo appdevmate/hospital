@@ -175,7 +175,6 @@ export class PatientsService {
         });
 
         const url = Config.buildUrl(this.path);
-        console.log('GET /patients query ->', params.toString());
         return this.http.get<PagedPatientsResponse>(url, { headers: this.authHeaders(), params });
     }
 

@@ -1,5 +1,4 @@
 exports.handler = async (event) => {
-    console.log('Incoming event:', JSON.stringify(event));
     try {
         const patientID = event.pathParameters?.patientID;
         if (!patientID) {
@@ -41,7 +40,6 @@ exports.handler = async (event) => {
             })
         };
     } catch (error) {
-        console.error('Error retrieving payments:', error);
         return {
             statusCode: 500,
             body: JSON.stringify({ message: 'Failed to retrieve payments', error: error.message })

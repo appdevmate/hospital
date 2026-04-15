@@ -45,12 +45,9 @@ exports.handler = async (event) => {
         const body = JSON.parse(event.body);
         if (!email && body?.email) {
           email = String(body.email).trim().toLowerCase();
-          console.log("EMAIL:::",email);
         }
         if (!entityType && body?.type) {
           entityType = String(body.type).trim().toUpperCase();
-          console.log("ENTITY TYPE:::",entityType);
-          
         }
       } catch {
         // ignore invalid JSON
@@ -110,8 +107,6 @@ exports.handler = async (event) => {
     };
 
   } catch (err) {
-    console.error('Get user by email error:', err?.name, err?.message);
-
     return {
       statusCode: 500,
       headers: hdrs,

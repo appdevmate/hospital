@@ -6,7 +6,6 @@ const KEEP_PREFIXES = ['SPECIALIZATION#', 'DEPARTMENT#'];
 const KEEP_EXACT    = ['COUNTER#PATIENTS', 'COUNTER#DOCTORS'];
 
 async function main() {
-    console.log('Scanning table...');
     let items = [], lastKey;
     do {
         const resp = await client.send(new ScanCommand({
@@ -23,8 +22,6 @@ async function main() {
         return !KEEP_PREFIXES.some(p => pk.startsWith(p)) && !KEEP_EXACT.includes(pk);
     });
 
-    console.log(`Total: ${items.length} | Deleting: ${toDelete.length} | Keeping: ${items.length - toDelete.length}`);
-
     for (let i = 0; i < toDelete.length; i++) {
         const pk = toDelete[i].PK.S;
         const sk = toDelete[i].SK.S;
@@ -32,9 +29,7 @@ async function main() {
             TableName: TABLE,
             Key: { PK: { S: pk }, SK: { S: sk } }
         }));
-        console.log(`[${i+1}/${toDelete.length}] Deleted: ${pk} / ${sk}`);
     }
-    console.log('Done.');
 }
 
-main().catch(console.error);
+main();

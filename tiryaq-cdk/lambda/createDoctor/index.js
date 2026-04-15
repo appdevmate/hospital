@@ -259,7 +259,6 @@ const createBulkDoctors = async (doctors) => {
 ========================= */
 
 exports.handler = async (event) => {
-  console.log('Incoming event:', JSON.stringify(event));
 
   try {
     const body   = JSON.parse(event.body || '{}');
@@ -320,8 +319,6 @@ exports.handler = async (event) => {
     };
 
   } catch (error) {
-    console.error('Create doctor error:', error);
-
     const isValidation =
       error.message.includes('required') ||
       error.message.includes('must be') ||

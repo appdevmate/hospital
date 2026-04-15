@@ -76,7 +76,6 @@ exports.handler = async (event) => {
       })
     };
   } catch (err) {
-    console.error('bulkCreateSpecializations error:', err);
     return { statusCode: 500, body: JSON.stringify({ message: 'Failed to create specializations', error: err.message }) };
   }
 };

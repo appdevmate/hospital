@@ -594,7 +594,6 @@ exports.handler = async (event) => {
       pageSize
     });
   } catch (err) {
-    console.error('❌ Error:', err);
     return errResp(500, err?.message || 'Internal Server Error');
   }
 };

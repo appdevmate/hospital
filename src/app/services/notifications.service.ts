@@ -4,7 +4,7 @@ import { map, catchError } from 'rxjs/operators';
 import { AppointmentsService, Appointment } from '@/services/appointments.service';
 import { PatientsService, Patient } from '@/services/patients.service';
 import { PharmacyService, PharmacyAlert } from '@/services/pharmacy.service';
-import { ExaminationService, Examination } from '@/services/examination.service';
+import { ExaminationService, Examination } from '@/services/consultation.service';
 
 export interface Notification {
     id: string;

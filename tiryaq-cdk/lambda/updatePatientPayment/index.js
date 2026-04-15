@@ -5,8 +5,6 @@ const client = new DynamoDBClient({ region: 'us-east-1' });
 const dynamo = DynamoDBDocumentClient.from(client);
 
 exports.handler = async (event) => {
-    console.log("Incoming event:", JSON.stringify(event));
-
     try {
         const patientID = decodeURIComponent(event.pathParameters.patientID);
         const paymentID = decodeURIComponent(event.pathParameters.paymentID);
@@ -26,7 +24,6 @@ exports.handler = async (event) => {
         const updateFields = {};
         for (const [key, value] of Object.entries(body)) {
             if (protectedFields.includes(key)) {
-                console.log(`⚠️ Skipping protected field: ${key}`);
                 continue;
             }
             updateFields[key] = value;
@@ -69,7 +66,6 @@ exports.handler = async (event) => {
         };
 
         const result = await dynamo.send(new UpdateCommand(params));
-        console.log("✅ Payment updated successfully:", result.Attributes);
 
         return {
             statusCode: 200,
@@ -82,8 +78,6 @@ exports.handler = async (event) => {
         };
 
     } catch (error) {
-        console.error("❌ Error updating payment:", error);
-
         if (error.name === 'ConditionalCheckFailedException') {
             return {
                 statusCode: 404,

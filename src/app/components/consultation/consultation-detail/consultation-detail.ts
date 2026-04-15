@@ -7,59 +7,64 @@ import { DividerModule } from 'primeng/divider';
 import { TabsModule } from 'primeng/tabs';
 import { catchError, of } from 'rxjs';
 
-import { ExaminationService, Examination } from '@/services/examination.service';
+import { ConsultationService, Consultation } from '@/services/consultation.service';
 import { AuthService } from '@/services/auth.service';
 import { HelpersService } from '@/services/helpers-service';
 
 @Component({
-    selector: 'app-examination-detail',
+    selector: 'app-consultation-detail',
     standalone: true,
     imports: [CommonModule, RouterModule, ButtonModule, TagModule, DividerModule, TabsModule],
-    templateUrl: './examination-detail.html',
-    styleUrl: './examination-detail.scss'
+    templateUrl: './consultation-detail.html',
+    styleUrl: './consultation-detail.scss'
 })
-export class ExaminationDetailComponent implements OnInit {
+export class ConsultationDetailComponent implements OnInit {
     private route = inject(ActivatedRoute);
     private router = inject(Router);
-    private examService = inject(ExaminationService);
+    private consultationService = inject(ConsultationService);
     private helpers = inject(HelpersService);
     auth = inject(AuthService);
 
-    exam: Examination | null = null;
+    consultation: Consultation | null = null;
     loading = true;
 
+    /** Template alias */
+    get exam() {
+        return this.consultation;
+    }
+
     ngOnInit() {
-        const examId = this.route.snapshot.paramMap.get('examId');
-        if (!examId) {
+        const consultationId = this.route.snapshot.paramMap.get('consultationId');
+        if (!consultationId) {
             this.router.navigate(['/']);
             return;
         }
 
-        this.examService
-            .getExamination(examId)
+        this.consultationService
+            .getConsultation(consultationId)
             .pipe(
                 catchError((err) => {
-                    this.helpers.notifyError('Error', err?.error?.message || 'Could not load examination');
+                    this.helpers.notifyError('Error', err?.error?.message || 'Could not load consultation');
                     this.router.navigate(['/']);
                     return of(null);
                 })
             )
-            .subscribe((exam) => {
-                this.exam = exam as Examination;
+            .subscribe((c) => {
+                this.consultation = c as Consultation;
                 this.loading = false;
             });
     }
 
     goBack() {
-        if (this.exam?.patientId) {
-            this.router.navigate(['/patient-profile', this.exam.patientId]);
+        if (this.consultation?.patientId) {
+            this.router.navigate(['/patient-profile', this.consultation.patientId]);
         } else {
             this.router.navigate(['/']);
         }
     }
 
-    editExam() {
-        this.router.navigate(['/examination', this.exam!.examId]);
+    editConsultation() {
+        this.router.navigate(['/consultation', this.consultation!.consultationId]);
     }
 
     print() {

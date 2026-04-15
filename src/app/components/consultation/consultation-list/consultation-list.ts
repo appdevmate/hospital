@@ -8,12 +8,12 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { catchError, of } from 'rxjs';
 
-import { ExaminationService, Examination } from '@/services/examination.service';
+import { ConsultationService, Consultation } from '@/services/consultation.service';
 import { AuthService } from '@/services/auth.service';
 import { HelpersService } from '@/services/helpers-service';
 
 @Component({
-    selector: 'app-examination-list',
+    selector: 'app-consultation-list',
     standalone: true,
     imports: [CommonModule, ButtonModule, TagModule, TooltipModule, ConfirmDialogModule],
     providers: [ConfirmationService],
@@ -23,11 +23,8 @@ import { HelpersService } from '@/services/helpers-service';
             <div class="exam-list-header">
                 <div class="flex items-center gap-2">
                     <i class="pi pi-file-medical" style="color:#16a34a;font-size:1.2rem;"></i>
-                    <span class="font-semibold text-lg">Examinations ({{ exams.length }})</span>
+                    <span class="font-semibold text-lg">Consultations ({{ consultations.length }})</span>
                 </div>
-                @if (auth.isDoctor || auth.isDeveloper) {
-                    <p-button label="New Examination" icon="pi pi-plus" severity="success" size="small" [loading]="creating" (onClick)="createNew()" />
-                }
             </div>
 
             <!-- Loading -->
@@ -38,63 +35,61 @@ import { HelpersService } from '@/services/helpers-service';
             }
 
             <!-- Empty -->
-            @if (!loading && exams.length === 0) {
+            @if (!loading && consultations.length === 0) {
                 <div class="empty-state">
                     <i class="pi pi-file-medical text-4xl mb-3" style="color:#D1D5DB;"></i>
-                    <p>No examinations recorded yet.</p>
-                    @if (auth.isDoctor || auth.isDeveloper) {
-                        <p class="text-sm text-surface-400">Click "New Examination" to start a SOAP note.</p>
-                    }
+                    <p>No consultations recorded yet.</p>
+                    <p class="text-sm text-surface-400">Start a consultation from the Appointments tab.</p>
                 </div>
             }
 
             <!-- List -->
-            @if (!loading && exams.length > 0) {
+            @if (!loading && consultations.length > 0) {
                 <div class="flex flex-col gap-3">
-                    @for (exam of exams; track exam.examId) {
-                        <div class="exam-card" [class.exam-card-completed]="exam.status === 'completed'">
+                    @for (c of consultations; track c.consultationId) {
+                        <div class="exam-card" [class.exam-card-completed]="c.status === 'completed'">
                             <!-- Left: date badge -->
                             <div class="exam-date-badge">
-                                <span class="exam-day">{{ exam.date | date: 'd' }}</span>
-                                <span class="exam-month">{{ exam.date | date: 'MMM y' }}</span>
+                                <span class="exam-day">{{ c.date | date: 'd' }}</span>
+                                <span class="exam-month">{{ c.date | date: 'MMM y' }}</span>
                             </div>
 
                             <!-- Middle: info -->
                             <div class="exam-info flex-1 min-w-0">
                                 <div class="flex items-center gap-2 mb-1 flex-wrap">
-                                    <p-tag [value]="exam.status === 'completed' ? 'Closed Consultation' : 'Draft'" [severity]="exam.status === 'completed' ? 'success' : 'warn'" />
-                                    @if (exam.diagnosis && exam.diagnosis.length > 0) {
-                                        <span class="text-sm font-medium text-surface-700 dark:text-surface-200"> {{ exam.diagnosis[0].icdCode }} — {{ exam.diagnosis[0].icdDescription }} </span>
+                                    <p-tag [value]="c.status === 'completed' ? 'Closed' : 'Draft'" [severity]="c.status === 'completed' ? 'success' : 'warn'" />
+                                    @if (c.diagnosis && c.diagnosis.length > 0) {
+                                        <span class="text-sm font-medium text-surface-700 dark:text-surface-200"> {{ c.diagnosis[0].icdCode }} — {{ c.diagnosis[0].icdDescription }} </span>
                                     } @else {
                                         <span class="text-sm text-surface-400 italic">No diagnosis yet</span>
                                     }
                                 </div>
 
                                 <div class="flex items-center gap-3 text-xs text-surface-500 flex-wrap">
-                                    <span><i class="pi pi-user-plus mr-1"></i>{{ exam.doctorName | titlecase }}</span>
-                                    @if (exam.chiefComplaint?.cc) {
-                                        <span><i class="pi pi-comment mr-1"></i>{{ exam.chiefComplaint!.cc | titlecase }}</span>
+                                    <span><i class="pi pi-user-plus mr-1"></i>{{ c.doctorName | titlecase }}</span>
+                                    @if (c.chiefComplaint?.cc) {
+                                        <span><i class="pi pi-comment mr-1"></i>{{ c.chiefComplaint!.cc | titlecase }}</span>
                                     }
-                                    @if (exam.prescriptions.length) {
-                                        <span><i class="pi pi-heart mr-1"></i>{{ exam.prescriptions.length }} Rx</span>
+                                    @if (c.prescriptions.length) {
+                                        <span><i class="pi pi-heart mr-1"></i>{{ c.prescriptions.length }} Rx</span>
                                     }
-                                    @if (exam.labOrders.length) {
-                                        <span><i class="pi pi-flask mr-1"></i>{{ exam.labOrders.length }} Labs</span>
+                                    @if (c.labOrders.length) {
+                                        <span><i class="pi pi-flask mr-1"></i>{{ c.labOrders.length }} Labs</span>
                                     }
-                                    @if (exam.radiologyOrders.length) {
-                                        <span><i class="pi pi-image mr-1"></i>{{ exam.radiologyOrders.length }} Imaging</span>
+                                    @if (c.radiologyOrders.length) {
+                                        <span><i class="pi pi-image mr-1"></i>{{ c.radiologyOrders.length }} Imaging</span>
                                     }
                                 </div>
                             </div>
 
                             <!-- Right: actions -->
                             <div class="flex items-center gap-1 flex-shrink-0">
-                                @if (exam.status === 'draft' && auth.isDoctor) {
-                                    <p-button icon="pi pi-pencil" text severity="success" pTooltip="Continue Examination" (onClick)="openForm(exam.examId)" />
+                                @if (c.status === 'draft' && (auth.isDoctor || auth.isDeveloper)) {
+                                    <p-button icon="pi pi-pencil" text severity="success" pTooltip="Continue Consultation" (onClick)="openForm(c.consultationId)" />
                                 }
-                                <p-button icon="pi pi-eye" text severity="info" pTooltip="View Details" (onClick)="openDetail(exam.examId)" />
+                                <p-button icon="pi pi-eye" text severity="info" pTooltip="View Details" (onClick)="openDetail(c.consultationId)" />
                                 @if (auth.isAdmin || auth.isDeveloper) {
-                                    <p-button icon="pi pi-trash" text severity="danger" pTooltip="Delete (Admin)" (onClick)="confirmDelete(exam)" />
+                                    <p-button icon="pi pi-trash" text severity="danger" pTooltip="Delete (Admin)" (onClick)="confirmDelete(c)" />
                                 }
                             </div>
                         </div>
@@ -162,19 +157,18 @@ import { HelpersService } from '@/services/helpers-service';
         `
     ]
 })
-export class ExaminationListComponent implements OnInit {
+export class ConsultationListComponent implements OnInit {
     @Input({ required: true }) patientId!: string;
     @Input() patientName: string = '';
 
     auth = inject(AuthService);
-    private examService = inject(ExaminationService);
+    private consultationService = inject(ConsultationService);
     private helpers = inject(HelpersService);
     private router = inject(Router);
     private confirm = inject(ConfirmationService);
 
-    exams: Examination[] = [];
+    consultations: Consultation[] = [];
     loading = true;
-    creating = false;
 
     ngOnInit() {
         this.load();
@@ -182,57 +176,37 @@ export class ExaminationListComponent implements OnInit {
 
     load() {
         this.loading = true;
-        this.examService
-            .listExaminations(this.patientId)
+        this.consultationService
+            .listConsultations(this.patientId)
             .pipe(catchError(() => of([])))
             .subscribe((data) => {
-                this.exams = data as Examination[];
+                this.consultations = data as Consultation[];
                 this.loading = false;
             });
     }
 
-    createNew() {
-        this.creating = true;
-        this.examService
-            .createExamination({
-                patientId: this.patientId,
-                patientName: this.patientName,
-                doctorEmail: this.auth.current?.email || '',
-                doctorName: this.auth.current?.name || ''
-            })
-            .subscribe({
-                next: (exam) => {
-                    this.creating = false;
-                    this.router.navigate(['/examination', exam.examId]);
-                },
-                error: (err) => {
-                    this.creating = false;
-                    this.helpers.notifyError('Error', err?.error?.message || 'Could not create examination');
-                }
-            });
+    openForm(consultationId: string) {
+        this.router.navigate(['/consultation', consultationId]);
     }
 
-    openForm(examId: string) {
-        this.router.navigate(['/examination', examId]);
-    }
-    openDetail(examId: string) {
-        this.router.navigate(['/examination', examId, 'view']);
+    openDetail(consultationId: string) {
+        this.router.navigate(['/consultation', consultationId, 'view']);
     }
 
-    confirmDelete(exam: Examination) {
+    confirmDelete(c: Consultation) {
         this.confirm.confirm({
-            message: `Delete examination from ${exam.date}?`,
+            message: `Delete consultation from ${c.date}?`,
             header: 'Confirm Delete',
             icon: 'pi pi-exclamation-triangle',
             acceptButtonProps: { label: 'Delete', severity: 'danger' },
             rejectButtonProps: { label: 'Cancel', severity: 'secondary', outlined: true },
             accept: () => {
-                this.examService.deleteExamination(exam.examId).subscribe({
+                this.consultationService.deleteConsultation(c.consultationId).subscribe({
                     next: () => {
-                        this.helpers.notifySuccess('Examination deleted');
+                        this.helpers.notifySuccess('Consultation deleted');
                         this.load();
                     },
-                    error: () => this.helpers.notifyError('Error', 'Could not delete examination')
+                    error: () => this.helpers.notifyError('Error', 'Could not delete consultation')
                 });
             }
         });

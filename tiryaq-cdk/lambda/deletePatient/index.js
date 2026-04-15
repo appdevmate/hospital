@@ -63,8 +63,6 @@ exports.handler = async (event) => {
 
     return { statusCode: 200, headers: hdrs, body: JSON.stringify({ message: `Patient ${id} soft-deleted.` }) };
   } catch (err) {
-    console.error('Tx delete error:', err?.name, err?.message);
-
     if (err?.name === 'ConditionalCheckFailedException') {
       // not found, wrong EntityType, or already soft-deleted
       return { statusCode: 404, headers: hdrs, body: JSON.stringify({ message: 'Patient not found or already deleted' }) };

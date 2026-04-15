@@ -6,7 +6,6 @@ const client = new DynamoDBClient({ region: 'us-east-1' });
 const dynamo = DynamoDBDocumentClient.from(client);
 
 exports.handler = async (event) => {
-    console.log('Incoming event:', JSON.stringify(event));
     try {
         const patientID = decodeURIComponent(event.pathParameters.patientID);
         const body = JSON.parse(event.body);
@@ -54,7 +53,6 @@ exports.handler = async (event) => {
             body: JSON.stringify({ message: 'Payment created successfully', data: item })
         };
     } catch (error) {
-        console.error('Error creating payment:', error);
         return {
             statusCode: 500,
             body: JSON.stringify({ message: 'Failed to create payment', error: error.message })

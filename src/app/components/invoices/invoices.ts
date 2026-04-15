@@ -161,7 +161,6 @@ export class InvoicesComponent implements OnInit, AfterViewInit {
     // ── Lifecycle ─────────────────────────────────────────────────────────────
     ngOnInit() {
         this.auth.invalidate();
-        console.log('isAdmin:', this.auth.isAdmin, 'isDoctor:', this.auth.isDoctor, 'role:', this.auth.current.role);
         if (this.auth.isAdmin) {
             this.loadReferenceData();
         }

@@ -49,7 +49,6 @@ exports.handler = async (event) => {
       })
     };
   } catch (err) {
-    console.error('Get doctor error:', err?.name, err?.message);
     if (err?.name === 'AccessDeniedException') {
       return { statusCode: 500, headers: hdrs, body: JSON.stringify({ message: 'Access denied (GetItem)' }) };
     }

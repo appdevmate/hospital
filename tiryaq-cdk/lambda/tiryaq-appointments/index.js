@@ -74,7 +74,7 @@ async function writeAudit(action, entityId, actorEmail, actorName, before, after
             }
         }));
     } catch (e) {
-        console.error('Audit write failed:', e.message);
+        // audit write failure is non-critical
     }
 }
 
@@ -125,8 +125,6 @@ function validateAppointment(body) {
 
 // ── Handler ───────────────────────────────────────────────────────────────────
 exports.handler = async (event) => {
-    console.log('Appointments event:', JSON.stringify(event));
-
     const method    = event.requestContext?.http?.method || event.httpMethod;
     const path      = event.rawPath || event.path || '';
     const apptId    = event.pathParameters?.apptId;

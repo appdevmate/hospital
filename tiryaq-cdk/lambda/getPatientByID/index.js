@@ -5,14 +5,10 @@ const client = new DynamoDBClient({ region: 'us-east-1' });
 const dynamo = DynamoDBDocumentClient.from(client);
 
 exports.handler = async (event) => {
-    console.log("Incoming event:", JSON.stringify(event));
-
     try {
         // ✅ Decode the URL-encoded patientID
         const encodedID = event.pathParameters.patientID;
         const patientID = decodeURIComponent(encodedID);
-
-        console.log(`Decoded patientID: ${patientID}`);
 
         const params = {
             TableName: 'Hospital',
@@ -34,7 +30,6 @@ exports.handler = async (event) => {
             };
         }
 
-        console.log("✅ Patient retrieved successfully.");
         return {
             statusCode: 200,
             body: JSON.stringify({
@@ -44,7 +39,6 @@ exports.handler = async (event) => {
         };
 
     } catch (error) {
-        console.error("❌ Error retrieving patient:", error);
         return {
             statusCode: 500,
             body: JSON.stringify({

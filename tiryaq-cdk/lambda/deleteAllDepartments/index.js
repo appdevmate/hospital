@@ -66,7 +66,6 @@ exports.handler = async () => {
 
     return { statusCode: 200, body: JSON.stringify({ message: 'All departments deleted', deleted }) };
   } catch (err) {
-    console.error('deleteAllDepartments error:', err);
     return { statusCode: 500, body: JSON.stringify({ message: 'Failed to delete departments', error: err.message }) };
   }
 };

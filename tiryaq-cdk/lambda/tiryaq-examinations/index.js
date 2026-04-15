@@ -67,7 +67,7 @@ async function writeAudit(action, entityType, entityId, actorEmail, actorName, b
             }
         }));
     } catch (e) {
-        console.error('Audit write failed:', e.message);
+        // audit write failure is non-critical
     }
 }
 
@@ -194,8 +194,6 @@ function validateSignOff(exam) {
 
 // ── Handler ──────────────────────────────────────────────────────────────────
 exports.handler = async (event) => {
-    console.log('Examinations event:', JSON.stringify(event));
-
     const method    = event.requestContext?.http?.method || event.httpMethod;
     const path      = event.rawPath || event.path || '';
     const examId    = event.pathParameters?.examId;

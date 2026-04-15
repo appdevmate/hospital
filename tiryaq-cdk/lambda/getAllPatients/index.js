@@ -23,8 +23,6 @@ exports.handler = async (event) => {
     const isAdminOrDev = groupArr.some(g => ['Admin', 'Developers'].includes(g.trim()));
     const isDoctor     = groupArr.some(g => g.trim() === 'Doctors');
     const callerEmail  = (claims['email'] || claims['username'] || '').toLowerCase().trim();
-console.log('DEBUG claims:', JSON.stringify(claims));
-      console.log('DEBUG parsed:', JSON.stringify({ isAdminOrDev, isDoctor, callerEmail }));
     // ── DOCTOR PATH — scoped to own patients via DOCTOR_PATIENT items ──────
     if (isDoctor && !isAdminOrDev && callerEmail) {
         const doctorEmail = callerEmail;
@@ -34,7 +32,6 @@ console.log('DEBUG claims:', JSON.stringify(claims));
                 KeyConditionExpression:    'PK = :pk',
                 ExpressionAttributeValues: { ':pk': `DOCTOR#${doctorEmail}` }
             }));
-console.log('DEBUG relItems:', JSON.stringify(relResult.Items));
 
             const relItems = (relResult.Items || []).filter(i => i.SK?.startsWith('PATIENT#'));
 
@@ -102,7 +99,6 @@ console.log('DEBUG relItems:', JSON.stringify(relResult.Items));
         });
 
     } catch (err) {
-        console.error('❌ Error:', err);
         return errResp(500, err?.message || 'Internal Server Error');
     }
 };

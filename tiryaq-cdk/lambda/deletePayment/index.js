@@ -5,8 +5,6 @@ const client = new DynamoDBClient({ region: 'eu-north-1' });
 const dynamo = DynamoDBDocumentClient.from(client);
 
 exports.handler = async (event) => {
-    console.log("Incoming event:", JSON.stringify(event));
-
     try {
         const encodedPatientID = event.pathParameters.patientID;
         const encodedPaymentID = event.pathParameters.paymentID;
@@ -38,7 +36,6 @@ exports.handler = async (event) => {
             })
         };
     } catch (error) {
-        console.error("❌ Error soft-deleting payment:", error);
         return {
             statusCode: 500,
             body: JSON.stringify({

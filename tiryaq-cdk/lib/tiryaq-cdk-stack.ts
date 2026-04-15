@@ -388,7 +388,6 @@ const TABLE  = process.env.TABLE_NAME;
 const DEPARTMENTS = ${JSON.stringify(DEPARTMENTS)};
 const SPECIALIZATIONS = ${JSON.stringify(SPECIALIZATIONS)};
 exports.handler = async (event) => {
-    console.log('Seed event:', JSON.stringify(event));
     if (event.RequestType === 'Delete') return { PhysicalResourceId: 'seed' };
     const now = new Date().toISOString();
     const puts = [];
@@ -405,7 +404,6 @@ exports.handler = async (event) => {
     for (const item of puts) {
         await client.send(new PutCommand({ TableName: TABLE, Item: item }));
     }
-    console.log(\`Seeded \${puts.length} items\`);
     return { PhysicalResourceId: 'seed', Data: { count: puts.length } };
 };
             `)
@@ -442,7 +440,6 @@ const USERS = [
     { username: 'pharmacist2', name: 'Pharmacist Two', email: 'pharmacist2@tiryaq.com', group: 'Pharmacists', password: 'Admin@1234' },
 ];
 exports.handler = async (event) => {
-    console.log('Users event:', JSON.stringify(event));
     if (event.RequestType === 'Delete') return { PhysicalResourceId: 'users' };
     for (const user of USERS) {
         try {
@@ -458,10 +455,8 @@ exports.handler = async (event) => {
             }));
             await client.send(new AdminSetUserPasswordCommand({ UserPoolId: POOL, Username: user.username, Password: user.password, Permanent: true }));
             await client.send(new AdminAddUserToGroupCommand({ UserPoolId: POOL, Username: user.username, GroupName: user.group }));
-            console.log('Created user:', user.username);
         } catch (e) {
             if (e.name !== 'UsernameExistsException') throw e;
-            console.log('User already exists:', user.username);
         }
     }
     return { PhysicalResourceId: 'users' };

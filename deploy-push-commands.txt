@@ -2,6 +2,6 @@ ng build --configuration production
 aws s3 sync "dist\verona-ng\browser" s3://tiryaqcdkstack-tiryaqfrontendbucket18b23106-pbwvq4ty0wya --delete
 aws cloudfront create-invalidation --distribution-id E3ONH40F3TKIIM --paths "/*"
 git add .
-git commit -m "doctor appointment change in workflow"
+git commit -m "changing consultation workflow v2"
 git push
 Remove-Item -Recurse -Force .angular\cache

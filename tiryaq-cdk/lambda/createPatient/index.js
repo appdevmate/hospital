@@ -231,8 +231,6 @@ const createBulkPatients = async (patients) => {
 ========================= */
 
 exports.handler = async (event) => {
-  console.log('Incoming event:', JSON.stringify(event));
-
   try {
     const body   = JSON.parse(event.body || '{}');
     const isBulk = Array.isArray(body) || Array.isArray(body.patients);
@@ -292,8 +290,6 @@ exports.handler = async (event) => {
     };
 
   } catch (error) {
-    console.error('Create patient error:', error);
-
     const isValidation =
       error.message.includes('required') ||
       error.message.includes('must be') ||

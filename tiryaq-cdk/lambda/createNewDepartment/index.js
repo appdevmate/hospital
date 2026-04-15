@@ -6,8 +6,6 @@ const client = new DynamoDBClient({ region: 'us-east-1' });
 const dynamo = DynamoDBDocumentClient.from(client);
 
 exports.handler = async (event) => {
-  console.log('Incoming event:', JSON.stringify(event));
-
   try {
     const body = JSON.parse(event.body || '{}');
     const name = String(body.name || '').trim();
@@ -38,7 +36,6 @@ exports.handler = async (event) => {
     };
 
     await dynamo.send(new PutCommand(params));
-    console.log('✅ Department record inserted');
 
     return {
       statusCode: 201,
@@ -48,7 +45,6 @@ exports.handler = async (event) => {
       })
     };
   } catch (error) {
-    console.error('❌ Error creating department:', error);
     return {
       statusCode: 500,
       body: JSON.stringify({

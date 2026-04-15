@@ -7,7 +7,6 @@ const dynamo = DynamoDBDocumentClient.from(client);
 const TABLE = 'Hospital';
 
 exports.handler = async (event) => {
-  console.log('Incoming event:', JSON.stringify(event));
   try {
     const qs = event.queryStringParameters || {};
     const q = String(qs.search || '').trim().toLowerCase();
@@ -46,7 +45,6 @@ exports.handler = async (event) => {
       body: JSON.stringify({ items, count: items.length, lastKey: null })
     };
   } catch (error) {
-    console.error('Error listing specializations:', error);
     return { statusCode: 500, body: JSON.stringify({ message: 'Failed to list specializations', error: error.message }) };
   }
 };
