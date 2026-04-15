@@ -141,7 +141,7 @@ interface StatCard {
                                 <!-- Info -->
                                 <div class="flex-1 min-w-0">
                                     <div class="font-medium text-surface-900 dark:text-surface-0 truncate text-sm">{{ appt.patientName | titlecase }}</div>
-                                    <div class="text-xs text-surface-500 mt-0.5">{{ appt.startTime }} · {{ appt.type | titlecase }}</div>
+                                    <div class="text-xs text-surface-500 mt-0.5">{{ appt.startTime }} · {{ appt.visitType | titlecase }}</div>
                                 </div>
                                 <p-tag [value]="appt.status | titlecase" [severity]="apptSeverity(appt.status)" styleClass="text-xs"></p-tag>
                             </div>
@@ -377,7 +377,7 @@ export class DashboardComponent implements OnInit {
 
     private loadDoctorDashboard(doctorEmail: string) {
         forkJoin({
-            appointments: this.appointmentsService.getAppointments(doctorEmail).pipe(catchError(() => of([]))),
+            appointments: this.appointmentsService.getAppointments().pipe(catchError(() => of([]))),
             invoices: this.paymentsService.getAllInvoices(doctorEmail).pipe(catchError(() => of({ data: [], count: 0 })))
         }).subscribe(({ appointments, invoices }) => {
             const allAppts = appointments as Appointment[];

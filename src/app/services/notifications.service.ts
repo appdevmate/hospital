@@ -37,7 +37,7 @@ export class NotificationsService {
 
         // Appointments — everyone except pharmacists
         if (!isPharmacist) {
-            sources['appointments'] = this.appointmentsService.getAppointments(isDoctor && !isAdmin && !isDeveloper ? doctorEmail : undefined).pipe(catchError(() => of([])));
+            sources['appointments'] = this.appointmentsService.getAppointments().pipe(catchError(() => of([])));
         }
 
         // Critical patients — admin, developer, and doctor (own patients)
