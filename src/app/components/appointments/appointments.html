@@ -15,11 +15,22 @@
     <p-button icon="pi pi-pencil" text (onClick)="openEdit(row)" pTooltip="Edit" />
     <p-button icon="pi pi-trash" text severity="danger" (onClick)="onDelete(row)" pTooltip="Delete" />
     }
+    @if ((auth.isDoctor || auth.isAdmin || auth.isDeveloper) && row.status === 'scheduled') {
+    <p-button icon="pi pi-sign-in" text severity="success" (onClick)="checkIn(row)" pTooltip="Check In" />
+    }
+    @if ((auth.isDoctor || auth.isAdmin || auth.isDeveloper) && row.status === 'checked-in') {
+    <p-button icon="pi pi-play" text severity="info" (onClick)="startConsultation(row)" pTooltip="Start Consultation" />
+    }
 </ng-template>
 
 <!-- Status custom template -->
 <ng-template #statusTemplate let-value="value">
     <p-tag [value]="value | titlecase" [severity]="getStatusSeverity(value)" />
+</ng-template>
+
+<!-- Priority custom template -->
+<ng-template #priorityTemplate let-value="value">
+    <p-tag [value]="value | titlecase" [severity]="getPrioritySeverity(value)" />
 </ng-template>
 
 <app-generic-table [columns]="columns" [config]="config" [data]="rows()" [loading]="loading()"
@@ -28,21 +39,31 @@
 </app-generic-table>
 
 <!-- ── Create Dialog ── -->
-<p-dialog header="New Appointment" [(visible)]="showCreateDialog" [style]="{ width: '500px' }" [modal]="true"
+<p-dialog header="New Appointment" [(visible)]="showCreateDialog" [style]="{ width: '560px' }" [modal]="true"
     [draggable]="false" [resizable]="false">
     <div style="display:flex; flex-direction:column; gap:1.2rem; padding:0.5rem 0;">
+
         <div style="display:flex; gap:1rem;">
             <div style="display:flex; flex-direction:column; gap:0.4rem; flex:1;">
                 <label class="field-label">Doctor *</label>
-                <p-select [options]="doctorOptions" [(ngModel)]="newAppt.doctorId" placeholder="Select doctor"
-                    appendTo="body" [style]="{ width: '100%' }" [filter]="true" />
+                <p-select [options]="doctorOptions" [(ngModel)]="newAppt.doctorId" optionLabel="label"
+                    optionValue="value" placeholder="Select doctor" appendTo="body" [style]="{ width: '100%' }"
+                    [filter]="true" (onChange)="onDoctorSelect($event.value)" />
             </div>
             <div style="display:flex; flex-direction:column; gap:0.4rem; flex:1;">
                 <label class="field-label">Patient *</label>
-                <p-select [options]="patientOptions" [(ngModel)]="newAppt.patientId" placeholder="Select patient"
-                    appendTo="body" [style]="{ width: '100%' }" [filter]="true" />
+                <p-select [options]="patientOptions" [(ngModel)]="newAppt.patientId" optionLabel="label"
+                    optionValue="value" placeholder="Select patient" appendTo="body" [style]="{ width: '100%' }"
+                    [filter]="true" />
             </div>
         </div>
+
+        <div style="display:flex; flex-direction:column; gap:0.4rem;">
+            <label class="field-label">Department *</label>
+            <input pInputText [(ngModel)]="newAppt.department" placeholder="e.g. Cardiology"
+                [style]="{ width: '100%' }" />
+        </div>
+
         <div style="display:flex; gap:1rem;">
             <div style="display:flex; flex-direction:column; gap:0.4rem; flex:1;">
                 <label class="field-label">Date *</label>
@@ -54,6 +75,7 @@
                 <input pInputText type="number" [(ngModel)]="newAppt.duration" [style]="{ width: '100%' }" />
             </div>
         </div>
+
         <div style="display:flex; gap:1rem;">
             <div style="display:flex; flex-direction:column; gap:0.4rem; flex:1;">
                 <label class="field-label">Start Time *</label>
@@ -66,23 +88,32 @@
                     appendTo="body" [style]="{ width: '100%' }" />
             </div>
         </div>
+
         <div style="display:flex; gap:1rem;">
             <div style="display:flex; flex-direction:column; gap:0.4rem; flex:1;">
-                <label class="field-label">Type</label>
-                <p-select [options]="typeOptions" [(ngModel)]="newAppt.type" optionLabel="label" optionValue="value"
-                    appendTo="body" [style]="{ width: '100%' }" />
+                <label class="field-label">Visit Type</label>
+                <p-select [options]="visitTypeOptions" [(ngModel)]="newAppt.visitType" optionLabel="label"
+                    optionValue="value" appendTo="body" [style]="{ width: '100%' }" />
             </div>
             <div style="display:flex; flex-direction:column; gap:0.4rem; flex:1;">
-                <label class="field-label">Status</label>
-                <p-select [options]="statusOptions" [(ngModel)]="newAppt.status" optionLabel="label" optionValue="value"
-                    appendTo="body" [style]="{ width: '100%' }" />
+                <label class="field-label">Priority</label>
+                <p-select [options]="priorityOptions" [(ngModel)]="newAppt.priority" optionLabel="label"
+                    optionValue="value" appendTo="body" [style]="{ width: '100%' }" />
             </div>
         </div>
+
+        <div style="display:flex; flex-direction:column; gap:0.4rem;">
+            <label class="field-label">Chief Complaint</label>
+            <input pInputText [(ngModel)]="newAppt.chiefComplaint" placeholder="Reason for visit"
+                [style]="{ width: '100%' }" />
+        </div>
+
         <div style="display:flex; flex-direction:column; gap:0.4rem;">
             <label class="field-label">Notes</label>
             <textarea pTextarea [(ngModel)]="newAppt.notes" rows="2" placeholder="Optional notes"
                 class="w-full"></textarea>
         </div>
+
         <hr style="border:none; border-top:1px solid #F3F4F6; margin:0;" />
         <div style="display:flex; justify-content:flex-end; gap:10px;">
             <p-button label="Cancel" severity="secondary" [outlined]="true" (click)="showCreateDialog = false" />
@@ -92,21 +123,28 @@
 </p-dialog>
 
 <!-- ── Edit Dialog ── -->
-<p-dialog header="Edit Appointment" [(visible)]="showEditDialog" [style]="{ width: '500px' }" [modal]="true"
+<p-dialog header="Edit Appointment" [(visible)]="showEditDialog" [style]="{ width: '560px' }" [modal]="true"
     [draggable]="false" [resizable]="false">
     <div style="display:flex; flex-direction:column; gap:1.2rem; padding:0.5rem 0;">
+
         <div style="display:flex; gap:1rem;">
             <div style="display:flex; flex-direction:column; gap:0.4rem; flex:1;">
                 <label class="field-label">Doctor</label>
-                <p-select [options]="doctorOptions" [(ngModel)]="editAppt.doctorId" appendTo="body"
-                    [style]="{ width: '100%' }" [filter]="true" />
+                <p-select [options]="doctorOptions" [(ngModel)]="editAppt.doctorId" optionLabel="label"
+                    optionValue="value" appendTo="body" [style]="{ width: '100%' }" [filter]="true" />
             </div>
             <div style="display:flex; flex-direction:column; gap:0.4rem; flex:1;">
                 <label class="field-label">Patient</label>
-                <p-select [options]="patientOptions" [(ngModel)]="editAppt.patientId" appendTo="body"
-                    [style]="{ width: '100%' }" [filter]="true" />
+                <p-select [options]="patientOptions" [(ngModel)]="editAppt.patientId" optionLabel="label"
+                    optionValue="value" appendTo="body" [style]="{ width: '100%' }" [filter]="true" />
             </div>
         </div>
+
+        <div style="display:flex; flex-direction:column; gap:0.4rem;">
+            <label class="field-label">Department</label>
+            <input pInputText [(ngModel)]="editAppt.department" [style]="{ width: '100%' }" />
+        </div>
+
         <div style="display:flex; gap:1rem;">
             <div style="display:flex; flex-direction:column; gap:0.4rem; flex:1;">
                 <label class="field-label">Date</label>
@@ -117,6 +155,7 @@
                 <input pInputText type="number" [(ngModel)]="editAppt.duration" [style]="{ width: '100%' }" />
             </div>
         </div>
+
         <div style="display:flex; gap:1rem;">
             <div style="display:flex; flex-direction:column; gap:0.4rem; flex:1;">
                 <label class="field-label">Start Time</label>
@@ -129,22 +168,44 @@
                     [style]="{ width: '100%' }" />
             </div>
         </div>
+
         <div style="display:flex; gap:1rem;">
             <div style="display:flex; flex-direction:column; gap:0.4rem; flex:1;">
-                <label class="field-label">Type</label>
-                <p-select [options]="typeOptions" [(ngModel)]="editAppt.type" optionLabel="label" optionValue="value"
-                    appendTo="body" [style]="{ width: '100%' }" />
+                <label class="field-label">Visit Type</label>
+                <p-select [options]="visitTypeOptions" [(ngModel)]="editAppt.visitType" optionLabel="label"
+                    optionValue="value" appendTo="body" [style]="{ width: '100%' }" />
             </div>
             <div style="display:flex; flex-direction:column; gap:0.4rem; flex:1;">
-                <label class="field-label">Status</label>
-                <p-select [options]="statusOptions" [(ngModel)]="editAppt.status" optionLabel="label"
+                <label class="field-label">Priority</label>
+                <p-select [options]="priorityOptions" [(ngModel)]="editAppt.priority" optionLabel="label"
                     optionValue="value" appendTo="body" [style]="{ width: '100%' }" />
             </div>
         </div>
+
+        <div style="display:flex; flex-direction:column; gap:0.4rem;">
+            <label class="field-label">Status</label>
+            <p-select [options]="statusOptions" [(ngModel)]="editAppt.status" optionLabel="label" optionValue="value"
+                appendTo="body" [style]="{ width: '100%' }" />
+        </div>
+
+        @if (editAppt.status === 'cancelled') {
+        <div style="display:flex; flex-direction:column; gap:0.4rem;">
+            <label class="field-label">Cancel Reason *</label>
+            <input pInputText [(ngModel)]="editAppt.cancelReason" placeholder="Reason for cancellation"
+                [style]="{ width: '100%' }" />
+        </div>
+        }
+
+        <div style="display:flex; flex-direction:column; gap:0.4rem;">
+            <label class="field-label">Chief Complaint</label>
+            <input pInputText [(ngModel)]="editAppt.chiefComplaint" [style]="{ width: '100%' }" />
+        </div>
+
         <div style="display:flex; flex-direction:column; gap:0.4rem;">
             <label class="field-label">Notes</label>
             <textarea pTextarea [(ngModel)]="editAppt.notes" rows="2" class="w-full"></textarea>
         </div>
+
         <hr style="border:none; border-top:1px solid #F3F4F6; margin:0;" />
         <div style="display:flex; justify-content:flex-end; gap:10px;">
             <p-button label="Cancel" severity="secondary" [outlined]="true" (click)="showEditDialog = false" />
@@ -154,16 +215,20 @@
 </p-dialog>
 
 <!-- ── Detail Dialog ── -->
-<p-dialog header="Appointment Details" [(visible)]="showDetailDialog" [style]="{ width: '420px' }" [modal]="true"
+<p-dialog header="Appointment Details" [(visible)]="showDetailDialog" [style]="{ width: '440px' }" [modal]="true"
     [draggable]="false" [resizable]="false">
     @if (selectedAppointment) {
     <div style="display:flex; flex-direction:column; gap:1rem; padding:0.5rem 0;">
-        <div style="display:flex; align-items:center; gap:0.8rem;">
+
+        <div style="display:flex; align-items:center; gap:0.8rem; flex-wrap:wrap;">
             <p-tag [value]="selectedAppointment.status | titlecase"
                 [severity]="getStatusSeverity(selectedAppointment.status)" />
+            <p-tag [value]="selectedAppointment.priority | titlecase"
+                [severity]="getPrioritySeverity(selectedAppointment.priority)" />
             <span style="font-size:1rem; font-weight:700; color:#111827; text-transform:capitalize;">{{
-                selectedAppointment.type }}</span>
+                selectedAppointment.visitType }}</span>
         </div>
+
         <div style="display:flex; gap:0.7rem; align-items:center;">
             <i class="pi pi-user" style="color:#9CA3AF;"></i>
             <span style="color:#4B5563;">Patient: <strong>{{ selectedAppointment.patientName | titlecase
@@ -175,6 +240,11 @@
                     }}</strong></span>
         </div>
         <div style="display:flex; gap:0.7rem; align-items:center;">
+            <i class="pi pi-building" style="color:#9CA3AF;"></i>
+            <span style="color:#4B5563;">Department: <strong>{{ selectedAppointment.department | titlecase
+                    }}</strong></span>
+        </div>
+        <div style="display:flex; gap:0.7rem; align-items:center;">
             <i class="pi pi-calendar" style="color:#9CA3AF;"></i>
             <span style="color:#4B5563;">{{ selectedAppointment.date | date:'EEEE, MMMM d, y' }}</span>
         </div>
@@ -183,12 +253,25 @@
             <span style="color:#4B5563;">{{ selectedAppointment.startTime }} — {{ selectedAppointment.endTime }} ({{
                 selectedAppointment.duration }} min)</span>
         </div>
+        @if (selectedAppointment.chiefComplaint) {
+        <div style="display:flex; gap:0.7rem; align-items:center;">
+            <i class="pi pi-info-circle" style="color:#9CA3AF;"></i>
+            <span style="color:#4B5563;">{{ selectedAppointment.chiefComplaint }}</span>
+        </div>
+        }
         @if (selectedAppointment.notes) {
         <div style="display:flex; gap:0.7rem;">
             <i class="pi pi-align-left" style="color:#9CA3AF; margin-top:2px;"></i>
             <span style="color:#4B5563;">{{ selectedAppointment.notes }}</span>
         </div>
         }
+        @if (selectedAppointment.cancelReason) {
+        <div style="display:flex; gap:0.7rem; background:#fef2f2; padding:0.5rem 0.75rem; border-radius:6px;">
+            <i class="pi pi-times-circle" style="color:#EF4444; margin-top:2px;"></i>
+            <span style="color:#991B1B; font-size:0.875rem;">{{ selectedAppointment.cancelReason }}</span>
+        </div>
+        }
+
         <hr style="border:none; border-top:1px solid #F3F4F6; margin:0;" />
         <div style="display:flex; justify-content:space-between; align-items:center;">
             @if (auth.isAdmin || auth.isDeveloper) {

@@ -17,6 +17,8 @@ exports.handler = async (event) => {
 
     // ── Identify caller from JWT token ────────────────────────────────────
     const claims       = event.requestContext?.authorizer?.jwt?.claims || {};
+      console.log('DEBUG claims:', JSON.stringify(claims));
+      console.log('DEBUG parsed:', JSON.stringify({ isAdminOrDev, isDoctor, callerEmail }));
     const groups       = claims['cognito:groups'] || '';
     const groupArr     = Array.isArray(groups) ? groups
         : String(groups).trim().replace(/^\[/, '').replace(/\]$/, '').split(/[, ]+/).filter(Boolean);
