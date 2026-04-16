@@ -94,8 +94,11 @@ export class PatientProfileComponent implements OnInit {
                     })
                     .subscribe({
                         next: (c) => {
+                            console.log('CONSULTATION CREATED:', JSON.stringify(c));
                             this.startingConsultation = null;
-                            this.router.navigate(['/consultation', c.consultationId]);
+                            const id = c.consultationId || (c as any).examId;
+                            console.log('NAVIGATING TO:', id);
+                            this.router.navigate(['/consultation', id]);
                         },
                         error: (err) => {
                             this.startingConsultation = null;
