@@ -17,6 +17,7 @@ import { ConfirmationService } from 'primeng/api';
 import { HelpersService } from '@/services/helpers-service';
 import { AuthService } from '@/services/auth.service';
 import { NewDoctor } from './new-doctor';
+import { TiryaqLoaderComponent } from '@/components/tiryaq-loader/tiryaq-loader';
 
 const EditorType = {
     Text: 'text',
@@ -57,9 +58,11 @@ const STATUS_SEVERITY: Record<string, 'success' | 'info' | 'warn' | 'danger' | '
     selector: 'app-doctors-management',
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [CommonModule, GenericTableComponent, TagModule, ConfirmDialogModule, ButtonModule, TooltipModule],
+    imports: [CommonModule, GenericTableComponent, TagModule, ConfirmDialogModule, ButtonModule, TooltipModule, TiryaqLoaderComponent],
     providers: [DialogService, ConfirmationService],
     template: `
+        <div style="position:relative; min-height:200px;">
+        <app-tiryaq-loader [loading]="loading()" message="Loading doctors…" />
         <ng-template #tbStart let-api="api" let-selected="selected">
             @if (auth.isAdmin || auth.isDeveloper) {
                 <p-button class="mr-2" [disabled]="loading()" label="New Doctor" icon="pi pi-plus" (onClick)="openNew()"></p-button>
@@ -121,6 +124,7 @@ const STATUS_SEVERITY: Record<string, 'success' | 'info' | 'warn' | 'danger' | '
         </app-generic-table>
 
         <p-confirmDialog key="global" appendTo="body" [baseZIndex]="200000"></p-confirmDialog>
+        </div>
     `
 })
 export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
@@ -650,7 +654,6 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
         const file = files?.[0];
         if (!file) return;
 
-        this._loading.set(true);
         this.readWorkbook(file)
             .then((rows) => {
                 const { valid, skipped } = this.prepare(rows);
@@ -663,7 +666,6 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
                 });
 
                 if (!unique.length) {
-                    this._loading.set(false);
                     const sample = skipped
                         .slice(0, 5)
                         .map((e, i) => `${i + 1}) ${e.reason}`)
@@ -686,12 +688,13 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
                     icon: 'pi pi-exclamation-triangle',
                     rejectButtonProps: { label: 'No', severity: 'secondary', variant: 'text' },
                     acceptButtonProps: { label: 'Yes', severity: 'primary' },
-                    accept: () => this.bulkCreate(unique),
-                    reject: () => this._loading.set(false)
+                    accept: () => {
+                        this._loading.set(true);
+                        this.bulkCreate(unique);
+                    }
                 });
             })
             .catch(() => {
-                this._loading.set(false);
                 this.helpers.notifyError('Import failed', 'Could not read file');
             });
     }

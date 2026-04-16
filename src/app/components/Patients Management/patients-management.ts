@@ -19,6 +19,7 @@ import { HelpersService } from '@/services/helpers-service';
 import { AuthService } from '@/services/auth.service';
 import { NewPatient } from './new-patient';
 import { EditPatient } from './edit-patient';
+import { TiryaqLoaderComponent } from '@/components/tiryaq-loader/tiryaq-loader';
 
 const EditorType = {
     Text: 'text',
@@ -63,9 +64,11 @@ const STATUS_SEVERITY: Record<string, 'success' | 'info' | 'warn' | 'danger' | '
     selector: 'app-patients-management',
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [CommonModule, GenericTableComponent, TagModule, ConfirmDialogModule, ButtonModule, TooltipModule],
+    imports: [CommonModule, GenericTableComponent, TagModule, ConfirmDialogModule, ButtonModule, TooltipModule, TiryaqLoaderComponent],
     providers: [DialogService, ConfirmationService],
     template: `
+        <div style="position:relative; min-height:200px;">
+        <app-tiryaq-loader [loading]="loading()" message="Loading patients…" />
         <!-- ── Toolbar: Start ── -->
         <ng-template #tbStart>
             @if (!showDeleted()) {
@@ -152,6 +155,7 @@ const STATUS_SEVERITY: Record<string, 'success' | 'info' | 'warn' | 'danger' | '
         </app-generic-table>
 
         <p-confirmDialog key="global" appendTo="body" [baseZIndex]="200000"></p-confirmDialog>
+        </div>
     `
 })
 export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
@@ -545,7 +549,6 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
         const file = files?.[0];
         if (!file) return;
 
-        this._loading.set(true);
         this.readWorkbook(file)
             .then((rows) => {
                 const { valid, skipped } = this.prepare(rows);
@@ -558,7 +561,6 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
                 });
 
                 if (!unique.length) {
-                    this._loading.set(false);
                     const sample = skipped
                         .slice(0, 5)
                         .map((e, i) => `${i + 1}) ${e.reason}`)
@@ -581,12 +583,13 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
                     icon: 'pi pi-exclamation-triangle',
                     rejectButtonProps: { label: 'No', severity: 'secondary', variant: 'text' },
                     acceptButtonProps: { label: 'Yes', severity: 'primary' },
-                    accept: () => this.bulkCreate(unique),
-                    reject: () => this._loading.set(false)
+                    accept: () => {
+                        this._loading.set(true);
+                        this.bulkCreate(unique);
+                    }
                 });
             })
             .catch(() => {
-                this._loading.set(false);
                 this.helpers.notifyError('Import failed', 'Could not read file');
             });
     }

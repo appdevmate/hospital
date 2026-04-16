@@ -192,7 +192,7 @@ import { CheckboxModule } from 'primeng/checkbox';
                         }
 
                         @if (showActionsCol()) {
-                            <th pResizableColumn style="min-width:10rem;width:10rem">
+                            <th pResizableColumn [style.min-width]="actionsColumnWidth" [style.width]="actionsColumnWidth">
                                 @if (actionsHeaderTemplate) {
                                     <ng-container [ngTemplateOutlet]="actionsHeaderTemplate" [ngTemplateOutletContext]="{ api: publicApi }"></ng-container>
                                 } @else {
@@ -413,6 +413,7 @@ export class GenericTableComponent<T = any> implements OnChanges {
     @Input() selectedRows: T[] = [];
     @Input() visibleColumnFields?: string[];
     @Input() requireAtLeastOneColumn = true;
+    @Input() actionsColumnWidth = '13rem';
     @Input() filterControls: FilterControl[] = [];
     @Input() activeFilters: Record<string, any> = {};
 

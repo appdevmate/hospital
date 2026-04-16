@@ -16,6 +16,7 @@ import { forkJoin } from 'rxjs';
 import { catchError, of } from 'rxjs';
 
 import { GenericTableComponent } from '@/components/generic-table/generic-table';
+import { TiryaqLoaderComponent } from '@/components/tiryaq-loader/tiryaq-loader';
 import type { TableColumn, TableConfig } from '@/interfaces/tableplugin.interfaces';
 import { AppointmentsService, Appointment, CreateAppointmentRequest } from '@/services/appointments.service';
 import { DoctorsService, Doctor } from '@/services/doctors.service';
@@ -41,7 +42,7 @@ const PRIORITY_SEVERITY: Record<string, 'success' | 'warn' | 'danger' | 'seconda
 @Component({
     selector: 'app-appointments',
     standalone: true,
-    imports: [CommonModule, FormsModule, ButtonModule, DialogModule, InputTextModule, TextareaModule, SelectModule, DatePickerModule, TagModule, ToastModule, ConfirmDialogModule, TooltipModule, GenericTableComponent],
+    imports: [CommonModule, FormsModule, ButtonModule, DialogModule, InputTextModule, TextareaModule, SelectModule, DatePickerModule, TagModule, ToastModule, ConfirmDialogModule, TooltipModule, GenericTableComponent, TiryaqLoaderComponent],
     providers: [MessageService, ConfirmationService, HelpersService],
     templateUrl: './appointments.html',
     styleUrl: './appointments.scss'
@@ -50,6 +51,7 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
     @ViewChild(GenericTableComponent) tableCmp?: GenericTableComponent;
     @ViewChild('statusTemplate') statusTemplate!: TemplateRef<any>;
     @ViewChild('priorityTemplate') priorityTemplate!: TemplateRef<any>;
+    @ViewChild('durationTemplate') durationTemplate!: TemplateRef<any>;
 
     // ── Services ─────────────────────────────────────────────────────────────
     private appointmentsService = inject(AppointmentsService);
@@ -127,10 +129,13 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
 
     columns: TableColumn[] = [
         { field: 'date', header: 'Date', sortable: true, filterable: true, type: 'date', pipe: 'date', dateFormat: 'MMM d, y', width: '130px' },
-        { field: 'startTime', header: 'Time', sortable: false, filterable: false, width: '90px' },
+        { field: 'startTime', header: 'Start', sortable: false, filterable: false, width: '80px' },
+        { field: 'endTime', header: 'End', sortable: false, filterable: false, width: '80px' },
+        { field: 'duration', header: 'Duration', sortable: true, filterable: false, customTemplate: true, width: '100px' },
         { field: 'patientName', header: 'Patient', sortable: true, filterable: true, pipe: 'titlecase' },
         { field: 'doctorName', header: 'Doctor', sortable: true, filterable: true, pipe: 'titlecase' },
         { field: 'department', header: 'Department', sortable: true, filterable: true, pipe: 'titlecase' },
+        { field: 'chiefComplaint', header: 'Chief Complaint', sortable: false, filterable: true, showTooltip: true },
         { field: 'visitType', header: 'Type', sortable: true, filterable: true, pipe: 'titlecase', width: '120px' },
         { field: 'priority', header: 'Priority', sortable: true, filterable: true, customTemplate: true, width: '110px' },
         { field: 'status', header: 'Status', sortable: true, filterable: true, customTemplate: true, width: '130px' },
@@ -146,7 +151,8 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         this._customTemplates.set({
             status: this.statusTemplate,
-            priority: this.priorityTemplate
+            priority: this.priorityTemplate,
+            duration: this.durationTemplate
         });
     }
 
@@ -180,9 +186,39 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
         this.showCreateDialog = true;
     }
 
-    onDoctorSelect(doctorPK: string) {
+    onDoctorSelect(doctorPK: string | null) {
+        if (!doctorPK) {
+            this.newAppt.department = '';
+            return;
+        }
         const doctor = this.doctors.find((d) => d.PK === doctorPK);
-        if (doctor) this.newAppt.department = doctor.department || '';
+        this.newAppt.department = doctor?.department || '';
+    }
+
+    onNewApptTimeChange() {
+        if (this.newAppt.startTime && this.newAppt.endTime) {
+            const diff = (this.newAppt.endTime.getTime() - this.newAppt.startTime.getTime()) / 60000;
+            if (diff <= 0) {
+                this.helpers.notifyError('Invalid Time', 'End time must be after start time.');
+                this.newAppt.endTime = null;
+                this.newAppt.duration = 0;
+            } else {
+                this.newAppt.duration = Math.round(diff);
+            }
+        }
+    }
+
+    onEditApptTimeChange() {
+        if (this.editAppt.startTime && this.editAppt.endTime) {
+            const diff = (this.editAppt.endTime.getTime() - this.editAppt.startTime.getTime()) / 60000;
+            if (diff <= 0) {
+                this.helpers.notifyError('Invalid Time', 'End time must be after start time.');
+                this.editAppt.endTime = null;
+                this.editAppt.duration = 0;
+            } else {
+                this.editAppt.duration = Math.round(diff);
+            }
+        }
     }
 
     onCreate() {
@@ -191,16 +227,37 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
             return;
         }
 
-        this.saving = true;
+        // Fix 7: Validate start time < end time
+        if (this.newAppt.startTime && this.newAppt.endTime) {
+            const diff = (this.newAppt.endTime.getTime() - this.newAppt.startTime.getTime()) / 60000;
+            if (diff <= 0) {
+                this.helpers.notifyError('Invalid Time', 'End time must be after start time.');
+                return;
+            }
+        }
+
         const doctor = this.doctors.find((d) => d.PK === this.newAppt.doctorId);
         const patient = this.patients.find((p) => p.PK === this.newAppt.patientId);
         const dateStr = this.formatDate(this.newAppt.date);
+
+        // Fix 6: Check for duplicate patient on same date
+        const duplicate = this._rows().find((a) => a.patientId === this.newAppt.patientId && a.date === dateStr);
+        if (duplicate) {
+            this.helpers.notifyError(
+                'Duplicate Appointment',
+                `${patient?.name || 'This patient'} already has an appointment on ${dateStr}. Please choose a different date or review existing appointments.`
+            );
+            return;
+        }
+
+        this.saving = true;
         const startTimeStr = this.formatTime(this.newAppt.startTime);
         const endTimeStr = this.newAppt.endTime ? this.formatTime(this.newAppt.endTime) : startTimeStr;
 
+        // Ensure duration is up to date
         if (this.newAppt.startTime && this.newAppt.endTime) {
             const diff = (this.newAppt.endTime.getTime() - this.newAppt.startTime.getTime()) / 60000;
-            if (diff > 0) this.newAppt.duration = diff;
+            if (diff > 0) this.newAppt.duration = Math.round(diff);
         }
 
         const data: CreateAppointmentRequest = {
@@ -340,14 +397,20 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
     // ── Quick status updates ──────────────────────────────────────────────────
     checkIn(appt: Appointment) {
         this.appointmentsService.checkIn(appt.appointmentId).subscribe({
-            next: (updated) => this.updateRow(updated),
+            next: (updated) => {
+                this.updateRow(updated);
+                this.helpers.notifySuccess(`${appt.patientName || 'Patient'} has been checked in successfully.`);
+            },
             error: () => this.helpers.notifyError('Error', 'Failed to check in.')
         });
     }
 
     startConsultation(appt: Appointment) {
         this.appointmentsService.startConsultation(appt.appointmentId).subscribe({
-            next: (updated) => this.updateRow(updated),
+            next: (updated) => {
+                this.updateRow(updated);
+                this.helpers.notifySuccess(`Consultation started for ${appt.patientName}.`);
+            },
             error: () => this.helpers.notifyError('Error', 'Failed to start consultation.')
         });
     }

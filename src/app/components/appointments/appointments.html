@@ -1,6 +1,9 @@
 <p-toast />
 <p-confirmDialog key="global" appendTo="body" />
 
+<div style="position:relative; min-height:200px;">
+<app-tiryaq-loader [loading]="loading()" message="Loading appointments…" />
+
 <!-- Toolbar: New Appointment only visible to admins -->
 <ng-template #tbStart>
     @if (auth.isAdmin || auth.isDeveloper) {
@@ -10,17 +13,19 @@
 
 <!-- Row actions -->
 <ng-template #rowActions let-row>
-    <p-button icon="pi pi-eye" text severity="info" (onClick)="openDetail(row)" pTooltip="View" />
-    @if (auth.isAdmin || auth.isDeveloper) {
-    <p-button icon="pi pi-pencil" text (onClick)="openEdit(row)" pTooltip="Edit" />
-    <p-button icon="pi pi-trash" text severity="danger" (onClick)="onDelete(row)" pTooltip="Delete" />
-    }
-    @if ((auth.isDoctor || auth.isAdmin || auth.isDeveloper) && row.status === 'scheduled') {
-    <p-button icon="pi pi-sign-in" text severity="success" (onClick)="checkIn(row)" pTooltip="Check In" />
-    }
-    @if ((auth.isDoctor || auth.isAdmin || auth.isDeveloper) && row.status === 'checked-in') {
-    <p-button icon="pi pi-play" text severity="info" (onClick)="startConsultation(row)" pTooltip="Start Consultation" />
-    }
+    <div style="display:flex; align-items:center; justify-content:center; gap:2px; flex-wrap:nowrap;">
+        <p-button icon="pi pi-eye" text severity="info" (onClick)="openDetail(row)" pTooltip="View" tooltipPosition="top" />
+        @if (auth.isAdmin || auth.isDeveloper) {
+        <p-button icon="pi pi-pencil" text (onClick)="openEdit(row)" pTooltip="Edit" tooltipPosition="top" />
+        <p-button icon="pi pi-trash" text severity="danger" (onClick)="onDelete(row)" pTooltip="Delete" tooltipPosition="top" />
+        }
+        @if ((auth.isDoctor || auth.isAdmin || auth.isDeveloper) && row.status === 'scheduled') {
+        <p-button icon="pi pi-sign-in" text severity="success" (onClick)="checkIn(row)" pTooltip="Check In" tooltipPosition="top" />
+        }
+        @if ((auth.isDoctor || auth.isAdmin || auth.isDeveloper) && row.status === 'checked-in') {
+        <p-button icon="pi pi-play" text severity="info" (onClick)="startConsultation(row)" pTooltip="Start Consultation" tooltipPosition="top" />
+        }
+    </div>
 </ng-template>
 
 <!-- Status custom template -->
@@ -33,10 +38,17 @@
     <p-tag [value]="value | titlecase" [severity]="getPrioritySeverity(value)" />
 </ng-template>
 
+<!-- Duration custom template -->
+<ng-template #durationTemplate let-value="value">
+    {{ value }} min
+</ng-template>
+
 <app-generic-table [columns]="columns" [config]="config" [data]="rows()" [loading]="loading()"
     [customTemplates]="customTemplates()" [actionsTemplate]="rowActions" [toolbarStart]="tbStart"
+    actionsColumnWidth="14rem"
     dataKey="appointmentId">
 </app-generic-table>
+</div>
 
 <!-- ── Create Dialog ── -->
 <p-dialog header="New Appointment" [(visible)]="showCreateDialog" [style]="{ width: '560px' }" [modal]="true"
@@ -59,9 +71,10 @@
         </div>
 
         <div style="display:flex; flex-direction:column; gap:0.4rem;">
-            <label class="field-label">Department *</label>
-            <input pInputText [(ngModel)]="newAppt.department" placeholder="e.g. Cardiology"
-                [style]="{ width: '100%' }" />
+            <label class="field-label">Department</label>
+            <input pInputText [(ngModel)]="newAppt.department" readonly
+                [placeholder]="newAppt.doctorId ? 'Auto-filled from doctor' : 'Select a doctor first'"
+                [style]="{ width: '100%', background: 'var(--p-surface-100,#f3f4f6)', cursor: 'not-allowed', color: newAppt.department ? 'inherit' : '#9ca3af' }" />
         </div>
 
         <div style="display:flex; gap:1rem;">
@@ -72,7 +85,9 @@
             </div>
             <div style="display:flex; flex-direction:column; gap:0.4rem; flex:1;">
                 <label class="field-label">Duration (min)</label>
-                <input pInputText type="number" [(ngModel)]="newAppt.duration" [style]="{ width: '100%' }" />
+                <input pInputText type="number" [(ngModel)]="newAppt.duration" readonly
+                    placeholder="Auto-calculated"
+                    [style]="{ width: '100%', background: 'var(--p-surface-100,#f3f4f6)', cursor: 'not-allowed' }" />
             </div>
         </div>
 
@@ -80,12 +95,13 @@
             <div style="display:flex; flex-direction:column; gap:0.4rem; flex:1;">
                 <label class="field-label">Start Time *</label>
                 <p-datepicker [(ngModel)]="newAppt.startTime" [timeOnly]="true" hourFormat="12"
-                    placeholder="Select time" appendTo="body" [style]="{ width: '100%' }" />
+                    placeholder="Select time" appendTo="body" [style]="{ width: '100%' }"
+                    (ngModelChange)="onNewApptTimeChange()" />
             </div>
             <div style="display:flex; flex-direction:column; gap:0.4rem; flex:1;">
                 <label class="field-label">End Time</label>
                 <p-datepicker [(ngModel)]="newAppt.endTime" [timeOnly]="true" hourFormat="12" placeholder="Select time"
-                    appendTo="body" [style]="{ width: '100%' }" />
+                    appendTo="body" [style]="{ width: '100%' }" (ngModelChange)="onNewApptTimeChange()" />
             </div>
         </div>
 
@@ -160,12 +176,12 @@
             <div style="display:flex; flex-direction:column; gap:0.4rem; flex:1;">
                 <label class="field-label">Start Time</label>
                 <p-datepicker [(ngModel)]="editAppt.startTime" [timeOnly]="true" hourFormat="12" appendTo="body"
-                    [style]="{ width: '100%' }" />
+                    [style]="{ width: '100%' }" (ngModelChange)="onEditApptTimeChange()" />
             </div>
             <div style="display:flex; flex-direction:column; gap:0.4rem; flex:1;">
                 <label class="field-label">End Time</label>
                 <p-datepicker [(ngModel)]="editAppt.endTime" [timeOnly]="true" hourFormat="12" appendTo="body"
-                    [style]="{ width: '100%' }" />
+                    [style]="{ width: '100%' }" (ngModelChange)="onEditApptTimeChange()" />
             </div>
         </div>
 
