@@ -45,7 +45,7 @@ import LOINC_CODES from './loinc-codes.json';
         ConfirmDialogModule,
         ToastModule
     ],
-    providers: [ConfirmationService, MessageService],
+    providers: [ConfirmationService, MessageService, HelpersService],
     templateUrl: './consultation-form.html',
     styleUrl: './consultation-form.scss'
 })
