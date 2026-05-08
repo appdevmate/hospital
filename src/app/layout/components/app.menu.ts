@@ -44,11 +44,22 @@ export class AppMenu implements OnInit {
 
         const sharedItems: MenuItem[] = [
             { label: 'Dashboard', icon: 'pi pi-desktop', routerLink: ['/'] },
+            { label: 'Doctor Workflow', icon: 'pi pi-sitemap', routerLink: ['/doctor-workflow'] },
             { label: 'Patients', icon: 'pi pi-user-plus', routerLink: ['/patients-management'] },
             { label: 'Calendar', icon: 'pi pi-calendar', routerLink: ['/calendar'] },
             { label: 'Appointments', icon: 'pi pi-calendar-plus', routerLink: ['/appointments'] },
             { label: 'Invoices', icon: 'pi pi-file-edit', routerLink: ['/invoices'] },
-            { label: 'Notifications', icon: 'pi pi-bell', routerLink: ['/notifications'] }
+            { label: 'Notifications', icon: 'pi pi-bell', routerLink: ['/notifications'] },
+            {
+                label: 'Clinical HMS',
+                icon: 'pi pi-heart',
+                items: [
+                    { label: 'Patients', icon: 'pi pi-users', routerLink: ['/hms/patients'] },
+                    { label: 'Appointments', icon: 'pi pi-calendar-plus', routerLink: ['/hms/appointments'] },
+                    { label: 'Consultations', icon: 'pi pi-clipboard', routerLink: ['/hms/consultations'] }
+                ]
+            },
+            { label: 'Clinic Workflow', icon: 'pi pi-play-circle', routerLink: ['/clinic-workflow'] }
         ];
 
         this.model = isAdmin ? [...sharedItems, ...adminOnlyItems] : sharedItems;

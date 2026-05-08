@@ -8,6 +8,7 @@ import { appRoutes } from './app.routes';
 import { provideAuth } from 'angular-auth-oidc-client';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { authInterceptor } from './app/interceptors/auth.interceptor';
+import { environment } from '../src/environments/environment';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -17,13 +18,15 @@ export const appConfig: ApplicationConfig = {
         providePrimeNG({ theme: { preset: Aura, options: { darkModeSelector: '.app-dark' } } }),
         provideAuth({
             config: {
-                authority: 'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_K2smcI5zB',
-                clientId: '4n7mna6irf5vjfg770l46aldij',
-                redirectUrl: window.location.origin + '/',
+                authority:             environment.cognitoAuthority,
+                clientId:              environment.cognitoClientId,
+                redirectUrl:           window.location.origin + '/',
                 postLogoutRedirectUri: window.location.origin + '/',
-                responseType: 'code',
-                useRefreshToken: true,
-                scope: 'openid email phone profile',
+                responseType:          'code',
+                useRefreshToken:       true,
+                silentRenew:           true,
+                renewTimeBeforeTokenExpiresInSeconds: 60,
+                scope:                 'openid email phone profile',
                 customParamsEndSessionRequest: {
                     logout_uri: window.location.origin + '/'
                 }

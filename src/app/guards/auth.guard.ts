@@ -8,26 +8,23 @@ export const authGuard: CanActivateFn = async (_route, state) => {
     const oidc = inject(OidcSecurityService);
     const router = inject(Router);
 
-    // checkAuth() must be called when the Router is ready (i.e. inside a guard,
-    // NOT in provideAppInitializer). It processes the Cognito callback
-    // (?code=...&state=...) when the user returns from login, and returns the
-    // cached auth state on all subsequent navigations.
     let isAuthenticated = false;
-    let accessToken = '';
 
     try {
         const result = await firstValueFrom(oidc.checkAuth());
         isAuthenticated = result.isAuthenticated;
-        accessToken = result.accessToken;
     } catch {
         // checkAuth() failed (e.g. expired code, state mismatch, network error).
         // Treat as unauthenticated — guard will redirect to Cognito below.
     }
 
     if (isAuthenticated) {
-        // Persist the token for services that read it from sessionStorage.
-        if (accessToken) {
-            sessionStorage.setItem('accessToken', accessToken);
+        // Keep sessionStorage in sync for legacy services that read from it.
+        // Use ID token — Cognito v2 access tokens are rejected by API Gateway
+        // COGNITO_USER_POOLS authorizers; ID tokens are v1 and fully supported.
+        const idToken = await firstValueFrom(oidc.getIdToken());
+        if (idToken) {
+            sessionStorage.setItem('accessToken', idToken);
         }
 
         // After any login redirect (initial load or expired-token re-login),

@@ -48,6 +48,21 @@ export const appRoutes: Routes = [
                 loadComponent: () => import('@/components/appointments/appointments').then((m) => m.AppointmentsComponent)
             },
             {
+                path: 'doctor-workflow',
+                data: { breadcrumb: 'Doctor Workflow' },
+                loadComponent: () => import('@/components/doctor-workflow/doctor-workflow').then((m) => m.DoctorWorkflowComponent)
+            },
+            {
+                path: 'doctor-dashboard',
+                data: { breadcrumb: 'Doctor Dashboard' },
+                loadComponent: () => import('@/components/doctor-dashboard/doctor-dashboard').then((m) => m.DoctorDashboardComponent)
+            },
+            {
+                path: 'consult-patient',
+                data: { breadcrumb: 'Consult Patient' },
+                loadComponent: () => import('@/components/consult-patient/consult-patient').then((m) => m.ConsultPatientComponent)
+            },
+            {
                 path: 'patient-profile/:id',
                 data: { breadcrumb: 'Patient Profile' },
                 loadComponent: () => import('@/components/patient-profile/patient-profile').then((m) => m.PatientProfileComponent)
@@ -68,7 +83,27 @@ export const appRoutes: Routes = [
             { path: 'blocks', data: { breadcrumb: 'Prime Blocks' }, loadChildren: () => import('@/pages/blocks/blocks.routes') },
             { path: 'profile', data: { breadcrumb: 'User Management' }, loadChildren: () => import('@/pages/usermanagement/usermanagement.routes') },
             { path: 'examination/:examId', component: ExaminationFormComponent },
-            { path: 'examination/:examId/view', component: ExaminationDetailComponent }
+            { path: 'examination/:examId/view', component: ExaminationDetailComponent },
+            {
+                path: 'hms/patients',
+                data: { breadcrumb: 'Patients' },
+                loadChildren: () => import('@/components/hms/patients/patients.routes')
+            },
+            {
+                path: 'hms/appointments',
+                data: { breadcrumb: 'Appointments' },
+                loadChildren: () => import('@/components/hms/appointments/appointments.routes')
+            },
+            {
+                path: 'hms/consultations',
+                data: { breadcrumb: 'Consultations' },
+                loadChildren: () => import('@/components/hms/consultations/consultations.routes')
+            },
+            {
+                path: 'clinic-workflow',
+                data: { breadcrumb: 'Clinic Workflow' },
+                loadChildren: () => import('@/components/clinic-workflow/clinic-workflow.routes')
+            }
         ]
     },
     { path: 'auth', loadChildren: () => import('@/pages/auth/auth.routes') },

@@ -1,24 +1,25 @@
+import { environment } from '../../../environments/environment';
+
 export class Config {
-    private static readonly tiryaqUrl = 'https://xy829e3qw2.execute-api.us-east-1.amazonaws.com';
-    private static readonly calendarUrl = 'https://od8gx8kld8.execute-api.us-east-1.amazonaws.com';
-    private static readonly environment = 'development';
+    private static readonly clinicUrl = environment.clinicApiUrl;
+    private static readonly usersUrl  = environment.usersApiUrl;
+    private static readonly hmsUrl    = environment.hmsApiUrl;
 
     static getEnvironment(): string {
-        return this.environment;
+        return environment.production ? 'production' : 'development';
     }
 
-    /** Builds a Tiryaq API endpoint URL */
-    static getBaseUrl(): string {
-        return this.tiryaqUrl;
-    }
+    /** Clinic API — doctors, payments, examinations, calendar, appointments */
+    static getBaseUrl(): string { return this.clinicUrl; }
+    static buildUrl(path: string): string { return `${this.clinicUrl}/${path}`; }
 
-    /** Builds a full Tiryaq API URL for a given path */
-    static buildUrl(path: string): string {
-        return `${this.tiryaqUrl}/${path}`;
-    }
+    /** Calendar sub-paths still go through the same clinic API */
+    static buildCalendarUrl(path: string): string { return `${this.clinicUrl}/${path}`; }
 
-    /** Builds a SaaS Calendar API endpoint URL */
-    static buildCalendarUrl(path: string): string {
-        return `${this.calendarUrl}/${path}`;
-    }
+    /** Users API */
+    static getUsersBaseUrl(): string { return `${this.usersUrl}/users`; }
+    static buildUsersUrl(path: string): string { return `${this.usersUrl}/${path}`; }
+
+    /** HMS API */
+    static buildHmsUrl(path: string): string { return `${this.hmsUrl}/${path}`; }
 }

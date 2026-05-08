@@ -12,6 +12,7 @@ import { InputIcon } from 'primeng/inputicon';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 import { take } from 'rxjs';
 import { BadgeModule } from 'primeng/badge';
 import { PopoverModule } from 'primeng/popover';
@@ -348,20 +349,21 @@ export class AppTopbar implements OnInit {
 
     // ── Logout ────────────────────────────────────────────────────────────
     logout() {
-        const clientId = '4n7mna6irf5vjfg770l46aldij';
-        const authority = 'https://us-east-1k2smci5zb.auth.us-east-1.amazoncognito.com';
+        const clientId = environment.cognitoClientId;
+        const hostedUi = environment.cognitoHostedUiUrl;
         const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
 
         const finish = () => {
+            localStorage.removeItem('userData');
             this.oidc.logoffLocal();
-            window.location.href = `${authority}/logout?client_id=${encodeURIComponent(clientId)}&logout_uri=${encodeURIComponent(window.location.origin + '/')}`;
+            window.location.href = `${hostedUi}/logout?client_id=${encodeURIComponent(clientId)}&logout_uri=${encodeURIComponent(window.location.origin + '/')}`;
         };
 
         this.oidc.getRefreshToken().subscribe({
             next: (refreshToken) => {
                 if (refreshToken) {
                     const body = new URLSearchParams({ token: refreshToken, token_type_hint: 'refresh_token', client_id: clientId }).toString();
-                    this.http.post(`${authority}/oauth2/revoke`, body, { headers }).subscribe({ next: finish, error: finish });
+                    this.http.post(`${hostedUi}/oauth2/revoke`, body, { headers }).subscribe({ next: finish, error: finish });
                 } else {
                     finish();
                 }

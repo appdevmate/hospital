@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Config } from './config';
 
 export interface Patient {
@@ -87,8 +88,9 @@ export interface GetPatientsPageOpts {
 
 @Injectable({ providedIn: 'root' })
 export class PatientsService {
-    path = 'patients';
-    deletePath = 'patients/delete';
+    private readonly hmsBase = Config.buildHmsUrl('patients');
+    private readonly clinicBase = Config.buildUrl('patients');
+
     constructor(private http: HttpClient) {}
 
     private authHeaders(): HttpHeaders {
@@ -96,133 +98,77 @@ export class PatientsService {
         return new HttpHeaders({ Authorization: `Bearer ${jwt}` });
     }
 
-    getPatientsPage(opts: GetPatientsPageOpts): Observable<PagedPatientsResponse> {
-        let params = new HttpParams();
-
-        const setIf = (k: string, v?: string | number | null) => {
-            if (v === null || v === undefined) return;
-            const s = String(v);
-            if (s.trim() !== '') params = params.set(k, s);
+    private mapPatient(p: any): Patient {
+        return {
+            PK: p.patientId ?? p.PK ?? '',
+            name: p.name ?? '',
+            email: p.email,
+            gender: p.gender,
+            insurance: p.insurance,
+            dob: p.dob,
+            phone: p.phone,
+            qid: p.qid,
+            admissionDate: p.admissionDate ?? null,
+            department: p.department ?? null,
+            specialization: p.specialization ?? null,
+            status: p.status ?? null,
+            bedNumber: p.bedNumber ?? null,
+            ward: p.ward ?? null,
+            medicalHistory: p.medicalHistory ?? null,
+            allergies: p.allergies ?? null,
+            medications: p.medications ?? null,
+            notes: p.notes ?? null,
+            bloodGroup: p.bloodGroup ?? null,
+            address: p.address ?? null,
+            timestamp: p.timestamp ?? p.createdAt,
         };
+    }
 
-        const addFilter = (key: keyof GetPatientsPageOpts, f?: FilterOption) => {
-            if (!f) return;
-            const raw = typeof f.value === 'string' ? f.value.trim() : f.value;
-            if (raw === '' || raw === undefined || raw === null) return;
-
-            // dobFrom/dobTo must be plain keys
-            if (key === 'dobFrom' || key === 'dobTo') {
-                params = params.set(String(key), String(raw));
-                return;
-            }
-
-            // equals -> plain key, others -> key.matchMode
-            if (f.matchMode === 'equals') {
-                params = params.set(String(key), String(raw));
-            } else {
-                params = params.set(`${String(key)}.${f.matchMode}`, String(raw));
-            }
-        };
-
-        // paging
-        setIf('pageSize', opts.pageSize ?? 25);
-        setIf('lastKey', opts.lastKey ?? null);
-        setIf('offset', opts.offset ?? null);
-
-        // sorting
-        setIf('sortField', opts.sortField ?? null);
-        setIf('sortOrder', opts.sortOrder ?? null);
-
-        // global search
-        if (opts.search && opts.search.trim()) params = params.set('search', opts.search.trim());
-
-        // field filters
-        addFilter('name', opts.name);
-        addFilter('gender', opts.gender);
-        addFilter('insurance', opts.insurance);
-        addFilter('dobFrom', opts.dobFrom);
-        addFilter('dobTo', opts.dobTo);
-
-        // -------- pass-through for arbitrary quick filters --------
-        // Anything not handled above (e.g., "status.notEquals": "dead,discharged")
-        const knownKeys = new Set(['pageSize', 'lastKey', 'offset', 'sortField', 'sortOrder', 'search', 'name', 'gender', 'insurance', 'dobFrom', 'dobTo']);
-
-        Object.entries(opts).forEach(([k, v]) => {
-            if (knownKeys.has(k)) return;
-            if (v === null || v === undefined) return;
-
-            // If caller passes arrays (e.g., ['dead','discharged']), join them.
-            if (Array.isArray(v)) {
-                if (v.length === 0) return;
-                params = params.set(k, v.map((x) => String(x)).join(','));
-                return;
-            }
-
-            // If key already contains a dot, send as-is (status.notEquals, etc.)
-            if (k.includes('.')) {
-                params = params.set(k, String(v));
-                return;
-            }
-
-            // Primitive passthrough
-            if (typeof v !== 'object') {
-                params = params.set(k, String(v));
-                return;
-            }
-
-            // If someone passed an ad-hoc FilterOption-like object, serialize similar to addFilter.
-            const maybe = v as Partial<FilterOption>;
-            if (maybe && 'value' in maybe && 'matchMode' in maybe) {
-                const raw = typeof maybe.value === 'string' ? maybe.value.trim() : maybe.value;
-                if (raw !== '' && raw !== undefined && raw !== null) {
-                    if (maybe.matchMode === 'equals') params = params.set(k, String(raw));
-                    else params = params.set(`${k}.${maybe.matchMode}`, String(raw));
-                }
-            }
-        });
-        // ----------------------------------------------------------
-
-        const url = Config.buildUrl(this.path);
-        console.log('GET /patients query ->', params.toString());
-        return this.http.get<PagedPatientsResponse>(url, { headers: this.authHeaders(), params });
+    getPatientsPage(_opts: GetPatientsPageOpts): Observable<PagedPatientsResponse> {
+        return this.http.get<any>(this.hmsBase, { headers: this.authHeaders() }).pipe(
+            map((res) => {
+                const arr: any[] = Array.isArray(res) ? res : (res.data ?? res.items ?? []);
+                const data = arr.map((p) => this.mapPatient(p));
+                return { data, hasMore: false, totalCount: data.length, count: data.length };
+            })
+        );
     }
 
     getPatientById(patientID: string): Observable<{ data: Patient }> {
-        return this.http.get<{ data: Patient }>(`${Config.buildUrl(this.path)}/${encodeURIComponent(patientID)}`, { headers: this.authHeaders() });
+        return this.http.get<any>(`${this.hmsBase}/${encodeURIComponent(patientID)}`, { headers: this.authHeaders() }).pipe(
+            map((res) => ({ data: this.mapPatient(res.data ?? res) }))
+        );
     }
 
     getPatientPayments(patientID: string, pageSize = 50, lastKey?: string | null) {
         let params = new HttpParams().set('pageSize', String(pageSize));
         if (lastKey) params = params.set('lastKey', lastKey);
-        return this.http.get<{ items: any[]; lastKey?: string | null }>(`${Config.buildUrl(this.path)}/${encodeURIComponent(patientID)}/payments`, { headers: this.authHeaders(), params });
+        return this.http.get<{ items: any[]; lastKey?: string | null }>(`${this.clinicBase}/${encodeURIComponent(patientID)}/payments`, { headers: this.authHeaders(), params });
     }
 
     getFilterOptions(field: 'gender' | 'insurance'): Observable<string[]> {
-        return this.http.get<string[]>(`${Config.buildUrl(this.path)}/filter-options/${field}`, { headers: this.authHeaders() });
+        return this.http.get<string[]>(`${this.hmsBase}/filter-options/${field}`, { headers: this.authHeaders() });
     }
 
     createPatient(patientData: CreateUpdatePatientRequest | CreateUpdatePatientRequest[] | { patients: CreateUpdatePatientRequest[] }): Observable<any> {
-        return this.http.post<any>(Config.buildUrl(this.path), patientData, {
-            headers: this.authHeaders()
-        });
+        return this.http.post<any>(this.hmsBase, patientData, { headers: this.authHeaders() });
     }
 
     updatePatient(patientID: string, patientData: CreateUpdatePatientRequest): Observable<{ data: Patient }> {
-        return this.http.patch<{ data: Patient }>(Config.buildUrl(this.path + '/' + patientID), patientData, {
-            headers: this.authHeaders()
-        });
+        return this.http.put<any>(`${this.hmsBase}/${patientID}`, patientData, { headers: this.authHeaders() }).pipe(
+            map((res) => ({ data: this.mapPatient(res.data ?? res) }))
+        );
     }
 
     deletePatient(patientID: string): Observable<{ data: Patient }> {
-        return this.http.delete<{ data: Patient }>(Config.buildUrl(this.path + '/' + patientID), {
-            headers: this.authHeaders()
-        });
+        return this.http.delete<any>(`${this.hmsBase}/${patientID}`, { headers: this.authHeaders() }).pipe(
+            map((res) => ({ data: this.mapPatient(res.data ?? { patientId: patientID }) }))
+        );
     }
 
     hardDeletePatient(idList: string[]): Observable<{ data: Patient }> {
-        return this.http.delete<{ data: Patient }>(Config.buildUrl(this.deletePath), {
-            headers: this.authHeaders(),
-            body: { ids: idList }
-        });
+        return this.http.delete<any>(`${this.hmsBase}/bulk`, { headers: this.authHeaders(), body: { ids: idList } }).pipe(
+            map((res) => ({ data: this.mapPatient(res.data ?? {}) }))
+        );
     }
 }

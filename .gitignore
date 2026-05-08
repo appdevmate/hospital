@@ -1,5 +1,8 @@
 node_modules
-
-.cursor\rules\nx-rules.mdc
-.github\instructions\nx.instructions.md
+dist/
 .angular/cache/
+.claude/settings.local.json
+.cursor/rules/nx-rules.mdc
+.github/instructions/nx.instructions.md
+backend/cdk.out/
+backend/node_modules/

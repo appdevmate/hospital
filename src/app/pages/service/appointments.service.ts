@@ -3,8 +3,6 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Config } from './config';
 
-const CALENDAR_API_KEY = 'tiryaq-hospital-001';
-
 export interface Appointment {
     appointmentId: string;
     doctorId: string;
@@ -47,9 +45,9 @@ export class AppointmentsService {
 
     constructor(private http: HttpClient) {}
 
-    /** x-api-key header for SaaS Calendar API */
     private headers(): HttpHeaders {
-        return new HttpHeaders({ 'x-api-key': CALENDAR_API_KEY });
+        const jwt = sessionStorage.getItem('accessToken') ?? '';
+        return new HttpHeaders({ Authorization: `Bearer ${jwt}` });
     }
 
     /** Get appointments. Pass doctorEmail to filter by doctor (doctor role only). */

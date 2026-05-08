@@ -3,8 +3,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Config } from './config';
 
-const CALENDAR_API_KEY = 'tiryaq-hospital-001';
-
 export interface HospitalCalendar {
     calendarId: string;
     name: string;
@@ -28,7 +26,8 @@ export class HospitalCalendarService {
     private http = inject(HttpClient);
 
     private headers(): HttpHeaders {
-        return new HttpHeaders({ 'x-api-key': CALENDAR_API_KEY });
+        const jwt = sessionStorage.getItem('accessToken') ?? '';
+        return new HttpHeaders({ Authorization: `Bearer ${jwt}` });
     }
 
     getCalendars(): Observable<HospitalCalendar[]> {
