@@ -1,0 +1,183 @@
+<p-toast></p-toast>
+
+<div class="voice-scribe-page">
+    <div class="header">
+        <h1>
+            <i class="pi pi-microphone"></i>
+            Voice Scribe
+            <p-tag value="Phase 1" severity="info"></p-tag>
+        </h1>
+        <p class="subtitle">Speak with the patient. Tiryaq writes the SOAP note for you.</p>
+    </div>
+
+    @if (!browserSupported) {
+        <p-card>
+            <div class="error-block">
+                <i class="pi pi-exclamation-triangle"></i>
+                <div>
+                    <strong>Voice recognition not supported in this browser.</strong>
+                    <p>Open Tiryaq in Google Chrome, Microsoft Edge, or Safari to use the voice scribe.</p>
+                </div>
+            </div>
+        </p-card>
+    } @else {
+
+    <!-- Step 1: Consent + create session -->
+    @if (!sessionId()) {
+        <p-card header="Step 1 — Patient consent">
+            <div class="consent-block">
+                <p>
+                    Before recording, the patient must explicitly agree to AI-assisted documentation.
+                    The recording is processed in real time and is not stored as audio.
+                </p>
+                <div class="consent-checkbox">
+                    <p-checkbox [(ngModel)]="consentGivenModel" [binary]="true" inputId="consent"></p-checkbox>
+                    <label for="consent">
+                        I confirm the patient has given verbal consent to AI-assisted documentation of this visit.
+                    </label>
+                </div>
+                <p-button
+                    label="Start Session"
+                    icon="pi pi-check"
+                    [disabled]="!consentGiven()"
+                    (onClick)="startSession()">
+                </p-button>
+            </div>
+        </p-card>
+    }
+
+    <!-- Step 2: Record -->
+    @if (sessionId() && status() !== 'review' && status() !== 'approved') {
+        <p-card header="Step 2 — Record the consultation">
+            <div class="recording-controls">
+                @if (!isRecording()) {
+                    <p-button
+                        label="Start Recording"
+                        icon="pi pi-microphone"
+                        severity="success"
+                        size="large"
+                        [disabled]="!canStartRecording()"
+                        (onClick)="startRecording()">
+                    </p-button>
+                } @else {
+                    <p-button
+                        label="Stop Recording"
+                        icon="pi pi-stop-circle"
+                        severity="danger"
+                        size="large"
+                        (onClick)="stopRecording()">
+                    </p-button>
+                    <span class="rec-indicator">
+                        <span class="rec-dot"></span>
+                        REC
+                    </span>
+                    <span class="duration">{{ formattedDuration() }}</span>
+                }
+                <p-tag [value]="statusLabel()" [severity]="isRecording() ? 'success' : 'info'"></p-tag>
+            </div>
+
+            @if (status() === 'processing') {
+                <p-progressBar mode="indeterminate" styleClass="mt-3"></p-progressBar>
+                <p class="hint">Generating SOAP note from transcript…</p>
+            }
+
+            @if (transcript() || interimTranscript()) {
+                <p-divider></p-divider>
+                <h3>Live transcript</h3>
+                <div class="transcript-pane">
+                    <span class="final">{{ transcript() }}</span>
+                    <span class="interim">{{ interimTranscript() }}</span>
+                </div>
+            }
+        </p-card>
+    }
+
+    <!-- Step 3: Review -->
+    @if (status() === 'review' && soapDraft) {
+        <p-card header="Step 3 — Review SOAP draft">
+            <p class="hint">
+                The fields below were drafted from your conversation. Edit anything wrong, then approve.
+            </p>
+
+            <div class="soap-grid">
+                <div class="soap-field">
+                    <label>Subjective <small>(what the patient reports)</small></label>
+                    <textarea
+                        pTextarea
+                        rows="6"
+                        [(ngModel)]="soapDraft.subjective"
+                        class="w-full">
+                    </textarea>
+                </div>
+                <div class="soap-field">
+                    <label>Objective <small>(observations & vitals)</small></label>
+                    <textarea
+                        pTextarea
+                        rows="6"
+                        [(ngModel)]="soapDraft.objective"
+                        class="w-full">
+                    </textarea>
+                </div>
+                <div class="soap-field">
+                    <label>Assessment <small>(diagnosis or impression)</small></label>
+                    <textarea
+                        pTextarea
+                        rows="6"
+                        [(ngModel)]="soapDraft.assessment"
+                        class="w-full">
+                    </textarea>
+                </div>
+                <div class="soap-field">
+                    <label>Plan <small>(next steps & follow-up)</small></label>
+                    <textarea
+                        pTextarea
+                        rows="6"
+                        [(ngModel)]="soapDraft.plan"
+                        class="w-full">
+                    </textarea>
+                </div>
+            </div>
+
+            <div class="actions">
+                <p-button label="Approve & Sign" icon="pi pi-check" severity="success" (onClick)="approveSoap()"></p-button>
+                <p-button label="Discard" icon="pi pi-times" severity="secondary" [outlined]="true" (onClick)="resetForNewSession()"></p-button>
+            </div>
+        </p-card>
+    }
+
+    <!-- Step 4: Approved -->
+    @if (status() === 'approved') {
+        <p-card>
+            <div class="approved-block">
+                <i class="pi pi-check-circle"></i>
+                <div>
+                    <h2>SOAP note approved</h2>
+                    <p>
+                        The note has been signed and audited. You can copy the text into the
+                        Consultation form, or start a new session.
+                    </p>
+                </div>
+            </div>
+            <div class="actions">
+                <p-button label="New Session" icon="pi pi-refresh" (onClick)="resetForNewSession()"></p-button>
+            </div>
+        </p-card>
+    }
+
+    @if (status() === 'error') {
+        <p-card>
+            <div class="error-block">
+                <i class="pi pi-exclamation-circle"></i>
+                <div>
+                    <strong>Something went wrong.</strong>
+                    <p>{{ errorMessage() }}</p>
+                </div>
+            </div>
+            <div class="actions">
+                <p-button label="Reset" icon="pi pi-refresh" (onClick)="resetForNewSession()"></p-button>
+            </div>
+        </p-card>
+    }
+
+    }
+</div>

@@ -19,7 +19,7 @@
 |---|---|---|
 | 1 | Navigate to the app URL | Redirected to Cognito managed login page with styled background |
 | 2 | Enter wrong password | Error message shown on login page |
-| 3 | Login as `admin1 / Admin@1234` | Redirected to dashboard |
+| 3 | Login as `admin1 / Admin@12345` | Redirected to dashboard |
 | 4 | Verify topbar shows "Admin One" and `admin1@tiryaq.com` | Correct name and email shown |
 
 ### 1.2 Logout

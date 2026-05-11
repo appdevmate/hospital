@@ -17,8 +17,8 @@ export const appConfig: ApplicationConfig = {
         providePrimeNG({ theme: { preset: Aura, options: { darkModeSelector: '.app-dark' } } }),
         provideAuth({
             config: {
-                authority: 'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_XQVs0qblT',
-                clientId: '7ftudt79e20b6j7qnle0mcmb4u',
+                authority: 'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_RACghntmS',
+                clientId: '2nfjfipi8hri262pjohtpgl45q',
                 redirectUrl: window.location.origin + '/',
                 postLogoutRedirectUri: window.location.origin + '/',
                 responseType: 'code',

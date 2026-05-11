@@ -1,5 +1,5 @@
 export class Config {
-    private static readonly tiryaqUrl = 'https://2i99abb3oi.execute-api.us-east-1.amazonaws.com';
+    private static readonly tiryaqUrl = 'https://jxz59jh15f.execute-api.us-east-1.amazonaws.com';
     private static readonly calendarUrl = 'https://od8gx8kld8.execute-api.us-east-1.amazonaws.com';
     private static readonly environment = 'development';
 

@@ -16,7 +16,7 @@ const {
 
 const REGION       = 'us-east-1';
 const TABLE_NAME   = process.env.TABLE_NAME || 'Hospital';
-const USER_POOL_ID = 'us-east-1_K2smcI5zB';
+const USER_POOL_ID = process.env.USER_POOL_ID;
 
 const db      = DynamoDBDocumentClient.from(new DynamoDBClient({ region: REGION }));
 const cognito = new CognitoIdentityProviderClient({ region: REGION });

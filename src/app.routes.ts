@@ -14,6 +14,7 @@ import { PharmacyComponent } from '@/components/pharmacy/pharmacy';
 const PATIENTS_ROLES: UserRole[] = ['admin', 'developer', 'doctor'];
 const ADMIN_ROLES: UserRole[] = ['admin', 'developer'];
 const PHARMACY_ROLES: UserRole[] = ['admin', 'developer', 'pharmacist'];
+const SCRIBE_ROLES: UserRole[] = ['admin', 'developer', 'doctor'];
 
 export const appRoutes: Routes = [
     {
@@ -53,6 +54,14 @@ export const appRoutes: Routes = [
 
             // Pharmacy
             { path: 'pharmacy', canActivate: [roleGuard(PHARMACY_ROLES)], component: PharmacyComponent },
+
+            // ScribeFirst Phase 1 — voice scribe
+            {
+                path: 'voice-scribe',
+                data: { breadcrumb: 'Voice Scribe' },
+                canActivate: [roleGuard(SCRIBE_ROLES)],
+                loadComponent: () => import('@/components/voice-scribe/voice-scribe').then((m) => m.VoiceScribeComponent)
+            },
 
             // Admin panel
             { path: 'admin-panel', canActivate: [roleGuard(ADMIN_ROLES)], component: AdminPanelComponent },

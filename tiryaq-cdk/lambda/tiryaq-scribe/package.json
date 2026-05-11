@@ -1,0 +1,10 @@
+{
+    "name": "tiryaq-scribe",
+    "version": "1.0.0",
+    "description": "ScribeFirst Phase 1 backend — SOAP generation via Bedrock + audit.",
+    "main": "index.js",
+    "private": true,
+    "engines": {
+        "node": ">=20"
+    }
+}

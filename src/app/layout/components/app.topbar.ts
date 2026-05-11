@@ -348,7 +348,7 @@ export class AppTopbar implements OnInit {
 
     // ── Logout ────────────────────────────────────────────────────────────
     logout() {
-        const clientId = '7ftudt79e20b6j7qnle0mcmb4u';
+        const clientId = '2nfjfipi8hri262pjohtpgl45q';
         const authority = 'https://tiryaq-hospital.auth.us-east-1.amazoncognito.com';
         const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
 
