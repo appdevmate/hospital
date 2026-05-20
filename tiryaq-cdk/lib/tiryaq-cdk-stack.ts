@@ -453,7 +453,6 @@ export class TiryaqStack extends cdk.Stack {
         const createPatientFn = fn('CreatePatient', 'createPatient', 'index.handler');
         const updatePatientFn = fn('UpdatePatient', 'updatePatient', 'index.handler');
         const deletePatientFn = fn('DeletePatient', 'deletePatient', 'index.handler');
-        const hardDeleteAllPatientsFn = fn('HardDeleteAllPatients', 'hardDeleteAllPatients', 'index.handler', lambda.Runtime.NODEJS_24_X);
         const getPatientsDataByFiltersFn = fn('GetPatientsDataByFilters', 'getPatientsDataByFilters', 'index.handler');
         const getAllDoctorsFn = fn('GetAllDoctors', 'getAllDoctors', 'index.handler');
         const getDoctorByIDFn = fn('GetDoctorByID', 'getDoctorByID', 'index.handler');
@@ -461,7 +460,6 @@ export class TiryaqStack extends cdk.Stack {
         const createDoctorFn = fn('CreateDoctor', 'createDoctor', 'index.handler');
         const updateDoctorFn = fn('UpdateDoctor', 'updateDoctor', 'index.handler');
         const deleteDoctorFn = fn('DeleteDoctor', 'deleteDoctor', 'index.handler');
-        const hardDeleteAllDoctorsFn = fn('HardDeleteAllDoctors', 'hardDeleteAllDoctors', 'index.handler', lambda.Runtime.NODEJS_24_X);
         const createPatientPaymentFn = fn('CreatePatientPayment', 'createPatientPayment', 'index.handler');
         const getAllPaymentsForPatientFn = fn('GetAllPaymentsForPatient', 'getAllPaymentsForPatient', 'index.handler');
         const listAllPaymentsForPatientByIDFn = fn('ListAllPaymentsForPatientByID', 'listAllPaymentsForPatientByID', 'index.handler');
@@ -486,6 +484,10 @@ export class TiryaqStack extends cdk.Stack {
         const documentManagerFn = fn('TiryaqDocumentManager', 'tiryaq-document-manager', 'index.handler', lambda.Runtime.NODEJS_24_X);
         const auditFn = fn('TiryaqAudit', 'tiryaq-audit', 'index.handler', lambda.Runtime.NODEJS_24_X);
         const appointmentsFn = fn('TiryaqAppointments', 'tiryaq-appointments', 'index.handler', lambda.Runtime.NODEJS_24_X);
+        // Hospital calendar — replaces the previous external CalendarPlatform SaaS.
+        // All calendar data now persists in the Hospital DynamoDB table for
+        // PDPPL data-residency + clinical-privacy compliance.
+        const calendarFn = fn('TiryaqCalendar', 'tiryaq-calendar', 'index.handler', lambda.Runtime.NODEJS_20_X);
 
         // ─────────────────────────────────────────────────────────────────────
         // ScribeFirst Phase 1 — SOAP generation Lambda.
@@ -523,7 +525,6 @@ export class TiryaqStack extends cdk.Stack {
             createPatientFn,
             updatePatientFn,
             deletePatientFn,
-            hardDeleteAllPatientsFn,
             getPatientsDataByFiltersFn,
             getAllDoctorsFn,
             getDoctorByIDFn,
@@ -531,7 +532,6 @@ export class TiryaqStack extends cdk.Stack {
             createDoctorFn,
             updateDoctorFn,
             deleteDoctorFn,
-            hardDeleteAllDoctorsFn,
             createPatientPaymentFn,
             getAllPaymentsForPatientFn,
             listAllPaymentsForPatientByIDFn,
@@ -556,6 +556,7 @@ export class TiryaqStack extends cdk.Stack {
             documentManagerFn,
             auditFn,
             appointmentsFn,
+            calendarFn,
             scribeFn
         ];
 
@@ -594,24 +595,48 @@ const client = DynamoDBDocumentClient.from(new DynamoDBClient({}));
 const TABLE  = process.env.TABLE_NAME;
 const DEPARTMENTS = ${JSON.stringify(DEPARTMENTS)};
 const SPECIALIZATIONS = ${JSON.stringify(SPECIALIZATIONS)};
+
+// attribute_not_exists(PK) makes every Put idempotent — existing rows are
+// preserved. This protects the patient/doctor counters from being reset on
+// any future replay of this CustomResource.
+async function putIfAbsent(item) {
+    try {
+        await client.send(new PutCommand({
+            TableName: TABLE,
+            Item: item,
+            ConditionExpression: 'attribute_not_exists(PK)'
+        }));
+        return true;
+    } catch (e) {
+        if (e.name === 'ConditionalCheckFailedException') return false;
+        throw e;
+    }
+}
+
 exports.handler = async (event) => {
-    if (event.RequestType === 'Delete') return { PhysicalResourceId: 'seed' };
+    // RequestType handling:
+    //   Create → run the full seed.
+    //   Update → NO-OP. Reference data (departments, specializations) and
+    //            live counters must not be regenerated automatically. To
+    //            re-seed intentionally, replace this CustomResource via
+    //            console or bump the logical id.
+    //   Delete → NO-OP. Never destroy seeded reference data on stack delete.
+    if (event.RequestType !== 'Create') {
+        return { PhysicalResourceId: 'seed', Data: { skipped: event.RequestType } };
+    }
     const now = new Date().toISOString();
-    const puts = [];
-    puts.push({ PK: 'COUNTER#PATIENTS', SK: 'COUNTER', count: 0, EntityType: 'COUNTER' });
-    puts.push({ PK: 'COUNTER#DOCTORS',  SK: 'COUNTER', count: 0, EntityType: 'COUNTER' });
+    let written = 0;
+    if (await putIfAbsent({ PK: 'COUNTER#PATIENTS', SK: 'COUNTER', count: 0, EntityType: 'COUNTER' })) written++;
+    if (await putIfAbsent({ PK: 'COUNTER#DOCTORS',  SK: 'COUNTER', count: 0, EntityType: 'COUNTER' })) written++;
     for (const name of DEPARTMENTS) {
         const id = randomUUID();
-        puts.push({ PK: \`DEPARTMENT#\${id}\`, SK: 'PROFILE', EntityType: 'DEPARTMENT', departmentId: id, name, createdAt: now });
+        if (await putIfAbsent({ PK: \`DEPARTMENT#\${id}\`, SK: 'PROFILE', EntityType: 'DEPARTMENT', departmentId: id, name, createdAt: now })) written++;
     }
     for (const name of SPECIALIZATIONS) {
         const id = randomUUID();
-        puts.push({ PK: \`SPECIALIZATION#\${id}\`, SK: 'PROFILE', EntityType: 'SPECIALIZATION', specializationId: id, name, createdAt: now });
+        if (await putIfAbsent({ PK: \`SPECIALIZATION#\${id}\`, SK: 'PROFILE', EntityType: 'SPECIALIZATION', specializationId: id, name, createdAt: now })) written++;
     }
-    for (const item of puts) {
-        await client.send(new PutCommand({ TableName: TABLE, Item: item }));
-    }
-    return { PhysicalResourceId: 'seed', Data: { count: puts.length } };
+    return { PhysicalResourceId: 'seed', Data: { written } };
 };
             `)
         });
@@ -619,9 +644,14 @@ exports.handler = async (event) => {
         table.grantWriteData(seedFn);
         tiryaqDataKey.grantEncryptDecrypt(seedFn);
         const seedProvider = new cr.Provider(this, 'SeedProvider', { onEventHandler: seedFn });
+        // Stable property — same on every synth — so CloudFormation does NOT
+        // re-trigger an Update of the SeedData CustomResource on `cdk deploy`.
+        // Previously `timestamp: Date.now()` caused the seed Lambda to run on
+        // every deploy, resetting patient/doctor counters and duplicating
+        // department/specialization records.
         new cdk.CustomResource(this, 'SeedData', {
             serviceToken: seedProvider.serviceToken,
-            properties: { timestamp: Date.now() }
+            properties: { seedVersion: 1 }
         });
 
         // ─────────────────────────────────────────────────────────────────────
@@ -815,7 +845,6 @@ exports.handler = async (event) => {
         route('/patients/{patientID}', [apigwv2.HttpMethod.PATCH], updatePatientFn);
         route('/patients/{patientID}', [apigwv2.HttpMethod.DELETE], deletePatientFn);
         route('/patients/{patientID}/restore', [apigwv2.HttpMethod.PATCH], updatePatientFn);
-        route('/patients/delete', [apigwv2.HttpMethod.DELETE], hardDeleteAllPatientsFn);
         route('/patients/search', [apigwv2.HttpMethod.GET], getPatientsDataByFiltersFn);
         route('/doctors', [apigwv2.HttpMethod.GET], getAllDoctorsFn);
         route('/doctors', [apigwv2.HttpMethod.POST], createDoctorFn);
@@ -823,7 +852,6 @@ exports.handler = async (event) => {
         route('/doctors/{doctorID}', [apigwv2.HttpMethod.PATCH], updateDoctorFn);
         route('/doctors/{doctorID}', [apigwv2.HttpMethod.DELETE], deleteDoctorFn);
         route('/doctors/email/{email}', [apigwv2.HttpMethod.GET], getDoctorByEmailFn);
-        route('/doctors/delete', [apigwv2.HttpMethod.DELETE], hardDeleteAllDoctorsFn);
         route('/patients/{patientID}/payments', [apigwv2.HttpMethod.GET], getAllPaymentsForPatientFn);
         route('/patients/{patientID}/payments', [apigwv2.HttpMethod.POST], createPatientPaymentFn);
         route('/patients/{patientID}/payments/{paymentID}', [apigwv2.HttpMethod.GET], getPaymentByIDFn);
@@ -851,12 +879,15 @@ exports.handler = async (event) => {
         route('/examinations', [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.POST], examinationsFn);
         route('/examinations/{examId}', [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.PATCH, apigwv2.HttpMethod.DELETE], examinationsFn);
         route('/examinations/{examId}/signoff', [apigwv2.HttpMethod.POST], examinationsFn);
-        route('/pharmacy/catalog', [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.POST], pharmacyFn);
-        route('/pharmacy/catalog/{itemId}', [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.PATCH, apigwv2.HttpMethod.DELETE], pharmacyFn);
+        // Pharmacy routes — paths match the tiryaq-pharmacy Lambda's internal router.
+        // (Lambda dispatches on event.rawPath; CDK must register identical paths.)
+        route('/pharmacy/medications', [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.POST], pharmacyFn);
+        route('/pharmacy/medications/{medId}', [apigwv2.HttpMethod.PATCH, apigwv2.HttpMethod.DELETE], pharmacyFn);
         route('/pharmacy/inventory', [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.POST], pharmacyFn);
+        route('/pharmacy/inventory/{medId}', [apigwv2.HttpMethod.PATCH], pharmacyFn);
         route('/pharmacy/prescriptions', [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.POST], pharmacyFn);
         route('/pharmacy/prescriptions/{rxId}', [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.PATCH], pharmacyFn);
-        route('/pharmacy/prescriptions/{rxId}/dispense', [apigwv2.HttpMethod.POST], pharmacyFn);
+        route('/pharmacy/dispense', [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.POST], pharmacyFn);
         route('/pharmacy/purchase-orders', [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.POST], pharmacyFn);
         route('/pharmacy/purchase-orders/{poId}', [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.PATCH], pharmacyFn);
         route('/pharmacy/alerts', [apigwv2.HttpMethod.GET], pharmacyFn);
@@ -866,6 +897,12 @@ exports.handler = async (event) => {
         route('/audit', [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.POST], auditFn);
         route('/appointments', [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.POST], appointmentsFn);
         route('/appointments/{apptId}', [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.PATCH, apigwv2.HttpMethod.DELETE], appointmentsFn);
+
+        // Hospital calendar routes — Tiryaq-local, JWT-authenticated.
+        route('/calendars', [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.POST], calendarFn);
+        route('/calendars/{calendarId}', [apigwv2.HttpMethod.DELETE], calendarFn);
+        route('/calendars/{calendarId}/events', [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.POST], calendarFn);
+        route('/calendars/{calendarId}/events/{eventId}', [apigwv2.HttpMethod.PATCH, apigwv2.HttpMethod.DELETE], calendarFn);
 
         // ScribeFirst Phase 1 — SOAP scribe routes
         route('/scribe/sessions', [apigwv2.HttpMethod.POST], scribeFn);

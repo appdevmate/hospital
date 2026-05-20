@@ -66,10 +66,7 @@ const STATUS_SEVERITY: Record<string, 'success' | 'info' | 'warn' | 'danger' | '
         <ng-template #tbStart let-api="api" let-selected="selected">
             @if (auth.isAdmin || auth.isDeveloper) {
                 <p-button class="mr-2" [disabled]="loading()" label="New Doctor" icon="pi pi-plus" (onClick)="openNew()"></p-button>
-                <p-button class="mr-2" [disabled]="!selected?.length" label="Delete Selected" icon="pi pi-trash" severity="danger" (onClick)="deleteSelected('soft')"></p-button>
-                @if (auth.isAdmin || auth.isDeveloper) {
-                    <p-button class="mr-2" [disabled]="!selected?.length" label="Hard Delete Selected" icon="pi pi-trash" severity="contrast" (onClick)="deleteSelected('hard')"></p-button>
-                }
+                <p-button class="mr-2" [disabled]="!selected?.length" label="Delete Selected" icon="pi pi-trash" severity="danger" (onClick)="deleteSelected()"></p-button>
                 <input type="file" #fileInput accept=".xlsx,.xls,.csv" (change)="onImportFromFileInput($event)" hidden />
                 <p-button class="mr-2" label="Import Doctor(s) Data" icon="pi pi-download" severity="secondary" (onClick)="fileInput.click()"></p-button>
                 <p-button class="mr-2" label="Download Doctor Template" icon="pi pi-file-excel" severity="secondary" (onClick)="downloadTemplate()"></p-button>
@@ -493,7 +490,10 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    deleteSelected(deletionOption: 'hard' | 'soft') {
+    // ── Delete (soft only) ─────────────────────────────────────────────────
+    // Hard delete is intentionally NOT exposed in the UI. Permanent removal is
+    // an IT-side DB operation, never a clinician/admin action.
+    deleteSelected() {
         const sel = this._selected();
         if (!sel?.length) {
             this.helpers.notifyInfo('Warning', 'No rows selected');
@@ -519,26 +519,17 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
                     }
                 };
 
-                const request$ =
-                    deletionOption === 'hard'
-                        ? this.doctors.hardDeleteDoctor(ids).pipe(
-                              map(() => ids.map(() => true)),
-                              catchError((err) => {
-                                  handleUnauthorized(err);
-                                  return of(ids.map(() => false));
-                              })
-                          )
-                        : forkJoin(
-                              ids.map((id) =>
-                                  this.doctors.deleteDoctor(id).pipe(
-                                      map(() => true),
-                                      catchError((err) => {
-                                          handleUnauthorized(err);
-                                          return of(false);
-                                      })
-                                  )
-                              )
-                          );
+                const request$ = forkJoin(
+                    ids.map((id) =>
+                        this.doctors.deleteDoctor(id).pipe(
+                            map(() => true),
+                            catchError((err) => {
+                                handleUnauthorized(err);
+                                return of(false);
+                            })
+                        )
+                    )
+                );
 
                 request$.pipe(finalize(() => this._loading.set(false))).subscribe((res) => {
                     const successCount = res.filter(Boolean).length;

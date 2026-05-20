@@ -71,59 +71,26 @@ const STATUS_SEVERITY: Record<string, 'success' | 'info' | 'warn' | 'danger' | '
         <app-tiryaq-loader [loading]="loading()" message="Loading patients…" />
         <!-- ── Toolbar: Start ── -->
         <ng-template #tbStart>
-            @if (!showDeleted()) {
-                <p-button class="mr-2" [disabled]="loading()" label="New Patient" icon="pi pi-plus" (onClick)="openNew()"></p-button>
-                <p-button class="mr-2" [disabled]="!selected().length" label="Delete Selected" icon="pi pi-trash" severity="danger" (onClick)="deleteSelected('soft')"></p-button>
-                @if (auth.isAdmin || auth.isDeveloper) {
-                    <p-button class="mr-2" [disabled]="!selected().length" label="Hard Delete Selected" icon="pi pi-trash" severity="contrast" (onClick)="deleteSelected('hard')"></p-button>
-                }
-                <input type="file" #fileInput accept=".xlsx,.xls,.csv" (change)="onImportFromFileInput($event)" hidden />
-                <p-button class="mr-2" label="Import Patient(s)" icon="pi pi-download" severity="secondary" (onClick)="fileInput.click()"></p-button>
-                <p-button class="mr-2" label="Download Template" icon="pi pi-file-excel" severity="secondary" (onClick)="downloadTemplate()"></p-button>
-            }
-            <!-- Toggle deactivated view — admin and developer only -->
-            @if (auth.isAdmin || auth.isDeveloper) {
-                <p-button
-                    class="mr-2"
-                    [label]="showDeleted() ? 'Show Active Patients' : 'Show Deactivated Patients'"
-                    [icon]="showDeleted() ? 'pi pi-users' : 'pi pi-eye-slash'"
-                    [severity]="showDeleted() ? 'warn' : 'secondary'"
-                    [outlined]="true"
-                    (onClick)="toggleDeleted()"
-                >
-                </p-button>
-            }
+            <p-button class="mr-2" [disabled]="loading()" label="New Patient" icon="pi pi-plus" (onClick)="openNew()"></p-button>
+            <p-button class="mr-2" [disabled]="!selected().length" label="Delete Selected" icon="pi pi-trash" severity="danger" (onClick)="deleteSelected()"></p-button>
+            <input type="file" #fileInput accept=".xlsx,.xls,.csv" (change)="onImportFromFileInput($event)" hidden />
+            <p-button class="mr-2" label="Import Patient(s)" icon="pi pi-download" severity="secondary" (onClick)="fileInput.click()"></p-button>
+            <p-button class="mr-2" label="Download Template" icon="pi pi-file-excel" severity="secondary" (onClick)="downloadTemplate()"></p-button>
         </ng-template>
 
         <!-- ── Toolbar: End ── -->
         <ng-template #tbEnd>
-            @if (!showDeleted()) {
-                <p-button label="Export to Excel" icon="pi pi-download" severity="secondary" (onClick)="exportExcel()"></p-button>
-            }
+            <p-button label="Export to Excel" icon="pi pi-download" severity="secondary" (onClick)="exportExcel()"></p-button>
         </ng-template>
 
         <!-- ── Row Actions ── -->
         <ng-template #rowActions let-row let-editing="editing">
             @if (!editing) {
-                @if (showDeleted()) {
-                    <!-- Deactivated view: only restore action -->
-                    <p-button icon="pi pi-undo" text severity="success" pTooltip="Restore Patient" (onClick)="restoreFromList(row)"> </p-button>
-                } @else {
-                    <!-- Normal view: standard actions -->
-                    <p-button icon="pi pi-pencil" text (onClick)="openEdit(row)" pTooltip="Edit Patient"></p-button>
-                    <p-button icon="pi pi-trash" text severity="danger" class="ml-2" (onClick)="deleteRow(row)" pTooltip="Delete"></p-button>
-                    <p-button icon="pi pi-eye" text severity="info" (onClick)="viewProfile(row)" pTooltip="View Profile"></p-button>
-                }
+                <p-button icon="pi pi-pencil" text (onClick)="openEdit(row)" pTooltip="Edit Patient"></p-button>
+                <p-button icon="pi pi-trash" text severity="danger" class="ml-2" (onClick)="deleteRow(row)" pTooltip="Delete"></p-button>
+                <p-button icon="pi pi-eye" text severity="info" (onClick)="viewProfile(row)" pTooltip="View Profile"></p-button>
             }
         </ng-template>
-
-        <!-- ── Deactivated patients banner ── -->
-        @if (showDeleted()) {
-            <div style="display:flex;align-items:center;gap:0.75rem;background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;padding:0.75rem 1rem;margin-bottom:0.875rem;">
-                <i class="pi pi-eye-slash" style="color:#dc2626;font-size:1.1rem;flex-shrink:0;"></i>
-                <span style="font-size:0.875rem;color:#991b1b;font-weight:500;"> Showing deactivated patients only. Use the <strong>Restore</strong> button on any row to reactivate a patient and make them visible in all normal views. </span>
-            </div>
-        }
 
         <!-- ── Table ── -->
         <app-generic-table
@@ -133,8 +100,8 @@ const STATUS_SEVERITY: Record<string, 'success' | 'info' | 'warn' | 'danger' | '
             [totalRecords]="totalRecords()"
             [loading]="loading()"
             [customTemplates]="customTemplates()"
-            [selectedRows]="showDeleted() ? [] : selected()"
-            [filterControls]="showDeleted() ? [] : filterControls"
+            [selectedRows]="selected()"
+            [filterControls]="filterControls"
             [activeFilters]="activeFilters"
             (filterControlChange)="onFilterControlChange($event)"
             [visibleColumnFields]="visibleCols()"
@@ -184,9 +151,6 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
     loading = this._loading.asReadonly();
     totalRecords = this._totalRecords.asReadonly();
     customTemplates = this._customTemplates;
-
-    /** When true the table shows only deactivated patients */
-    showDeleted = signal<boolean>(false);
 
     visibleCols = signal<string[]>(['name', 'bloodGroup', 'gender', 'phone', 'qid', 'dob', 'status', 'bedNumber', 'ward']);
 
@@ -252,44 +216,6 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy() {}
-
-    // ── Toggle deactivated view ──────────────────────────────────────────
-    toggleDeleted() {
-        this.showDeleted.set(!this.showDeleted());
-        // reset pagination and filters when switching modes
-        this.filters = { pageSize: this.pageSize, lastKey: null, offset: 0 };
-        this._selected.set([]);
-        this.load({ first: 0, rows: this.pageSize, sortField: this.prevSortField, sortOrder: this.prevSortOrder, filters: {} });
-    }
-
-    // ── Restore from the deactivated list ───────────────────────────────
-    restoreFromList(row: Patient) {
-        const name = row.name || 'this patient';
-        this.confirm.confirm({
-            key: 'global',
-            header: 'Restore Patient',
-            message: `Restore ${new TitleCasePipe().transform(name)}? They will become visible again in all normal views.`,
-            icon: 'pi pi-undo',
-            acceptButtonProps: { label: 'Restore', severity: 'success' },
-            rejectButtonProps: { label: 'Cancel', severity: 'secondary', outlined: true },
-            accept: () => {
-                const id = this.pkToId(row.PK);
-                this._loading.set(true);
-                this.patients
-                    .restorePatient(id)
-                    .pipe(finalize(() => this._loading.set(false)))
-                    .subscribe({
-                        next: () => {
-                            this.helpers.notifySuccess(`${new TitleCasePipe().transform(name)} restored successfully`);
-                            this.fetch();
-                        },
-                        error: (e: any) => {
-                            this.helpers.notifyError('Error', e?.error?.message || 'Could not restore patient');
-                        }
-                    });
-            }
-        });
-    }
 
     // ── Navigation ───────────────────────────────────────────────────────
     viewProfile(row: Patient) {
@@ -373,8 +299,11 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
         });
     }
 
-    // ── Delete ───────────────────────────────────────────────────────────
-    deleteSelected(deletionOption: 'hard' | 'soft') {
+    // ── Delete (soft only) ─────────────────────────────────────────────────
+    // Hard delete is intentionally NOT exposed in the UI. Soft delete sets
+    // deletedAt; permanent removal / restore is an IT-side operation against
+    // the database, not a clinician/admin action (clinical-record integrity).
+    deleteSelected() {
         const sel = this._selected();
         if (!sel.length) {
             this.helpers.notifyInfo('Warning', 'No rows selected');
@@ -400,26 +329,17 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
                     }
                 };
 
-                const request$ =
-                    deletionOption === 'hard'
-                        ? this.patients.hardDeletePatient(ids).pipe(
-                              map(() => ids.map(() => true)),
-                              catchError((err) => {
-                                  handleUnauthorized(err);
-                                  return of(ids.map(() => false));
-                              })
-                          )
-                        : forkJoin(
-                              ids.map((id) =>
-                                  this.patients.deletePatient(id).pipe(
-                                      map(() => true),
-                                      catchError((err) => {
-                                          handleUnauthorized(err);
-                                          return of(false);
-                                      })
-                                  )
-                              )
-                          );
+                const request$ = forkJoin(
+                    ids.map((id) =>
+                        this.patients.deletePatient(id).pipe(
+                            map(() => true),
+                            catchError((err) => {
+                                handleUnauthorized(err);
+                                return of(false);
+                            })
+                        )
+                    )
+                );
 
                 request$.pipe(finalize(() => this._loading.set(false))).subscribe((res) => {
                     const successCount = (res as boolean[]).filter(Boolean).length;
@@ -516,7 +436,6 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
     private fetch() {
         this._loading.set(true);
         const opts: GetPatientsPageOpts = { ...this.filters };
-        if (this.showDeleted()) opts.showDeleted = true;
         // No doctorEmail param — backend handles scoping from JWT
 
         this.patients.getPatientsPage(opts).subscribe({

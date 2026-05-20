@@ -1,7 +1,10 @@
+# Run all from the repo root: C:\Users\Sami Toufic Taha\Desktop\aws apps\hospital
+# Clean the Angular build cache BEFORE building — a stale .angular\cache can emit
+# incomplete Tailwind CSS (dashboard grid collapses to a single column).
+Remove-Item -Recurse -Force .angular\cache -ErrorAction SilentlyContinue
 ng build --configuration production
-aws s3 sync "dist\verona-ng\browser" s3://tiryaqcdkstack-tiryaqfrontendbucket18b23106-pbwvq4ty0wya --delete
-aws cloudfront create-invalidation --distribution-id E3ONH40F3TKIIM --paths "/*"
+aws s3 sync "dist\verona-ng\browser" s3://tiryaqcdkstack-tiryaqfrontendbucket18b23106-jsz6deto6hub --delete
+aws cloudfront create-invalidation --distribution-id E1Z1ZKYM74LVA7 --paths "/*"
 git add .
-git commit -m "fixing save chief complaint V1"
+git commit -m "describe your change here"
 git push
-Remove-Item -Recurse -Force .angular\cache

@@ -17,15 +17,13 @@ const client = new DynamoDBClient({ region: REGION });
 const db     = DynamoDBDocumentClient.from(client);
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
+// CORS headers are injected by API Gateway HTTP API's corsPreflight
+// allow-list (see tiryaq-cdk-stack.ts). Do NOT echo wildcard CORS headers
+// here — they would override the allow-list and re-open every origin.
 function res(statusCode, body) {
     return {
         statusCode,
-        headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Headers': 'Content-Type,Authorization',
-            'Access-Control-Allow-Methods': 'GET,POST,PATCH,DELETE,OPTIONS'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
     };
 }
@@ -191,7 +189,8 @@ exports.handler = async (event) => {
             createdBy:       caller.email,
             createdByName:   caller.name,
             createdAt:       now,
-            updatedAt:       null
+            // Avoid updatedAt: null — fails dataClass-index GSI validation (S required).
+            updatedAt:       now
         };
 
         await db.send(new PutCommand({ TableName: TABLE_NAME, Item: appointment }));

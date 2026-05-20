@@ -90,7 +90,6 @@ export interface GetPatientsPageOpts {
 @Injectable({ providedIn: 'root' })
 export class PatientsService {
     path = 'patients';
-    deletePath = 'patients/delete';
 
     constructor(private http: HttpClient) {}
 
@@ -204,13 +203,6 @@ export class PatientsService {
 
     deletePatient(patientID: string): Observable<{ data: Patient }> {
         return this.http.delete<{ data: Patient }>(Config.buildUrl(`${this.path}/${patientID}`), { headers: this.authHeaders() });
-    }
-
-    hardDeletePatient(idList: string[]): Observable<{ data: Patient }> {
-        return this.http.delete<{ data: Patient }>(Config.buildUrl(this.deletePath), {
-            headers: this.authHeaders(),
-            body: { ids: idList }
-        });
     }
 
     // ── Restore a deactivated patient ─────────────────────────────────────────

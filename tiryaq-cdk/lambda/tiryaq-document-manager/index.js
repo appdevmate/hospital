@@ -275,15 +275,13 @@ function sanitizeFilename(filename) {
         .substring(0, 255);               // Limit length
 }
 
+// CORS headers are injected by API Gateway HTTP API's corsPreflight
+// allow-list (see tiryaq-cdk-stack.ts). Do NOT echo wildcard CORS headers
+// here — they would override the allow-list and re-open every origin.
 function ok(body) {
     return {
         statusCode: 200,
-        headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-            'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
     };
 }
@@ -291,12 +289,7 @@ function ok(body) {
 function errResp(status, message) {
     return {
         statusCode: status,
-        headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-            'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: message })
     };
 }

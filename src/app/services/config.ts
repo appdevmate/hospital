@@ -1,6 +1,5 @@
 export class Config {
     private static readonly tiryaqUrl = 'https://jxz59jh15f.execute-api.us-east-1.amazonaws.com';
-    private static readonly calendarUrl = 'https://od8gx8kld8.execute-api.us-east-1.amazonaws.com';
     private static readonly environment = 'development';
 
     static getEnvironment(): string {
@@ -15,10 +14,5 @@ export class Config {
     /** Builds a full Tiryaq API URL for a given path */
     static buildUrl(path: string): string {
         return `${this.tiryaqUrl}/${path}`;
-    }
-
-    /** Builds a SaaS Calendar API endpoint URL */
-    static buildCalendarUrl(path: string): string {
-        return `${this.calendarUrl}/${path}`;
     }
 }

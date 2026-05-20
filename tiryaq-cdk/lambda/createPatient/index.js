@@ -105,9 +105,12 @@ const createPatientItem = (patient) => {
     bedNumber: patient.bedNumber || null,
     bloodGroup: patient.bloodGroup || null,
     // audit fields
+    // Don't write updatedAt or deletedAt as NULL — the dataClass-index GSI
+    // (compliance Update 06) requires updatedAt to be a String when present.
+    // Leave them undefined until an actual update / soft-delete happens.
     timestamp,
-    updatedAt: null,
-    deletedAt: null
+    createdAt: timestamp,
+    updatedAt: timestamp
   };
 };
 
@@ -149,8 +152,9 @@ const createSinglePatient = async (patient, index = null) => {
     SK: 'LOCK',
     EntityType: 'QID_LOCK',
     patientPK: patientItem.PK,
+    // Avoid updatedAt: null — fails dataClass-index GSI validation (S required).
     createdAt: new Date().toISOString(),
-    updatedAt: null
+    updatedAt: new Date().toISOString()
   };
 
   const phoneLockItem = {
@@ -158,8 +162,9 @@ const createSinglePatient = async (patient, index = null) => {
     SK: 'LOCK',
     EntityType: 'PHONE_LOCK',
     patientPK: patientItem.PK,
+    // Avoid updatedAt: null — fails dataClass-index GSI validation (S required).
     createdAt: new Date().toISOString(),
-    updatedAt: null
+    updatedAt: new Date().toISOString()
   };
 
   try {

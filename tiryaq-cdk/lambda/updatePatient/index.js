@@ -15,6 +15,27 @@ const hdrs = {
 const ok  = (body)          => ({ statusCode: 200, headers: hdrs, body: JSON.stringify(body) });
 const err = (code, message) => ({ statusCode: code, headers: hdrs, body: JSON.stringify({ message }) });
 
+// ── Extract Cognito groups from the JWT claims (bracket-stripped) ─────
+// API Gateway JWT authorizer sends `cognito:groups` as a string like
+// "[Admin]" or "[Admin, Developers]", or sometimes as an array — handle both.
+const getGroups = (event) => {
+  const claims = event.requestContext?.authorizer?.jwt?.claims
+              || event.requestContext?.authorizer?.claims || {};
+  const raw = claims['cognito:groups'] || '';
+  if (Array.isArray(raw)) return raw.map((g) => String(g).trim());
+  return String(raw)
+    .trim()
+    .replace(/^\[/, '')
+    .replace(/\]$/, '')
+    .split(/[,\s]+/)
+    .filter(Boolean);
+};
+
+const isAdminOrDeveloper = (event) => {
+  const groups = getGroups(event);
+  return groups.some((g) => ['Admin', 'admin', 'Developers', 'Developer', 'developer'].includes(g));
+};
+
 exports.handler = async (event) => {
   try {
     const method = event.requestContext?.http?.method || event.httpMethod || '';
@@ -28,8 +49,13 @@ exports.handler = async (event) => {
     if (!patientID) return err(400, 'Missing patient id');
 
     // ── PATCH /patients/{id}/restore ─────────────────────────────────────
-    // Clears deletedAt and increments the patient counter back by 1
+    // Clears deletedAt and increments the patient counter back by 1.
+    // Restore is admin/developer only — doctors can edit their patients but
+    // must not undo a soft-delete decision made by an admin.
     if (path.includes('/restore')) {
+      if (!isAdminOrDeveloper(event)) {
+        return err(403, 'Access denied: restoring a deleted patient is admin-only');
+      }
       await dynamo.send(new TransactWriteCommand({
         TransactItems: [
           {

@@ -121,7 +121,6 @@ export class DoctorsService {
     private http = inject(HttpClient);
 
     private readonly path = 'doctors';
-    private readonly deletePath = 'doctors/delete';
 
     private authHeaders(): HttpHeaders {
         const jwt = sessionStorage.getItem('accessToken') || '';
@@ -216,10 +215,6 @@ export class DoctorsService {
 
     deleteDoctor(doctorID: string): Observable<{ data: Doctor }> {
         return this.http.delete<{ data: Doctor }>(Config.buildUrl(`${this.path}/${doctorID}`), { headers: this.authHeaders() });
-    }
-
-    hardDeleteDoctor(idList: string[]): Observable<{ data: Doctor }> {
-        return this.http.delete<{ data: Doctor }>(Config.buildUrl(this.deletePath), { headers: this.authHeaders(), body: { ids: idList } });
     }
 
     searchSpecializations(search = '', limit = 20): Observable<Specialization[]> {

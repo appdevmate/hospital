@@ -107,8 +107,11 @@ const createDoctorItem = (doctor) => {
     dutyEnd: doctor.dutyEnd || null,
     bloodGroup: doctor.bloodGroup || null,
     timestamp,
-    updatedAt: null,
-    deletedAt: null
+    // Don't write updatedAt or deletedAt as NULL — the dataClass-index GSI
+    // (compliance Update 06) requires updatedAt to be a String when present.
+    // Leave them undefined until an actual update / soft-delete happens.
+    createdAt: timestamp,
+    updatedAt: timestamp
   };
 };
 
@@ -161,8 +164,9 @@ const createSingleDoctor = async (doctor, index = null) => {
     SK: 'LOCK',
     EntityType: 'EMAIL_LOCK',
     doctorPK:  doctorItem.PK,
+    // Avoid updatedAt: null — fails dataClass-index GSI validation (S required).
     createdAt: new Date().toISOString(),
-    updatedAt: null
+    updatedAt: new Date().toISOString()
   };
 
   const qidLockItem = {
@@ -170,8 +174,9 @@ const createSingleDoctor = async (doctor, index = null) => {
     SK: 'LOCK',
     EntityType: 'QID_LOCK',
     doctorPK:  doctorItem.PK,
+    // Avoid updatedAt: null — fails dataClass-index GSI validation (S required).
     createdAt: new Date().toISOString(),
-    updatedAt: null
+    updatedAt: new Date().toISOString()
   };
 
   const phoneLockItem = {
@@ -179,8 +184,9 @@ const createSingleDoctor = async (doctor, index = null) => {
     SK: 'LOCK',
     EntityType: 'PHONE_LOCK',
     doctorPK:  doctorItem.PK,
+    // Avoid updatedAt: null — fails dataClass-index GSI validation (S required).
     createdAt: new Date().toISOString(),
-    updatedAt: null
+    updatedAt: new Date().toISOString()
   };
 
   try {
@@ -217,8 +223,35 @@ const createSingleDoctor = async (doctor, index = null) => {
       ]
     }));
   } catch (err) {
+    // Log everything so CloudWatch shows the real failure cause.
+    console.error('createDoctor TransactWrite failed:', {
+      name: err.name,
+      message: err.message,
+      cancellationReasons: err.CancellationReasons,
+      doctorPK: doctorItem.PK,
+      emailLockPK,
+      qidLockPK,
+      phoneLockPK,
+      doctorInput: {
+        email: normalizedEmail,
+        qid: normalizedQID,
+        phone: normalizedPhone,
+        name: doctorItem.name
+      }
+    });
     if (err.name === 'TransactionCanceledException') {
-      throw new Error('Failed to create doctor, email, QID, or phone number already exists');
+      // CancellationReasons is an array aligned with TransactItems order:
+      // [doctorPK, emailLock, qidLock, phoneLock]. Each entry has Code like
+      // "ConditionalCheckFailed" or "None" (passed).
+      const reasons = err.CancellationReasons || [];
+      const labels = ['doctor profile', 'email', 'QID', 'phone'];
+      const failed = reasons
+        .map((r, i) => (r.Code && r.Code !== 'None') ? labels[i] : null)
+        .filter(Boolean);
+      const detail = failed.length
+        ? `${failed.join(', ')} already exists`
+        : 'email, QID, or phone number already exists';
+      throw new Error(`Failed to create doctor, ${detail}`);
     }
     throw err;
   }
