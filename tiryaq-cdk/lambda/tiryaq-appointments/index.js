@@ -128,7 +128,8 @@ async function getDoctorDutyDays(doctorId) {
     if (!doctorId) return null;
     try {
         const r = await db.send(new GetCommand({ TableName: TABLE_NAME, Key: { PK: doctorId, SK: 'PROFILE' } }));
-        return Array.isArray(r.Item?.dutyDays) ? r.Item.dutyDays.map((d) => String(d).toLowerCase()) : null;
+        // Return the raw stored values so error messages can show them as-is.
+        return Array.isArray(r.Item?.dutyDays) ? r.Item.dutyDays : null;
     } catch (_) {
         return null;
     }
@@ -138,6 +139,13 @@ async function getDoctorDutyDays(doctorId) {
 function weekdayOf(dateStr) {
     const d = new Date(`${dateStr}T00:00:00Z`);
     return isNaN(d.getTime()) ? null : DAY_NAMES[d.getUTCDay()];
+}
+
+// Normalise a weekday token to its 3-letter lowercase prefix so stored
+// abbreviations ("Fri", "Mon") and full names ("Friday") compare equal.
+// mon/tue/wed/thu/fri/sat/sun are all unique in their first 3 letters.
+function normDay(d) {
+    return String(d).toLowerCase().slice(0, 3);
 }
 
 // ── Handler ───────────────────────────────────────────────────────────────────
@@ -162,7 +170,8 @@ exports.handler = async (event) => {
         const dutyDays = await getDoctorDutyDays(body.doctorId);
         if (dutyDays && dutyDays.length) {
             const wd = weekdayOf(body.date);
-            if (wd && !dutyDays.includes(wd)) {
+            const allowed = dutyDays.map(normDay);
+            if (wd && !allowed.includes(normDay(wd))) {
                 return err(400, `Doctor is not on duty on ${wd}. Duty days: ${dutyDays.join(', ')}.`);
             }
         }
@@ -336,6 +345,28 @@ exports.handler = async (event) => {
             }
         }
 
+        // ── Block edits to cancelled or past appointments ────────────────────
+        // The frontend hides the edit action; this is the server-side
+        // enforcement (security boundary — never trust the client).
+        //   - A cancelled appointment is terminal: no further modification.
+        //   - A past-dated appointment cannot have its details edited. Pure
+        //     status transitions (e.g. cancel, no-show) are still allowed.
+        const todayStr    = new Date().toISOString().slice(0, 10); // UTC YYYY-MM-DD
+        const isCancelled = appt.status === 'cancelled';
+        const isPast      = !!appt.date && appt.date < todayStr;
+        const EDIT_FIELDS = [
+            'date', 'startTime', 'endTime', 'duration', 'visitType', 'priority',
+            'doctorId', 'doctorName', 'doctorEmail', 'department', 'specialization',
+            'patientId', 'patientName', 'referredBy', 'referredByName'
+        ];
+        const isEdit = EDIT_FIELDS.some((f) => body[f] !== undefined);
+        if (isCancelled) {
+            return err(409, 'This appointment is cancelled and can no longer be modified.');
+        }
+        if (isPast && isEdit) {
+            return err(409, 'This appointment date has passed and can no longer be edited.');
+        }
+
         // Validate status transition
         if (body.status && !VALID_STATUSES.includes(body.status)) {
             return err(400, `Invalid status. Must be one of: ${VALID_STATUSES.join(', ')}`);
@@ -351,7 +382,8 @@ exports.handler = async (event) => {
             const dutyDays    = await getDoctorDutyDays(effDoctorId);
             if (dutyDays && dutyDays.length) {
                 const wd = weekdayOf(effDate);
-                if (wd && !dutyDays.includes(wd)) {
+                const allowed = dutyDays.map(normDay);
+                if (wd && !allowed.includes(normDay(wd))) {
                     return err(400, `Doctor is not on duty on ${wd}. Duty days: ${dutyDays.join(', ')}.`);
                 }
             }
