@@ -818,11 +818,7 @@ export class EditPatient implements OnInit, AfterViewInit {
             },
             error: (err) => {
                 this.isSubmitting = false;
-                if (err?.error?.message === 'Unauthorized') {
-                    this.helpersService.redirectToLogin();
-                    return;
-                }
-                this.helpersService.notifyError('Error', err?.error?.message || 'Failed to update patient');
+                this.helpersService.notifyApiError('Error', err, 'Failed to update patient');
             }
         });
     }

@@ -13,7 +13,7 @@ import { PharmacyComponent } from '@/components/pharmacy/pharmacy';
 
 const PATIENTS_ROLES: UserRole[] = ['admin', 'developer', 'doctor'];
 const ADMIN_ROLES: UserRole[] = ['admin', 'developer'];
-const PHARMACY_ROLES: UserRole[] = ['admin', 'developer', 'pharmacist'];
+const PHARMACY_ROLES: UserRole[] = ['pharmacist'];
 const SCRIBE_ROLES: UserRole[] = ['admin', 'developer', 'doctor'];
 
 export const appRoutes: Routes = [

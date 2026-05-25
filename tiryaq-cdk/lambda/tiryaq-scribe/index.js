@@ -23,8 +23,11 @@ const { randomUUID, createHash } = require('crypto');
 const REGION     = process.env.AWS_REGION || 'us-east-1';
 const TABLE_NAME = process.env.TABLE_NAME || 'Hospital';
 const BEDROCK_REGION = process.env.BEDROCK_REGION || REGION;
-// Claude Haiku via Bedrock — cheap, fast, sufficient for SOAP structuring.
-const BEDROCK_MODEL_ID = process.env.BEDROCK_MODEL_ID || 'anthropic.claude-3-haiku-20240307-v1:0';
+// Claude 3.5 Haiku via Bedrock (US cross-region inference profile) — cheap,
+// fast, sufficient for SOAP structuring. The CDK stack sets BEDROCK_MODEL_ID;
+// this fallback only applies if the env var is missing. The original
+// claude-3-haiku-20240307 model was retired/marked legacy by the provider.
+const BEDROCK_MODEL_ID = process.env.BEDROCK_MODEL_ID || 'us.anthropic.claude-haiku-4-5-20251001-v1:0';
 
 const ddb = DynamoDBDocumentClient.from(new DynamoDBClient({ region: REGION }));
 const bedrock = new BedrockRuntimeClient({ region: BEDROCK_REGION });

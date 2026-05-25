@@ -46,9 +46,9 @@
         </p-card>
     }
 
-    <!-- Step 2: Record -->
+    <!-- Step 2: Record or type -->
     @if (sessionId() && status() !== 'review' && status() !== 'approved') {
-        <p-card header="Step 2 — Record the consultation">
+        <p-card header="Step 2 — Record or type the consultation">
             <div class="recording-controls">
                 @if (!isRecording()) {
                     <p-button
@@ -76,19 +76,42 @@
                 <p-tag [value]="statusLabel()" [severity]="isRecording() ? 'success' : 'info'"></p-tag>
             </div>
 
+            @if (micWarning()) {
+                <div class="mic-warning">
+                    <i class="pi pi-exclamation-triangle"></i>
+                    <span>{{ micWarning() }}</span>
+                </div>
+            }
+
+            <p-divider></p-divider>
+            <h3>Transcript</h3>
+            <p class="hint">
+                Speak using the mic above, or type / paste the consultation here. When it looks right, click <strong>Generate SOAP</strong>.
+            </p>
+            <textarea
+                pTextarea
+                rows="8"
+                [(ngModel)]="transcriptModel"
+                class="w-full"
+                placeholder="Your speech appears here as you talk — or just type the consultation directly.">
+            </textarea>
+            @if (interimTranscript()) {
+                <p class="interim">{{ interimTranscript() }}</p>
+            }
+
             @if (status() === 'processing') {
                 <p-progressBar mode="indeterminate" styleClass="mt-3"></p-progressBar>
                 <p class="hint">Generating SOAP note from transcript…</p>
             }
 
-            @if (transcript() || interimTranscript()) {
-                <p-divider></p-divider>
-                <h3>Live transcript</h3>
-                <div class="transcript-pane">
-                    <span class="final">{{ transcript() }}</span>
-                    <span class="interim">{{ interimTranscript() }}</span>
-                </div>
-            }
+            <div class="actions">
+                <p-button
+                    label="Generate SOAP"
+                    icon="pi pi-sparkles"
+                    [disabled]="!canGenerate()"
+                    (onClick)="generateSoap()">
+                </p-button>
+            </div>
         </p-card>
     }
 

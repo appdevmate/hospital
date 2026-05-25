@@ -197,6 +197,13 @@ This matrix maps each obligation to the technical control needed in Tiryaq.
 | 24 | Annual security assessment | NCSA NIA | Third-party pen test annually | Process |
 | 25 | Clinical safety | MOPH | Change control for AI features; validation of SOAP/ICD-10 outputs | Process |
 
+> **Control #19 — documented cross-border transfer (ScribeFirst SOAP generation).**
+> The ScribeFirst voice-scribe sends the consultation transcript (classified **PHI**) to Amazon Bedrock for SOAP structuring. As of **2026-05-24** this uses **Claude Haiku 4.5**, invoked through the **US cross-region inference profile** `us.anthropic.claude-haiku-4-5-20251001-v1:0`. Because it is a *cross-region* inference profile, Bedrock may process the request in any of **us-east-1, us-east-2, or us-west-2** — all outside the `me-south-1` data-residency region.
+>
+> This transfer is approved under PDPPL Art. 25 on the basis that: (a) the transcript is transient and is **not persisted as audio**; (b) only the free-text transcript leaves the region, not the wider patient record; (c) patient consent to AI-assisted documentation is captured **before** recording (control #20); and (d) AWS is a contracted sub-processor under the executed DPA (control #21).
+>
+> **Technical scoping:** the `tiryaq-scribe` Lambda IAM policy restricts `bedrock:InvokeModel` to this inference-profile ARN plus its three underlying regional foundation-model ARNs (`us-east-1`/`us-east-2`/`us-west-2`) only. The Bedrock region is set via `BEDROCK_REGION=us-east-1`. **Superseded:** the original `anthropic.claude-3-haiku-20240307` model was retired/marked legacy by the provider and is no longer used.
+
 ---
 
 ## 6. Architectural Compliance Posture (target state)

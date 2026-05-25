@@ -1,8 +1,10 @@
 # Pharmacy Module — Technical Documentation
 
-## Overview
+**Document version:** 2.0
+**Date:** 2026-05-25
+**Scope:** Frontend (Angular) + the `tiryaq-pharmacy` Lambda contract it consumes.
 
-The Pharmacy module manages the full medication lifecycle — from catalog and inventory to prescription dispensing and purchase orders. It is accessible to users in the **Admin**, **Developers**, or **Pharmacists** Cognito groups.
+> **What changed in 2.0:** Access is now **Pharmacists only** (previously open to Admin/Developers/Pharmacists). The dispense flow now requires a **doctor-approved document upload** when a pharmacist overrides an allergy. Both are reflected below.
 
 ---
 
@@ -10,205 +12,115 @@ The Pharmacy module manages the full medication lifecycle — from catalog and i
 
 | Component | Detail |
 |-----------|--------|
-| Lambda | `tiryaq-pharmacy` — Node.js 20.x |
-| API Base | `https://xy829e3qw2.execute-api.us-east-1.amazonaws.com` |
-| Database | DynamoDB — `Hospital` table (single-table design) |
-| Auth | Cognito JWT via API Gateway authorizer |
-| Access | Admin, Developers, Pharmacists groups |
+| Lambda | `tiryaq-pharmacy` — Node.js 24.x |
+| API base | from `src/app/services/config.ts` (`Config.buildUrl(...)`) — not hardcoded |
+| Database | DynamoDB `Hospital` table (single-table design) |
+| Auth | Cognito JWT via the API Gateway authorizer |
+| Access | **Pharmacists group only** (UI route guard, menu, and Lambda all enforce this) |
 
 ---
 
-## 2. Cognito Groups
+## 2. Access control (Pharmacists only)
 
-| Group | Access |
-|-------|--------|
-| Admin | Full access including catalog management |
-| Developers | Full access including catalog management |
-| Pharmacists | Full access including catalog management |
-| Doctors | No access to Pharmacy module |
+Three layers enforce the same rule:
+
+1. **Route guard** — `app.routes.ts`: `{ path: 'pharmacy', canActivate: [roleGuard(PHARMACY_ROLES)], component: PharmacyComponent }` where `PHARMACY_ROLES = ['pharmacist']`. Other roles are redirected to `/notfound`.
+2. **Menu** — `app.menu.ts` adds the Pharmacy item only when `isPharmacist`. Admins, doctors, and developers do not see it.
+3. **Lambda** — `canAccessPharmacy(event)` returns true only for the `Pharmacists` group; every other caller gets `403 'Access denied: pharmacy staff only'`.
+
+| Group | Pharmacy access |
+|-------|-----------------|
+| Pharmacists | Full access |
+| Admin | None |
+| Developers | None |
+| Doctors | None |
+
+> Edge case: a user who is in *both* `Developers` and `Pharmacists` Cognito groups resolves to role `developer` (precedence in `AuthService.parseRole`), so the route guard would deny `/pharmacy` even though the menu's group-based `isPharmacist` would still show the link. Keep seeded users in a single group.
 
 ---
 
-## 3. DynamoDB Entity Types
+## 3. DynamoDB entity types
 
-All pharmacy data is stored in the same `Hospital` DynamoDB table using distinct `EntityType` values and key prefixes.
+All pharmacy data lives in the `Hospital` table via distinct `EntityType` values and key prefixes.
 
 | Entity | PK | SK | EntityType |
 |--------|----|----|------------|
 | Medication | `MED#<uuid>` | `PROFILE` | `MEDICATION` |
 | Inventory | `MED#<uuid>` | `INVENTORY` | `INVENTORY` |
-| Dispense Record | `DISPENSE#<uuid>` | `PROFILE` | `DISPENSE` |
-| Purchase Order | `PO#<uuid>` | `PROFILE` | `PURCHASE_ORDER` |
+| Dispense record | `DISPENSE#<uuid>` | `PROFILE` | `DISPENSE` |
+| Purchase order | `PO#<uuid>` | `PROFILE` | `PURCHASE_ORDER` |
 
-### Medication Record
-
-| Attribute | Type | Description |
-|-----------|------|-------------|
-| `medId` | String | UUID |
-| `name` | String | Brand name e.g. Amoxicillin |
-| `genericName` | String | Generic/chemical name |
-| `category` | String | e.g. Antibiotic, Analgesic |
-| `form` | String | Tablet, Capsule, Injection, Syrup, etc. |
-| `strength` | String | e.g. 500mg |
-| `unit` | String | e.g. mg, ml, tablet |
-| `manufacturer` | String | Manufacturer name |
-| `requiresPrescription` | Boolean | Whether a prescription is required |
-| `reorderPoint` | Number | Minimum stock level before alert triggers |
-
-### Inventory Record
-
-| Attribute | Type | Description |
-|-----------|------|-------------|
-| `medId` | String | Links to medication record |
-| `medName` | String | Denormalized medication name |
-| `stockQty` | Number | Current stock quantity |
-| `unit` | String | Unit of measurement |
-| `location` | String | Physical storage location e.g. Shelf A-3 |
-| `batchNumber` | String | Current batch/lot number |
-| `expiryDate` | String | YYYY-MM-DD format |
-| `adjustments` | List | Full log of every stock change |
-
-### Stock Adjustment Types
-
-| Type | Effect | When to use |
-|------|--------|-------------|
-| `received` | Adds stock | New delivery received |
-| `returned` | Adds stock | Patient returned unused medication |
-| `expired` | Deducts stock | Disposing expired stock |
-| `damaged` | Deducts stock | Disposing damaged stock |
-| `correction` | Sets directly | Manual correction after stock count |
-| `dispensed` | Deducts stock | Auto-recorded when dispensing |
-
-### Dispense Record
+### Dispense record (current fields)
 
 | Attribute | Type | Description |
 |-----------|------|-------------|
 | `dispenseId` | String | UUID |
-| `examId` | String | Examination this prescription belongs to |
+| `examId` | String | Examination the prescription belongs to |
 | `prescriptionId` | String | The specific prescription item UUID |
-| `patientId` | String | Patient UUID |
-| `medId` | String | Inventory medication UUID |
-| `medName` | String | Medication name at time of dispense |
-| `quantityDispensed` | Number | How many units were dispensed |
-| `batchNumber` | String | Batch dispensed from |
-| `expiryDate` | String | Expiry of batch dispensed |
-| `allergyWarnings` | List | Allergy matches found at time of dispense |
-| `allergyOverridden` | Boolean | True if pharmacist overrode an allergy warning |
-| `dispensedBy` | String | Pharmacist email |
+| `patientId` / `patientName` | String | Patient |
+| `doctorName` | String | Prescribing doctor |
+| `medId` / `medName` | String | Inventory medication |
+| `quantityDispensed` | Number | Units dispensed |
+| `unit` / `packUnit` / `batchNumber` / `expiryDate` | — | Pulled from the inventory item |
+| `notes` | String | Counselling / dispense notes |
+| `allergyWarnings` | List | Allergy matches found at dispense time |
+| `allergyOverridden` | Boolean | True if an allergy warning was overridden |
+| **`approvalDocumentKey`** | String\|null | **S3 key of the doctor-approved document (override only)** |
+| **`approvalDocumentName`** | String\|null | **Original filename of that document** |
+| `dispensedBy` / `dispensedByName` | String | Pharmacist identity |
 | `dispensedAt` | String | ISO timestamp |
 
-### Purchase Order Record
-
-| Attribute | Type | Description |
-|-----------|------|-------------|
-| `poId` | String | UUID |
-| `poNumber` | String | Auto-generated e.g. `PO-1742813400000` |
-| `status` | String | See lifecycle below |
-| `supplier` | String | Supplier name |
-| `items` | List | Array of PO line items |
-| `totalCost` | Number | Sum of all item costs |
-| `currency` | String | Default QAR |
-| `expectedDate` | String | Expected delivery date |
-
-**Purchase Order Lifecycle:**
-
-```
-draft → submitted → ordered → partially_received → received
-                 ↘ cancelled (from any status)
-```
-
-When status changes to `received`, the Lambda automatically adds received quantities to inventory stock for each line item.
+Stock-adjustment types on the inventory `adjustments[]` log: `received, returned, expired, damaged, correction, dispensed`.
 
 ---
 
-## 4. API Routes
+## 4. API routes (consumed by `pharmacy.service.ts`)
 
 | Method | Route | Description |
 |--------|-------|-------------|
-| GET | `/pharmacy/medications` | List all medications in catalog |
-| POST | `/pharmacy/medications` | Add new medication to catalog |
-| PATCH | `/pharmacy/medications/{medId}` | Update medication details |
-| DELETE | `/pharmacy/medications/{medId}` | Delete medication (only if stock is 0) |
-| GET | `/pharmacy/inventory` | Full inventory with stock levels and alerts |
-| PATCH | `/pharmacy/inventory/{medId}` | Adjust stock |
-| GET | `/pharmacy/prescriptions` | List prescriptions from examinations |
-| POST | `/pharmacy/dispense` | Dispense a prescription |
-| GET | `/pharmacy/dispense` | Dispense history |
-| GET | `/pharmacy/purchase-orders` | List all purchase orders |
-| POST | `/pharmacy/purchase-orders` | Create new purchase order |
-| PATCH | `/pharmacy/purchase-orders/{poId}` | Update PO status or details |
-| GET | `/pharmacy/alerts` | Active stock and expiry alerts |
+| GET / POST | `/pharmacy/medications` | List / add catalog medications |
+| PATCH / DELETE | `/pharmacy/medications/{medId}` | Update / delete (delete only if stock 0) |
+| GET / POST | `/pharmacy/inventory` | Inventory with alert flags / create |
+| PATCH | `/pharmacy/inventory/{medId}` | Stock adjustment (reason + actor logged) |
+| GET / POST | `/pharmacy/prescriptions` | Prescriptions from exams (+ allergy flags) |
+| GET / PATCH | `/pharmacy/prescriptions/{rxId}` | Prescription detail / update |
+| GET / POST | `/pharmacy/dispense` | Dispense history / dispense |
+| GET / POST | `/pharmacy/purchase-orders` | List / create PO |
+| GET / PATCH | `/pharmacy/purchase-orders/{poId}` | PO detail / status update |
+| GET | `/pharmacy/alerts` | Active stock & expiry alerts |
 
 ---
 
-## 5. Route Details
+## 5. Dispense + allergy-override flow (the important one)
 
-### GET /pharmacy/inventory
+### Request — `POST /pharmacy/dispense`
 
-Returns all inventory items enriched with alert flags.
-
-**Response includes per item:**
-- `isLowStock` — true if `stockQty <= reorderPoint`
-- `isExpiringSoon` — true if expiry is within 30 days
-- `isExpired` — true if expiry date has passed
-- `daysToExpiry` — number of days until expiry (negative if expired)
-
----
-
-### PATCH /pharmacy/inventory/{medId}
-
-Adjusts stock for a medication.
-
-**Request body:**
-```json
-{
-  "adjustmentType": "received",
-  "quantity": 100,
-  "reason": "Monthly delivery from Qatar Pharma",
-  "batchNumber": "LOT-2026-001",
-  "expiryDate": "2027-06-30",
-  "location": "Shelf A-3"
-}
-```
-
-Every adjustment is appended to the `adjustments` array with actor identity and timestamp for full traceability.
-
----
-
-### GET /pharmacy/prescriptions?status=ordered
-
-Fetches all prescriptions from examination records matching the given status.
-
-**Status values:** `ordered` (pending), `dispensed`, `cancelled`
-
-For each prescription, the Lambda also fetches the patient's allergy list and checks for matches against the medication name, returning:
-- `allergyWarnings` — list of matching allergy strings
-- `hasAllergyAlert` — boolean flag for quick filtering
-
----
-
-### POST /pharmacy/dispense
-
-Dispenses a prescription. This route:
-1. Validates the prescription exists and is not already dispensed
-2. Checks inventory stock is sufficient
-3. Checks patient allergies against the medication name
-4. If allergy found and `allergyOverrideConfirmed` is not true — returns a warning response instead of dispensing
-5. If proceeding — deducts stock, creates dispense record, updates prescription status on the exam to `dispensed`
-
-**Request body:**
 ```json
 {
   "examId": "exam-uuid",
   "prescriptionId": "rx-uuid",
   "medId": "med-uuid",
   "quantityDispensed": 14,
-  "notes": "Patient counselled on side effects",
-  "allergyOverrideConfirmed": false
+  "notes": "Counselled on side effects",
+  "allergyOverrideConfirmed": false,
+  "approvalDocumentKey": null,
+  "approvalDocumentName": null
 }
 ```
 
-**Allergy warning response (when override needed):**
+### Step-by-step
+
+1. Pharmacist clicks **Dispense**, selects the inventory medication (`medId`) and quantity.
+2. The Lambda checks the patient's `allergies` against the medication.
+3. **No allergy** → dispense proceeds; stock is deducted; the prescription is marked `dispensed`.
+4. **Allergy found, not yet confirmed** → Lambda returns `{ requiresAllergyConfirmation: true, allergyWarnings, message }`. The dialog shows a red **Allergy Override** banner and a **"Doctor-approved document *"** file picker.
+5. The **"Override & Dispense"** button is **disabled until a file is attached** (`[disabled]="!approvalFile"`).
+6. On confirm, `confirmAllergyOverride()` uploads the file via `DocumentService.uploadFile(file, 'pharmacy-approvals')`, gets back an S3 `key`, then re-calls dispense with `allergyOverrideConfirmed: true`, `approvalDocumentKey: <key>`, `approvalDocumentName: <file.name>`.
+7. Server guard: if `allergyOverrideConfirmed` is true but `approvalDocumentKey` is missing, the Lambda returns `400 'A doctor-approved document is required to override the allergy and dispense.'`
+8. The dispense record stores `allergyOverridden: true` plus the approval document key/name for audit.
+
+### Allergy warning response
+
 ```json
 {
   "requiresAllergyConfirmation": true,
@@ -217,101 +129,51 @@ Dispenses a prescription. This route:
 }
 ```
 
-To proceed after the warning, resend with `allergyOverrideConfirmed: true`. The dispense record will store `allergyOverridden: true` for audit purposes.
-
 ---
 
-### GET /pharmacy/alerts
-
-Returns all active alerts sorted by severity (critical first).
-
-**Alert types:**
-
-| Type | Severity | Condition |
-|------|----------|-----------|
-| `out_of_stock` | critical | `stockQty === 0` |
-| `expired` | critical | Expiry date has passed |
-| `low_stock` | warning | `stockQty <= reorderPoint` and > 0 |
-| `expiring_soon` | warning | Expiry within 30 days |
-
----
-
-### PATCH /pharmacy/purchase-orders/{poId}
-
-Updates PO status or details. Valid status transitions:
-
-| From | To (allowed) |
-|------|-------------|
-| `draft` | `submitted`, `cancelled` |
-| `submitted` | `ordered`, `cancelled` |
-| `ordered` | `partially_received`, `received`, `cancelled` |
-| `partially_received` | `received`, `cancelled` |
-
-When status is set to `received`, include `received` quantity and `batchNumber`/`expiryDate` per item in the `items` array — the Lambda will automatically update inventory stock for each item.
-
----
-
-## 6. Frontend
-
-### Files
+## 6. Frontend files
 
 | File | Location |
 |------|----------|
-| `pharmacy.ts` | `src/app/components/pharmacy/pharmacy.ts` |
-| `pharmacy.html` | `src/app/components/pharmacy/pharmacy.html` |
-| `pharmacy.scss` | `src/app/components/pharmacy/pharmacy.scss` |
-| `pharmacy.service.ts` | `src/app/pages/service/pharmacy.service.ts` |
-
-### Route
-
-```typescript
-{ path: 'pharmacy', component: PharmacyComponent }
-```
-
-### Menu
-
-Visible to all roles (Admin, Developers, Doctors, Pharmacists) in `app.menu.ts` shared items.
+| Component | `src/app/components/pharmacy/pharmacy.ts` |
+| Template | `src/app/components/pharmacy/pharmacy.html` |
+| Styles | `src/app/components/pharmacy/pharmacy.scss` |
+| Service | `src/app/services/pharmacy.service.ts` |
+| Upload helper | `src/app/services/document.service.ts` (`uploadFile` → pre-signed S3 PUT) |
 
 ### Tabs
 
 | Tab | Content |
 |-----|---------|
-| Dashboard | 5 stat cards + all active alerts grouped by severity |
-| Catalog | Medication master list — add/edit/delete for Admin and Pharmacists |
-| Inventory | Stock table with low stock and expiry highlights + adjust stock dialog |
-| Prescriptions | Pending prescriptions from examination module + dispense dialog |
-| History | All dispense records with allergy override indicator |
-| Purchase Orders | PO list with status lifecycle actions + create/edit dialog |
+| Dashboard | Stat cards + active alerts grouped by severity |
+| Catalog | Medication master list — add/edit/delete |
+| Inventory | Stock table with low-stock/expiry highlights + adjust dialog |
+| Prescriptions | Pending prescriptions from exams + dispense dialog (with allergy override) |
+| History | Dispense records, with an "Allergy Override" tag where applicable |
+| Purchase Orders | PO list with lifecycle actions + create/edit dialog |
 
-### Allergy Check Flow
+### Error handling
 
-1. Pharmacist clicks **Dispense** on a prescription
-2. Lambda checks patient's `allergies` field against the medication name
-3. If a match is found → Lambda returns `requiresAllergyConfirmation: true`
-4. Angular shows a red allergy override banner in the dispense dialog
-5. Pharmacist clicks **Override & Dispense** to confirm with clinical judgment
-6. Second request sent with `allergyOverrideConfirmed: true`
-7. Dispense record stored with `allergyOverridden: true` for audit trail
+Failed calls go through `HelpersService.notifyApiError(...)`, which surfaces the backend `message` (e.g. the override-document requirement) and redirects to login on `401`.
 
 ---
 
-## 7. AuthService — isPharmacist
+## 7. AuthService — `isPharmacist`
 
 ```typescript
 get isPharmacist(): boolean {
-    void this.current; // ensures _groups is populated
+    void this.current;            // ensures _groups is populated
     return this._groups.includes('Pharmacists');
 }
 ```
 
-The `_groups` array is populated when `current` is first accessed by parsing the `cognito:groups` claim from the access token JWT.
+`_groups` is parsed from the `cognito:groups` claim on the access token. Note `parseRole` precedence (developer → admin → doctor → pharmacist), which is why a pure pharmacist resolves to role `pharmacist` and passes the route guard.
 
 ---
 
-## 8. Known Issues & Fixes
+## 8. Document control
 
-| Issue | Cause | Fix |
-|-------|-------|-----|
-| `Access denied: pharmacy staff only` for Pharmacist user | `cognito:groups` arrives as `"[Pharmacists]"` string with square brackets, `split(',')` returned `["[Pharmacists]"]` which did not match `"Pharmacists"` | Strip `[` and `]` before splitting: `.replace(/^\[/, '').replace(/\]$/, '')` |
-| Arrow function in `@if` template causing build error | Angular template parser does not support arrow functions in binding expressions | Moved `inventory.some(i => ...)` to a `get hasInventoryAlerts()` getter in the component class |
-| `Partial<POItem>` type error on `savePo()` | `POItem.medId` and other fields were typed as required `string` but `poForm.items` uses `Partial<POItem>[]` | Made all `POItem` fields optional with `?` |
+| Version | Date | Change |
+|---------|------|--------|
+| 1.0 | — | Initial pharmacy module documentation |
+| 2.0 | 2026-05-25 | Pharmacist-only access (route/menu/Lambda); dispense allergy-override now requires a doctor-approved document upload; corrected service path and dispense record fields |

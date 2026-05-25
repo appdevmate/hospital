@@ -17,7 +17,9 @@
         <p-button icon="pi pi-eye" text severity="info" (onClick)="openDetail(row)" pTooltip="View" tooltipPosition="top" />
         @if (auth.isAdmin || auth.isDeveloper) {
         <p-button icon="pi pi-pencil" text (onClick)="openEdit(row)" pTooltip="Edit" tooltipPosition="top" />
-        <p-button icon="pi pi-trash" text severity="danger" (onClick)="onDelete(row)" pTooltip="Delete" tooltipPosition="top" />
+        @if (row.status !== 'cancelled' && row.status !== 'completed') {
+        <p-button icon="pi pi-ban" text severity="danger" (onClick)="openCancel(row)" pTooltip="Cancel" tooltipPosition="top" />
+        }
         }
         @if ((auth.isDoctor || auth.isAdmin || auth.isDeveloper) && row.status === 'scheduled') {
         <p-button icon="pi pi-sign-in" text severity="success" (onClick)="checkIn(row)" pTooltip="Check In" tooltipPosition="top" />
@@ -44,6 +46,7 @@
 </ng-template>
 
 <app-generic-table [columns]="columns" [config]="config" [data]="rows()" [loading]="loading()"
+    [isLazy]="false" [totalRecords]="rows().length"
     [customTemplates]="customTemplates()" [actionsTemplate]="rowActions" [toolbarStart]="tbStart"
     actionsColumnWidth="14rem"
     dataKey="appointmentId">
@@ -290,9 +293,9 @@
 
         <hr style="border:none; border-top:1px solid #F3F4F6; margin:0;" />
         <div style="display:flex; justify-content:space-between; align-items:center;">
-            @if (auth.isAdmin || auth.isDeveloper) {
-            <p-button label="Delete" severity="danger" [outlined]="true" icon="pi pi-trash"
-                (click)="onDelete(selectedAppointment!)" />
+            @if ((auth.isAdmin || auth.isDeveloper) && selectedAppointment.status !== 'cancelled' && selectedAppointment.status !== 'completed') {
+            <p-button label="Cancel Appointment" severity="danger" [outlined]="true" icon="pi pi-ban"
+                (click)="openCancel(selectedAppointment!)" />
             } @else {
             <span></span>
             }
@@ -302,6 +305,30 @@
                 <p-button label="Edit" icon="pi pi-pencil" (click)="openEdit(selectedAppointment!)" />
                 }
             </div>
+        </div>
+    </div>
+    }
+</p-dialog>
+
+<!-- ── Cancel Dialog ── -->
+<p-dialog header="Cancel Appointment" [(visible)]="showCancelDialog" [style]="{ width: '440px' }" [modal]="true"
+    [draggable]="false" [resizable]="false">
+    @if (appointmentToCancel) {
+    <div style="display:flex; flex-direction:column; gap:1rem; padding:0.5rem 0;">
+        <p style="margin:0; color:#4B5563;">
+            Cancel the appointment for <strong>{{ appointmentToCancel.patientName | titlecase }}</strong>
+            on {{ appointmentToCancel.date | date:'MMM d, y' }}? This cannot be undone.
+        </p>
+        <div style="display:flex; flex-direction:column; gap:0.4rem;">
+            <label class="field-label">Reason for cancellation *</label>
+            <textarea pTextarea [(ngModel)]="cancelReason" rows="3" class="w-full"
+                placeholder="Enter the reason for cancelling this appointment"></textarea>
+        </div>
+        <hr style="border:none; border-top:1px solid #F3F4F6; margin:0;" />
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+            <p-button label="Keep Appointment" severity="secondary" [outlined]="true" (click)="showCancelDialog = false" />
+            <p-button label="Confirm Cancellation" icon="pi pi-ban" severity="danger" [loading]="saving"
+                (click)="confirmCancel()" />
         </div>
     </div>
     }

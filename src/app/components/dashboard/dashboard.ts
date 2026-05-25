@@ -324,7 +324,7 @@ export class DashboardComponent implements OnInit {
     ngOnInit() {
         const doctorEmail = this.auth.isDoctor ? this.auth.current.email : undefined;
 
-        if (this.auth.isAdmin || this.auth.isAdmin) {
+        if (this.auth.isAdmin || this.auth.isDeveloper) {
             this.loadAdminDashboard();
         } else {
             this.loadDoctorDashboard(doctorEmail!);
@@ -366,6 +366,7 @@ export class DashboardComponent implements OnInit {
             this.stats.set([
                 { label: "Today's Appointments", value: todayAppts.length, icon: 'pi pi-calendar-clock', color: 'purple', svgKey: 'interactions' },
                 { label: 'Upcoming (7 Days)', value: upcomingAppts.length, icon: 'pi pi-calendar', color: 'blue', svgKey: 'users' },
+                { label: 'Total Appointments', value: allAppts.length, icon: 'pi pi-list', color: 'blue', svgKey: 'users' },
                 { label: 'Pending Invoices', value: pending, icon: 'pi pi-file-invoice', color: 'orange', svgKey: 'locations' },
                 { label: 'Total Revenue', value: revenue, icon: 'pi pi-dollar', color: 'green', svgKey: 'rate', suffix: ' QAR' }
             ]);

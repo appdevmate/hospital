@@ -703,11 +703,7 @@ export class NewDoctor implements AfterViewInit {
             },
             error: (err) => {
                 this.isSubmitting = false;
-                if (err?.error?.message === 'Unauthorized') {
-                    this.helpersService.redirectToLogin();
-                    return;
-                }
-                this.helpersService.notifyError('Error', err?.error?.message || 'Failed to create doctor profile');
+                this.helpersService.notifyApiError('Error', err, 'Failed to create doctor profile');
             }
         });
     }
@@ -762,11 +758,7 @@ export class NewDoctor implements AfterViewInit {
             },
             error: (err) => {
                 this.isSavingDept = false;
-                if (err?.error?.message === 'Unauthorized') {
-                    this.helpersService.redirectToLogin();
-                    return;
-                }
-                this.helpersService.notifyError('Error', 'Failed to add department');
+                this.helpersService.notifyApiError('Error', err, 'Failed to add department');
             }
         });
     }
@@ -792,11 +784,7 @@ export class NewDoctor implements AfterViewInit {
             },
             error: (err) => {
                 this.isSavingSpec = false;
-                if (err?.error?.message === 'Unauthorized') {
-                    this.helpersService.redirectToLogin();
-                    return;
-                }
-                this.helpersService.notifyError('Error', 'Failed to add specialization');
+                this.helpersService.notifyApiError('Error', err, 'Failed to add specialization');
             }
         });
     }

@@ -61,7 +61,8 @@ function isPharmacist(event) {
 }
 
 function canAccessPharmacy(event) {
-    return isAdmin(event) || isPharmacist(event);
+    // Pharmacy module is restricted to the Pharmacists role only.
+    return isPharmacist(event);
 }
 
 // Days until date
@@ -139,7 +140,8 @@ exports.handler = async (event) => {
             requiresPrescription: body.requiresPrescription !== false,
             reorderPoint:      body.reorderPoint || 10,   // min stock before alert
             createdAt:         now,
-            updatedAt:         null
+            // Avoid updatedAt: null — fails dataClass-index GSI validation (S required).
+            updatedAt:         now
         };
 
         await db.send(new PutCommand({ TableName: TABLE_NAME, Item: med }));
@@ -397,6 +399,11 @@ exports.handler = async (event) => {
             return res(200, { requiresAllergyConfirmation: true, allergyWarnings, message: 'Allergy alert — confirm override to proceed' });
         }
 
+        // #4/#9 — overriding an allergy requires the doctor-approved document.
+        if (allergyWarnings.length > 0 && body.allergyOverrideConfirmed && !body.approvalDocumentKey) {
+            return err(400, 'A doctor-approved document is required to override the allergy and dispense.');
+        }
+
         // Create dispense record
 const dispenseId = randomUUID();
 const dispensedByEmail = body.dispensedByEmail || actor.email;
@@ -422,6 +429,8 @@ const dispense = {
     notes:               body.notes           || null,
     allergyWarnings:     allergyWarnings,
     allergyOverridden:   allergyWarnings.length > 0 && body.allergyOverrideConfirmed,
+    approvalDocumentKey:  body.approvalDocumentKey  || null,
+    approvalDocumentName: body.approvalDocumentName || null,
     dispensedBy:         dispensedByEmail,
     dispensedByName:     dispensedByName,
     dispensedAt:         now,
@@ -539,7 +548,9 @@ const dispense = {
             createdBy:    actor.email,
             createdByName:actor.name,
             createdAt:    now,
-            updatedAt:    null,
+            // Avoid updatedAt: null — fails dataClass-index GSI validation (S required).
+            // (submittedAt/orderedAt/receivedAt may stay null — they're not GSI keys.)
+            updatedAt:    now,
             submittedAt:  null,
             orderedAt:    null,
             receivedAt:   null

@@ -224,7 +224,8 @@ exports.handler = async (event) => {
             status:          'draft',
             signedOffAt:     null,
             createdAt:       now,
-            updatedAt:       null,
+            // Avoid updatedAt: null — fails dataClass-index GSI validation (S required).
+            updatedAt:       now,
             chiefComplaint:  null,
             vitalSigns:      null,
             physicalExam:    null,

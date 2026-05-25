@@ -1,15 +1,17 @@
 # Tiryaq User Manual — Developer
 
-**Document version:** 1.0
-**Date:** 2026-04-30
+**Document version:** 2.0
+**Date:** 2026-05-25
 **Audience:** Users in the **Developers** Cognito group
 **Tone:** Technical, code-aware, assumes AWS literacy.
+
+> **What changed in 2.0:** Single-stack deploy (the WAF edge stack is disabled); MFA is currently disabled by design (documented regression); Angular 20; added the `updatedAt`/GSI-null rule, `updatedBy` stamping, duty-day enforcement, and backend-error-surfacing conventions; added references to the new backend reference and `deploy.ps1`.
 
 ---
 
 ## 1. Who you are
 
-You build and operate Tiryaq. You write CDK, Lambda, and Angular code. You deploy. You debug production. You have read access to most of the application's data for diagnostic purposes, but you should not browse PHI casually — every read is audited.
+You build and operate Tiryaq — CDK, Lambda, and Angular. You deploy and debug production. You have broad read access for diagnostics but must not browse PHI casually; every read is audited. In the app, the Developer role behaves like an Admin (the dashboard and admin panel treat `Developers` as administrators).
 
 ---
 
@@ -17,23 +19,26 @@ You build and operate Tiryaq. You write CDK, Lambda, and Angular code. You deplo
 
 ```
 hospital/
-├── src/                      # Angular 21 + PrimeNG frontend
+├── src/                      # Angular 20 + PrimeNG 20 frontend (standalone components, signals)
 │   ├── app/
-│   │   ├── components/       # Domain modules
-│   │   ├── services/         # API clients, auth
+│   │   ├── components/       # Domain modules (appointments, pharmacy, dashboard, …)
+│   │   ├── services/         # API clients, auth, helpers
 │   │   ├── interceptors/     # JWT injection
-│   │   └── guards/           # Route protection by role
+│   │   └── guards/           # auth.guard + role.guard (roleGuard([...roles]))
 │   ├── app.config.ts         # Cognito wiring (authority, clientId)
-│   └── ...
-├── tiryaq-cdk/               # AWS CDK (TypeScript)
-│   ├── bin/                  # CDK app entry
-│   ├── lib/                  # Stacks
-│   └── lambda/               # Node.js Lambda functions (CommonJS)
+│   └── app.routes.ts         # Routes + per-route roleGuard
+├── tiryaq-cdk/
+│   ├── bin/tiryaq-cdk.ts     # CDK app entry — TiryaqCdkStack only (edge stack commented out)
+│   ├── lib/tiryaq-cdk-stack.ts
+│   └── lambda/               # Node.js Lambda functions (CommonJS), built via Code.fromAsset
 ├── docs/
+│   ├── backend/              # 01-Lambda-API-Reference.md (+ per-function notes)
 │   ├── compliance/           # PDPPL/MOPH/NCSA documentation
-│   ├── infrastructure/       # AWS + CDK reference
+│   ├── frontend/             # pharmacy.md, admin-panel.md, …
+│   ├── infrastructure/       # 01-AWS-CDK-Reference.md
 │   ├── scribefirst/          # ScribeFirst feature docs
 │   └── user-manuals/         # This folder
+├── deploy.ps1                # Backend-then-frontend deploy script
 └── ...
 ```
 
@@ -42,163 +47,138 @@ hospital/
 ## 3. Local development
 
 ### 3.1 Frontend
-
 ```powershell
 cd hospital
 npm install
 npm start          # ng serve on http://localhost:4200
 ```
-
-`localhost:4200` is whitelisted in Cognito callback URLs and API Gateway CORS. Sign in with any test user.
+`localhost:4200` is in the Cognito callback URLs and the API Gateway CORS allow-list.
 
 ### 3.2 CDK
-
 ```powershell
 cd hospital\tiryaq-cdk
 npm install
-npx cdk synth      # validate the stack templates locally
-npx cdk diff       # see what would change vs. the live stack
+npx cdk synth      # validate templates
+npx cdk diff       # diff vs. live stack
 ```
 
-### 3.3 Lambda development loop
-
-Lambdas are deployed via `cdk deploy`. **CDK deploy is currently bypassed** for fast iteration — use the existing `Compress-Archive` + `update-function-code` pattern documented in CLAUDE.md.
-
+### 3.3 Lambda fast iteration (optional)
+Lambdas deploy via `cdk deploy` (which repackages each function from its folder via `Code.fromAsset`). For a single-function hotfix you can bypass CDK:
 ```powershell
 cd tiryaq-cdk\lambda\createPatient
 Compress-Archive -Path *.js -DestinationPath function.zip -Force
-aws lambda update-function-code `
-    --function-name createPatient `
-    --zip-file fileb://function.zip `
-    --region us-east-1
+aws lambda update-function-code --function-name createPatient --zip-file fileb://function.zip --region us-east-1
 ```
-
-This skips CDK and CloudFormation. Use it for iterating on a single function. Use full `cdk deploy` when CDK metadata changes (new IAM, new env vars).
+Use full `cdk deploy` whenever CDK metadata changes (IAM, env vars, new routes). Note the stray `function.zip` files are **not** what `cdk deploy` uses — it always re-zips from source.
 
 ---
 
 ## 4. Conventions you must follow
 
-### 4.1 DynamoDB single-table design
+### 4.1 Single-table design
+One table `Hospital`. Every item has `PK`, `SK`, `EntityType`. Use `withCompliance` (`lambda/_shared/compliance.js`) to stamp `dataClass`/timestamps where applicable.
 
-- One table: `Hospital`.
-- Every item has `PK`, `SK`, `EntityType`, plus domain-specific attributes.
-- Always wrap writes with `withCompliance` from `tiryaq-cdk/lambda/_shared/compliance.js` to ensure `dataClass`, `createdAt`, `updatedAt` are stamped.
+### 4.2 `updatedAt` is a GSI sort key — never write it as NULL
+`dataClass-index` sorts on `updatedAt`. **Never** write `updatedAt: null`, and **never** SET a GSI key attribute (email, dataClass, updatedAt, …) to NULL — DynamoDB rejects the write and you get a 500. Pattern: on create stamp `createdAt`/`updatedAt` with a timestamp; on update, filter out null/undefined fields and always stamp `updatedAt`.
 
-### 4.2 Cognito groups arrive bracket-wrapped
+### 4.3 Stamp `updatedBy` on audited writes
+Appointments and invoices (and similar) set `updatedBy` (and `createdBy`) to the caller email from the JWT (`claims.email || claims.username`).
 
+### 4.4 Cognito groups arrive bracket-wrapped
+`cognito:groups` may be `"[Doctors]"` (string) or an array. Strip `[`/`]` and split before matching:
 ```js
-// JWT claim "cognito:groups" comes as: ["[Doctors]"]
-// Always strip:
-const groups = (claims['cognito:groups'] || [])
-    .map(g => g.replace(/^\[|\]$/g, ''));
+const groups = Array.isArray(raw) ? raw
+  : String(raw).trim().replace(/^\[/, '').replace(/\]$/, '').split(/[,\s]+/).filter(Boolean);
 ```
 
-### 4.3 Transactional writes for uniqueness locks
+### 4.5 Transactional uniqueness locks
+For unique fields (email, QID, phone) use `TransactWriteItems` with `attribute_not_exists(PK)` lock items (see `createPatient`/`createDoctor`). Throw user-readable errors ("…already exists") — the frontend surfaces `message`.
 
-When creating users / patients with unique fields (email, QID, phone), use DynamoDB `TransactWriteItems` with conditional `attribute_not_exists(PK)` on lock items. Examples in `createPatient` and `createDoctor`.
+### 4.6 Surface real errors to the client
+Return `{ message, error }` with a meaningful status. The frontend's `HelpersService.extractError`/`notifyApiError` reads `error.error.message` (or `message`) and shows it in a toast, so write messages for humans.
 
-### 4.4 No hardcoded secrets
+### 4.7 Business rules to preserve
+- **Duty days:** appointment create/update validates the date against the doctor's `dutyDays` (UTC-midnight weekday).
+- **Cancel, not delete:** appointment cancellation requires `cancelReason` and sets `cancelledAt`/`cancelledBy`; the UI exposes Cancel, not Delete.
+- **Pharmacy is pharmacist-only** at the Lambda (`canAccessPharmacy`), route guard, and menu.
+- **Dispense override** requires `approvalDocumentKey` when `allergyOverrideConfirmed` is true.
 
-- Never commit credentials, API keys, or production endpoints.
-- Use Secrets Manager for runtime secrets.
-- Use CDK environment variables for configuration values.
+### 4.8 No hardcoded secrets/endpoints
+Secrets Manager for runtime secrets; CDK env vars for config; the frontend reads the API base from `config.ts`.
 
 ---
 
 ## 5. Deployment workflow
 
 ### 5.1 Standard release
+1. Branch from `main`; code + commit.
+2. `npx cdk diff` to review AWS changes.
+3. Backend: `cd tiryaq-cdk && npx cdk deploy --require-approval never` (single stack — `--all` is no longer required because the edge/WAF stack is disabled).
+4. Frontend: `ng build --configuration production` → `aws s3 sync dist\verona-ng\browser s3://<frontend-bucket> --delete` → `aws cloudfront create-invalidation --distribution-id <id> --paths "/*"`.
 
-1. Branch from `main`.
-2. Code + commit.
-3. `npx cdk diff` — review the proposed AWS changes.
-4. `npx cdk deploy --all --require-approval never` from your machine, OR via CI.
-5. `ng build --configuration production` → `aws s3 sync` → CloudFront invalidation.
+Or run `deploy.ps1` from the repo root (does backend-then-frontend with checks; flags `-BackendOnly`, `-FrontendOnly`, `-SkipInvalidation`).
 
-### 5.2 The "DynamoDB only allows ONE GSI per update" rule
+### 5.2 One GSI per update
+DynamoDB allows only one GSI add/remove per table update. Add new GSIs one at a time.
 
-Documented in the CDK comments. If you add a new GSI, deploy it alone — do not bundle multiple new GSIs in one PR.
-
-### 5.3 Region-pinning (CRITICAL for production)
-
-- `bin/tiryaq-cdk.ts` defaults to `us-east-1` (dev). For production it MUST be `me-south-1`.
-- Override with `$env:CDK_DEPLOY_REGION` only with a documented MOPH approval reason.
+### 5.3 Region-pinning
+`bin/tiryaq-cdk.ts` defaults to `us-east-1` (dev). Production target is `me-south-1`; override with `$env:CDK_DEPLOY_REGION` only with a documented MOPH approval reason.
 
 ---
 
 ## 6. Debugging in production
 
-### 6.1 Check Lambda logs
-
 ```powershell
-aws logs tail "/aws/lambda/createPatient" --region us-east-1 --since 10m --follow
-```
+# Lambda logs
+aws logs tail "/aws/lambda/tiryaq-appointments" --region us-east-1 --since 10m --follow
 
-### 6.2 Trace a specific request
-
-- Find the request ID in the API Gateway access log or the user's browser network tab.
-- Search CloudWatch Logs Insights:
-
-```
-fields @timestamp, @message
-| filter @message like /<request-id>/
-| sort @timestamp asc
-```
-
-### 6.3 Check CloudTrail for "who did what"
-
-```powershell
+# CloudTrail "who did what"
 aws cloudtrail lookup-events --region us-east-1 `
-    --lookup-attributes AttributeKey=Username,AttributeValue=admin1 `
-    --max-results 50
-```
+  --lookup-attributes AttributeKey=Username,AttributeValue=admin1 --max-results 50
 
-### 6.4 Inspect DynamoDB
-
-The console works, but for queries use the AWS CLI:
-
-```powershell
+# DynamoDB query
 aws dynamodb query --table-name Hospital --region us-east-1 `
-    --key-condition-expression "PK = :pk" `
-    --expression-attribute-values '{ \":pk\": { \"S\": \"PATIENT#abc-123\" } }'
+  --key-condition-expression "PK = :pk" `
+  --expression-attribute-values '{ \":pk\": { \"S\": \"APPOINTMENT#<id>\" } }'
 ```
+
+For request tracing, find the request ID (API Gateway access log / browser network tab) and search CloudWatch Logs Insights with `filter @message like /<request-id>/`.
 
 ---
 
 ## 7. Code quality expectations
 
-- Production-grade, specific, no clever shortcuts.
-- ESLint + Prettier on commit.
-- Lambda functions have a single responsibility — no domain mixing.
-- Angular services are typed; no `any` outside type-narrowing helpers.
-- Pull requests must include a manual test note describing what you verified.
+- Production-grade, single-responsibility Lambdas; typed Angular services (avoid `any`).
+- ESLint + Prettier on commit (`npm run format`).
+- PRs include a manual test note (see `docs/test-plan-batch-2026-05-24.md` for the recent batch's format).
 
 ---
 
 ## 8. What you should NOT do
 
-- Don't browse patient records out of curiosity. Every DynamoDB read on `PATIENT#*` is audited via CloudTrail data events (when enabled) and via the application audit Lambda.
-- Don't disable MFA, even temporarily, for "testing convenience."
-- Don't expose Lambda logs publicly.
-- Don't commit AWS credentials.
-- Don't make a production deploy from a dev machine without signed-off ticket reference.
+- Don't browse PATIENT records out of curiosity — reads are audited.
+- Don't commit AWS credentials or expose Lambda logs.
+- Don't make a production deploy from a dev machine without a signed-off ticket.
+- Don't re-enable or disable security controls (WAF, MFA) silently — they are currently **disabled as a documented cost regression** (`docs/compliance/updates/2026-05-02-regression-01-waf-and-mfa-disabled.md`). Re-enabling is a deliberate, reviewed change (see `docs/infrastructure/01-AWS-CDK-Reference.md` §7).
 
 ---
 
 ## 9. Useful AWS Console links (us-east-1 dev)
 
-- CloudFormation stacks: https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks
+- CloudFormation: https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks
 - DynamoDB: https://us-east-1.console.aws.amazon.com/dynamodbv2/home?region=us-east-1#tables
 - Cognito: https://us-east-1.console.aws.amazon.com/cognito/v2/idp/user-pools?region=us-east-1
 - CloudFront: https://us-east-1.console.aws.amazon.com/cloudfront/v4/home
-- WAF: https://us-east-1.console.aws.amazon.com/wafv2/homev2/web-acls
+
+> WAFv2 is currently disabled; its console link is omitted until the edge stack is re-enabled.
 
 ---
 
 ## 10. Where to find more docs
 
+- `docs/backend/01-Lambda-API-Reference.md` — all Lambdas, routes, rules
+- `docs/infrastructure/01-AWS-CDK-Reference.md` — services + deploy runbook
+- `docs/frontend/` — module-level frontend docs (pharmacy, admin-panel)
 - `docs/compliance/` — regulatory framework, status, updates
-- `docs/infrastructure/01-AWS-CDK-Reference.md` — services + costs + deploy runbook
 - `docs/scribefirst/01-ScribeFirst-Design.md` — voice-scribe feature
 - `CLAUDE.md` — project conventions & rules

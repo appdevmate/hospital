@@ -35,6 +35,7 @@ export class AppMenu implements OnInit {
         const isAdmin = this.auth.isAdmin;
         const isDoctor = this.auth.isDoctor;
         const isDeveloper = this.auth.isDeveloper;
+        const isPharmacist = this.auth.isPharmacist;
 
         const developerItems: MenuItem[] = [
             { label: 'Dashboard', icon: 'pi pi-desktop', routerLink: ['/'] },
@@ -43,7 +44,6 @@ export class AppMenu implements OnInit {
             { label: 'Voice Scribe', icon: 'pi pi-microphone', routerLink: ['/voice-scribe'] },
             { label: 'Invoices', icon: 'pi pi-file-edit', routerLink: ['/invoices'] },
             { label: 'Notifications', icon: 'pi pi-bell', routerLink: ['/notifications'] },
-            { label: 'Pharmacy', icon: 'pi pi-heart-fill', routerLink: ['/pharmacy'] },
             { label: 'Patients', icon: 'pi pi-user-plus', routerLink: ['/patients-management'] },
             { label: 'Doctors Management', icon: 'pi pi-briefcase', routerLink: ['/doctors-management'] },
             {
@@ -64,7 +64,6 @@ export class AppMenu implements OnInit {
         const adminOnlyItems: MenuItem[] = [
             { separator: true },
             { label: 'Patients', icon: 'pi pi-user-plus', routerLink: ['/patients-management'] },
-            { label: 'Pharmacy', icon: 'pi pi-heart-fill', routerLink: ['/pharmacy'] },
             { label: 'Doctors Management', icon: 'pi pi-briefcase', routerLink: ['/doctors-management'] },
             { label: 'Voice Scribe', icon: 'pi pi-microphone', routerLink: ['/voice-scribe'] },
             {
@@ -88,8 +87,10 @@ export class AppMenu implements OnInit {
             this.model = [...sharedItems, ...doctorOnlyItems];
         } else if (isDeveloper) {
             this.model = [...developerItems];
-        } else {
+        } else if (isPharmacist) {
             this.model = [...sharedItems, ...pharmacistItems];
+        } else {
+            this.model = [...sharedItems];
         }
     }
 }

@@ -46,6 +46,30 @@ export class HelpersService {
         });
     }
 
+    /**
+     * Pulls the most specific error text out of a failed HTTP call.
+     * Backend Lambdas return { message, error }; some return only one, and
+     * gateway/string errors land on err.error or err.message. This checks all.
+     */
+    extractError(err: any, fallback = 'Something went wrong. Please try again.'): string {
+        if (!err) return fallback;
+        const e = err.error ?? err;
+        if (typeof e === 'string' && e.trim()) return e;
+        return e?.message || e?.error || err?.message || fallback;
+    }
+
+    /**
+     * Standard error toast for API calls: surfaces the backend message, and
+     * transparently handles 401/Unauthorized by redirecting to login.
+     */
+    notifyApiError(summary: string, err: any, fallback = 'Something went wrong. Please try again.') {
+        if (err?.status === 401 || err?.error?.message === 'Unauthorized') {
+            this.redirectToLogin();
+            return;
+        }
+        this.notifyError(summary, this.extractError(err, fallback));
+    }
+
     notifyInfo(summary: string, message: string) {
         this.messageService.add({
             severity: 'info',

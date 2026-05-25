@@ -5,10 +5,18 @@ const { randomUUID } = require('crypto');
 const client = new DynamoDBClient({ region: 'us-east-1' });
 const dynamo = DynamoDBDocumentClient.from(client);
 
+// Actor email from the JWT (audit: who created/updated the invoice).
+function getActorEmail(event) {
+    const claims = event.requestContext?.authorizer?.jwt?.claims
+        || event.requestContext?.authorizer?.claims || {};
+    return (claims.email || claims.username || 'unknown').toLowerCase().trim();
+}
+
 exports.handler = async (event) => {
     try {
         const patientID = decodeURIComponent(event.pathParameters.patientID);
         const body = JSON.parse(event.body);
+        const actorEmail = getActorEmail(event);
 
         if (!body.amount || !body.status) {
             return {
@@ -42,6 +50,8 @@ exports.handler = async (event) => {
             paymentType: body.paymentType || null,
             dueDate: body.dueDate || null,
             notes: body.notes || null,
+            createdBy: actorEmail,
+            updatedBy: actorEmail,
             createdAt: timestamp,
             updatedAt: timestamp
         };

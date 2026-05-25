@@ -503,15 +503,26 @@ export class TiryaqStack extends cdk.Stack {
             lambda.Runtime.NODEJS_20_X,
             {
                 BEDROCK_REGION: 'us-east-1',
-                BEDROCK_MODEL_ID: 'anthropic.claude-3-haiku-20240307-v1:0'
+                // Claude 3.5 Haiku via the US cross-region inference profile.
+                // The original claude-3-haiku-20240307 model was retired/marked
+                // legacy by the provider, which caused InvokeModel AccessDenied.
+                // Newer Anthropic models on Bedrock are only invokable through an
+                // inference profile (the "us." prefix), not the bare model ID.
+                BEDROCK_MODEL_ID: 'us.anthropic.claude-haiku-4-5-20251001-v1:0'
             }
         );
-        // Allow Bedrock InvokeModel only on the Haiku model, in us-east-1.
+        // Allow Bedrock InvokeModel on the Claude 3.5 Haiku US inference profile.
+        // A cross-region inference profile requires permission on BOTH the
+        // profile ARN and the underlying foundation-model ARNs in every region
+        // the profile can route to (us-east-1 / us-east-2 / us-west-2).
         scribeFn.addToRolePolicy(
             new iam.PolicyStatement({
                 actions: ['bedrock:InvokeModel'],
                 resources: [
-                    'arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-haiku-20240307-v1:0'
+                    `arn:aws:bedrock:us-east-1:${this.account}:inference-profile/us.anthropic.claude-haiku-4-5-20251001-v1:0`,
+                    'arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-haiku-4-5-20251001-v1:0',
+                    'arn:aws:bedrock:us-east-2::foundation-model/anthropic.claude-haiku-4-5-20251001-v1:0',
+                    'arn:aws:bedrock:us-west-2::foundation-model/anthropic.claude-haiku-4-5-20251001-v1:0'
                 ]
             })
         );

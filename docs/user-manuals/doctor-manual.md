@@ -1,9 +1,11 @@
 # Tiryaq User Manual — Doctor
 
-**Document version:** 1.0
-**Date:** 2026-04-30
+**Document version:** 2.0
+**Date:** 2026-05-25
 **Audience:** Users in the **Doctors** Cognito group
 **Tone:** Plain, task-focused. No jargon.
+
+> **What changed in 2.0:** Added the **Appointments** workflow (check-in, start consultation), the **Total Appointments** and **Pending Invoices** dashboard cards, and **invoice notifications**. Sign-in steps corrected — **MFA is currently switched off**, so you sign in with username + password only.
 
 ---
 
@@ -11,13 +13,14 @@
 
 Tiryaq is your daily clinical workspace. You'll use it to:
 
-- See your patient list
-- Open or create a consultation
+- See your appointments and patient list
+- Check patients in and start consultations
 - Document the visit (SOAP note)
 - Order labs, imaging, and prescriptions
+- Track your invoices
 - Sign off the visit
 
-Once ScribeFirst Phase 1 is enabled, you'll also be able to **speak the consultation instead of typing it** — Tiryaq will draft the SOAP note for you to review.
+Once ScribeFirst is enabled, you can **speak the consultation instead of typing it** — Tiryaq drafts the SOAP note for you to review.
 
 ---
 
@@ -25,128 +28,118 @@ Once ScribeFirst Phase 1 is enabled, you'll also be able to **speak the consulta
 
 1. Open **https://d6i7iwknkj0bg.cloudfront.net** (or your clinic's URL).
 2. Sign in with your username (e.g. `doctor1`) and password.
-3. First time only: change the temporary password and enrol your phone for MFA. Use Google Authenticator, Microsoft Authenticator, or 1Password.
-4. From then on, every sign-in asks for your password and a 6-digit code from your authenticator app.
+3. First time only: change the temporary password — minimum 12 characters with at least one uppercase, lowercase, digit, and symbol.
+4. Your session lasts 1 hour; after that you sign in again.
+
+> Multi-factor authentication (MFA) is **currently disabled** on the platform. If your clinic re-enables it, you'll be asked to enrol an authenticator app on first login and enter a 6-digit code each time.
 
 ---
 
 ## 3. Your dashboard
 
-After signing in, you land on the **Dashboard**:
+After signing in you land on the **Dashboard**. As a doctor you see:
 
-- **Today's appointments** — patients on your schedule today.
-- **Recent patients** — the last 10 you saw.
-- **Pending sign-offs** — consultations you started but didn't finalise. Anything older than 24 hours is highlighted.
-- **Lab/imaging results inbox** — ordered tests with results back.
+- **Today's Appointments** — count and list of patients scheduled with you today.
+- **Upcoming (7 Days)** — your scheduled appointments for the week.
+- **Total Appointments** — the total number of your appointments in the system.
+- **Pending Invoices** — your invoices that are still pending or overdue.
+
+The bell/notifications also surface today's and tomorrow's appointments, consultations in progress, critical patients on your list, and your pending invoices.
 
 ---
 
-## 4. Finding a patient
+## 4. Appointments
 
-Use **Patients → Search** in the sidebar.
+Open **Appointments** in the sidebar. You see **your own** appointments (scoped to your account automatically).
+
+What you can do as a doctor:
+
+- **Check In** — on a *scheduled* appointment, click the green check-in icon. The status changes to **Checked In** immediately (the system also records the check-in time). The icon then becomes **Start Consultation**.
+- **Start Consultation** — on a *checked-in* appointment, click play to move it to **In Progress** and begin documenting.
+- **View** — open the appointment detail.
+
+What you cannot do: doctors do not create, edit, or cancel appointments — that's an Admin task. (If a patient's appointment is wrong, ask an Admin to fix or cancel it.)
+
+> Appointments can only be booked on a doctor's **duty days**. If your duty days are set (in Doctors Management), an Admin cannot book you on a non-duty weekday.
+
+---
+
+## 5. Finding a patient
+
+Use **Patients → Search**.
 
 - Search by name, QID (Qatari ID), phone, or patient ID.
 - Click a result to open the **Patient Profile**.
 
-The Patient Profile has tabs:
-
-| Tab | Shows |
-|-----|-------|
-| Overview | Name, QID, age, allergies, chronic conditions |
-| Consultations | Every visit you or any doctor has done with this patient |
-| Prescriptions | Active and historic medications |
-| Lab orders | Tests ordered and results |
-| Surgeries | Past surgical history |
-| Documents | Uploaded files (PDFs, scans) |
-| Payments | Billing history |
+Patient Profile tabs: Overview (name, QID, age, allergies, chronic conditions), Consultations, Prescriptions, Lab orders, Surgeries, Documents, Payments.
 
 ---
 
-## 5. Doing a consultation
+## 6. Doing a consultation
 
-### 5.1 Start
+### 6.1 Start
 
-- From your dashboard, click the appointment row → "Start Consultation."
-- Or, from a patient profile, click "New Consultation."
-- The consultation form opens with the patient pre-loaded.
+- From **Appointments**, check the patient in, then click **Start Consultation**; or
+- From a patient profile, click **New Consultation**.
 
-### 5.2 SOAP note (manual mode — today)
+### 6.2 SOAP note (manual mode)
 
-Four sections. Fill in what's relevant:
+Fill the four sections: **Subjective** (what the patient told you), **Objective** (vitals, exam findings), **Assessment** (diagnosis/impression), **Plan** (medication, referral, follow-up).
 
-- **Subjective** — what the patient told you (chief complaint, history)
-- **Objective** — what you observed and measured (vitals, exam findings)
-- **Assessment** — your diagnosis or impression
-- **Plan** — what you'll do next (medication, referral, follow-up)
-
-### 5.3 SOAP note (voice mode — ScribeFirst Phase 1)
+### 6.3 SOAP note (voice mode — ScribeFirst)
 
 > Available once ScribeFirst is deployed.
 
 1. Tick the consent checkbox: "Patient has consented to AI-assisted documentation."
-2. Click the green **Start Recording** mic button.
-3. Talk normally with the patient. The transcript appears live on screen.
-4. When done, click **Stop**.
-5. Tiryaq auto-fills the four SOAP sections from the transcript. Each filled field is highlighted yellow.
-6. Read each section. Edit anything wrong.
-7. Click **Save & Sign-off** when you're satisfied.
+2. Click **Start Recording**. The transcript appears live.
+3. Click **Stop**. Tiryaq auto-fills the four SOAP sections (highlighted yellow).
+4. Review and edit each section, then **Save & Sign-off**.
 
-You can switch between voice and manual freely — they're the same form.
+### 6.4 Adding orders
 
-### 5.4 Adding orders
+In the consultation form: **Prescriptions** (search the catalog → set dose, frequency, duration), **Lab orders**, **Imaging orders**, **Referral** (free text + specialty). Prescriptions you write here are what the pharmacist dispenses.
 
-In the consultation form, scroll down to:
+### 6.5 Sign-off
 
-- **Prescriptions** → click "Add" → search the medication catalog → set dose, frequency, duration → save
-- **Lab orders** → similar pattern
-- **Imaging orders** → similar pattern
-- **Referral** → free text + selected specialty
-
-### 5.5 Sign-off
-
-- Click **Save & Sign-off** at the bottom.
-- The consultation is now locked. Edits after sign-off require a formal correction (visible in the audit trail).
+Click **Save & Sign-off**. The consultation is locked; later edits create a correction visible in the audit trail.
 
 ---
 
-## 6. Tips
+## 7. Invoices
 
-- Drafts auto-save every 30 seconds while you're editing.
-- If you accidentally close the browser, reopen the consultation — your draft is there.
-- The audit log shows when you opened, edited, and signed any consultation. Every action you take with a patient record is recorded.
+Open **Invoices** to see billing tied to your patients (scoped to your account). Pending/overdue invoices also appear on your dashboard and in notifications.
 
 ---
 
-## 7. What you cannot do
+## 8. What you cannot do
 
-- You cannot delete patient records or signed consultations. Corrections are appended, not replaced.
-- You cannot view audit log details (only Admins can).
-- You cannot dispense medications — that's the Pharmacist's role. You write the prescription; the pharmacist dispenses.
-
----
-
-## 8. Privacy and consent
-
-- Every patient interaction is logged: timestamp, the doctor's email (your account), and the action.
-- If the patient asks "who has accessed my record?" — you can request the report from your Admin.
-- If you use ScribeFirst voice scribing, the patient must give explicit consent before each session. The consent flag is stored on the consultation row.
+- Delete patient records or signed consultations (corrections are appended, not replaced).
+- Create, edit, or cancel appointments (Admin only).
+- Dispense medications (Pharmacist only) — you write the prescription; the pharmacist dispenses.
+- View full audit-log detail (Admins only).
 
 ---
 
-## 9. Common situations
+## 9. Privacy and consent
+
+- Every patient interaction is logged with your email, a timestamp, and the action.
+- For ScribeFirst voice scribing, the patient must consent before each session; the consent flag is stored on the consultation.
+
+---
+
+## 10. Common situations
 
 | Situation | What to do |
 |-----------|-----------|
-| A patient I just saw isn't in my list | Refresh the dashboard (Ctrl-R). If still missing, the appointment may not have been booked through Tiryaq. |
-| The system is slow | Check your internet first. If the network is fine, contact the development team — there may be a backend issue. |
-| I made a mistake on a signed consultation | Open the consultation. The Edit button creates a correction note. The original remains visible. |
-| I get logged out unexpectedly | Sessions expire after 1 hour. Sign in again. If it happens often, check that your browser allows cookies for the Tiryaq domain. |
-| I lost my MFA device | Contact your Admin — they can reset the MFA enrolment after verifying your identity in person. |
+| A patient I should see isn't in my appointments | Ask an Admin — the appointment may not be booked, or may be on a different date. |
+| I can't check in an appointment | Check-in only works on a *scheduled* appointment. If it's already checked in, use **Start Consultation**. |
+| I get logged out | Sessions expire after 1 hour. Sign in again. |
+| The system is slow | Check your internet first; if fine, contact the development team. |
+| I made a mistake on a signed consultation | Open it; the Edit button creates a correction note. The original stays visible. |
 
 ---
 
-## 10. Where to get help
+## 11. Where to get help
 
 - Clinical workflow questions → your clinic's medical director.
-- App problems → contact your Admin or the development team.
-- Account problems (password, MFA) → your Admin.
+- App problems / account problems → your Admin or the development team.

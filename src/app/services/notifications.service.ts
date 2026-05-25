@@ -4,10 +4,11 @@ import { map, catchError } from 'rxjs/operators';
 import { AppointmentsService, Appointment } from '@/services/appointments.service';
 import { PatientsService, Patient } from '@/services/patients.service';
 import { PharmacyService, PharmacyAlert } from '@/services/pharmacy.service';
+import { PaymentsService, Payment } from '@/services/payments.service';
 
 export interface Notification {
     id: string;
-    type: 'today' | 'upcoming' | 'critical' | 'pharmacy_alert' | 'pending_prescriptions' | 'pending_signoff';
+    type: 'today' | 'upcoming' | 'critical' | 'pharmacy_alert' | 'pending_prescriptions' | 'pending_signoff' | 'pending_invoices';
     title: string;
     message: string;
     icon: string;
@@ -22,6 +23,7 @@ export class NotificationsService {
     private appointmentsService = inject(AppointmentsService);
     private patientsService = inject(PatientsService);
     private pharmacyService = inject(PharmacyService);
+    private paymentsService = inject(PaymentsService);
 
     getNotifications(isAdmin: boolean, doctorEmail?: string, isPharmacist = false, isDeveloper = false): Observable<Notification[]> {
         const today = new Date();
@@ -50,6 +52,11 @@ export class NotificationsService {
         // Pending prescriptions — admin, pharmacist, developer
         if (isAdmin || isPharmacist || isDeveloper) {
             sources['pendingPrescriptions'] = this.pharmacyService.getPrescriptions('ordered').pipe(catchError(() => of([])));
+        }
+
+        // Invoices — admin, developer, doctor (doctor scoped by email) (#10)
+        if (isAdmin || isDeveloper || isDoctor) {
+            sources['invoices'] = this.paymentsService.getAllInvoices(isDoctor ? doctorEmail : undefined).pipe(catchError(() => of({ data: [] })));
         }
 
         return forkJoin(sources).pipe(
@@ -179,6 +186,23 @@ export class NotificationsService {
                         severity: 'info',
                         routerLink: '/pharmacy',
                         data: pendingRx
+                    });
+                }
+
+                // ── Pending invoices (#10) ────────────────────────────────
+                const invoices: Payment[] = results['invoices']?.data || [];
+                const pendingInvoices = invoices.filter((i) => ['pending', 'overdue'].includes((i.status || '').toLowerCase()));
+                if (pendingInvoices.length > 0) {
+                    const totalOwed = pendingInvoices.reduce((sum, i) => sum + (i.amount || 0), 0);
+                    notifications.push({
+                        id: 'pending-invoices',
+                        type: 'pending_invoices',
+                        title: 'Pending Invoices',
+                        message: `${pendingInvoices.length} invoice${pendingInvoices.length > 1 ? 's' : ''} awaiting payment (QAR ${Math.round(totalOwed).toLocaleString()})`,
+                        icon: 'pi pi-file-invoice',
+                        severity: 'warn',
+                        routerLink: '/invoices',
+                        data: pendingInvoices
                     });
                 }
 

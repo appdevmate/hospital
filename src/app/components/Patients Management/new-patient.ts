@@ -882,11 +882,7 @@ export class NewPatient implements AfterViewInit, OnDestroy {
             },
             error: (err) => {
                 this.isSubmitting = false;
-                if (err?.error?.message === 'Unauthorized') {
-                    this.helpersService.redirectToLogin();
-                    return;
-                }
-                this.helpersService.notifyError('Error', err?.error?.message || 'Failed to create patient');
+                this.helpersService.notifyApiError('Error', err, 'Failed to create patient');
             }
         });
     }

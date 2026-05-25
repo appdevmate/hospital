@@ -95,6 +95,29 @@
         }
     }
 
+    // Inline, non-fatal mic/speech notice (the flow keeps going — type instead).
+    .mic-warning {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        margin: 0.75rem 0 0;
+        padding: 0.6rem 0.85rem;
+        border-radius: 6px;
+        background: var(--p-yellow-50);
+        border: 1px solid var(--p-yellow-200);
+        color: var(--p-yellow-700);
+        font-size: 0.9rem;
+
+        i { font-size: 1.1rem; }
+    }
+
+    // Live interim words shown under the editable transcript box.
+    > p.interim,
+    .interim {
+        color: var(--p-text-muted-color);
+        font-style: italic;
+    }
+
     .soap-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;

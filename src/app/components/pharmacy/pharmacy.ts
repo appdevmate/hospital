@@ -22,6 +22,7 @@ import { catchError, of, finalize } from 'rxjs';
 import { PharmacyService, Medication, InventoryItem, PrescriptionQueueItem, DispenseRecord, PurchaseOrder, POItem, PharmacyAlert } from '@/services/pharmacy.service';
 import { HelpersService } from '@/services/helpers-service';
 import { AuthService } from '@/services/auth.service';
+import { DocumentService } from '@/services/document.service';
 
 @Component({
     selector: 'app-pharmacy',
@@ -58,6 +59,7 @@ export class PharmacyComponent implements OnInit {
     private helpers = inject(HelpersService);
     private confirm = inject(ConfirmationService);
     private cdr = inject(ChangeDetectorRef);
+    private documentService = inject(DocumentService);
     auth = inject(AuthService);
 
     // ── Dashboard ─────────────────────────────────────────────────────────────
@@ -131,6 +133,9 @@ export class PharmacyComponent implements OnInit {
     dispenseSaving = false;
     allergyWarnings: string[] = [];
     allergyOverride = false;
+    // #4/#9 — doctor-approved document required to override an allergy and dispense.
+    approvalFile: File | null = null;
+    approvalUploading = false;
 
     rxStatusOptions = [
         { label: 'Pending (ordered)', value: 'ordered' },
@@ -373,11 +378,18 @@ export class PharmacyComponent implements OnInit {
         this.dispensingRx = rx;
         this.allergyWarnings = [];
         this.allergyOverride = false;
+        this.approvalFile = null;
+        this.approvalUploading = false;
         this.dispenseForm = { medId: '', quantityDispensed: 1, notes: '' };
         this.showDispenseDialog = true;
     }
 
-    doDispense(overrideAllergy = false) {
+    onApprovalFileSelect(event: Event) {
+        const input = event.target as HTMLInputElement;
+        this.approvalFile = input.files && input.files.length ? input.files[0] : null;
+    }
+
+    doDispense(overrideAllergy = false, approvalDocumentKey?: string, approvalDocumentName?: string) {
         if (!this.dispensingRx || !this.dispenseForm.medId) {
             this.helpers.notifyError('Validation', 'Select the inventory medication to dispense');
             return;
@@ -390,7 +402,9 @@ export class PharmacyComponent implements OnInit {
                 medId: this.dispenseForm.medId,
                 quantityDispensed: this.dispenseForm.quantityDispensed,
                 notes: this.dispenseForm.notes || undefined,
-                allergyOverrideConfirmed: overrideAllergy || undefined
+                allergyOverrideConfirmed: overrideAllergy || undefined,
+                approvalDocumentKey: approvalDocumentKey || undefined,
+                approvalDocumentName: approvalDocumentName || undefined
             })
             .pipe(
                 finalize(() => {
@@ -410,17 +424,40 @@ export class PharmacyComponent implements OnInit {
                     this.showDispenseDialog = false;
                     this.allergyWarnings = [];
                     this.allergyOverride = false;
+                    this.approvalFile = null;
                     this.loadPrescriptions();
                     this.loadInventory();
                     this.loadDispenseHistory();
                     this.loadAlerts();
                 },
-                error: (e) => this.helpers.notifyError('Dispense Failed', e?.error?.message || 'Could not dispense')
+                error: (e) => this.helpers.notifyApiError('Dispense Failed', e, 'Could not dispense')
             });
     }
 
+    // Override requires the doctor-approved document: upload it first, then dispense.
     confirmAllergyOverride() {
-        this.doDispense(true);
+        if (!this.dispenseForm.medId) {
+            this.helpers.notifyError('Validation', 'Select the inventory medication to dispense');
+            return;
+        }
+        if (!this.approvalFile) {
+            this.helpers.notifyError('Document required', 'Attach the doctor-approved document before overriding the allergy.');
+            return;
+        }
+        const file = this.approvalFile;
+        this.approvalUploading = true;
+        this.documentService.uploadFile(file, 'pharmacy-approvals').subscribe({
+            next: (res) => {
+                if (res.key) {
+                    this.approvalUploading = false;
+                    this.doDispense(true, res.key, file.name);
+                }
+            },
+            error: (e) => {
+                this.approvalUploading = false;
+                this.helpers.notifyApiError('Upload Failed', e, 'Could not upload the approval document.');
+            }
+        });
     }
 
     // ── Dispense History ──────────────────────────────────────────────────────

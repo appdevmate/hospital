@@ -609,9 +609,17 @@
                 @for (w of allergyWarnings; track w) {
                 <div class="text-sm">{{ w }}</div>
                 }
-                <div class="text-sm mt-2 font-medium">Click "Override & Dispense" to proceed with clinical judgment.
+                <div class="text-sm mt-2 font-medium">
+                    Attach the doctor-approved document confirming this medicine is approved for this patient, then click "Override &amp; Dispense".
                 </div>
             </div>
+        </div>
+        <div class="mb-3">
+            <label class="field-label">Doctor-approved document *</label>
+            <input type="file" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx" (change)="onApprovalFileSelect($event)" />
+            @if (approvalFile) {
+            <div class="text-xs text-surface-500 mt-1"><i class="pi pi-paperclip"></i> {{ approvalFile.name }}</div>
+            }
         </div>
         }
 
@@ -648,7 +656,8 @@
         <p-button label="Cancel" severity="secondary" outlined (onClick)="showDispenseDialog = false" />
         @if (allergyOverride) {
         <p-button label="Override & Dispense" icon="pi pi-exclamation-triangle" severity="danger"
-            [loading]="dispenseSaving" (onClick)="confirmAllergyOverride()" />
+            [loading]="dispenseSaving || approvalUploading" [disabled]="!approvalFile"
+            (onClick)="confirmAllergyOverride()" />
         } @else {
         <p-button label="Dispense" icon="pi pi-check" severity="success" [loading]="dispenseSaving"
             (onClick)="doDispense()" />

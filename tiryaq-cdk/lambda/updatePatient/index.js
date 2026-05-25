@@ -94,6 +94,9 @@ exports.handler = async (event) => {
       Object.entries(body)
         .filter(([k]) => !protectedFields.includes(k))
         .map(([k, v]) => [k, toLower(v)])
+        // Never SET a GSI key attribute (email, dataClass, updatedAt, …) to NULL —
+        // DynamoDB rejects the write. Skip empty fields instead of nulling them.
+        .filter(([, v]) => v !== null && v !== undefined)
     );
     updateFields.updatedAt = new Date().toISOString();
 

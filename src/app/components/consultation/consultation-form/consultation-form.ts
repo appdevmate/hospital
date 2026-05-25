@@ -162,12 +162,17 @@ export class ConsultationFormComponent implements OnInit {
         return this.consultation;
     }
 
+    /** The consultation/exam id from the route — always present, unlike the
+     *  response field which the backend returns as `examId` not `consultationId`. */
+    consultationId = '';
+
     ngOnInit() {
         const consultationId = this.route.snapshot.paramMap.get('consultationId');
         if (!consultationId) {
             this.router.navigate(['/']);
             return;
         }
+        this.consultationId = consultationId;
 
         this.consultationService
             .getConsultation(consultationId)
@@ -200,7 +205,9 @@ export class ConsultationFormComponent implements OnInit {
     }
 
     saveSection(sectionName: string, data: any) {
-        const id = this.consultation?.consultationId;
+        // Backend returns the id as `examId`, not `consultationId`, so prefer
+        // the route id we stored in ngOnInit.
+        const id = this.consultationId || this.consultation?.consultationId || this.consultation?.examId;
         if (!id) return;
         this.saving = true;
         this.cdr.markForCheck();
@@ -304,7 +311,7 @@ export class ConsultationFormComponent implements OnInit {
             accept: () => {
                 this.saving = true;
                 this.cdr.markForCheck();
-                this.consultationService.signOff(this.consultation!.consultationId).subscribe({
+                this.consultationService.signOff(this.consultationId || this.consultation!.consultationId || this.consultation!.examId!).subscribe({
                     next: (updated) => {
                         this.consultation = updated;
                         this.saving = false;

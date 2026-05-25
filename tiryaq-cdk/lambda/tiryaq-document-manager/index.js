@@ -17,7 +17,8 @@ const ALLOWED_FOLDERS = [
     'patients-documents',
     'lab-results',
     'prescriptions',
-    'radiology-images'
+    'radiology-images',
+    'pharmacy-approvals'
 ];
 
 // Allowed file types

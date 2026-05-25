@@ -121,6 +121,25 @@ function validateAppointment(body) {
     return errors;
 }
 
+// ── Duty-day validation (#2) ────────────────────────────────────────────────
+const DAY_NAMES = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+
+async function getDoctorDutyDays(doctorId) {
+    if (!doctorId) return null;
+    try {
+        const r = await db.send(new GetCommand({ TableName: TABLE_NAME, Key: { PK: doctorId, SK: 'PROFILE' } }));
+        return Array.isArray(r.Item?.dutyDays) ? r.Item.dutyDays.map((d) => String(d).toLowerCase()) : null;
+    } catch (_) {
+        return null;
+    }
+}
+
+// 'YYYY-MM-DD' → lowercase weekday name (UTC-safe, avoids off-by-one).
+function weekdayOf(dateStr) {
+    const d = new Date(`${dateStr}T00:00:00Z`);
+    return isNaN(d.getTime()) ? null : DAY_NAMES[d.getUTCDay()];
+}
+
 // ── Handler ───────────────────────────────────────────────────────────────────
 exports.handler = async (event) => {
     const method    = event.requestContext?.http?.method || event.httpMethod;
@@ -138,6 +157,15 @@ exports.handler = async (event) => {
         const body = JSON.parse(event.body || '{}');
         const validationErrors = validateAppointment(body);
         if (validationErrors.length > 0) return err(400, validationErrors.join(' | '));
+
+        // #2 — appointment date must fall on one of the doctor's duty days.
+        const dutyDays = await getDoctorDutyDays(body.doctorId);
+        if (dutyDays && dutyDays.length) {
+            const wd = weekdayOf(body.date);
+            if (wd && !dutyDays.includes(wd)) {
+                return err(400, `Doctor is not on duty on ${wd}. Duty days: ${dutyDays.join(', ')}.`);
+            }
+        }
 
         const id  = randomUUID();
         const now = new Date().toISOString();
@@ -182,12 +210,15 @@ exports.handler = async (event) => {
             checkedInAt:     null,
             checkedOutAt:    null,
             cancelReason:    null,
+            cancelledAt:     null,
+            cancelledBy:     null,
             // Notes
             notes:           body.notes          || null,
             chiefComplaint:  body.chiefComplaint  || null,
             // Audit
             createdBy:       caller.email,
             createdByName:   caller.name,
+            updatedBy:       caller.email,
             createdAt:       now,
             // Avoid updatedAt: null — fails dataClass-index GSI validation (S required).
             updatedAt:       now
@@ -313,10 +344,24 @@ exports.handler = async (event) => {
             return err(400, 'cancelReason is required when cancelling');
         }
 
+        // #2 — if date or doctor is changing, re-validate against duty days.
+        if (body.date || body.doctorId) {
+            const effDoctorId = body.doctorId || appt.doctorId;
+            const effDate     = body.date || appt.date;
+            const dutyDays    = await getDoctorDutyDays(effDoctorId);
+            if (dutyDays && dutyDays.length) {
+                const wd = weekdayOf(effDate);
+                if (wd && !dutyDays.includes(wd)) {
+                    return err(400, `Doctor is not on duty on ${wd}. Duty days: ${dutyDays.join(', ')}.`);
+                }
+            }
+        }
+
         const now      = new Date().toISOString();
-        const setParts = ['#updatedAt = :updatedAt'];
-        const names    = { '#updatedAt': 'updatedAt' };
-        const values   = { ':updatedAt': now };
+        // Always stamp who/when on every update (#3 audit requirement).
+        const setParts = ['#updatedAt = :updatedAt', '#updatedBy = :updatedBy'];
+        const names    = { '#updatedAt': 'updatedAt', '#updatedBy': 'updatedBy' };
+        const values   = { ':updatedAt': now, ':updatedBy': caller.email };
 
         const updatableFields = [
             'status', 'date', 'startTime', 'endTime', 'duration',
@@ -345,6 +390,14 @@ exports.handler = async (event) => {
             setParts.push('#checkedOutAt = :checkedOutAt');
             names['#checkedOutAt']  = 'checkedOutAt';
             values[':checkedOutAt'] = now;
+        }
+        // Auto-set cancellation audit fields when status changes to cancelled (#7)
+        if (body.status === 'cancelled') {
+            setParts.push('#cancelledAt = :cancelledAt', '#cancelledBy = :cancelledBy');
+            names['#cancelledAt']  = 'cancelledAt';
+            names['#cancelledBy']  = 'cancelledBy';
+            values[':cancelledAt'] = appt.cancelledAt || now; // preserve first cancel time
+            values[':cancelledBy'] = caller.email;
         }
 
         await db.send(new UpdateCommand({

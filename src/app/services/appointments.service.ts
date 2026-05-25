@@ -32,6 +32,8 @@ export interface Appointment {
     checkedInAt?: string | null;
     checkedOutAt?: string | null;
     cancelReason?: string | null;
+    cancelledAt?: string | null;
+    cancelledBy?: string | null;
     // Notes
     notes?: string | null;
     chiefComplaint?: string | null;
@@ -40,6 +42,7 @@ export interface Appointment {
     createdByName: string;
     createdAt: string;
     updatedAt: string | null;
+    updatedBy?: string | null;
 }
 
 export interface CreateAppointmentRequest {

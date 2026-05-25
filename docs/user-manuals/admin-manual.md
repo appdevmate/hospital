@@ -1,105 +1,130 @@
 # Tiryaq User Manual — Administrator
 
-**Document version:** 1.0
-**Date:** 2026-04-30
+**Document version:** 2.0
+**Date:** 2026-05-25
 **Audience:** Users in the **Admin** Cognito group
 **Tone:** Step-by-step, screen-by-screen.
+
+> **What changed in 2.0:** Added **Appointments management** (book, edit, cancel-with-reason — delete has been removed), the **Dashboard** overview, and **notifications**. Admin-panel actions corrected (temporary **set-password**, no password-reset-email, no GDPR tab). Sign-in corrected — **MFA is currently switched off**.
 
 ---
 
 ## 1. Who you are
 
-You are an Administrator on Tiryaq. You manage users, monitor activity, control access, and oversee the platform. You do not see patient clinical detail unless you also belong to a clinical group.
+You are an Administrator on Tiryaq. You manage users, monitor activity, control access, manage doctors/patients, book appointments, and oversee billing. You do not see patient clinical detail (SOAP notes) unless you also belong to a clinical group.
 
 ---
 
 ## 2. First-time login
 
-1. Open **https://d6i7iwknkj0bg.cloudfront.net** (or your production URL).
-2. Click **Sign in**.
-3. Enter your username (e.g. `admin1`) and your temporary password (provided by your deploy team via Secrets Manager).
-4. Cognito will prompt you to set a new password — minimum 12 characters with at least one uppercase, lowercase, digit, and symbol.
-5. You will be required to enrol multi-factor authentication (MFA):
-   - Recommended: **TOTP** with Google Authenticator, Microsoft Authenticator, or 1Password.
-   - Alternative: **SMS** to your registered phone number.
-6. You're in.
+1. Open **https://d6i7iwknkj0bg.cloudfront.net** (or your production URL) and click **Sign in**.
+2. Enter your username (e.g. `admin1`) and your temporary password (provided by your deploy team via Secrets Manager under `/tiryaq/seed-users/<username>`).
+3. Cognito prompts you to set a new password — minimum 12 characters with at least one uppercase, lowercase, digit, and symbol.
+4. You're in. Sessions last 1 hour.
+
+> MFA is **currently disabled** on the platform (a cost regression — see the compliance notes). When re-enabled, first login will require enrolling an authenticator app (TOTP) and entering a 6-digit code each sign-in.
 
 ---
 
-## 3. The Admin Panel
+## 3. The Dashboard
 
-Navigate to **Admin Panel** in the left sidebar. You'll see four tabs:
+As an Admin/Developer the dashboard shows:
 
-### 3.1 Stats
+- **Stat cards:** Today's Appointments, Upcoming (7 Days), **Total Appointments**, Pending Invoices, Total Revenue.
+- **Today's Appointments** and **Upcoming (7 Days)** lists.
+- **Invoice Summary** (paid / pending / overdue counts) and recent invoices.
+- **Quick Overview:** total doctors, total patients, appointments this month, total revenue.
 
-- Total patients, doctors, pharmacy items, recent activity counts.
-- Use this for a daily quick read of platform health.
-
-### 3.2 Users
-
-- List of all Cognito users with their group, status (Enabled / Disabled / Force-change-password), and last sign-in.
-- Actions you can take:
-  - **Disable user** — instantly blocks sign-in. Useful when a doctor leaves the clinic.
-  - **Enable user** — restores access.
-  - **Set password** — issues a new temporary password (the user must change it on next login).
-- You **cannot** see another user's actual password. Cognito doesn't store reversible passwords.
-
-### 3.3 Audit
-
-- Chronological feed of every significant action across the system.
-- Each row shows: timestamp, actor email, action type, target entity ID.
-- Filter by date range or actor.
-- This is read-only. You cannot delete audit rows — by design.
-
-### 3.4 (Future) System health
-
-- Reserved for future operations dashboards.
+Notifications (bell) include today's/tomorrow's appointments, consultations in progress, critical patients, pharmacy alerts, pending prescriptions, and **pending invoices** (count + total QAR).
 
 ---
 
-## 4. Daily routine
+## 4. Appointments
+
+Open **Appointments**. As an Admin you manage every appointment.
+
+- **New Appointment** — choose doctor, patient, date, start/end time, type, priority. Two rules are enforced:
+  - The chosen **date must fall on one of the doctor's duty days** (set in Doctors Management). A non-duty day is blocked with a clear message.
+  - A patient can't be double-booked on the same date.
+- **Edit** — change details; duty-day rules re-apply if you change the date or doctor.
+- **Cancel** — the **delete action has been removed**. To cancel, click the **Cancel** (ban) icon, enter a **reason** (required), and confirm. The appointment moves to **Cancelled** and the system records who cancelled it and when (`cancelledBy`, `cancelledAt`).
+- **Check In / Start Consultation** — also available to you, same as doctors.
+
+Every create/edit/cancel stamps the acting user's email (`updatedBy`) and is written to the audit log.
+
+---
+
+## 5. The Admin Panel
+
+Navigate to **Admin Panel** (Administration in the sidebar). Three tabs:
+
+### 5.1 Overview (Stats)
+Total patients, doctors, examinations, and invoices — a quick daily read.
+
+### 5.2 Users
+List of all Cognito users with group, status, and enabled flag. Actions:
+- **Disable user** — instantly blocks sign-in (e.g. a leaver).
+- **Enable user** — restores access.
+- **Set password** — issues a new **temporary** password; the user must change it on next login. You cannot see anyone's actual password.
+
+> There is no "send reset email" button and no GDPR tab in the current build. Patient soft-delete/restore is handled in the **Patients** module.
+
+### 5.3 Audit
+Chronological feed of significant actions: timestamp, actor email, action, entity, and before/after snapshots. Filter by date, entity type, entity ID, action, or actor. Read-only by design — audit rows cannot be edited or deleted.
+
+---
+
+## 6. Managing doctors & patients
+
+- **Doctors Management** — create/edit doctor profiles, including each doctor's **duty days** (which gate appointment booking). 
+- **Patients** — create/edit patients; QID and phone are unique (duplicate attempts return a clear message). Deleting a patient is a **soft delete** (recoverable via restore), not a physical delete.
+
+---
+
+## 7. Daily routine
 
 | Task | How |
 |------|-----|
-| Check overnight failed logins | Audit tab → filter `LOGIN_FAILED` last 24h |
-| Onboard a new doctor | Cognito console (separate, AWS-side) → create user → add to `Doctors` group → user gets temp password |
-| Offboard a leaver | Admin Panel → Users → click Disable on their row |
-| Investigate "I can't see X" complaint | Audit tab → filter by their email → check what they last did |
-| Audit data access | Audit tab → filter by patient ID or doctor email |
+| Read platform health | Admin Panel → Overview |
+| Onboard a doctor | Create the Cognito user (add to `Doctors` group) + create the doctor profile in Doctors Management; set duty days |
+| Offboard a leaver | Admin Panel → Users → Disable |
+| Book / fix an appointment | Appointments → New / Edit / Cancel |
+| Investigate "I can't see X" | Admin Panel → Audit → filter by their email |
+| Review who accessed a record | Audit → filter by entity ID or actor |
 
 ---
 
-## 5. What you cannot do (by design)
+## 8. What you cannot do (by design)
 
-- View patient clinical content (diagnoses, prescriptions) unless you also belong to the `Doctors` group.
-- Edit or delete audit log rows.
-- Bypass MFA for yourself or others.
-- Export the full database — there is no "export everything" button. This is a PDPPL safeguard. If you need a data subject access request, raise a ticket with the development team.
-
----
-
-## 6. Security expectations of you
-
-- Treat your password and TOTP device like a hospital key.
-- Never share credentials. Each Admin must have their own account.
-- Do not investigate patients you don't have a need to access — the audit log records every read.
-- If you suspect a compromise: change your password immediately, then notify the development team to rotate the relevant Cognito tokens.
+- View patient clinical content unless you're also in `Doctors`.
+- Edit or delete audit rows.
+- Permanently delete patients (soft delete only).
+- Export the entire database — there is no "export everything" button (PDPPL safeguard).
 
 ---
 
-## 7. Common error messages
+## 9. Security expectations
+
+- Each Admin has their own account; never share credentials.
+- Don't access records you have no need to see — every read is audited.
+- On suspected compromise: change your password immediately and notify the development lead.
+
+---
+
+## 10. Common error messages
 
 | Message | Likely cause | Fix |
 |---------|-------------|-----|
-| "Force change password" | Temp password expired or never changed | Sign out, sign in again, follow the prompt |
-| "MFA setup required" | First login or MFA was reset | Scan the QR code with an authenticator app |
-| "Access denied" on a resource | You're not in the right Cognito group | Contact development team to adjust group membership |
-| "CORS error" in browser console | Frontend URL doesn't match the Cognito callback URL | Development team needs to update CDK + redeploy |
+| "Force change password" | Temp password never changed | Sign in again and follow the prompt |
+| "Outside duty days" when booking | Date isn't one of the doctor's duty days | Pick a duty day, or update the doctor's duty days |
+| "…already exists" creating a patient | Duplicate QID or phone | Check for an existing record |
+| "Access denied" | Wrong Cognito group | Adjust group membership |
+| "CORS error" in console | Frontend URL not in the API allow-list | Development team updates CDK + redeploys |
 
 ---
 
-## 8. Where to get help
+## 11. Where to get help
 
-- Application bugs → development team via internal issue tracker.
-- Security concerns → notify the development lead immediately.
-- Compliance questions → see `docs/compliance/01-Qatar-GCC-Compliance-Master.md`.
+- Application bugs → development team.
+- Security concerns → development lead immediately.
+- Compliance questions → `docs/compliance/01-Qatar-GCC-Compliance-Master.md`.

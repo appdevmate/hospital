@@ -80,7 +80,10 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
     showCreateDialog = false;
     showEditDialog = false;
     showDetailDialog = false;
+    showCancelDialog = false;
     selectedAppointment: Appointment | null = null;
+    appointmentToCancel: Appointment | null = null;
+    cancelReason = '';
     newAppt: any = this.emptyAppt();
     editAppt: any = {};
 
@@ -250,6 +253,13 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
             return;
         }
 
+        // #2 — date must be one of the doctor's duty days
+        const dutyErr = this.dutyDayError(this.newAppt.doctorId, this.newAppt.date);
+        if (dutyErr) {
+            this.helpers.notifyError('Outside duty days', dutyErr);
+            return;
+        }
+
         this.saving = true;
         const startTimeStr = this.formatTime(this.newAppt.startTime);
         const endTimeStr = this.newAppt.endTime ? this.formatTime(this.newAppt.endTime) : startTimeStr;
@@ -317,6 +327,14 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
 
     onUpdate() {
         if (!this.selectedAppointment) return;
+
+        // #2 — date must be one of the doctor's duty days
+        const dutyErr = this.dutyDayError(this.editAppt.doctorId, this.editAppt.date);
+        if (dutyErr) {
+            this.helpers.notifyError('Outside duty days', dutyErr);
+            return;
+        }
+
         this.saving = true;
 
         const doctor = this.doctors.find((d) => d.PK === this.editAppt.doctorId);
@@ -372,24 +390,34 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
         this.showDetailDialog = true;
     }
 
-    // ── Delete ────────────────────────────────────────────────────────────────
-    onDelete(appt: Appointment) {
-        this.confirmationService.confirm({
-            message: `Delete appointment for ${appt.patientName}?`,
-            header: 'Confirm Delete',
-            icon: 'pi pi-trash',
-            rejectButtonProps: { label: 'No', severity: 'secondary', variant: 'text' },
-            acceptButtonProps: { label: 'Yes', severity: 'danger' },
-            accept: () => {
-                this.appointmentsService.deleteAppointment(appt.appointmentId).subscribe({
-                    next: () => {
-                        this._rows.set(this._rows().filter((a) => a.appointmentId !== appt.appointmentId));
-                        this.showDetailDialog = false;
-                        this.helpers.notifySuccess('Appointment deleted.');
-                        this.cd.detectChanges();
-                    },
-                    error: () => this.helpers.notifyError('Error', 'Failed to delete appointment.')
-                });
+    // ── Cancel (replaces delete) ───────────────────────────────────────────────
+    openCancel(appt: Appointment) {
+        this.appointmentToCancel = appt;
+        this.cancelReason = '';
+        this.showDetailDialog = false;
+        this.showCancelDialog = true;
+    }
+
+    confirmCancel() {
+        const appt = this.appointmentToCancel;
+        if (!appt) return;
+        const reason = (this.cancelReason || '').trim();
+        if (!reason) {
+            this.helpers.notifyError('Reason required', 'Please enter a reason for cancellation.');
+            return;
+        }
+        this.saving = true;
+        // Backend sets status=cancelled, cancelledAt and cancelledBy from the JWT.
+        this.appointmentsService.cancel(appt.appointmentId, reason).subscribe({
+            next: (updated) => {
+                this.updateRow(updated);
+                this.showCancelDialog = false;
+                this.saving = false;
+                this.helpers.notifySuccess('Appointment cancelled.');
+            },
+            error: (e) => {
+                this.saving = false;
+                this.helpers.notifyApiError('Error', e, 'Failed to cancel appointment.');
             }
         });
     }
@@ -421,6 +449,25 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
     }
     getPrioritySeverity(priority: string) {
         return PRIORITY_SEVERITY[priority] || 'secondary';
+    }
+
+    private weekdayName(date: Date): string {
+        return date.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+    }
+
+    /** Returns an error message if the date is not one of the doctor's duty days, else null. */
+    private dutyDayError(doctorPK: string | null, date: Date | null): string | null {
+        if (!doctorPK || !date) return null;
+        const doctor = this.doctors.find((d) => d.PK === doctorPK);
+        const days = (doctor?.dutyDays || []).map((d) => d.toLowerCase());
+        if (!days.length) return null; // no duty days configured → no restriction
+        const wd = this.weekdayName(date);
+        if (!days.includes(wd)) {
+            const pretty = days.map((d) => d.charAt(0).toUpperCase() + d.slice(1)).join(', ');
+            const wdCap = wd.charAt(0).toUpperCase() + wd.slice(1);
+            return `${doctor?.name || 'This doctor'} is on duty on: ${pretty}. ${wdCap} is not a duty day.`;
+        }
+        return null;
     }
 
     private updateRow(updated: Appointment) {

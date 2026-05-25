@@ -1,8 +1,10 @@
 # Admin Panel Module — Technical Documentation
 
-## Overview
+**Document version:** 2.0
+**Date:** 2026-05-25
+**Scope:** Frontend (Angular) + the `tiryaq-admin-panel` Lambda contract it consumes.
 
-The Admin Panel is a restricted module accessible only to users in the **Admin** or **Developers** Cognito groups. It provides system administration tools including user management, audit log browsing, system statistics, and GDPR data tools.
+> **What changed in 2.0:** Re-derived from `admin-panel.service.ts` and `tiryaq-admin-panel/index.js`. The current Lambda exposes **six** routes: stats, users, disable, enable, **set-password** (not "reset-password"), and audit. The previously-documented `/admin/gdpr/*` routes and the password-reset-email route are **not in the code** and have been removed. Hardcoded API base / user-pool IDs were removed in favour of config + environment.
 
 ---
 
@@ -11,296 +13,152 @@ The Admin Panel is a restricted module accessible only to users in the **Admin**
 | Component | Detail |
 |-----------|--------|
 | Lambda | `tiryaq-admin-panel` — Node.js 20.x |
-| API Base | `https://xy829e3qw2.execute-api.us-east-1.amazonaws.com` |
-| Database | DynamoDB — `Hospital` table |
-| Cognito | User Pool `us-east-1_K2smcI5zB` |
+| API base | `src/app/services/config.ts` (`Config.buildUrl(...)`) |
+| Database | DynamoDB `Hospital` table |
+| Cognito | User pool from `USER_POOL_ID` env (set by CDK) |
 | Auth | AWS SDK v3 `@aws-sdk/client-cognito-identity-provider` |
-| Access | Admin + Developers groups only |
+| Access | **Admin + Developers groups only** |
 
 ---
 
-## 2. API Routes
+## 2. Access control
 
-All routes require a valid Cognito JWT token in the `Authorization: Bearer <token>` header. All routes return 403 if the user is not in the Admin or Developers group.
-
-| Method | Route | Description |
-|--------|-------|-------------|
-| GET | `/admin/stats` | System statistics from DynamoDB |
-| GET | `/admin/users` | List all Cognito users with group membership |
-| POST | `/admin/users/{username}/disable` | Disable a Cognito user account |
-| POST | `/admin/users/{username}/enable` | Enable a Cognito user account |
-| POST | `/admin/users/{username}/reset-password` | Send password reset email |
-| GET | `/admin/audit` | Query the audit log |
-| GET | `/admin/gdpr/export` | Export all data for a patient |
-| POST | `/admin/gdpr/soft-delete` | Mark a patient as GDPR deleted |
-| POST | `/admin/gdpr/restore` | Restore a GDPR deleted patient |
+- **Lambda:** every route checks `isAdmin(event)` (matches `Admin`/`admin`/`Developer`/`Developers`) and returns `403 'Access denied: admin only'` otherwise.
+- **Route guard:** `app.routes.ts` → `{ path: 'admin-panel', canActivate: [roleGuard(ADMIN_ROLES)], component: AdminPanelComponent }`, `ADMIN_ROLES = ['admin', 'developer']`.
+- **Menu:** the **Administration** item appears only for Admin and Developer.
 
 ---
 
-## 3. Route Details
+## 3. API routes (consumed by `admin-panel.service.ts`)
+
+All routes require `Authorization: Bearer <jwt>`.
+
+| Method | Route | Service method | Description |
+|--------|-------|----------------|-------------|
+| GET | `/admin/stats` | `getStats()` | System counts |
+| GET | `/admin/users` | `getUsers(filter?, nextToken?)` | Cognito users + groups (paginated) |
+| POST | `/admin/users/{username}/disable` | `disableUser()` | Disable a user |
+| POST | `/admin/users/{username}/enable` | `enableUser()` | Enable a user |
+| POST | `/admin/users/{username}/set-password` | `setPassword(username, password)` | Set a **temporary** password (user must change at next login) |
+| GET | `/admin/audit` | `getAuditLog({...})` | Query the audit log |
 
 ### GET /admin/stats
 
-Returns total counts for the system.
-
-**Response:**
 ```json
-{
-  "totalPatients": 142,
-  "totalDoctors": 18,
-  "totalExams": 310,
-  "totalInvoices": 275
-}
+{ "totalPatients": 142, "totalDoctors": 18, "totalExams": 310, "totalInvoices": 275 }
 ```
 
-Patients and doctors are read from DynamoDB counter records (`COUNTER#PATIENTS` and `COUNTER#DOCTORS`). Exams and invoices are counted via the `EntityType-index` GSI.
-
----
+Patients/doctors come from `COUNTER#PATIENTS` / `COUNTER#DOCTORS`; exams/invoices are counted via `EntityType-index`.
 
 ### GET /admin/users
 
-Lists all users in the Cognito User Pool with their group membership.
+Query params: `limit` (default 60), `nextToken`, `filter` (Cognito filter e.g. `email ^= "omar"`).
 
-**Query parameters:**
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `limit` | number | Max users to return (default 60) |
-| `nextToken` | string | Pagination token from previous response |
-| `filter` | string | Cognito filter expression e.g. `email ^= "omar"` |
-
-**Response:**
 ```json
 {
   "users": [
     {
-      "username": "khalil",
-      "email": "khalil@tiryaq.com",
-      "name": "Khalil Hassan",
-      "status": "CONFIRMED",
-      "enabled": true,
-      "created": "2026-01-15T08:00:00.000Z",
-      "groups": ["Developers"]
+      "username": "doctor1", "email": "doctor1@tiryaq.com", "name": "Doctor One",
+      "sub": "…", "status": "CONFIRMED", "enabled": true,
+      "created": "2026-01-15T08:00:00.000Z", "modified": "…", "groups": ["Doctors"]
     }
   ],
   "nextToken": null
 }
 ```
 
-Group membership is fetched by checking all four groups: `Admin`, `Developers`, `Doctors`, `Pharmacists`.
+Group membership is computed by checking all four groups (`Admin`, `Developers`, `Doctors`, `Pharmacists`).
 
----
+### POST /admin/users/{username}/set-password
 
-### POST /admin/users/{username}/disable
+Body `{ "password": "<min 8 chars>" }`. Calls `AdminSetUserPassword` with `Permanent: false`, so Cognito flags the account to change the password on next login.
 
-Disables the user — they will not be able to log in until re-enabled.
-
-**Response:**
 ```json
-{ "message": "User khalil disabled successfully" }
+{ "message": "Temporary password set for doctor1. User must change it on next login." }
 ```
 
----
-
-### POST /admin/users/{username}/enable
-
-Re-enables a disabled user.
-
-**Response:**
-```json
-{ "message": "User khalil enabled successfully" }
-```
-
----
-
-### POST /admin/users/{username}/reset-password
-
-Triggers Cognito to send a password reset email to the user.
-
-**Response:**
-```json
-{ "message": "Password reset email sent to khalil" }
-```
-
----
+> There is **no** "send password reset email" route in the current Lambda. To rotate a password, an admin sets a temporary one here.
 
 ### GET /admin/audit
 
-Queries the audit log for a specific date with optional filters.
+Query params: `date` (default today, `YYYY-MM-DD`), `entityType`, `entityId`, `action`, `actor`, `limit` (default 100). Queries `PK = AUDIT#<date>`, `SK begins_with AUDIT#`, newest first.
 
-**Query parameters:**
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `date` | string | Date in `YYYY-MM-DD` format (defaults to today) |
-| `entityType` | string | Filter by entity: `EXAMINATION`, `PATIENT`, `DOCTOR`, `PAYMENT` |
-| `entityId` | string | Filter by specific record UUID |
-| `action` | string | Filter by action: `CREATE`, `UPDATE`, `DELETE`, `SIGNOFF`, `VIEW` |
-| `actor` | string | Filter by actor email |
-| `limit` | number | Max records to return (default 100) |
-
-**Response:**
 ```json
-{
-  "date": "2026-03-24",
-  "count": 5,
-  "items": [
-    {
-      "action": "SIGNOFF",
-      "entityType": "EXAMINATION",
-      "entityId": "abc-123",
-      "actorEmail": "omar@tiryaq.com",
-      "actorName": "Omar Rashidi",
-      "timestamp": "2026-03-24T09:15:00.000Z",
-      "changeSummary": "Examination signed off"
-    }
-  ]
-}
-```
-
-Audit records are stored in DynamoDB with `PK = AUDIT#YYYY-MM-DD` and `SK = AUDIT#<timestamp>#<uuid>`.
-
----
-
-### GET /admin/gdpr/export?patientId={id}
-
-Exports all data for a patient as a JSON response. The Angular frontend converts this to a multi-sheet Excel file using the `xlsx` library.
-
-**Response:**
-```json
-{
-  "exportedAt": "2026-03-24T11:00:00.000Z",
-  "patientId": "uuid-here",
-  "patient": { "...patient record..." },
-  "exams": [ "...examination records..." ],
-  "invoices": [ "...invoice records..." ]
-}
+{ "date": "2026-05-25", "count": 5, "items": [ /* audit rows */ ] }
 ```
 
 ---
 
-### POST /admin/gdpr/soft-delete
+## 4. Audit record schema (read-only here)
 
-Marks a patient as GDPR deleted by setting `gdprDeleted: true` on their DynamoDB record. The patient data is **not physically deleted** — it is hidden from all normal views. This can be reversed.
-
-**Request body:**
-```json
-{ "patientId": "uuid-here" }
-```
-
-**Response:**
-```json
-{ "message": "Patient marked as GDPR deleted", "patientId": "uuid-here" }
-```
-
----
-
-### POST /admin/gdpr/restore
-
-Removes the `gdprDeleted` flag, making the patient visible again in all views.
-
-**Request body:**
-```json
-{ "patientId": "uuid-here" }
-```
-
----
-
-## 4. DynamoDB — Audit Record Schema
-
-Audit records are written automatically by the `examinations.js` Lambda on every clinical action. The Admin Panel only reads them.
+Audit rows are written by the feature Lambdas (appointments, examinations, etc.) on mutating actions; the Admin Panel only reads them.
 
 | Attribute | Value |
 |-----------|-------|
 | `PK` | `AUDIT#YYYY-MM-DD` |
 | `SK` | `AUDIT#<ISO timestamp>#<uuid>` |
 | `EntityType` | `AUDIT` |
-| `action` | `CREATE`, `UPDATE`, `DELETE`, `SIGNOFF`, or `VIEW` |
-| `entityType` | The type of record affected, e.g. `EXAMINATION` |
+| `action` | `CREATE`, `UPDATE`, `DELETE`, `SIGNOFF`, … |
+| `entityType` | affected entity, e.g. `APPOINTMENT`, `EXAMINATION`, `PATIENT` |
 | `entityId` | UUID of the affected record |
-| `actorEmail` | Email of the user who performed the action |
-| `actorName` | Name of the user |
-| `timestamp` | ISO 8601 timestamp |
-| `changeSummary` | Plain text description of what changed |
-| `before` | JSON snapshot before the change (null for CREATE) |
-| `after` | JSON snapshot after the change (null for DELETE) |
+| `actorEmail` / `actorName` | who performed the action |
+| `ipAddress` | source IP (where captured) |
+| `timestamp` | ISO 8601 |
+| `before` / `after` | JSON snapshots (string) |
+
+The Angular `AuditItem` interface also includes `changeSummary` for display where present.
 
 ---
 
 ## 5. Frontend
 
-### Files
-
 | File | Location |
 |------|----------|
-| `admin-panel.ts` | `src/app/components/admin-panel/admin-panel.ts` |
-| `admin-panel.html` | `src/app/components/admin-panel/admin-panel.html` |
-| `admin-panel.scss` | `src/app/components/admin-panel/admin-panel.scss` |
-| `admin-panel.service.ts` | `src/app/pages/service/admin-panel.service.ts` |
-
-### Route
-
-```typescript
-{ path: 'admin-panel', component: AdminPanelComponent }
-```
-
-### Menu
-
-Visible only to Admin and Developers roles under the **Administration** section in `app.menu.ts`.
+| Component | `src/app/components/admin-panel/admin-panel.ts` |
+| Template | `src/app/components/admin-panel/admin-panel.html` |
+| Styles | `src/app/components/admin-panel/admin-panel.scss` |
+| Service | `src/app/services/admin-panel.service.ts` |
 
 ### Tabs
 
 | Tab | Content |
 |-----|---------|
-| Overview | 4 stat cards: total patients, doctors, exams, invoices |
-| User Management | Table of all Cognito users with enable/disable/reset actions |
-| Audit Log | Filterable table by date, entity type, action, actor email |
-| GDPR Tools | Patient search → Excel export → soft delete → restore |
+| Overview | 4 stat cards: patients, doctors, exams, invoices |
+| User Management | Cognito user table with enable / disable / set-temporary-password |
+| Audit Log | Filterable by date, entity type, action, actor email |
 
-### Role Check
+> Patient data lifecycle (soft-delete / restore) is handled in the **Patients** module via `DELETE /patients/{id}` (soft delete) and `PATCH /patients/{id}/restore`, not through admin-panel routes.
+
+### Role check
 
 ```typescript
-get isAdmin(): boolean {
-    return this.current.role === 'developer' || this.current.role === 'admin';
-}
+get isAdmin(): boolean { return this.current.role === 'admin'; }
+get isDeveloper(): boolean { return this.current.role === 'developer'; }
 ```
 
-The menu item and route are only accessible if `auth.isAdmin` returns true.
+The route guard uses `ADMIN_ROLES = ['admin', 'developer']`.
 
 ---
 
-## 6. IAM Policy Required
+## 6. IAM policy (granted by CDK)
 
-The Lambda execution role must have the following inline policy attached:
+The `tiryaq-admin-panel` execution role is granted, scoped to the user pool ARN:
 
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "cognito-idp:ListUsers",
-        "cognito-idp:ListUsersInGroup",
-        "cognito-idp:AdminGetUser",
-        "cognito-idp:AdminDisableUser",
-        "cognito-idp:AdminEnableUser",
-        "cognito-idp:AdminResetUserPassword"
-      ],
-      "Resource": "arn:aws:cognito-idp:us-east-1:075134876036:userpool/us-east-1_K2smcI5zB"
-    }
-  ]
-}
 ```
+cognito-idp:ListUsers
+cognito-idp:ListUsersInGroup
+cognito-idp:AdminDisableUser
+cognito-idp:AdminEnableUser
+cognito-idp:AdminSetUserPassword
+```
+
+plus read/write on the `Hospital` table and Encrypt/Decrypt on the data CMK (shared grant).
 
 ---
 
-## 7. Known Issues & Fixes
+## 7. Document control
 
-| Issue | Cause | Fix |
-|-------|-------|-----|
-| `Cannot find module 'aws-sdk'` | Node.js 20+ does not include SDK v2 | Switched to SDK v3 `@aws-sdk/client-cognito-identity-provider` |
-| `Illegal return statement` | Lambda runtime was Node.js 24 with `.mjs` file extension forcing ES modules | Changed runtime to Node.js 20.x and file to `.js` |
-| `User pool does not exist` | User Pool ID was lowercase `us-east-1_k2smci5zb` | Corrected to `us-east-1_K2smcI5zB` (case sensitive) |
-| `Access denied: admin only` | Cognito group `Developers` (with capital D and s) not matched | Added `Developers` to the allowed groups array in `isAdmin()` |
-| `cognito:groups` arrives as `"[Developers]"` string | API Gateway JWT authorizer serializes groups with square brackets | Strip `[` and `]` before splitting the string |
+| Version | Date | Change |
+|---------|------|--------|
+| 1.0 | — | Initial admin panel documentation |
+| 2.0 | 2026-05-25 | Matched to code: removed non-existent GDPR + reset-password routes; `set-password` documented; config/env instead of hardcoded IDs; corrected service path, route guard, IAM actions |

@@ -2,8 +2,11 @@ const { DynamoDBClient, ScanCommand, DeleteItemCommand } = require('@aws-sdk/cli
 
 const client = new DynamoDBClient({ region: 'us-east-1' });
 const TABLE = 'Hospital';
+// Keep reference/lookup data; wipe everything else INCLUDING the counters.
+// (createPatient / createDoctor recreate the counters lazily via
+//  `SET total = if_not_exists(total, :zero) + :inc` on first insert.)
 const KEEP_PREFIXES = ['SPECIALIZATION#', 'DEPARTMENT#'];
-const KEEP_EXACT    = ['COUNTER#PATIENTS', 'COUNTER#DOCTORS'];
+const KEEP_EXACT    = [];
 
 async function main() {
     let items = [], lastKey;
