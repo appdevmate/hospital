@@ -328,6 +328,13 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
     onUpdate() {
         if (!this.selectedAppointment) return;
 
+        // Defensive guard: the edit icon is hidden for these, but block here too
+        // in case the dialog was opened before the row changed state.
+        if (!this.canEdit(this.selectedAppointment)) {
+            this.helpers.notifyError('Cannot edit', 'A cancelled or past appointment can no longer be edited.');
+            return;
+        }
+
         // #2 — date must be one of the doctor's duty days
         const dutyErr = this.dutyDayError(this.editAppt.doctorId, this.editAppt.date);
         if (dutyErr) {
@@ -447,6 +454,23 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
     getStatusSeverity(status: string) {
         return STATUS_SEVERITY[status] || 'secondary';
     }
+
+    /**
+     * An appointment can be edited only while it is not cancelled and its date
+     * has not passed. Used to hide the edit (pencil) action; the backend also
+     * enforces this (security boundary — never trust the client).
+     */
+    canEdit(appt: Appointment): boolean {
+        if (!appt) return false;
+        if (appt.status === 'cancelled') return false;
+        return !this.isPastDate(appt.date);
+    }
+
+    /** True when the appointment's date (YYYY-MM-DD) is before today. */
+    private isPastDate(dateStr: string): boolean {
+        if (!dateStr) return false;
+        return dateStr < this.formatDate(new Date());
+    }
     getPrioritySeverity(priority: string) {
         return PRIORITY_SEVERITY[priority] || 'secondary';
     }
@@ -455,15 +479,25 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
         return date.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
     }
 
+    /**
+     * Normalises a weekday token to its 3-letter lowercase prefix so stored
+     * abbreviations ("Fri", "Mon") and full names ("Friday") compare equal.
+     * mon/tue/wed/thu/fri/sat/sun are all unique in their first 3 letters.
+     */
+    private normDay(d: string): string {
+        return String(d).toLowerCase().slice(0, 3);
+    }
+
     /** Returns an error message if the date is not one of the doctor's duty days, else null. */
     private dutyDayError(doctorPK: string | null, date: Date | null): string | null {
         if (!doctorPK || !date) return null;
         const doctor = this.doctors.find((d) => d.PK === doctorPK);
-        const days = (doctor?.dutyDays || []).map((d) => d.toLowerCase());
-        if (!days.length) return null; // no duty days configured → no restriction
+        const rawDays = doctor?.dutyDays || [];
+        if (!rawDays.length) return null; // no duty days configured → no restriction
+        const days = rawDays.map((d) => this.normDay(d));
         const wd = this.weekdayName(date);
-        if (!days.includes(wd)) {
-            const pretty = days.map((d) => d.charAt(0).toUpperCase() + d.slice(1)).join(', ');
+        if (!days.includes(this.normDay(wd))) {
+            const pretty = rawDays.join(', ');
             const wdCap = wd.charAt(0).toUpperCase() + wd.slice(1);
             return `${doctor?.name || 'This doctor'} is on duty on: ${pretty}. ${wdCap} is not a duty day.`;
         }

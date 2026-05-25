@@ -16,7 +16,9 @@
     <div style="display:flex; align-items:center; justify-content:center; gap:2px; flex-wrap:nowrap;">
         <p-button icon="pi pi-eye" text severity="info" (onClick)="openDetail(row)" pTooltip="View" tooltipPosition="top" />
         @if (auth.isAdmin || auth.isDeveloper) {
+        @if (canEdit(row)) {
         <p-button icon="pi pi-pencil" text (onClick)="openEdit(row)" pTooltip="Edit" tooltipPosition="top" />
+        }
         @if (row.status !== 'cancelled' && row.status !== 'completed') {
         <p-button icon="pi pi-ban" text severity="danger" (onClick)="openCancel(row)" pTooltip="Cancel" tooltipPosition="top" />
         }
