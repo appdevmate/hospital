@@ -389,6 +389,11 @@ export class PharmacyComponent implements OnInit {
         this.approvalFile = input.files && input.files.length ? input.files[0] : null;
     }
 
+    clearApprovalFile(input?: HTMLInputElement) {
+        this.approvalFile = null;
+        if (input) input.value = '';
+    }
+
     doDispense(overrideAllergy = false, approvalDocumentKey?: string, approvalDocumentName?: string) {
         if (!this.dispensingRx || !this.dispenseForm.medId) {
             this.helpers.notifyError('Validation', 'Select the inventory medication to dispense');

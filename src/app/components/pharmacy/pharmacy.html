@@ -585,7 +585,7 @@
 
 <!-- ── Dispense Dialog ── -->
 <p-dialog [(visible)]="showDispenseDialog" [modal]="true" [closable]="true" header="Dispense Medication"
-    [style]="{'width':'540px'}" appendTo="body">
+    [style]="{'width':'680px'}" [breakpoints]="{'960px':'92vw'}" appendTo="body">
     @if (dispensingRx) {
     <div class="dialog-form">
 
@@ -616,9 +616,23 @@
         </div>
         <div class="mb-3">
             <label class="field-label">Doctor-approved document *</label>
-            <input type="file" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx" (change)="onApprovalFileSelect($event)" />
-            @if (approvalFile) {
-            <div class="text-xs text-surface-500 mt-1"><i class="pi pi-paperclip"></i> {{ approvalFile.name }}</div>
+            <input type="file" #approvalInput accept=".pdf,.png,.jpg,.jpeg,.doc,.docx" (change)="onApprovalFileSelect($event)" class="hidden" />
+            @if (!approvalFile) {
+            <div class="flex flex-col items-center justify-center py-8 px-4 border-2 border-dashed border-surface-300 dark:border-surface-600 rounded-xl text-muted-color cursor-pointer select-none transition-colors hover:border-primary hover:text-primary"
+                (click)="approvalInput.click()">
+                <i class="pi pi-cloud-upload text-4xl mb-2 text-primary"></i>
+                <p class="m-0 font-medium">Click to choose the document</p>
+                <p class="m-0 text-sm mt-1">PDF, image, or Word · max 50 MB</p>
+            </div>
+            } @else {
+            <div class="flex items-center gap-3 p-3 rounded-lg border border-surface-200 dark:border-surface-700">
+                <i class="pi pi-file text-2xl text-primary flex-shrink-0"></i>
+                <div class="flex flex-col flex-1 min-w-0">
+                    <span class="font-medium truncate">{{ approvalFile.name }}</span>
+                    <span class="text-muted-color text-sm">Ready to upload</span>
+                </div>
+                <p-button icon="pi pi-times" rounded text severity="danger" (onClick)="clearApprovalFile(approvalInput)" pTooltip="Remove" />
+            </div>
             }
         </div>
         }

@@ -15,7 +15,7 @@
 <ng-template #rowActions let-row>
     <div style="display:flex; align-items:center; justify-content:center; gap:2px; flex-wrap:nowrap;">
         <p-button icon="pi pi-eye" text severity="info" (onClick)="openDetail(row)" pTooltip="View" tooltipPosition="top" />
-        @if (auth.isAdmin || auth.isDeveloper) {
+        @if (auth.isAdmin || auth.isDeveloper || auth.isDoctor) {
         @if (canEdit(row)) {
         <p-button icon="pi pi-pencil" text (onClick)="openEdit(row)" pTooltip="Edit" tooltipPosition="top" />
         }
@@ -295,7 +295,7 @@
 
         <hr style="border:none; border-top:1px solid #F3F4F6; margin:0;" />
         <div style="display:flex; justify-content:space-between; align-items:center;">
-            @if ((auth.isAdmin || auth.isDeveloper) && selectedAppointment.status !== 'cancelled' && selectedAppointment.status !== 'completed') {
+            @if ((auth.isAdmin || auth.isDeveloper || auth.isDoctor) && selectedAppointment.status !== 'cancelled' && selectedAppointment.status !== 'completed') {
             <p-button label="Cancel Appointment" severity="danger" [outlined]="true" icon="pi pi-ban"
                 (click)="openCancel(selectedAppointment!)" />
             } @else {

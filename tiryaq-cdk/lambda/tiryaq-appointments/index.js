@@ -333,15 +333,17 @@ exports.handler = async (event) => {
         if (!existing.Item) return err(404, 'Appointment not found');
         const appt = existing.Item;
 
-        // Only admin can update, or doctor can update status of their own appointment
+        // Admins update any appointment. Doctors may edit/cancel only their OWN
+        // appointment, and must not reassign it to another doctor or patient.
         if (!caller.isAdmin) {
-            if (caller.isDoctor && appt.doctorEmail === caller.email) {
-                // Doctor can only update status, checkedInAt, checkedOutAt, notes
-                const allowedFields = ['status', 'checkedInAt', 'checkedOutAt', 'notes', 'cancelReason', 'encounterId'];
-                const attempted = Object.keys(body).filter(k => !allowedFields.includes(k));
-                if (attempted.length > 0) return err(403, `Doctors can only update: ${allowedFields.join(', ')}`);
-            } else {
+            if (!(caller.isDoctor && appt.doctorEmail === caller.email)) {
                 return err(403, 'Unauthorized to update this appointment');
+            }
+            if (body.doctorEmail && body.doctorEmail.toLowerCase().trim() !== caller.email) {
+                return err(403, 'Doctors cannot reassign an appointment to another doctor');
+            }
+            if (body.patientId && body.patientId !== appt.patientId) {
+                return err(403, 'Doctors cannot change the patient on an appointment');
             }
         }
 

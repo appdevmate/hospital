@@ -165,7 +165,7 @@
                             style="display:flex;flex-direction:column;align-items:flex-end;gap:0.5rem;">
                             <p-tag [value]="appt.status | titlecase" [severity]="getApptStatusSeverity(appt.status)" />
                             @if (auth.isDoctor && appt.status === 'in-progress') {
-                            <p-button label="Start Consultation" icon="pi pi-file-medical" severity="success"
+                            <p-button [label]="appt.encounterId ? 'Resume Consultation' : 'Start Consultation'" icon="pi pi-file-medical" severity="success"
                                 size="small" [loading]="startingConsultation === appt.appointmentId"
                                 (onClick)="startConsultation(appt)" />
                             }

@@ -589,6 +589,15 @@ export class TiryaqStack extends cdk.Stack {
             })
         );
 
+        // Document manager signs pre-signed URLs for the tiryaq-documents bucket,
+        // so its execution role needs S3 object access on that bucket.
+        documentManagerFn.addToRolePolicy(
+            new iam.PolicyStatement({
+                actions: ['s3:PutObject', 's3:GetObject', 's3:DeleteObject', 's3:ListBucket'],
+                resources: ['arn:aws:s3:::tiryaq-documents', 'arn:aws:s3:::tiryaq-documents/*']
+            })
+        );
+
         // ─────────────────────────────────────────────────────────────────────
         // Seed Lambda — departments, specializations, counters
         // ─────────────────────────────────────────────────────────────────────
@@ -902,9 +911,13 @@ exports.handler = async (event) => {
         route('/pharmacy/purchase-orders', [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.POST], pharmacyFn);
         route('/pharmacy/purchase-orders/{poId}', [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.PATCH], pharmacyFn);
         route('/pharmacy/alerts', [apigwv2.HttpMethod.GET], pharmacyFn);
-        route('/documents', [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.POST], documentManagerFn);
-        route('/documents/{documentId}', [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.DELETE], documentManagerFn);
-        route('/documents/{documentId}/presign', [apigwv2.HttpMethod.GET], documentManagerFn);
+        // Document manager — paths match the tiryaq-document-manager Lambda's
+        // internal router and the Angular DocumentService calls.
+        route('/documents/upload-url', [apigwv2.HttpMethod.POST], documentManagerFn);
+        route('/documents/download-url', [apigwv2.HttpMethod.POST], documentManagerFn);
+        route('/documents/list', [apigwv2.HttpMethod.GET], documentManagerFn);
+        route('/documents/folders', [apigwv2.HttpMethod.GET], documentManagerFn);
+        route('/documents/delete', [apigwv2.HttpMethod.DELETE], documentManagerFn);
         route('/audit', [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.POST], auditFn);
         route('/appointments', [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.POST], appointmentsFn);
         route('/appointments/{apptId}', [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.PATCH, apigwv2.HttpMethod.DELETE], appointmentsFn);

@@ -15,6 +15,7 @@ const PATIENTS_ROLES: UserRole[] = ['admin', 'developer', 'doctor'];
 const ADMIN_ROLES: UserRole[] = ['admin', 'developer'];
 const PHARMACY_ROLES: UserRole[] = ['pharmacist'];
 const SCRIBE_ROLES: UserRole[] = ['admin', 'developer', 'doctor'];
+const DOCS_ROLES: UserRole[] = ['admin', 'developer', 'doctor'];
 
 export const appRoutes: Routes = [
     {
@@ -67,7 +68,7 @@ export const appRoutes: Routes = [
             { path: 'admin-panel', canActivate: [roleGuard(ADMIN_ROLES)], component: AdminPanelComponent },
 
             // Open to all authenticated users
-            { path: 'documents', data: { breadcrumb: 'Documents' }, loadComponent: () => import('@/components/documents/document-manager/document-manager').then((m) => m.DocumentManagerComponent) },
+            { path: 'documents', data: { breadcrumb: 'Documents' }, canActivate: [roleGuard(DOCS_ROLES)], loadComponent: () => import('@/components/documents/document-manager/document-manager').then((m) => m.DocumentManagerComponent) },
             { path: 'calendar', data: { breadcrumb: 'Calendar' }, loadComponent: () => import('@/components/hospital-calendar/hospital-calendar').then((m) => m.HospitalCalendarComponent) },
             { path: 'appointments', data: { breadcrumb: 'Appointments' }, loadComponent: () => import('@/components/appointments/appointments').then((m) => m.AppointmentsComponent) },
             { path: 'invoices', data: { breadcrumb: 'Invoices' }, loadComponent: () => import('@/components/invoices/invoices').then((m) => m.InvoicesComponent) },

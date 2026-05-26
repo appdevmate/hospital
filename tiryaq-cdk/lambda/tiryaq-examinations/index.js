@@ -220,6 +220,7 @@ exports.handler = async (event) => {
             doctorId:        body.doctorId    || id,
             doctorName:      body.doctorName  || '',
             doctorEmail:     body.doctorEmail.toLowerCase().trim(),
+            appointmentId:   body.appointmentId || null,
             date:            body.date        || now.slice(0, 10),
             status:          'draft',
             signedOffAt:     null,
@@ -419,6 +420,24 @@ exports.handler = async (event) => {
         await writeAudit('SIGNOFF', 'EXAMINATION', examId,
             body.doctorEmail || exam.doctorEmail, body.doctorName || exam.doctorName,
             { status: 'draft' }, { status: 'completed', signedOffAt: now }, ipAddress);
+
+        // Closing a consultation completes its linked appointment, so it no
+        // longer shows "Start Consultation". Non-critical and skips a cancelled
+        // appointment — never fail the sign-off on this.
+        if (exam.appointmentId) {
+            try {
+                await db.send(new UpdateCommand({
+                    TableName:                 TABLE_NAME,
+                    Key:                       { PK: `APPOINTMENT#${exam.appointmentId}`, SK: 'PROFILE' },
+                    UpdateExpression:          'SET #status = :completed, #updatedAt = :ua, #updatedBy = :ub, #checkedOutAt = if_not_exists(#checkedOutAt, :ua)',
+                    ExpressionAttributeNames:  { '#status': 'status', '#updatedAt': 'updatedAt', '#updatedBy': 'updatedBy', '#checkedOutAt': 'checkedOutAt' },
+                    ExpressionAttributeValues: { ':completed': 'completed', ':ua': now, ':ub': (body.doctorEmail || exam.doctorEmail || 'system'), ':cancelled': 'cancelled' },
+                    ConditionExpression:       'attribute_exists(PK) AND #status <> :cancelled'
+                }));
+            } catch (e) {
+                // Appointment missing or already cancelled — ignore.
+            }
+        }
 
         const updated = await db.send(new GetCommand({
             TableName: TABLE_NAME,

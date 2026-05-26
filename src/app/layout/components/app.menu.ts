@@ -46,6 +46,7 @@ export class AppMenu implements OnInit {
             { label: 'Notifications', icon: 'pi pi-bell', routerLink: ['/notifications'] },
             { label: 'Patients', icon: 'pi pi-user-plus', routerLink: ['/patients-management'] },
             { label: 'Doctors Management', icon: 'pi pi-briefcase', routerLink: ['/doctors-management'] },
+            { label: 'Documents', icon: 'pi pi-folder', routerLink: ['/documents'] },
             {
                 label: 'Administration',
                 icon: 'pi pi-shield',
@@ -66,6 +67,7 @@ export class AppMenu implements OnInit {
             { label: 'Patients', icon: 'pi pi-user-plus', routerLink: ['/patients-management'] },
             { label: 'Doctors Management', icon: 'pi pi-briefcase', routerLink: ['/doctors-management'] },
             { label: 'Voice Scribe', icon: 'pi pi-microphone', routerLink: ['/voice-scribe'] },
+            { label: 'Documents', icon: 'pi pi-folder', routerLink: ['/documents'] },
             {
                 label: 'Administration',
                 icon: 'pi pi-shield',
@@ -76,7 +78,8 @@ export class AppMenu implements OnInit {
         const doctorOnlyItems: MenuItem[] = [
             { separator: true },
             { label: 'Patients', icon: 'pi pi-user-plus', routerLink: ['/patients-management'] },
-            { label: 'Voice Scribe', icon: 'pi pi-microphone', routerLink: ['/voice-scribe'] }
+            { label: 'Voice Scribe', icon: 'pi pi-microphone', routerLink: ['/voice-scribe'] },
+            { label: 'Documents', icon: 'pi pi-folder', routerLink: ['/documents'] }
         ];
 
         const pharmacistItems: MenuItem[] = [{ separator: true }, { label: 'Pharmacy', icon: 'pi pi-heart-fill', routerLink: ['/pharmacy'] }];

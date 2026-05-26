@@ -76,8 +76,14 @@ export class PatientProfileComponent implements OnInit {
         });
     }
 
-    // ── Start Consultation from appointment ───────────────────────────────
+    // ── Start / resume consultation from appointment ──────────────────────
     startConsultation(appt: Appointment) {
+        // Already linked to a consultation → resume it (don't create a duplicate).
+        if (appt.encounterId) {
+            this.router.navigate(['/consultation', appt.encounterId]);
+            return;
+        }
+
         this.startingConsultation = appt.appointmentId;
 
         this.appointmentsService
@@ -94,10 +100,14 @@ export class PatientProfileComponent implements OnInit {
                     })
                     .subscribe({
                         next: (c) => {
-                            console.log('CONSULTATION CREATED:', JSON.stringify(c));
                             this.startingConsultation = null;
                             const id = c.consultationId || (c as any).examId;
-                            console.log('NAVIGATING TO:', id);
+                            // Link the consultation to the appointment so we can resume it
+                            // and so closing it can complete the appointment.
+                            if (id) {
+                                appt.encounterId = id;
+                                this.appointmentsService.linkEncounter(appt.appointmentId, id).subscribe({ error: () => {} });
+                            }
                             this.router.navigate(['/consultation', id]);
                         },
                         error: (err) => {
