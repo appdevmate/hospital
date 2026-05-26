@@ -589,14 +589,8 @@ export class TiryaqStack extends cdk.Stack {
             })
         );
 
-        // Document manager signs pre-signed URLs for the tiryaq-documents bucket,
-        // so its execution role needs S3 object access on that bucket.
-        documentManagerFn.addToRolePolicy(
-            new iam.PolicyStatement({
-                actions: ['s3:PutObject', 's3:GetObject', 's3:DeleteObject', 's3:ListBucket'],
-                resources: ['arn:aws:s3:::tiryaq-documents', 'arn:aws:s3:::tiryaq-documents/*']
-            })
-        );
+        // Documents bucket access is granted on the bucket construct below
+        // (see TiryaqDocumentsBucket), so no cross-account inline policy here.
 
         // ─────────────────────────────────────────────────────────────────────
         // Seed Lambda — departments, specializations, counters
@@ -1005,6 +999,33 @@ exports.handler = async (event) => {
         );
 
         // ─────────────────────────────────────────────────────────────────────
+        // Documents bucket (owned by THIS account)
+        // The old `tiryaq-documents` name belongs to a different account, which
+        // is why CORS could never be set. We create our own account-scoped
+        // bucket and declare CORS as a property so browser→S3 pre-signed PUT/GET
+        // uploads are allowed. The Lambda reads the name from DOCUMENTS_BUCKET.
+        // ─────────────────────────────────────────────────────────────────────
+        const documentsBucket = new s3.Bucket(this, 'TiryaqDocumentsBucket', {
+            bucketName: `tiryaq-documents-${accountId}-${region}`,
+            blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+            encryption: s3.BucketEncryption.S3_MANAGED,
+            enforceSSL: true,
+            versioned: true,
+            removalPolicy: cdk.RemovalPolicy.RETAIN,
+            cors: [
+                {
+                    allowedHeaders: ['*'],
+                    allowedMethods: [s3.HttpMethods.GET, s3.HttpMethods.PUT, s3.HttpMethods.POST, s3.HttpMethods.HEAD],
+                    allowedOrigins,
+                    exposedHeaders: ['ETag', 'Content-Length', 'Content-Type'],
+                    maxAge: 3600
+                }
+            ]
+        });
+        documentsBucket.grantReadWrite(documentManagerFn);
+        documentManagerFn.addEnvironment('DOCUMENTS_BUCKET', documentsBucket.bucketName);
+
+        // ─────────────────────────────────────────────────────────────────────
         // Outputs
         // ─────────────────────────────────────────────────────────────────────
         new cdk.CfnOutput(this, 'ApiUrl', { value: api.apiEndpoint, description: 'HTTP API URL → update Config.ts tiryaqUrl' });
@@ -1014,5 +1035,6 @@ exports.handler = async (event) => {
         new cdk.CfnOutput(this, 'AppClientId', { value: appClient.userPoolClientId, description: 'Cognito App Client ID → update app.config.ts clientId' });
         new cdk.CfnOutput(this, 'DistributionId', { value: distribution.distributionId, description: 'CloudFront Distribution ID → cache invalidation' });
         new cdk.CfnOutput(this, 'CognitoAuthority', { value: `https://cognito-idp.${region}.amazonaws.com/${userPool.userPoolId}`, description: 'Cognito authority URL → update app.config.ts' });
+        new cdk.CfnOutput(this, 'DocumentsBucketName', { value: documentsBucket.bucketName, description: 'Documents bucket (uploads via pre-signed URLs)' });
     }
 }

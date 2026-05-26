@@ -6,7 +6,7 @@ const { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand, ListO
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 
 const REGION = 'us-east-1';
-const BUCKET = 'tiryaq-documents';
+const BUCKET = process.env.DOCUMENTS_BUCKET || 'tiryaq-documents';
 const URL_EXPIRY = 300; // 5 minutes
 
 const s3 = new S3Client({ region: REGION });
