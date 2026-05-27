@@ -148,6 +148,66 @@ function normDay(d) {
     return String(d).toLowerCase().slice(0, 3);
 }
 
+// ── Calendar mirroring (#4) ────────────────────────────────────────────────
+// Find the doctor's calendar (tagged with doctorEmail) or create one.
+async function findOrCreateDoctorCalendar(doctorEmail, doctorName, now) {
+    if (!doctorEmail) return null;
+    const q = await db.send(new QueryCommand({
+        TableName:                 TABLE_NAME,
+        IndexName:                 'EntityType-index',
+        KeyConditionExpression:    'EntityType = :et',
+        FilterExpression:          'doctorEmail = :de',
+        ExpressionAttributeValues: { ':et': 'CALENDAR', ':de': doctorEmail }
+    }));
+    if (q.Items && q.Items.length) return q.Items[0].calendarId;
+
+    const calendarId = randomUUID();
+    await db.send(new PutCommand({
+        TableName: TABLE_NAME,
+        Item: {
+            PK:          `CALENDAR#${calendarId}`,
+            SK:          'PROFILE',
+            EntityType:  'CALENDAR',
+            calendarId,
+            name:        doctorName ? `Dr. ${doctorName}` : doctorEmail,
+            description: `Auto-created schedule for ${doctorEmail}`,
+            doctorEmail,
+            dataClass:   'PHI',
+            createdAt:   now,
+            updatedAt:   now
+        },
+        ConditionExpression: 'attribute_not_exists(PK)'
+    }));
+    return calendarId;
+}
+
+// Create a CALENDAR_EVENT mirroring the appointment on the doctor's calendar.
+async function createCalendarEventForAppointment(appt, now) {
+    const calendarId = await findOrCreateDoctorCalendar(appt.doctorEmail, appt.doctorName, now);
+    if (!calendarId) return;
+    const eventId = randomUUID();
+    await db.send(new PutCommand({
+        TableName: TABLE_NAME,
+        Item: {
+            PK:            `CALENDAR#${calendarId}`,
+            SK:            `EVENT#${eventId}`,
+            EntityType:    'CALENDAR_EVENT',
+            eventId,
+            calendarId,
+            name:          `Appointment: ${appt.patientName}`,
+            description:   `${appt.visitType || 'visit'} · ${appt.department || ''}`.trim(),
+            startDate:     `${appt.date}T${appt.startTime}:00`,
+            endDate:       `${appt.date}T${appt.endTime}:00`,
+            color:         '#10b981',
+            recurrence:    null,
+            appointmentId: appt.appointmentId,
+            dataClass:     'PHI',
+            createdAt:     now,
+            updatedAt:     now
+        }
+    }));
+}
+
 // ── Handler ───────────────────────────────────────────────────────────────────
 exports.handler = async (event) => {
     const method    = event.requestContext?.http?.method || event.httpMethod;
@@ -244,6 +304,9 @@ exports.handler = async (event) => {
         );
 
         await writeAudit('CREATE', id, caller.email, caller.name, null, appointment, ipAddress);
+
+        // #4 — mirror the appointment onto the doctor's calendar (non-critical).
+        try { await createCalendarEventForAppointment(appointment, now); } catch (_) {}
 
         return res(201, appointment);
     }

@@ -37,6 +37,11 @@
     <p-tag [value]="value | titlecase" [severity]="getStatusSeverity(value)" />
 </ng-template>
 
+<!-- Type custom template -->
+<ng-template #typeTemplate let-value="value">
+    <p-tag [value]="value | titlecase" [severity]="getVisitTypeSeverity(value)" />
+</ng-template>
+
 <!-- Priority custom template -->
 <ng-template #priorityTemplate let-value="value">
     <p-tag [value]="value | titlecase" [severity]="getPrioritySeverity(value)" />

@@ -224,9 +224,10 @@ export class AppMenuitem implements OnInit, OnDestroy {
             this.item.command({ originalEvent: event, item: this.item });
         }
 
-        if ((event.metaKey || event.ctrlKey) && this.item.routerLink && (!this.item.data || !this.item.data.fullPage)) {
-            this.layoutService.onTabOpen(this.item);
-            event.preventDefault();
+        // Ctrl/Cmd/middle-click → let the browser open the routerLink in a new
+        // tab natively (the <a> has an href). Do not intercept or preventDefault.
+        if ((event.metaKey || event.ctrlKey) && this.item.routerLink) {
+            return;
         }
 
         if (this.item.items) {

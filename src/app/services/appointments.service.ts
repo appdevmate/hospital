@@ -43,6 +43,8 @@ export interface Appointment {
     createdAt: string;
     updatedAt: string | null;
     updatedBy?: string | null;
+    // UI-only: weekday label derived from `date` (not persisted).
+    dayName?: string;
 }
 
 export interface CreateAppointmentRequest {

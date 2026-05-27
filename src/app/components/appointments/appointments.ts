@@ -39,6 +39,15 @@ const PRIORITY_SEVERITY: Record<string, 'success' | 'warn' | 'danger' | 'seconda
     emergency: 'danger'
 };
 
+const VISIT_TYPE_SEVERITY: Record<string, 'success' | 'warn' | 'danger' | 'secondary' | 'info' | 'contrast'> = {
+    scheduled: 'info',
+    'walk-in': 'secondary',
+    emergency: 'danger',
+    referral: 'warn',
+    'follow-up': 'success',
+    'check-up': 'contrast'
+};
+
 @Component({
     selector: 'app-appointments',
     standalone: true,
@@ -52,6 +61,7 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
     @ViewChild('statusTemplate') statusTemplate!: TemplateRef<any>;
     @ViewChild('priorityTemplate') priorityTemplate!: TemplateRef<any>;
     @ViewChild('durationTemplate') durationTemplate!: TemplateRef<any>;
+    @ViewChild('typeTemplate') typeTemplate!: TemplateRef<any>;
 
     // ── Services ─────────────────────────────────────────────────────────────
     private appointmentsService = inject(AppointmentsService);
@@ -132,6 +142,7 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
 
     columns: TableColumn[] = [
         { field: 'date', header: 'Date', sortable: true, filterable: true, type: 'date', pipe: 'date', dateFormat: 'MMM d, y', width: '130px' },
+        { field: 'dayName', header: 'Day', sortable: true, filterable: true, width: '110px' },
         { field: 'startTime', header: 'Start', sortable: false, filterable: false, width: '80px' },
         { field: 'endTime', header: 'End', sortable: false, filterable: false, width: '80px' },
         { field: 'duration', header: 'Duration', sortable: true, filterable: false, customTemplate: true, width: '100px' },
@@ -139,7 +150,7 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
         { field: 'doctorName', header: 'Doctor', sortable: true, filterable: true, pipe: 'titlecase' },
         { field: 'department', header: 'Department', sortable: true, filterable: true, pipe: 'titlecase' },
         { field: 'chiefComplaint', header: 'Chief Complaint', sortable: false, filterable: true, showTooltip: true },
-        { field: 'visitType', header: 'Type', sortable: true, filterable: true, pipe: 'titlecase', width: '120px' },
+        { field: 'visitType', header: 'Type', sortable: true, filterable: true, customTemplate: true, width: '120px' },
         { field: 'priority', header: 'Priority', sortable: true, filterable: true, customTemplate: true, width: '110px' },
         { field: 'status', header: 'Status', sortable: true, filterable: true, customTemplate: true, width: '130px' },
         { field: 'notes', header: 'Notes', sortable: false, filterable: true, showTooltip: true }
@@ -155,7 +166,8 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
         this._customTemplates.set({
             status: this.statusTemplate,
             priority: this.priorityTemplate,
-            duration: this.durationTemplate
+            duration: this.durationTemplate,
+            visitType: this.typeTemplate
         });
     }
 
@@ -167,7 +179,7 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
             doctors: this.doctorsService.getDoctorsPage({ pageSize: 200 }).pipe(catchError(() => of({ data: [] }))),
             patients: this.patientsService.getPatientsPage({ pageSize: 200 }).pipe(catchError(() => of({ data: [] })))
         }).subscribe(({ appointments, doctors, patients }) => {
-            this._rows.set(appointments);
+            this._rows.set((appointments as Appointment[]).map((a) => ({ ...a, dayName: this.weekdayLabel(a.date) })));
             this.doctors = (doctors as any).data || [];
             this.patients = (patients as any).data || [];
             this._loading.set(false);
@@ -290,7 +302,7 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
 
         this.appointmentsService.createAppointment(data).subscribe({
             next: (appt) => {
-                this._rows.set([appt, ...this._rows()]);
+                this._rows.set([{ ...appt, dayName: this.weekdayLabel(appt.date) }, ...this._rows()]);
                 this.showCreateDialog = false;
                 this.saving = false;
                 this.helpers.notifySuccess(`Appointment booked: ${patient?.name} with ${doctor?.name}`);
@@ -377,7 +389,7 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
                 next: (updated) => {
                     const rows = [...this._rows()];
                     const idx = rows.findIndex((a) => a.appointmentId === updated.appointmentId);
-                    if (idx !== -1) rows[idx] = updated;
+                    if (idx !== -1) rows[idx] = { ...updated, dayName: this.weekdayLabel(updated.date) };
                     this._rows.set(rows);
                     this.showEditDialog = false;
                     this.saving = false;
@@ -475,6 +487,17 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
         return PRIORITY_SEVERITY[priority] || 'secondary';
     }
 
+    getVisitTypeSeverity(visitType: string) {
+        return VISIT_TYPE_SEVERITY[visitType] || 'secondary';
+    }
+
+    /** Full weekday name from a YYYY-MM-DD date string (e.g. "Friday"). */
+    private weekdayLabel(dateStr: string): string {
+        if (!dateStr) return '';
+        const d = new Date(`${dateStr}T00:00:00`);
+        return isNaN(d.getTime()) ? '' : d.toLocaleDateString('en-US', { weekday: 'long' });
+    }
+
     private weekdayName(date: Date): string {
         return date.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
     }
@@ -507,7 +530,7 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
     private updateRow(updated: Appointment) {
         const rows = [...this._rows()];
         const idx = rows.findIndex((a) => a.appointmentId === updated.appointmentId);
-        if (idx !== -1) rows[idx] = updated;
+        if (idx !== -1) rows[idx] = { ...updated, dayName: this.weekdayLabel(updated.date) };
         this._rows.set(rows);
         this.showDetailDialog = false;
         this.cd.detectChanges();

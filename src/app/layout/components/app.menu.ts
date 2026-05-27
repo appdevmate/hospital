@@ -66,7 +66,6 @@ export class AppMenu implements OnInit {
             { separator: true },
             { label: 'Patients', icon: 'pi pi-user-plus', routerLink: ['/patients-management'] },
             { label: 'Doctors Management', icon: 'pi pi-briefcase', routerLink: ['/doctors-management'] },
-            { label: 'Voice Scribe', icon: 'pi pi-microphone', routerLink: ['/voice-scribe'] },
             { label: 'Documents', icon: 'pi pi-folder', routerLink: ['/documents'] },
             {
                 label: 'Administration',
