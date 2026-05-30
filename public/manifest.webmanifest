@@ -1,0 +1,13 @@
+{
+  "name": "Tiryaq",
+  "short_name": "Tiryaq",
+  "theme_color": "#10b981",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
+  "orientation": "any",
+  "icons": [
+    { "src": "/favicon.ico", "sizes": "64x64", "type": "image/x-icon" }
+  ]
+}

@@ -1,7 +1,8 @@
-import { ApplicationConfig } from '@angular/core';
+import { ApplicationConfig, isDevMode } from '@angular/core';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { PreloadAllModules, provideRouter, withEnabledBlockingInitialNavigation, withInMemoryScrolling, withPreloading } from '@angular/router';
+import { provideServiceWorker } from '@angular/service-worker';
 import Aura from '@primeuix/themes/aura';
 import { providePrimeNG } from 'primeng/config';
 import { appRoutes } from './app.routes';
@@ -38,6 +39,14 @@ export const appConfig: ApplicationConfig = {
             }
         }),
         MessageService,
-        ConfirmationService
+        ConfirmationService,
+        // Offline mode — Phase A: register Angular Service Worker (PWA shell)
+        // so the app loads + browses cached pages without a network.
+        // Enabled only in production builds; registers after the app is stable
+        // (so it doesn't compete with initial load).
+        provideServiceWorker('ngsw-worker.js', {
+            enabled: !isDevMode(),
+            registrationStrategy: 'registerWhenStable:30000'
+        })
     ]
 };
