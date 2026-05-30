@@ -32,14 +32,14 @@ export const authGuard: CanActivateFn = async (_route, state) => {
 
         // After any login redirect (initial load or expired-token re-login),
         // send the user back to where they came from.
-        const returnUrl = sessionStorage.getItem('returnUrl');
+        const returnUrl = localStorage.getItem('returnUrl');
         if (
             returnUrl &&
             returnUrl.startsWith('/') &&
             !returnUrl.startsWith('//') &&
             returnUrl !== state.url
         ) {
-            sessionStorage.removeItem('returnUrl');
+            localStorage.removeItem('returnUrl');
             // Return a UrlTree so Angular navigates in the same routing cycle.
             return router.parseUrl(returnUrl) as boolean | UrlTree;
         }
@@ -48,7 +48,10 @@ export const authGuard: CanActivateFn = async (_route, state) => {
     }
 
     // Not authenticated — save where the user was heading, then go to Cognito.
-    sessionStorage.setItem('returnUrl', state.url);
+    // Using localStorage so the value survives the Cognito round-trip + works
+    // when a new tab opens a deep link (sessionStorage is per-tab/can be flaky).
+    // Only the URL path is stored — no tokens — so no XSS surface increase.
+    localStorage.setItem('returnUrl', state.url);
     oidc.authorize();
     return false;
 };

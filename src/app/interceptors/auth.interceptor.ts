@@ -25,8 +25,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     return next(req).pipe(
         catchError((error) => {
             if (error instanceof HttpErrorResponse && error.status === 401) {
-                // Save the current route so the user returns here after re-login
-                sessionStorage.setItem('returnUrl', router.url);
+                // Save the current route so the user returns here after re-login.
+                // Use localStorage so it survives the Cognito redirect reliably.
+                localStorage.setItem('returnUrl', router.url);
                 oidc.authorize();
             }
             return throwError(() => error);
