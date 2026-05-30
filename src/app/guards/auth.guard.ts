@@ -3,25 +3,32 @@ import { CanActivateFn, Router, UrlTree } from '@angular/router';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { firstValueFrom } from 'rxjs';
 
+// Module-level flag — checkAuth() must run ONCE per app load to process the
+// Cognito callback (?code=...&state=...). Calling it on every navigation makes
+// every link click slow because the library does internal work each time.
+// After the first call, we trust the cached sessionStorage token (the 401
+// interceptor will force a re-login if it actually expires).
+let checkAuthDone = false;
+
 export const authGuard: CanActivateFn = async (_route, state) => {
-    // inject() calls MUST happen before any await — this is valid in Angular guards.
+    // inject() calls MUST happen before any await — valid in Angular guards.
     const oidc = inject(OidcSecurityService);
     const router = inject(Router);
 
-    // checkAuth() must be called when the Router is ready (i.e. inside a guard,
-    // NOT in provideAppInitializer). It processes the Cognito callback
-    // (?code=...&state=...) when the user returns from login, and returns the
-    // cached auth state on all subsequent navigations.
-    let isAuthenticated = false;
-    let accessToken = '';
+    let isAuthenticated = !!sessionStorage.getItem('accessToken');
+    let accessToken = sessionStorage.getItem('accessToken') || '';
 
-    try {
-        const result = await firstValueFrom(oidc.checkAuth());
-        isAuthenticated = result.isAuthenticated;
-        accessToken = result.accessToken;
-    } catch {
-        // checkAuth() failed (e.g. expired code, state mismatch, network error).
-        // Treat as unauthenticated — guard will redirect to Cognito below.
+    if (!checkAuthDone) {
+        // First navigation after app boot — process potential ?code and
+        // resolve the auth state from the OIDC library.
+        try {
+            const result = await firstValueFrom(oidc.checkAuth());
+            isAuthenticated = result.isAuthenticated;
+            accessToken = result.accessToken;
+        } catch {
+            // checkAuth() failed → fall through to the unauthenticated path.
+        }
+        checkAuthDone = true;
     }
 
     if (isAuthenticated) {
