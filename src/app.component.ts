@@ -32,7 +32,8 @@ export class AppComponent implements OnInit {
           return;
         }
         if (here === '/' || here === '') {
-          localStorage.removeItem('returnUrl');
+          // Don't remove yet — let the NavigationEnd that lands on `target`
+          // clear it. Otherwise a failed nav would leave the user stuck.
           this.router.navigateByUrl(target);
         }
       });

@@ -39,8 +39,9 @@ export const authGuard: CanActivateFn = async (_route, state) => {
             !returnUrl.startsWith('//') &&
             returnUrl !== state.url
         ) {
-            localStorage.removeItem('returnUrl');
-            // Return a UrlTree so Angular navigates in the same routing cycle.
+            // Don't remove yet — the AppComponent NavigationEnd fallback clears
+            // returnUrl once we actually land on the target page. If we remove
+            // here and the UrlTree isn't honoured, the fallback can't recover.
             return router.parseUrl(returnUrl) as boolean | UrlTree;
         }
 
