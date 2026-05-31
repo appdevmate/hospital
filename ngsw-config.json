@@ -46,5 +46,53 @@
       }
     }
   ],
-  "dataGroups": []
+  "dataGroups": [
+    {
+      "name": "api-reference",
+      "urls": [
+        "https://jxz59jh15f.execute-api.us-east-1.amazonaws.com/departments",
+        "https://jxz59jh15f.execute-api.us-east-1.amazonaws.com/departments/**",
+        "https://jxz59jh15f.execute-api.us-east-1.amazonaws.com/specializations",
+        "https://jxz59jh15f.execute-api.us-east-1.amazonaws.com/specializations/**"
+      ],
+      "cacheConfig": {
+        "maxSize": 50,
+        "maxAge": "7d",
+        "strategy": "performance"
+      }
+    },
+    {
+      "name": "api-reads",
+      "urls": [
+        "https://jxz59jh15f.execute-api.us-east-1.amazonaws.com/patients",
+        "https://jxz59jh15f.execute-api.us-east-1.amazonaws.com/patients/**",
+        "https://jxz59jh15f.execute-api.us-east-1.amazonaws.com/doctors",
+        "https://jxz59jh15f.execute-api.us-east-1.amazonaws.com/doctors/**",
+        "https://jxz59jh15f.execute-api.us-east-1.amazonaws.com/appointments",
+        "https://jxz59jh15f.execute-api.us-east-1.amazonaws.com/appointments/**",
+        "https://jxz59jh15f.execute-api.us-east-1.amazonaws.com/payments",
+        "https://jxz59jh15f.execute-api.us-east-1.amazonaws.com/payments/**",
+        "https://jxz59jh15f.execute-api.us-east-1.amazonaws.com/invoices",
+        "https://jxz59jh15f.execute-api.us-east-1.amazonaws.com/invoices/**",
+        "https://jxz59jh15f.execute-api.us-east-1.amazonaws.com/surgeries",
+        "https://jxz59jh15f.execute-api.us-east-1.amazonaws.com/surgeries/**",
+        "https://jxz59jh15f.execute-api.us-east-1.amazonaws.com/examinations",
+        "https://jxz59jh15f.execute-api.us-east-1.amazonaws.com/examinations/**",
+        "https://jxz59jh15f.execute-api.us-east-1.amazonaws.com/pharmacy/**",
+        "https://jxz59jh15f.execute-api.us-east-1.amazonaws.com/calendars",
+        "https://jxz59jh15f.execute-api.us-east-1.amazonaws.com/calendars/**",
+        "https://jxz59jh15f.execute-api.us-east-1.amazonaws.com/documents/list",
+        "https://jxz59jh15f.execute-api.us-east-1.amazonaws.com/documents/folders",
+        "https://jxz59jh15f.execute-api.us-east-1.amazonaws.com/admin/stats",
+        "https://jxz59jh15f.execute-api.us-east-1.amazonaws.com/admin/users",
+        "https://jxz59jh15f.execute-api.us-east-1.amazonaws.com/scribe/sessions/**"
+      ],
+      "cacheConfig": {
+        "maxSize": 500,
+        "maxAge": "1d",
+        "timeout": "3s",
+        "strategy": "freshness"
+      }
+    }
+  ]
 }
