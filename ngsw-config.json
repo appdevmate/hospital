@@ -23,14 +23,25 @@
       }
     },
     {
-      "name": "assets",
+      "name": "fonts-icons",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/**/*.(otf|ttf|woff|woff2|eot)"
+        ]
+      }
+    },
+    {
+      "name": "images",
       "installMode": "lazy",
       "updateMode": "prefetch",
       "resources": {
         "files": [
           "/assets/**",
           "/demo/**",
-          "/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
+          "/media/**",
+          "/**/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|ico)"
         ]
       }
     }
