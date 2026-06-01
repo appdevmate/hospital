@@ -9,6 +9,7 @@ import { appRoutes } from './app.routes';
 import { provideAuth } from 'angular-auth-oidc-client';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { authInterceptor } from './app/interceptors/auth.interceptor';
+import { offlineQueueInterceptor } from './app/interceptors/offline-queue.interceptor';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -21,7 +22,10 @@ export const appConfig: ApplicationConfig = {
             // chunk download per route).
             withPreloading(PreloadAllModules)
         ),
-        provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
+        // offlineQueueInterceptor runs first → short-circuits offline mutations
+        // into the IndexedDB queue. authInterceptor runs second → adds 401
+        // re-login handling for requests that actually reach the network.
+        provideHttpClient(withFetch(), withInterceptors([offlineQueueInterceptor, authInterceptor])),
         provideAnimationsAsync(),
         providePrimeNG({ theme: { preset: Aura, options: { darkModeSelector: '.app-dark' } } }),
         provideAuth({

@@ -1,0 +1,55 @@
+import { HttpInterceptorFn, HttpResponse } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { OfflineService } from '@/services/offline.service';
+import { HelpersService } from '@/services/helpers-service';
+
+/**
+ * Offline mutation interceptor (Phase C).
+ *
+ * - Only intercepts mutating HTTP methods on our own API host.
+ * - When offline:
+ *     1. Saves the request to the IndexedDB queue (see OfflineService.enqueue).
+ *     2. Returns a synthetic 202 "Queued offline" response, with the body
+ *        echoed so the caller's success path can run (optimistic UI).
+ *     3. Shows a toast.
+ * - When online: passes through normally (auth + network errors still surface).
+ *
+ * Cognito/OIDC calls go to a different host and are never queued.
+ * Document uploads PUT directly to S3 and are NOT queued in Phase C.
+ */
+const API_HOST = 'execute-api.us-east-1.amazonaws.com';
+const MUTATING = new Set(['POST', 'PATCH', 'PUT', 'DELETE']);
+
+export const offlineQueueInterceptor: HttpInterceptorFn = (req, next) => {
+    const offline = inject(OfflineService);
+    const helpers = inject(HelpersService);
+
+    const isMutating = MUTATING.has(req.method.toUpperCase());
+    const isApi = req.url.includes(API_HOST);
+
+    if (!isMutating || !isApi) return next(req);
+    if (!offline.isOffline()) return next(req);
+
+    // Persist + notify. Fire-and-forget; the synthetic response below makes the
+    // caller think the save succeeded so the UI doesn't get stuck.
+    offline.enqueue(req).then(
+        () => helpers.notifyInfo('Saved offline', 'Will sync when connection is back.'),
+        () => helpers.notifyError('Save Failed', 'Could not queue the request offline.')
+    );
+
+    // Echo the body so optimistic UI keeps the fields the user typed.
+    const body =
+        req.body && typeof req.body === 'object'
+            ? { ...(req.body as object), _offlineQueued: true }
+            : { _offlineQueued: true };
+
+    return of(
+        new HttpResponse({
+            status: 202,
+            statusText: 'Queued offline',
+            url: req.urlWithParams,
+            body
+        })
+    ) as unknown as Observable<any>;
+};
