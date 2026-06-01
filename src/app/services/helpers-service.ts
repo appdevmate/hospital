@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { wasOfflineEnqueueRecent } from './offline-db';
 
 @Injectable({
     providedIn: 'root'
@@ -22,6 +23,9 @@ export class HelpersService {
     }
 
     notifySuccess(message: string) {
+        // Suppress component "Created/Saved/Updated" toasts that fire on top of
+        // the offline interceptor's "Saved offline, will sync..." toast.
+        if (wasOfflineEnqueueRecent()) return;
         this.messageService.add({
             severity: 'success',
             summary: 'Success',

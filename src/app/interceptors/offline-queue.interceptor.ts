@@ -3,6 +3,7 @@ import { inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { OfflineService } from '@/services/offline.service';
 import { HelpersService } from '@/services/helpers-service';
+import { markOfflineEnqueue } from '@/services/offline-db';
 
 /**
  * Offline mutation interceptor (Phase C).
@@ -30,6 +31,11 @@ export const offlineQueueInterceptor: HttpInterceptorFn = (req, next) => {
 
     if (!isMutating || !isApi) return next(req);
     if (!offline.isOffline()) return next(req);
+
+    // Mark synchronously so HelpersService.notifySuccess can suppress the
+    // component's "Created/Updated" toast that would otherwise stack on top of
+    // the "Saved offline" toast below.
+    markOfflineEnqueue();
 
     // Persist + notify. Fire-and-forget; the synthetic response below makes the
     // caller think the save succeeded so the UI doesn't get stuck.

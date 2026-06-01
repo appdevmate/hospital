@@ -102,3 +102,16 @@ export const offlineDb = {
         }
     }
 };
+
+// ── Toast coordination ──────────────────────────────────────────────────────
+// The offline interceptor calls markOfflineEnqueue() the moment it queues a
+// mutation. HelpersService.notifySuccess checks wasOfflineEnqueueRecent() and
+// skips the component's "Saved/Created/..." toast so we don't double-notify on
+// top of the interceptor's "Saved offline, will sync when back online" toast.
+let lastEnqueueAt = 0;
+export function markOfflineEnqueue(): void {
+    lastEnqueueAt = Date.now();
+}
+export function wasOfflineEnqueueRecent(windowMs = 1500): boolean {
+    return Date.now() - lastEnqueueAt < windowMs;
+}
