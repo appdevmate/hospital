@@ -19,6 +19,7 @@ import { TagModule } from 'primeng/tag';
 import { Router } from '@angular/router';
 import { NotificationsService, Notification } from '@/services/notifications.service';
 import { AuthService } from '@/services/auth.service';
+import { OfflineService } from '@/services/offline.service';
 
 @Component({
     selector: '[app-topbar]',
@@ -58,6 +59,20 @@ import { AuthService } from '@/services/auth.service';
             </ul>
 
             <div class="topbar-actions">
+                <!-- Offline / sync pill (Phase E) -->
+                @if (!isOnline || pendingCount > 0) {
+                    <div class="offline-pill"
+                         [class.offline-pill-off]="!isOnline"
+                         [class.offline-pill-sync]="isOnline && pendingCount > 0"
+                         [title]="!isOnline ? 'You are offline — changes will sync when back online' : 'Syncing pending changes…'">
+                        <i [class]="!isOnline ? 'pi pi-wifi' : 'pi pi-sync'" [class.pi-spin]="isOnline && pendingCount > 0"></i>
+                        <span class="offline-pill-text">{{ !isOnline ? 'Offline' : 'Syncing' }}</span>
+                        @if (pendingCount > 0) {
+                            <span class="offline-pill-badge">{{ pendingCount }}</span>
+                        }
+                    </div>
+                }
+
                 <p-button icon="pi pi-palette" rounded (onClick)="layoutService.showConfigSidebar()"></p-button>
 
                 <div class="topbar-search" [ngClass]="{ 'topbar-search-active': searchActive }">
@@ -251,6 +266,39 @@ import { AuthService } from '@/services/auth.service';
             padding: 0.5rem;
             text-align: center;
         }
+        /* Offline / sync pill (Phase E) */
+        .offline-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.35rem 0.7rem;
+            border-radius: 9999px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            line-height: 1;
+            cursor: default;
+            user-select: none;
+            border: 1px solid transparent;
+            i { font-size: 0.85rem; }
+        }
+        .offline-pill-off {
+            background: #fef2f2;
+            color: #b91c1c;
+            border-color: #fecaca;
+        }
+        .offline-pill-sync {
+            background: #fffbeb;
+            color: #b45309;
+            border-color: #fde68a;
+        }
+        .offline-pill-badge {
+            background: rgba(0, 0, 0, 0.08);
+            border-radius: 9999px;
+            padding: 0 0.45rem;
+            min-width: 18px;
+            text-align: center;
+            font-weight: 700;
+        }
     `,
     host: { class: 'layout-topbar' }
 })
@@ -262,6 +310,13 @@ export class AppTopbar implements OnInit {
     private oidc = inject(OidcSecurityService);
     private http = inject(HttpClient);
     private router = inject(Router);
+    private offline = inject(OfflineService);
+
+    // ── Phase E: offline status + pending count ───────────────────────────
+    isOnline = typeof navigator !== 'undefined' ? navigator.onLine : true;
+    pendingCount = 0;
+    private onlineHandler = () => { this.isOnline = true; };
+    private offlineHandler = () => { this.isOnline = false; };
 
     // ── ViewChildren ──────────────────────────────────────────────────────
     @ViewChild('searchinput') searchInput!: ElementRef;
@@ -284,6 +339,15 @@ export class AppTopbar implements OnInit {
 
     ngOnInit() {
         this.loadNotifications();
+        // Phase E: live offline status + pending count
+        window.addEventListener('online', this.onlineHandler);
+        window.addEventListener('offline', this.offlineHandler);
+        this.offline.pendingCount$.subscribe((n) => (this.pendingCount = n));
+    }
+
+    ngOnDestroy() {
+        window.removeEventListener('online', this.onlineHandler);
+        window.removeEventListener('offline', this.offlineHandler);
     }
 
     // ── Notifications ─────────────────────────────────────────────────────

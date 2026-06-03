@@ -1,243 +1,275 @@
-# Offline Mode — Design Doc
+# Offline Mode — Full Reference
 
-**Date:** 2026-05-26
-**Status:** Proposed (not implemented)
-**Goal:** Let the user keep working while offline and auto-submit pending writes when the connection returns.
-
-## What the user sees
-
-- App keeps loading + browsing already-fetched data while offline
-- Trying to save / update / cancel / delete → toast: "No connection. Will submit when you're back online."
-- A small badge shows pending count
-- When online → queued requests submit automatically → toast: "Synced."
-
-## Glossary (abbreviations)
-
-- **PWA** → Progressive Web App. A web app that can be installed and work offline.
-- **SW / Service Worker** → Background JS script in the browser. Intercepts network requests; controls caching.
-- **ngsw** → Angular Service Worker (`@angular/service-worker`). Configured via `ngsw-config.json`.
-- **IndexedDB** → Browser-side database (per-origin). Stores structured data offline.
-- **idb** → Tiny npm wrapper around IndexedDB (less boilerplate).
-- **localForage** → Alternative npm lib that wraps IndexedDB with a simpler API.
-- **Background Sync API** → Browser API (Chrome/Edge). Lets the SW retry queued requests even after the tab is closed.
-- **CRUD** → Create / Read / Update / Delete.
-- **FK** → Foreign Key — a field that references another record.
-- **UUID** → Universally Unique Identifier (e.g. `550e8400-e29b-…`). Used to give offline-created records a stable ID before the server sees them.
-- **OIDC** → OpenID Connect (auth protocol used with Cognito).
-- **JWT** → JSON Web Token (access-token format).
-- **PHI** → Protected Health Information (regulated patient data).
-- **PDPPL** → Qatar's Personal Data Privacy Protection Law.
-- **MOPH** → Ministry of Public Health (Qatar regulator).
-- **SOAP note** → Subjective / Objective / Assessment / Plan — standard clinical note format.
-- **TTL** → Time-to-live (auto-expiry for stored items).
-- **LWW** → Last-Write-Wins (a conflict resolution policy).
+**Status:** Implemented (Phases A–F).
+**Goal:** Doctors / staff can keep working when the network drops — read previously-fetched data, create / edit / cancel records, and have everything sync automatically when the network returns.
 
 ---
 
-## Building blocks
+## 1. What the user sees
 
-1. Cache app + GET responses → **Angular PWA / Service Worker**
-2. Queue mutations (POST / PATCH / DELETE) → **HTTP interceptor + IndexedDB**
-3. Replay queue → **`online` event** (and Background Sync where supported)
-4. UI signals → banner + badge + toasts
-5. Idempotency on the backend → each queued write carries a client UUID
-
----
-
-## 1. Cache app + reads (Service Worker)
-
-- `ng add @angular/pwa`
-- Generates `ngsw-config.json` (cache rules)
-- `assetGroups` → cache the SPA shell (HTML / JS / CSS / images)
-- `dataGroups` → cache safe GET endpoints (e.g. departments, specializations, dashboards summaries)
-- Result → app loads offline, previously-fetched lists/details viewable
-
-## 2. Queue writes (interceptor + IndexedDB)
-
-- New `OfflineQueueInterceptor` chained AFTER `authInterceptor`
-- On POST / PATCH / DELETE → check `navigator.onLine`
-- If offline:
-  - Save `{ id, url, method, headers, body, createdAt }` to IndexedDB
-  - Return a synthetic 202-style response: `{ queued: true, id }`
-  - Show toast: "No connection. Will submit when you're back online."
-- If online → pass through normally
-- Use `idb` or `localForage` for IndexedDB
-
-## 3. Replay queue (online event)
-
-- `window.addEventListener('online', replay)`
-- `replay()` → read all queued items in order → re-send via plain HttpClient
-- On success → remove from IndexedDB → update UI badge
-- On failure → keep in queue, retry later (exponential backoff)
-- (Optional) Register Background Sync in the Service Worker → fires even if the tab is closed (Chrome / Edge only)
-
-## 4. UI signals
-
-- Top banner when `navigator.onLine === false` → "You are offline. Changes will sync when back."
-- Badge in the topbar → "N pending"
-- Per-row optimistic update → list shows the change immediately (with "pending" tag) so the user sees progress
-
-## 5. Idempotency + conflict rules
-
-- Frontend → assign a `clientRequestId` (UUID) to every queued mutation
-- Backend Lambdas → dedupe by `clientRequestId` (store recent IDs for 24h)
-- On replay 409 or 422 → drop from queue, show "Could not sync (already applied)"
-- Conflict policy when offline-edited data is newer than server → simple last-write-wins for v1
+- App keeps loading + browsing already-fetched data while offline.
+- Trying to save / update / cancel / delete → toast: **"Saved offline — will sync when connection is back."**
+- A topbar pill shows current state — **"Offline"** (red) or **"Syncing"** (amber) — with a badge showing pending mutation count.
+- When network returns → queued requests replay in order → toast: **"Synced N pending action(s)."**
 
 ---
 
-## What NOT to cache
+## 2. Glossary (abbreviations)
 
-- Cognito callback `https://www.akwadona.com/?code=…&state=…` → never cache
-- Auth tokens → never put tokens in IndexedDB
-- Highly sensitive PHI → mark those routes `no-store` in `ngsw-config.json`
-- Audit log routes → always fetch fresh
-
-## Auth considerations
-
-- Token can expire while offline → on replay, a 401 will fire → existing interceptor triggers re-login + `returnUrl`
-- Don't store the token with the queued request → use the live token at replay time
+| Abbr | Meaning |
+| --- | --- |
+| PWA | Progressive Web App — installable, offline-capable web app |
+| SW | Service Worker — browser background script that intercepts network requests and serves cache |
+| ngsw | Angular's official Service Worker (`@angular/service-worker`), configured via `ngsw-config.json` |
+| IDB | IndexedDB — browser-side per-origin database, used for the mutation queue and temp-id map |
+| idb | npm wrapper for IndexedDB — **not used here** (we use raw IDB API to avoid the dependency) |
+| Cache API | Browser caches managed by the SW (separate from IndexedDB) |
+| Idempotency | Property that running the same request twice has the same effect as running it once |
+| FK | Foreign Key — a field that points to another record (e.g. `appointmentId` in an examination) |
+| temp id | Client-side placeholder id (`temp_<uuid>`) used for entities created while offline; replaced on replay |
+| CID | `X-Client-Request-Id` HTTP header — unique per mutation, used for backend idempotency dedup |
+| TTL | Time-to-live — DynamoDB attribute that auto-deletes the row after the timestamp |
+| OIDC | OpenID Connect — auth protocol used with Cognito |
+| JWT | JSON Web Token — Cognito access token format |
+| LWW | Last-Write-Wins — chosen conflict policy for offline-edited rows |
+| PHI | Protected Health Information |
 
 ---
 
-## Suggested project layout
+## 3. Architecture (end-to-end)
 
 ```
-src/app/
-├── services/
-│   ├── offline.service.ts       # online status + queue + replay
-│   └── offline-db.ts            # IndexedDB wrapper (idb)
-├── interceptors/
-│   └── offline-queue.interceptor.ts
-├── components/
-│   └── offline-banner/          # banner + pending badge
-└── …
-public/
-└── ngsw-config.json             # service worker cache rules
+   ┌──────────────┐   GET /…   ┌──────────────────────────┐
+   │  Component   │ ─────────► │ Service Worker (ngsw)    │
+   │              │ ◄───────── │  Cache: app shell + APIs │
+   └──────┬───────┘   200 from └──────────────────────────┘
+          │           cache when offline
+          │
+          │ POST/PATCH/DELETE
+          ▼
+   ┌──────────────────────────────────┐
+   │ offline-queue.interceptor (TS)   │
+   │  - adds X-Client-Request-Id      │
+   │  - if offline:                   │
+   │      stamps _tempId on POSTs     │
+   │      enqueues to IndexedDB       │
+   │      returns synthetic 202       │
+   └──────────────┬───────────────────┘
+                  │
+                  ▼
+   ┌──────────────────────────────────┐
+   │ IndexedDB (tiryaq-offline)       │
+   │   pendingMutations               │
+   │   tempIdMap (Phase F)            │
+   └──────────────┬───────────────────┘
+                  │ window 'online' event
+                  ▼
+   ┌──────────────────────────────────┐
+   │ OfflineService.replay()          │
+   │  - rewrite temp_* in URL + body  │
+   │  - send each queued mutation     │
+   │  - extract real id from response │
+   │  - drop on 4xx / break on 5xx    │
+   └──────────────┬───────────────────┘
+                  │
+                  ▼
+   ┌──────────────────────────────────┐
+   │ Backend Lambdas                  │
+   │  - read X-Client-Request-Id      │
+   │  - check IDEMP#<cid> in DynamoDB │
+   │  - if cached → return cached     │
+   │  - else do work + cache (24h)    │
+   └──────────────────────────────────┘
 ```
 
-`app.config.ts` additions:
-- `provideServiceWorker('ngsw-worker.js', { enabled: production })`
-- Add `OfflineQueueInterceptor` to the interceptor chain
+---
+
+## 4. Phases — what was built
+
+### Phase A — PWA shell (the page itself works offline)
+
+- `npm install @angular/service-worker@20.0.6 --save-exact`
+- `app.config.ts` registers the SW: `provideServiceWorker('ngsw-worker.js', { enabled: !isDevMode(), registrationStrategy: 'registerWhenStable:30000' })`
+- `ngsw-config.json` `assetGroups`:
+  - `app` (prefetch HTML/JS/CSS)
+  - `fonts-icons` (prefetch `**/*.{ttf,woff,woff2,eot}` — PrimeIcons offline)
+  - `images` (lazy)
+- `navigationUrls` allow the SPA to fall back to `/index.html` for any non-asset URL.
+
+### Phase B — Cache GET responses
+
+- `ngsw-config.json` `dataGroups`:
+  ```json
+  {
+    "name": "api-reads",
+    "urls": ["https://jxz59jh15f.execute-api.us-east-1.amazonaws.com/**"],
+    "cacheConfig": { "maxSize": 500, "maxAge": "1d", "timeout": "3s", "strategy": "freshness" }
+  }
+  ```
+- Freshness strategy: SW races network for 3 s; serves cache on timeout / offline.
+- One catch-all rule prevents glob mismatches against query-string variants.
+
+### Phase C — Queue mutations + replay
+
+- `src/app/services/offline-db.ts` — raw IndexedDB wrapper.
+  - Stores: `pendingMutations`, `tempIdMap`.
+- `src/app/interceptors/offline-queue.interceptor.ts`:
+  - Adds `X-Client-Request-Id: <uuid>` to every mutating API request.
+  - If `!navigator.onLine`: enqueue to IDB, return synthetic 202 with body echoed, toast "Saved offline".
+- `src/app/services/offline.service.ts`:
+  - Subscribes to `window.online` event.
+  - Loads queue, sends in `createdAt` order with the current access token.
+  - Drops a row on 400/404/409/422 (already applied or invalid).
+  - Stops on 0/401/5xx (will retry on next online event).
+- `helpers-service.ts` suppresses duplicate "Created/Updated" toasts via `wasOfflineEnqueueRecent()` when an offline enqueue just fired.
+
+### Phase D — Backend idempotency
+
+Every mutating Lambda reads `X-Client-Request-Id` and stores a 24h idempotency cache row in DynamoDB:
+
+```
+PK = IDEMP#<cid>
+SK = PROFILE
+EntityType = IDEMPOTENCY
+response = <JSON of the response that was returned>
+expiresAt = <epoch + 86400>     (table TTL deletes the row after 24h)
+```
+
+Pattern at the top of each route handler:
+```js
+const cid = getClientRequestId(event);
+const cached = await checkIdempotency(cid);
+if (cached) return cached;
+// … do work …
+const response = res(/* … */);
+await storeIdempotency(cid, response);
+return response;
+```
+
+Applied to **every mutating Lambda in the app**:
+- `tiryaq-appointments` — POST / PATCH / DELETE
+- `tiryaq-examinations` — POST create / PATCH section / POST signoff / DELETE
+- `tiryaq-pharmacy` — medications, inventory, dispense, purchase orders
+- `tiryaq-calendar` — calendars + events
+- `tiryaq-admin-panel` — disable / enable / set-password
+- `tiryaq-document-manager` — upload-url, delete
+- `createPatient` / `updatePatient` / `deletePatient`
+- `createDoctor` / `updateDoctor` / `deleteDoctor`
+- `createPatientPayment` / `updatePatientPayment` / `deletePayment`
+- `createNewDepartment` / `bulkCreateDepartments` / `deleteAllDepartments`
+- `createNewSpecialization` / `bulkCreateSpecializations` / `deleteAllSpecializations`
+
+### Phase E — UI signals (offline + pending count)
+
+- `src/app/layout/components/app.topbar.ts`:
+  - Subscribes to `OfflineService.pendingCount$` (BehaviorSubject driven by `offlineDb.count()`).
+  - Listens to `window.online` / `window.offline`.
+  - Renders an offline / sync pill in the topbar actions, with a count badge when items are queued.
+
+### Phase F — Full offline consultations + FK rewrite
+
+- `offline-db.ts` v2 schema upgrade — new `tempIdMap` IDB store.
+- `tempId()` / `isTempId()` helpers — generate `temp_<uuid>` placeholders.
+- `offline-queue.interceptor.ts` — on offline POSTs, stamps `_tempId` into the body and echoes it back under common id keys (`examinationId`, `appointmentId`, …) so the UI can keep navigating.
+- `offline.service.ts` `replay()`:
+  - Loads `tempIdMap` from IDB.
+  - Before sending each queued request, rewrites every `temp_<uuid>` occurrence in URL and body with the real server id (if known).
+  - Strips `_tempId` from create bodies.
+  - After a successful create, scans the response for the first real id key (e.g. `examinationId`) and saves the mapping `temp_xxx → real-yyy` to IDB.
+  - If the queued request still references an unresolved temp id, replay halts so the next round (after later creates resolve) can continue.
+
+This enables a full offline consultation flow:
+
+```
+offline:
+  POST   /appointments                       → temp_aaa
+  POST   /examinations  {appointmentId:aaa}  → temp_bbb
+  PATCH  /examinations/temp_bbb/sections
+  POST   /examinations/temp_bbb/signoff
+  PATCH  /appointments/temp_aaa  status=completed
+
+reconnect → replay:
+  POST   /appointments       → real-AAA   (mapping aaa→AAA stored)
+  POST   /examinations       → real-BBB   (mapping bbb→BBB stored)
+  PATCH  /examinations/real-BBB/sections
+  POST   /examinations/real-BBB/signoff
+  PATCH  /appointments/real-AAA  status=completed
+```
 
 ---
 
-## Backend changes needed
+## 5. Files of interest
 
-- Every mutating Lambda accepts an optional `clientRequestId` body field
-- Store recent `clientRequestId`s in the `Hospital` table for ~24h (TTL via `expiresAt`)
-- If a request comes in with a known `clientRequestId` → return the original result (no double-write)
+```
+src/app/services/offline-db.ts                — raw IndexedDB wrapper, tempId helpers
+src/app/services/offline.service.ts           — queue + replay + temp-id rewriting
+src/app/interceptors/offline-queue.interceptor.ts — HTTP intercept, enqueue, temp-id stamp
+src/app/services/helpers-service.ts           — toast coordination (skip duplicates)
+src/app/layout/components/app.topbar.ts       — Phase E offline/sync pill + badge
+src/app/guards/auth.guard.ts                  — single-shot checkAuth, returnUrl in localStorage
+src/app.component.ts                          — NavigationEnd fallback for returnUrl
+ngsw-config.json                              — assetGroups + dataGroups
+src/app.config.ts                             — provideServiceWorker + interceptor wiring
 
----
-
-## Full offline scenario (everything, incl. consultations)
-
-Goal → every action works offline: create / edit / cancel appointments, file consultations end-to-end with prescriptions and lab orders, manage invoices, etc. Sync happens automatically when the connection returns.
-
-### Local-first data model (IndexedDB)
-
-- IndexedDB is the device's source of truth while offline (via `idb`).
-- One object store per collection → `patients`, `doctors`, `appointments`, `consultations`, `payments`, `dispenses`, `pendingMutations`.
-- Every row carries:
-  - `id` → client-side **UUID** (used until the server assigns its own)
-  - `serverId` → filled after sync confirms
-  - `_status` → `synced` / `pending` / `failed`
-  - `_op` → `create` / `update` / `delete`
-  - `_updatedAt` → local timestamp
-  - `clientRequestId` → **UUID** per mutation (used by backend for idempotency)
-
-### Read path
-
-- Every screen reads from IndexedDB first → instant render
-- If online → also refresh from API in the background → update IndexedDB → screen reactively updates
-- If offline → user sees the IndexedDB snapshot as-is
-
-### Write path (optimistic)
-
-1. Service writes to IndexedDB immediately
-2. A `pendingMutations` row is appended → `{ url, method, body, headers, clientRequestId, ref: localId }`
-3. If online → fire the HTTP call now → on success mark `synced`, store `serverId`
-4. If offline → leave `pending` → on `online` event the queue replays
-
-### Consultations end-to-end (the hardest case)
-
-1. Doctor checks in an appointment (offline allowed) → updates appointment row + queues PATCH
-2. Doctor clicks **Start Consultation** offline:
-   - Locally `consultationId = UUID`
-   - Insert `consultations` row (`_status: pending`, `_op: create`)
-   - Queue `POST /examinations` with `appointmentId` + `clientRequestId`
-3. Doctor fills each section (Chief Complaint, Vitals, …) → each save:
-   - Update the same consultation row
-   - Append `PATCH /examinations/{localId}` mutation
-4. Doctor adds prescriptions / lab orders / radiology / referrals:
-   - Stored as nested arrays on the consultation row (no separate FK store needed)
-5. Doctor clicks **Close Consultation** → queue `POST /examinations/{localId}/signoff`
-6. Browser reconnects → replay runs in order:
-   - POST `/examinations` → server returns the real `examId`
-   - **FK rewrite** → scan remaining queue → swap any `localId` references with `examId`
-   - PATCHes apply → signoff applies → appointment auto-completes via the existing backend hook
-
-### FK rewrite step (critical)
-
-- A queued create returns a server ID → the queue may contain follow-ups that referenced the local UUID
-- Walk the rest of the queue → replace `localId` with `serverId` in URLs and bodies
-- Same trick for offline-created patients, doctors, invoices, appointments
-
-### Conflict handling
-
-- Replay 409 / 412 / 422 → mark the row `failed`, surface a toast: *"Couldn't sync X — newer version on server."*
-- v1 → **LWW** (last-write-wins) with a "View server version" link
-- v2 → optional merge dialog (Subjective/Objective fields side-by-side)
-- Server is authoritative — local can never overwrite a `cancelled` or signed-off record (the backend guards already enforce this)
-
-### Auth while offline
-
-- Access JWT (1h) lives in sessionStorage; refresh token (30d) in OIDC storage
-- Cannot refresh while offline → on replay a 401 fires → normal re-login flow (`returnUrl` + the queue both survive in localStorage)
-- Never put tokens in IndexedDB
-
-### Edge cases
-
-- Browser closed offline → IndexedDB persists → next open replays
-- User clears site data → queue is wiped → warn before destructive actions
-- Two devices edit the same record while offline → second to replay loses (LWW) → flag for clinical review
-- **S3 uploads (e.g. dispense override doc)** → cannot queue blindly:
-  - Allow the form offline
-  - Block only the file-upload step until online (no presigned PUT without network)
-  - Surface: *"1 step pending: upload doctor-approved document"*
-
-### PHI / compliance considerations
-
-- IndexedDB on the device contains PHI → handle with care:
-  - Recommend OS-level disk encryption + per-user OS login
-  - On logout → wipe IndexedDB (`OfflineService.clear()`)
-  - On role change → wipe and re-sync
-  - Cap cached patient data by *touched-recently* (don't cache the whole hospital)
-- `ngsw-config.json` → mark audit + admin routes `no-store`
-- All compliance controls (PDPPL Art. 9, MOPH audit) still apply to data once it syncs
+tiryaq-cdk/lambda/*/index.js                  — every mutating Lambda has Phase D idempotency
+docs/offline-mode.md                          — this file
+```
 
 ---
 
-## Out of scope (deferred)
+## 6. Testing — Phase D + offline end-to-end
 
-- Merge UI for non-trivial clinical conflicts → v2
-- Voice scribe offline → recording needs streaming → out
-- Bedrock SOAP generation offline → online-only
-- Background Sync on Safari / Firefox → falls back to `online` event
+### 6.1 Phase D idempotency (one-shot dedupe at the API)
 
-## Suggested phasing
+1. Open DevTools → Network → **online**.
+2. Pick a module — e.g. Appointments → New Appointment → fill form.
+3. In Network tab, **right-click** the resulting `POST /appointments` request → Copy as fetch.
+4. Paste into the Console and run it again — verify response is **identical** (same `appointmentId`, same body). The 2nd call hit the idempotency cache.
+5. In DynamoDB Studio (Hospital table) filter `EntityType = IDEMPOTENCY` — confirm the `IDEMP#<cid>` row exists with `expiresAt` ≈ now + 24h.
 
-1. **Phase A** → Service Worker + cache the SPA shell (offline read-only)
-2. **Phase B** → cache safe GET endpoints (lists viewable offline)
-3. **Phase C** → offline queue + replay for simple mutations
-4. **Phase D** → backend idempotency by `clientRequestId` + conflict messages
-5. **Phase E** → richer UX (per-row "pending" indicators, optimistic updates)
-6. **Phase F** → full-feature offline (consultations + nested entities + FK rewrite + conflict UI)
+### 6.2 Phase C / E offline → replay
+
+1. DevTools → Network → **Offline** (throttle).
+2. Confirm the topbar pill flips to red **"Offline"**.
+3. Create a new appointment → toast: **"Saved offline — will sync when connection is back."**
+4. Pill goes amber **"Syncing"** with a **badge: 1**.
+5. Repeat for 2–3 more mutations → badge climbs.
+6. Network → **Online** (or **No throttling**).
+7. Within a second:
+   - Toast: **"Synced N pending action(s)."**
+   - Pill disappears.
+   - Refresh the page → all the offline-created rows are now real in the table.
+
+### 6.3 Phase F full offline consultation
+
+1. Pre-cache: visit Patients → open patient profile, visit Appointments page (so SW caches the relevant GETs).
+2. Go **Offline**.
+3. Patient profile → **Start consultation** offline. UI keeps working — `examinationId` shows as `temp_…` in the URL.
+4. Fill SOAP sections (PATCH each — all queued).
+5. **Sign off** the consultation (POST signoff — queued).
+6. Go **Online**.
+7. Watch the badge drop to 0. Refresh.
+8. Open the patient's consultation list — the just-finished consultation is present with a **real** id, all sections saved, status = signed-off, and the linked appointment is **completed**.
+
+### 6.4 Negative tests
+
+- Offline → save → **Ctrl+F5 (hard refresh)** while still offline → page may show offline (expected — bypasses SW). Plain F5 works.
+- Replay double-fires (e.g. flap online/offline) → backend idempotency returns the cached response, no duplicate rows.
 
 ---
 
-## Document control
+## 7. Known constraints (and what's deferred)
 
-| Version | Date | Change |
-|---------|------|--------|
-| 1.0 | 2026-05-26 | Initial design — proposed offline mode strategy |
+- Hard refresh (Ctrl+F5) bypasses the SW — browser behaviour, not a bug.
+- File uploads (S3 PUT via presigned URL) are **not** queued — they require a live network.
+- Conflict policy is **Last-Write-Wins** at the DynamoDB row level; no merge UI.
+- Cross-tab queue: each tab opens its own IDB connection but writes to the same DB, so a second tab will see queued items.
+- Background Sync API not used — replay is bound to the `online` event in the open tab. Closing all tabs while offline pauses replay until a tab is reopened.
+
+---
+
+## 8. Operational notes
+
+- Bumping `DB_VERSION` in `offline-db.ts` triggers an `onupgradeneeded` for users with an existing offline DB — only additive changes are safe.
+- The `tiryaq-offline` DB is per-origin — clearing site data wipes the queue.
+- Idempotency rows live in the main `Hospital` table under `PK = IDEMP#<cid>` with the table's TTL attribute `expiresAt`. No separate table needed.

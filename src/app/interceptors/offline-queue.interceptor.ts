@@ -3,7 +3,7 @@ import { inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { OfflineService } from '@/services/offline.service';
 import { HelpersService } from '@/services/helpers-service';
-import { markOfflineEnqueue, uuid } from '@/services/offline-db';
+import { markOfflineEnqueue, uuid, tempId } from '@/services/offline-db';
 
 /**
  * Offline mutation interceptor (Phase C).
@@ -44,25 +44,48 @@ export const offlineQueueInterceptor: HttpInterceptorFn = (req, next) => {
     // the "Saved offline" toast below.
     markOfflineEnqueue();
 
+    // Phase F: for offline POSTs (creates), stamp a temp id into the body so
+    // the UI has a stable handle until replay returns the real id. Body must
+    // be a JSON object — we never alter raw bodies (file uploads, etc.).
+    let queuedReq = workingReq;
+    if (workingReq.method.toUpperCase() === 'POST' &&
+        workingReq.body && typeof workingReq.body === 'object' && !Array.isArray(workingReq.body)) {
+        const b: any = workingReq.body;
+        if (!b._tempId) {
+            const t = tempId();
+            queuedReq = workingReq.clone({ body: { ...b, _tempId: t } });
+        }
+    }
+
     // Persist + notify. Fire-and-forget; the synthetic response below makes the
     // caller think the save succeeded so the UI doesn't get stuck.
-    offline.enqueue(workingReq).then(
+    offline.enqueue(queuedReq).then(
         () => helpers.notifyInfo('Saved offline', 'Will sync when connection is back.'),
         () => helpers.notifyError('Save Failed', 'Could not queue the request offline.')
     );
 
-    // Echo the body so optimistic UI keeps the fields the user typed.
-    const body =
-        workingReq.body && typeof workingReq.body === 'object'
-            ? { ...(workingReq.body as object), _offlineQueued: true }
+    // Echo the body (including any temp id we stamped) so optimistic UI keeps
+    // the fields the user typed and has a stable id to use for follow-ups.
+    const echoBody: any =
+        queuedReq.body && typeof queuedReq.body === 'object'
+            ? { ...(queuedReq.body as object), _offlineQueued: true }
             : { _offlineQueued: true };
+    // Map common id keys to the temp id so calling components that read
+    // `response.examinationId` (etc.) get the temp id back transparently.
+    if (echoBody && echoBody._tempId && typeof echoBody === 'object') {
+        const t = echoBody._tempId;
+        for (const k of ['id', 'examinationId', 'appointmentId', 'paymentId', 'eventId',
+                          'calendarId', 'patientId', 'doctorId', 'orderId']) {
+            if (echoBody[k] == null) echoBody[k] = t;
+        }
+    }
 
     return of(
         new HttpResponse({
             status: 202,
             statusText: 'Queued offline',
-            url: workingReq.urlWithParams,
-            body
+            url: queuedReq.urlWithParams,
+            body: echoBody
         })
     ) as unknown as Observable<any>;
 };

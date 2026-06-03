@@ -14,8 +14,11 @@ export interface PendingMutation {
 }
 
 const DB_NAME = 'tiryaq-offline';
-const DB_VERSION = 1;
+// Phase F: bumped to v2 to add the tempIdMap store for offline-created
+// entity FK rewriting (consultations etc.).
+const DB_VERSION = 2;
 const STORE = 'pendingMutations';
+const TEMP_STORE = 'tempIdMap';
 
 function open(): Promise<IDBDatabase> {
     return new Promise((resolve, reject) => {
@@ -24,6 +27,10 @@ function open(): Promise<IDBDatabase> {
             const db = req.result;
             if (!db.objectStoreNames.contains(STORE)) {
                 db.createObjectStore(STORE, { keyPath: 'id' });
+            }
+            if (!db.objectStoreNames.contains(TEMP_STORE)) {
+                // Map tempId (e.g. "temp_<uuid>") → realId returned by server on replay.
+                db.createObjectStore(TEMP_STORE, { keyPath: 'tempId' });
             }
         };
         req.onsuccess = () => resolve(req.result);
@@ -100,8 +107,64 @@ export const offlineDb = {
         } finally {
             db.close();
         }
+    },
+
+    // ── Temp-ID mapping (Phase F) ───────────────────────────────────────────
+    /** Record that an offline tempId resolved to a real server-issued id. */
+    async putTempMapping(tempId: string, realId: string): Promise<void> {
+        if (!tempId || !realId) return;
+        const db = await open();
+        try {
+            await new Promise<void>((resolve, reject) => {
+                const tx = db.transaction(TEMP_STORE, 'readwrite');
+                tx.objectStore(TEMP_STORE).put({ tempId, realId, createdAt: Date.now() });
+                tx.oncomplete = () => resolve();
+                tx.onerror = () => reject(tx.error);
+            });
+        } finally {
+            db.close();
+        }
+    },
+
+    async getTempMapping(tempId: string): Promise<string | null> {
+        const db = await open();
+        try {
+            return await new Promise<string | null>((resolve, reject) => {
+                const tx = db.transaction(TEMP_STORE, 'readonly');
+                const req = tx.objectStore(TEMP_STORE).get(tempId);
+                req.onsuccess = () => resolve(req.result?.realId || null);
+                req.onerror = () => reject(req.error);
+            });
+        } finally {
+            db.close();
+        }
+    },
+
+    async getAllTempMappings(): Promise<Record<string, string>> {
+        const db = await open();
+        try {
+            const rows = await new Promise<any[]>((resolve, reject) => {
+                const tx = db.transaction(TEMP_STORE, 'readonly');
+                const req = tx.objectStore(TEMP_STORE).getAll();
+                req.onsuccess = () => resolve(req.result || []);
+                req.onerror = () => reject(req.error);
+            });
+            const map: Record<string, string> = {};
+            for (const r of rows) map[r.tempId] = r.realId;
+            return map;
+        } finally {
+            db.close();
+        }
     }
 };
+
+/** Create a temp id used while offline. Recognisable everywhere as `temp_…`. */
+export function tempId(): string {
+    return 'temp_' + uuid();
+}
+export function isTempId(v: any): boolean {
+    return typeof v === 'string' && v.startsWith('temp_');
+}
 
 // ── Toast coordination ──────────────────────────────────────────────────────
 // The offline interceptor calls markOfflineEnqueue() the moment it queues a
