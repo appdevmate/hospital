@@ -1,12 +1,44 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const {
   DynamoDBDocumentClient,
-  TransactWriteCommand
+  TransactWriteCommand,
+  GetCommand,
+  PutCommand
 } = require('@aws-sdk/lib-dynamodb');
 
 const REGION = 'us-east-1';
 const TABLE = 'Hospital';
 const ddb = DynamoDBDocumentClient.from(new DynamoDBClient({ region: REGION }));
+
+// ── Idempotency (Phase D) ────────────────────────────────────────────────────
+function getClientRequestId(event) {
+  const h = event.headers || {};
+  return h['x-client-request-id'] || h['X-Client-Request-Id'] || null;
+}
+async function checkIdempotency(cid) {
+  if (!cid) return null;
+  try {
+    const r = await ddb.send(new GetCommand({ TableName: TABLE, Key: { PK: `IDEMP#${cid}`, SK: 'PROFILE' } }));
+    if (r.Item && r.Item.response) return JSON.parse(r.Item.response);
+  } catch (_) {}
+  return null;
+}
+async function storeIdempotency(cid, response) {
+  if (!cid) return;
+  try {
+    await ddb.send(new PutCommand({
+      TableName: TABLE,
+      Item: {
+        PK: `IDEMP#${cid}`, SK: 'PROFILE', EntityType: 'IDEMPOTENCY',
+        clientRequestId: cid, response: JSON.stringify(response),
+        dataClass: 'SYSTEM',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        expiresAt: Math.floor(Date.now() / 1000) + 86400
+      }
+    }));
+  } catch (_) {}
+}
 
 const HDRS = {
   'content-type': 'application/json',
@@ -22,6 +54,10 @@ const extractId = (raw) => {
 };
 
 exports.handler = async (event, context) => {
+  const cid = getClientRequestId(event);
+  const cached = await checkIdempotency(cid);
+  if (cached) return cached;
+
   try {
     const id = extractId(event?.pathParameters?.doctorID ?? event?.pathParameters?.id);
     if (!id) {
@@ -78,11 +114,13 @@ exports.handler = async (event, context) => {
 
     await ddb.send(tx);
 
-    return {
+    const response = {
       statusCode: 200,
       headers: HDRS,
       body: JSON.stringify({ message: `Doctor ${id} soft-deleted.`, deletedAt: now })
     };
+    await storeIdempotency(cid, response);
+    return response;
 
   } catch (err) {
     // Try to distinguish “already deleted” vs “not found”

@@ -4,12 +4,46 @@
 
 const { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand, ListObjectsV2Command } = require('@aws-sdk/client-s3');
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
+const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
+const { DynamoDBDocumentClient, GetCommand, PutCommand } = require('@aws-sdk/lib-dynamodb');
 
 const REGION = 'us-east-1';
 const BUCKET = process.env.DOCUMENTS_BUCKET || 'tiryaq-documents';
+const TABLE  = process.env.TABLE_NAME || 'Hospital';
 const URL_EXPIRY = 300; // 5 minutes
 
 const s3 = new S3Client({ region: REGION });
+const ddb = DynamoDBDocumentClient.from(new DynamoDBClient({ region: REGION }));
+
+// ── Idempotency (Phase D) ────────────────────────────────────────────────────
+function getClientRequestId(event) {
+    const h = event.headers || {};
+    return h['x-client-request-id'] || h['X-Client-Request-Id'] || null;
+}
+async function checkIdempotency(cid) {
+    if (!cid) return null;
+    try {
+        const r = await ddb.send(new GetCommand({ TableName: TABLE, Key: { PK: `IDEMP#${cid}`, SK: 'PROFILE' } }));
+        if (r.Item && r.Item.response) return JSON.parse(r.Item.response);
+    } catch (_) {}
+    return null;
+}
+async function storeIdempotency(cid, response) {
+    if (!cid) return;
+    try {
+        await ddb.send(new PutCommand({
+            TableName: TABLE,
+            Item: {
+                PK: `IDEMP#${cid}`, SK: 'PROFILE', EntityType: 'IDEMPOTENCY',
+                clientRequestId: cid, response: JSON.stringify(response),
+                dataClass: 'SYSTEM',
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+                expiresAt: Math.floor(Date.now() / 1000) + 86400
+            }
+        }));
+    } catch (_) {}
+}
 
 // Allowed folders — requests for any other folder are rejected
 const ALLOWED_FOLDERS = [
@@ -79,6 +113,9 @@ exports.handler = async (event) => {
         // Generate a pre-signed URL for uploading a file
         // ─────────────────────────────────────────────
         if (path.endsWith('/upload-url') && method === 'POST') {
+            const cid = getClientRequestId(event);
+            const cached = await checkIdempotency(cid);
+            if (cached) return cached;
             const { folder, fileName, contentType, fileSize } = body;
 
             // Validate required fields
@@ -119,12 +156,14 @@ exports.handler = async (event) => {
 
             const uploadUrl = await getSignedUrl(s3, command, { expiresIn: URL_EXPIRY });
 
-            return ok({
+            const response = ok({
                 uploadUrl: uploadUrl,
                 key: key,
                 expiresIn: URL_EXPIRY,
                 message: 'Upload URL generated. Use PUT method to upload.'
             });
+            await storeIdempotency(cid, response);
+            return response;
         }
 
         // ─────────────────────────────────────────────
@@ -215,6 +254,9 @@ exports.handler = async (event) => {
         // Delete a specific file
         // ─────────────────────────────────────────────
         if (path.endsWith('/delete') && method === 'DELETE') {
+            const cid = getClientRequestId(event);
+            const cached = await checkIdempotency(cid);
+            if (cached) return cached;
             const key = body.key || '';
 
             if (!key) {
@@ -233,7 +275,9 @@ exports.handler = async (event) => {
 
             await s3.send(command);
 
-            return ok({ message: 'File deleted successfully', key: key });
+            const response = ok({ message: 'File deleted successfully', key: key });
+            await storeIdempotency(cid, response);
+            return response;
         }
 
         // ─────────────────────────────────────────────

@@ -24,6 +24,39 @@ function res(statusCode, body) {
 }
 function err(code, msg) { return res(code, { error: msg, message: msg }); }
 
+// ── Idempotency (Phase D) ────────────────────────────────────────────────────
+// Frontend attaches X-Client-Request-Id to every mutating call. Replays of the
+// same id return the cached response so offline-queue replays don't double-write.
+// 24h TTL via the table's `expiresAt` attribute.
+function getClientRequestId(event) {
+    const h = event.headers || {};
+    return h['x-client-request-id'] || h['X-Client-Request-Id'] || null;
+}
+async function checkIdempotency(cid) {
+    if (!cid) return null;
+    try {
+        const r = await db.send(new GetCommand({ TableName: TABLE_NAME, Key: { PK: `IDEMP#${cid}`, SK: 'PROFILE' } }));
+        if (r.Item && r.Item.response) return JSON.parse(r.Item.response);
+    } catch (_) {}
+    return null;
+}
+async function storeIdempotency(cid, response) {
+    if (!cid) return;
+    try {
+        await db.send(new PutCommand({
+            TableName: TABLE_NAME,
+            Item: {
+                PK: `IDEMP#${cid}`, SK: 'PROFILE', EntityType: 'IDEMPOTENCY',
+                clientRequestId: cid, response: JSON.stringify(response),
+                dataClass: 'SYSTEM',
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+                expiresAt: Math.floor(Date.now() / 1000) + 86400
+            }
+        }));
+    } catch (_) {}
+}
+
 function getClaims(event) {
     return event.requestContext?.authorizer?.jwt?.claims
         || event.requestContext?.authorizer?.claims || {};
@@ -117,6 +150,9 @@ exports.handler = async (event) => {
     // POST /pharmacy/medications
     if (method === 'POST' && path.endsWith('/medications')) {
         if (!isAdmin(event) && !isPharmacist(event)) return err(403, 'Only admins or pharmacists can add medications to the catalog');
+        const cid = getClientRequestId(event);
+        const cachedResp = await checkIdempotency(cid);
+        if (cachedResp) return cachedResp;
         const body = JSON.parse(event.body || '{}');
         if (!body.name)     return err(400, 'Medication name is required');
         if (!body.category) return err(400, 'Category is required');
@@ -165,12 +201,17 @@ exports.handler = async (event) => {
         };
         await db.send(new PutCommand({ TableName: TABLE_NAME, Item: inventory }));
 
-        return res(201, { medication: med, inventory });
+        const response = res(201, { medication: med, inventory });
+        await storeIdempotency(cid, response);
+        return response;
     }
 
     // PATCH /pharmacy/medications/{medId}
     if (method === 'PATCH' && path.includes('/medications/') && params.medId && !path.includes('/inventory')) {
         if (!isAdmin(event) && !isPharmacist(event)) return err(403, 'Only admins or pharmacists can update the medication catalog');
+        const cid = getClientRequestId(event);
+        const cachedResp = await checkIdempotency(cid);
+        if (cachedResp) return cachedResp;
         const body  = JSON.parse(event.body || '{}');
         const medId = params.medId;
         const now   = new Date().toISOString();
@@ -197,12 +238,17 @@ exports.handler = async (event) => {
         }));
 
         const updated = await db.send(new GetCommand({ TableName: TABLE_NAME, Key: { PK: `MED#${medId}`, SK: 'PROFILE' } }));
-        return res(200, updated.Item);
+        const response = res(200, updated.Item);
+        await storeIdempotency(cid, response);
+        return response;
     }
 
     // DELETE /pharmacy/medications/{medId}
     if (method === 'DELETE' && path.includes('/medications/') && params.medId) {
         if (!isAdmin(event) && !isPharmacist(event)) return err(403, 'Only admins or pharmacists can delete medications');
+        const cid = getClientRequestId(event);
+        const cachedResp = await checkIdempotency(cid);
+        if (cachedResp) return cachedResp;
         const medId = params.medId;
 
         // Check stock before delete
@@ -211,7 +257,9 @@ exports.handler = async (event) => {
 
         await db.send(new DeleteCommand({ TableName: TABLE_NAME, Key: { PK: `MED#${medId}`, SK: 'PROFILE' } }));
         await db.send(new DeleteCommand({ TableName: TABLE_NAME, Key: { PK: `MED#${medId}`, SK: 'INVENTORY' } }));
-        return res(200, { message: 'Medication deleted', medId });
+        const response = res(200, { message: 'Medication deleted', medId });
+        await storeIdempotency(cid, response);
+        return response;
     }
 
     // ══════════════════════════════════════════════════════════════════════════
@@ -252,6 +300,9 @@ exports.handler = async (event) => {
 
     // PATCH /pharmacy/inventory/{medId} — adjust stock
     if (method === 'PATCH' && path.includes('/inventory/') && params.medId) {
+        const cid = getClientRequestId(event);
+        const cachedResp = await checkIdempotency(cid);
+        if (cachedResp) return cachedResp;
         const body   = JSON.parse(event.body || '{}');
         const medId  = params.medId;
         const actor  = getActor(event);
@@ -300,7 +351,9 @@ exports.handler = async (event) => {
             ExpressionAttributeValues: updateValues
         }));
 
-        return res(200, { message: 'Stock updated', adjustment, newQty });
+        const response = res(200, { message: 'Stock updated', adjustment, newQty });
+        await storeIdempotency(cid, response);
+        return response;
     }
 
     // ══════════════════════════════════════════════════════════════════════════
@@ -359,6 +412,11 @@ exports.handler = async (event) => {
 
     // POST /pharmacy/dispense
     if (method === 'POST' && path.endsWith('/dispense')) {
+        // Idempotency (Phase D)
+        const cid = getClientRequestId(event);
+        const cachedResp = await checkIdempotency(cid);
+        if (cachedResp) return cachedResp;
+
         const body  = JSON.parse(event.body || '{}');
         const actor = getActor(event);
         const now   = new Date().toISOString();
@@ -471,7 +529,9 @@ const dispense = {
             ExpressionAttributeValues: { ':rx': updatedPrescriptions, ':ua': now }
         }));
 
-        return res(201, { dispense, newStock: newQty, allergyWarnings });
+        const response = res(201, { dispense, newStock: newQty, allergyWarnings });
+        await storeIdempotency(cid, response);
+        return response;
     }
 
     // GET /pharmacy/dispense
@@ -508,6 +568,9 @@ const dispense = {
 
     // POST /pharmacy/purchase-orders
     if (method === 'POST' && path.endsWith('/purchase-orders')) {
+        const cid = getClientRequestId(event);
+        const cachedResp = await checkIdempotency(cid);
+        if (cachedResp) return cachedResp;
         const body  = JSON.parse(event.body || '{}');
         const actor = getActor(event);
         const now   = new Date().toISOString();
@@ -557,11 +620,16 @@ const dispense = {
         };
 
         await db.send(new PutCommand({ TableName: TABLE_NAME, Item: po }));
-        return res(201, po);
+        const response = res(201, po);
+        await storeIdempotency(cid, response);
+        return response;
     }
 
     // PATCH /pharmacy/purchase-orders/{poId}
     if (method === 'PATCH' && path.includes('/purchase-orders/') && params.poId) {
+        const cid = getClientRequestId(event);
+        const cachedResp = await checkIdempotency(cid);
+        if (cachedResp) return cachedResp;
         const body  = JSON.parse(event.body || '{}');
         const poId  = params.poId;
         const actor = getActor(event);
@@ -637,7 +705,9 @@ const dispense = {
         }
 
         const updated = await db.send(new GetCommand({ TableName: TABLE_NAME, Key: { PK: `PO#${poId}`, SK: 'PROFILE' } }));
-        return res(200, updated.Item);
+        const response = res(200, updated.Item);
+        await storeIdempotency(cid, response);
+        return response;
     }
 
     // ══════════════════════════════════════════════════════════════════════════

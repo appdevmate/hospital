@@ -48,6 +48,48 @@ function getCaller(event) {
     };
 }
 
+// ── Idempotency (Phase D) ─────────────────────────────────────────────────────
+// The frontend offline-queue interceptor sends `X-Client-Request-Id` on every
+// mutating call. If we've already processed that id, return the cached response
+// instead of running the write a second time. Records auto-expire in 24h via
+// the table's TTL on `expiresAt`.
+function getClientRequestId(event) {
+    const h = event.headers || {};
+    return h['x-client-request-id'] || h['X-Client-Request-Id'] || null;
+}
+
+async function checkIdempotency(cid) {
+    if (!cid) return null;
+    try {
+        const r = await db.send(new GetCommand({
+            TableName: TABLE_NAME,
+            Key: { PK: `IDEMP#${cid}`, SK: 'PROFILE' }
+        }));
+        if (r.Item && r.Item.response) return JSON.parse(r.Item.response);
+    } catch (_) {}
+    return null;
+}
+
+async function storeIdempotency(cid, response) {
+    if (!cid) return;
+    try {
+        await db.send(new PutCommand({
+            TableName: TABLE_NAME,
+            Item: {
+                PK:              `IDEMP#${cid}`,
+                SK:              'PROFILE',
+                EntityType:      'IDEMPOTENCY',
+                clientRequestId: cid,
+                response:        JSON.stringify(response),
+                dataClass:       'SYSTEM',
+                createdAt:       new Date().toISOString(),
+                updatedAt:       new Date().toISOString(),
+                expiresAt:       Math.floor(Date.now() / 1000) + 86400 // 24h TTL
+            }
+        }));
+    } catch (_) {}
+}
+
 // ── Audit Trail ───────────────────────────────────────────────────────────────
 async function writeAudit(action, entityId, actorEmail, actorName, before, after, ipAddress) {
     const auditId = randomUUID();
@@ -222,6 +264,12 @@ exports.handler = async (event) => {
     if (method === 'POST' && !apptId) {
         if (!caller.isAdmin) return err(403, 'Only administrators can create appointments');
 
+        // Idempotency: if this clientRequestId was processed already, return
+        // the cached response so an offline-queue replay never double-creates.
+        const cid = getClientRequestId(event);
+        const cached = await checkIdempotency(cid);
+        if (cached) return cached;
+
         const body = JSON.parse(event.body || '{}');
         const validationErrors = validateAppointment(body);
         if (validationErrors.length > 0) return err(400, validationErrors.join(' | '));
@@ -308,7 +356,9 @@ exports.handler = async (event) => {
         // #4 — mirror the appointment onto the doctor's calendar (non-critical).
         try { await createCalendarEventForAppointment(appointment, now); } catch (_) {}
 
-        return res(201, appointment);
+        const response = res(201, appointment);
+        await storeIdempotency(cid, response);
+        return response;
     }
 
     // ── GET /appointments ── LIST ────────────────────────────────────────────
@@ -387,6 +437,11 @@ exports.handler = async (event) => {
 
     // ── PATCH /appointments/{apptId} ── UPDATE ───────────────────────────────
     if (method === 'PATCH' && apptId) {
+        // Idempotency check (Phase D) — returns cached response on replay.
+        const cid = getClientRequestId(event);
+        const cached = await checkIdempotency(cid);
+        if (cached) return cached;
+
         const body = JSON.parse(event.body || '{}');
 
         const existing = await db.send(new GetCommand({
@@ -522,12 +577,19 @@ exports.handler = async (event) => {
             Key: { PK: `APPOINTMENT#${apptId}`, SK: 'PROFILE' }
         }));
 
-        return res(200, updated.Item);
+        const response = res(200, updated.Item);
+        await storeIdempotency(cid, response);
+        return response;
     }
 
     // ── DELETE /appointments/{apptId} ── ADMIN ONLY ──────────────────────────
     if (method === 'DELETE' && apptId) {
         if (!caller.isAdmin) return err(403, 'Only administrators can delete appointments');
+
+        // Idempotency check (Phase D) — replays of the same delete are no-ops.
+        const cid = getClientRequestId(event);
+        const cached = await checkIdempotency(cid);
+        if (cached) return cached;
 
         const existing = await db.send(new GetCommand({
             TableName: TABLE_NAME,
@@ -542,7 +604,9 @@ exports.handler = async (event) => {
 
         await writeAudit('DELETE', apptId, caller.email, caller.name, existing.Item, null, ipAddress);
 
-        return res(200, { message: 'Appointment deleted', appointmentId: apptId });
+        const response = res(200, { message: 'Appointment deleted', appointmentId: apptId });
+        await storeIdempotency(cid, response);
+        return response;
     }
 
     return err(400, 'Unknown route');

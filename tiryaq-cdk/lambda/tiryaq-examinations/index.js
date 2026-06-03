@@ -40,6 +40,42 @@ function isAdmin(event) {
     return arr.some(g => ['admin','Admin','developer','Developer','Developers'].includes(g.trim()));
 }
 
+// ── Idempotency (Phase D) ────────────────────────────────────────────────────
+// Frontend sends X-Client-Request-Id on every mutating call. If we've seen the
+// id, return the cached response so offline-queue replays never double-write.
+// TTL 24h via the table's `expiresAt` attribute.
+function getClientRequestId(event) {
+    const h = event.headers || {};
+    return h['x-client-request-id'] || h['X-Client-Request-Id'] || null;
+}
+async function checkIdempotency(cid) {
+    if (!cid) return null;
+    try {
+        const r = await db.send(new GetCommand({ TableName: TABLE_NAME, Key: { PK: `IDEMP#${cid}`, SK: 'PROFILE' } }));
+        if (r.Item && r.Item.response) return JSON.parse(r.Item.response);
+    } catch (_) {}
+    return null;
+}
+async function storeIdempotency(cid, response) {
+    if (!cid) return;
+    try {
+        await db.send(new PutCommand({
+            TableName: TABLE_NAME,
+            Item: {
+                PK:              `IDEMP#${cid}`,
+                SK:              'PROFILE',
+                EntityType:      'IDEMPOTENCY',
+                clientRequestId: cid,
+                response:        JSON.stringify(response),
+                dataClass:       'SYSTEM',
+                createdAt:       new Date().toISOString(),
+                updatedAt:       new Date().toISOString(),
+                expiresAt:       Math.floor(Date.now() / 1000) + 86400
+            }
+        }));
+    } catch (_) {}
+}
+
 // ── Audit Trail ──────────────────────────────────────────────────────────────
 async function writeAudit(action, entityType, entityId, actorEmail, actorName, before, after, ipAddress) {
     const auditId = randomUUID();
@@ -202,6 +238,11 @@ exports.handler = async (event) => {
 
     // ── POST /examinations ── CREATE ─────────────────────────────────────────
     if (method === 'POST' && !path.includes('/signoff')) {
+        // Idempotency (Phase D)
+        const cid = getClientRequestId(event);
+        const cached = await checkIdempotency(cid);
+        if (cached) return cached;
+
         const body = JSON.parse(event.body || '{}');
 
         if (!body.patientId)   return err(400, 'patientId is required');
@@ -263,7 +304,9 @@ exports.handler = async (event) => {
 
         await writeAudit('CREATE', 'EXAMINATION', id, body.doctorEmail, body.doctorName, null, exam, ipAddress);
 
-        return res(201, exam);
+        const response = res(201, exam);
+        await storeIdempotency(cid, response);
+        return response;
     }
 
     // ── GET /examinations?patientId=x OR ?doctorEmail=x ── LIST ─────────────
@@ -317,6 +360,11 @@ exports.handler = async (event) => {
 
     // ── PATCH /examinations/{examId} ── UPDATE SECTION ──────────────────────
     if (method === 'PATCH' && examId && !path.includes('/signoff')) {
+        // Idempotency (Phase D)
+        const cid = getClientRequestId(event);
+        const cached = await checkIdempotency(cid);
+        if (cached) return cached;
+
         const body = JSON.parse(event.body || '{}');
 
         const existing = await db.send(new GetCommand({
@@ -388,11 +436,18 @@ exports.handler = async (event) => {
             Key: { PK: `EXAM#${examId}`, SK: 'PROFILE' }
         }));
 
-        return res(200, updated.Item);
+        const response = res(200, updated.Item);
+        await storeIdempotency(cid, response);
+        return response;
     }
 
     // ── POST /examinations/{examId}/signoff ──────────────────────────────────
     if (method === 'POST' && examId && path.includes('/signoff')) {
+        // Idempotency (Phase D)
+        const cid = getClientRequestId(event);
+        const cached = await checkIdempotency(cid);
+        if (cached) return cached;
+
         const body = JSON.parse(event.body || '{}');
 
         const existing = await db.send(new GetCommand({
@@ -444,12 +499,19 @@ exports.handler = async (event) => {
             Key: { PK: `EXAM#${examId}`, SK: 'PROFILE' }
         }));
 
-        return res(200, updated.Item);
+        const response = res(200, updated.Item);
+        await storeIdempotency(cid, response);
+        return response;
     }
 
     // ── DELETE /examinations/{examId} ── ADMIN ONLY ──────────────────────────
     if (method === 'DELETE' && examId) {
         if (!adminUser) return err(403, 'Only administrators can delete examinations');
+
+        // Idempotency (Phase D)
+        const cid = getClientRequestId(event);
+        const cached = await checkIdempotency(cid);
+        if (cached) return cached;
 
         const existing = await db.send(new GetCommand({
             TableName: TABLE_NAME,
@@ -466,7 +528,9 @@ exports.handler = async (event) => {
         await writeAudit('DELETE', 'EXAMINATION', examId,
             'admin', 'admin', existing.Item, null, ipAddress);
 
-        return res(200, { message: 'Examination deleted', examId });
+        const response = res(200, { message: 'Examination deleted', examId });
+        await storeIdempotency(cid, response);
+        return response;
     }
 
     return err(400, 'Unknown route');

@@ -115,3 +115,17 @@ export function markOfflineEnqueue(): void {
 export function wasOfflineEnqueueRecent(windowMs = 1500): boolean {
     return Date.now() - lastEnqueueAt < windowMs;
 }
+
+// ── UUID helper ─────────────────────────────────────────────────────────────
+// Used for both queue row ids and the X-Client-Request-Id header attached to
+// every mutating API call (backend uses it for idempotency / dedupe on replay).
+export function uuid(): string {
+    if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
+        return (crypto as { randomUUID(): string }).randomUUID();
+    }
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+        const r = (Math.random() * 16) | 0;
+        const v = c === 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+    });
+}

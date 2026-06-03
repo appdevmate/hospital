@@ -1,8 +1,38 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
-const { DynamoDBDocumentClient, UpdateCommand, TransactWriteCommand } = require('@aws-sdk/lib-dynamodb');
+const { DynamoDBDocumentClient, UpdateCommand, TransactWriteCommand, GetCommand, PutCommand } = require('@aws-sdk/lib-dynamodb');
 
 const dynamo  = DynamoDBDocumentClient.from(new DynamoDBClient({ region: 'us-east-1' }));
 const TABLE   = 'Hospital';
+
+// ── Idempotency (Phase D) ────────────────────────────────────────────────────
+function getClientRequestId(event) {
+  const h = event.headers || {};
+  return h['x-client-request-id'] || h['X-Client-Request-Id'] || null;
+}
+async function checkIdempotency(cid) {
+  if (!cid) return null;
+  try {
+    const r = await dynamo.send(new GetCommand({ TableName: TABLE, Key: { PK: `IDEMP#${cid}`, SK: 'PROFILE' } }));
+    if (r.Item && r.Item.response) return JSON.parse(r.Item.response);
+  } catch (_) {}
+  return null;
+}
+async function storeIdempotency(cid, response) {
+  if (!cid) return;
+  try {
+    await dynamo.send(new PutCommand({
+      TableName: TABLE,
+      Item: {
+        PK: `IDEMP#${cid}`, SK: 'PROFILE', EntityType: 'IDEMPOTENCY',
+        clientRequestId: cid, response: JSON.stringify(response),
+        dataClass: 'SYSTEM',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        expiresAt: Math.floor(Date.now() / 1000) + 86400
+      }
+    }));
+  } catch (_) {}
+}
 const toLower = (v) => (typeof v === 'string' ? v.toLowerCase() : v ?? null);
 
 const hdrs = {
@@ -37,6 +67,11 @@ const isAdminOrDeveloper = (event) => {
 };
 
 exports.handler = async (event) => {
+  // Idempotency (Phase D)
+  const cid = getClientRequestId(event);
+  const cached = await checkIdempotency(cid);
+  if (cached) return cached;
+
   try {
     const method = event.requestContext?.http?.method || event.httpMethod || '';
     const path   = event.rawPath || event.path || '';
@@ -79,7 +114,9 @@ exports.handler = async (event) => {
         ]
       }));
 
-      return ok({ message: 'Patient restored successfully', patientId: patientID });
+      const restoreRes = ok({ message: 'Patient restored successfully', patientId: patientID });
+      await storeIdempotency(cid, restoreRes);
+      return restoreRes;
     }
 
     // ── PATCH /patients/{id} — standard update ───────────────────────────
@@ -117,7 +154,9 @@ exports.handler = async (event) => {
       ConditionExpression: 'attribute_exists(PK) AND attribute_exists(SK)'
     }));
 
-    return ok({ message: 'Patient updated successfully', patientID, updatedData: result.Attributes });
+    const updateRes = ok({ message: 'Patient updated successfully', patientID, updatedData: result.Attributes });
+    await storeIdempotency(cid, updateRes);
+    return updateRes;
 
   } catch (error) {
     if (error.name === 'ConditionalCheckFailedException') {

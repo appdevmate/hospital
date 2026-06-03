@@ -3,7 +3,8 @@ const {
   DynamoDBDocumentClient,
   TransactWriteCommand,
   UpdateCommand,
-  GetCommand
+  GetCommand,
+  PutCommand
 } = require('@aws-sdk/lib-dynamodb');
 const { randomUUID } = require('crypto');
 
@@ -14,6 +15,36 @@ const COUNTER_SK = 'TOTAL';
 
 const client = new DynamoDBClient({ region: REGION });
 const dynamo = DynamoDBDocumentClient.from(client);
+
+// ── Idempotency (Phase D) ────────────────────────────────────────────────────
+function getClientRequestId(event) {
+  const h = event.headers || {};
+  return h['x-client-request-id'] || h['X-Client-Request-Id'] || null;
+}
+async function checkIdempotency(cid) {
+  if (!cid) return null;
+  try {
+    const r = await dynamo.send(new GetCommand({ TableName: TABLE_NAME, Key: { PK: `IDEMP#${cid}`, SK: 'PROFILE' } }));
+    if (r.Item && r.Item.response) return JSON.parse(r.Item.response);
+  } catch (_) {}
+  return null;
+}
+async function storeIdempotency(cid, response) {
+  if (!cid) return;
+  try {
+    await dynamo.send(new PutCommand({
+      TableName: TABLE_NAME,
+      Item: {
+        PK: `IDEMP#${cid}`, SK: 'PROFILE', EntityType: 'IDEMPOTENCY',
+        clientRequestId: cid, response: JSON.stringify(response),
+        dataClass: 'SYSTEM',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        expiresAt: Math.floor(Date.now() / 1000) + 86400
+      }
+    }));
+  } catch (_) {}
+}
 
 /* =========================
    Helpers
@@ -292,6 +323,9 @@ const createBulkDoctors = async (doctors) => {
 ========================= */
 
 exports.handler = async (event) => {
+  const cid = getClientRequestId(event);
+  const cached = await checkIdempotency(cid);
+  if (cached) return cached;
 
   try {
     const body   = JSON.parse(event.body || '{}');
@@ -337,7 +371,7 @@ exports.handler = async (event) => {
     // ── Single ──
     const doctorID = await createSingleDoctor(body);
 
-    return {
+    const response = {
       statusCode: 201,
       headers: {
         'Content-Type': 'application/json',
@@ -350,6 +384,8 @@ exports.handler = async (event) => {
         doctorID
       })
     };
+    await storeIdempotency(cid, response);
+    return response;
 
   } catch (error) {
     const isValidation =

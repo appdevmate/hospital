@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
-import { offlineDb, PendingMutation } from './offline-db';
+import { offlineDb, PendingMutation, uuid } from './offline-db';
 import { HelpersService } from './helpers-service';
 
 /**
@@ -53,9 +53,12 @@ export class OfflineService {
                 if (v !== null) headers[k] = v;
             }
         });
+        // Preserve the X-Client-Request-Id the interceptor already attached so
+        // the backend can dedupe on replay. Fall back to a new UUID if absent.
+        const cid = req.headers.get('X-Client-Request-Id') || uuid();
         const m: PendingMutation = {
-            id: this.uuid(),
-            clientRequestId: this.uuid(),
+            id: uuid(),
+            clientRequestId: cid,
             url: req.urlWithParams,
             method: req.method,
             headers,
@@ -122,16 +125,5 @@ export class OfflineService {
         } catch {
             // ignore — IndexedDB unavailable
         }
-    }
-
-    private uuid(): string {
-        if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
-            return (crypto as any).randomUUID();
-        }
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-            const r = (Math.random() * 16) | 0;
-            const v = c === 'x' ? r : (r & 0x3) | 0x8;
-            return v.toString(16);
-        });
     }
 }

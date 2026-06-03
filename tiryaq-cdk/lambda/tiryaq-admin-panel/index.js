@@ -3,7 +3,8 @@ const {
     DynamoDBDocumentClient,
     GetCommand,
     QueryCommand,
-    UpdateCommand
+    UpdateCommand,
+    PutCommand
 } = require('@aws-sdk/lib-dynamodb');
 const {
     CognitoIdentityProviderClient,
@@ -37,6 +38,36 @@ function res(statusCode, body) {
 
 function err(statusCode, message) {
     return res(statusCode, { error: message, message });
+}
+
+// ── Idempotency (Phase D) ────────────────────────────────────────────────────
+function getClientRequestId(event) {
+    const h = event.headers || {};
+    return h['x-client-request-id'] || h['X-Client-Request-Id'] || null;
+}
+async function checkIdempotency(cid) {
+    if (!cid) return null;
+    try {
+        const r = await db.send(new GetCommand({ TableName: TABLE_NAME, Key: { PK: `IDEMP#${cid}`, SK: 'PROFILE' } }));
+        if (r.Item && r.Item.response) return JSON.parse(r.Item.response);
+    } catch (_) {}
+    return null;
+}
+async function storeIdempotency(cid, response) {
+    if (!cid) return;
+    try {
+        await db.send(new PutCommand({
+            TableName: TABLE_NAME,
+            Item: {
+                PK: `IDEMP#${cid}`, SK: 'PROFILE', EntityType: 'IDEMPOTENCY',
+                clientRequestId: cid, response: JSON.stringify(response),
+                dataClass: 'SYSTEM',
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+                expiresAt: Math.floor(Date.now() / 1000) + 86400
+            }
+        }));
+    } catch (_) {}
 }
 
 function isAdmin(event) {
@@ -134,22 +165,35 @@ exports.handler = async (event) => {
 
     // ── POST /admin/users/{username}/disable ──────────────────────────────────
     if (method === 'POST' && path.includes('/disable')) {
+        const cid = getClientRequestId(event);
+        const cached = await checkIdempotency(cid);
+        if (cached) return cached;
         const username = params.username;
         if (!username) return err(400, 'username is required');
         await cognito.send(new AdminDisableUserCommand({ UserPoolId: USER_POOL_ID, Username: username }));
-        return res(200, { message: `User ${username} disabled successfully` });
+        const response = res(200, { message: `User ${username} disabled successfully` });
+        await storeIdempotency(cid, response);
+        return response;
     }
 
     // ── POST /admin/users/{username}/enable ───────────────────────────────────
     if (method === 'POST' && path.includes('/enable')) {
+        const cid = getClientRequestId(event);
+        const cached = await checkIdempotency(cid);
+        if (cached) return cached;
         const username = params.username;
         if (!username) return err(400, 'username is required');
         await cognito.send(new AdminEnableUserCommand({ UserPoolId: USER_POOL_ID, Username: username }));
-        return res(200, { message: `User ${username} enabled successfully` });
+        const response = res(200, { message: `User ${username} enabled successfully` });
+        await storeIdempotency(cid, response);
+        return response;
     }
 
     // ── POST /admin/users/{username}/set-password ─────────────────────────────
     if (method === 'POST' && path.includes('/set-password')) {
+        const cid = getClientRequestId(event);
+        const cached = await checkIdempotency(cid);
+        if (cached) return cached;
         const body     = JSON.parse(event.body || '{}');
         const username = params.username;
         const password = body.password;
@@ -163,7 +207,9 @@ exports.handler = async (event) => {
             Password:   password,
             Permanent:  false
         }));
-        return res(200, { message: `Temporary password set for ${username}. User must change it on next login.` });
+        const response = res(200, { message: `Temporary password set for ${username}. User must change it on next login.` });
+        await storeIdempotency(cid, response);
+        return response;
     }
 
     // ── GET /admin/audit ──────────────────────────────────────────────────────

@@ -76,6 +76,36 @@ function res(statusCode, body) {
 function err(code, message) { return res(code, { error: message, message }); }
 function nowIso() { return new Date().toISOString(); }
 
+// ── Idempotency (Phase D) ────────────────────────────────────────────────────
+function getClientRequestId(event) {
+    const h = event.headers || {};
+    return h['x-client-request-id'] || h['X-Client-Request-Id'] || null;
+}
+async function checkIdempotency(cid) {
+    if (!cid) return null;
+    try {
+        const r = await ddb.send(new GetCommand({ TableName: TABLE_NAME, Key: { PK: `IDEMP#${cid}`, SK: 'PROFILE' } }));
+        if (r.Item && r.Item.response) return JSON.parse(r.Item.response);
+    } catch (_) {}
+    return null;
+}
+async function storeIdempotency(cid, response) {
+    if (!cid) return;
+    try {
+        await ddb.send(new PutCommand({
+            TableName: TABLE_NAME,
+            Item: {
+                PK: `IDEMP#${cid}`, SK: 'PROFILE', EntityType: 'IDEMPOTENCY',
+                clientRequestId: cid, response: JSON.stringify(response),
+                dataClass: 'SYSTEM',
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+                expiresAt: Math.floor(Date.now() / 1000) + 86400
+            }
+        }));
+    } catch (_) {}
+}
+
 function getActor(event) {
     const claims = event.requestContext?.authorizer?.jwt?.claims
                 || event.requestContext?.authorizer?.claims || {};
@@ -116,6 +146,9 @@ async function listCalendars() {
 }
 
 async function createCalendar(event, actor) {
+    const cid = getClientRequestId(event);
+    const cached = await checkIdempotency(cid);
+    if (cached) return cached;
     let body = {};
     try { body = JSON.parse(event.body || '{}'); } catch (_) { return err(400, 'Invalid JSON body'); }
     const name = (body.name || '').toString().trim();
@@ -135,15 +168,20 @@ async function createCalendar(event, actor) {
         Item: item,
         ConditionExpression: 'attribute_not_exists(PK)'
     }));
-    return res(201, {
+    const response = res(201, {
         calendarId,
         name,
         description,
         createdAt: item.createdAt
     });
+    await storeIdempotency(cid, response);
+    return response;
 }
 
 async function deleteCalendar(event, actor) {
+    const cid = getClientRequestId(event);
+    const cached = await checkIdempotency(cid);
+    if (cached) return cached;
     const calendarId = event.pathParameters?.calendarId;
     if (!calendarId) return err(400, 'Missing calendarId');
 
@@ -172,7 +210,9 @@ async function deleteCalendar(event, actor) {
         Key: { PK: `CALENDAR#${calendarId}`, SK: 'PROFILE' }
     }));
 
-    return res(204, {});
+    const response = res(204, {});
+    await storeIdempotency(cid, response);
+    return response;
 }
 
 // ── Events ───────────────────────────────────────────────────────────
@@ -199,6 +239,9 @@ async function listEvents(event) {
 }
 
 async function createEvent(event, actor) {
+    const cid = getClientRequestId(event);
+    const cached = await checkIdempotency(cid);
+    if (cached) return cached;
     const calendarId = event.pathParameters?.calendarId;
     if (!calendarId) return err(400, 'Missing calendarId');
 
@@ -231,7 +274,7 @@ async function createEvent(event, actor) {
     }, { dataClass: DATA_CLASS.PHI, actor: actor.email });
 
     await ddb.send(new PutCommand({ TableName: TABLE_NAME, Item: item }));
-    return res(201, {
+    const response = res(201, {
         eventId,
         calendarId,
         name:        item.name,
@@ -241,9 +284,14 @@ async function createEvent(event, actor) {
         color:       item.color,
         recurrence:  item.recurrence
     });
+    await storeIdempotency(cid, response);
+    return response;
 }
 
 async function updateEvent(event, actor) {
+    const cid = getClientRequestId(event);
+    const cached = await checkIdempotency(cid);
+    if (cached) return cached;
     const calendarId = event.pathParameters?.calendarId;
     const eventId    = event.pathParameters?.eventId;
     if (!calendarId || !eventId) return err(400, 'Missing calendarId or eventId');
@@ -278,7 +326,7 @@ async function updateEvent(event, actor) {
             ReturnValues: 'ALL_NEW'
         }));
         const it = out.Attributes;
-        return res(200, {
+        const response = res(200, {
             eventId:     it.eventId,
             calendarId:  it.calendarId,
             name:        it.name,
@@ -288,6 +336,8 @@ async function updateEvent(event, actor) {
             color:       it.color || null,
             recurrence:  it.recurrence || null
         });
+        await storeIdempotency(cid, response);
+        return response;
     } catch (e) {
         if (e.name === 'ConditionalCheckFailedException') return err(404, 'Event not found');
         throw e;
@@ -295,6 +345,9 @@ async function updateEvent(event, actor) {
 }
 
 async function deleteEvent(event) {
+    const cid = getClientRequestId(event);
+    const cached = await checkIdempotency(cid);
+    if (cached) return cached;
     const calendarId = event.pathParameters?.calendarId;
     const eventId    = event.pathParameters?.eventId;
     if (!calendarId || !eventId) return err(400, 'Missing calendarId or eventId');
@@ -302,7 +355,9 @@ async function deleteEvent(event) {
         TableName: TABLE_NAME,
         Key: { PK: `CALENDAR#${calendarId}`, SK: `EVENT#${eventId}` }
     }));
-    return res(204, {});
+    const response = res(204, {});
+    await storeIdempotency(cid, response);
+    return response;
 }
 
 // ── Router ───────────────────────────────────────────────────────────

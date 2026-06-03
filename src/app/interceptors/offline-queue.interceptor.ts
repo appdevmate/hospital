@@ -3,7 +3,7 @@ import { inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { OfflineService } from '@/services/offline.service';
 import { HelpersService } from '@/services/helpers-service';
-import { markOfflineEnqueue } from '@/services/offline-db';
+import { markOfflineEnqueue, uuid } from '@/services/offline-db';
 
 /**
  * Offline mutation interceptor (Phase C).
@@ -29,8 +29,15 @@ export const offlineQueueInterceptor: HttpInterceptorFn = (req, next) => {
     const isMutating = MUTATING.has(req.method.toUpperCase());
     const isApi = req.url.includes(API_HOST);
 
-    if (!isMutating || !isApi) return next(req);
-    if (!offline.isOffline()) return next(req);
+    // Attach X-Client-Request-Id on every mutating API call (online + offline)
+    // so the backend can dedupe replays / accidental double-submits.
+    let workingReq = req;
+    if (isMutating && isApi && !req.headers.has('X-Client-Request-Id')) {
+        workingReq = req.clone({ setHeaders: { 'X-Client-Request-Id': uuid() } });
+    }
+
+    if (!isMutating || !isApi) return next(workingReq);
+    if (!offline.isOffline()) return next(workingReq);
 
     // Mark synchronously so HelpersService.notifySuccess can suppress the
     // component's "Created/Updated" toast that would otherwise stack on top of
@@ -39,22 +46,22 @@ export const offlineQueueInterceptor: HttpInterceptorFn = (req, next) => {
 
     // Persist + notify. Fire-and-forget; the synthetic response below makes the
     // caller think the save succeeded so the UI doesn't get stuck.
-    offline.enqueue(req).then(
+    offline.enqueue(workingReq).then(
         () => helpers.notifyInfo('Saved offline', 'Will sync when connection is back.'),
         () => helpers.notifyError('Save Failed', 'Could not queue the request offline.')
     );
 
     // Echo the body so optimistic UI keeps the fields the user typed.
     const body =
-        req.body && typeof req.body === 'object'
-            ? { ...(req.body as object), _offlineQueued: true }
+        workingReq.body && typeof workingReq.body === 'object'
+            ? { ...(workingReq.body as object), _offlineQueued: true }
             : { _offlineQueued: true };
 
     return of(
         new HttpResponse({
             status: 202,
             statusText: 'Queued offline',
-            url: req.urlWithParams,
+            url: workingReq.urlWithParams,
             body
         })
     ) as unknown as Observable<any>;
