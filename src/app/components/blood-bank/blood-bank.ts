@@ -112,7 +112,10 @@ export class BloodBankComponent implements OnInit {
         this.refreshDonors();
         this.refreshUnits();
         this.refreshRequests();
-        this.patientsSvc.getAllPatients().subscribe({ next: (p) => (this.patients = p || []), error: () => {} });
+        this.patientsSvc.getPatientsPage({ pageSize: 500 } as any).subscribe({
+            next: (r: any) => (this.patients = (r?.items || r?.data || r || []) as any[]),
+            error: () => {}
+        });
     }
 
     // ── Stock ────────────────────────────────────────────────────────────────
@@ -178,7 +181,7 @@ export class BloodBankComponent implements OnInit {
         if (!this.donationDonor) return;
         this.bb.createDonation(this.donationDonor.donorId, this.donationForm).subscribe({
             next: () => {
-                this.helpers.notifySuccess('Donation recorded', `${this.donationForm.units || 1} unit(s) added to inventory.`);
+                this.helpers.notifySuccess(`Donation recorded — ${this.donationForm.units || 1} unit(s) added to inventory.`);
                 this.showDonationDialog = false;
                 this.refreshDonors();
                 this.refreshUnits();
