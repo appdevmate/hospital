@@ -842,7 +842,7 @@ exports.handler = async (event) => {
                     apigwv2.CorsHttpMethod.DELETE,
                     apigwv2.CorsHttpMethod.OPTIONS
                 ],
-                allowHeaders: ['Content-Type', 'Authorization'],
+                allowHeaders: ['Content-Type', 'Authorization', 'X-Client-Request-Id'],
                 allowCredentials: false,
                 maxAge: cdk.Duration.minutes(10)
             }

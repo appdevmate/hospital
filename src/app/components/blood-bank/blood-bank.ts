@@ -7,6 +7,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { SelectModule } from 'primeng/select';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { InputMaskModule } from 'primeng/inputmask';
 import { DatePickerModule } from 'primeng/datepicker';
 import { TextareaModule } from 'primeng/textarea';
 import { TableModule } from 'primeng/table';
@@ -31,8 +32,8 @@ import { PatientsService } from '@/services/patients.service';
     standalone: true,
     imports: [
         CommonModule, FormsModule, ButtonModule, TagModule, InputTextModule,
-        InputNumberModule, SelectModule, MultiSelectModule, DatePickerModule,
-        TextareaModule, TableModule, TooltipModule, ConfirmDialogModule,
+        InputNumberModule, SelectModule, MultiSelectModule, InputMaskModule,
+        DatePickerModule, TextareaModule, TableModule, TooltipModule, ConfirmDialogModule,
         DialogModule, DividerModule, Tabs, TabList, Tab, TabPanels, TabPanel
     ],
     providers: [ConfirmationService],
@@ -58,6 +59,13 @@ export class BloodBankComponent implements OnInit {
     readonly UNIT_STATUSES: UnitStatus[] = ['available','reserved','issued','used','discarded','expired','quarantined'];
     readonly REQ_STATUSES: ReqStatus[]   = ['pending','approved','crossmatched','issued','cancelled','rejected'];
     readonly URGENCIES: Urgency[]        = ['routine','urgent','emergency','stat'];
+    readonly GENDERS = [
+        { label: 'Male',   value: 'male' },
+        { label: 'Female', value: 'female' },
+        { label: 'Other',  value: 'other' }
+    ];
+    /** Standard phone mask used across the app (patient/doctor) */
+    readonly PHONE_MASK = '+999 9999 9999';
 
     canManageInventory = false;
     canRequestBlood    = false;
@@ -332,7 +340,7 @@ export class BloodBankComponent implements OnInit {
 
     // ── Form helpers ─────────────────────────────────────────────────────────
     private emptyDonor(): Partial<Donor> {
-        return { name: '', bloodType: undefined as any, gender: '', phone: '', email: '', address: '', notes: '' };
+        return { name: '', bloodType: undefined as any, gender: '', phone: '', address: '', notes: '' };
     }
     private emptyDonation() {
         return { productType: 'whole' as ProductType, units: 1, volumeMl: 450, collectionDate: new Date().toISOString().slice(0,10), notes: '' };
