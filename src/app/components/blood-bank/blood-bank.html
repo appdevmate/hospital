@@ -113,6 +113,7 @@
                             <th>Name</th>
                             <th>Blood</th>
                             <th>Phone</th>
+                            <th>Qatar ID</th>
                             <th>Last donation</th>
                             <th>Count</th>
                             <th>Eligibility</th>
@@ -124,6 +125,7 @@
                             <td>{{ d.name }}</td>
                             <td><strong>{{ d.bloodType }}</strong></td>
                             <td>{{ d.phone || '—' }}</td>
+                            <td>{{ d.qid || '—' }}</td>
                             <td>{{ d.lastDonation || '—' }}</td>
                             <td>{{ d.donationCount || 0 }}</td>
                             <td><p-tag [value]="d.eligibilityStatus || 'eligible'" [severity]="d.eligibilityStatus === 'eligible' ? 'success' : 'warn'"></p-tag></td>
@@ -136,7 +138,7 @@
                             </td>
                         </tr>
                     </ng-template>
-                    <ng-template pTemplate="emptymessage"><tr><td colspan="7" class="text-center p-4">No donors yet.</td></tr></ng-template>
+                    <ng-template pTemplate="emptymessage"><tr><td colspan="8" class="text-center p-4">No donors yet.</td></tr></ng-template>
                 </p-table>
             </p-tabpanel>
 
