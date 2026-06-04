@@ -1,174 +1,184 @@
-# Tiryaq — Batch Test Plan (12 fixes/features)
+# Tiryaq — End-to-End Test Workflow
 
-Date: 2026-05-24
-Covers: #1, #2, #3, #4/#9, #5, #6, #7, #8, #10, #11, #12
-
----
-
-## 0. Deploy
-
-Backend (Lambdas + IAM):
-
-```powershell
-cd "C:\Users\Sami Toufic Taha\Desktop\aws apps\hospital\tiryaq-cdk"
-npx cdk deploy --require-approval never
-```
-
-Frontend (after backend finishes):
-
-```powershell
-cd "C:\Users\Sami Toufic Taha\Desktop\aws apps\hospital"
-Remove-Item -Recurse -Force .angular\cache -ErrorAction SilentlyContinue
-ng build --configuration production
-aws s3 sync "dist\verona-ng\browser" s3://tiryaqcdkstack-tiryaqfrontendbucket18b23106-jsz6deto6hub --delete
-aws cloudfront create-invalidation --distribution-id E1Z1ZKYM74LVA7 --paths "/*"
-```
-
-Wait for the invalidation to reach `Completed`, then hard-refresh.
+One continuous walk-through that exercises every module + feature in the system. Follow it from top to bottom in one sitting on a fresh login. Expected result of each step is in **bold**.
 
 ---
 
-## 1. Pharmacy = pharmacist only (#5)
+## 0. Prerequisites
 
-1. Log in as a **doctor** (or admin/developer) → confirm **no "Pharmacy"** item in the left menu.
-2. Manually visit `/pharmacy` → you are redirected to **/notfound**.
-3. (Backend) In the browser console / Network, a direct `GET /pharmacy/medications` with a non-pharmacist token returns **403** "Access denied: pharmacy staff only".
-4. Log in as a **pharmacist** → Pharmacy menu visible and all tabs load.
-
-Pass = only pharmacist can reach pharmacy (UI + API).
+- 4 Cognito users seeded — one per group: `admin1` (Admin), `doctor1` (Doctors), `pharmacist1` (Pharmacists), `developer1` (Developers).
+- Browser: Edge or Chrome, DevTools open, **Application → Service Workers → "Update on reload" off** so caching is realistic.
+- Deployment is current (`cdk deploy` + `aws s3 sync` + invalidation done).
 
 ---
 
-## 2. updatedAt:null GSI scrub (#11)
+## 1. Sign in & shell
 
-1. Edit a **patient**: clear an optional field (e.g. notes) and save → **saves OK, no 500**.
-2. Edit a **doctor**: save with some fields blank → **saves OK**.
-3. Edit a **payment/invoice** → **saves OK**.
-
-Pass = updates never crash with a GSI "Type mismatch … NULL" error.
-
----
-
-## 3. Backend error surfacing (#12)
-
-1. Create a **doctor** using an email that already exists → toast shows the real message, e.g. **"Failed to create doctor, email already exists: …"** (not a generic message).
-2. Repeat with a duplicate **QID/phone** → specific message shown.
-
-Pass = the backend's actual error text reaches the toast.
+1. Go to `https://akwadona.com` → log in as **admin1**.
+2. **Expect:** dashboard loads, side menu has Dashboard / Calendar / Appointments / Invoices / Notifications / Patients / Doctors Management / Blood Bank / Documents / Administration.
+3. Top bar shows your name + email. Click the palette icon → theme sidebar opens → close.
+4. Open a new tab → paste `https://akwadona.com/appointments` → **Expect:** lands on Appointments (return-url preserved through Cognito if not logged in).
 
 ---
 
-## 4. Check-in changes status (#6)
+## 2. Reference data
 
-1. Appointments → find a **scheduled** appointment → click **Check In**.
-2. The row's **Status flips to "Checked In" immediately** (no refresh needed); the green check-in icon is replaced by "Start Consultation".
-3. Bonus: column sort, filter, and global search now work on the table.
-
-Verify (DynamoDB):
-
-```sql
-SELECT PK, SK, status, checkedInAt FROM "Hospital" WHERE begins_with(PK, 'APPOINTMENT#')
-```
-
-Pass = status `checked-in` + `checkedInAt` set, and the table reflects it live.
+1. Side menu → **Administration**.
+2. Departments tab → add **Cardiology** and **Surgery**. **Expect:** rows appear immediately.
+3. Specializations tab → add **General Surgery**, **Cardiology**. **Expect:** rows appear.
+4. Users tab → confirm the four users; click **Disable** then **Enable** on developer1 → **Expect:** toast for each action.
 
 ---
 
-## 5. Cancel replaces delete (#7)
+## 3. Doctors module
 
-1. Appointments → confirm there is **no Delete** action (row menu and detail dialog).
-2. Click **Cancel** on a scheduled appointment → dialog opens.
-3. Try confirming with an **empty reason** → blocked ("Reason required").
-4. Enter a reason → **Confirm Cancellation** → status → **Cancelled**.
-
-Verify (DynamoDB):
-
-```sql
-SELECT PK, SK, status, cancelReason, cancelledAt, cancelledBy FROM "Hospital" WHERE begins_with(PK, 'APPOINTMENT#')
-```
-
-Pass = `status=cancelled`, `cancelReason`, `cancelledAt`, and `cancelledBy` (your email) all set.
+1. Side menu → **Doctors Management** → **New Doctor** → fill name, email (`drtest@tiryaq.com`), phone (mask `+999 9999 9999`), QID (11 digits), gender dropdown, department, specialization, duty days (e.g. Sun/Mon/Tue/Wed/Thu), duty hours 09:00–17:00 → Save. **Expect:** doctor in the table.
+2. Click **Download Template** → open the file → add 2 rows; leave one row without name → save.
+3. Click **Import Doctor(s)** → pick the file. **Expect:** loader **"Reading & validating file…"**, then the **Import issues** dialog opens with the bad row + missing field. Click **Import N valid only**. **Expect:** loader **"Importing doctors…"**, then table updates.
+4. Edit the test doctor → remove one duty day → Save.
 
 ---
 
-## 6. updatedBy on appointment + invoice (#3)
+## 4. Patients module
 
-1. Edit any appointment → save.
-2. Create and then edit an invoice/payment.
-
-Verify (DynamoDB):
-
-```sql
-SELECT PK, SK, updatedBy FROM "Hospital" WHERE begins_with(PK, 'APPOINTMENT#')
-SELECT PK, SK, createdBy, updatedBy FROM "Hospital" WHERE begins_with(SK, 'PAYMENT#')
-```
-
-Pass = appointment has `updatedBy` (email); invoice has `createdBy` + `updatedBy` (email).
+1. Side menu → **Patients Management** → **New Patient** → fill name, dob, gender, phone, QID, insurance, blood group. Save.
+2. **Import Patient(s)** → pick a file where one row is missing gender. **Expect:** issues dialog lists the bad row; **Import N valid only** brings only the clean rows in.
+3. Filter cycle button → "Active" / "All" / "Inactive". **Expect:** rows update.
+4. Open a patient profile → tabs render (overview, consultations, payments, documents).
 
 ---
 
-## 7. Appointment date must match doctor duty days (#2)
+## 5. Appointments module — multi-rule check
 
-Setup: ensure a doctor has **dutyDays** set (e.g. Mon/Tue/Wed) in Doctors Management.
-
-1. New Appointment → pick that doctor → choose a date on a **non-duty day** (e.g. a Friday) → **Book** → blocked with: "*… is on duty on: Monday, Tuesday, Wednesday. Friday is not a duty day.*"
-2. Choose a date **on** a duty day → books successfully.
-3. (Backend) Even if the UI is bypassed, `POST /appointments` with a non-duty date returns **400**.
-
-Pass = booking only allowed on the doctor's duty days (UI + API).
-
----
-
-## 8. Dashboard total-appointments card (#1)
-
-1. Log in as **admin** → Dashboard → a **"Total Appointments"** stat card appears, showing the count of all appointments in the system.
-2. (Doctor dashboard already shows its own Total Appointments card.)
-
-Pass = card present with correct total.
+1. Side menu → **Appointments** → **New Appointment**.
+2. Open the **Doctor** dropdown → **Expect:** the doctors you created are listed. (If empty, close + reopen — the dialog auto-refreshes empty lookup lists.)
+3. Pick doctor, patient, date (today/future), start 10:00, end 10:30 → Book. **Expect:** row appears, day column shows weekday, type/priority tags have severity colors, status `scheduled`.
+4. Re-open New Appointment → same doctor + same date + start 10:15 (overlap). **Expect:** error **"Doctor already has an appointment at 10:00-10:30…"**.
+5. New Appointment → same doctor + same date + start 11:00, end 11:30. **Expect:** booked OK (multiple per day allowed when no overlap).
+6. New Appointment → same patient + different doctor + same date + 10:10–10:25. **Expect:** error **"This patient already has an appointment at 10:00-10:30…"**.
+7. New Appointment outside the doctor's duty days. **Expect:** error **"Doctor is not on duty on …"**.
+8. List is sorted **nearest date first**, past at bottom.
+9. Edit an existing appointment → change start time to overlap another → **Expect:** same conflict error on save.
+10. On a past or cancelled appointment → **Expect:** edit + cancel icons hidden.
+11. Log out, log in as **doctor1** → Appointments → **Expect:** see only your own; edit + cancel allowed on your own future ones.
+12. Still as doctor1 → Calendar → **Expect:** appointments appear on the SAME calendar as your duty shifts (one calendar per doctor).
 
 ---
 
-## 9. Pharmacist dispense document upload (#4/#9)
+## 6. Consultations (examinations)
 
-1. As **pharmacist**, dispense a prescription that triggers an **allergy alert** (e.g. Amoxicillin for the allergic patient).
-2. The override panel now shows a **"Doctor-approved document *"** file picker.
-3. With **no file attached**, the "Override & Dispense" button is **disabled**.
-4. Attach a PDF/image → button enables → **Override & Dispense** → uploads, then dispenses.
-5. (Negative/backend) A dispense with `allergyOverrideConfirmed=true` but no document returns **400** "A doctor-approved document is required…".
-
-Verify (DynamoDB):
-
-```sql
-SELECT PK, SK, allergyOverridden, approvalDocumentKey, approvalDocumentName FROM "Hospital" WHERE begins_with(PK, 'DISPENSE#')
-```
-
-Pass = dispense row has `approvalDocumentKey` + `approvalDocumentName`; the file is in S3 under `pharmacy-approvals/…`.
+1. Log in as **doctor1**. On the appointments list, **check-in** a today appointment.
+2. Click **Start consultation** → form opens.
+3. Fill SOAP sections (Subjective / Objective / Assessment / Plan / Diagnosis / Prescriptions / Lab orders / Radiology orders). Save each. **Expect:** auto-save toast.
+4. Click **Sign off**. **Expect:** consultation read-only; parent appointment status `completed`.
+5. Reload mid-consultation → **Expect:** resumed in edit mode, no duplicate row.
 
 ---
 
-## 10. Pending invoices in notifications (#10)
+## 7. Voice Scribe (Doctor / Developer only)
 
-1. Ensure at least one invoice has status **pending** or **overdue**.
-2. Open **Notifications** (and the bell) → a **"Pending Invoices"** entry appears with the count and total QAR, linking to `/invoices`.
-3. As a **doctor**, only that doctor's pending invoices are counted.
-
-Pass = pending/overdue invoices surface as a notification.
+1. As **doctor1** → side menu → **Voice Scribe** → start session → paste a transcript → request SOAP.
+2. **Expect:** Bedrock-generated SOAP split into S/O/A/P.
+3. **Approve** → session moves to approved. Admin must NOT see this menu item.
 
 ---
 
-## 11. Compliance note — cross-region inference profile (#8)
+## 8. Pharmacy (as pharmacist1)
 
-1. Open `docs/compliance/01-Qatar-GCC-Compliance-Master.md`.
-2. Under the control register (control #19) there is a **"documented cross-border transfer (ScribeFirst SOAP)"** note recording Claude Haiku 4.5, the `us.` inference profile, the us-east-1/-east-2/-west-2 regions, the approval basis, and IAM scoping.
-
-Pass = note present and accurate.
+1. Side menu → **Pharmacy**.
+2. Medications tab → New medication → fill → Save.
+3. Inventory tab → add stock → adjust qty → **Expect:** alerts widget updates if reorder point breached.
+4. Prescription queue → process the prescription from Step 6.3 → dispense quantity → upload a doctor-approval PDF. **Expect:** doc uploaded; dispense record created.
+5. Purchase orders → draft → submit → mark received.
 
 ---
 
-## Quick DynamoDB roll-up (optional)
+## 9. Blood Bank (pharmacist1, then doctor1)
 
-```sql
-SELECT PK, SK, status, checkedInAt, cancelledAt, cancelledBy, updatedBy FROM "Hospital" WHERE begins_with(PK, 'APPOINTMENT#')
-SELECT PK, SK, createdBy, updatedBy, status FROM "Hospital" WHERE begins_with(SK, 'PAYMENT#')
-SELECT PK, SK, approvalDocumentKey, allergyOverridden FROM "Hospital" WHERE begins_with(PK, 'DISPENSE#')
-```
+1. As **pharmacist1** → **Blood Bank** → Donors → **New donor** → name, blood type, gender dropdown, phone OR QID (at least one). Save.
+2. Green **+** on donor row → **Record donation** → product type, units 2, volume 450, today → Save. **Expect:** 2 BB_UNITs in Inventory; donor row shows **Last donation = today**, **Count = 1**.
+3. Inventory tab → filter `available` + the donor's blood type → **Expect:** units listed.
+4. Stock tab → **Expect:** counts per blood type × product.
+5. Log out → as **doctor1** → Blood Bank → **New request** → patient + blood type matching inventory + units 1 + urgency `urgent` → Submit.
+6. Log out → as **pharmacist1** → Blood Bank → Requests → open request → cross-match dropdown → pick unit → **Cross-match**. **Expect:** unit reserved, request `crossmatched`.
+7. In dialog → multi-select cross-matched unit → **Issue**. **Expect:** unit `issued`, request `issued`.
+
+---
+
+## 10. Documents (Admin / Doctor)
+
+1. As **admin1** → **Documents** → 6 folders shown.
+2. Open **patients-documents** → Upload a small PDF → **Expect:** appears in list. Download → file opens.
+3. Delete the uploaded doc → confirm → gone.
+
+---
+
+## 11. Invoices
+
+1. **Invoices** (as admin1) → **Expect:** invoices generated by consultation/dispense flows listed. Open one → status `pending`.
+2. Mark paid → **Expect:** status flips, dashboard badge updates.
+
+---
+
+## 12. Calendar
+
+1. **Calendar** → admin sees a doctor dropdown.
+2. Pick a doctor → **Expect:** duty shifts + appointments + manual events on a single calendar.
+3. Click empty slot → **New event** dialog → fill → Save. **Expect:** event appears.
+4. Drag the event to another day → **Expect:** PATCH succeeds.
+5. Click **Re-sync Duty Schedule** → **Expect:** new doctors get a calendar created; orphans deleted.
+
+---
+
+## 13. Notifications + Dashboard
+
+1. Bell in topbar → list of recent notifications.
+2. **Dashboard** → cards for Patients / Doctors / Exams / Invoices reflect live counts. Click a card → routes correctly.
+3. Click any individual notification → routes correctly.
+
+---
+
+## 14. Phase D — backend idempotency
+
+1. Network tab → pick a recent POST (e.g. `POST /appointments`) → right-click → **Copy as fetch** → paste into Console → run again.
+2. **Expect:** identical response (same `appointmentId`, same body) — cached idempotency row hit.
+3. DynamoDB Studio → filter `EntityType = IDEMPOTENCY` → see `IDEMP#<cid>` rows with `expiresAt` ≈ now + 24h.
+
+---
+
+## 15. Offline mode (Phases A–F)
+
+1. DevTools → Network → **Offline**. Topbar pill flips to red **"Offline"**.
+2. Create an appointment, a patient, a donor, a pharmacy stock adjust, a blood request — each toasts **"Saved offline — will sync when connection is back."** Badge counts up.
+3. Navigate between pages while offline — page shell loads (Phase A), cached GETs render (Phase B).
+4. Network → **Online**. **Expect:** toast **"Synced N pending action(s)."** Pill disappears.
+5. Reload → **Expect:** all offline-created rows are real with real IDs (Phase F temp-id rewrite).
+6. DynamoDB → confirm no duplicates from any earlier replay (idempotency working).
+
+---
+
+## 16. Security / role enforcement
+
+1. As **doctor1** → manually try `/admin-panel` → **Expect:** guard blocks, redirects to dashboard.
+2. As **pharmacist1** → try `/doctors-management` → **Expect:** blocked.
+3. DevTools → Application → Session Storage → **Expect:** OIDC tokens here, NOT in localStorage. LocalStorage only has `returnUrl` + `userData`.
+4. Right-click any side menu link → **Open in new tab** → **Expect:** new tab lands on the same page after sign-in, not the dashboard.
+5. Log out → URL goes to Cognito hosted UI, then back to `/`.
+
+---
+
+## 17. Compliance smoke
+
+1. AWS Console:
+   - DynamoDB `Hospital` encryption shows **Customer-managed CMK**.
+   - S3 buckets: **KMS** + **Block public access ON** + **Versioning ON**.
+   - CloudFront: **OAC** + **security-headers** response policy.
+   - Cognito User Pool: MFA per current decision, Advanced security = audit.
+
+---
+
+## 18. Done
+
+If every step passed, the system end-to-end works for the current sprint.
+
+If anything failed, capture: screenshot + URL + the failing request from DevTools → Network, and file under the failing module name.
