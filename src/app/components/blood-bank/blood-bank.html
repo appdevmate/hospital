@@ -204,9 +204,16 @@
                 <p-select [options]="GENDERS" optionLabel="label" optionValue="value" [(ngModel)]="donorForm.gender" placeholder="Select gender" appendTo="body" class="w-full"></p-select>
             </div>
         </div>
-        <div>
-            <label class="text-xs">Phone</label>
-            <p-inputMask [mask]="PHONE_MASK" [(ngModel)]="donorForm.phone" styleClass="w-full" inputmode="numeric"></p-inputMask>
+        <div class="text-xs text-gray-500">Provide at least one — phone number or Qatar ID.</div>
+        <div class="grid grid-cols-2 gap-3">
+            <div>
+                <label class="text-xs">Phone</label>
+                <p-inputMask [mask]="PHONE_MASK" [(ngModel)]="donorForm.phone" styleClass="w-full" inputmode="numeric"></p-inputMask>
+            </div>
+            <div>
+                <label class="text-xs">Qatar ID</label>
+                <p-inputMask [mask]="QID_MASK" [unmask]="true" [(ngModel)]="donorForm.qid" styleClass="w-full" inputmode="numeric" placeholder="11 digits"></p-inputMask>
+            </div>
         </div>
         <div><label class="text-xs">Address</label><input pInputText [(ngModel)]="donorForm.address" class="w-full" /></div>
         <div><label class="text-xs">Notes</label><textarea pTextarea [(ngModel)]="donorForm.notes" rows="2" class="w-full"></textarea></div>

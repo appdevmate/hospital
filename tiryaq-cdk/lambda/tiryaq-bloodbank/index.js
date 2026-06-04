@@ -170,6 +170,17 @@ async function createDonor(event, actor) {
     let body = {}; try { body = JSON.parse(event.body || '{}'); } catch { return err(400, 'Invalid JSON'); }
     if (!body.name) return err(400, 'name required');
     if (!VALID_BLOOD_TYPES.includes(body.bloodType)) return err(400, 'invalid bloodType');
+    // At least one of phone / qid must be present. Each, if provided, must
+    // be well-formed (phone ≥ 8 digits, qid exactly 11 digits).
+    const phoneDigits = String(body.phone || '').replace(/\D/g, '');
+    const qidDigits   = String(body.qid   || '').replace(/\D/g, '');
+    const hasPhone = phoneDigits.length >= 8;
+    const hasQid   = qidDigits.length === 11;
+    if (!hasPhone && !hasQid) {
+        return err(400, 'Provide at least one identifier — phone (min 8 digits) or qid (11 digits)');
+    }
+    if (body.phone && !hasPhone) return err(400, 'phone must have at least 8 digits');
+    if (body.qid && !hasQid)     return err(400, 'qid must be 11 digits');
     const id = randomUUID();
     const item = {
         PK: `DONOR#${id}`, SK: 'PROFILE', EntityType: 'BB_DONOR', dataClass: 'PHI',
@@ -182,11 +193,11 @@ async function createDonor(event, actor) {
         createdAt: nowIso(), updatedAt: nowIso(),
         createdBy: actor.email
     };
-    // Optional fields — only write when present. Setting them to null breaks
-    // any GSI that uses them as a key attribute (e.g. email-index).
+    // Optional contact fields — write only what's present.
+    if (hasPhone)     item.phone   = String(body.phone).trim();
+    if (hasQid)       item.qid     = qidDigits;
     if (body.gender)  item.gender  = String(body.gender).trim();
     if (body.dob)     item.dob     = String(body.dob).trim();
-    if (body.phone)   item.phone   = String(body.phone).trim();
     if (body.email)   item.email   = String(body.email).trim();
     if (body.address) item.address = String(body.address).trim();
     if (body.notes)   item.notes   = String(body.notes).trim();

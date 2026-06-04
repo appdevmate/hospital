@@ -16,7 +16,8 @@ export interface Donor {
     bloodType: BloodType;
     gender?: string;
     dob?: string;
-    phone?: string;
+    phone?: string;         // at least one of phone/qid required
+    qid?: string;           // 11-digit Qatar ID; at least one of phone/qid required
     email?: string;
     address?: string;
     lastDonation?: string | null;

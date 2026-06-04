@@ -26,7 +26,7 @@ import {
 import { HelpersService } from '@/services/helpers-service';
 import { AuthService } from '@/services/auth.service';
 import { PatientsService } from '@/services/patients.service';
-import { GENDER_OPTIONS, PHONE_MASK as APP_PHONE_MASK, BLOOD_TYPE_OPTIONS } from '@/shared/form-constants';
+import { GENDER_OPTIONS, PHONE_MASK as APP_PHONE_MASK, QID_MASK, BLOOD_TYPE_OPTIONS, isValidPhone, isValidQid } from '@/shared/form-constants';
 
 @Component({
     selector: 'app-blood-bank',
@@ -63,6 +63,7 @@ export class BloodBankComponent implements OnInit {
     readonly GENDERS = GENDER_OPTIONS;
     /** Standard phone mask used across the app (patient/doctor) */
     readonly PHONE_MASK = APP_PHONE_MASK;
+    readonly QID_MASK = QID_MASK;
 
     canManageInventory = false;
     canRequestBlood    = false;
@@ -154,6 +155,20 @@ export class BloodBankComponent implements OnInit {
     saveDonor() {
         if (!this.donorForm.name || !this.donorForm.bloodType) {
             this.helpers.notifyError('Required', 'Name and blood type are required.');
+            return;
+        }
+        const hasPhone = isValidPhone(this.donorForm.phone);
+        const hasQid   = isValidQid(this.donorForm.qid);
+        if (!hasPhone && !hasQid) {
+            this.helpers.notifyError('Identifier required', 'Enter at least one — phone number or Qatar ID.');
+            return;
+        }
+        if (this.donorForm.phone && !hasPhone) {
+            this.helpers.notifyError('Invalid phone', 'Enter a valid phone number.');
+            return;
+        }
+        if (this.donorForm.qid && !hasQid) {
+            this.helpers.notifyError('Invalid QID', 'Qatar ID must be 11 digits.');
             return;
         }
         const obs = this.editingDonor
@@ -337,7 +352,7 @@ export class BloodBankComponent implements OnInit {
 
     // ── Form helpers ─────────────────────────────────────────────────────────
     private emptyDonor(): Partial<Donor> {
-        return { name: '', bloodType: undefined as any, gender: '', phone: '', address: '', notes: '' };
+        return { name: '', bloodType: undefined as any, gender: '', phone: '', qid: '', address: '', notes: '' };
     }
     private emptyDonation() {
         return { productType: 'whole' as ProductType, units: 1, volumeMl: 450, collectionDate: new Date().toISOString().slice(0,10), notes: '' };
