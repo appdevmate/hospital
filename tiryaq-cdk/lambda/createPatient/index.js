@@ -89,14 +89,13 @@ const validatePatient = (patient, index = null) => {
   if (!patient.gender)
     errors.push(`${prefix}gender is required`);
 
+  // insurance is optional — imported rows may not have it.
+
   if (!patient.phone)
     errors.push(`${prefix}phone is required`);
 
   if (!patient.qid || !validateQID(patient.qid))
     errors.push(`${prefix}qid is required and must be exactly 11 digits`);
-
-  if (!patient.insurance)
-    errors.push(`${prefix}insurance is required`);
 
   return errors;
 };
@@ -116,10 +115,10 @@ const createPatientItem = (patient) => {
     // required fields
     name: toLower(patient.name),
     dob: patient.dob,
-    gender: toLower(patient.gender),
+    gender: toLower(patient.gender),         // may be null — no GSI on gender, so safe
     phone: cleanPhone(patient.phone),
     qid: toLower(patient.qid),
-    insurance: toLower(patient.insurance),
+    insurance: toLower(patient.insurance),   // may be null
     // optional string fields
     email: normalizeString(patient.email),
     job: toLower(patient.job),
