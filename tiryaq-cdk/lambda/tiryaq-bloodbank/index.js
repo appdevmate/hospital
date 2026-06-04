@@ -321,13 +321,18 @@ async function createDonation(event, actor) {
         createdUnits.push(stripKeys(unit));
     }
 
-    // Bump donor stats
-    await ddb.send(new UpdateCommand({
-        TableName: TABLE_NAME,
-        Key: { PK: `DONOR#${donorId}`, SK: 'PROFILE' },
-        UpdateExpression: 'SET lastDonation = :d, donationCount = if_not_exists(donationCount, :z) + :one, updatedAt = :d',
-        ExpressionAttributeValues: { ':d': collectionDate, ':z': 0, ':one': 1 }
-    })).catch(() => {});
+    // Bump donor stats. updatedAt must be a full ISO datetime — the
+    // dataClass-index GSI rejects a date-only string.
+    try {
+        await ddb.send(new UpdateCommand({
+            TableName: TABLE_NAME,
+            Key: { PK: `DONOR#${donorId}`, SK: 'PROFILE' },
+            UpdateExpression: 'SET lastDonation = :ld, donationCount = if_not_exists(donationCount, :z) + :one, updatedAt = :u',
+            ExpressionAttributeValues: { ':ld': collectionDate, ':z': 0, ':one': 1, ':u': nowIso() }
+        }));
+    } catch (e) {
+        console.error('Failed to bump donor stats', e);
+    }
 
     const response = res(201, { donation: stripKeys(donation), units: createdUnits });
     await storeIdempotency(cid, response);
