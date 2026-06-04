@@ -70,7 +70,7 @@ const STATUS_SEVERITY: Record<string, 'success' | 'info' | 'warn' | 'danger' | '
     providers: [DialogService, ConfirmationService],
     template: `
         <div style="position:relative; min-height:200px;">
-        <app-tiryaq-loader [loading]="loading()" message="Loading patients…" />
+        <app-tiryaq-loader [loading]="loading()" [message]="loaderMessage" />
         <!-- ── Toolbar: Start ── -->
         <ng-template #tbStart>
             <p-button class="mr-2" [disabled]="loading()" label="New Patient" icon="pi pi-plus" (onClick)="openNew()"></p-button>
@@ -185,6 +185,7 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
     showImportIssues = false;
     pendingValid: any[] = [];
     pendingSkipped: { row: any; reason: string }[] = [];
+    loaderMessage = 'Loading patients…';
 
     // ── Table config (reactive — disables selection in deleted view) ────
     tableConfig = signal<TableConfig>({
@@ -500,9 +501,15 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
         const file = files?.[0];
         if (!file) return;
 
+        // Loader while we parse the workbook and validate every row.
+        this.loaderMessage = 'Reading & validating file…';
+        this._loading.set(true);
+
         this.readWorkbook(file)
             .then((rows) => {
                 const { valid, skipped } = this.prepare(rows);
+                this._loading.set(false);
+                this.loaderMessage = 'Loading patients…';
                 const seen = new Set<string>();
                 const unique = valid.filter((r) => {
                     const k = r.qid as string;
@@ -543,6 +550,8 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
                 });
             })
             .catch(() => {
+                this._loading.set(false);
+                this.loaderMessage = 'Loading patients…';
                 this.helpers.notifyError('Import failed', 'Could not read file');
             });
     }
@@ -554,6 +563,7 @@ export class PatientsManagementComponent implements AfterViewInit, OnDestroy {
         this.pendingValid = [];
         this.pendingSkipped = [];
         if (!toImport.length) return;
+        this.loaderMessage = 'Importing patients…';
         this._loading.set(true);
         this.bulkCreate(toImport);
     }
