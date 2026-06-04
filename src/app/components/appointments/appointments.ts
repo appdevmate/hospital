@@ -181,8 +181,8 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
         }).subscribe(({ appointments, doctors, patients }) => {
             const rows = (appointments as Appointment[]).map((a) => ({ ...a, dayName: this.weekdayLabel(a.date) }));
             this._rows.set(this.sortByNearest(rows));
-            this.doctors = (doctors as any).data || [];
-            this.patients = (patients as any).data || [];
+            this.doctors = (doctors as any)?.data || (doctors as any)?.items || (Array.isArray(doctors) ? doctors : []) || [];
+            this.patients = (patients as any)?.data || (patients as any)?.items || (Array.isArray(patients) ? patients : []) || [];
             this._loading.set(false);
             this.cd.detectChanges();
         });
@@ -200,6 +200,24 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
     openCreate() {
         this.newAppt = this.emptyAppt();
         this.showCreateDialog = true;
+        // Safety net: if the initial load served stale/empty lists from the SW
+        // cache, refresh doctors + patients in the background so the dropdowns
+        // populate without requiring a hard refresh.
+        if (!this.doctors?.length || !this.patients?.length) {
+            this.reloadLookups();
+        }
+    }
+
+    /** Re-fetch doctors + patients in the background (used by openCreate). */
+    private reloadLookups() {
+        this.doctorsService.getDoctorsPage({ pageSize: 200 }).pipe(catchError(() => of({ data: [] }))).subscribe((r: any) => {
+            this.doctors = r?.data || r?.items || [];
+            this.cd.detectChanges();
+        });
+        this.patientsService.getPatientsPage({ pageSize: 200 }).pipe(catchError(() => of({ data: [] }))).subscribe((r: any) => {
+            this.patients = r?.data || r?.items || [];
+            this.cd.detectChanges();
+        });
     }
 
     onDoctorSelect(doctorPK: string | null) {
