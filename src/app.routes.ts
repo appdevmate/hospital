@@ -16,6 +16,7 @@ const ADMIN_ROLES: UserRole[] = ['admin', 'developer'];
 const PHARMACY_ROLES: UserRole[] = ['pharmacist'];
 const SCRIBE_ROLES: UserRole[] = ['developer', 'doctor'];
 const DOCS_ROLES: UserRole[] = ['admin', 'developer', 'doctor'];
+const BLOODBANK_ROLES: UserRole[] = ['admin', 'developer', 'doctor', 'pharmacist'];
 
 export const appRoutes: Routes = [
     {
@@ -55,6 +56,14 @@ export const appRoutes: Routes = [
 
             // Pharmacy
             { path: 'pharmacy', canActivate: [roleGuard(PHARMACY_ROLES)], component: PharmacyComponent },
+
+            // Blood Bank
+            {
+                path: 'blood-bank',
+                data: { breadcrumb: 'Blood Bank' },
+                canActivate: [roleGuard(BLOODBANK_ROLES)],
+                loadComponent: () => import('@/components/blood-bank/blood-bank').then((m) => m.BloodBankComponent)
+            },
 
             // ScribeFirst Phase 1 — voice scribe
             {

@@ -272,6 +272,22 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
             return;
         }
 
+        // Doctor may have many appointments on the same date, but not at
+        // overlapping times. Block if the new slot intersects an existing one.
+        const docConflict = this.findDoctorOverlap(
+            this.newAppt.doctorId,
+            dateStr,
+            this.formatTime(this.newAppt.startTime),
+            this.newAppt.endTime ? this.formatTime(this.newAppt.endTime) : this.formatTime(this.newAppt.startTime)
+        );
+        if (docConflict) {
+            this.helpers.notifyError(
+                'Time conflict',
+                `${doctor?.name || 'This doctor'} already has an appointment at ${docConflict.startTime}-${docConflict.endTime} on ${dateStr}.`
+            );
+            return;
+        }
+
         this.saving = true;
         const startTimeStr = this.formatTime(this.newAppt.startTime);
         const endTimeStr = this.newAppt.endTime ? this.formatTime(this.newAppt.endTime) : startTimeStr;
@@ -354,13 +370,29 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
             return;
         }
 
-        this.saving = true;
-
         const doctor = this.doctors.find((d) => d.PK === this.editAppt.doctorId);
         const patient = this.patients.find((p) => p.PK === this.editAppt.patientId);
         const dateStr = this.formatDate(this.editAppt.date);
         const startTimeStr = this.formatTime(this.editAppt.startTime);
         const endTimeStr = this.editAppt.endTime ? this.formatTime(this.editAppt.endTime) : startTimeStr;
+
+        // Same-time overlap check (allow many appointments per day, block overlap).
+        const docConflict = this.findDoctorOverlap(
+            this.editAppt.doctorId,
+            dateStr,
+            startTimeStr,
+            endTimeStr,
+            this.selectedAppointment.appointmentId
+        );
+        if (docConflict) {
+            this.helpers.notifyError(
+                'Time conflict',
+                `${doctor?.name || 'This doctor'} already has an appointment at ${docConflict.startTime}-${docConflict.endTime} on ${dateStr}.`
+            );
+            return;
+        }
+
+        this.saving = true;
 
         if (this.editAppt.startTime && this.editAppt.endTime) {
             const diff = (this.editAppt.endTime.getTime() - this.editAppt.startTime.getTime()) / 60000;
@@ -509,6 +541,39 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
      */
     private normDay(d: string): string {
         return String(d).toLowerCase().slice(0, 3);
+    }
+
+    /**
+     * Doctor may have multiple appointments per day; only block when slot overlaps.
+     * Returns the conflicting appointment or null. Pass `ignoreApptId` when editing
+     * so the appointment doesn't conflict with itself.
+     */
+    private findDoctorOverlap(
+        doctorId: string | null,
+        date: string,
+        startTime: string,
+        endTime: string,
+        ignoreApptId?: string
+    ): Appointment | null {
+        if (!doctorId || !date || !startTime) return null;
+        const toMin = (t: string) => {
+            const [h, m] = (t || '').split(':').map(Number);
+            return isNaN(h) || isNaN(m) ? NaN : h * 60 + m;
+        };
+        const s = toMin(startTime);
+        const e = toMin(endTime || startTime);
+        if (isNaN(s)) return null;
+        for (const a of this._rows()) {
+            if (ignoreApptId && a.appointmentId === ignoreApptId) continue;
+            if (a.doctorId !== doctorId) continue;
+            if (a.date !== date) continue;
+            if (a.status === 'cancelled') continue;
+            const is = toMin(a.startTime);
+            const ie = toMin(a.endTime || a.startTime);
+            if (isNaN(is)) continue;
+            if (s < ie && e > is) return a;
+        }
+        return null;
     }
 
     /** Returns an error message if the date is not one of the doctor's duty days, else null. */

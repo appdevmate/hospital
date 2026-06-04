@@ -46,6 +46,7 @@ export class AppMenu implements OnInit {
             { label: 'Notifications', icon: 'pi pi-bell', routerLink: ['/notifications'] },
             { label: 'Patients', icon: 'pi pi-user-plus', routerLink: ['/patients-management'] },
             { label: 'Doctors Management', icon: 'pi pi-briefcase', routerLink: ['/doctors-management'] },
+            { label: 'Blood Bank', icon: 'pi pi-heart', routerLink: ['/blood-bank'] },
             { label: 'Documents', icon: 'pi pi-folder', routerLink: ['/documents'] },
             {
                 label: 'Administration',
@@ -66,6 +67,7 @@ export class AppMenu implements OnInit {
             { separator: true },
             { label: 'Patients', icon: 'pi pi-user-plus', routerLink: ['/patients-management'] },
             { label: 'Doctors Management', icon: 'pi pi-briefcase', routerLink: ['/doctors-management'] },
+            { label: 'Blood Bank', icon: 'pi pi-heart', routerLink: ['/blood-bank'] },
             { label: 'Documents', icon: 'pi pi-folder', routerLink: ['/documents'] },
             {
                 label: 'Administration',
@@ -78,10 +80,15 @@ export class AppMenu implements OnInit {
             { separator: true },
             { label: 'Patients', icon: 'pi pi-user-plus', routerLink: ['/patients-management'] },
             { label: 'Voice Scribe', icon: 'pi pi-microphone', routerLink: ['/voice-scribe'] },
+            { label: 'Blood Bank', icon: 'pi pi-heart', routerLink: ['/blood-bank'] },
             { label: 'Documents', icon: 'pi pi-folder', routerLink: ['/documents'] }
         ];
 
-        const pharmacistItems: MenuItem[] = [{ separator: true }, { label: 'Pharmacy', icon: 'pi pi-heart-fill', routerLink: ['/pharmacy'] }];
+        const pharmacistItems: MenuItem[] = [
+            { separator: true },
+            { label: 'Pharmacy', icon: 'pi pi-heart-fill', routerLink: ['/pharmacy'] },
+            { label: 'Blood Bank', icon: 'pi pi-heart', routerLink: ['/blood-bank'] }
+        ];
 
         if (isAdmin) {
             this.model = [...sharedItems, ...adminOnlyItems];

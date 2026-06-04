@@ -1,0 +1,340 @@
+<div class="bb-wrap">
+    <div class="bb-header">
+        <h2><i class="pi pi-heart-fill text-red-600 mr-2"></i> Blood Bank</h2>
+        <span class="bb-sub">Inventory, donors, donations, requests + cross-match.</span>
+    </div>
+
+    <p-tabs value="0">
+        <p-tablist>
+            <p-tab value="0"><i class="pi pi-chart-bar mr-2"></i>Stock</p-tab>
+            <p-tab value="1"><i class="pi pi-box mr-2"></i>Inventory</p-tab>
+            <p-tab value="2"><i class="pi pi-users mr-2"></i>Donors</p-tab>
+            <p-tab value="3"><i class="pi pi-clipboard mr-2"></i>Requests</p-tab>
+        </p-tablist>
+
+        <p-tabpanels>
+            <!-- ── Stock ──────────────────────────────────────────────────── -->
+            <p-tabpanel value="0">
+                <div class="flex justify-between items-center mb-3">
+                    <h3>Stock summary</h3>
+                    <p-button icon="pi pi-refresh" text (onClick)="refreshStock()" [loading]="stockLoading" />
+                </div>
+                <p-table [value]="stock" [loading]="stockLoading" [paginator]="false" responsiveLayout="scroll">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Blood type</th>
+                            <th>Product</th>
+                            <th>Available</th>
+                            <th>Reserved</th>
+                            <th>Issued</th>
+                            <th>Expired</th>
+                            <th>Total</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-row>
+                        <tr>
+                            <td><strong>{{ row.bloodType }}</strong></td>
+                            <td>{{ row.productType }}</td>
+                            <td><p-tag [value]="row.available || 0" [severity]="stockCellSeverity(row.available)"></p-tag></td>
+                            <td>{{ row.reserved || 0 }}</td>
+                            <td>{{ row.issued   || 0 }}</td>
+                            <td>{{ row.expired  || 0 }}</td>
+                            <td>{{ row.total }}</td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage"><tr><td colspan="7" class="text-center p-4">No stock yet.</td></tr></ng-template>
+                </p-table>
+            </p-tabpanel>
+
+            <!-- ── Inventory ──────────────────────────────────────────────── -->
+            <p-tabpanel value="1">
+                <div class="flex flex-wrap gap-2 items-end mb-3">
+                    <div class="flex flex-col">
+                        <label class="text-xs">Status</label>
+                        <p-select [options]="UNIT_STATUSES" [(ngModel)]="unitFilters.status" placeholder="Any" [showClear]="true" appendTo="body"></p-select>
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-xs">Blood type</label>
+                        <p-select [options]="BLOOD_TYPES" [(ngModel)]="unitFilters.bloodType" placeholder="Any" [showClear]="true" appendTo="body"></p-select>
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-xs">Product</label>
+                        <p-select [options]="PRODUCT_TYPES" optionLabel="label" optionValue="value" [(ngModel)]="unitFilters.productType" placeholder="Any" [showClear]="true" appendTo="body"></p-select>
+                    </div>
+                    <p-button icon="pi pi-filter" label="Apply" (onClick)="refreshUnits()"></p-button>
+                </div>
+
+                <p-table [value]="units" [loading]="unitsLoading" [paginator]="true" [rows]="20" responsiveLayout="scroll">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Unit ID</th>
+                            <th>Blood</th>
+                            <th>Product</th>
+                            <th>Donor</th>
+                            <th>Collected</th>
+                            <th>Expires</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-u>
+                        <tr>
+                            <td><code>{{ u.unitId.slice(0,8) }}</code></td>
+                            <td><strong>{{ u.bloodType }}</strong></td>
+                            <td>{{ u.productType }}</td>
+                            <td>{{ u.donorName || '—' }}</td>
+                            <td>{{ u.collectionDate }}</td>
+                            <td>{{ u.expiryDate }}</td>
+                            <td>{{ u.currentLocation || '—' }}</td>
+                            <td><p-tag [value]="u.status" [severity]="unitStatusSeverity(u.status)"></p-tag></td>
+                            <td>
+                                @if (canManageInventory && u.status !== 'issued' && u.status !== 'used' && u.status !== 'discarded') {
+                                    <p-button icon="pi pi-trash" severity="danger" text rounded (onClick)="discardUnit(u)" pTooltip="Discard"></p-button>
+                                }
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage"><tr><td colspan="9" class="text-center p-4">No units match the filters.</td></tr></ng-template>
+                </p-table>
+            </p-tabpanel>
+
+            <!-- ── Donors ─────────────────────────────────────────────────── -->
+            <p-tabpanel value="2">
+                <div class="flex justify-between items-center mb-3">
+                    <h3>Donors</h3>
+                    @if (canManageInventory) {
+                        <p-button icon="pi pi-plus" label="New donor" (onClick)="openDonorDialog()"></p-button>
+                    }
+                </div>
+                <p-table [value]="donors" [loading]="donorsLoading" [paginator]="true" [rows]="20" responsiveLayout="scroll">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Name</th>
+                            <th>Blood</th>
+                            <th>Phone</th>
+                            <th>Last donation</th>
+                            <th>Count</th>
+                            <th>Eligibility</th>
+                            <th></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-d>
+                        <tr>
+                            <td>{{ d.name }}</td>
+                            <td><strong>{{ d.bloodType }}</strong></td>
+                            <td>{{ d.phone || '—' }}</td>
+                            <td>{{ d.lastDonation || '—' }}</td>
+                            <td>{{ d.donationCount || 0 }}</td>
+                            <td><p-tag [value]="d.eligibilityStatus || 'eligible'" [severity]="d.eligibilityStatus === 'eligible' ? 'success' : 'warn'"></p-tag></td>
+                            <td class="text-right">
+                                @if (canManageInventory) {
+                                    <p-button icon="pi pi-plus" severity="success" text rounded (onClick)="openDonationDialog(d)" pTooltip="Record donation"></p-button>
+                                    <p-button icon="pi pi-pencil" text rounded (onClick)="openDonorDialog(d)" pTooltip="Edit"></p-button>
+                                    <p-button icon="pi pi-trash" severity="danger" text rounded (onClick)="deleteDonor(d)" pTooltip="Delete"></p-button>
+                                }
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage"><tr><td colspan="7" class="text-center p-4">No donors yet.</td></tr></ng-template>
+                </p-table>
+            </p-tabpanel>
+
+            <!-- ── Requests ───────────────────────────────────────────────── -->
+            <p-tabpanel value="3">
+                <div class="flex justify-between items-center mb-3">
+                    <h3>Blood requests</h3>
+                    @if (canRequestBlood) {
+                        <p-button icon="pi pi-plus" label="New request" (onClick)="openRequestDialog()"></p-button>
+                    }
+                </div>
+                <p-table [value]="requests" [loading]="requestsLoading" [paginator]="true" [rows]="20" responsiveLayout="scroll">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Patient</th>
+                            <th>Blood</th>
+                            <th>Product</th>
+                            <th>Units</th>
+                            <th>Urgency</th>
+                            <th>Doctor</th>
+                            <th>Created</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-r>
+                        <tr>
+                            <td>{{ r.patientName }}</td>
+                            <td><strong>{{ r.bloodType }}</strong></td>
+                            <td>{{ r.productType }}</td>
+                            <td>{{ r.unitsRequested }}</td>
+                            <td><p-tag [value]="r.urgency" [severity]="urgencySeverity(r.urgency)"></p-tag></td>
+                            <td>{{ r.requestingDoctorName || '—' }}</td>
+                            <td>{{ r.createdAt | date: 'short' }}</td>
+                            <td><p-tag [value]="r.status" [severity]="requestStatusSeverity(r.status)"></p-tag></td>
+                            <td class="text-right">
+                                <p-button icon="pi pi-eye" text rounded (onClick)="openDetail(r)" pTooltip="Open"></p-button>
+                                @if (r.status !== 'cancelled' && r.status !== 'issued' && (canManageInventory || canRequestBlood)) {
+                                    <p-button icon="pi pi-times" severity="danger" text rounded (onClick)="cancelRequest(r)" pTooltip="Cancel"></p-button>
+                                }
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage"><tr><td colspan="9" class="text-center p-4">No requests yet.</td></tr></ng-template>
+                </p-table>
+            </p-tabpanel>
+        </p-tabpanels>
+    </p-tabs>
+</div>
+
+<!-- ── Donor dialog ───────────────────────────────────────────────────── -->
+<p-dialog [(visible)]="showDonorDialog" [modal]="true" [style]="{ width: '500px' }" [header]="editingDonor ? 'Edit donor' : 'New donor'">
+    <div class="flex flex-col gap-3">
+        <div>
+            <label class="text-xs">Name *</label>
+            <input pInputText [(ngModel)]="donorForm.name" class="w-full" />
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+            <div>
+                <label class="text-xs">Blood type *</label>
+                <p-select [options]="BLOOD_TYPES" [(ngModel)]="donorForm.bloodType" placeholder="Select" appendTo="body" class="w-full"></p-select>
+            </div>
+            <div>
+                <label class="text-xs">Gender</label>
+                <input pInputText [(ngModel)]="donorForm.gender" class="w-full" />
+            </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+            <div><label class="text-xs">Phone</label><input pInputText [(ngModel)]="donorForm.phone" class="w-full" /></div>
+            <div><label class="text-xs">Email</label><input pInputText [(ngModel)]="donorForm.email" class="w-full" /></div>
+        </div>
+        <div><label class="text-xs">Address</label><input pInputText [(ngModel)]="donorForm.address" class="w-full" /></div>
+        <div><label class="text-xs">Notes</label><textarea pTextarea [(ngModel)]="donorForm.notes" rows="2" class="w-full"></textarea></div>
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button label="Cancel" severity="secondary" text (onClick)="showDonorDialog = false"></p-button>
+        <p-button label="Save" icon="pi pi-check" (onClick)="saveDonor()"></p-button>
+    </ng-template>
+</p-dialog>
+
+<!-- ── Record donation dialog ─────────────────────────────────────────── -->
+<p-dialog [(visible)]="showDonationDialog" [modal]="true" [style]="{ width: '500px' }" header="Record donation">
+    <div class="flex flex-col gap-3">
+        @if (donationDonor) {
+            <div class="bb-row"><strong>{{ donationDonor.name }}</strong> &middot; <strong class="text-red-600">{{ donationDonor.bloodType }}</strong></div>
+        }
+        <div class="grid grid-cols-2 gap-3">
+            <div>
+                <label class="text-xs">Product</label>
+                <p-select [options]="PRODUCT_TYPES" optionLabel="label" optionValue="value" [(ngModel)]="donationForm.productType" appendTo="body" class="w-full"></p-select>
+            </div>
+            <div>
+                <label class="text-xs">Units</label>
+                <p-inputNumber [(ngModel)]="donationForm.units" [min]="1" [max]="10" class="w-full"></p-inputNumber>
+            </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+            <div><label class="text-xs">Volume (mL)</label><p-inputNumber [(ngModel)]="donationForm.volumeMl" [min]="100" [max]="1000" class="w-full"></p-inputNumber></div>
+            <div><label class="text-xs">Collection date</label><input pInputText [(ngModel)]="donationForm.collectionDate" placeholder="YYYY-MM-DD" class="w-full" /></div>
+        </div>
+        <div><label class="text-xs">Notes</label><textarea pTextarea [(ngModel)]="donationForm.notes" rows="2" class="w-full"></textarea></div>
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button label="Cancel" severity="secondary" text (onClick)="showDonationDialog = false"></p-button>
+        <p-button label="Save" icon="pi pi-check" (onClick)="saveDonation()"></p-button>
+    </ng-template>
+</p-dialog>
+
+<!-- ── Request dialog ─────────────────────────────────────────────────── -->
+<p-dialog [(visible)]="showRequestDialog" [modal]="true" [style]="{ width: '560px' }" header="New blood request">
+    <div class="flex flex-col gap-3">
+        <div>
+            <label class="text-xs">Patient *</label>
+            <p-select [options]="patients" optionLabel="name" [filter]="true" filterBy="name" [(ngModel)]="requestForm.patientId" optionValue="PK" (onChange)="onRequestPatientChange($event.value)" placeholder="Select patient" appendTo="body" class="w-full"></p-select>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+            <div><label class="text-xs">Blood type *</label><p-select [options]="BLOOD_TYPES" [(ngModel)]="requestForm.bloodType" appendTo="body" class="w-full"></p-select></div>
+            <div><label class="text-xs">Product</label><p-select [options]="PRODUCT_TYPES" optionLabel="label" optionValue="value" [(ngModel)]="requestForm.productType" appendTo="body" class="w-full"></p-select></div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+            <div><label class="text-xs">Units</label><p-inputNumber [(ngModel)]="requestForm.unitsRequested" [min]="1" [max]="20" class="w-full"></p-inputNumber></div>
+            <div><label class="text-xs">Urgency</label><p-select [options]="URGENCIES" [(ngModel)]="requestForm.urgency" appendTo="body" class="w-full"></p-select></div>
+        </div>
+        <div><label class="text-xs">Clinical reason</label><textarea pTextarea [(ngModel)]="requestForm.clinicalReason" rows="3" class="w-full"></textarea></div>
+        <div><label class="text-xs">Notes</label><textarea pTextarea [(ngModel)]="requestForm.notes" rows="2" class="w-full"></textarea></div>
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button label="Cancel" severity="secondary" text (onClick)="showRequestDialog = false"></p-button>
+        <p-button label="Submit" icon="pi pi-check" (onClick)="submitRequest()"></p-button>
+    </ng-template>
+</p-dialog>
+
+<!-- ── Request detail / cross-match / issue ───────────────────────────── -->
+<p-dialog [(visible)]="showDetailDialog" [modal]="true" [style]="{ width: '700px' }" header="Request detail">
+    @if (detailLoading) { <div class="p-4 text-center">Loading…</div> }
+    @if (detail) {
+        <div class="flex flex-col gap-3">
+            <div><strong>{{ detail.patientName }}</strong> &middot; <strong class="text-red-600">{{ detail.bloodType }}</strong> &middot; {{ detail.productType }} &times; {{ detail.unitsRequested }}</div>
+            <div>Status: <p-tag [value]="detail.status" [severity]="requestStatusSeverity(detail.status)"></p-tag> &nbsp; Urgency: <p-tag [value]="detail.urgency" [severity]="urgencySeverity(detail.urgency)"></p-tag></div>
+            @if (detail.clinicalReason) { <div class="text-sm"><em>Clinical reason:</em> {{ detail.clinicalReason }}</div> }
+
+            <p-divider></p-divider>
+
+            <h4>Cross-matches</h4>
+            <p-table [value]="detail.crossmatches || []" responsiveLayout="scroll">
+                <ng-template pTemplate="header"><tr><th>Unit</th><th>Donor blood</th><th>Compatible</th><th>Technician</th><th>Performed</th></tr></ng-template>
+                <ng-template pTemplate="body" let-x>
+                    <tr>
+                        <td><code>{{ x.unitId.slice(0,8) }}</code></td>
+                        <td>{{ x.donorBloodType }}</td>
+                        <td><p-tag [value]="x.compatible ? 'YES' : 'NO'" [severity]="x.compatible ? 'success' : 'danger'"></p-tag></td>
+                        <td>{{ x.technician }}</td>
+                        <td>{{ x.performedAt | date: 'short' }}</td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage"><tr><td colspan="5" class="text-center p-2 text-sm">None yet.</td></tr></ng-template>
+            </p-table>
+
+            @if (canManageInventory && detail.status !== 'cancelled' && detail.status !== 'issued') {
+                <div class="flex gap-2 items-end">
+                    <div class="flex-1">
+                        <label class="text-xs">Add cross-match — choose a unit</label>
+                        <p-select [options]="xmatchCandidates" optionLabel="unitId" optionValue="unitId" [(ngModel)]="xmatchUnitId" placeholder="Compatible candidates" appendTo="body" class="w-full"></p-select>
+                    </div>
+                    <p-button icon="pi pi-plus" label="Cross-match" (onClick)="addCrossmatch()" [disabled]="!xmatchUnitId"></p-button>
+                </div>
+            }
+
+            <p-divider></p-divider>
+
+            <h4>Issue compatible units</h4>
+            @if (canIssueBlood && compatibleCrossmatchedUnits().length > 0 && detail.status !== 'issued') {
+                <div class="flex gap-2 items-end">
+                    <div class="flex-1">
+                        <p-multiselect [options]="compatibleCrossmatchedUnits()" optionLabel="unitId" optionValue="unitId" [(ngModel)]="issueUnitIds" placeholder="Select units to issue" appendTo="body" class="w-full"></p-multiselect>
+                    </div>
+                    <p-button icon="pi pi-send" label="Issue" severity="success" (onClick)="issueSelectedUnits()" [disabled]="!issueUnitIds.length"></p-button>
+                </div>
+            } @else if (detail.status === 'issued') {
+                <div class="text-sm text-gray-500">Already issued.</div>
+            } @else {
+                <div class="text-sm text-gray-500">No compatible cross-matched units yet.</div>
+            }
+
+            @if ((detail.issues || []).length > 0) {
+                <p-divider></p-divider>
+                <h4>Issue history</h4>
+                <ul class="text-sm">
+                    @for (i of detail.issues; track i.issueId) {
+                        <li>{{ i.issuedAt | date: 'short' }} — {{ i.unitIds.length }} unit(s) issued by {{ i.issuedBy }}</li>
+                    }
+                </ul>
+            }
+        </div>
+    }
+    <ng-template pTemplate="footer">
+        <p-button label="Close" severity="secondary" text (onClick)="showDetailDialog = false"></p-button>
+    </ng-template>
+</p-dialog>
+
+<p-confirmDialog></p-confirmDialog>

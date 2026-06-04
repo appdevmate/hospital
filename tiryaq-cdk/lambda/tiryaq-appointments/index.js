@@ -183,6 +183,42 @@ function weekdayOf(dateStr) {
     return isNaN(d.getTime()) ? null : DAY_NAMES[d.getUTCDay()];
 }
 
+// ── Doctor same-time conflict (allow many per day, block overlap) ────────────
+// 'HH:mm' → minutes since 00:00. Returns NaN for missing/invalid.
+function toMin(t) {
+    if (!t || typeof t !== 'string') return NaN;
+    const [h, m] = t.split(':').map(Number);
+    if (isNaN(h) || isNaN(m)) return NaN;
+    return h * 60 + m;
+}
+async function findDoctorOverlap({ doctorId, date, startTime, endTime, ignoreApptId }) {
+    if (!doctorId || !date || !startTime) return null;
+    const s = toMin(startTime);
+    const e = toMin(endTime || startTime);
+    if (isNaN(s)) return null;
+    try {
+        const out = await db.send(new QueryCommand({
+            TableName:                 TABLE_NAME,
+            IndexName:                 'EntityType-index',
+            KeyConditionExpression:    'EntityType = :et',
+            FilterExpression:          '#doctorId = :d AND #date = :date AND #status <> :cancelled',
+            ExpressionAttributeNames:  { '#doctorId': 'doctorId', '#date': 'date', '#status': 'status' },
+            ExpressionAttributeValues: { ':et': 'APPOINTMENT', ':d': doctorId, ':date': date, ':cancelled': 'cancelled' }
+        }));
+        for (const it of (out.Items || [])) {
+            if (ignoreApptId && it.appointmentId === ignoreApptId) continue;
+            const is = toMin(it.startTime);
+            const ie = toMin(it.endTime || it.startTime);
+            if (isNaN(is)) continue;
+            // Overlap if s < ie AND e > is. Touching ends (e === is) is allowed.
+            if (s < ie && e > is) {
+                return it;
+            }
+        }
+    } catch (_) {}
+    return null;
+}
+
 // Normalise a weekday token to its 3-letter lowercase prefix so stored
 // abbreviations ("Fri", "Mon") and full names ("Friday") compare equal.
 // mon/tue/wed/thu/fri/sat/sun are all unique in their first 3 letters.
@@ -282,6 +318,18 @@ exports.handler = async (event) => {
             if (wd && !allowed.includes(normDay(wd))) {
                 return err(400, `Doctor is not on duty on ${wd}. Duty days: ${dutyDays.join(', ')}.`);
             }
+        }
+
+        // Doctor may hold multiple appointments per day BUT not overlapping
+        // time slots. Block exact same time or overlapping intervals.
+        const conflict = await findDoctorOverlap({
+            doctorId:  body.doctorId,
+            date:      body.date,
+            startTime: body.startTime,
+            endTime:   body.endTime
+        });
+        if (conflict) {
+            return err(409, `Doctor already has an appointment at ${conflict.startTime}-${conflict.endTime} on ${body.date}.`);
         }
 
         const id  = randomUUID();
@@ -506,6 +554,20 @@ exports.handler = async (event) => {
                 if (wd && !allowed.includes(normDay(wd))) {
                     return err(400, `Doctor is not on duty on ${wd}. Duty days: ${dutyDays.join(', ')}.`);
                 }
+            }
+        }
+
+        // Doctor same-time overlap check on edits (skip cancelling/no-op edits).
+        if ((body.date || body.startTime || body.endTime || body.doctorId) && body.status !== 'cancelled') {
+            const conflict = await findDoctorOverlap({
+                doctorId:     body.doctorId  || appt.doctorId,
+                date:         body.date      || appt.date,
+                startTime:    body.startTime || appt.startTime,
+                endTime:      body.endTime   || appt.endTime,
+                ignoreApptId: appt.appointmentId
+            });
+            if (conflict) {
+                return err(409, `Doctor already has an appointment at ${conflict.startTime}-${conflict.endTime} on ${body.date || appt.date}.`);
             }
         }
 

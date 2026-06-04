@@ -488,6 +488,8 @@ export class TiryaqStack extends cdk.Stack {
         // All calendar data now persists in the Hospital DynamoDB table for
         // PDPPL data-residency + clinical-privacy compliance.
         const calendarFn = fn('TiryaqCalendar', 'tiryaq-calendar', 'index.handler', lambda.Runtime.NODEJS_20_X);
+        // Blood Bank module — donors / donations / inventory / requests / crossmatch / issue.
+        const bloodbankFn = fn('TiryaqBloodbank', 'tiryaq-bloodbank', 'index.handler', lambda.Runtime.NODEJS_20_X);
 
         // ─────────────────────────────────────────────────────────────────────
         // ScribeFirst Phase 1 — SOAP generation Lambda.
@@ -568,6 +570,7 @@ export class TiryaqStack extends cdk.Stack {
             auditFn,
             appointmentsFn,
             calendarFn,
+            bloodbankFn,
             scribeFn
         ];
 
@@ -921,6 +924,19 @@ exports.handler = async (event) => {
         route('/calendars/{calendarId}', [apigwv2.HttpMethod.DELETE], calendarFn);
         route('/calendars/{calendarId}/events', [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.POST], calendarFn);
         route('/calendars/{calendarId}/events/{eventId}', [apigwv2.HttpMethod.PATCH, apigwv2.HttpMethod.DELETE], calendarFn);
+
+        // Blood Bank module
+        route('/bloodbank/donors',                                  [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.POST],   bloodbankFn);
+        route('/bloodbank/donors/{donorId}',                        [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.PATCH, apigwv2.HttpMethod.DELETE], bloodbankFn);
+        route('/bloodbank/donors/{donorId}/donations',              [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.POST],   bloodbankFn);
+        route('/bloodbank/donations',                               [apigwv2.HttpMethod.GET],                            bloodbankFn);
+        route('/bloodbank/units',                                   [apigwv2.HttpMethod.GET],                            bloodbankFn);
+        route('/bloodbank/units/{unitId}',                          [apigwv2.HttpMethod.PATCH, apigwv2.HttpMethod.DELETE], bloodbankFn);
+        route('/bloodbank/stock',                                   [apigwv2.HttpMethod.GET],                            bloodbankFn);
+        route('/bloodbank/requests',                                [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.POST],   bloodbankFn);
+        route('/bloodbank/requests/{requestId}',                    [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.PATCH, apigwv2.HttpMethod.DELETE], bloodbankFn);
+        route('/bloodbank/requests/{requestId}/crossmatch',         [apigwv2.HttpMethod.POST],                           bloodbankFn);
+        route('/bloodbank/requests/{requestId}/issue',              [apigwv2.HttpMethod.POST],                           bloodbankFn);
 
         // ScribeFirst Phase 1 — SOAP scribe routes
         route('/scribe/sessions', [apigwv2.HttpMethod.POST], scribeFn);
