@@ -352,6 +352,15 @@ exports.handler = async (event) => {
             }
         }
 
+        // Reject appointments whose end time has already passed.
+        if (body.date && body.endTime) {
+            const slotEndIso = `${body.date}T${body.endTime}:00`;
+            const slotEnd = Date.parse(slotEndIso);
+            if (!isNaN(slotEnd) && slotEnd <= Date.now()) {
+                return err(400, 'The selected date/time has already passed.');
+            }
+        }
+
         // Doctor may hold multiple appointments per day BUT not overlapping
         // time slots. Block exact same time or overlapping intervals.
         const conflict = await findDoctorOverlap({

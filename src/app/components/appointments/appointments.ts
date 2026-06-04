@@ -270,6 +270,13 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
             }
         }
 
+        // Block appointments whose end time has already passed (today included).
+        const slotEnd = this.combineDateAndTime(this.newAppt.date, this.newAppt.endTime || this.newAppt.startTime);
+        if (slotEnd && slotEnd.getTime() <= Date.now()) {
+            this.helpers.notifyError('Past time', 'The selected date/time has already passed.');
+            return;
+        }
+
         const doctor = this.doctors.find((d) => d.PK === this.newAppt.doctorId);
         const patient = this.patients.find((p) => p.PK === this.newAppt.patientId);
         const dateStr = this.formatDate(this.newAppt.date);
@@ -394,6 +401,13 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
         const dutyErr = this.dutyDayError(this.editAppt.doctorId, this.editAppt.date);
         if (dutyErr) {
             this.helpers.notifyError('Outside duty days', dutyErr);
+            return;
+        }
+
+        // Block scheduling into a past slot.
+        const editSlotEnd = this.combineDateAndTime(this.editAppt.date, this.editAppt.endTime || this.editAppt.startTime);
+        if (editSlotEnd && editSlotEnd.getTime() <= Date.now()) {
+            this.helpers.notifyError('Past time', 'The selected date/time has already passed.');
             return;
         }
 
@@ -722,6 +736,14 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
         const d = new Date();
         const [h, m] = (timeStr || '00:00').split(':');
         d.setHours(+h, +m, 0, 0);
+        return d;
+    }
+
+    /** Combine a calendar Date (date part only) with a time Date (HH:mm) into one Date. */
+    private combineDateAndTime(dateOnly: Date | null, time: Date | null): Date | null {
+        if (!dateOnly || !time) return null;
+        const d = new Date(dateOnly);
+        d.setHours(time.getHours(), time.getMinutes(), 0, 0);
         return d;
     }
 
