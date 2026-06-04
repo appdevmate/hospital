@@ -229,16 +229,48 @@ function normDay(d) {
 // ── Calendar mirroring (#4) ────────────────────────────────────────────────
 // Find the doctor's calendar (tagged with doctorEmail) or create one.
 async function findOrCreateDoctorCalendar(doctorEmail, doctorName, now) {
-    if (!doctorEmail) return null;
-    const q = await db.send(new QueryCommand({
+    if (!doctorEmail && !doctorName) return null;
+    // 1) Prefer an existing calendar matched by doctorEmail attribute.
+    let q = await db.send(new QueryCommand({
         TableName:                 TABLE_NAME,
         IndexName:                 'EntityType-index',
         KeyConditionExpression:    'EntityType = :et',
         FilterExpression:          'doctorEmail = :de',
-        ExpressionAttributeValues: { ':et': 'CALENDAR', ':de': doctorEmail }
+        ExpressionAttributeValues: { ':et': 'CALENDAR', ':de': doctorEmail || '__nope__' }
     }));
     if (q.Items && q.Items.length) return q.Items[0].calendarId;
 
+    // 2) Fall back to the calendar created by the duty-shift system, which
+    //    names calendars after the plain doctor name (no "Dr." prefix).
+    //    This ensures appointment events show on the SAME calendar the doctor
+    //    sees their duty shifts on.
+    if (doctorName) {
+        q = await db.send(new QueryCommand({
+            TableName:                 TABLE_NAME,
+            IndexName:                 'EntityType-index',
+            KeyConditionExpression:    'EntityType = :et',
+            FilterExpression:          '#n = :n',
+            ExpressionAttributeNames:  { '#n': 'name' },
+            ExpressionAttributeValues: { ':et': 'CALENDAR', ':n': doctorName }
+        }));
+        if (q.Items && q.Items.length) {
+            // Backfill the doctorEmail attribute so the email-based path
+            // finds it next time (saves the scan).
+            if (doctorEmail && !q.Items[0].doctorEmail) {
+                try {
+                    await db.send(new UpdateCommand({
+                        TableName: TABLE_NAME,
+                        Key: { PK: q.Items[0].PK, SK: q.Items[0].SK },
+                        UpdateExpression: 'SET doctorEmail = :de, updatedAt = :u',
+                        ExpressionAttributeValues: { ':de': doctorEmail, ':u': now }
+                    }));
+                } catch (_) {}
+            }
+            return q.Items[0].calendarId;
+        }
+    }
+
+    // 3) Nothing found — create one matching the duty-shift naming scheme.
     const calendarId = randomUUID();
     await db.send(new PutCommand({
         TableName: TABLE_NAME,
@@ -247,9 +279,9 @@ async function findOrCreateDoctorCalendar(doctorEmail, doctorName, now) {
             SK:          'PROFILE',
             EntityType:  'CALENDAR',
             calendarId,
-            name:        doctorName ? `Dr. ${doctorName}` : doctorEmail,
-            description: `Auto-created schedule for ${doctorEmail}`,
-            doctorEmail,
+            name:        doctorName || doctorEmail,
+            description: `Calendar for ${doctorName || doctorEmail}`,
+            doctorEmail: doctorEmail || null,
             dataClass:   'PHI',
             createdAt:   now,
             updatedAt:   now
