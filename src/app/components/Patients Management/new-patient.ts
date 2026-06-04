@@ -509,6 +509,7 @@ import { Fluid } from 'primeng/fluid';
 
 import { PatientsService, CreateUpdatePatientRequest } from '@/services/patients.service';
 import { HelpersService } from '@/services/helpers-service';
+import { GENDER_OPTIONS, BLOOD_TYPE_OPTIONS } from '@/shared/form-constants';
 
 @Component({
     selector: 'app-new-patient',
@@ -775,14 +776,11 @@ export class NewPatient implements AfterViewInit, OnDestroy {
     today = new Date();
     isSubmitting = false;
 
-    genderOptions = [
-        { label: 'Male', value: 'male' },
-        { label: 'Female', value: 'female' }
-    ];
+    genderOptions = GENDER_OPTIONS;
     filteredGenderOptions: any[] = [];
     statusOptions: string[] = ['admitted', 'stable', 'under treatment', 'discharged', 'critical', 'dead'];
     filteredStatusOptions: string[] = [];
-    bloodGroupOptions: string[] = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+    bloodGroupOptions: string[] = BLOOD_TYPE_OPTIONS;
     filteredBloodGroupOptions: string[] = [];
 
     constructor() {

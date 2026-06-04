@@ -26,6 +26,7 @@ import {
 import { HelpersService } from '@/services/helpers-service';
 import { AuthService } from '@/services/auth.service';
 import { PatientsService } from '@/services/patients.service';
+import { GENDER_OPTIONS, PHONE_MASK as APP_PHONE_MASK, BLOOD_TYPE_OPTIONS } from '@/shared/form-constants';
 
 @Component({
     selector: 'app-blood-bank',
@@ -48,7 +49,7 @@ export class BloodBankComponent implements OnInit {
     private patientsSvc = inject(PatientsService);
     auth = inject(AuthService);
 
-    readonly BLOOD_TYPES: BloodType[] = ['O+','O-','A+','A-','B+','B-','AB+','AB-'];
+    readonly BLOOD_TYPES: BloodType[] = BLOOD_TYPE_OPTIONS as BloodType[];
     readonly PRODUCT_TYPES: { label: string; value: ProductType }[] = [
         { label: 'Whole blood', value: 'whole' },
         { label: 'Packed RBC',  value: 'packed-rbc' },
@@ -59,13 +60,9 @@ export class BloodBankComponent implements OnInit {
     readonly UNIT_STATUSES: UnitStatus[] = ['available','reserved','issued','used','discarded','expired','quarantined'];
     readonly REQ_STATUSES: ReqStatus[]   = ['pending','approved','crossmatched','issued','cancelled','rejected'];
     readonly URGENCIES: Urgency[]        = ['routine','urgent','emergency','stat'];
-    readonly GENDERS = [
-        { label: 'Male',   value: 'male' },
-        { label: 'Female', value: 'female' },
-        { label: 'Other',  value: 'other' }
-    ];
+    readonly GENDERS = GENDER_OPTIONS;
     /** Standard phone mask used across the app (patient/doctor) */
-    readonly PHONE_MASK = '+999 9999 9999';
+    readonly PHONE_MASK = APP_PHONE_MASK;
 
     canManageInventory = false;
     canRequestBlood    = false;

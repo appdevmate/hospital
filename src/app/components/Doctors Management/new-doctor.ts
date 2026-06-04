@@ -19,6 +19,7 @@ import { Fluid } from 'primeng/fluid';
 
 import { DoctorsService, Department, Specialization, CreateUpdateDoctorRequest } from '@/services/doctors.service';
 import { HelpersService } from '@/services/helpers-service';
+import { GENDER_OPTIONS } from '@/shared/form-constants';
 
 @Component({
     selector: 'app-new-doctor',
@@ -475,10 +476,7 @@ export class NewDoctor implements AfterViewInit {
     bulkPreview: { name: string; code?: string }[] = [];
     bulkInvalid: any[] = [];
 
-    genderOptions = [
-        { label: 'Male', value: 'male' },
-        { label: 'Female', value: 'female' }
-    ];
+    genderOptions = GENDER_OPTIONS;
     filteredGenderOptions: any[] = [];
 
     filteredDepartmentOptions: Department[] = [];
