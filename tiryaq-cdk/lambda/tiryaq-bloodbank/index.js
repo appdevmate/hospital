@@ -176,18 +176,20 @@ async function createDonor(event, actor) {
         donorId: id,
         name:        String(body.name).trim(),
         bloodType:   body.bloodType,
-        gender:      body.gender || null,
-        dob:         body.dob || null,
-        phone:       body.phone || null,
-        email:       body.email || null,
-        address:     body.address || null,
         lastDonation: null,
         donationCount: 0,
         eligibilityStatus: 'eligible',
-        notes:       body.notes || null,
         createdAt: nowIso(), updatedAt: nowIso(),
         createdBy: actor.email
     };
+    // Optional fields — only write when present. Setting them to null breaks
+    // any GSI that uses them as a key attribute (e.g. email-index).
+    if (body.gender)  item.gender  = String(body.gender).trim();
+    if (body.dob)     item.dob     = String(body.dob).trim();
+    if (body.phone)   item.phone   = String(body.phone).trim();
+    if (body.email)   item.email   = String(body.email).trim();
+    if (body.address) item.address = String(body.address).trim();
+    if (body.notes)   item.notes   = String(body.notes).trim();
     await ddb.send(new PutCommand({ TableName: TABLE_NAME, Item: item, ConditionExpression: 'attribute_not_exists(PK)' }));
     const response = res(201, stripKeys(item));
     await storeIdempotency(cid, response);
@@ -204,10 +206,11 @@ async function updateDonor(event, actor) {
     const sets = ['#u = :u', '#ub = :ub'];
     let i = 0;
     for (const k of allowed) {
-        if (body[k] !== undefined && body[k] !== null) {
-            const n = `#k${i}`, v = `:v${i}`;
-            names[n] = k; values[v] = body[k]; sets.push(`${n} = ${v}`); i++;
-        }
+        const v = body[k];
+        // Never SET an indexed string attribute to null/empty — GSIs reject it.
+        if (v === undefined || v === null || v === '') continue;
+        const nk = `#k${i}`, vk = `:v${i}`;
+        names[nk] = k; values[vk] = v; sets.push(`${nk} = ${vk}`); i++;
     }
     try {
         const out = await ddb.send(new UpdateCommand({
