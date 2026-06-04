@@ -1,3 +1,34 @@
+/* Production-scale toolbar filters */
+.appt-tabs {
+    display: inline-flex;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    .appt-tab {
+        background: transparent;
+        border: 0;
+        padding: 0.4rem 0.85rem;
+        font-size: 0.85rem;
+        cursor: pointer;
+        color: #4b5563;
+        &:not(:last-child) { border-right: 1px solid #e5e7eb; }
+        &.active { background: #10b981; color: #fff; font-weight: 600; }
+    }
+}
+.appt-search {
+    width: 240px;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.85rem;
+}
+.appt-select, .appt-date {
+    height: 34px;
+    padding: 0 .55rem;
+    font-size: 0.85rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    background: #fff;
+}
+
 .appointments-page {
   padding: 1.5rem;
 

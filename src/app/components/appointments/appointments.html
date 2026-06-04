@@ -4,11 +4,50 @@
 <div style="position:relative; min-height:200px;">
 <app-tiryaq-loader [loading]="loading()" message="Loading appointments…" />
 
-<!-- Toolbar: New Appointment only visible to admins -->
+<!-- Toolbar: New Appointment + filters/tabs -->
 <ng-template #tbStart>
-    @if (auth.isAdmin || auth.isDeveloper) {
-    <p-button label="New Appointment" icon="pi pi-plus" (onClick)="openCreate()" />
-    }
+    <div class="flex flex-wrap items-center gap-2 w-full">
+        @if (auth.isAdmin || auth.isDeveloper) {
+            <p-button label="New Appointment" icon="pi pi-plus" (onClick)="openCreate()" />
+        }
+        <!-- Tabs -->
+        <div class="appt-tabs ml-2">
+            <button type="button" class="appt-tab" [class.active]="tab === 'upcoming'" (click)="setTab('upcoming')">Upcoming</button>
+            <button type="button" class="appt-tab" [class.active]="tab === 'past'"     (click)="setTab('past')">Past</button>
+            <button type="button" class="appt-tab" [class.active]="tab === 'all'"      (click)="setTab('all')">All</button>
+        </div>
+        <!-- Search -->
+        <input pInputText class="appt-search" placeholder="Search patient / doctor / dept…"
+               [ngModel]="filterQ" (ngModelChange)="onSearchInput($event)" />
+        <!-- Status -->
+        <select class="appt-select" [(ngModel)]="filterStatus" (change)="applyFilters()">
+            <option value="">Any status</option>
+            <option value="scheduled">Scheduled</option>
+            <option value="checked-in">Checked-in</option>
+            <option value="in-progress">In progress</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+            <option value="no-show">No-show</option>
+        </select>
+        <!-- Priority -->
+        <select class="appt-select" [(ngModel)]="filterPriority" (change)="applyFilters()">
+            <option value="">Any priority</option>
+            <option value="routine">Routine</option>
+            <option value="urgent">Urgent</option>
+            <option value="emergency">Emergency</option>
+        </select>
+        <!-- Date range -->
+        <input type="date" class="appt-date" [(ngModel)]="filterDateFrom" (change)="applyFilters()" />
+        <span class="text-xs">to</span>
+        <input type="date" class="appt-date" [(ngModel)]="filterDateTo" (change)="applyFilters()" />
+        <p-button icon="pi pi-filter-slash" severity="secondary" text (onClick)="resetFilters()" pTooltip="Reset filters"></p-button>
+        <!-- Pager -->
+        <div class="ml-auto flex items-center gap-1">
+            <p-button icon="pi pi-chevron-left"  severity="secondary" [outlined]="true" [disabled]="cursorIndex === 0" (onClick)="pagePrev()" pTooltip="Previous page"></p-button>
+            <span class="text-xs">page {{ cursorIndex + 1 }}</span>
+            <p-button icon="pi pi-chevron-right" severity="secondary" [outlined]="true" [disabled]="!hasMore"        (onClick)="pageNext()" pTooltip="Next page"></p-button>
+        </div>
+    </div>
 </ng-template>
 
 <!-- Row actions -->

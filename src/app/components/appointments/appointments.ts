@@ -128,8 +128,9 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
         showGlobalSearch: true,
         showClearButton: true,
         showToolbar: true,
-        pageSizeOptions: [10, 25, 50],
-        defaultPageSize: 10,
+        // Server-driven pagination — the toolbar pager controls page changes.
+        pageSizeOptions: [25, 50, 100],
+        defaultPageSize: 25,
         scrollHeight: '600px',
         emptyMessage: 'No appointments found.',
         showGridlines: true,
@@ -156,10 +157,30 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
         { field: 'notes', header: 'Notes', sortable: false, filterable: true, showTooltip: true }
     ];
 
+    // ── Pagination + filters (production-scale) ───────────────────────────────
+    /** 'upcoming' = today+future, 'past' = before today, 'all' = everything. */
+    tab: 'upcoming' | 'past' | 'all' = 'upcoming';
+    pageSize = 25;
+    /** Per-tab cursor stack — index 0 = first page (no token). */
+    private cursorStack: (string | null)[] = [null];
+    private cursorIndex = 0;
+    nextToken: string | null = null;
+    hasMore = false;
+    /** Server-side filter state. */
+    filterQ        = '';
+    filterStatus   = '';
+    filterPriority = '';
+    filterDoctorId = '';
+    filterPatientId = '';
+    filterDateFrom = '';
+    filterDateTo   = '';
+    private searchDebounce: any = null;
+
     // ── Lifecycle ─────────────────────────────────────────────────────────────
     ngOnInit() {
         this.auth.invalidate();
-        this.loadAll();
+        this.loadLookups();
+        this.loadPage(true);
     }
 
     ngAfterViewInit() {
@@ -171,22 +192,93 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
         });
     }
 
-    // ── Data loading ──────────────────────────────────────────────────────────
-    loadAll() {
-        this._loading.set(true);
+    // ── Data loading (paginated) ──────────────────────────────────────────────
+    /** One-time lookup load — doctors + patients (small) used by the dialogs. */
+    private loadLookups() {
         forkJoin({
-            appointments: this.appointmentsService.getAppointments().pipe(catchError(() => of([]))),
             doctors: this.doctorsService.getDoctorsPage({ pageSize: 200 }).pipe(catchError(() => of({ data: [] }))),
             patients: this.patientsService.getPatientsPage({ pageSize: 200 }).pipe(catchError(() => of({ data: [] })))
-        }).subscribe(({ appointments, doctors, patients }) => {
-            const rows = (appointments as Appointment[]).map((a) => ({ ...a, dayName: this.weekdayLabel(a.date) }));
-            this._rows.set(this.sortByNearest(rows));
+        }).subscribe(({ doctors, patients }) => {
             this.doctors = (doctors as any)?.data || (doctors as any)?.items || (Array.isArray(doctors) ? doctors : []) || [];
             this.patients = (patients as any)?.data || (patients as any)?.items || (Array.isArray(patients) ? patients : []) || [];
+            this.cd.detectChanges();
+        });
+    }
+
+    /** Fetch the current page from the server (lazy). reset=true resets the cursor stack. */
+    loadPage(reset = false) {
+        if (reset) {
+            this.cursorStack = [null];
+            this.cursorIndex = 0;
+        }
+        this._loading.set(true);
+        this.appointmentsService.getAppointmentsPage({
+            pageSize:  this.pageSize,
+            nextToken: this.cursorStack[this.cursorIndex] || null,
+            tab:       this.tab,
+            dateFrom:  this.filterDateFrom || undefined,
+            dateTo:    this.filterDateTo   || undefined,
+            status:    this.filterStatus   || undefined,
+            priority:  this.filterPriority || undefined,
+            doctorId:  this.filterDoctorId || undefined,
+            patientId: this.filterPatientId || undefined,
+            q:         this.filterQ        || undefined,
+            sortDir:   this.tab === 'past' ? 'desc' : 'asc'
+        }).pipe(catchError(() => of({ data: [], nextToken: null, hasMore: false, count: 0, pageSize: this.pageSize }))).subscribe((r) => {
+            const rows = (r.data || []).map((a) => ({ ...a, dayName: this.weekdayLabel(a.date) }));
+            this._rows.set(rows);
+            this.nextToken = r.nextToken || null;
+            this.hasMore = !!r.hasMore;
+            // Push the new cursor onto the stack when we move forward.
+            if (this.nextToken && this.cursorStack[this.cursorIndex + 1] !== this.nextToken) {
+                this.cursorStack = this.cursorStack.slice(0, this.cursorIndex + 1);
+                this.cursorStack.push(this.nextToken);
+            }
             this._loading.set(false);
             this.cd.detectChanges();
         });
     }
+
+    /** Move to the next server page. */
+    pageNext() {
+        if (!this.hasMore) return;
+        this.cursorIndex++;
+        this.loadPage();
+    }
+    /** Move to the previous server page. */
+    pagePrev() {
+        if (this.cursorIndex === 0) return;
+        this.cursorIndex--;
+        this.loadPage();
+    }
+    /** Switch the tab (upcoming / past / all) — resets pagination. */
+    setTab(t: 'upcoming' | 'past' | 'all') {
+        if (this.tab === t) return;
+        this.tab = t;
+        this.loadPage(true);
+    }
+    /** Debounced search-as-you-type. */
+    onSearchInput(v: string) {
+        this.filterQ = v;
+        clearTimeout(this.searchDebounce);
+        this.searchDebounce = setTimeout(() => this.loadPage(true), 300);
+    }
+    /** Apply filter dropdown changes immediately. */
+    applyFilters() { this.loadPage(true); }
+    /** Reset every filter + tab back to defaults. */
+    resetFilters() {
+        this.filterQ = '';
+        this.filterStatus = '';
+        this.filterPriority = '';
+        this.filterDoctorId = '';
+        this.filterPatientId = '';
+        this.filterDateFrom = '';
+        this.filterDateTo = '';
+        this.tab = 'upcoming';
+        this.loadPage(true);
+    }
+    /** Legacy method retained so existing call sites compile. */
+    loadAll() { this.loadPage(true); }
 
     // ── Dropdown option builders ──────────────────────────────────────────────
     get doctorOptions() {
@@ -352,7 +444,9 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
 
         this.appointmentsService.createAppointment(data).subscribe({
             next: (appt) => {
-                this._rows.set(this.sortByNearest([{ ...appt, dayName: this.weekdayLabel(appt.date) }, ...this._rows()]));
+                // Reload current page from server — the new row may land elsewhere
+                // depending on the active tab + sort + filters.
+                this.loadPage(true);
                 this.showCreateDialog = false;
                 this.saving = false;
                 this.helpers.notifySuccess(`Appointment booked: ${patient?.name} with ${doctor?.name}`);
@@ -474,10 +568,11 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
             })
             .subscribe({
                 next: (updated) => {
+                    // Patch the row in place; if it moved off-page we reload.
                     const rows = [...this._rows()];
                     const idx = rows.findIndex((a) => a.appointmentId === updated.appointmentId);
                     if (idx !== -1) rows[idx] = { ...updated, dayName: this.weekdayLabel(updated.date) };
-                    this._rows.set(this.sortByNearest(rows));
+                    this._rows.set(rows);
                     this.showEditDialog = false;
                     this.saving = false;
                     this.helpers.notifySuccess('Appointment updated.');

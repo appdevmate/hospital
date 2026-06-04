@@ -450,68 +450,26 @@ exports.handler = async (event) => {
         return response;
     }
 
-    // ── GET /appointments ── LIST ────────────────────────────────────────────
+    // ── GET /appointments ── LIST (paginated) ────────────────────────────────
+    //
+    // Query params (all optional):
+    //   pageSize    : 1-100, default 25
+    //   nextToken   : opaque base64 cursor from the previous response
+    //   tab         : 'upcoming' (today+future) | 'past' | 'all' (default upcoming)
+    //   dateFrom    : YYYY-MM-DD lower bound (inclusive)
+    //   dateTo      : YYYY-MM-DD upper bound (inclusive)
+    //   date        : exact date YYYY-MM-DD (overrides from/to)
+    //   status      : scheduled | checked-in | in-progress | completed | cancelled | no-show
+    //   priority    : routine | urgent | emergency
+    //   visitType   : walk-in | scheduled | emergency | referral | follow-up | check-up
+    //   doctorId    : APPOINTMENT.doctorId exact match
+    //   patientId   : APPOINTMENT.patientId exact match
+    //   q           : free-text — patientName / doctorName / department / chiefComplaint
+    //   sortDir     : asc | desc — default depends on tab (upcoming = asc, past = desc)
+    //
+    // Response: { data: Appointment[], nextToken: string|null, hasMore: bool, count, pageSize }
     if (method === 'GET' && !apptId) {
-        const qp   = event.queryStringParameters || {};
-        const date = qp.date;       // optional filter by date
-        const status = qp.status;   // optional filter by status
-
-        let filterExp   = 'EntityType = :et';
-        let filterVals  = { ':et': 'APPOINTMENT' };
-        let filterNames = {};
-
-        if (date) {
-            filterExp += ' AND #date = :date';
-            filterNames['#date'] = 'date';
-            filterVals[':date']  = date;
-        }
-        if (status) {
-            filterExp += ' AND #status = :status';
-            filterNames['#status'] = 'status';
-            filterVals[':status']  = status;
-        }
-
-        // Doctor — scope to own appointments using GSI
-        if (caller.isDoctor && !caller.isAdmin) {
-            const result = await db.send(new QueryCommand({
-                TableName:                 TABLE_NAME,
-                IndexName:                 'doctorEmail-createdAt-index',
-                KeyConditionExpression:    'doctorEmail = :de',
-                FilterExpression:          date || status ? (date && status ? '#date = :date AND #status = :status' : date ? '#date = :date' : '#status = :status') : undefined,
-                ExpressionAttributeNames:  Object.keys(filterNames).length ? filterNames : undefined,
-                ExpressionAttributeValues: {
-                    ':de': caller.email,
-                    ...(date   ? { ':date':   date   } : {}),
-                    ...(status ? { ':status': status } : {})
-                }
-            }));
-
-            const items = (result.Items || [])
-                .filter(i => i.EntityType === 'APPOINTMENT')
-                .sort((a, b) => {
-                    if (a.date !== b.date) return b.date.localeCompare(a.date);
-                    return b.startTime.localeCompare(a.startTime);
-                });
-
-            return res(200, items);
-        }
-
-        // Admin / Developer — get all appointments via EntityType-index
-        const result = await db.send(new QueryCommand({
-            TableName:                 TABLE_NAME,
-            IndexName:                 'EntityType-index',
-            KeyConditionExpression:    'EntityType = :et',
-            FilterExpression:          (date || status) ? filterExp.replace('EntityType = :et AND ', '') || undefined : undefined,
-            ExpressionAttributeNames:  Object.keys(filterNames).length ? filterNames : undefined,
-            ExpressionAttributeValues: filterVals
-        }));
-
-        const items = (result.Items || []).sort((a, b) => {
-            if (a.date !== b.date) return b.date.localeCompare(a.date);
-            return b.startTime.localeCompare(a.startTime);
-        });
-
-        return res(200, items);
+        return await listAppointmentsPaged(event, caller);
     }
 
     // ── GET /appointments/{apptId} ── GET ONE ────────────────────────────────
@@ -714,3 +672,124 @@ exports.handler = async (event) => {
 
     return err(400, 'Unknown route');
 };
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Paginated list — production scale (10M+ rows)
+// ─────────────────────────────────────────────────────────────────────────────
+const MAX_PAGE_SIZE = 100;
+const DEFAULT_PAGE_SIZE = 25;
+// Safety cap on how many pages of upstream DynamoDB results we'll burn while
+// trying to fill one client page (filter expressions may discard rows after
+// the read). At 1MB/page this gives ~10 MB scanned per request worst case.
+const MAX_UPSTREAM_PAGES = 10;
+
+function encodeNextToken(lek) {
+    if (!lek) return null;
+    return Buffer.from(JSON.stringify(lek)).toString('base64');
+}
+function decodeNextToken(t) {
+    if (!t) return undefined;
+    try { return JSON.parse(Buffer.from(t, 'base64').toString('utf8')); } catch { return undefined; }
+}
+function textMatch(item, q) {
+    if (!q) return true;
+    const fields = [item.patientName, item.doctorName, item.department, item.chiefComplaint, item.notes];
+    return fields.some(v => typeof v === 'string' && v.toLowerCase().includes(q));
+}
+
+async function listAppointmentsPaged(event, caller) {
+    const qp = event.queryStringParameters || {};
+    const pageSize = Math.min(Math.max(parseInt(qp.pageSize, 10) || DEFAULT_PAGE_SIZE, 1), MAX_PAGE_SIZE);
+    let startKey   = decodeNextToken(qp.nextToken);
+    const tab      = (qp.tab || 'upcoming').toLowerCase();
+    const today    = new Date().toISOString().slice(0, 10);
+    const q        = (qp.q || '').trim().toLowerCase();
+
+    // Build the FilterExpression once. The same shape works for both indices.
+    const exprNames  = {};
+    const exprValues = {};
+    const parts      = [];
+    if (qp.date) {
+        parts.push('#d = :d'); exprNames['#d'] = 'date'; exprValues[':d'] = qp.date;
+    } else {
+        if (qp.dateFrom) {
+            parts.push('#d >= :dFrom');
+            exprNames['#d'] = 'date'; exprValues[':dFrom'] = qp.dateFrom;
+        }
+        if (qp.dateTo) {
+            parts.push('#d <= :dTo');
+            exprNames['#d'] = 'date'; exprValues[':dTo'] = qp.dateTo;
+        }
+        if (tab === 'upcoming') {
+            parts.push('#d >= :today');
+            exprNames['#d'] = 'date'; exprValues[':today'] = today;
+        } else if (tab === 'past') {
+            parts.push('#d < :today');
+            exprNames['#d'] = 'date'; exprValues[':today'] = today;
+        }
+    }
+    if (qp.status)    { parts.push('#s = :s');     exprNames['#s'] = 'status';    exprValues[':s'] = qp.status; }
+    if (qp.priority)  { parts.push('priority = :p');                                exprValues[':p'] = qp.priority; }
+    if (qp.visitType) { parts.push('visitType = :vt');                              exprValues[':vt'] = qp.visitType; }
+    if (qp.doctorId)  { parts.push('doctorId = :dId');                              exprValues[':dId'] = qp.doctorId; }
+    if (qp.patientId) { parts.push('patientId = :pId');                             exprValues[':pId'] = qp.patientId; }
+
+    // Default sort: upcoming → ascending (soonest first); past → descending.
+    const sortDir = (qp.sortDir || (tab === 'past' ? 'desc' : 'asc')).toLowerCase();
+    const ScanIndexForward = sortDir !== 'desc';
+
+    // Choose the index.
+    const baseParams = {
+        TableName:                 TABLE_NAME,
+        Limit:                     pageSize,
+        ScanIndexForward
+    };
+
+    if (caller.isDoctor && !caller.isAdmin) {
+        // Doctor: scope to own appointments via doctorEmail-createdAt-index.
+        baseParams.IndexName              = 'doctorEmail-createdAt-index';
+        baseParams.KeyConditionExpression = 'doctorEmail = :de';
+        baseParams.ExpressionAttributeValues = { ':de': caller.email, ...exprValues };
+    } else {
+        // Admin / Developer: full firehose via EntityType-index.
+        baseParams.IndexName              = 'EntityType-index';
+        baseParams.KeyConditionExpression = 'EntityType = :et';
+        baseParams.ExpressionAttributeValues = { ':et': 'APPOINTMENT', ...exprValues };
+    }
+    if (parts.length) {
+        baseParams.FilterExpression = parts.join(' AND ');
+        baseParams.ExpressionAttributeNames = exprNames;
+    }
+
+    // FilterExpression runs AFTER DynamoDB's per-page read, so a strict filter
+    // may leave us with 0 items even though `LastEvaluatedKey` is set. Loop
+    // forward (bounded by MAX_UPSTREAM_PAGES) until we either fill the page or
+    // exhaust the data.
+    const collected = [];
+    let lastKey = startKey;
+    let upstreamPages = 0;
+
+    while (collected.length < pageSize && upstreamPages < MAX_UPSTREAM_PAGES) {
+        const params = { ...baseParams, ExclusiveStartKey: lastKey };
+        const r = await db.send(new QueryCommand(params));
+        upstreamPages++;
+
+        for (const it of (r.Items || [])) {
+            if (caller.isDoctor && it.EntityType !== 'APPOINTMENT') continue;
+            if (q && !textMatch(it, q)) continue;
+            collected.push(it);
+            if (collected.length >= pageSize) break;
+        }
+
+        lastKey = r.LastEvaluatedKey;
+        if (!lastKey) break;
+    }
+
+    return res(200, {
+        data:      collected,
+        nextToken: encodeNextToken(lastKey),
+        hasMore:   !!lastKey,
+        count:     collected.length,
+        pageSize
+    });
+}
