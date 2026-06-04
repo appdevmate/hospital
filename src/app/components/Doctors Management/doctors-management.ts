@@ -4,6 +4,8 @@ import { of, forkJoin } from 'rxjs';
 import { catchError, finalize, map } from 'rxjs/operators';
 import { TagModule } from 'primeng/tag';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DialogModule } from 'primeng/dialog';
+import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -58,11 +60,11 @@ const STATUS_SEVERITY: Record<string, 'success' | 'info' | 'warn' | 'danger' | '
     selector: 'app-doctors-management',
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [CommonModule, GenericTableComponent, TagModule, ConfirmDialogModule, ButtonModule, TooltipModule, TiryaqLoaderComponent],
+    imports: [CommonModule, GenericTableComponent, TagModule, ConfirmDialogModule, DialogModule, TableModule, ButtonModule, TooltipModule, TiryaqLoaderComponent],
     providers: [DialogService, ConfirmationService],
     template: `
         <div style="position:relative; min-height:200px;">
-        <app-tiryaq-loader [loading]="loading()" message="Loading doctors…" />
+        <app-tiryaq-loader [loading]="loading()" [message]="loaderMessage" />
         <ng-template #tbStart let-api="api" let-selected="selected">
             @if (auth.isAdmin || auth.isDeveloper) {
                 <p-button class="mr-2" [disabled]="loading()" label="New Doctor" icon="pi pi-plus" (onClick)="openNew()"></p-button>
@@ -121,6 +123,32 @@ const STATUS_SEVERITY: Record<string, 'success' | 'info' | 'warn' | 'danger' | '
         </app-generic-table>
 
         <p-confirmDialog key="global" appendTo="body" [baseZIndex]="200000"></p-confirmDialog>
+
+        <!-- Import-issues dialog: shows rows with missing required fields -->
+        <p-dialog header="Import issues — required fields missing" [(visible)]="showImportIssues" [modal]="true" [style]="{ width: '720px', maxWidth: '95vw' }" [closable]="false">
+            <div class="text-sm mb-3">
+                <strong>{{ pendingValid.length }}</strong> row(s) are ready to import.
+                <strong class="text-red-600">{{ pendingSkipped.length }}</strong> row(s) will be skipped because required fields are missing.
+            </div>
+            <p-table [value]="pendingSkipped" [paginator]="pendingSkipped.length > 5" [rows]="5" responsiveLayout="scroll" styleClass="p-datatable-sm">
+                <ng-template pTemplate="header">
+                    <tr><th>Name</th><th>QID</th><th>Phone</th><th>Missing</th></tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-r>
+                    <tr>
+                        <td>{{ r.row?.name || '—' }}</td>
+                        <td>{{ r.row?.qid  || '—' }}</td>
+                        <td>{{ r.row?.phone || '—' }}</td>
+                        <td class="text-red-600">{{ r.reason }}</td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage"><tr><td colspan="4" class="text-center p-3">—</td></tr></ng-template>
+            </p-table>
+            <ng-template pTemplate="footer">
+                <p-button label="Cancel" severity="secondary" text (onClick)="cancelImport()"></p-button>
+                <p-button [label]="'Import ' + pendingValid.length + ' valid only'" icon="pi pi-check" [disabled]="!pendingValid.length" (onClick)="confirmPartialImport()"></p-button>
+            </ng-template>
+        </p-dialog>
         </div>
     `
 })
@@ -135,6 +163,12 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
     private helpers = inject(HelpersService);
     private dialog = inject(DialogService);
     private destroyRef = inject(DestroyRef);
+
+    // ── Import-issues dialog state ──────────────────────────────────────
+    showImportIssues = false;
+    pendingValid: any[] = [];
+    pendingSkipped: { row: any; reason: string }[] = [];
+    loaderMessage = 'Loading doctors…';
 
     private _rows = signal<DoctorLike[]>([]);
     private _selected = signal<DoctorLike[]>([]);
@@ -645,9 +679,16 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
         const file = files?.[0];
         if (!file) return;
 
+        // Loader while we parse the workbook and validate every row.
+        this.loaderMessage = 'Reading & validating file…';
+        this._loading.set(true);
+
         this.readWorkbook(file)
             .then((rows) => {
                 const { valid, skipped } = this.prepare(rows);
+                this._loading.set(false);
+                this.loaderMessage = 'Loading doctors…';
+
                 const seen = new Set<string>();
                 const unique = valid.filter((r) => {
                     const k = r.qid as string;
@@ -656,38 +697,62 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
                     return true;
                 });
 
+                // No valid rows at all → show the issue dialog with all bad rows.
                 if (!unique.length) {
-                    const sample = skipped
-                        .slice(0, 5)
-                        .map((e, i) => `${i + 1}) ${e.reason}`)
-                        .join(' | ');
-                    this.helpers.notifyError('Import aborted', sample || 'No valid rows.');
+                    this.pendingValid = [];
+                    this.pendingSkipped = skipped;
+                    this.showImportIssues = true;
                     return;
                 }
 
-                const errSummary = skipped.length
-                    ? ` Skipped ${skipped.length}. ${skipped
-                          .slice(0, 3)
-                          .map((s) => s.reason)
-                          .join(' | ')}`
-                    : '';
+                // Some rows have missing required fields → ask user to proceed
+                // with only the valid ones or cancel.
+                if (skipped.length) {
+                    this.pendingValid = unique;
+                    this.pendingSkipped = skipped;
+                    this.showImportIssues = true;
+                    return;
+                }
 
+                // Clean file — just confirm and import.
                 this.confirm.confirm({
                     key: 'global',
                     header: 'Confirm Import',
-                    message: `Create ${unique.length} doctor(s).${errSummary}`,
+                    message: `Create ${unique.length} doctor(s).`,
                     icon: 'pi pi-exclamation-triangle',
                     rejectButtonProps: { label: 'No', severity: 'secondary', variant: 'text' },
                     acceptButtonProps: { label: 'Yes', severity: 'primary' },
                     accept: () => {
+                        this.loaderMessage = 'Importing doctors…';
                         this._loading.set(true);
                         this.bulkCreate(unique);
                     }
                 });
             })
             .catch(() => {
+                this._loading.set(false);
+                this.loaderMessage = 'Loading doctors…';
                 this.helpers.notifyError('Import failed', 'Could not read file');
             });
+    }
+
+    /** User confirmed import — proceed with only the valid rows. */
+    confirmPartialImport() {
+        const toImport = this.pendingValid;
+        this.showImportIssues = false;
+        this.pendingValid = [];
+        this.pendingSkipped = [];
+        if (!toImport.length) return;
+        this.loaderMessage = 'Importing doctors…';
+        this._loading.set(true);
+        this.bulkCreate(toImport);
+    }
+
+    /** User cancelled — drop everything. */
+    cancelImport() {
+        this.showImportIssues = false;
+        this.pendingValid = [];
+        this.pendingSkipped = [];
     }
 
     prepare(rows: any[]): { valid: any[]; skipped: { row: any; reason: string }[] } {
