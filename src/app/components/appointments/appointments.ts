@@ -179,7 +179,8 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
             doctors: this.doctorsService.getDoctorsPage({ pageSize: 200 }).pipe(catchError(() => of({ data: [] }))),
             patients: this.patientsService.getPatientsPage({ pageSize: 200 }).pipe(catchError(() => of({ data: [] })))
         }).subscribe(({ appointments, doctors, patients }) => {
-            this._rows.set((appointments as Appointment[]).map((a) => ({ ...a, dayName: this.weekdayLabel(a.date) })));
+            const rows = (appointments as Appointment[]).map((a) => ({ ...a, dayName: this.weekdayLabel(a.date) }));
+            this._rows.set(this.sortByNearest(rows));
             this.doctors = (doctors as any).data || [];
             this.patients = (patients as any).data || [];
             this._loading.set(false);
@@ -326,7 +327,7 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
 
         this.appointmentsService.createAppointment(data).subscribe({
             next: (appt) => {
-                this._rows.set([{ ...appt, dayName: this.weekdayLabel(appt.date) }, ...this._rows()]);
+                this._rows.set(this.sortByNearest([{ ...appt, dayName: this.weekdayLabel(appt.date) }, ...this._rows()]));
                 this.showCreateDialog = false;
                 this.saving = false;
                 this.helpers.notifySuccess(`Appointment booked: ${patient?.name} with ${doctor?.name}`);
@@ -444,7 +445,7 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
                     const rows = [...this._rows()];
                     const idx = rows.findIndex((a) => a.appointmentId === updated.appointmentId);
                     if (idx !== -1) rows[idx] = { ...updated, dayName: this.weekdayLabel(updated.date) };
-                    this._rows.set(rows);
+                    this._rows.set(this.sortByNearest(rows));
                     this.showEditDialog = false;
                     this.saving = false;
                     this.helpers.notifySuccess('Appointment updated.');
@@ -563,6 +564,33 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
      */
     private normDay(d: string): string {
         return String(d).toLowerCase().slice(0, 3);
+    }
+
+    /**
+     * Order appointments by nearest scheduled date first:
+     *  1. Future + today's appointments, soonest at the top.
+     *  2. Past appointments after, most recent past first.
+     * Ties broken by startTime ascending.
+     */
+    private sortByNearest(rows: Appointment[]): Appointment[] {
+        const today = new Date().toISOString().slice(0, 10);
+        const ts = (a: Appointment) => {
+            const d = a.date || '';
+            const t = a.startTime || '00:00';
+            return `${d}T${t}`;
+        };
+        return [...rows].sort((a, b) => {
+            const aFuture = (a.date || '') >= today;
+            const bFuture = (b.date || '') >= today;
+            if (aFuture && !bFuture) return -1;
+            if (!aFuture && bFuture) return 1;
+            if (aFuture) {
+                // both future/today → soonest first
+                return ts(a).localeCompare(ts(b));
+            }
+            // both past → most recent first
+            return ts(b).localeCompare(ts(a));
+        });
     }
 
     /**
