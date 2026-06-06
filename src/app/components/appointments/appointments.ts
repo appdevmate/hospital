@@ -161,11 +161,13 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
     /** 'upcoming' = today+future, 'past' = before today, 'all' = everything. */
     tab: 'upcoming' | 'past' | 'all' = 'upcoming';
     pageSize = 25;
-    /** Per-tab cursor stack — index 0 = first page (no token). */
-    private cursorStack: (string | null)[] = [null];
-    private cursorIndex = 0;
+    /** Per-tab cursor stack — index N holds the token to fetch page N. [null,'tok1','tok2',...] */
+    cursorStack: (string | null)[] = [null];
+    cursorIndex = 0;
     nextToken: string | null = null;
     hasMore = false;
+    private _total = signal<number>(0);
+    totalRecords = this._total.asReadonly();
     /** Server-side filter state. */
     filterQ        = '';
     filterStatus   = '';
@@ -224,8 +226,8 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
             patientId: this.filterPatientId || undefined,
             q:         this.filterQ        || undefined,
             sortDir:   this.tab === 'past' ? 'desc' : 'asc'
-        }).pipe(catchError(() => of({ data: [], nextToken: null, hasMore: false, count: 0, pageSize: this.pageSize }))).subscribe((r) => {
-            const rows = (r.data || []).map((a) => ({ ...a, dayName: this.weekdayLabel(a.date) }));
+        }).pipe(catchError(() => of({ data: [], nextToken: null, hasMore: false, count: 0, pageSize: this.pageSize, totalRecords: null }))).subscribe((r: any) => {
+            const rows = (r.data || []).map((a: Appointment) => ({ ...a, dayName: this.weekdayLabel(a.date) }));
             this._rows.set(rows);
             this.nextToken = r.nextToken || null;
             this.hasMore = !!r.hasMore;
@@ -234,9 +236,41 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
                 this.cursorStack = this.cursorStack.slice(0, this.cursorIndex + 1);
                 this.cursorStack.push(this.nextToken);
             }
+            // Total — unfiltered counter from the server. Falls back to whatever
+            // we can estimate so the "Showing X of Y" line stays meaningful.
+            if (typeof r.totalRecords === 'number') {
+                this._total.set(r.totalRecords);
+            } else if (!this.hasMore && this.cursorIndex === 0) {
+                // Filtered single-page result — show the actual count.
+                this._total.set(rows.length);
+            } else if (this._total() === 0) {
+                // Unknown total + has more pages — give the table a hint.
+                this._total.set((this.cursorIndex + 1) * this.pageSize + (this.hasMore ? this.pageSize : 0));
+            }
             this._loading.set(false);
             this.cd.detectChanges();
         });
+    }
+
+    /** Driven by the table's built-in paginator (lazy mode). */
+    onLazyLoad(event: any) {
+        const first = event?.first || 0;
+        const rows  = event?.rows  || this.pageSize;
+        if (rows !== this.pageSize) {
+            this.pageSize = rows;
+            this.loadPage(true);
+            return;
+        }
+        const targetPage = Math.floor(first / rows);
+        if (targetPage === this.cursorIndex) return;
+        // Forward jump: advance one at a time so the cursor stack stays in sync.
+        // Backward jump: stack already has the token.
+        if (targetPage > this.cursorIndex && targetPage > this.cursorStack.length - 1) {
+            this.cursorIndex = this.cursorStack.length - 1;
+        } else {
+            this.cursorIndex = Math.min(targetPage, this.cursorStack.length - 1);
+        }
+        this.loadPage();
     }
 
     /** Move to the next server page. */

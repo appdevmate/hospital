@@ -11,6 +11,8 @@ export interface PagedAppointmentsResponse {
     hasMore: boolean;
     count: number;
     pageSize: number;
+    /** Total rows in the dataset (unfiltered, admin-only). null if not available. */
+    totalRecords?: number | null;
 }
 
 export interface AppointmentsPageOpts {

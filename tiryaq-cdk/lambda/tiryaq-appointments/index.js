@@ -432,6 +432,17 @@ exports.handler = async (event) => {
 
         await db.send(new PutCommand({ TableName: TABLE_NAME, Item: appointment }));
 
+        // Bump the all-appointments counter so the table can show a fast total.
+        try {
+            await db.send(new UpdateCommand({
+                TableName: TABLE_NAME,
+                Key: { PK: 'COUNTER#APPOINTMENTS', SK: 'TOTAL' },
+                UpdateExpression: 'ADD #t :one SET updatedAt = :u',
+                ExpressionAttributeNames: { '#t': 'total' },
+                ExpressionAttributeValues: { ':one': 1, ':u': now }
+            }));
+        } catch (_) {}
+
         // Write DOCTOR_PATIENT relationship — this is the assignment mechanism
         await writeDoctorPatientRelation(
             appointment.doctorEmail,
@@ -663,6 +674,17 @@ exports.handler = async (event) => {
             Key: { PK: `APPOINTMENT#${apptId}`, SK: 'PROFILE' }
         }));
 
+        // Decrement the counter (won't go below 0 in practice if create always bumps).
+        try {
+            await db.send(new UpdateCommand({
+                TableName: TABLE_NAME,
+                Key: { PK: 'COUNTER#APPOINTMENTS', SK: 'TOTAL' },
+                UpdateExpression: 'ADD #t :neg SET updatedAt = :u',
+                ExpressionAttributeNames: { '#t': 'total' },
+                ExpressionAttributeValues: { ':neg': -1, ':u': new Date().toISOString() }
+            }));
+        } catch (_) {}
+
         await writeAudit('DELETE', apptId, caller.email, caller.name, existing.Item, null, ipAddress);
 
         const response = res(200, { message: 'Appointment deleted', appointmentId: apptId });
@@ -785,11 +807,27 @@ async function listAppointmentsPaged(event, caller) {
         if (!lastKey) break;
     }
 
+    // Best-effort total — counter row maintained on create/delete. Filtered
+    // counts would need a server-side count query which is expensive at scale,
+    // so the UI shows the unfiltered total when filters are off.
+    let totalRecords = null;
+    const filterActive = !!(qp.date || qp.dateFrom || qp.dateTo || qp.status || qp.priority || qp.visitType || qp.doctorId || qp.patientId || q);
+    if (!filterActive && !(caller.isDoctor && !caller.isAdmin)) {
+        try {
+            const c = await db.send(new GetCommand({
+                TableName: TABLE_NAME,
+                Key: { PK: 'COUNTER#APPOINTMENTS', SK: 'TOTAL' }
+            }));
+            totalRecords = c.Item?.total ?? null;
+        } catch (_) {}
+    }
+
     return res(200, {
-        data:      collected,
-        nextToken: encodeNextToken(lastKey),
-        hasMore:   !!lastKey,
-        count:     collected.length,
-        pageSize
+        data:         collected,
+        nextToken:    encodeNextToken(lastKey),
+        hasMore:      !!lastKey,
+        count:        collected.length,
+        pageSize,
+        totalRecords
     });
 }
