@@ -63,32 +63,21 @@ exports.handler = async (event) => {
             lastEvaluatedKey = result.LastEvaluatedKey;
 
         } else {
-            // ── Admin role: scan all payments, collect until pageSize ───
-            // We loop because Scan Limit counts scanned items not matched items
-            let collected = [];
-            let startKey  = lastKey;
-
-            do {
-                const result = await ddb.send(new ScanCommand({
-                    TableName:                 TABLE,
-                    FilterExpression:          'EntityType = :type',
-                    ExpressionAttributeValues: { ':type': 'PAYMENT' },
-                    Limit:                     pageSize * 3, // over-fetch to compensate for filtering
-                    ExclusiveStartKey:         startKey
-                }));
-
-                collected.push(...(result.Items || []));
-                startKey         = result.LastEvaluatedKey;
-                lastEvaluatedKey = result.LastEvaluatedKey;
-
-                if (collected.length >= pageSize) break;
-                if (!startKey) break;
-
-            } while (collected.length < pageSize);
-
-            items = collected.slice(0, pageSize);
-            // If we have more items than pageSize, there's definitely more
-            if (collected.length > pageSize) lastEvaluatedKey = lastEvaluatedKey;
+            // ── Admin role: Query EntityType-index (NOT a full table scan)
+            // The previous implementation did a full DynamoDB Scan + filter,
+            // which times out at ~30 s once the table holds more than a few
+            // hundred thousand rows of any entity type.
+            const result = await ddb.send(new QueryCommand({
+                TableName:                 TABLE,
+                IndexName:                 'EntityType-index',
+                KeyConditionExpression:    'EntityType = :type',
+                ExpressionAttributeValues: { ':type': 'PAYMENT' },
+                Limit:                     pageSize,
+                ExclusiveStartKey:         lastKey,
+                ScanIndexForward:          false
+            }));
+            items            = result.Items || [];
+            lastEvaluatedKey = result.LastEvaluatedKey;
         }
 
         return {

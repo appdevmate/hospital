@@ -553,7 +553,7 @@
 //   };
 // }
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
-const { DynamoDBDocumentClient, ScanCommand, GetCommand } = require('@aws-sdk/lib-dynamodb');
+const { DynamoDBDocumentClient, ScanCommand, GetCommand, QueryCommand } = require('@aws-sdk/lib-dynamodb');
 const REGION = 'us-east-1';
 const TABLE_NAME = 'Hospital';
 const ddb = DynamoDBDocumentClient.from(new DynamoDBClient({ region: REGION }));
@@ -795,21 +795,25 @@ function buildFilterExpression(filters) {
 
 /* ------------------------------ scan paths ------------------------------ */
 async function scanUnsorted(filterExpression, names, values, pageSize, startKey, offset = 0) {
+  // Query EntityType-index instead of scanning the entire table.
+  // The pure-Scan version timed out at ~30 s once the table grew past a few
+  // hundred thousand rows of other entity types (appointments / examinations).
   const doctors = []; let currentLastKey = startKey; let lastKeyOut = null; let skipped = 0; const maxIterations = 50; let iterations = 0;
   while (doctors.length < pageSize && iterations++ < maxIterations) {
-    const batchSize = Math.max(pageSize * 3, 50);
     const params = {
       TableName: TABLE_NAME,
-      Limit: batchSize,
-      FilterExpression: filterExpression,
-      ExpressionAttributeNames: names,
-      ExpressionAttributeValues: values
+      IndexName: 'EntityType-index',
+      KeyConditionExpression: 'EntityType = :et',
+      Limit: Math.max(pageSize * 3, 50),
+      ExpressionAttributeNames: { ...(names || {}) },
+      ExpressionAttributeValues: { ...(values || {}), ':et': 'DOCTOR' }
     };
+    if (filterExpression) params.FilterExpression = filterExpression;
     if (currentLastKey) params.ExclusiveStartKey = currentLastKey;
-    const res = await ddb.send(new ScanCommand(params));
+    const res = await ddb.send(new QueryCommand(params));
     const items = res.Items || [];
     for (const it of items) {
-      if (it.PK?.startsWith('DOCTOR#') && it.SK === 'PROFILE' && it.EntityType === 'DOCTOR' && !isDeleted(it)) {
+      if (it.PK?.startsWith('DOCTOR#') && it.SK === 'PROFILE' && !isDeleted(it)) {
         if (startKey == null && offset > 0 && skipped < offset) { skipped++; continue; }
         doctors.push(normalizeDoctor(it));
         lastKeyOut = { PK: it.PK, SK: it.SK };
@@ -819,19 +823,7 @@ async function scanUnsorted(filterExpression, names, values, pageSize, startKey,
     currentLastKey = res.LastEvaluatedKey;
     if (!currentLastKey) break;
   }
-  let hasMore = false;
-  if (doctors.length === pageSize) {
-    const probe = {
-      TableName: TABLE_NAME,
-      Limit: 50,
-      FilterExpression: filterExpression,
-      ExpressionAttributeNames: names,
-      ExpressionAttributeValues: values
-    };
-    if (currentLastKey) probe.ExclusiveStartKey = currentLastKey; else if (lastKeyOut) probe.ExclusiveStartKey = lastKeyOut;
-    const nxt = await ddb.send(new ScanCommand(probe));
-    hasMore = !!(nxt.LastEvaluatedKey || (nxt.Items || []).some(x => x.PK?.startsWith('DOCTOR#') && x.SK === 'PROFILE' && x.EntityType === 'DOCTOR' && !isDeleted(x)));
-  }
+  const hasMore = !!currentLastKey;
   const nextKey = hasMore && lastKeyOut ? encodeURIComponent(JSON.stringify(lastKeyOut)) : null;
   return { doctors, hasMore, nextKey };
 }
@@ -928,22 +920,18 @@ async function getFilteredCount(filters) {
   return count;
 }
 
-async function countByScan(filters) {
-  const { filterExpression, expressionAttributeNames, expressionAttributeValues } = buildFilterExpression(filters);
-  let count = 0, lastEvaluatedKey;
-  do {
-    const params = {
+async function countByScan(_filters) {
+  // Fast path — read the maintained counter row. Create/delete handlers keep
+  // it in sync. Falls back to 0 if the row doesn't exist yet (sync script).
+  try {
+    const r = await ddb.send(new GetCommand({
       TableName: TABLE_NAME,
-      Select: 'COUNT',
-      FilterExpression: filterExpression,
-      ExpressionAttributeNames: expressionAttributeNames,
-      ExpressionAttributeValues: expressionAttributeValues
-    };
-    if (lastEvaluatedKey) params.ExclusiveStartKey = lastEvaluatedKey;
-    const res = await ddb.send(new ScanCommand(params));
-    count += res.Count || 0; lastEvaluatedKey = res.LastEvaluatedKey;
-  } while (lastEvaluatedKey);
-  return count;
+      Key: { PK: 'COUNTER#DOCTORS', SK: 'TOTAL' }
+    }));
+    return r.Item?.total ?? 0;
+  } catch (_) {
+    return 0;
+  }
 }
 
 /* --------------------------------- misc ---------------------------------- */
