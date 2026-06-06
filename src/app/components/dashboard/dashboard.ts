@@ -332,43 +332,46 @@ export class DashboardComponent implements OnInit {
     }
 
     private loadAdminDashboard() {
+        // Cheap server-side queries instead of pulling all 1M+ appointments client-side.
         forkJoin({
-            doctors: this.doctorsService.getDoctorsPage({ pageSize: 1 }).pipe(catchError(() => of({ totalCount: 0 }))),
-            patients: this.patientsService.getPatientsPage({ pageSize: 1 }).pipe(catchError(() => of({ totalCount: 0 }))),
-            appointments: this.appointmentsService.getAppointments().pipe(catchError(() => of([]))),
-            invoices: this.paymentsService.getAllInvoices().pipe(catchError(() => of({ data: [], count: 0 })))
-        }).subscribe(({ doctors, patients, appointments, invoices }) => {
-            const allAppts = appointments as Appointment[];
+            doctors:        this.doctorsService.getDoctorsPage({ pageSize: 1 }).pipe(catchError(() => of({ totalCount: 0 }))),
+            patients:       this.patientsService.getPatientsPage({ pageSize: 1 }).pipe(catchError(() => of({ totalCount: 0 }))),
+            todayList:      this.appointmentsService.getAppointmentsPage({ date: this.todayStr, pageSize: 100, tab: 'all' }).pipe(catchError(() => of({ data: [], totalRecords: 0 } as any))),
+            upcomingList:   this.appointmentsService.getAppointmentsPage({ dateFrom: this.tomorrowStr(), dateTo: this.in7DaysStr, status: 'scheduled', pageSize: 50, tab: 'all', sortDir: 'asc' }).pipe(catchError(() => of({ data: [], totalRecords: 0 } as any))),
+            totalAppts:     this.appointmentsService.getAppointmentsPage({ pageSize: 1, tab: 'all' }).pipe(catchError(() => of({ data: [], totalRecords: 0 } as any))),
+            monthAppts:     this.appointmentsService.getAppointmentsPage({ dateFrom: this.thisMonthStr + '-01', dateTo: this.thisMonthStr + '-31', pageSize: 1, tab: 'all' }).pipe(catchError(() => of({ data: [], totalRecords: 0, hasMore: false, count: 0 } as any))),
+            invoices:       this.paymentsService.getAllInvoices().pipe(catchError(() => of({ data: [], count: 0 })))
+        }).subscribe(({ doctors, patients, todayList, upcomingList, totalAppts, monthAppts, invoices }) => {
             const allInvoices = (invoices as any).data as Payment[];
-
-            const totalDoctors = (doctors as any).totalCount || 0;
+            const totalDoctors  = (doctors as any).totalCount || 0;
             const totalPatients = (patients as any).totalCount || 0;
+            const today = (todayList as any).data || [];
+            const upcoming = (upcomingList as any).data || [];
+            const totalAppointments = (totalAppts as any).totalRecords ?? today.length;
+            // Month count: server may not return totalRecords with filters; fall back
+            // to count of the small page we asked for (best-effort).
+            const monthAppointmentsCount = (monthAppts as any).totalRecords ?? (monthAppts as any).count ?? 0;
 
-            const todayAppts = allAppts.filter((a) => a.date === this.todayStr);
-            const upcomingAppts = allAppts.filter((a) => a.date > this.todayStr && a.date <= this.in7DaysStr && a.status === 'scheduled').sort((a, b) => a.date.localeCompare(b.date));
-
-            const monthAppts = allAppts.filter((a) => a.date.startsWith(this.thisMonthStr)).length;
-
-            const paid = allInvoices.filter((i) => i.status?.toLowerCase() === 'paid').length;
+            const paid    = allInvoices.filter((i) => i.status?.toLowerCase() === 'paid').length;
             const pending = allInvoices.filter((i) => i.status?.toLowerCase() === 'pending').length;
             const overdue = allInvoices.filter((i) => i.status?.toLowerCase() === 'overdue').length;
             const revenue = allInvoices.filter((i) => i.status?.toLowerCase() === 'paid').reduce((sum, i) => sum + (i.amount || 0), 0);
 
             this.totalDoctors.set(totalDoctors);
             this.totalPatients.set(totalPatients);
-            this.monthAppointments.set(monthAppts);
+            this.monthAppointments.set(monthAppointmentsCount);
             this.totalRevenue.set(revenue);
-            this.todayAppointments.set(todayAppts);
-            this.upcomingAppointments.set(upcomingAppts);
+            this.todayAppointments.set(today as Appointment[]);
+            this.upcomingAppointments.set(upcoming as Appointment[]);
             this.invoiceSummary.set({ paid, pending, overdue });
             this.recentInvoices.set(allInvoices.slice(0, 5));
 
             this.stats.set([
-                { label: "Today's Appointments", value: todayAppts.length, icon: 'pi pi-calendar-clock', color: 'purple', svgKey: 'interactions' },
-                { label: 'Upcoming (7 Days)', value: upcomingAppts.length, icon: 'pi pi-calendar', color: 'blue', svgKey: 'users' },
-                { label: 'Total Appointments', value: allAppts.length, icon: 'pi pi-list', color: 'blue', svgKey: 'users' },
-                { label: 'Pending Invoices', value: pending, icon: 'pi pi-file-invoice', color: 'orange', svgKey: 'locations' },
-                { label: 'Total Revenue', value: revenue, icon: 'pi pi-dollar', color: 'green', svgKey: 'rate', suffix: ' QAR' }
+                { label: "Today's Appointments", value: today.length,         icon: 'pi pi-calendar-clock', color: 'purple', svgKey: 'interactions' },
+                { label: 'Upcoming (7 Days)',    value: upcoming.length,      icon: 'pi pi-calendar',       color: 'blue',   svgKey: 'users' },
+                { label: 'Total Appointments',   value: totalAppointments,    icon: 'pi pi-list',           color: 'blue',   svgKey: 'users' },
+                { label: 'Pending Invoices',     value: pending,              icon: 'pi pi-file-invoice',   color: 'orange', svgKey: 'locations' },
+                { label: 'Total Revenue',        value: revenue,              icon: 'pi pi-dollar',         color: 'green',  svgKey: 'rate', suffix: ' QAR' }
             ]);
 
             this.loading.set(false);
@@ -376,28 +379,35 @@ export class DashboardComponent implements OnInit {
         });
     }
 
+    /** Cheap helper — tomorrow's date in YYYY-MM-DD. */
+    private tomorrowStr(): string {
+        const d = new Date();
+        d.setDate(d.getDate() + 1);
+        return d.toISOString().slice(0, 10);
+    }
+
     private loadDoctorDashboard(doctorEmail: string) {
         forkJoin({
-            appointments: this.appointmentsService.getAppointments().pipe(catchError(() => of([]))),
-            invoices: this.paymentsService.getAllInvoices(doctorEmail).pipe(catchError(() => of({ data: [], count: 0 })))
-        }).subscribe(({ appointments, invoices }) => {
-            const allAppts = appointments as Appointment[];
+            todayList:    this.appointmentsService.getAppointmentsPage({ date: this.todayStr, pageSize: 100, tab: 'all' }).pipe(catchError(() => of({ data: [], totalRecords: 0 } as any))),
+            upcomingList: this.appointmentsService.getAppointmentsPage({ dateFrom: this.tomorrowStr(), dateTo: this.in7DaysStr, status: 'scheduled', pageSize: 50, tab: 'all', sortDir: 'asc' }).pipe(catchError(() => of({ data: [], totalRecords: 0 } as any))),
+            totalAppts:   this.appointmentsService.getAppointmentsPage({ pageSize: 1, tab: 'all' }).pipe(catchError(() => of({ data: [], totalRecords: 0 } as any))),
+            invoices:     this.paymentsService.getAllInvoices(doctorEmail).pipe(catchError(() => of({ data: [], count: 0 })))
+        }).subscribe(({ todayList, upcomingList, totalAppts, invoices }) => {
+            const today    = (todayList as any).data || [];
+            const upcoming = (upcomingList as any).data || [];
+            const totalAppointments = (totalAppts as any).totalRecords ?? today.length;
             const allInvoices = (invoices as any).data as Payment[];
-
-            const todayAppts = allAppts.filter((a) => a.date === this.todayStr);
-            const upcomingAppts = allAppts.filter((a) => a.date > this.todayStr && a.date <= this.in7DaysStr && a.status === 'scheduled').sort((a, b) => a.date.localeCompare(b.date));
-
             const pending = allInvoices.filter((i) => ['pending', 'overdue'].includes(i.status?.toLowerCase()));
 
-            this.todayAppointments.set(todayAppts);
-            this.upcomingAppointments.set(upcomingAppts);
+            this.todayAppointments.set(today as Appointment[]);
+            this.upcomingAppointments.set(upcoming as Appointment[]);
             this.pendingInvoices.set(pending);
 
             this.stats.set([
-                { label: "Today's Appointments", value: todayAppts.length, icon: 'pi pi-calendar-clock', color: 'purple', svgKey: 'interactions' },
-                { label: 'Upcoming (7 Days)', value: upcomingAppts.length, icon: 'pi pi-calendar', color: 'blue', svgKey: 'users' },
-                { label: 'Pending Invoices', value: pending.length, icon: 'pi pi-file-invoice', color: 'orange', svgKey: 'locations' },
-                { label: 'Total Appointments', value: allAppts.length, icon: 'pi pi-list', color: 'green', svgKey: 'rate' }
+                { label: "Today's Appointments", value: today.length,        icon: 'pi pi-calendar-clock', color: 'purple', svgKey: 'interactions' },
+                { label: 'Upcoming (7 Days)',    value: upcoming.length,     icon: 'pi pi-calendar',       color: 'blue',   svgKey: 'users' },
+                { label: 'Pending Invoices',     value: pending.length,      icon: 'pi pi-file-invoice',   color: 'orange', svgKey: 'locations' },
+                { label: 'Total Appointments',   value: totalAppointments,   icon: 'pi pi-list',           color: 'green',  svgKey: 'rate' }
             ]);
 
             this.loading.set(false);

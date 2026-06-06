@@ -75,7 +75,7 @@ npx cdk deploy --require-approval never
 
 Re-print them anytime:
 ```powershell
-aws cloudformation describe-stacks --stack-name TiryaqCdkStack --region us-east-1 --query "Stacks[0].Outputs"
+aws cloudformation describe-stacks --stack-name TiryaqCdkStack --region us-east-1 --query "Stacks[0].StackStatus" --output text
 ```
 
 ## Where to put the values (frontend config)
@@ -121,3 +121,10 @@ npx cdk synth    # validate the template locally
 ## Full reference
 
 - `docs/infrastructure/01-AWS-CDK-Reference.md`
+
+
+## Sync Counter Appointments
+```powershell
+cd "C:\Users\Sami Toufic Taha\Desktop\aws apps\hospital\scripts"
+node sync-appointments-counter.js
+```
