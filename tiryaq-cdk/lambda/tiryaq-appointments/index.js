@@ -320,6 +320,7 @@ async function createCalendarEventForAppointment(appt, now) {
 
 // ── Handler ───────────────────────────────────────────────────────────────────
 exports.handler = async (event) => {
+    if (event && event._warmup) return { ok: true, warmed: true };
     const method    = event.requestContext?.http?.method || event.httpMethod;
     const path      = event.rawPath || event.path || '';
     const apptId    = event.pathParameters?.apptId;

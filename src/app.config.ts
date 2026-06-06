@@ -1,7 +1,7 @@
 import { ApplicationConfig, isDevMode } from '@angular/core';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { PreloadAllModules, provideRouter, withEnabledBlockingInitialNavigation, withInMemoryScrolling, withPreloading } from '@angular/router';
+import { PreloadAllModules, provideRouter, withInMemoryScrolling, withPreloading } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
 import Aura from '@primeuix/themes/aura';
 import { providePrimeNG } from 'primeng/config';
@@ -16,10 +16,10 @@ export const appConfig: ApplicationConfig = {
         provideRouter(
             appRoutes,
             withInMemoryScrolling({ anchorScrolling: 'enabled', scrollPositionRestoration: 'enabled' }),
-            withEnabledBlockingInitialNavigation(),
-            // Preload all lazy-loaded route chunks in the background after the
-            // first render → clicking any link becomes instant (no on-demand
-            // chunk download per route).
+            // Default (non-blocking) initial navigation — the app shell paints
+            // immediately while the authGuard resolves auth state in parallel.
+            // This eliminates the white-screen-while-OIDC-bootstraps delay
+            // (which used to be 1–3 minutes on a cold-start login).
             withPreloading(PreloadAllModules)
         ),
         // offlineQueueInterceptor runs first → short-circuits offline mutations

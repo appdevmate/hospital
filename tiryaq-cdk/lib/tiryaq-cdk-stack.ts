@@ -10,6 +10,8 @@ import * as iam from 'aws-cdk-lib/aws-iam';
 import * as kms from 'aws-cdk-lib/aws-kms';
 import * as cloudtrail from 'aws-cdk-lib/aws-cloudtrail';
 import * as cr from 'aws-cdk-lib/custom-resources';
+import * as events from 'aws-cdk-lib/aws-events';
+import * as eventsTargets from 'aws-cdk-lib/aws-events-targets';
 
 export interface TiryaqStackProps extends cdk.StackProps {
     /** ARN of the CloudFront-scoped WAFv2 WebACL created in the edge (us-east-1) stack. */
@@ -435,14 +437,19 @@ export class TiryaqStack extends cdk.Stack {
             USER_POOL_ID: userPool.userPoolId
         };
 
-        const fn = (id: string, folder: string, handler: string, runtime: lambda.Runtime = lambda.Runtime.NODEJS_18_X, extraEnv: Record<string, string> = {}) =>
+        // Lambda factory.
+        // Memory bumped to 512 MB by default — Node.js cold-start scales with
+        // CPU which is allocated proportionally to memory; 512 MB roughly
+        // halves cold-start time vs the default 128 MB and is still pennies/month.
+        const fn = (id: string, folder: string, handler: string, runtime: lambda.Runtime = lambda.Runtime.NODEJS_18_X, extraEnv: Record<string, string> = {}, opts: { memorySize?: number } = {}) =>
             new lambda.Function(this, id, {
                 functionName: folder,
                 runtime,
                 handler,
                 code: lambda.Code.fromAsset(`lambda/${folder}`),
                 environment: { ...sharedEnv, ...extraEnv },
-                timeout: cdk.Duration.seconds(30)
+                timeout: cdk.Duration.seconds(30),
+                memorySize: opts.memorySize ?? 512
             });
 
         // ─────────────────────────────────────────────────────────────────────
@@ -580,6 +587,32 @@ export class TiryaqStack extends cdk.Stack {
             // KMS Encrypt/Decrypt on the data CMK because DynamoDB CUSTOMER_MANAGED
             // encryption requires the caller principal to have key access.
             tiryaqDataKey.grantEncryptDecrypt(f);
+        });
+
+        // ─────────────────────────────────────────────────────────────────────
+        // Lambda warmer — pings auth-critical and dashboard Lambdas every 5
+        // minutes so first-user-of-the-day doesn't pay the cold-start tax.
+        // Each ping costs $0 (the Lambda short-circuits on a `_warmup` event).
+        // ─────────────────────────────────────────────────────────────────────
+        const warmTargets = [
+            preTokenFn,
+            appointmentsFn,
+            getAllPatientsFn,
+            getAllDoctorsFn,
+            getAllInvoicesFn,
+            examinationsFn,
+            pharmacyFn,
+            bloodbankFn
+        ].filter(Boolean) as lambda.Function[];
+
+        const warmerRule = new events.Rule(this, 'TiryaqLambdaWarmer', {
+            description: 'Keeps auth + dashboard Lambdas warm to eliminate cold-start latency.',
+            schedule: events.Schedule.rate(cdk.Duration.minutes(5))
+        });
+        warmTargets.forEach((target, i) => {
+            warmerRule.addTarget(new eventsTargets.LambdaFunction(target, {
+                event: events.RuleTargetInput.fromObject({ _warmup: true, idx: i })
+            }));
         });
 
         // Seed Lambda also writes to the encrypted table.

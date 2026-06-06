@@ -12,6 +12,7 @@ const VALID_OPERATORS    = ['contains', 'startsWith', 'endsWith', 'notContains',
 const ALLOWED_SORT_FIELDS = new Set(['name', 'gender', 'insurance', 'status', 'dob', 'timestamp']);
 
 exports.handler = async (event) => {
+  if (event && event._warmup) return { ok: true, warmed: true };
   try {
     const qp = event?.queryStringParameters || {};
 

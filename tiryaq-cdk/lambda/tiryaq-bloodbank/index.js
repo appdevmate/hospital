@@ -726,6 +726,7 @@ function stripKeys(it) {
 
 // ── Router ──────────────────────────────────────────────────────────
 exports.handler = async (event) => {
+    if (event && event._warmup) return { ok: true, warmed: true };
     try {
         const method = event.requestContext?.http?.method || event.httpMethod || '';
         if (method === 'OPTIONS') return res(200, {});

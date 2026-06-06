@@ -28,6 +28,7 @@ function getCaller(event) {
 }
 
 exports.handler = async (event) => {
+    if (event && event._warmup) return { ok: true, warmed: true };
     try {
         const q        = event.queryStringParameters || {};
         const caller   = getCaller(event);

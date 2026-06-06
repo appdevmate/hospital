@@ -73,7 +73,33 @@ const ALLOWED_TYPES = [
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50 MB
 
+/**
+ * Folder-to-group access rules — admin/developer have full access; doctors
+ * may read/write clinical folders; pharmacists may read/write pharmacy
+ * folders only. Anything outside this matrix is rejected before we hit S3.
+ */
+const FOLDER_ACCESS = {
+    'doctors-documents':  ['Admin', 'Developers', 'Doctors'],
+    'patients-documents': ['Admin', 'Developers', 'Doctors'],
+    'lab-results':        ['Admin', 'Developers', 'Doctors'],
+    'radiology-images':   ['Admin', 'Developers', 'Doctors'],
+    'prescriptions':      ['Admin', 'Developers', 'Doctors', 'Pharmacists'],
+    'pharmacy-approvals': ['Admin', 'Developers', 'Doctors', 'Pharmacists']
+};
+function getGroups(claims) {
+    const raw = claims['cognito:groups'] || '';
+    return Array.isArray(raw)
+        ? raw
+        : String(raw).trim().replace(/^\[/, '').replace(/\]$/, '').split(/[, ]+/).filter(Boolean);
+}
+function canAccessFolder(groups, folder) {
+    const allowed = FOLDER_ACCESS[folder];
+    if (!allowed) return false;
+    return groups.some(g => allowed.includes(g.trim()));
+}
+
 exports.handler = async (event) => {
+    if (event && event._warmup) return { ok: true, warmed: true };
     // Handle CORS preflight
     const method = event.httpMethod || event.requestContext?.http?.method || '';
     if (method === 'OPTIONS') {
@@ -85,8 +111,12 @@ exports.handler = async (event) => {
         const claims = event.requestContext?.authorizer?.claims
             || event.requestContext?.authorizer?.jwt?.claims
             || {};
-        const userId = claims.sub || claims['cognito:username'] || 'anonymous';
-        const userGroups = claims['cognito:groups'] || '';
+        const userId = claims.sub || claims['cognito:username'];
+        if (!userId) {
+            return errResp(401, 'Unauthenticated — missing sub claim');
+        }
+        const groups = getGroups(claims);
+        const isAdminLike = groups.some(g => ['Admin','Developers','admin','developer'].includes(g.trim()));
 
         // Parse path
         const path = event.path || event.rawPath || '';
@@ -126,6 +156,10 @@ exports.handler = async (event) => {
             // Validate folder
             if (!validateFolder(folder)) {
                 return errResp(400, 'Invalid folder. Allowed: ' + ALLOWED_FOLDERS.join(', '));
+            }
+            // Authorization: only certain groups can write to certain folders.
+            if (!canAccessFolder(groups, folder)) {
+                return errResp(403, 'You do not have permission to upload to this folder');
             }
 
             // Validate file type
@@ -182,6 +216,16 @@ exports.handler = async (event) => {
             if (!validateFolder(folder)) {
                 return errResp(400, 'Invalid file path');
             }
+            // Authorization: caller must have access to this folder by group.
+            if (!canAccessFolder(groups, folder)) {
+                return errResp(403, 'You do not have permission to download from this folder');
+            }
+            // Per-resource check: non-admin users may only fetch keys uploaded
+            // by themselves (key format is `folder/<userId>/...`).
+            const keyOwner = key.split('/')[1];
+            if (!isAdminLike && keyOwner && keyOwner !== userId) {
+                return errResp(403, 'You may only download your own files');
+            }
 
             const command = new GetObjectCommand({
                 Bucket: BUCKET,
@@ -210,6 +254,9 @@ exports.handler = async (event) => {
 
             if (!validateFolder(folder)) {
                 return errResp(400, 'Invalid folder. Allowed: ' + ALLOWED_FOLDERS.join(', '));
+            }
+            if (!canAccessFolder(groups, folder)) {
+                return errResp(403, 'You do not have permission to list this folder');
             }
 
             // Build the prefix to search
@@ -266,6 +313,13 @@ exports.handler = async (event) => {
             const folder = key.split('/')[0];
             if (!validateFolder(folder)) {
                 return errResp(400, 'Invalid file path');
+            }
+            if (!canAccessFolder(groups, folder)) {
+                return errResp(403, 'You do not have permission to delete from this folder');
+            }
+            const keyOwner = key.split('/')[1];
+            if (!isAdminLike && keyOwner && keyOwner !== userId) {
+                return errResp(403, 'You may only delete your own files');
             }
 
             const command = new DeleteObjectCommand({

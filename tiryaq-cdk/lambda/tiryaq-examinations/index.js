@@ -40,6 +40,19 @@ function isAdmin(event) {
     return arr.some(g => ['admin','Admin','developer','Developer','Developers'].includes(g.trim()));
 }
 
+function getCaller(event) {
+    const claims = event.requestContext?.authorizer?.jwt?.claims
+                || event.requestContext?.authorizer?.claims || {};
+    const groups = claims['cognito:groups'] || '';
+    const arr = Array.isArray(groups) ? groups
+        : String(groups).trim().replace(/^\[/, '').replace(/\]$/, '').split(/[, ]+/).filter(Boolean);
+    return {
+        email:    (claims.email || claims['cognito:username'] || '').toLowerCase().trim(),
+        isAdmin:  arr.some(g => ['admin','Admin','developer','Developer','Developers'].includes(g.trim())),
+        isDoctor: arr.some(g => ['doctor','Doctor','Doctors'].includes(g.trim()))
+    };
+}
+
 // ── Idempotency (Phase D) ────────────────────────────────────────────────────
 // Frontend sends X-Client-Request-Id on every mutating call. If we've seen the
 // id, return the cached response so offline-queue replays never double-write.
@@ -228,6 +241,7 @@ function validateSignOff(exam) {
 
 // ── Handler ──────────────────────────────────────────────────────────────────
 exports.handler = async (event) => {
+    if (event && event._warmup) return { ok: true, warmed: true };
     const method    = event.requestContext?.http?.method || event.httpMethod;
     const path      = event.rawPath || event.path || '';
     const examId    = event.pathParameters?.examId;
@@ -235,6 +249,13 @@ exports.handler = async (event) => {
     const ipAddress = event.requestContext?.http?.sourceIp || 'unknown';
 
     if (method === 'OPTIONS') return res(200, {});
+
+    // Code review finding 2.1 — only admins or the named doctor themselves
+    // may create / patch / sign off an examination. Reject anything else.
+    const caller = getCaller(event);
+    if (!caller.isAdmin && !caller.isDoctor) {
+        return err(403, 'Access denied: only doctors or admin can use this endpoint');
+    }
 
     // ── POST /examinations ── CREATE ─────────────────────────────────────────
     if (method === 'POST' && !path.includes('/signoff')) {
@@ -248,6 +269,13 @@ exports.handler = async (event) => {
         if (!body.patientId)   return err(400, 'patientId is required');
         if (!body.patientName) return err(400, 'patientName is required');
         if (!body.doctorEmail) return err(400, 'doctorEmail is required');
+        if (!body.doctorId)    return err(400, 'doctorId is required');
+
+        // Doctors may only write into their own chart.
+        if (caller.isDoctor && !caller.isAdmin
+            && body.doctorEmail.toLowerCase().trim() !== caller.email) {
+            return err(403, 'Doctors can only create examinations for themselves');
+        }
 
         const id  = randomUUID();
         const now = new Date().toISOString();
@@ -258,7 +286,7 @@ exports.handler = async (event) => {
             examId:          id,
             patientId:       body.patientId,
             patientName:     body.patientName,
-            doctorId:        body.doctorId    || id,
+            doctorId:        body.doctorId,    // validated as required above
             doctorName:      body.doctorName  || '',
             doctorEmail:     body.doctorEmail.toLowerCase().trim(),
             appointmentId:   body.appointmentId || null,

@@ -67,6 +67,8 @@ const isAdminOrDeveloper = (event) => {
 };
 
 exports.handler = async (event) => {
+  if (event && event._warmup) return { ok: true, warmed: true };
+
   // Idempotency (Phase D)
   const cid = getClientRequestId(event);
   const cached = await checkIdempotency(cid);
@@ -77,6 +79,12 @@ exports.handler = async (event) => {
     const path   = event.rawPath || event.path || '';
 
     if (method === 'OPTIONS') return ok({});
+
+    // Code review finding 2.1 — patient mutations are admin/developer-only.
+    // Doctors can read; only admins/devs alter patient profile or restore.
+    if (!isAdminOrDeveloper(event)) {
+      return err(403, 'Access denied: only admin/developer can update patients');
+    }
 
     const patientID = decodeURIComponent(
       event.pathParameters?.patientID || event.pathParameters?.id || ''

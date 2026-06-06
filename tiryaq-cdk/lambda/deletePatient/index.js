@@ -44,7 +44,24 @@ function extractId(raw) {
   return i >= 0 ? s.slice(i + 1) : s;
 }
 
+// ── Role enforcement ────────────────────────────────────────────────────────
+// Frontend hides the delete button for non-admins, but the API must enforce
+// it server-side too (defense in depth — code review finding 2.1).
+function isAdminOrDeveloper(event) {
+    const claims = event.requestContext?.authorizer?.jwt?.claims
+                || event.requestContext?.authorizer?.claims || {};
+    const raw = claims['cognito:groups'] || '';
+    const groups = Array.isArray(raw)
+        ? raw
+        : String(raw).trim().replace(/^\[/, '').replace(/\]$/, '').split(/[, ]+/).filter(Boolean);
+    return groups.some(g => ['Admin','admin','Developers','Developer','developer'].includes(g.trim()));
+}
+
 exports.handler = async (event) => {
+  if (event && event._warmup) return { ok: true, warmed: true };
+  if (!isAdminOrDeveloper(event)) {
+    return { statusCode: 403, headers: hdrs, body: JSON.stringify({ message: 'Access denied: deleting patients is admin-only' }) };
+  }
   const cid = getClientRequestId(event);
   const cached = await checkIdempotency(cid);
   if (cached) return cached;

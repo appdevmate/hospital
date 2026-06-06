@@ -565,6 +565,7 @@ const ALLOWED_SORT_FIELDS = new Set([
 ]);
 
 exports.handler = async (event) => {
+  if (event && event._warmup) return { ok: true, warmed: true };
   try {
     const doctorID = event?.pathParameters?.doctorID;
     if (doctorID) {
