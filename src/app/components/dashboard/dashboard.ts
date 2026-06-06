@@ -34,21 +34,32 @@ interface StatCard {
     template: `
         <!-- ═══════════════════════════════════════════════ STAT CARDS ══ -->
         <div class="col-span-12 grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4">
-            @for (card of stats(); track card.label) {
-                <div class="card p-0! overflow-hidden flex flex-col">
-                    <div class="flex items-center p-4">
-                        <i [class]="card.icon + ' text-4xl!'" [ngClass]="textClass(card.color)"></i>
-                        <div class="ml-4 min-w-0">
-                            <span class="block uppercase text-xs font-semibold truncate" [ngClass]="textClass(card.color)">{{ card.label }}</span>
-                            @if (loading()) {
-                                <p-skeleton width="5rem" height="2rem" styleClass="mt-1"></p-skeleton>
-                            } @else {
-                                <span class="block text-2xl font-bold truncate" [ngClass]="textClass(card.color)" [title]="(card.value | number: '1.0-0') + (card.suffix ?? '')"> {{ card.value | number: '1.0-0' }}{{ card.suffix ?? '' }} </span>
-                            }
+            @if (loading()) {
+                @for (i of [1, 2, 3, 4, 5]; track i) {
+                    <div class="card p-0! overflow-hidden flex flex-col stat-card">
+                        <div class="flex items-center p-4">
+                            <p-skeleton shape="circle" size="3rem"></p-skeleton>
+                            <div class="ml-4 flex-1 min-w-0">
+                                <p-skeleton width="60%" height="0.85rem"></p-skeleton>
+                                <p-skeleton width="50%" height="1.6rem" styleClass="mt-2"></p-skeleton>
+                            </div>
                         </div>
+                        <p-skeleton width="100%" height="60px" styleClass="mt-auto" borderRadius="0"></p-skeleton>
                     </div>
-                    <img [src]="setSvg(card.svgKey)" class="w-full mt-auto" [alt]="card.label" />
-                </div>
+                }
+            } @else {
+                @for (card of stats(); track card.label) {
+                    <div class="card p-0! overflow-hidden flex flex-col stat-card">
+                        <div class="flex items-center p-4">
+                            <i [class]="card.icon + ' text-4xl!'" [ngClass]="textClass(card.color)"></i>
+                            <div class="ml-4 min-w-0">
+                                <span class="block uppercase text-xs font-semibold truncate" [ngClass]="textClass(card.color)">{{ card.label }}</span>
+                                <span class="block text-2xl font-bold truncate" [ngClass]="textClass(card.color)" [title]="(card.value | number: '1.0-0') + (card.suffix ?? '')"> {{ card.value | number: '1.0-0' }}{{ card.suffix ?? '' }} </span>
+                            </div>
+                        </div>
+                        <img [src]="setSvg(card.svgKey)" class="stat-card-img mt-auto" [alt]="card.label" />
+                    </div>
+                }
             }
         </div>
 
@@ -286,6 +297,20 @@ interface StatCard {
                     }
                 </div>
             </div>
+        }
+    `,
+    styles: `
+        /* Stat-card sizing — make all five cards exactly the same height so the
+           row never staggers, and clip the SVG decoration to a fixed band so
+           differently-sized art doesn't push one card taller than another. */
+        .stat-card {
+            height: 160px;
+        }
+        .stat-card-img {
+            width: 100%;
+            height: 60px;
+            object-fit: cover;
+            object-position: bottom;
         }
     `
 })
