@@ -53,7 +53,7 @@ interface StatCard {
         </div>
 
         <!-- ════════════════════════════════ TODAY'S APPOINTMENTS ══ -->
-        <div class="col-span-12 xl:col-span-7">
+        <div class="col-span-12 xl:col-span-6">
             <div class="card h-full">
                 <div class="flex items-center justify-between mb-6">
                     <h5 class="font-semibold text-lg m-0">Today's Appointments</h5>
@@ -107,7 +107,7 @@ interface StatCard {
         </div>
 
         <!-- ════════════════════════════════ UPCOMING (7 DAYS) ══ -->
-        <div class="col-span-12 xl:col-span-5">
+        <div class="col-span-12 xl:col-span-6">
             <div class="card h-full">
                 <div class="flex items-center justify-between mb-6">
                     <h5 class="font-semibold text-lg m-0">Upcoming (7 Days)</h5>
