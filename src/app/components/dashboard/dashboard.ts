@@ -33,24 +33,24 @@ interface StatCard {
     host: { class: 'grid grid-cols-12 gap-8 mb-4' },
     template: `
         <!-- ═══════════════════════════════════════════════ STAT CARDS ══ -->
-        @for (card of stats(); track card.label) {
-            <div class="col-span-12 md:col-span-6 xl:col-span-3">
+        <div class="col-span-12 grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4">
+            @for (card of stats(); track card.label) {
                 <div class="card p-0! overflow-hidden flex flex-col">
-                    <div class="flex items-center p-6">
-                        <i [class]="card.icon + ' text-5xl!'" [ngClass]="textClass(card.color)"></i>
-                        <div class="ml-6">
-                            <span class="block whitespace-nowrap uppercase text-sm font-semibold" [ngClass]="textClass(card.color)">{{ card.label }}</span>
+                    <div class="flex items-center p-4">
+                        <i [class]="card.icon + ' text-4xl!'" [ngClass]="textClass(card.color)"></i>
+                        <div class="ml-4 min-w-0">
+                            <span class="block uppercase text-xs font-semibold truncate" [ngClass]="textClass(card.color)">{{ card.label }}</span>
                             @if (loading()) {
-                                <p-skeleton width="5rem" height="2.5rem" styleClass="mt-1"></p-skeleton>
+                                <p-skeleton width="5rem" height="2rem" styleClass="mt-1"></p-skeleton>
                             } @else {
-                                <span class="block text-4xl font-bold" [ngClass]="textClass(card.color)"> {{ card.value }}{{ card.suffix ?? '' }} </span>
+                                <span class="block text-2xl font-bold truncate" [ngClass]="textClass(card.color)" [title]="(card.value | number: '1.0-0') + (card.suffix ?? '')"> {{ card.value | number: '1.0-0' }}{{ card.suffix ?? '' }} </span>
                             }
                         </div>
                     </div>
                     <img [src]="setSvg(card.svgKey)" class="w-full mt-auto" [alt]="card.label" />
                 </div>
-            </div>
-        }
+            }
+        </div>
 
         <!-- ════════════════════════════════ TODAY'S APPOINTMENTS ══ -->
         <div class="col-span-12 xl:col-span-7">
