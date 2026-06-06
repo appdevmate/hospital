@@ -15,11 +15,12 @@ import { TooltipModule } from 'primeng/tooltip';
 import { PopoverModule } from 'primeng/popover';
 import { ListboxModule } from 'primeng/listbox';
 import { CheckboxModule } from 'primeng/checkbox';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 @Component({
     selector: 'app-generic-table',
     standalone: true,
-    imports: [CommonModule, FormsModule, TableModule, IconFieldModule, InputIconModule, InputTextModule, AutoCompleteModule, DatePickerModule, ButtonModule, ToolbarModule, TagModule, TooltipModule, PopoverModule, ListboxModule, CheckboxModule],
+    imports: [CommonModule, FormsModule, TableModule, IconFieldModule, InputIconModule, InputTextModule, AutoCompleteModule, DatePickerModule, ButtonModule, ToolbarModule, TagModule, TooltipModule, PopoverModule, ListboxModule, CheckboxModule, MultiSelectModule],
     template: `
         <div class="card">
             <!-- Title -->
@@ -174,8 +175,16 @@ import { CheckboxModule } from 'primeng/checkbox';
                                             <p-sortIcon [field]="col.field"></p-sortIcon>
                                         </span>
                                         @if (col.filterable !== false) {
-                                            <p-columnFilter style="flex-shrink:0;" type="text" [field]="col.field" display="menu" [placeholder]="'Search by ' + col.header.toLowerCase()" [showOperator]="false" [showAddButton]="false">
-                                            </p-columnFilter>
+                                            @if (col.filterType === 'multiSelect' && col.filterOptions?.length) {
+                                                <p-columnFilter style="flex-shrink:0;" [field]="col.field" matchMode="in" display="menu" [showOperator]="false" [showAddButton]="false" [showMatchModes]="false">
+                                                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                                                        <p-multiSelect [options]="col.filterOptions || []" optionLabel="label" optionValue="value" [ngModel]="value" (onChange)="filter($event.value)" placeholder="Any" appendTo="body" display="chip" [style]="{ 'min-width': '12rem' }"></p-multiSelect>
+                                                    </ng-template>
+                                                </p-columnFilter>
+                                            } @else {
+                                                <p-columnFilter style="flex-shrink:0;" type="text" [field]="col.field" display="menu" [placeholder]="'Search by ' + col.header.toLowerCase()" [showOperator]="false" [showAddButton]="false">
+                                                </p-columnFilter>
+                                            }
                                         }
                                     </div>
                                 </th>
@@ -184,7 +193,15 @@ import { CheckboxModule } from 'primeng/checkbox';
                                     <div style="display:flex;align-items:center;justify-content:space-between;gap:.5rem;">
                                         <span style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ col.header }}</span>
                                         @if (col.filterable !== false) {
-                                            <p-columnFilter type="text" [field]="col.field" display="menu" [placeholder]="'Search by ' + col.header.toLowerCase()" [showOperator]="false" [showAddButton]="false"> </p-columnFilter>
+                                            @if (col.filterType === 'multiSelect' && col.filterOptions?.length) {
+                                                <p-columnFilter [field]="col.field" matchMode="in" display="menu" [showOperator]="false" [showAddButton]="false" [showMatchModes]="false">
+                                                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                                                        <p-multiSelect [options]="col.filterOptions || []" optionLabel="label" optionValue="value" [ngModel]="value" (onChange)="filter($event.value)" placeholder="Any" appendTo="body" display="chip" [style]="{ 'min-width': '12rem' }"></p-multiSelect>
+                                                    </ng-template>
+                                                </p-columnFilter>
+                                            } @else {
+                                                <p-columnFilter type="text" [field]="col.field" display="menu" [placeholder]="'Search by ' + col.header.toLowerCase()" [showOperator]="false" [showAddButton]="false"> </p-columnFilter>
+                                            }
                                         }
                                     </div>
                                 </th>

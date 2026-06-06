@@ -19,27 +19,6 @@
         <!-- Search -->
         <input pInputText class="appt-search" placeholder="Search patient / doctor / dept…"
                [ngModel]="filterQ" (ngModelChange)="onSearchInput($event)" />
-        <!-- Status -->
-        <select class="appt-select" [(ngModel)]="filterStatus" (change)="applyFilters()">
-            <option value="">Any status</option>
-            <option value="scheduled">Scheduled</option>
-            <option value="checked-in">Checked-in</option>
-            <option value="in-progress">In progress</option>
-            <option value="completed">Completed</option>
-            <option value="cancelled">Cancelled</option>
-            <option value="no-show">No-show</option>
-        </select>
-        <!-- Priority -->
-        <select class="appt-select" [(ngModel)]="filterPriority" (change)="applyFilters()">
-            <option value="">Any priority</option>
-            <option value="routine">Routine</option>
-            <option value="urgent">Urgent</option>
-            <option value="emergency">Emergency</option>
-        </select>
-        <!-- Date range -->
-        <input type="date" class="appt-date" [(ngModel)]="filterDateFrom" (change)="applyFilters()" />
-        <span class="text-xs">to</span>
-        <input type="date" class="appt-date" [(ngModel)]="filterDateTo" (change)="applyFilters()" />
         <p-button icon="pi pi-filter-slash" severity="secondary" text (onClick)="resetFilters()" pTooltip="Reset filters"></p-button>
     </div>
 </ng-template>

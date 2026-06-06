@@ -750,11 +750,29 @@ async function listAppointmentsPaged(event, caller) {
             exprNames['#d'] = 'date'; exprValues[':today'] = today;
         }
     }
-    if (qp.status)    { parts.push('#s = :s');     exprNames['#s'] = 'status';    exprValues[':s'] = qp.status; }
-    if (qp.priority)  { parts.push('priority = :p');                                exprValues[':p'] = qp.priority; }
-    if (qp.visitType) { parts.push('visitType = :vt');                              exprValues[':vt'] = qp.visitType; }
-    if (qp.doctorId)  { parts.push('doctorId = :dId');                              exprValues[':dId'] = qp.doctorId; }
-    if (qp.patientId) { parts.push('patientId = :pId');                             exprValues[':pId'] = qp.patientId; }
+    // Multi-value filters arrive as comma-separated strings (one query param =
+    // one HTTP request, no array semantics on API Gateway HTTP API v2).
+    const inList = (raw, prefix, attrName, expressionAlias) => {
+        if (!raw) return;
+        const values = String(raw).split(',').map(s => s.trim()).filter(Boolean);
+        if (!values.length) return;
+        const placeholders = values.map((v, i) => {
+            const ph = `:${prefix}${i}`;
+            exprValues[ph] = v;
+            return ph;
+        });
+        if (attrName) {
+            exprNames[expressionAlias] = attrName;
+            parts.push(`${expressionAlias} IN (${placeholders.join(', ')})`);
+        } else {
+            parts.push(`${expressionAlias} IN (${placeholders.join(', ')})`);
+        }
+    };
+    inList(qp.status,    'st',  'status',    '#s');
+    inList(qp.priority,  'pr',  null,        'priority');
+    inList(qp.visitType, 'vt',  null,        'visitType');
+    if (qp.doctorId)  { parts.push('doctorId = :dId');  exprValues[':dId'] = qp.doctorId; }
+    if (qp.patientId) { parts.push('patientId = :pId'); exprValues[':pId'] = qp.patientId; }
 
     // Default sort: upcoming → ascending (soonest first); past → descending.
     const sortDir = (qp.sortDir || (tab === 'past' ? 'desc' : 'asc')).toLowerCase();

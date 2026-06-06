@@ -151,9 +151,36 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
         { field: 'doctorName', header: 'Doctor', sortable: true, filterable: true, pipe: 'titlecase' },
         { field: 'department', header: 'Department', sortable: true, filterable: true, pipe: 'titlecase' },
         { field: 'chiefComplaint', header: 'Chief Complaint', sortable: false, filterable: true, showTooltip: true },
-        { field: 'visitType', header: 'Type', sortable: true, filterable: true, customTemplate: true, width: '120px' },
-        { field: 'priority', header: 'Priority', sortable: true, filterable: true, customTemplate: true, width: '110px' },
-        { field: 'status', header: 'Status', sortable: true, filterable: true, customTemplate: true, width: '130px' },
+        {
+            field: 'visitType', header: 'Type', sortable: true, filterable: true, customTemplate: true, width: '120px',
+            filterType: 'multiSelect', filterOptions: [
+                { label: 'Walk-in',    value: 'walk-in' },
+                { label: 'Scheduled',  value: 'scheduled' },
+                { label: 'Emergency',  value: 'emergency' },
+                { label: 'Referral',   value: 'referral' },
+                { label: 'Follow-up',  value: 'follow-up' },
+                { label: 'Check-up',   value: 'check-up' }
+            ]
+        },
+        {
+            field: 'priority', header: 'Priority', sortable: true, filterable: true, customTemplate: true, width: '110px',
+            filterType: 'multiSelect', filterOptions: [
+                { label: 'Routine',   value: 'routine' },
+                { label: 'Urgent',    value: 'urgent' },
+                { label: 'Emergency', value: 'emergency' }
+            ]
+        },
+        {
+            field: 'status', header: 'Status', sortable: true, filterable: true, customTemplate: true, width: '130px',
+            filterType: 'multiSelect', filterOptions: [
+                { label: 'Scheduled',   value: 'scheduled' },
+                { label: 'Checked-in',  value: 'checked-in' },
+                { label: 'In progress', value: 'in-progress' },
+                { label: 'Completed',   value: 'completed' },
+                { label: 'Cancelled',   value: 'cancelled' },
+                { label: 'No-show',     value: 'no-show' }
+            ]
+        },
         { field: 'notes', header: 'Notes', sortable: false, filterable: true, showTooltip: true }
     ];
 
@@ -169,13 +196,14 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
     private _total = signal<number>(0);
     totalRecords = this._total.asReadonly();
     /** Server-side filter state. */
-    filterQ        = '';
-    filterStatus   = '';
-    filterPriority = '';
-    filterDoctorId = '';
-    filterPatientId = '';
-    filterDateFrom = '';
-    filterDateTo   = '';
+    filterQ          = '';
+    filterStatus     = '';
+    filterPriority   = '';
+    filterVisitType  = '';
+    filterDoctorId   = '';
+    filterPatientId  = '';
+    filterDateFrom   = '';
+    filterDateTo     = '';
     private searchDebounce: any = null;
 
     // ── Lifecycle ─────────────────────────────────────────────────────────────
@@ -222,6 +250,7 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
             dateTo:    this.filterDateTo   || undefined,
             status:    this.filterStatus   || undefined,
             priority:  this.filterPriority || undefined,
+            visitType: this.filterVisitType || undefined,
             doctorId:  this.filterDoctorId || undefined,
             patientId: this.filterPatientId || undefined,
             q:         this.filterQ        || undefined,
@@ -256,6 +285,29 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
     onLazyLoad(event: any) {
         const first = event?.first || 0;
         const rows  = event?.rows  || this.pageSize;
+        // Pull column filters out of the event (status / priority / visitType
+        // configured as multiSelect; others stay as 'contains' text filters but
+        // we don't push those to the server today).
+        const fil = event?.filters || {};
+        const arrOf = (k: string): string => {
+            const v = fil[k]?.value;
+            if (Array.isArray(v) && v.length) return v.join(',');
+            return '';
+        };
+        const newStatus    = arrOf('status');
+        const newPriority  = arrOf('priority');
+        const newVisitType = arrOf('visitType');
+        const filtersChanged =
+            newStatus    !== this.filterStatus ||
+            newPriority  !== this.filterPriority ||
+            newVisitType !== this.filterVisitType;
+        if (filtersChanged) {
+            this.filterStatus    = newStatus;
+            this.filterPriority  = newPriority;
+            this.filterVisitType = newVisitType;
+            this.loadPage(true);
+            return;
+        }
         if (rows !== this.pageSize) {
             this.pageSize = rows;
             this.loadPage(true);
@@ -263,8 +315,6 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
         }
         const targetPage = Math.floor(first / rows);
         if (targetPage === this.cursorIndex) return;
-        // Forward jump: advance one at a time so the cursor stack stays in sync.
-        // Backward jump: stack already has the token.
         if (targetPage > this.cursorIndex && targetPage > this.cursorStack.length - 1) {
             this.cursorIndex = this.cursorStack.length - 1;
         } else {
@@ -304,6 +354,7 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
         this.filterQ = '';
         this.filterStatus = '';
         this.filterPriority = '';
+        this.filterVisitType = '';
         this.filterDoctorId = '';
         this.filterPatientId = '';
         this.filterDateFrom = '';

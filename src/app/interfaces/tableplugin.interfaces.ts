@@ -14,7 +14,7 @@ export interface TableColumn {
     frozen?: boolean;
     editorType?: 'text' | 'number' | 'date' | 'textarea' | 'autocomplete' | 'time';
     editorOptions?: ReadonlyArray<{ label: string; value: any }>;
-    filterType?: 'text' | 'dropdown';
+    filterType?: 'text' | 'dropdown' | 'multiSelect';
     filterOptions?: Array<{ label: string; value: any }>;
     filterMatchMode?: 'contains' | 'equals' | 'startsWith' | 'endsWith';
     showTooltip?: boolean;
