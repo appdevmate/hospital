@@ -799,6 +799,21 @@ async function scanUnsorted(filterExpression, names, values, pageSize, startKey,
   // Query EntityType-index instead of scanning the entire table.
   // The pure-Scan version timed out at ~30 s once the table grew past a few
   // hundred thousand rows of other entity types (appointments / examinations).
+  //
+  // The legacy buildFilterExpression() embeds `#entityType = :doctorType`
+  // inside the FilterExpression. On a Query against EntityType-index,
+  // EntityType is the *partition key* of the index — DynamoDB forbids a
+  // FilterExpression referencing the index's primary key. Strip that clause
+  // (and its value) before sending the request.
+  const cleanFilter = (filterExpression || '')
+      .replace(/\s*AND\s*#entityType\s*=\s*:doctorType\s*/i, ' ')
+      .replace(/^\s*#entityType\s*=\s*:doctorType\s*AND\s*/i, '')
+      .trim();
+  const cleanValues = { ...(values || {}) };
+  delete cleanValues[':doctorType'];
+  const cleanNames = { ...(names || {}) };
+  if (!cleanFilter.includes('#entityType')) delete cleanNames['#entityType'];
+
   const doctors = []; let currentLastKey = startKey; let lastKeyOut = null; let skipped = 0; const maxIterations = 50; let iterations = 0;
   while (doctors.length < pageSize && iterations++ < maxIterations) {
     const params = {
@@ -806,10 +821,10 @@ async function scanUnsorted(filterExpression, names, values, pageSize, startKey,
       IndexName: 'EntityType-index',
       KeyConditionExpression: 'EntityType = :et',
       Limit: Math.max(pageSize * 3, 50),
-      ExpressionAttributeNames: { ...(names || {}) },
-      ExpressionAttributeValues: { ...(values || {}), ':et': 'DOCTOR' }
+      ExpressionAttributeValues: { ...cleanValues, ':et': 'DOCTOR' }
     };
-    if (filterExpression) params.FilterExpression = filterExpression;
+    if (Object.keys(cleanNames).length) params.ExpressionAttributeNames = cleanNames;
+    if (cleanFilter) params.FilterExpression = cleanFilter;
     if (currentLastKey) params.ExclusiveStartKey = currentLastKey;
     const res = await ddb.send(new QueryCommand(params));
     const items = res.Items || [];
