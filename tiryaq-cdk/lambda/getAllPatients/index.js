@@ -220,19 +220,40 @@ function buildFilterExpression(filters) {
 
 /* ------------------------------ scan paths ------------------------------ */
 async function scanUnsorted(filterExpression, names, values, pageSize, startKey, offset = 0) {
+    // Query EntityType-index (not Scan) so 1 M+ appointment rows don't dilute
+    // the search before it finds the patient rows. The legacy buildFilter
+    // result includes `#entityType = :patientType` — that references the
+    // index's partition key, which DynamoDB rejects in a FilterExpression on
+    // a Query; strip it (and its value) before sending.
+    const cleanFilter = (filterExpression || '')
+        .replace(/\s*AND\s*#entityType\s*=\s*:patientType\s*/i, ' ')
+        .replace(/^\s*#entityType\s*=\s*:patientType\s*AND\s*/i, '')
+        .trim();
+    const cleanValues = { ...(values || {}) };
+    delete cleanValues[':patientType'];
+    const cleanNames = { ...(names || {}) };
+    if (!cleanFilter.includes('#entityType')) delete cleanNames['#entityType'];
+
     const patients = []; let currentLastKey = startKey; let lastPatientKey = null; let skipped = 0;
     const maxIterations = 50; let iterations = 0;
 
     while (patients.length < pageSize && iterations++ < maxIterations) {
-        const batchSize = Math.max(pageSize * 3, 50);
-        const params = { TableName: TABLE_NAME, Limit: batchSize, FilterExpression: filterExpression, ExpressionAttributeNames: names, ExpressionAttributeValues: values };
+        const params = {
+            TableName: TABLE_NAME,
+            IndexName: 'EntityType-index',
+            KeyConditionExpression: 'EntityType = :et',
+            Limit: Math.max(pageSize * 3, 50),
+            ExpressionAttributeValues: { ...cleanValues, ':et': 'PATIENT' }
+        };
+        if (Object.keys(cleanNames).length) params.ExpressionAttributeNames = cleanNames;
+        if (cleanFilter) params.FilterExpression = cleanFilter;
         if (currentLastKey) params.ExclusiveStartKey = currentLastKey;
 
-        const res = await ddb.send(new ScanCommand(params));
+        const res = await ddb.send(new QueryCommand(params));
         const items = res.Items || [];
 
         for (const it of items) {
-            if (it.PK?.startsWith('PATIENT#') && it.SK === 'PROFILE' && it.EntityType === 'PATIENT') {
+            if (it.PK?.startsWith('PATIENT#') && it.SK === 'PROFILE') {
                 if (startKey == null && offset > 0 && skipped < offset) { skipped++; continue; }
                 patients.push(normalizePatient(it));
                 lastPatientKey = { PK: it.PK, SK: it.SK };
@@ -243,15 +264,7 @@ async function scanUnsorted(filterExpression, names, values, pageSize, startKey,
         if (!currentLastKey) break;
     }
 
-    let hasMore = false;
-    if (patients.length === pageSize) {
-        const probe = { TableName: TABLE_NAME, Limit: 50, FilterExpression: filterExpression, ExpressionAttributeNames: names, ExpressionAttributeValues: values };
-        if (currentLastKey) probe.ExclusiveStartKey = currentLastKey;
-        else if (lastPatientKey) probe.ExclusiveStartKey = lastPatientKey;
-        const nxt = await ddb.send(new ScanCommand(probe));
-        hasMore = !!(nxt.LastEvaluatedKey || (nxt.Items || []).some(x => x.PK?.startsWith('PATIENT#') && x.SK === 'PROFILE' && x.EntityType === 'PATIENT'));
-    }
-
+    const hasMore = !!currentLastKey;
     const nextKey = hasMore && lastPatientKey ? encodeURIComponent(JSON.stringify(lastPatientKey)) : null;
     return { patients, hasMore, nextKey };
 }
