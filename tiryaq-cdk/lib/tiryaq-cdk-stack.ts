@@ -594,15 +594,16 @@ export class TiryaqStack extends cdk.Stack {
         // minutes so first-user-of-the-day doesn't pay the cold-start tax.
         // Each ping costs $0 (the Lambda short-circuits on a `_warmup` event).
         // ─────────────────────────────────────────────────────────────────────
+        // Warm only the auth-critical + dashboard Lambdas (max 5 per rule —
+        // EventBridge limit — and keeping the count low because we're near
+        // the CloudFormation 500-resource-per-stack ceiling). The rest of
+        // the Lambdas can cold-start on their first user-driven call.
         const warmTargets = [
-            preTokenFn,
-            appointmentsFn,
-            getAllPatientsFn,
-            getAllDoctorsFn,
-            getAllInvoicesFn,
-            examinationsFn,
-            pharmacyFn,
-            bloodbankFn
+            preTokenFn,         // every sign-in goes through this
+            appointmentsFn,    // dashboard + appointments page
+            getAllPatientsFn,  // dashboard + patients page
+            getAllDoctorsFn,   // dashboard + doctors page
+            getAllInvoicesFn   // dashboard + invoices page
         ].filter(Boolean) as lambda.Function[];
 
         const warmerRule = new events.Rule(this, 'TiryaqLambdaWarmer', {
