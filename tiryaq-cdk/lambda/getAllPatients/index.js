@@ -225,12 +225,14 @@ async function scanUnsorted(filterExpression, names, values, pageSize, startKey,
     // result includes `#entityType = :patientType` — that references the
     // index's partition key, which DynamoDB rejects in a FilterExpression on
     // a Query; strip it (and its value) before sending.
+    // Strip the entityType predicate however the builder names it.
     const cleanFilter = (filterExpression || '')
-        .replace(/\s*AND\s*#entityType\s*=\s*:patientType\s*/i, ' ')
-        .replace(/^\s*#entityType\s*=\s*:patientType\s*AND\s*/i, '')
+        .replace(/\s*AND\s*#entityType\s*=\s*:[a-zA-Z]+\s*/i, ' ')
+        .replace(/^\s*#entityType\s*=\s*:[a-zA-Z]+\s*AND\s*/i, '')
         .trim();
     const cleanValues = { ...(values || {}) };
-    delete cleanValues[':patientType'];
+    delete cleanValues[':entityType'];   // builder in this file uses :entityType
+    delete cleanValues[':patientType'];  // belt-and-braces in case it changes
     const cleanNames = { ...(names || {}) };
     if (!cleanFilter.includes('#entityType')) delete cleanNames['#entityType'];
 
