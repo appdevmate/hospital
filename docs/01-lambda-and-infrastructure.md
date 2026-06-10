@@ -1,4 +1,7 @@
-# Tiryaq — Lambda & Infrastructure Documentation
+# Akwadona — Lambda & Infrastructure Documentation
+
+> **Product name:** Akwadona. **Customers (tenants):** Tiryaq, Alshifaa, ...
+> Internal AWS resource names (`TiryaqCdkStack`, `tiryaq-*` Lambdas, `tiryaq-user-pool`, S3 buckets) are kept as-is for now; they are infrastructure identifiers, not the product brand. A separate migration step will rename them.
 
 Single reference for the backend. Covers the AWS infrastructure, every Lambda function (what it does + why), the database shape, security, and a code-review register at the end. Plain English, bullet points, glossary at the bottom.
 

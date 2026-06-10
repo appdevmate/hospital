@@ -24,7 +24,7 @@ import { CommonModule } from '@angular/common';
                     <!-- ── Animated logo ─────────────────────────────── -->
                     <div class="tl-logo-wrap">
                         <!--
-                            Cross SVG only — "Tiryaq" text is rendered as HTML
+                            Cross SVG only — "Akwadona" text is rendered as HTML
                             for crisp sub-pixel browser text rendering.
                             viewBox "0 0 100 100" gives generous coordinate space.
                         -->
@@ -56,7 +56,7 @@ import { CommonModule } from '@angular/common';
                         </svg>
 
                         <!-- Brand name — crisp HTML text, not SVG text -->
-                        <span class="tl-brand">Tiryaq</span>
+                        <span class="tl-brand">Akwadona</span>
                     </div>
 
                     <!-- ── Loading message ───────────────────────────── -->

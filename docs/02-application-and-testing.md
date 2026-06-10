@@ -1,6 +1,8 @@
-# Tiryaq — Application & Testing Documentation
+# Akwadona — Application & Testing Documentation
 
-User-facing reference for the Tiryaq web app (akwadona.com): frontend architecture, per-role user manuals, and the end-to-end test workflow.
+> **Product name:** Akwadona. **Customers (tenants):** Tiryaq, Alshifaa, ...
+
+User-facing reference for the Akwadona web app (akwadona.com): frontend architecture, per-role user manuals, and the end-to-end test workflow.
 
 ---
 
@@ -20,7 +22,7 @@ User-facing reference for the Tiryaq web app (akwadona.com): frontend architectu
 
 ## 1. What the app does
 
-Tiryaq is a hospital management web app for the Qatar / GCC market. It runs four user roles:
+Akwadona is a hospital management web app for the Qatar / GCC market. Each hospital customer (e.g. Tiryaq, Alshifaa) gets its own subdomain and sees only its own data. The platform runs four user roles:
 
 - **Admin** — full control: patients, doctors, appointments, invoices, documents, admin panel, blood bank.
 - **Developer** — same as admin + Voice Scribe; used by support staff.

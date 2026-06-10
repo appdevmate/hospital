@@ -643,7 +643,9 @@ export class NewDoctor implements AfterViewInit {
 
     validateEmail(email: string): boolean {
         if (!email) return false;
-        return /^[a-zA-Z0-9._-]+@tiryaq\.com$/i.test(email.trim());
+        // Standard RFC-style email — any domain. Per-tenant allow-lists
+        // are enforced by Cognito + backend, not by frontend regex.
+        return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i.test(email.trim());
     }
 
     submit(): void {
@@ -655,7 +657,7 @@ export class NewDoctor implements AfterViewInit {
 
         const email = this.form.get('email')?.value;
         if (!this.validateEmail(email)) {
-            this.helpersService.notifyError('Validation Error', 'Email must be a valid @tiryaq.com address');
+            this.helpersService.notifyError('Validation Error', 'Please enter a valid email address');
             return;
         }
 

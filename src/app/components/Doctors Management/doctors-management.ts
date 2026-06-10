@@ -478,7 +478,7 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
         ];
         const sampleRow = [
             'Dr. Ahmed Hassan',
-            'ahmed.hassan@tiryaq.com',
+            'ahmed.hassan@hospital.com',
             '1985-03-15',
             'Male',
             '+974-5512-3456',

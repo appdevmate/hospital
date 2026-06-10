@@ -6,12 +6,12 @@ export class Config {
         return this.environment;
     }
 
-    /** Builds a Tiryaq API endpoint URL */
+    /** Builds an Akwadona API endpoint URL */
     static getBaseUrl(): string {
         return this.tiryaqUrl;
     }
 
-    /** Builds a full Tiryaq API URL for a given path */
+    /** Builds a full Akwadona API URL for a given path */
     static buildUrl(path: string): string {
         return `${this.tiryaqUrl}/${path}`;
     }

@@ -29,7 +29,7 @@ import { OfflineService } from '@/services/offline.service';
         <div class="layout-topbar">
             <a class="app-logo" routerLink="/">
                 <img alt="app logo" [src]="logo" />
-                <span class="app-name">Verona</span>
+                <span class="app-name">Akwadona</span>
             </a>
 
             <button #menubutton class="topbar-menubutton p-link" type="button" (click)="onMenuButtonClick()">

@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Config } from './config';
 
-// Hospital calendar is now Tiryaq-local — backed by the tiryaq-calendar Lambda
+// Hospital calendar is now Akwadona-local — backed by the tiryaq-calendar Lambda
 // writing into the Hospital DynamoDB table. The previous external CalendarPlatform
 // API has been retired for PDPPL data-residency + clinical-privacy compliance.
 
