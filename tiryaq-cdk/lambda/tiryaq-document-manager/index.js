@@ -15,6 +15,22 @@ const URL_EXPIRY = 300; // 5 minutes
 const s3 = new S3Client({ region: REGION });
 const ddb = DynamoDBDocumentClient.from(new DynamoDBClient({ region: REGION }));
 
+// ── Tenant enforcement (Step 2d) — guard at handler entry. ───────────────────
+function getTenant(event) {
+  const claims = (event && event.requestContext && event.requestContext.authorizer
+                  && (event.requestContext.authorizer.jwt
+                      ? event.requestContext.authorizer.jwt.claims
+                      : event.requestContext.authorizer.claims))
+              || {};
+  const tenantId = claims.tenantId || claims['custom:tenantId'];
+  if (!tenantId || tenantId === 'UNASSIGNED') {
+    const e = new Error('Tenant not assigned for this user');
+    e.statusCode = 403;
+    throw e;
+  }
+  return tenantId;
+}
+
 // ── Idempotency (Phase D) ────────────────────────────────────────────────────
 function getClientRequestId(event) {
     const h = event.headers || {};
@@ -105,6 +121,10 @@ exports.handler = async (event) => {
     if (method === 'OPTIONS') {
         return ok({});
     }
+
+    // Step 2d — tenant guard.
+    try { getTenant(event); }
+    catch (e) { return errResp(e.statusCode || 403, e.message); }
 
     try {
         // Extract user info from Cognito authorizer

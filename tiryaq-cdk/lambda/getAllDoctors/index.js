@@ -554,9 +554,30 @@
 // }
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const { DynamoDBDocumentClient, ScanCommand, GetCommand, QueryCommand } = require('@aws-sdk/lib-dynamodb');
+
+// Step 3 — PHI envelope decryption. ./crypto.js synced from _shared/.
+const { decryptItem, decryptItems, DOCTOR_PHI_FIELDS } = require('./crypto');
+
 const REGION = 'us-east-1';
 const TABLE_NAME = 'Hospital';
 const ddb = DynamoDBDocumentClient.from(new DynamoDBClient({ region: REGION }));
+
+// ── Tenant enforcement (Step 2d) ─────────────────────────────────────────────
+function getTenant(event) {
+  const claims = (event && event.requestContext && event.requestContext.authorizer
+                  && (event.requestContext.authorizer.jwt
+                      ? event.requestContext.authorizer.jwt.claims
+                      : event.requestContext.authorizer.claims))
+              || {};
+  const tenantId = claims.tenantId || claims['custom:tenantId'];
+  if (!tenantId || tenantId === 'UNASSIGNED') {
+    const e = new Error('Tenant not assigned for this user');
+    e.statusCode = 403;
+    throw e;
+  }
+  return tenantId;
+}
+
 const VALID_OPERATORS = ['contains', 'startsWith', 'endsWith', 'notContains', 'equals', 'notEquals'];
 const ALLOWED_SORT_FIELDS = new Set([
   'name','gender','insurance','department','specialization','status','dob',
@@ -566,10 +587,15 @@ const ALLOWED_SORT_FIELDS = new Set([
 
 exports.handler = async (event) => {
   if (event && event._warmup) return { ok: true, warmed: true };
+
+  let tenantId;
+  try { tenantId = getTenant(event); }
+  catch (e) { return errResp(e.statusCode || 403, e.message); }
+
   try {
     const doctorID = event?.pathParameters?.doctorID;
     if (doctorID) {
-      const single = await getDoctorById(doctorID);
+      const single = await getDoctorById(doctorID, tenantId);
       if (!single) return errResp(404, 'Doctor not found');
       return ok({ message: 'Doctor retrieved successfully', data: single });
     }
@@ -582,9 +608,9 @@ exports.handler = async (event) => {
     const filters = parseFilterParameters(qp);
     const { filterExpression, expressionAttributeNames, expressionAttributeValues } = buildFilterExpression(filters);
     const result = !sortField
-      ? await scanUnsorted(filterExpression, expressionAttributeNames, expressionAttributeValues, pageSize, dynamoStartKey, offset)
-      : await scanSorted(filterExpression, expressionAttributeNames, expressionAttributeValues, pageSize, dynamoStartKey, sortField, sortOrder, cursor, offset);
-    const totalCount = await getFilteredCount(filters);
+      ? await scanUnsorted(filterExpression, expressionAttributeNames, expressionAttributeValues, pageSize, dynamoStartKey, offset, tenantId)
+      : await scanSorted(filterExpression, expressionAttributeNames, expressionAttributeValues, pageSize, dynamoStartKey, sortField, sortOrder, cursor, offset, tenantId);
+    const totalCount = await getFilteredCount(filters, tenantId);
     return ok({
       message: 'Doctors retrieved successfully',
       data: result.doctors,
@@ -600,7 +626,7 @@ exports.handler = async (event) => {
 };
 
 /* ---------------------------- single by id ---------------------------- */
-async function getDoctorById(doctorPK) {
+async function getDoctorById(doctorPK, tenantId) {
   const res = await ddb.send(new GetCommand({
     TableName: TABLE_NAME,
     Key: { PK: doctorPK, SK: 'PROFILE' }
@@ -608,7 +634,11 @@ async function getDoctorById(doctorPK) {
   }));
   const it = res.Item;
   if (!it) return null;
+  // Step 2d — return null (treated as 404) if the row belongs to another tenant.
+  if (it.tenantId !== tenantId) return null;
   if (isDeleted(it)) return null;
+  // Step 3 — decrypt PHI before returning.
+  await decryptItem(it, DOCTOR_PHI_FIELDS, tenantId);
   return normalizeDoctor(it);
 }
 
@@ -795,16 +825,11 @@ function buildFilterExpression(filters) {
 }
 
 /* ------------------------------ scan paths ------------------------------ */
-async function scanUnsorted(filterExpression, names, values, pageSize, startKey, offset = 0) {
-  // Query EntityType-index instead of scanning the entire table.
-  // The pure-Scan version timed out at ~30 s once the table grew past a few
-  // hundred thousand rows of other entity types (appointments / examinations).
-  //
-  // The legacy buildFilterExpression() embeds `#entityType = :doctorType`
-  // inside the FilterExpression. On a Query against EntityType-index,
-  // EntityType is the *partition key* of the index — DynamoDB forbids a
-  // FilterExpression referencing the index's primary key. Strip that clause
-  // (and its value) before sending the request.
+async function scanUnsorted(filterExpression, names, values, pageSize, startKey, offset = 0, tenantId) {
+  // Step 2d — Query the per-tenant GSI `tenant-entityType-index` so other
+  // tenants' doctor rows are never read. The legacy filter may still
+  // include `#entityType = :doctorType` — that references the index's
+  // sort key; DynamoDB forbids that on a Query, so we strip it.
   const cleanFilter = (filterExpression || '')
       .replace(/\s*AND\s*#entityType\s*=\s*:doctorType\s*/i, ' ')
       .replace(/^\s*#entityType\s*=\s*:doctorType\s*AND\s*/i, '')
@@ -818,16 +843,22 @@ async function scanUnsorted(filterExpression, names, values, pageSize, startKey,
   while (doctors.length < pageSize && iterations++ < maxIterations) {
     const params = {
       TableName: TABLE_NAME,
-      IndexName: 'EntityType-index',
-      KeyConditionExpression: 'EntityType = :et',
+      IndexName: 'tenant-entityType-index',
+      KeyConditionExpression: 'tenantId = :tid AND EntityType = :et',
       Limit: Math.max(pageSize * 3, 50),
-      ExpressionAttributeValues: { ...cleanValues, ':et': 'DOCTOR' }
+      ExpressionAttributeValues: { ...cleanValues, ':tid': tenantId, ':et': 'DOCTOR' }
     };
     if (Object.keys(cleanNames).length) params.ExpressionAttributeNames = cleanNames;
     if (cleanFilter) params.FilterExpression = cleanFilter;
     if (currentLastKey) params.ExclusiveStartKey = currentLastKey;
     const res = await ddb.send(new QueryCommand(params));
     const items = res.Items || [];
+    // Step 3 — bulk-decrypt the doctor rows on this page in parallel.
+    await decryptItems(
+      items.filter(it => it.PK?.startsWith('DOCTOR#') && it.SK === 'PROFILE'),
+      DOCTOR_PHI_FIELDS,
+      tenantId
+    );
     for (const it of items) {
       if (it.PK?.startsWith('DOCTOR#') && it.SK === 'PROFILE' && !isDeleted(it)) {
         if (startKey == null && offset > 0 && skipped < offset) { skipped++; continue; }
@@ -844,22 +875,32 @@ async function scanUnsorted(filterExpression, names, values, pageSize, startKey,
   return { doctors, hasMore, nextKey };
 }
 
-async function scanSorted(filterExpression, names, values, pageSize, startKey, sortField, sortOrder, cursor, offset = 0) {
+async function scanSorted(filterExpression, names, values, pageSize, startKey, sortField, sortOrder, cursor, offset = 0, tenantId) {
   const buffer = []; let currentLastKey = startKey; const maxIterations = 50; let iterations = 0;
+  // Step 2d — augment with tenant filter so cross-tenant rows are dropped server-side too.
+  const augmentedFilter = filterExpression ? `${filterExpression} AND #__tid = :__tid` : '#__tid = :__tid';
+  const augmentedNames  = { ...names, '#__tid': 'tenantId' };
+  const augmentedValues = { ...values, ':__tid': tenantId };
   while (iterations++ < maxIterations) {
     const batchSize = Math.max(pageSize * 3, 50);
     const params = {
       TableName: TABLE_NAME,
       Limit: batchSize,
-      FilterExpression: filterExpression,
-      ExpressionAttributeNames: names,
-      ExpressionAttributeValues: values
+      FilterExpression: augmentedFilter,
+      ExpressionAttributeNames: augmentedNames,
+      ExpressionAttributeValues: augmentedValues
     };
     if (currentLastKey) params.ExclusiveStartKey = currentLastKey;
     const res = await ddb.send(new ScanCommand(params));
     const items = res.Items || [];
     currentLastKey = res.LastEvaluatedKey;
-    for (const it of items) if (it.PK?.startsWith('DOCTOR#') && it.SK === 'PROFILE' && it.EntityType === 'DOCTOR' && !isDeleted(it)) buffer.push(normalizeDoctor(it));
+    // Step 3 — decrypt matched doctor rows on this page in parallel.
+    const matched = items.filter(it =>
+        it.PK?.startsWith('DOCTOR#') && it.SK === 'PROFILE'
+        && it.EntityType === 'DOCTOR' && it.tenantId === tenantId && !isDeleted(it)
+    );
+    await decryptItems(matched, DOCTOR_PHI_FIELDS, tenantId);
+    for (const it of matched) buffer.push(normalizeDoctor(it));
     let eligible = sortArray(buffer, sortField, sortOrder);
     eligible = afterCursor(eligible, cursor, sortField, sortOrder);
     if (!cursor && startKey == null && offset > 0 && eligible.length > offset) eligible = eligible.slice(offset);
@@ -910,7 +951,7 @@ function afterCursor(sorted, cursor, field, order) {
 }
 
 /* --------------------------------- count --------------------------------- */
-async function getFilteredCount(filters) {
+async function getFilteredCount(filters, tenantId) {
   const hasFilters =
   filters.search || filters.name || filters.gender || filters.insurance ||
   filters.status || filters.department || filters.specialization ||
@@ -918,16 +959,20 @@ async function getFilteredCount(filters) {
   filters.experienceYears || filters.experienceMonths || filters.notes ||
   filters.education || filters.dutyDays || filters.dutyStart || filters.dutyEnd ||
   filters.bloodGroup;
-  if (!hasFilters) return await countByScan(filters);
+  if (!hasFilters) return await countByScan(filters, tenantId);
   const { filterExpression, expressionAttributeNames, expressionAttributeValues } = buildFilterExpression(filters);
+  // Step 2d — augment with tenant filter.
+  const augmentedFilter = `${filterExpression} AND #__tid = :__tid`;
+  const augmentedNames  = { ...expressionAttributeNames, '#__tid': 'tenantId' };
+  const augmentedValues = { ...expressionAttributeValues, ':__tid': tenantId };
   let count = 0, lastEvaluatedKey;
   do {
     const params = {
       TableName: TABLE_NAME,
       Select: 'COUNT',
-      FilterExpression: filterExpression,
-      ExpressionAttributeNames: expressionAttributeNames,
-      ExpressionAttributeValues: expressionAttributeValues
+      FilterExpression: augmentedFilter,
+      ExpressionAttributeNames: augmentedNames,
+      ExpressionAttributeValues: augmentedValues
     };
     if (lastEvaluatedKey) params.ExclusiveStartKey = lastEvaluatedKey;
     const res = await ddb.send(new ScanCommand(params));
@@ -936,13 +981,12 @@ async function getFilteredCount(filters) {
   return count;
 }
 
-async function countByScan(_filters) {
-  // Fast path — read the maintained counter row. Create/delete handlers keep
-  // it in sync. Falls back to 0 if the row doesn't exist yet (sync script).
+async function countByScan(_filters, tenantId) {
+  // Per-tenant counter (Step 2d). New layout: COUNTER#DOCTORS#<tenantId>.
   try {
     const r = await ddb.send(new GetCommand({
       TableName: TABLE_NAME,
-      Key: { PK: 'COUNTER#DOCTORS', SK: 'TOTAL' }
+      Key: { PK: `COUNTER#DOCTORS#${tenantId}`, SK: 'TOTAL' }
     }));
     return r.Item?.total ?? 0;
   } catch (_) {

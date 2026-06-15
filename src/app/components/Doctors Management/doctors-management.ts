@@ -216,7 +216,11 @@ export class DoctorsManagementComponent implements AfterViewInit, OnDestroy {
 
     columns: TableColumn[] = [
         { field: 'name', header: 'Name', editable: true, editorType: EditorType.Text, pipe: 'titlecase', sortable: true, filterable: true, width: '200px' },
-        { field: 'email', header: 'Email', editable: true, editorType: EditorType.Text, pipe: 'lowercase', sortable: true, filterable: true, width: '200px' },
+        // Step 3 — email is tied to the doctor's Cognito login. Editing it
+        // here would silently desync the DB row from the user pool. Use
+        // Admin Panel → Users → Change Email instead (coordinates Cognito
+        // update + DB update + audit).
+        { field: 'email', header: 'Email', editable: false, pipe: 'lowercase', sortable: true, filterable: true, width: '200px' },
         { field: 'gender', header: 'Gender', editable: true, editorType: EditorType.Autocomplete, editorOptions: GENDER_OPTIONS, customTemplate: true, filterable: true },
         { field: 'insurance', header: 'Insurance', editable: true, editorType: EditorType.Text, pipe: 'titlecase', showTooltip: true, filterable: true },
         { field: 'department', header: 'Department', editable: true, editorType: EditorType.Text, pipe: 'titlecase', showTooltip: true, filterable: true },

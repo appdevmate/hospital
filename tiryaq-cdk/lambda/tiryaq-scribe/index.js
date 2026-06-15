@@ -32,6 +32,22 @@ const BEDROCK_MODEL_ID = process.env.BEDROCK_MODEL_ID || 'us.anthropic.claude-ha
 const ddb = DynamoDBDocumentClient.from(new DynamoDBClient({ region: REGION }));
 const bedrock = new BedrockRuntimeClient({ region: BEDROCK_REGION });
 
+// ── Tenant enforcement (Step 2d) — guard at handler entry. ───────────────────
+function getTenant(event) {
+  const claims = (event && event.requestContext && event.requestContext.authorizer
+                  && (event.requestContext.authorizer.jwt
+                      ? event.requestContext.authorizer.jwt.claims
+                      : event.requestContext.authorizer.claims))
+              || {};
+  const tenantId = claims.tenantId || claims['custom:tenantId'];
+  if (!tenantId || tenantId === 'UNASSIGNED') {
+    const e = new Error('Tenant not assigned for this user');
+    e.statusCode = 403;
+    throw e;
+  }
+  return tenantId;
+}
+
 // ─────────────────────────────────────────────────────────────────────
 // Helpers
 // ─────────────────────────────────────────────────────────────────────
@@ -303,7 +319,12 @@ async function getSession(event, actor) {
 // ─────────────────────────────────────────────────────────────────────
 
 exports.handler = async (event) => {
+    if (event && event._warmup) return { ok: true, warmed: true };
     try {
+        // Step 2d — tenant guard.
+        try { getTenant(event); }
+        catch (e) { return err(e.message, e.statusCode || 403); }
+
         const actor = getActor(event);
         if (!isDoctorOrAdmin(actor)) {
             return err('Forbidden — only doctors and admins can use the scribe', 403);

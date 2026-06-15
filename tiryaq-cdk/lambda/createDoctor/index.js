@@ -8,6 +8,11 @@ const {
 } = require('@aws-sdk/lib-dynamodb');
 const { randomUUID } = require('crypto');
 
+// Step 3 — PHI envelope encryption. ./crypto.js synced from _shared/.
+// Step 4 — stampHashes + computeHmac. Doctor has THREE uniqueness locks
+// (email, QID, phone) so we need all three hashes for lock PKs.
+const { encryptItem, stampHashes, computeHmac, DOCTOR_PHI_FIELDS, DOCTOR_HASH_FIELDS } = require('./crypto');
+
 const REGION     = 'us-east-1';
 const TABLE_NAME = 'Hospital';
 const COUNTER_PK = 'COUNTER#DOCTORS';
@@ -15,6 +20,22 @@ const COUNTER_SK = 'TOTAL';
 
 const client = new DynamoDBClient({ region: REGION });
 const dynamo = DynamoDBDocumentClient.from(client);
+
+// ── Tenant enforcement (Step 2d) ─────────────────────────────────────────────
+function getTenant(event) {
+  const claims = (event && event.requestContext && event.requestContext.authorizer
+                  && (event.requestContext.authorizer.jwt
+                      ? event.requestContext.authorizer.jwt.claims
+                      : event.requestContext.authorizer.claims))
+              || {};
+  const tenantId = claims.tenantId || claims['custom:tenantId'];
+  if (!tenantId || tenantId === 'UNASSIGNED') {
+    const e = new Error('Tenant not assigned for this user');
+    e.statusCode = 403;
+    throw e;
+  }
+  return tenantId;
+}
 
 // ── Idempotency (Phase D) ────────────────────────────────────────────────────
 function getClientRequestId(event) {
@@ -75,7 +96,8 @@ const validateQID = (qid) => {
 const validateEmail = (email) => {
   if (!email) return false;
   const cleaned = normalizeString(email);
-  return /^[a-zA-Z0-9._-]+@tiryaq\.com$/i.test(cleaned);
+  // Step 1 — multi-tenant: removed `@tiryaq.com` lock-in. Standard RFC-style email.
+  return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i.test(cleaned);
 };
 
 /* =========================
@@ -116,6 +138,7 @@ const createDoctorItem = (doctor) => {
     PK: doctorID,
     SK: 'PROFILE',
     EntityType: 'DOCTOR',
+    tenantId: doctor.__tenantId,  // Step 2d — caller's tenant from JWT
     name: toLower(doctor.name),
     email: normalizeString(doctor.email),
     dob: doctor.dob,
@@ -150,19 +173,24 @@ const createDoctorItem = (doctor) => {
    Single Create
 ========================= */
 
-const createSingleDoctor = async (doctor, index = null) => {
+const createSingleDoctor = async (doctor, tenantId, index = null) => {
   const errors = validateDoctor(doctor, index);
   if (errors.length > 0) throw new Error(errors.join('; '));
 
+  doctor.__tenantId = tenantId;
   const doctorItem      = createDoctorItem(doctor);
   const normalizedEmail = doctorItem.email;
   const normalizedQID   = doctorItem.qid;
   const normalizedPhone = doctorItem.phone;
-  const emailLockPK     = `EMAIL#${normalizedEmail}`;
-  const qidLockPK       = `QID#${normalizedQID}`;
-  const phoneLockPK     = `PHONE#${normalizedPhone}`;
+  // Step 4 — hashed, tenant-scoped lock PKs (see createPatient for rationale).
+  const emailLockHash = await computeHmac(normalizedEmail, tenantId);
+  const qidLockHash   = await computeHmac(normalizedQID, tenantId);
+  const phoneLockHash = await computeHmac(normalizedPhone, tenantId);
+  const emailLockPK   = `EMAIL#${emailLockHash}`;
+  const qidLockPK     = `QID#${qidLockHash}`;
+  const phoneLockPK   = `PHONE#${phoneLockHash}`;
 
-  // ── Check email lock ──
+  // ── Check email lock — same-tenant duplicate detection ──
   const existingEmailLock = await dynamo.send(new GetCommand({
     TableName: TABLE_NAME,
     Key: { PK: emailLockPK, SK: 'LOCK' }
@@ -171,7 +199,7 @@ const createSingleDoctor = async (doctor, index = null) => {
     throw new Error(`Failed to create doctor, email already exists: ${normalizedEmail}`);
   }
 
-  // ── Check QID lock ──
+  // ── Check QID lock — same-tenant duplicate detection ──
   const existingQIDLock = await dynamo.send(new GetCommand({
     TableName: TABLE_NAME,
     Key: { PK: qidLockPK, SK: 'LOCK' }
@@ -180,7 +208,7 @@ const createSingleDoctor = async (doctor, index = null) => {
     throw new Error(`Failed to create doctor, QID already exists: ${normalizedQID}`);
   }
 
-  // ── Check phone lock ──
+  // ── Check phone lock — same-tenant duplicate detection ──
   const existingPhoneLock = await dynamo.send(new GetCommand({
     TableName: TABLE_NAME,
     Key: { PK: phoneLockPK, SK: 'LOCK' }
@@ -195,7 +223,7 @@ const createSingleDoctor = async (doctor, index = null) => {
     SK: 'LOCK',
     EntityType: 'EMAIL_LOCK',
     doctorPK:  doctorItem.PK,
-    // Avoid updatedAt: null — fails dataClass-index GSI validation (S required).
+    tenantId,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   };
@@ -205,7 +233,7 @@ const createSingleDoctor = async (doctor, index = null) => {
     SK: 'LOCK',
     EntityType: 'QID_LOCK',
     doctorPK:  doctorItem.PK,
-    // Avoid updatedAt: null — fails dataClass-index GSI validation (S required).
+    tenantId,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   };
@@ -215,10 +243,18 @@ const createSingleDoctor = async (doctor, index = null) => {
     SK: 'LOCK',
     EntityType: 'PHONE_LOCK',
     doctorPK:  doctorItem.PK,
-    // Avoid updatedAt: null — fails dataClass-index GSI validation (S required).
+    tenantId,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   };
+
+  // Step 4 — stamp HMAC hashes (qidHash, emailHash, phoneHash) BEFORE
+  // encryption so we can index/lookup later.
+  await stampHashes(doctorItem, DOCTOR_HASH_FIELDS, tenantId);
+
+  // Step 3 — encrypt doctor PHI before the TransactWrite. Lock PKs were
+  // built from plaintext above so cross-tenant uniqueness checks still work.
+  await encryptItem(doctorItem, DOCTOR_PHI_FIELDS, tenantId);
 
   try {
     await dynamo.send(new TransactWriteCommand({
@@ -287,13 +323,13 @@ const createSingleDoctor = async (doctor, index = null) => {
     throw err;
   }
 
-  // ── Increment counter ──
+  // ── Per-tenant counter (Step 2d) ──
   await dynamo.send(new UpdateCommand({
     TableName: TABLE_NAME,
-    Key: { PK: COUNTER_PK, SK: COUNTER_SK },
-    UpdateExpression: 'SET #t = if_not_exists(#t, :zero) + :one',
+    Key: { PK: `${COUNTER_PK}#${tenantId}`, SK: COUNTER_SK },
+    UpdateExpression: 'SET #t = if_not_exists(#t, :zero) + :one, tenantId = :tid, EntityType = :et',
     ExpressionAttributeNames: { '#t': 'total' },
-    ExpressionAttributeValues: { ':one': 1, ':zero': 0 }
+    ExpressionAttributeValues: { ':one': 1, ':zero': 0, ':tid': tenantId, ':et': 'COUNTER' }
   }));
 
   return doctorItem.PK;
@@ -303,12 +339,12 @@ const createSingleDoctor = async (doctor, index = null) => {
    Bulk Create
 ========================= */
 
-const createBulkDoctors = async (doctors) => {
+const createBulkDoctors = async (doctors, tenantId) => {
   const results = { created: [], failed: [] };
 
   for (let i = 0; i < doctors.length; i++) {
     try {
-      const doctorID = await createSingleDoctor(doctors[i], i);
+      const doctorID = await createSingleDoctor(doctors[i], tenantId, i);
       results.created.push({ index: i, doctorID, name: doctors[i].name });
     } catch (err) {
       results.failed.push({ index: i, name: doctors[i]?.name || null, reason: err.message });
@@ -341,6 +377,18 @@ exports.handler = async (event) => {
       body: JSON.stringify({ message: 'Access denied: creating doctors is admin-only' })
     };
   }
+
+  // ── Tenant enforcement (Step 2d) ──
+  let tenantId;
+  try { tenantId = getTenant(event); }
+  catch (e) {
+    return {
+      statusCode: e.statusCode || 403,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+      body: JSON.stringify({ message: e.message })
+    };
+  }
+
   const cid = getClientRequestId(event);
   const cached = await checkIdempotency(cid);
   if (cached) return cached;
@@ -360,7 +408,7 @@ exports.handler = async (event) => {
         };
       }
 
-      const results    = await createBulkDoctors(doctors);
+      const results    = await createBulkDoctors(doctors, tenantId);
       const statusCode = results.created.length === 0 ? 400
                        : results.failed.length  > 0   ? 207
                        : 201;
@@ -387,7 +435,7 @@ exports.handler = async (event) => {
     }
 
     // ── Single ──
-    const doctorID = await createSingleDoctor(body);
+    const doctorID = await createSingleDoctor(body, tenantId);
 
     const response = {
       statusCode: 201,

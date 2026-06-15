@@ -2,6 +2,8 @@
 
 > **Product name:** Akwadona. **Customers (tenants):** Tiryaq, Alshifaa, ...
 
+> **Tenant access (Step 2):** Each customer uses its own subdomain — `https://tiryaq.akwadona.com`, `https://alshifaa.akwadona.com`. The Akwadona brand stays the same; a small green pill in the top bar shows which tenant you're in. Cross-tenant access is blocked at the database level. Full design + how to onboard new tenants: `akwadona-multitenant-setup.md`.
+
 User-facing reference for the Akwadona web app (akwadona.com): frontend architecture, per-role user manuals, and the end-to-end test workflow.
 
 ---

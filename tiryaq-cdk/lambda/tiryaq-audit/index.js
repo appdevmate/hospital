@@ -8,6 +8,22 @@ const client = new DynamoDBClient({});
 const db = DynamoDBDocumentClient.from(client);
 const TABLE = process.env.TABLE_NAME || "Hospital";
 
+// ── Tenant enforcement (Step 2d) ─────────────────────────────────────────────
+function getTenant(event) {
+  const claims = (event && event.requestContext && event.requestContext.authorizer
+                  && (event.requestContext.authorizer.jwt
+                      ? event.requestContext.authorizer.jwt.claims
+                      : event.requestContext.authorizer.claims))
+              || {};
+  const tenantId = claims.tenantId || claims['custom:tenantId'];
+  if (!tenantId || tenantId === 'UNASSIGNED') {
+    const e = new Error('Tenant not assigned for this user');
+    e.statusCode = 403;
+    throw e;
+  }
+  return tenantId;
+}
+
 // CORS headers are injected by API Gateway HTTP API's corsPreflight
 // allow-list (see tiryaq-cdk-stack.ts). Do NOT echo wildcard CORS headers
 // here — they would override the allow-list and re-open every origin.
@@ -32,12 +48,18 @@ function isAdmin(event) {
 }
 
 exports.handler = async (event) => {
+  if (event && event._warmup) return { ok: true, warmed: true };
   const method = event.requestContext?.http?.method || event.httpMethod;
 
   if (method === "OPTIONS") return res(200, {});
 
   // Audit log is admin-only
   if (!isAdmin(event)) return res(403, { error: "Access denied: admin only" });
+
+  // ── Tenant enforcement (Step 2d) ──
+  let tenantId;
+  try { tenantId = getTenant(event); }
+  catch (e) { return res(e.statusCode || 403, { error: e.message }); }
 
   const params = event.queryStringParameters || {};
 
@@ -68,6 +90,11 @@ exports.handler = async (event) => {
     filterVals[":act"] = action;
   }
 
+  // Step 2d — always scope to caller's tenant.
+  filterExp += (filterExp ? " AND " : "") + "#__tid = :__tid";
+  filterNames["#__tid"] = "tenantId";
+  filterVals[":__tid"] = tenantId;
+
   const query = {
     TableName: TABLE,
     KeyConditionExpression: "PK = :pk AND begins_with(SK, :prefix)",
@@ -87,9 +114,12 @@ exports.handler = async (event) => {
 
   const result = await db.send(new QueryCommand(query));
 
+  // Defence-in-depth — drop anything not belonging to caller's tenant.
+  const items = (result.Items || []).filter(i => i.tenantId === tenantId);
+
   return res(200, {
     date,
-    count: (result.Items || []).length,
-    items: result.Items || [],
+    count: items.length,
+    items,
   });
 };

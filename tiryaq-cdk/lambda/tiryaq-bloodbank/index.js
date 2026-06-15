@@ -56,6 +56,25 @@ const REGION     = process.env.AWS_REGION || 'us-east-1';
 const TABLE_NAME = process.env.TABLE_NAME || 'Hospital';
 const ddb        = DynamoDBDocumentClient.from(new DynamoDBClient({ region: REGION }));
 
+// ── Tenant enforcement (Step 2d) — guard at handler entry. ───────────────────
+// Per-row stamping (tenantId on every item + ConditionExpression on writes)
+// is applied via the follow-up 2d-4 cleanup task; for now the guard rejects
+// any UNASSIGNED user from reaching any blood-bank operation.
+function getTenant(event) {
+  const claims = (event && event.requestContext && event.requestContext.authorizer
+                  && (event.requestContext.authorizer.jwt
+                      ? event.requestContext.authorizer.jwt.claims
+                      : event.requestContext.authorizer.claims))
+              || {};
+  const tenantId = claims.tenantId || claims['custom:tenantId'];
+  if (!tenantId || tenantId === 'UNASSIGNED') {
+    const e = new Error('Tenant not assigned for this user');
+    e.statusCode = 403;
+    throw e;
+  }
+  return tenantId;
+}
+
 // ── Helpers ──────────────────────────────────────────────────────────
 function res(statusCode, body) {
     return { statusCode, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) };
@@ -730,6 +749,10 @@ exports.handler = async (event) => {
     try {
         const method = event.requestContext?.http?.method || event.httpMethod || '';
         if (method === 'OPTIONS') return res(200, {});
+
+        // Step 2d — tenant guard.
+        try { getTenant(event); }
+        catch (e) { return err(e.statusCode || 403, e.message); }
 
         const actor = getActor(event);
         if (!canRead(actor)) return err(403, 'Forbidden');

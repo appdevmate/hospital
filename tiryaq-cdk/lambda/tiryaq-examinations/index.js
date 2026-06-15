@@ -15,6 +15,25 @@ const TABLE_NAME = 'Hospital';
 const client = new DynamoDBClient({ region: REGION });
 const db     = DynamoDBDocumentClient.from(client);
 
+// Step 3 — PHI envelope encryption. ./crypto.js synced from _shared/.
+const { encryptItem, decryptItem, decryptItems, EXAMINATION_PHI_FIELDS } = require('./crypto');
+
+// ── Tenant enforcement (Step 2d) — guard at handler entry. ───────────────────
+function getTenant(event) {
+  const claims = (event && event.requestContext && event.requestContext.authorizer
+                  && (event.requestContext.authorizer.jwt
+                      ? event.requestContext.authorizer.jwt.claims
+                      : event.requestContext.authorizer.claims))
+              || {};
+  const tenantId = claims.tenantId || claims['custom:tenantId'];
+  if (!tenantId || tenantId === 'UNASSIGNED') {
+    const e = new Error('Tenant not assigned for this user');
+    e.statusCode = 403;
+    throw e;
+  }
+  return tenantId;
+}
+
 // ── Helpers ──────────────────────────────────────────────────────────────────
 // CORS headers are injected by API Gateway HTTP API's corsPreflight
 // allow-list (see tiryaq-cdk-stack.ts). Do NOT echo wildcard CORS headers
@@ -250,6 +269,10 @@ exports.handler = async (event) => {
 
     if (method === 'OPTIONS') return res(200, {});
 
+    // Step 2d — tenant guard.
+    try { getTenant(event); }
+    catch (e) { return err(e.statusCode || 403, e.message); }
+
     // Code review finding 2.1 — only admins or the named doctor themselves
     // may create / patch / sign off an examination. Reject anything else.
     const caller = getCaller(event);
@@ -306,7 +329,12 @@ exports.handler = async (event) => {
             treatmentPlan:   null
         };
 
-        await db.send(new PutCommand({ TableName: TABLE_NAME, Item: exam }));
+        // Step 3 — encrypt PHI before write. Note: the audit row below
+        // still receives the plaintext `exam` (the writeAudit helper here
+        // does NOT encrypt; consider parity with tiryaq-appointments later).
+        const examToStore = { ...exam };
+        await encryptItem(examToStore, EXAMINATION_PHI_FIELDS, tenantId);
+        await db.send(new PutCommand({ TableName: TABLE_NAME, Item: examToStore }));
 
         // ── Write DOCTOR_PATIENT relationship item ────────────────────────────
         // This allows O(1) lookup of a doctor's patients without scanning exams.
@@ -351,6 +379,8 @@ exports.handler = async (event) => {
                 ExpressionAttributeValues: { ':de': doctorEmail.toLowerCase().trim() }
             }));
             const items = (result.Items || []).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+            // Step 3 — decrypt PHI on every returned exam before responding.
+            await decryptItems(items, EXAMINATION_PHI_FIELDS, tenantId);
             return res(200, items);
         }
 
@@ -372,6 +402,8 @@ exports.handler = async (event) => {
         }));
 
         const items = (result.Items || []).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+        // Step 3 — decrypt PHI on every returned exam.
+        await decryptItems(items, EXAMINATION_PHI_FIELDS, tenantId);
         return res(200, items);
     }
 
@@ -383,6 +415,8 @@ exports.handler = async (event) => {
         }));
 
         if (!result.Item) return err(404, 'Examination not found');
+        // Step 3 — decrypt PHI before returning.
+        await decryptItem(result.Item, EXAMINATION_PHI_FIELDS, tenantId);
         return res(200, result.Item);
     }
 
@@ -401,6 +435,8 @@ exports.handler = async (event) => {
         }));
 
         if (!existing.Item) return err(404, 'Examination not found');
+        // Step 3 — decrypt PHI so business logic / validation works on plaintext.
+        await decryptItem(existing.Item, EXAMINATION_PHI_FIELDS, tenantId);
         const exam = existing.Item;
 
         if (exam.status === 'completed' && !adminUser)
@@ -447,6 +483,26 @@ exports.handler = async (event) => {
         const before = {};
         sections.forEach(s => { before[s] = exam[s]; });
 
+        // Step 3 — encrypt PHI sections before persisting. We re-encrypt the
+        // full exam with a fresh DEK so the row stays internally consistent.
+        const fullMerged = { ...exam };
+        sections.forEach(s => { fullMerged[s] = body[s]; });
+        fullMerged.updatedAt = now;
+        delete fullMerged._kms_dek;
+        delete fullMerged._kms_v;
+        await encryptItem(fullMerged, EXAMINATION_PHI_FIELDS, tenantId);
+        for (const phiField of EXAMINATION_PHI_FIELDS) {
+            if (`:${phiField}` in values && fullMerged[phiField] !== undefined) {
+                values[`:${phiField}`] = fullMerged[phiField];
+            }
+        }
+        // Write the new wrapped DEK so subsequent reads work.
+        setParts.push('#__dek = :__dek', '#__v = :__v');
+        names['#__dek'] = '_kms_dek';
+        names['#__v']   = '_kms_v';
+        values[':__dek'] = fullMerged._kms_dek;
+        values[':__v']   = fullMerged._kms_v;
+
         await db.send(new UpdateCommand({
             TableName:                 TABLE_NAME,
             Key:                       { PK: `EXAM#${examId}`, SK: 'PROFILE' },
@@ -464,6 +520,8 @@ exports.handler = async (event) => {
             Key: { PK: `EXAM#${examId}`, SK: 'PROFILE' }
         }));
 
+        // Step 3 — decrypt before returning.
+        if (updated.Item) await decryptItem(updated.Item, EXAMINATION_PHI_FIELDS, tenantId);
         const response = res(200, updated.Item);
         await storeIdempotency(cid, response);
         return response;
@@ -527,6 +585,8 @@ exports.handler = async (event) => {
             Key: { PK: `EXAM#${examId}`, SK: 'PROFILE' }
         }));
 
+        // Step 3 — decrypt before returning.
+        if (updated.Item) await decryptItem(updated.Item, EXAMINATION_PHI_FIELDS, tenantId);
         const response = res(200, updated.Item);
         await storeIdempotency(cid, response);
         return response;

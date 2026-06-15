@@ -5,6 +5,22 @@ const client = new DynamoDBClient({ region: 'us-east-1' });
 const dynamo = DynamoDBDocumentClient.from(client);
 const TABLE = 'Hospital';
 
+// ── Tenant enforcement (Step 2d) ─────────────────────────────────────────────
+function getTenant(event) {
+  const claims = (event && event.requestContext && event.requestContext.authorizer
+                  && (event.requestContext.authorizer.jwt
+                      ? event.requestContext.authorizer.jwt.claims
+                      : event.requestContext.authorizer.claims))
+              || {};
+  const tenantId = claims.tenantId || claims['custom:tenantId'];
+  if (!tenantId || tenantId === 'UNASSIGNED') {
+    const e = new Error('Tenant not assigned for this user');
+    e.statusCode = 403;
+    throw e;
+  }
+  return tenantId;
+}
+
 // ── Idempotency (Phase D) ────────────────────────────────────────────────────
 function getClientRequestId(event) {
   const h = event.headers || {};
@@ -43,6 +59,12 @@ function getActorEmail(event) {
 }
 
 exports.handler = async (event) => {
+    if (event && event._warmup) return { ok: true, warmed: true };
+
+    let tenantId;
+    try { tenantId = getTenant(event); }
+    catch (e) { return { statusCode: e.statusCode || 403, body: JSON.stringify({ message: e.message }) }; }
+
     const cid = getClientRequestId(event);
     const cached = await checkIdempotency(cid);
     if (cached) return cached;
@@ -106,10 +128,11 @@ exports.handler = async (event) => {
                 SK: `PAYMENT#${paymentID}`
             },
             UpdateExpression: updateExpression,
-            ExpressionAttributeNames: expressionAttributeNames,
-            ExpressionAttributeValues: expressionAttributeValues,
+            ExpressionAttributeNames: { ...expressionAttributeNames, '#__tid': 'tenantId' },
+            ExpressionAttributeValues: { ...expressionAttributeValues, ':__tid': tenantId },
             ReturnValues: "ALL_NEW",
-            ConditionExpression: "attribute_exists(PK) AND attribute_exists(SK)"
+            // Step 2d — tenant boundary enforced at the DB level.
+            ConditionExpression: "attribute_exists(PK) AND attribute_exists(SK) AND #__tid = :__tid"
         };
 
         const result = await dynamo.send(new UpdateCommand(params));

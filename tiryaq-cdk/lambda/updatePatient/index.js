@@ -1,8 +1,33 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const { DynamoDBDocumentClient, UpdateCommand, TransactWriteCommand, GetCommand, PutCommand } = require('@aws-sdk/lib-dynamodb');
 
+// Step 3 — PHI envelope encryption. ./crypto.js synced from _shared/.
+// Step 4 — also import stampHashes + PATIENT_HASH_FIELDS to refresh
+// qidHash / emailHash / phoneHash whenever the source field changes.
+const { encryptItem, decryptItem, stampHashes, PATIENT_PHI_FIELDS, PATIENT_HASH_FIELDS } = require('./crypto');
+
 const dynamo  = DynamoDBDocumentClient.from(new DynamoDBClient({ region: 'us-east-1' }));
 const TABLE   = 'Hospital';
+
+// ── Tenant enforcement (Step 2d) ─────────────────────────────────────────────
+// Every write carries a ConditionExpression `tenantId = :tid`. If the
+// caller's tenant doesn't own the row, the conditional check fails and
+// DynamoDB returns ConditionalCheckFailedException — we then return 404
+// (not 403) so cross-tenant existence is not disclosed.
+function getTenant(event) {
+  const claims = (event && event.requestContext && event.requestContext.authorizer
+                  && (event.requestContext.authorizer.jwt
+                      ? event.requestContext.authorizer.jwt.claims
+                      : event.requestContext.authorizer.claims))
+              || {};
+  const tenantId = claims.tenantId || claims['custom:tenantId'];
+  if (!tenantId || tenantId === 'UNASSIGNED') {
+    const e = new Error('Tenant not assigned for this user');
+    e.statusCode = 403;
+    throw e;
+  }
+  return tenantId;
+}
 
 // ── Idempotency (Phase D) ────────────────────────────────────────────────────
 function getClientRequestId(event) {
@@ -69,6 +94,11 @@ const isAdminOrDeveloper = (event) => {
 exports.handler = async (event) => {
   if (event && event._warmup) return { ok: true, warmed: true };
 
+  // ── Tenant enforcement (Step 2d) ──
+  let tenantId;
+  try { tenantId = getTenant(event); }
+  catch (e) { return err(e.statusCode || 403, e.message); }
+
   // Idempotency (Phase D)
   const cid = getClientRequestId(event);
   const cached = await checkIdempotency(cid);
@@ -106,17 +136,19 @@ exports.handler = async (event) => {
               TableName: TABLE,
               Key: { PK: `PATIENT#${patientID}`, SK: 'PROFILE' },
               UpdateExpression: 'REMOVE #deletedAt',
-              ConditionExpression: 'attribute_exists(PK) AND attribute_exists(SK)',
-              ExpressionAttributeNames: { '#deletedAt': 'deletedAt' }
+              // Step 2d: Tenant boundary enforced at the DB level.
+              ConditionExpression: 'attribute_exists(PK) AND attribute_exists(SK) AND tenantId = :tid',
+              ExpressionAttributeNames: { '#deletedAt': 'deletedAt' },
+              ExpressionAttributeValues: { ':tid': tenantId }
             }
           },
           {
             Update: {
               TableName: TABLE,
-              Key: { PK: 'COUNTER#PATIENTS', SK: 'TOTAL' },
-              UpdateExpression: 'SET #total = if_not_exists(#total, :zero) + :inc',
+              Key: { PK: `COUNTER#PATIENTS#${tenantId}`, SK: 'TOTAL' },
+              UpdateExpression: 'SET #total = if_not_exists(#total, :zero) + :inc, tenantId = :tid, EntityType = :et',
               ExpressionAttributeNames: { '#total': 'total' },
-              ExpressionAttributeValues: { ':zero': 0, ':inc': 1 }
+              ExpressionAttributeValues: { ':zero': 0, ':inc': 1, ':tid': tenantId, ':et': 'COUNTER' }
             }
           }
         ]
@@ -128,39 +160,64 @@ exports.handler = async (event) => {
     }
 
     // ── PATCH /patients/{id} — standard update ───────────────────────────
+    // Step 3: refactored from in-place UpdateExpression to Get→Decrypt→Merge
+    // →Re-encrypt→Put. This is needed because PHI fields are now ciphertext
+    // and can't be merged at the DynamoDB level — we have to decrypt, apply
+    // the update in memory, and re-encrypt with a fresh DEK.
     const body = JSON.parse(event.body || '{}');
 
     if (!Object.keys(body).length) {
       return err(400, 'Request body cannot be empty.');
     }
 
-    const protectedFields = ['PK', 'SK', 'EntityType', 'deletedAt'];
-    const updateFields = Object.fromEntries(
-      Object.entries(body)
-        .filter(([k]) => !protectedFields.includes(k))
-        .map(([k, v]) => [k, toLower(v)])
-        // Never SET a GSI key attribute (email, dataClass, updatedAt, …) to NULL —
-        // DynamoDB rejects the write. Skip empty fields instead of nulling them.
-        .filter(([, v]) => v !== null && v !== undefined)
-    );
-    updateFields.updatedAt = new Date().toISOString();
-
-    const keys = Object.keys(updateFields);
-    if (!keys.length) return err(400, 'No valid fields to update.');
-
-    const updateExpression         = 'SET ' + keys.map((_, i) => `#k${i} = :v${i}`).join(', ');
-    const ExpressionAttributeNames  = Object.fromEntries(keys.map((k, i) => [`#k${i}`, k]));
-    const ExpressionAttributeValues = Object.fromEntries(keys.map((k, i) => [`:v${i}`, updateFields[k]]));
-
-    const result = await dynamo.send(new UpdateCommand({
+    // Load the existing row (verifies tenant ownership: 404 on cross-tenant).
+    const existing = await dynamo.send(new GetCommand({
       TableName: TABLE,
-      Key: { PK: `PATIENT#${patientID}`, SK: 'PROFILE' },
-      UpdateExpression: updateExpression,
-      ExpressionAttributeNames,
-      ExpressionAttributeValues,
-      ReturnValues: 'ALL_NEW',
-      ConditionExpression: 'attribute_exists(PK) AND attribute_exists(SK)'
+      Key: { PK: `PATIENT#${patientID}`, SK: 'PROFILE' }
     }));
+    if (!existing.Item || existing.Item.tenantId !== tenantId) {
+      return err(404, 'Patient not found');
+    }
+
+    // Decrypt PHI so we can merge user-supplied plaintext with it.
+    await decryptItem(existing.Item, PATIENT_PHI_FIELDS, tenantId);
+
+    // Build the updated item. Protected fields are never overwritten by
+    // the client body (PK/SK/EntityType/deletedAt/tenantId). Empty values
+    // are skipped so we don't blank out fields by accident.
+    const protectedFields = new Set(['PK', 'SK', 'EntityType', 'deletedAt', 'tenantId', '_kms_dek', '_kms_v']);
+    const merged = { ...existing.Item };
+    for (const [k, v] of Object.entries(body)) {
+      if (protectedFields.has(k)) continue;
+      if (v === null || v === undefined) continue;
+      merged[k] = toLower(v);
+    }
+    merged.updatedAt = new Date().toISOString();
+
+    // Force a fresh DEK on every update (defence: limits exposure if any
+    // single DEK is ever compromised).
+    delete merged._kms_dek;
+    delete merged._kms_v;
+
+    // Step 4 — re-stamp hashes from the (possibly updated) plaintext values
+    // BEFORE encryption. If the user changed phone, the phoneHash refreshes;
+    // if not, stampHashes recomputes the same value (idempotent via cache).
+    await stampHashes(merged, PATIENT_HASH_FIELDS, tenantId);
+
+    await encryptItem(merged, PATIENT_PHI_FIELDS, tenantId);
+
+    // Step 2d: tenant boundary still enforced at the DB level via Condition.
+    await dynamo.send(new PutCommand({
+      TableName: TABLE,
+      Item: merged,
+      ConditionExpression: 'attribute_exists(PK) AND tenantId = :tid',
+      ExpressionAttributeValues: { ':tid': tenantId }
+    }));
+
+    // Decrypt before returning so the API response is plaintext for the
+    // caller (who is the same tenant — authorised).
+    await decryptItem(merged, PATIENT_PHI_FIELDS, tenantId);
+    const result = { Attributes: merged };
 
     const updateRes = ok({ message: 'Patient updated successfully', patientID, updatedData: result.Attributes });
     await storeIdempotency(cid, updateRes);

@@ -1,13 +1,36 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const { DynamoDBDocumentClient, QueryCommand } = require('@aws-sdk/lib-dynamodb');
 
+// Step 3 — PHI envelope decryption. ./crypto.js synced from _shared/.
+// Step 4 — rewritten to look up via emailHash-EntityType-index.
+// Plaintext email is now ciphertext on the row, so the legacy email-index
+// no longer works. We HMAC the input email with the tenant's KMS HMAC key
+// and Query the new index by emailHash.
+const { decryptItem, computeHmac, DOCTOR_PHI_FIELDS, PATIENT_PHI_FIELDS } = require('./crypto');
+
 const REGION = 'us-east-1';
 const TABLE = 'Hospital';
-const GSI_NAME = 'email-index';
+const GSI_NAME = 'emailHash-EntityType-index';
 
 const ddb = DynamoDBDocumentClient.from(
   new DynamoDBClient({ region: REGION })
 );
+
+// ── Tenant enforcement (Step 2d) ─────────────────────────────────────────────
+function getTenant(event) {
+  const claims = (event && event.requestContext && event.requestContext.authorizer
+                  && (event.requestContext.authorizer.jwt
+                      ? event.requestContext.authorizer.jwt.claims
+                      : event.requestContext.authorizer.claims))
+              || {};
+  const tenantId = claims.tenantId || claims['custom:tenantId'];
+  if (!tenantId || tenantId === 'UNASSIGNED') {
+    const e = new Error('Tenant not assigned for this user');
+    e.statusCode = 403;
+    throw e;
+  }
+  return tenantId;
+}
 
 const hdrs = {
   'access-control-allow-origin': '*',
@@ -25,6 +48,12 @@ function normalizeUser(item) {
 }
 
 exports.handler = async (event) => {
+  if (event && event._warmup) return { ok: true, warmed: true };
+
+  let tenantId;
+  try { tenantId = getTenant(event); }
+  catch (e) { return { statusCode: e.statusCode || 403, headers: hdrs, body: JSON.stringify({ message: e.message }) }; }
+
   try {
     let email = null;
     let entityType = null; // 'DOCTOR', 'PATIENT', 'NURSE', 'ADMIN'
@@ -62,13 +91,18 @@ exports.handler = async (event) => {
       };
     }
 
-    // DynamoDB Query using GSI
+    // Step 4 — hash the input email with the tenant's KMS HMAC key, then
+    // Query the emailHash-EntityType-index. Same plaintext + same tenant
+    // always produces the same hash, so equality lookups work despite
+    // ciphertext storage of the actual email.
+    const emailHash = await computeHmac(email, tenantId);
+
     const params = {
       TableName: TABLE,
       IndexName: GSI_NAME,
-      KeyConditionExpression: 'email = :email AND EntityType = :type',
+      KeyConditionExpression: 'emailHash = :h AND EntityType = :type',
       ExpressionAttributeValues: {
-        ':email': email,
+        ':h': emailHash,
         ':type': entityType
       },
       Limit: 1
@@ -86,6 +120,15 @@ exports.handler = async (event) => {
 
     const userItem = Items[0];
 
+    // Step 2d — cross-tenant → 404 (no existence disclosure).
+    if (userItem.tenantId !== tenantId) {
+      return {
+        statusCode: 404,
+        headers: hdrs,
+        body: JSON.stringify({ message: `${entityType} not found with email ${email}` })
+      };
+    }
+
     // Exclude soft-deleted users
     if (userItem.deletedAt !== undefined && userItem.deletedAt !== null && userItem.deletedAt !== '') {
       return {
@@ -94,6 +137,10 @@ exports.handler = async (event) => {
         body: JSON.stringify({ message: `${entityType} not found with email ${email}` })
       };
     }
+
+    // Step 3 — decrypt PHI fields before returning. Choose field list by entity.
+    const phiFields = entityType === 'DOCTOR' ? DOCTOR_PHI_FIELDS : PATIENT_PHI_FIELDS;
+    await decryptItem(userItem, phiFields, tenantId);
 
     const user = normalizeUser(userItem);
 

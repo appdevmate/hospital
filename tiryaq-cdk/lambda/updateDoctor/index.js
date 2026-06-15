@@ -1,9 +1,30 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const { DynamoDBDocumentClient, UpdateCommand, GetCommand, PutCommand } = require('@aws-sdk/lib-dynamodb');
 
+// Step 3 — PHI envelope encryption. ./crypto.js synced from _shared/.
+// Step 4 — also import stampHashes + DOCTOR_HASH_FIELDS to refresh
+// qidHash / emailHash / phoneHash whenever the source field changes.
+const { encryptItem, decryptItem, stampHashes, DOCTOR_PHI_FIELDS, DOCTOR_HASH_FIELDS } = require('./crypto');
+
 const dynamo = DynamoDBDocumentClient.from(new DynamoDBClient({ region: 'us-east-1' }));
 const TABLE = 'Hospital';
 const toLower = (v) => (typeof v === 'string' ? v.toLowerCase() : v ?? null);
+
+// ── Tenant enforcement (Step 2d) ─────────────────────────────────────────────
+function getTenant(event) {
+  const claims = (event && event.requestContext && event.requestContext.authorizer
+                  && (event.requestContext.authorizer.jwt
+                      ? event.requestContext.authorizer.jwt.claims
+                      : event.requestContext.authorizer.claims))
+              || {};
+  const tenantId = claims.tenantId || claims['custom:tenantId'];
+  if (!tenantId || tenantId === 'UNASSIGNED') {
+    const e = new Error('Tenant not assigned for this user');
+    e.statusCode = 403;
+    throw e;
+  }
+  return tenantId;
+}
 
 // ── Idempotency (Phase D) ────────────────────────────────────────────────────
 function getClientRequestId(event) {
@@ -36,6 +57,12 @@ async function storeIdempotency(cid, response) {
 }
 
 exports.handler = async (event) => {
+  if (event && event._warmup) return { ok: true, warmed: true };
+
+  let tenantId;
+  try { tenantId = getTenant(event); }
+  catch (e) { return { statusCode: e.statusCode || 403, body: JSON.stringify({ message: e.message }) }; }
+
   const cid = getClientRequestId(event);
   const cached = await checkIdempotency(cid);
   if (cached) return cached;
@@ -48,37 +75,49 @@ exports.handler = async (event) => {
       return { statusCode: 400, body: JSON.stringify({ message: 'Request body cannot be empty.' }) };
     }
 
-    const protectedFields = ['PK', 'SK', 'EntityType'];
+    // Step 3 — refactored to Get→Decrypt→Merge→Re-encrypt→Put. PHI fields
+    // are now ciphertext at rest and cannot be merged at the DDB level.
+    const existing = await dynamo.send(new GetCommand({
+      TableName: TABLE,
+      Key: { PK: `DOCTOR#${doctorID}`, SK: 'PROFILE' }
+    }));
+    if (!existing.Item || existing.Item.tenantId !== tenantId) {
+      return { statusCode: 404, body: JSON.stringify({ message: 'Doctor not found' }) };
+    }
+    await decryptItem(existing.Item, DOCTOR_PHI_FIELDS, tenantId);
+
+    const protectedFields = new Set(['PK', 'SK', 'EntityType', 'tenantId', '_kms_dek', '_kms_v']);
     const alias = { specialty: 'specialization', qatarID: 'qid', QatarID: 'qid' };
 
-    const updateFields = Object.fromEntries(
-      Object.entries(body)
-        .filter(([k]) => !protectedFields.includes(k))
-        .map(([k, v]) => [alias[k] || k, toLower(v)])
-        // Never SET a GSI key attribute (email, dataClass, updatedAt, …) to NULL —
-        // DynamoDB rejects the write. Skip empty fields instead of nulling them.
-        .filter(([, v]) => v !== null && v !== undefined)
-    );
-    updateFields.updatedAt = new Date().toISOString();
-
-    const keys = Object.keys(updateFields);
-    if (!keys.length) {
-      return { statusCode: 400, body: JSON.stringify({ message: 'No valid fields to update.' }) };
+    const merged = { ...existing.Item };
+    for (const [k, v] of Object.entries(body)) {
+      const key = alias[k] || k;
+      if (protectedFields.has(key)) continue;
+      if (v === null || v === undefined) continue;
+      merged[key] = toLower(v);
     }
+    merged.updatedAt = new Date().toISOString();
 
-    const UpdateExpression = 'SET ' + keys.map((_, i) => `#k${i} = :v${i}`).join(', ');
-    const ExpressionAttributeNames = Object.fromEntries(keys.map((k, i) => [`#k${i}`, k]));
-    const ExpressionAttributeValues = Object.fromEntries(keys.map((k, i) => [`:v${i}`, updateFields[k]]));
+    // Fresh DEK on every update.
+    delete merged._kms_dek;
+    delete merged._kms_v;
 
-    const result = await dynamo.send(new UpdateCommand({
-      TableName: 'Hospital',
-      Key: { PK: `DOCTOR#${doctorID}`, SK: 'PROFILE' },
-      UpdateExpression,
-      ExpressionAttributeNames,
-      ExpressionAttributeValues,
-      ReturnValues: 'ALL_NEW',
-      ConditionExpression: 'attribute_exists(PK) AND attribute_exists(SK)'
+    // Step 4 — re-stamp hashes BEFORE encryption.
+    await stampHashes(merged, DOCTOR_HASH_FIELDS, tenantId);
+
+    await encryptItem(merged, DOCTOR_PHI_FIELDS, tenantId);
+
+    await dynamo.send(new PutCommand({
+      TableName: TABLE,
+      Item: merged,
+      // Step 2d — tenant boundary enforced at the DB level.
+      ConditionExpression: 'attribute_exists(PK) AND tenantId = :tid',
+      ExpressionAttributeValues: { ':tid': tenantId }
     }));
+
+    // Decrypt before returning so the API response is plaintext.
+    await decryptItem(merged, DOCTOR_PHI_FIELDS, tenantId);
+    const result = { Attributes: merged };
 
     const response = {
       statusCode: 200,

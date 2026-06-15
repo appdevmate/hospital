@@ -8,6 +8,14 @@ const {
 } = require('@aws-sdk/lib-dynamodb');
 const { randomUUID } = require('crypto');
 
+// Step 3 — PHI envelope encryption. ./crypto.js is a copy of
+// _shared/crypto.js synced by scripts/sync-shared-helpers.js. Do not
+// edit this sibling — edit the master and re-sync.
+// Step 4 — also import stampHashes + the patient hash-field map so we
+// can write qidHash / emailHash / phoneHash for searchable lookups, and
+// computeHmac so we can build hashed lock PKs that are tenant-scoped.
+const { encryptItem, stampHashes, computeHmac, PATIENT_PHI_FIELDS, PATIENT_HASH_FIELDS } = require('./crypto');
+
 const REGION     = 'us-east-1';
 const TABLE_NAME = 'Hospital';
 const COUNTER_PK = 'COUNTER#PATIENTS';
@@ -15,6 +23,26 @@ const COUNTER_SK = 'TOTAL';
 
 const client = new DynamoDBClient({ region: REGION });
 const dynamo = DynamoDBDocumentClient.from(client);
+
+// ── Tenant enforcement (Step 2d) ─────────────────────────────────────────────
+// Inlined from _shared/tenant.js — see that file for full docs.
+// Reads tenantId from the JWT claims (signed by Cognito), so a malicious
+// client cannot forge it. Rejects "UNASSIGNED" so users not yet backfilled
+// can sign in but can never create patient rows.
+function getTenant(event) {
+  const claims = (event && event.requestContext && event.requestContext.authorizer
+                  && (event.requestContext.authorizer.jwt
+                      ? event.requestContext.authorizer.jwt.claims
+                      : event.requestContext.authorizer.claims))
+              || {};
+  const tenantId = claims.tenantId || claims['custom:tenantId'];
+  if (!tenantId || tenantId === 'UNASSIGNED') {
+    const err = new Error('Tenant not assigned for this user');
+    err.statusCode = 403;
+    throw err;
+  }
+  return tenantId;
+}
 
 // ── Idempotency (Phase D) ────────────────────────────────────────────────────
 function getClientRequestId(event) {
@@ -104,7 +132,7 @@ const validatePatient = (patient, index = null) => {
    Item Builder
 ========================= */
 
-const createPatientItem = (patient) => {
+const createPatientItem = (patient, tenantId) => {
   const patientID = `PATIENT#${randomUUID()}`;
   const timestamp = new Date().toISOString();
 
@@ -112,6 +140,7 @@ const createPatientItem = (patient) => {
     PK: patientID,
     SK: 'PROFILE',
     EntityType: 'PATIENT',
+    tenantId,
     // required fields
     name: toLower(patient.name),
     dob: patient.dob,
@@ -148,17 +177,29 @@ const createPatientItem = (patient) => {
    Single Create
 ========================= */
 
-const createSinglePatient = async (patient, index = null) => {
+const createSinglePatient = async (patient, tenantId, index = null) => {
   const errors = validatePatient(patient, index);
   if (errors.length > 0) throw new Error(errors.join('; '));
 
-  const patientItem     = createPatientItem(patient);
+  const patientItem     = createPatientItem(patient, tenantId);
   const normalizedQID   = patientItem.qid;
   const normalizedPhone = patientItem.phone;
-  const qidLockPK       = `QID#${normalizedQID}`;
-  const phoneLockPK     = `PHONE#${normalizedPhone}`;
 
-  // ── Check QID lock ──
+  // ── Step 4 — Hashed lock PKs ──────────────────────────────────────────
+  // Old design: QID#<plaintext-qid> as the lock key. Two problems:
+  //   1. Plaintext QID stored in a partition key → PHI leak to anyone
+  //      with DynamoDB read access.
+  //   2. Cross-tenant collisions — Tiryaq registering QID 123 blocks
+  //      Alshifaa from registering the same person.
+  // New design: QID#<HMAC(tenantKey, qid)>. Different tenants produce
+  // different hashes for the same input, so locks are tenant-scoped.
+  // The plaintext QID never appears in a partition key.
+  const qidLockHash   = await computeHmac(normalizedQID, tenantId);
+  const phoneLockHash = await computeHmac(normalizedPhone, tenantId);
+  const qidLockPK     = `QID#${qidLockHash}`;
+  const phoneLockPK   = `PHONE#${phoneLockHash}`;
+
+  // ── Check QID lock — same-tenant duplicate detection ──
   const existingQIDLock = await dynamo.send(new GetCommand({
     TableName: TABLE_NAME,
     Key: { PK: qidLockPK, SK: 'LOCK' }
@@ -167,7 +208,7 @@ const createSinglePatient = async (patient, index = null) => {
     throw new Error(`Failed to create patient, QID already exists: ${normalizedQID}`);
   }
 
-  // ── Check phone lock ──
+  // ── Check phone lock — same-tenant duplicate detection ──
   const existingPhoneLock = await dynamo.send(new GetCommand({
     TableName: TABLE_NAME,
     Key: { PK: phoneLockPK, SK: 'LOCK' }
@@ -177,12 +218,15 @@ const createSinglePatient = async (patient, index = null) => {
   }
 
   // ── No locks — create patient + QID lock + phone lock atomically ──
+  // Locks carry tenantId so the cross-tenant disclosure check above
+  // works on every future read. EntityType=*_LOCK rows are still system
+  // rows (no per-tenant Query needed), they just identify the owner.
   const qidLockItem = {
     PK: qidLockPK,
     SK: 'LOCK',
     EntityType: 'QID_LOCK',
     patientPK: patientItem.PK,
-    // Avoid updatedAt: null — fails dataClass-index GSI validation (S required).
+    tenantId,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   };
@@ -192,10 +236,25 @@ const createSinglePatient = async (patient, index = null) => {
     SK: 'LOCK',
     EntityType: 'PHONE_LOCK',
     patientPK: patientItem.PK,
-    // Avoid updatedAt: null — fails dataClass-index GSI validation (S required).
+    tenantId,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   };
+
+  // ── Step 4 — stamp HMAC hashes of QID / email / phone BEFORE encryption ──
+  // The crypto helper hashes the plaintext, so it must run before
+  // encryptItem() turns those fields into ciphertext. Output fields:
+  //   qidHash, emailHash, phoneHash — stay plaintext, indexed by
+  //   emailHash-EntityType-index for fast lookups.
+  await stampHashes(patientItem, PATIENT_HASH_FIELDS, tenantId);
+
+  // ── Step 3 — PHI envelope encryption ─────────────────────────────────────
+  // Locks were built BEFORE this step on purpose: QID/phone lock PKs use
+  // plaintext values so cross-tenant uniqueness still works. Inside the
+  // patient row itself, the PHI fields (name, dob, qid, phone, email,
+  // medicalHistory, notes, allergies, medications, bloodGroup) become
+  // base64 ciphertext, and a wrapped DEK is added at `_kms_dek`.
+  await encryptItem(patientItem, PATIENT_PHI_FIELDS, tenantId);
 
   try {
     await dynamo.send(new TransactWriteCommand({
@@ -230,13 +289,16 @@ const createSinglePatient = async (patient, index = null) => {
     throw err;
   }
 
-  // ── Increment counter ──
+  // ── Increment per-tenant counter (Step 2d) ─────────────────────────────────
+  // Old `COUNTER#PATIENTS` row is left in place as a legacy total but is no
+  // longer incremented — counters are per-tenant now so the operator console
+  // can show each customer their own counts without scanning the table.
   await dynamo.send(new UpdateCommand({
     TableName: TABLE_NAME,
-    Key: { PK: COUNTER_PK, SK: COUNTER_SK },
-    UpdateExpression: 'SET #t = if_not_exists(#t, :zero) + :one',
+    Key: { PK: `${COUNTER_PK}#${tenantId}`, SK: COUNTER_SK },
+    UpdateExpression: 'SET #t = if_not_exists(#t, :zero) + :one, tenantId = :tid, EntityType = :et',
     ExpressionAttributeNames: { '#t': 'total' },
-    ExpressionAttributeValues: { ':one': 1, ':zero': 0 }
+    ExpressionAttributeValues: { ':one': 1, ':zero': 0, ':tid': tenantId, ':et': 'COUNTER' }
   }));
 
   return patientItem.PK;
@@ -246,12 +308,12 @@ const createSinglePatient = async (patient, index = null) => {
    Bulk Create
 ========================= */
 
-const createBulkPatients = async (patients) => {
+const createBulkPatients = async (patients, tenantId) => {
   const results = { created: [], failed: [] };
 
   for (let i = 0; i < patients.length; i++) {
     try {
-      const patientID = await createSinglePatient(patients[i], i);
+      const patientID = await createSinglePatient(patients[i], tenantId, i);
       results.created.push({ index: i, patientID, name: patients[i].name });
     } catch (err) {
       results.failed.push({ index: i, name: patients[i]?.name || null, reason: err.message });
@@ -284,6 +346,18 @@ exports.handler = async (event) => {
       body: JSON.stringify({ message: 'Access denied: creating patients is admin-only' })
     };
   }
+
+  // ── Tenant enforcement (Step 2d) ──
+  let tenantId;
+  try { tenantId = getTenant(event); }
+  catch (e) {
+    return {
+      statusCode: e.statusCode || 403,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+      body: JSON.stringify({ message: e.message })
+    };
+  }
+
   // Idempotency (Phase D) — return the cached response if we've seen this id.
   const cid = getClientRequestId(event);
   const cached = await checkIdempotency(cid);
@@ -304,7 +378,7 @@ exports.handler = async (event) => {
         };
       }
 
-      const results    = await createBulkPatients(patients);
+      const results    = await createBulkPatients(patients, tenantId);
       const statusCode = results.created.length === 0 ? 400
                        : results.failed.length  > 0   ? 207
                        : 201;
@@ -331,7 +405,7 @@ exports.handler = async (event) => {
     }
 
     // ── Single ──
-    const patientID = await createSinglePatient(body);
+    const patientID = await createSinglePatient(body, tenantId);
 
     const response = {
       statusCode: 201,

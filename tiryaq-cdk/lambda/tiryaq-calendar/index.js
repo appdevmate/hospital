@@ -38,6 +38,22 @@ const TABLE_NAME = process.env.TABLE_NAME || 'Hospital';
 
 const ddb = DynamoDBDocumentClient.from(new DynamoDBClient({ region: REGION }));
 
+// ── Tenant enforcement (Step 2d) — guard at handler entry. ───────────────────
+function getTenant(event) {
+  const claims = (event && event.requestContext && event.requestContext.authorizer
+                  && (event.requestContext.authorizer.jwt
+                      ? event.requestContext.authorizer.jwt.claims
+                      : event.requestContext.authorizer.claims))
+              || {};
+  const tenantId = claims.tenantId || claims['custom:tenantId'];
+  if (!tenantId || tenantId === 'UNASSIGNED') {
+    const e = new Error('Tenant not assigned for this user');
+    e.statusCode = 403;
+    throw e;
+  }
+  return tenantId;
+}
+
 // Inlined compliance helpers — CDK packages this Lambda from its own folder
 // only, so `require('../_shared/compliance')` would fail at runtime. Keep in
 // sync with tiryaq-cdk/lambda/_shared/compliance.js.
@@ -362,9 +378,14 @@ async function deleteEvent(event) {
 
 // ── Router ───────────────────────────────────────────────────────────
 exports.handler = async (event) => {
+    if (event && event._warmup) return { ok: true, warmed: true };
     try {
         const method = event.requestContext?.http?.method || event.httpMethod || '';
         if (method === 'OPTIONS') return res(200, {});
+
+        // Step 2d — tenant guard.
+        try { getTenant(event); }
+        catch (e) { return err(e.statusCode || 403, e.message); }
 
         const actor = getActor(event);
         const route = event.routeKey || `${method} ${event.rawPath || event.path || ''}`;

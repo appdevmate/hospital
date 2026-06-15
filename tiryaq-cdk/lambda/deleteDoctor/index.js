@@ -10,6 +10,22 @@ const REGION = 'us-east-1';
 const TABLE = 'Hospital';
 const ddb = DynamoDBDocumentClient.from(new DynamoDBClient({ region: REGION }));
 
+// ── Tenant enforcement (Step 2d) ─────────────────────────────────────────────
+function getTenant(event) {
+  const claims = (event && event.requestContext && event.requestContext.authorizer
+                  && (event.requestContext.authorizer.jwt
+                      ? event.requestContext.authorizer.jwt.claims
+                      : event.requestContext.authorizer.claims))
+              || {};
+  const tenantId = claims.tenantId || claims['custom:tenantId'];
+  if (!tenantId || tenantId === 'UNASSIGNED') {
+    const e = new Error('Tenant not assigned for this user');
+    e.statusCode = 403;
+    throw e;
+  }
+  return tenantId;
+}
+
 // ── Idempotency (Phase D) ────────────────────────────────────────────────────
 function getClientRequestId(event) {
   const h = event.headers || {};
@@ -54,6 +70,12 @@ const extractId = (raw) => {
 };
 
 exports.handler = async (event, context) => {
+  if (event && event._warmup) return { ok: true, warmed: true };
+
+  let tenantId;
+  try { tenantId = getTenant(event); }
+  catch (e) { return { statusCode: e.statusCode || 403, headers: HDRS, body: JSON.stringify({ message: e.message }) }; }
+
   const cid = getClientRequestId(event);
   const cached = await checkIdempotency(cid);
   if (cached) return cached;
@@ -78,7 +100,7 @@ exports.handler = async (event, context) => {
             Key: { PK: `DOCTOR#${id}`, SK: 'PROFILE' },
             UpdateExpression: 'SET #deletedAt = :now, #deletedBy = :by, #deletedReason = :reason',
             ConditionExpression:
-              'attribute_exists(PK) AND attribute_exists(SK) AND #type = :t AND ' +
+              'attribute_exists(PK) AND attribute_exists(SK) AND #type = :t AND #tid = :tid AND ' +
               '(attribute_not_exists(#deletedAt) OR attribute_type(#deletedAt, :nullType) OR #deletedAt = :empty OR #deletedAt = :nullStr)',
 
 
@@ -86,14 +108,16 @@ exports.handler = async (event, context) => {
               '#type': 'EntityType',
               '#deletedAt': 'deletedAt',
               '#deletedBy': 'deletedBy',
-              '#deletedReason': 'deletedReason'
+              '#deletedReason': 'deletedReason',
+              '#tid': 'tenantId'
             },
             ExpressionAttributeValues: {
               ':t': 'DOCTOR',
               ':now': now,
               ':by': by,
               ':reason': reason,
-              ':nullType': 'NULL',   // <-- key fix
+              ':tid': tenantId,
+              ':nullType': 'NULL',
               ':empty': '',
               ':nullStr': 'null'
             },
@@ -103,10 +127,10 @@ exports.handler = async (event, context) => {
         {
           Update: {
             TableName: TABLE,
-            Key: { PK: 'COUNTER#DOCTORS', SK: 'TOTAL' },
-            UpdateExpression: 'SET #total = if_not_exists(#total, :zero) + :dec',
+            Key: { PK: `COUNTER#DOCTORS#${tenantId}`, SK: 'TOTAL' },
+            UpdateExpression: 'SET #total = if_not_exists(#total, :zero) + :dec, tenantId = :tid, EntityType = :et',
             ExpressionAttributeNames: { '#total': 'total' },
-            ExpressionAttributeValues: { ':zero': 0, ':dec': -1 }
+            ExpressionAttributeValues: { ':zero': 0, ':dec': -1, ':tid': tenantId, ':et': 'COUNTER' }
           }
         }
       ]

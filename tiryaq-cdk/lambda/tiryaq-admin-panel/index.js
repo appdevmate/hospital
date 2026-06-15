@@ -22,6 +22,22 @@ const USER_POOL_ID = process.env.USER_POOL_ID;
 const db      = DynamoDBDocumentClient.from(new DynamoDBClient({ region: REGION }));
 const cognito = new CognitoIdentityProviderClient({ region: REGION });
 
+// ── Tenant enforcement (Step 2d) ─────────────────────────────────────────────
+function getTenant(event) {
+  const claims = (event && event.requestContext && event.requestContext.authorizer
+                  && (event.requestContext.authorizer.jwt
+                      ? event.requestContext.authorizer.jwt.claims
+                      : event.requestContext.authorizer.claims))
+              || {};
+  const tenantId = claims.tenantId || claims['custom:tenantId'];
+  if (!tenantId || tenantId === 'UNASSIGNED') {
+    const e = new Error('Tenant not assigned for this user');
+    e.statusCode = 403;
+    throw e;
+  }
+  return tenantId;
+}
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function res(statusCode, body) {
     return {
@@ -82,6 +98,8 @@ function isAdmin(event) {
 
 // ── Main Handler ──────────────────────────────────────────────────────────────
 exports.handler = async (event) => {
+    if (event && event._warmup) return { ok: true, warmed: true };
+
     const method = event.requestContext?.http?.method || event.httpMethod;
     const path   = event.rawPath || event.path || '';
     const qs     = event.queryStringParameters || {};
@@ -90,21 +108,41 @@ exports.handler = async (event) => {
     if (method === 'OPTIONS') return res(200, {});
     if (!isAdmin(event))      return err(403, 'Access denied: admin only');
 
-    // ── GET /admin/stats ──────────────────────────────────────────────────────
+    // ── Tenant enforcement (Step 2d) ──
+    let tenantId;
+    try { tenantId = getTenant(event); }
+    catch (e) { return err(e.statusCode || 403, e.message); }
+
+    // Helper: verify a Cognito user belongs to the caller's tenant.
+    const verifyUserTenant = async (username) => {
+        try {
+            const { Users: list } = await cognito.send(new ListUsersCommand({
+                UserPoolId: USER_POOL_ID,
+                Filter: `username = "${username}"`,
+                Limit: 1
+            }));
+            const u = (list || [])[0];
+            if (!u) return false;
+            const t = u.Attributes?.find(a => a.Name === 'custom:tenantId')?.Value;
+            return t === tenantId;
+        } catch (_) { return false; }
+    };
+
+    // ── GET /admin/stats — per-tenant counts (Step 2d) ────────────────────────
     if (method === 'GET' && path.endsWith('/stats')) {
         const [patients, doctors, exams, invoices] = await Promise.all([
-            db.send(new GetCommand({ TableName: TABLE_NAME, Key: { PK: 'COUNTER#PATIENTS', SK: 'TOTAL' } })),
-            db.send(new GetCommand({ TableName: TABLE_NAME, Key: { PK: 'COUNTER#DOCTORS',  SK: 'TOTAL' } })),
+            db.send(new GetCommand({ TableName: TABLE_NAME, Key: { PK: `COUNTER#PATIENTS#${tenantId}`, SK: 'TOTAL' } })),
+            db.send(new GetCommand({ TableName: TABLE_NAME, Key: { PK: `COUNTER#DOCTORS#${tenantId}`,  SK: 'TOTAL' } })),
             db.send(new QueryCommand({
-                TableName: TABLE_NAME, IndexName: 'EntityType-index',
-                KeyConditionExpression: 'EntityType = :et',
-                ExpressionAttributeValues: { ':et': 'EXAMINATION' },
+                TableName: TABLE_NAME, IndexName: 'tenant-entityType-index',
+                KeyConditionExpression: 'tenantId = :tid AND EntityType = :et',
+                ExpressionAttributeValues: { ':tid': tenantId, ':et': 'EXAMINATION' },
                 Select: 'COUNT'
             })),
             db.send(new QueryCommand({
-                TableName: TABLE_NAME, IndexName: 'EntityType-index',
-                KeyConditionExpression: 'EntityType = :et',
-                ExpressionAttributeValues: { ':et': 'PAYMENT' },
+                TableName: TABLE_NAME, IndexName: 'tenant-entityType-index',
+                KeyConditionExpression: 'tenantId = :tid AND EntityType = :et',
+                ExpressionAttributeValues: { ':tid': tenantId, ':et': 'PAYMENT' },
                 Select: 'COUNT'
             }))
         ]);
@@ -116,32 +154,39 @@ exports.handler = async (event) => {
         });
     }
 
-    // ── GET /admin/users ──────────────────────────────────────────────────────
+    // ── GET /admin/users — scoped to caller's tenant (Step 2d) ────────────────
     if (method === 'GET' && path.endsWith('/users')) {
         const limit  = parseInt(qs.limit || '60', 10);
         const token  = qs.nextToken || undefined;
         const filter = qs.filter    || undefined;
 
+        // Cognito's ListUsers Filter does not support custom attributes, so we
+        // page through and drop users from other tenants client-side.
         const cmdParams = { UserPoolId: USER_POOL_ID, Limit: limit };
         if (token)  cmdParams.PaginationToken = token;
         if (filter) cmdParams.Filter          = filter;
 
         const result = await cognito.send(new ListUsersCommand(cmdParams));
 
-        const users = (result.Users || []).map(u => {
-            const attr = (name) => u.Attributes?.find(a => a.Name === name)?.Value || '';
-            return {
-                username: u.Username,
-                email:    attr('email'),
-                name:     attr('name'),
-                sub:      attr('sub'),
-                status:   u.UserStatus,
-                enabled:  u.Enabled,
-                created:  u.UserCreateDate,
-                modified: u.UserLastModifiedDate,
-                groups:   []
-            };
-        });
+        const users = (result.Users || [])
+            .filter(u => {
+                const t = u.Attributes?.find(a => a.Name === 'custom:tenantId')?.Value;
+                return t === tenantId;
+            })
+            .map(u => {
+                const attr = (name) => u.Attributes?.find(a => a.Name === name)?.Value || '';
+                return {
+                    username: u.Username,
+                    email:    attr('email'),
+                    name:     attr('name'),
+                    sub:      attr('sub'),
+                    status:   u.UserStatus,
+                    enabled:  u.Enabled,
+                    created:  u.UserCreateDate,
+                    modified: u.UserLastModifiedDate,
+                    groups:   []
+                };
+            });
 
         await Promise.all(users.map(async (u) => {
             try {
@@ -170,6 +215,8 @@ exports.handler = async (event) => {
         if (cached) return cached;
         const username = params.username;
         if (!username) return err(400, 'username is required');
+        // Step 2d — admin can only disable users in their own tenant.
+        if (!(await verifyUserTenant(username))) return err(404, 'User not found');
         await cognito.send(new AdminDisableUserCommand({ UserPoolId: USER_POOL_ID, Username: username }));
         const response = res(200, { message: `User ${username} disabled successfully` });
         await storeIdempotency(cid, response);
@@ -183,6 +230,7 @@ exports.handler = async (event) => {
         if (cached) return cached;
         const username = params.username;
         if (!username) return err(400, 'username is required');
+        if (!(await verifyUserTenant(username))) return err(404, 'User not found');
         await cognito.send(new AdminEnableUserCommand({ UserPoolId: USER_POOL_ID, Username: username }));
         const response = res(200, { message: `User ${username} enabled successfully` });
         await storeIdempotency(cid, response);
@@ -200,6 +248,7 @@ exports.handler = async (event) => {
         if (!username) return err(400, 'username is required');
         if (!password) return err(400, 'password is required');
         if (password.length < 8) return err(400, 'Password must be at least 8 characters');
+        if (!(await verifyUserTenant(username))) return err(404, 'User not found');
 
         await cognito.send(new AdminSetUserPasswordCommand({
             UserPoolId: USER_POOL_ID,
@@ -229,6 +278,10 @@ exports.handler = async (event) => {
         if (entityId)   { filterParts.push('#entityId = :eid');   filterNames['#entityId']   = 'entityId';   filterValues[':eid'] = entityId; }
         if (action)     { filterParts.push('#action = :act');     filterNames['#action']     = 'action';     filterValues[':act'] = action; }
         if (actor)      { filterParts.push('#actorEmail = :ae');  filterNames['#actorEmail'] = 'actorEmail'; filterValues[':ae']  = actor; }
+        // Step 2d — always scope to caller's tenant.
+        filterParts.push('#__tid = :__tid');
+        filterNames['#__tid'] = 'tenantId';
+        filterValues[':__tid'] = tenantId;
 
         const query = {
             TableName:                 TABLE_NAME,
@@ -243,7 +296,9 @@ exports.handler = async (event) => {
         }
 
         const result = await db.send(new QueryCommand(query));
-        return res(200, { date, count: (result.Items || []).length, items: result.Items || [] });
+        // Defence-in-depth — drop anything not belonging to caller's tenant.
+        const items = (result.Items || []).filter(i => i.tenantId === tenantId);
+        return res(200, { date, count: items.length, items });
     }
 
     return err(400, 'Unknown route');

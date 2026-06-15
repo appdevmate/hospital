@@ -326,6 +326,37 @@ export class TiryaqStack extends cdk.Stack {
         });
 
         // ─────────────────────────────────────────────────────────────────────
+        // Step 2 — Multi-tenant foundation.
+        // Pooled multi-tenancy (Athenahealth / Particle Health model):
+        // every row carries `tenantId`. This GSI lets each customer list
+        // their own rows by EntityType in O(1) — no full-table scans, no
+        // cross-tenant leak risk. Sort key = EntityType so a tenant can
+        // request "all PATIENT rows for tenant T_a1b2c3d4" in one Query.
+        // ─────────────────────────────────────────────────────────────────────
+        table.addGlobalSecondaryIndex({
+            indexName: 'tenant-entityType-index',
+            partitionKey: { name: 'tenantId', type: dynamodb.AttributeType.STRING },
+            sortKey: { name: 'EntityType', type: dynamodb.AttributeType.STRING },
+            projectionType: dynamodb.ProjectionType.ALL
+        });
+
+        // ─────────────────────────────────────────────────────────────────────
+        // Step 4 — Hashed-search lookup index.
+        // After Step 3 encrypted `email`, `qid`, `phone`, the existing
+        // email-index returns ciphertext that varies per row, so equality
+        // lookups by email no longer work. We store an HMAC-SHA256 hash
+        // (`emailHash`) alongside the ciphertext and Query this index to
+        // find a record by its plaintext email after hashing the input
+        // with the tenant's KMS HMAC key.
+        // ─────────────────────────────────────────────────────────────────────
+        table.addGlobalSecondaryIndex({
+            indexName: 'emailHash-EntityType-index',
+            partitionKey: { name: 'emailHash', type: dynamodb.AttributeType.STRING },
+            sortKey: { name: 'EntityType', type: dynamodb.AttributeType.STRING },
+            projectionType: dynamodb.ProjectionType.ALL
+        });
+
+        // ─────────────────────────────────────────────────────────────────────
         // Cognito User Pool
         // ─────────────────────────────────────────────────────────────────────
         // ─────────────────────────────────────────────────────────────────────
@@ -346,6 +377,18 @@ export class TiryaqStack extends cdk.Stack {
                 gender: { required: true, mutable: true },
                 phoneNumber: { required: false, mutable: true },
                 birthdate: { required: false, mutable: true }
+            },
+            // ─────────────────────────────────────────────────────────────
+            // Step 2 — Multi-tenant foundation.
+            // `custom:tenantId` is the opaque ID (e.g. T_a1b2c3d4) that
+            // ties a user to one hospital customer. Injected into the JWT
+            // by the pre-token-generation Lambda and read by every backend
+            // Lambda to scope DynamoDB queries. Mutable=true so the
+            // operator console can re-assign a user (rare, but possible
+            // for cross-hospital transfers).
+            // ─────────────────────────────────────────────────────────────
+            customAttributes: {
+                tenantId: new cognito.StringAttribute({ mutable: true, minLen: 1, maxLen: 64 })
             },
             passwordPolicy: {
                 minLength: 12,
@@ -430,11 +473,55 @@ export class TiryaqStack extends cdk.Stack {
         };
 
         // ─────────────────────────────────────────────────────────────────────
+        // Step 3 — Per-tenant KMS keys for PHI envelope encryption.
+        //
+        // Keys are created OUTSIDE CDK (via AWS Console / CLI) so they survive
+        // stack rebuilds and don't count against the 500-resource ceiling.
+        // The key policies whitelist any role matching
+        // `TiryaqCdkStack-*ServiceRole*` — that's every Lambda execution role
+        // in this stack, automatically. No IAM grant from CDK is needed.
+        //
+        // To onboard a new tenant: create a CMK in us-east-1 with alias
+        // `akwadona-tenant-<slug>`, apply the standard key policy template,
+        // then add its tenantId → ARN entry below and redeploy.
+        // ─────────────────────────────────────────────────────────────────────
+        const tenantKeys: Record<string, string> = {
+            'T_2572fc71': 'arn:aws:kms:us-east-1:483176634665:key/11b1386b-51c2-41ab-b5ba-aa6eb9a0e8a6', // Tiryaq
+            'T_a4b8aef9': 'arn:aws:kms:us-east-1:483176634665:key/c1c1657b-b3f9-41a9-a816-dee382e00bb1'  // Alshifaa
+        };
+
+        // ─────────────────────────────────────────────────────────────────────
+        // Step 4 — Per-tenant KMS HMAC keys for searchable hashed fields.
+        //
+        // PHI fields like `qid`, `email`, `phone` are now encrypted (Step 3),
+        // so equality lookups (find patient by QID) no longer work — every
+        // encryption uses a fresh IV, so the same plaintext produces different
+        // ciphertext each time. To restore search we store an HMAC-SHA256
+        // hash alongside the ciphertext: deterministic per (tenant, plaintext),
+        // one-way (can't reverse), tenant-scoped (different tenants produce
+        // different hashes for the same input).
+        //
+        // KMS HMAC keys keep the secret inside the FIPS 140-2 HSM — the
+        // hashing call goes to KMS, the Lambda never sees the secret.
+        // ─────────────────────────────────────────────────────────────────────
+        const tenantHmacKeys: Record<string, string> = {
+            'T_2572fc71': 'arn:aws:kms:us-east-1:483176634665:key/601f8aab-f37c-4786-a557-afc12cb864e8', // Tiryaq HMAC
+            'T_a4b8aef9': 'arn:aws:kms:us-east-1:483176634665:key/0a23ea33-4659-4f37-a4a2-a62366010bcd'  // Alshifaa HMAC
+        };
+
+        // ─────────────────────────────────────────────────────────────────────
         // Shared Lambda environment + helper
         // ─────────────────────────────────────────────────────────────────────
         const sharedEnv = {
             TABLE_NAME: 'Hospital',
-            USER_POOL_ID: userPool.userPoolId
+            USER_POOL_ID: userPool.userPoolId,
+            // JSON map: tenantId → KMS key ARN. The crypto helper in each
+            // Lambda parses this once and uses it to encrypt/decrypt PHI.
+            TENANT_KEYS: JSON.stringify(tenantKeys),
+            // Step 4 — JSON map: tenantId → KMS HMAC key ARN. Used by the
+            // crypto helper's computeHmac() to produce searchable hashes of
+            // PHI fields. Never sees the key material — KMS runs the MAC.
+            TENANT_HMAC_KEYS: JSON.stringify(tenantHmacKeys)
         };
 
         // Lambda factory.
@@ -859,11 +946,19 @@ exports.handler = async (event) => {
         // for dev. Wildcard origins are forbidden — they enable cross-site data
         // exfiltration from the patient's browser.
         // ─────────────────────────────────────────────────────────────────────
+        // Step 2 / Step 3 fix — every tenant subdomain must be on this list,
+        // otherwise the browser rejects API calls from tiryaq.akwadona.com,
+        // alshifaa.akwadona.com, etc. Add the new slug here whenever a
+        // tenant is onboarded (same list lives in src/app/services/tenant.service.ts).
+        const tenantSlugs = ['tiryaq', 'alshifaa'];
+        const tenantOrigins = tenantSlugs.map(slug => `https://${slug}.akwadona.com`);
+
         const allowedOrigins = [
             'http://localhost:4200',
             'https://d6i7iwknkj0bg.cloudfront.net',
             'https://akwadona.com',
-            'https://www.akwadona.com'
+            'https://www.akwadona.com',
+            ...tenantOrigins
         ];
         const api = new apigwv2.HttpApi(this, 'TiryaqHttpApi', {
             apiName: 'tiryaq-api',

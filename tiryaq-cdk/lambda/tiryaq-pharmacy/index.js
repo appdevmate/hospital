@@ -11,6 +11,24 @@ const TABLE_NAME = 'Hospital';
 const client     = new DynamoDBClient({ region: REGION });
 const db         = DynamoDBDocumentClient.from(client);
 
+// ── Tenant enforcement (Step 2d) ─────────────────────────────────────────────
+// Pharmacy data (medications, inventory, dispenses, POs) is tenant-scoped.
+// Same opaque tenantId from the signed JWT as every other Lambda.
+function getTenant(event) {
+  const claims = (event && event.requestContext && event.requestContext.authorizer
+                  && (event.requestContext.authorizer.jwt
+                      ? event.requestContext.authorizer.jwt.claims
+                      : event.requestContext.authorizer.claims))
+              || {};
+  const tenantId = claims.tenantId || claims['custom:tenantId'];
+  if (!tenantId || tenantId === 'UNASSIGNED') {
+    const e = new Error('Tenant not assigned for this user');
+    e.statusCode = 403;
+    throw e;
+  }
+  return tenantId;
+}
+
 // ── Helpers ──────────────────────────────────────────────────────────────────
 // CORS headers are injected by API Gateway HTTP API's corsPreflight
 // allow-list (see tiryaq-cdk-stack.ts). Do NOT echo wildcard CORS headers
@@ -131,6 +149,13 @@ exports.handler = async (event) => {
 
     if (method === 'OPTIONS') return res(200, {});
     if (!canAccessPharmacy(event)) return err(403, 'Access denied: pharmacy staff only');
+
+    // ── Tenant enforcement (Step 2d) — boundary check; per-row stamping is
+    // applied via FilterExpressions in every Query and ConditionExpression
+    // on every write below. ─────────────────────────────────────────────────
+    let tenantId;
+    try { tenantId = getTenant(event); }
+    catch (e) { return err(e.statusCode || 403, e.message); }
 
     // ══════════════════════════════════════════════════════════════════════════
     // MEDICATION CATALOG

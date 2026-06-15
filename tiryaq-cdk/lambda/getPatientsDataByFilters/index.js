@@ -2,6 +2,9 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const { DynamoDBDocumentClient, QueryCommand } = require('@aws-sdk/lib-dynamodb');
 
+// Step 3 — PHI decryption. ./crypto.js synced from _shared/.
+const { decryptItems, PATIENT_PHI_FIELDS } = require('./crypto');
+
 const client = new DynamoDBClient({ region: 'us-east-1' });
 const ddb = DynamoDBDocumentClient.from(client);
 
@@ -13,7 +16,35 @@ const encodeLEK = (obj) => obj ? Buffer.from(JSON.stringify(obj)).toString('base
 const decodeLEK = (s) => s ? JSON.parse(Buffer.from(s, 'base64').toString('utf8')) : undefined;
 const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
 
+// ── Tenant enforcement (Step 2d) ─────────────────────────────────────────────
+function getTenant(event) {
+  const claims = (event && event.requestContext && event.requestContext.authorizer
+                  && (event.requestContext.authorizer.jwt
+                      ? event.requestContext.authorizer.jwt.claims
+                      : event.requestContext.authorizer.claims))
+              || {};
+  const tenantId = claims.tenantId || claims['custom:tenantId'];
+  if (!tenantId || tenantId === 'UNASSIGNED') {
+    const e = new Error('Tenant not assigned for this user');
+    e.statusCode = 403;
+    throw e;
+  }
+  return tenantId;
+}
+
 exports.handler = async (event) => {
+  if (event && event._warmup) return { ok: true, warmed: true };
+
+  let tenantId;
+  try { tenantId = getTenant(event); }
+  catch (e) {
+    return {
+      statusCode: e.statusCode || 403,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: e.message })
+    };
+  }
+
   try {
     const q = event.queryStringParameters || {};
     const pageSize = clamp(parseInt(q.pageSize, 10) || 50, 1, 200);
@@ -64,16 +95,24 @@ exports.handler = async (event) => {
     if (dobFrom) { names['#dob'] = 'dob'; values[':dobFrom'] = dobFrom; filters.push('#dob >= :dobFrom'); }
     if (dobTo) { names['#dob'] = 'dob'; values[':dobTo'] = dobTo; filters.push('#dob <= :dobTo'); }
 
-    if (filters.length) {
-      input.FilterExpression = filters.join(' AND ');
-      input.ExpressionAttributeNames = { ...(input.ExpressionAttributeNames || {}), ...names };
-      input.ExpressionAttributeValues = { ...(input.ExpressionAttributeValues || {}), ...values };
-    }
+    // Step 2d — always scope to caller's tenant. GSI1/GSI2 are not
+    // partitioned by tenantId, so we use FilterExpression. The post-query
+    // .filter() below is defence-in-depth.
+    names['#__tid'] = 'tenantId';
+    values[':__tid'] = tenantId;
+    filters.push('#__tid = :__tid');
+
+    input.FilterExpression = filters.join(' AND ');
+    input.ExpressionAttributeNames = { ...(input.ExpressionAttributeNames || {}), ...names };
+    input.ExpressionAttributeValues = { ...(input.ExpressionAttributeValues || {}), ...values };
 
     const { Items = [], LastEvaluatedKey } = await ddb.send(new QueryCommand(input));
 
-    // Return only the profile fields you render (optional ProjectionExpression above)
-    const out = Items.map(it => ({
+    // Step 3 — bulk-decrypt matching items before shaping the response.
+    const matched = Items.filter(it => it.tenantId === tenantId);
+    await decryptItems(matched, PATIENT_PHI_FIELDS, tenantId);
+
+    const out = matched.map(it => ({
       PK: it.PK,
       name: it.name,
       gender: it.gender,

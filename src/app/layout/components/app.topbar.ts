@@ -20,6 +20,7 @@ import { Router } from '@angular/router';
 import { NotificationsService, Notification } from '@/services/notifications.service';
 import { AuthService } from '@/services/auth.service';
 import { OfflineService } from '@/services/offline.service';
+import { TenantService } from '@/services/tenant.service';
 
 @Component({
     selector: '[app-topbar]',
@@ -28,8 +29,15 @@ import { OfflineService } from '@/services/offline.service';
     template: `
         <div class="layout-topbar">
             <a class="app-logo" routerLink="/">
-                <img alt="app logo" [src]="logo" />
+                <!-- Step 1: text-only brand — no logo image, no icon. The
+                     legacy tiryaq_logo_v5.png had "Tiryaq" baked into the
+                     image. The product brand "Akwadona" is shown as plain
+                     HTML text + a per-tenant pill ("Tiryaq Hospital" /
+                     "Alshifaa Hospital") fed by TenantService. -->
                 <span class="app-name">Akwadona</span>
+                @if (tenantDisplayName) {
+                    <span class="tenant-badge" [title]="'Tenant: ' + tenantDisplayName">{{ tenantDisplayName }}</span>
+                }
             </a>
 
             <button #menubutton class="topbar-menubutton p-link" type="button" (click)="onMenuButtonClick()">
@@ -172,13 +180,36 @@ import { OfflineService } from '@/services/offline.service';
             .app-logo {
                 display: flex;
                 align-items: center;
-                gap: 0.75rem;
+                gap: 0.5rem;
+                text-decoration: none;
+                /* Legacy logo image removed from the template — keep this
+                   rule in case any cached template still renders the <img>. */
                 img {
-                    height: 100px;
-                    width: auto;
+                    display: none;
                 }
                 .app-name {
+                    /* The Verona theme's slim-sidebar SCSS hides every <span>
+                       inside .app-logo at min-width:992px. Force it back so
+                       the Akwadona brand text stays visible. */
+                    display: inline-block !important;
                     font-size: 1.5rem;
+                    font-weight: 700;
+                    color: #111827;
+                    margin-left: 0;
+                    letter-spacing: -0.01em;
+                }
+                .tenant-badge {
+                    /* Same slim-sidebar override applies to this badge. */
+                    display: inline-block !important;
+                    margin-left: 0.5rem;
+                    padding: 0.15rem 0.55rem;
+                    font-size: 0.8rem;
+                    font-weight: 600;
+                    color: #047857;
+                    background: #d1fae5;
+                    border-radius: 999px;
+                    line-height: 1.2;
+                    white-space: nowrap;
                 }
             }
         }
@@ -311,6 +342,16 @@ export class AppTopbar implements OnInit {
     private http = inject(HttpClient);
     private router = inject(Router);
     private offline = inject(OfflineService);
+    private tenant = inject(TenantService);
+
+    // ── Step 2e: tenant display ───────────────────────────────────────────
+    // Friendly name pulled from subdomain — read-only label so the doctor
+    // / admin always knows which hospital scope they're working in.
+    get tenantDisplayName(): string | null {
+        const slug = this.tenant.slug;
+        if (!slug || slug === 'www') return null;
+        return this.tenant.displayName;
+    }
 
     // ── Phase E: offline status + pending count ───────────────────────────
     isOnline = typeof navigator !== 'undefined' ? navigator.onLine : true;

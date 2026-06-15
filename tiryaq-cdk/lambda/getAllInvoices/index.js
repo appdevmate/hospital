@@ -7,6 +7,22 @@ const ddb = DynamoDBDocumentClient.from(client);
 const TABLE = 'Hospital';
 const GSI   = 'doctorEmail-createdAt-index';
 
+// ── Tenant enforcement (Step 2d) ─────────────────────────────────────────────
+function getTenant(event) {
+  const claims = (event && event.requestContext && event.requestContext.authorizer
+                  && (event.requestContext.authorizer.jwt
+                      ? event.requestContext.authorizer.jwt.claims
+                      : event.requestContext.authorizer.claims))
+              || {};
+  const tenantId = claims.tenantId || claims['custom:tenantId'];
+  if (!tenantId || tenantId === 'UNASSIGNED') {
+    const e = new Error('Tenant not assigned for this user');
+    e.statusCode = 403;
+    throw e;
+  }
+  return tenantId;
+}
+
 const encodeLEK = (obj) => obj ? Buffer.from(JSON.stringify(obj)).toString('base64') : null;
 const decodeLEK = (s)   => s   ? JSON.parse(Buffer.from(s, 'base64').toString('utf8')) : undefined;
 const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
@@ -29,6 +45,11 @@ function getCaller(event) {
 
 exports.handler = async (event) => {
     if (event && event._warmup) return { ok: true, warmed: true };
+
+    let tenantId;
+    try { tenantId = getTenant(event); }
+    catch (e) { return { statusCode: e.statusCode || 403, body: JSON.stringify({ message: e.message }) }; }
+
     try {
         const q        = event.queryStringParameters || {};
         const caller   = getCaller(event);
@@ -50,13 +71,14 @@ exports.handler = async (event) => {
         let lastEvaluatedKey;
 
         if (doctorEmail) {
-            // ── Doctor role: query GSI by doctorEmail ──────────────────
+            // ── Doctor role: query GSI by doctorEmail + tenant filter ──
             const result = await ddb.send(new QueryCommand({
                 TableName:                 TABLE,
                 IndexName:                 GSI,
                 KeyConditionExpression:    'doctorEmail = :email',
-                FilterExpression:          'EntityType = :type',
-                ExpressionAttributeValues: { ':email': doctorEmail, ':type': 'PAYMENT' },
+                FilterExpression:          'EntityType = :type AND #__tid = :__tid',
+                ExpressionAttributeNames:  { '#__tid': 'tenantId' },
+                ExpressionAttributeValues: { ':email': doctorEmail, ':type': 'PAYMENT', ':__tid': tenantId },
                 ExclusiveStartKey:         lastKey,
                 ScanIndexForward:          false
             }));
@@ -64,15 +86,12 @@ exports.handler = async (event) => {
             lastEvaluatedKey = result.LastEvaluatedKey;
 
         } else {
-            // ── Admin role: Query EntityType-index (NOT a full table scan)
-            // The previous implementation did a full DynamoDB Scan + filter,
-            // which times out at ~30 s once the table holds more than a few
-            // hundred thousand rows of any entity type.
+            // ── Admin role: per-tenant GSI scoped to tenantId + PAYMENT ──
             const result = await ddb.send(new QueryCommand({
                 TableName:                 TABLE,
-                IndexName:                 'EntityType-index',
-                KeyConditionExpression:    'EntityType = :type',
-                ExpressionAttributeValues: { ':type': 'PAYMENT' },
+                IndexName:                 'tenant-entityType-index',
+                KeyConditionExpression:    'tenantId = :tid AND EntityType = :type',
+                ExpressionAttributeValues: { ':tid': tenantId, ':type': 'PAYMENT' },
                 Limit:                     pageSize,
                 ExclusiveStartKey:         lastKey,
                 ScanIndexForward:          false
@@ -80,6 +99,9 @@ exports.handler = async (event) => {
             items            = result.Items || [];
             lastEvaluatedKey = result.LastEvaluatedKey;
         }
+
+        // Defence-in-depth — drop any row missing tenantId or mismatched.
+        items = items.filter(i => i.tenantId === tenantId);
 
         return {
             statusCode: 200,

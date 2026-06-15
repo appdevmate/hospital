@@ -7,6 +7,22 @@ const ddb = DynamoDBDocumentClient.from(new DynamoDBClient({ region: REGION }));
 
 const hdrs = { 'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true' };
 
+// ── Tenant enforcement (Step 2d) ─────────────────────────────────────────────
+function getTenant(event) {
+  const claims = (event && event.requestContext && event.requestContext.authorizer
+                  && (event.requestContext.authorizer.jwt
+                      ? event.requestContext.authorizer.jwt.claims
+                      : event.requestContext.authorizer.claims))
+              || {};
+  const tenantId = claims.tenantId || claims['custom:tenantId'];
+  if (!tenantId || tenantId === 'UNASSIGNED') {
+    const e = new Error('Tenant not assigned for this user');
+    e.statusCode = 403;
+    throw e;
+  }
+  return tenantId;
+}
+
 // ── Idempotency (Phase D) ────────────────────────────────────────────────────
 function getClientRequestId(event) {
   const h = event.headers || {};
@@ -62,6 +78,11 @@ exports.handler = async (event) => {
   if (!isAdminOrDeveloper(event)) {
     return { statusCode: 403, headers: hdrs, body: JSON.stringify({ message: 'Access denied: deleting patients is admin-only' }) };
   }
+
+  let tenantId;
+  try { tenantId = getTenant(event); }
+  catch (e) { return { statusCode: e.statusCode || 403, headers: hdrs, body: JSON.stringify({ message: e.message }) }; }
+
   const cid = getClientRequestId(event);
   const cached = await checkIdempotency(cid);
   if (cached) return cached;
@@ -81,30 +102,32 @@ exports.handler = async (event) => {
             TableName: TABLE,
             Key: { PK: `PATIENT#${id}`, SK: 'PROFILE' },
             UpdateExpression: 'SET #deletedAt = :now',
+            // Step 2d: must belong to caller's tenant; ConditionalCheckFailed → 404.
             ConditionExpression:
-              'attribute_exists(PK) AND attribute_exists(SK) AND #type = :t AND ' +
+              'attribute_exists(PK) AND attribute_exists(SK) AND #type = :t AND #tid = :tid AND ' +
               '(attribute_not_exists(#deletedAt) OR attribute_type(#deletedAt, :nullType) OR #deletedAt = :empty OR #deletedAt = :nullStr)',
             ExpressionAttributeNames: {
               '#type': 'EntityType',
-              '#deletedAt': 'deletedAt'
+              '#deletedAt': 'deletedAt',
+              '#tid': 'tenantId'
             },
             ExpressionAttributeValues: {
               ':t': 'PATIENT',
               ':now': now,
+              ':tid': tenantId,
               ':nullType': 'NULL',
               ':empty': '',
               ':nullStr': 'null'
             }
-          }        
+          }
         },
         {
           Update: {
             TableName: TABLE,
-            Key: { PK: 'COUNTER#PATIENTS', SK: 'TOTAL' },
-            // prevent negative drift if attribute missing: init to 0 then add -1
-            UpdateExpression: 'SET #total = if_not_exists(#total, :zero) + :dec',
+            Key: { PK: `COUNTER#PATIENTS#${tenantId}`, SK: 'TOTAL' },
+            UpdateExpression: 'SET #total = if_not_exists(#total, :zero) + :dec, tenantId = :tid, EntityType = :et',
             ExpressionAttributeNames: { '#total': 'total' },
-            ExpressionAttributeValues: { ':zero': 0, ':dec': -1 }
+            ExpressionAttributeValues: { ':zero': 0, ':dec': -1, ':tid': tenantId, ':et': 'COUNTER' }
           }
         }
       ]

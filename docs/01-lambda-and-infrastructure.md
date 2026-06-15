@@ -3,6 +3,8 @@
 > **Product name:** Akwadona. **Customers (tenants):** Tiryaq, Alshifaa, ...
 > Internal AWS resource names (`TiryaqCdkStack`, `tiryaq-*` Lambdas, `tiryaq-user-pool`, S3 buckets) are kept as-is for now; they are infrastructure identifiers, not the product brand. A separate migration step will rename them.
 
+> **Multi-tenant model (Step 2):** Pooled tenancy — one DynamoDB table, one Cognito pool, one set of Lambdas, scoped per customer by the opaque `tenantId` claim in the signed JWT. Each row carries `tenantId`; reads use the `tenant-entityType-index` GSI; writes use ConditionExpression `tenantId = :tid`. Full design and per-Lambda coverage status: see `akwadona-multitenant-setup.md`.
+
 Single reference for the backend. Covers the AWS infrastructure, every Lambda function (what it does + why), the database shape, security, and a code-review register at the end. Plain English, bullet points, glossary at the bottom.
 
 ---

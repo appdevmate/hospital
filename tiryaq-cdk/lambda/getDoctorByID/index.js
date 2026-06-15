@@ -1,17 +1,36 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const { DynamoDBDocumentClient, GetCommand } = require('@aws-sdk/lib-dynamodb');
 
+// Step 3 — PHI envelope decryption. ./crypto.js synced from _shared/.
+const { decryptItem, DOCTOR_PHI_FIELDS } = require('./crypto');
+
 const REGION = 'us-east-1';
 const TABLE = 'Hospital';
 const ddb = DynamoDBDocumentClient.from(new DynamoDBClient({ region: REGION }));
 
 const hdrs = { 'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true' };
 
+// ── Tenant enforcement (Step 2d) — inlined from _shared/tenant.js ──
+function getTenant(event) {
+  const claims = (event && event.requestContext && event.requestContext.authorizer
+                  && (event.requestContext.authorizer.jwt
+                      ? event.requestContext.authorizer.jwt.claims
+                      : event.requestContext.authorizer.claims))
+              || {};
+  const tenantId = claims.tenantId || claims['custom:tenantId'];
+  if (!tenantId || tenantId === 'UNASSIGNED') {
+    const e = new Error('Tenant not assigned for this user');
+    e.statusCode = 403;
+    throw e;
+  }
+  return tenantId;
+}
+
 function extractId(raw) {
   if (!raw) return '';
   const s = decodeURIComponent(String(raw)).trim();
   const i = s.indexOf('#');
-  return i >= 0 ? s.slice(i + 1) : s; // supports "DOCTOR#<id>" or "<id>"
+  return i >= 0 ? s.slice(i + 1) : s;
 }
 
 function isSoftDeleted(item) {
@@ -20,6 +39,12 @@ function isSoftDeleted(item) {
 }
 
 exports.handler = async (event) => {
+  if (event && event._warmup) return { ok: true, warmed: true };
+
+  let tenantId;
+  try { tenantId = getTenant(event); }
+  catch (e) { return { statusCode: e.statusCode || 403, headers: hdrs, body: JSON.stringify({ message: e.message }) }; }
+
   try {
     const id = extractId(
       event?.pathParameters?.doctorID ??
@@ -33,11 +58,14 @@ exports.handler = async (event) => {
       Key: { PK: `DOCTOR#${id}`, SK: 'PROFILE' }
     }));
 
-    if (!Item || Item.EntityType !== 'DOCTOR' || isSoftDeleted(Item)) {
+    // Step 2d: cross-tenant → 404, never disclose existence.
+    if (!Item || Item.EntityType !== 'DOCTOR' || Item.tenantId !== tenantId || isSoftDeleted(Item)) {
       return { statusCode: 404, headers: hdrs, body: JSON.stringify({ message: 'Doctor not found' }) };
     }
 
-    // Strip keys and return all doctor attributes
+    // Step 3 — decrypt PHI fields before returning.
+    await decryptItem(Item, DOCTOR_PHI_FIELDS, tenantId);
+
     const { PK, SK, EntityType, ...attrs } = Item;
 
     return {
@@ -45,7 +73,7 @@ exports.handler = async (event) => {
       headers: hdrs,
       body: JSON.stringify({
         message: 'Doctor retrieved',
-        data: { id, ...attrs } // includes name, gender, insurance, department, specialization, phone, qid, dob, timestamp, status, hiringDate, etc.
+        data: { id, ...attrs }
       })
     };
   } catch (err) {
