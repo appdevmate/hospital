@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { AppMenuitem } from './app.menuitem';
 import { AuthService } from '@/services/auth.service';
+import { TenantService } from '@/services/tenant.service';
 
 @Component({
     selector: '[app-menu]',
@@ -26,6 +27,7 @@ import { AuthService } from '@/services/auth.service';
 export class AppMenu implements OnInit {
     el: ElementRef = inject(ElementRef);
     private auth = inject(AuthService);
+    private tenant = inject(TenantService);
     @ViewChild('menuContainer') menuContainer!: ElementRef;
 
     model: MenuItem[] = [];
@@ -36,6 +38,20 @@ export class AppMenu implements OnInit {
         const isDoctor = this.auth.isDoctor;
         const isDeveloper = this.auth.isDeveloper;
         const isPharmacist = this.auth.isPharmacist;
+
+        // ── Step 7g — Operator menu (platform admin only, no tenant nav) ──
+        // The operator never works inside a hospital, so we never show
+        // Calendar / Appointments / Patients / Doctors / Documents etc.
+        // Modeled after Stripe Connect / Vercel Teams admin nav.
+        if (this.tenant.isOperator) {
+            this.model = [
+                { label: 'Tenants',     icon: 'pi pi-building', routerLink: ['/operator'] },
+                { label: 'Usage',       icon: 'pi pi-chart-line', routerLink: ['/operator'], fragment: 'usage' },
+                { label: 'Compliance',  icon: 'pi pi-verified', routerLink: ['/operator'], fragment: 'compliance' },
+                { label: 'Audit',       icon: 'pi pi-history', routerLink: ['/operator'], fragment: 'audit' }
+            ];
+            return;
+        }
 
         const developerItems: MenuItem[] = [
             { label: 'Dashboard', icon: 'pi pi-desktop', routerLink: ['/'] },

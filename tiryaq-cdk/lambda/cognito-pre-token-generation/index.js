@@ -31,10 +31,18 @@ exports.handler = async (event) => {
     // Cognito stores custom attributes under "custom:<name>".
     const tenantId = attrs['custom:tenantId'] || 'UNASSIGNED';
 
+    // Step 7 — Operator detection. Cognito provides group membership via
+    // request.groupConfiguration.groupsToOverride (V3_0 trigger). We mark
+    // operator users with `role: "operator"` so backend Lambdas can route
+    // them to operator endpoints without using tenantId.
+    const groups = (event.request && event.request.groupConfiguration && event.request.groupConfiguration.groupsToOverride) || [];
+    const isOperator = Array.isArray(groups) && groups.includes('Operator');
+
     const claimsToAddOrOverride = {
         email:    attrs.email || '',
         name:     attrs.name  || '',
-        tenantId: tenantId
+        tenantId: tenantId,
+        role:     isOperator ? 'operator' : 'tenant_user'
     };
 
     event.response = {

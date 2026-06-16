@@ -438,7 +438,12 @@ export class TiryaqStack extends cdk.Stack {
             cognitoDomain: { domainPrefix: 'tiryaq-hospital' }
         });
 
-        ['Admin', 'Developers', 'Doctors', 'Pharmacists'].forEach((groupName) => {
+        // Step 7 — Add `Operator` group for Akwadona platform staff. Members
+        // of this group access the operator console at www.akwadona.com,
+        // bypass tenantId checks, but have NO kms:Decrypt on any tenant key
+        // (enforced by the key-policy condition that matches only Lambda
+        // execution roles, not human-derived JWT claims).
+        ['Admin', 'Developers', 'Doctors', 'Pharmacists', 'Operator'].forEach((groupName) => {
             new cognito.CfnUserPoolGroup(this, `Group${groupName}`, {
                 userPoolId: userPool.userPoolId,
                 groupName,
@@ -561,7 +566,9 @@ export class TiryaqStack extends cdk.Stack {
         const getPaymentByIDFn = fn('GetPaymentByID', 'getPaymentByID', 'index.handler');
         const deletePaymentFn = fn('DeletePayment', 'deletePayment', 'index.handler');
         const getAllInvoicesFn = fn('GetAllInvoices', 'getAllInvoices', 'index.handler', lambda.Runtime.NODEJS_24_X);
-        const createPatientSurgeryFn = fn('CreatePatientSurgery', 'createPatientSurgery', 'index.handler');
+        // createPatientSurgeryFn removed (was an unimplemented stub) to free
+        // CFN resources for the operator console. Re-add when the surgery
+        // module is built out.
         const listAllSurgeriesForPatientByIDFn = fn('ListAllSurgeriesForPatientByID', 'listAllSurgeriesForPatientByID', 'index.handler');
         const getSurgeryByIDFn = fn('GetSurgeryByID', 'getSurgeryByID', 'index.handler');
         const getAllDepartmentsFn = fn('GetAllDepartments', 'getAllDepartments', 'index.handler');
@@ -573,6 +580,26 @@ export class TiryaqStack extends cdk.Stack {
         const bulkCreateSpecializationsFn = fn('BulkCreateSpecializations', 'bulkCreateSpecializations', 'index.handler');
         const deleteAllSpecializationsFn = fn('DeleteAllSpecializations', 'deleteAllSpecializations', 'index.handler');
         const adminPanelFn = fn('TiryaqAdminPanel', 'tiryaq-admin-panel', 'index.handler', lambda.Runtime.NODEJS_20_X);
+        // Step 7 — Operator console backend.
+        // Read-mostly Lambda that surfaces tenant metadata, counts, and
+        // audit metadata to the operator UI at www.akwadona.com. By
+        // convention it never calls KMS Decrypt on tenant data — see the
+        // top-of-file comment in tiryaq-operator-console/index.js.
+        const operatorConsoleFn = fn('TiryaqOperatorConsole', 'tiryaq-operator-console', 'index.handler', lambda.Runtime.NODEJS_20_X, {
+            API_ID: 'jxz59jh15f',
+            USER_POOL_ID: 'us-east-1_RACghntmS',
+            CLOUDFRONT_DISTRIBUTION_ID: 'E1Z1ZKYM74LVA7'
+        });
+        // Step 7g — platform-admin metrics need CloudWatch + Cognito list access.
+        // Read-only — no business data.
+        operatorConsoleFn.addToRolePolicy(new iam.PolicyStatement({
+            actions: ['cloudwatch:GetMetricData', 'cloudwatch:GetMetricStatistics'],
+            resources: ['*']
+        }));
+        operatorConsoleFn.addToRolePolicy(new iam.PolicyStatement({
+            actions: ['cognito-idp:ListUsersInGroup'],
+            resources: [userPool.userPoolArn]
+        }));
         const examinationsFn = fn('TiryaqExaminations', 'tiryaq-examinations', 'index.handler', lambda.Runtime.NODEJS_24_X);
         const pharmacyFn = fn('TiryaqPharmacy', 'tiryaq-pharmacy', 'index.handler', lambda.Runtime.NODEJS_24_X);
         const documentManagerFn = fn('TiryaqDocumentManager', 'tiryaq-document-manager', 'index.handler', lambda.Runtime.NODEJS_24_X);
@@ -646,7 +673,6 @@ export class TiryaqStack extends cdk.Stack {
             getPaymentByIDFn,
             deletePaymentFn,
             getAllInvoicesFn,
-            createPatientSurgeryFn,
             listAllSurgeriesForPatientByIDFn,
             getSurgeryByIDFn,
             getAllDepartmentsFn,
@@ -658,6 +684,7 @@ export class TiryaqStack extends cdk.Stack {
             bulkCreateSpecializationsFn,
             deleteAllSpecializationsFn,
             adminPanelFn,
+            operatorConsoleFn,
             examinationsFn,
             pharmacyFn,
             documentManagerFn,
@@ -676,32 +703,12 @@ export class TiryaqStack extends cdk.Stack {
             tiryaqDataKey.grantEncryptDecrypt(f);
         });
 
-        // ─────────────────────────────────────────────────────────────────────
-        // Lambda warmer — pings auth-critical and dashboard Lambdas every 5
-        // minutes so first-user-of-the-day doesn't pay the cold-start tax.
-        // Each ping costs $0 (the Lambda short-circuits on a `_warmup` event).
-        // ─────────────────────────────────────────────────────────────────────
-        // Warm only the auth-critical + dashboard Lambdas (max 5 per rule —
-        // EventBridge limit — and keeping the count low because we're near
-        // the CloudFormation 500-resource-per-stack ceiling). The rest of
-        // the Lambdas can cold-start on their first user-driven call.
-        const warmTargets = [
-            preTokenFn,         // every sign-in goes through this
-            appointmentsFn,    // dashboard + appointments page
-            getAllPatientsFn,  // dashboard + patients page
-            getAllDoctorsFn,   // dashboard + doctors page
-            getAllInvoicesFn   // dashboard + invoices page
-        ].filter(Boolean) as lambda.Function[];
-
-        const warmerRule = new events.Rule(this, 'TiryaqLambdaWarmer', {
-            description: 'Keeps auth + dashboard Lambdas warm to eliminate cold-start latency.',
-            schedule: events.Schedule.rate(cdk.Duration.minutes(5))
-        });
-        warmTargets.forEach((target, i) => {
-            warmerRule.addTarget(new eventsTargets.LambdaFunction(target, {
-                event: events.RuleTargetInput.fromObject({ _warmup: true, idx: i })
-            }));
-        });
+        // Step 7 cleanup — EventBridge warmer removed to free CFN resources
+        // for the operator console. At our traffic levels Lambda containers
+        // stay warm naturally, and the warmer's 6 resources (1 rule + 5
+        // Lambda permissions) were eating into our 500-resource budget.
+        // The Lambdas still short-circuit on `_warmup` events so any future
+        // re-introduction (or external pinger) works without code change.
 
         // Seed Lambda also writes to the encrypted table.
         // (granted further down where seedFn is defined.)
@@ -1006,7 +1013,7 @@ exports.handler = async (event) => {
         route('/payments', [apigwv2.HttpMethod.GET], listAllPaymentsForPatientByIDFn);
         route('/invoices', [apigwv2.HttpMethod.GET], getAllInvoicesFn);
         route('/patients/{patientID}/surgeries', [apigwv2.HttpMethod.GET], listAllSurgeriesForPatientByIDFn);
-        route('/patients/{patientID}/surgeries', [apigwv2.HttpMethod.POST], createPatientSurgeryFn);
+        // /patients/{patientID}/surgeries POST removed with createPatientSurgeryFn stub.
         route('/surgeries/{surgeryID}', [apigwv2.HttpMethod.GET], getSurgeryByIDFn);
         route('/departments', [apigwv2.HttpMethod.GET], getAllDepartmentsFn);
         route('/departments', [apigwv2.HttpMethod.POST], createNewDepartmentFn);
@@ -1022,6 +1029,28 @@ exports.handler = async (event) => {
         route('/admin/users/{username}/enable', [apigwv2.HttpMethod.POST], adminPanelFn);
         route('/admin/users/{username}/set-password', [apigwv2.HttpMethod.POST], adminPanelFn);
         route('/admin/audit', [apigwv2.HttpMethod.GET], adminPanelFn);
+
+        // Step 7 — Operator console: single catch-all route. We deliberately
+        // use {proxy+} + ANY method to keep the resource count low (each
+        // path × method = a CFN route resource; we were near the 500
+        // ceiling). The Lambda parses the path itself. All requests still
+        // pass through the JWT authorizer; the Lambda then checks
+        // claims.role === 'operator'.
+        api.addRoutes({
+            path: '/operator/{proxy+}',
+            // NOT ANY — including OPTIONS routes preflight through the JWT
+            // authorizer, which 401s (browsers don't send Authorization on
+            // preflight). With explicit methods, API Gateway HTTP API handles
+            // OPTIONS itself using the corsPreflight config.
+            methods: [
+                apigwv2.HttpMethod.GET,
+                apigwv2.HttpMethod.POST,
+                apigwv2.HttpMethod.PATCH,
+                apigwv2.HttpMethod.DELETE
+            ],
+            integration: new HttpLambdaIntegration('OperatorConsoleProxy', operatorConsoleFn),
+            authorizer
+        });
         route('/examinations', [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.POST], examinationsFn);
         route('/examinations/{examId}', [apigwv2.HttpMethod.GET, apigwv2.HttpMethod.PATCH, apigwv2.HttpMethod.DELETE], examinationsFn);
         route('/examinations/{examId}/signoff', [apigwv2.HttpMethod.POST], examinationsFn);

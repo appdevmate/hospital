@@ -10,6 +10,7 @@ import { ConsultationDetailComponent } from '@/components/consultation/consultat
 import { ConsultationFormComponent } from '@/components/consultation/consultation-form/consultation-form';
 import { AdminPanelComponent } from '@/components/admin-panel/admin-panel';
 import { PharmacyComponent } from '@/components/pharmacy/pharmacy';
+import { operatorGuard } from './app/guards/operator.guard';
 
 const PATIENTS_ROLES: UserRole[] = ['admin', 'developer', 'doctor'];
 const ADMIN_ROLES: UserRole[] = ['admin', 'developer'];
@@ -82,7 +83,15 @@ export const appRoutes: Routes = [
             { path: 'appointments', data: { breadcrumb: 'Appointments' }, loadComponent: () => import('@/components/appointments/appointments').then((m) => m.AppointmentsComponent) },
             { path: 'invoices', data: { breadcrumb: 'Invoices' }, loadComponent: () => import('@/components/invoices/invoices').then((m) => m.InvoicesComponent) },
             { path: 'notifications', data: { breadcrumb: 'Notifications' }, loadComponent: () => import('@/components/notifications/notifications').then((m) => m.NotificationsComponent) },
-            { path: 'user-profile', data: { breadcrumb: 'Profile' }, component: UserProfileComponent }
+            { path: 'user-profile', data: { breadcrumb: 'Profile' }, component: UserProfileComponent },
+
+            // Operator console (www.akwadona.com) — Step 7
+            {
+                path: 'operator',
+                data: { breadcrumb: 'Operator Console' },
+                canActivate: [operatorGuard],
+                loadComponent: () => import('@/components/operator-console/operator-console').then((m) => m.OperatorConsoleComponent)
+            }
         ]
     },
     { path: 'notfound', loadComponent: () => import('@/components/notfound/notfound').then((c) => c.Notfound) },

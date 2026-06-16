@@ -64,17 +64,35 @@ export class TenantService {
     /** tenantId carried by the current access token (authoritative). */
     get tenantIdFromJwt(): string | null {
         if (this._jwtTenantId !== null) return this._jwtTenantId;
+        const c = this.jwtClaims();
+        this._jwtTenantId = c?.tenantId || null;
+        return this._jwtTenantId;
+    }
+
+    /** True when the JWT carries `role: operator` (Akwadona platform staff). */
+    get isOperator(): boolean {
+        return this.jwtClaims()?.role === 'operator';
+    }
+
+    /** True when the subdomain is `www` — the operator console origin. */
+    get isOperatorSubdomain(): boolean {
+        return this.slug === 'www';
+    }
+
+    /**
+     * Parse the JWT access token once per call. Lightweight enough that
+     * we don't bother caching the full payload, only the tenantId.
+     */
+    private jwtClaims(): any | null {
         try {
             const token = sessionStorage.getItem('accessToken') || '';
             if (!token || token.split('.').length !== 3) return null;
             const part = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
             const pad = part + '='.repeat((4 - (part.length % 4)) % 4);
-            const payload = JSON.parse(atob(pad));
-            this._jwtTenantId = payload?.tenantId || null;
+            return JSON.parse(atob(pad));
         } catch {
-            this._jwtTenantId = null;
+            return null;
         }
-        return this._jwtTenantId;
     }
 
     /**

@@ -35,7 +35,9 @@ import { TenantService } from '@/services/tenant.service';
                      HTML text + a per-tenant pill ("Tiryaq Hospital" /
                      "Alshifaa Hospital") fed by TenantService. -->
                 <span class="app-name">Akwadona</span>
-                @if (tenantDisplayName) {
+                @if (isOperator) {
+                    <span class="operator-badge" title="Akwadona platform staff — PHI-blind console">Operator</span>
+                } @else if (tenantDisplayName) {
                     <span class="tenant-badge" [title]="'Tenant: ' + tenantDisplayName">{{ tenantDisplayName }}</span>
                 }
             </a>
@@ -211,6 +213,19 @@ import { TenantService } from '@/services/tenant.service';
                     line-height: 1.2;
                     white-space: nowrap;
                 }
+                .operator-badge {
+                    display: inline-block !important;
+                    margin-left: 0.5rem;
+                    padding: 0.15rem 0.55rem;
+                    font-size: 0.8rem;
+                    font-weight: 700;
+                    color: #fff;
+                    background: #4338ca;
+                    border-radius: 999px;
+                    line-height: 1.2;
+                    white-space: nowrap;
+                    letter-spacing: 0.02em;
+                }
             }
         }
         .notif-header {
@@ -353,6 +368,12 @@ export class AppTopbar implements OnInit {
         return this.tenant.displayName;
     }
 
+    // ── Step 7: operator badge ────────────────────────────────────────────
+    // Shown instead of the tenant pill when the JWT carries role=operator.
+    get isOperator(): boolean {
+        return this.tenant.isOperator;
+    }
+
     // ── Phase E: offline status + pending count ───────────────────────────
     isOnline = typeof navigator !== 'undefined' ? navigator.onLine : true;
     pendingCount = 0;
@@ -454,7 +475,7 @@ export class AppTopbar implements OnInit {
     // ── Logout ────────────────────────────────────────────────────────────
     logout() {
         const clientId = '2nfjfipi8hri262pjohtpgl45q';
-        const authority = 'https://tiryaq-hospital.auth.us-east-1.amazoncognito.com';
+        const authority = 'https://auth.akwadona.com';
         const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
 
         const finish = () => {

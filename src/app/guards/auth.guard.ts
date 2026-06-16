@@ -39,16 +39,49 @@ export const authGuard: CanActivateFn = async (_route, state) => {
             sessionStorage.setItem('accessToken', accessToken);
         }
 
-        // ── Step 2e — tenant subdomain check ─────────────────────────────
-        // The signed-in user carries `tenantId` in the JWT (authoritative).
-        // The URL subdomain is just a brand label. If they don't agree, the
-        // user is on the wrong hospital's site — sign them out and bounce
-        // them to their own subdomain so they never see another tenant's
-        // page chrome (even though the backend would already refuse the
-        // data).
+        // ── Step 2e + 7 — tenant / operator subdomain check ──────────────
+        // The signed-in user carries `tenantId` + `role` in the JWT
+        // (authoritative). The URL subdomain is just a label. We enforce:
+        //   - operator on tenant subdomain → bounce to www
+        //   - non-operator on www subdomain → bounce to their tenant
+        //   - tenant user on wrong tenant subdomain → sign out + redirect
+        // The backend would already refuse the data — this prevents the
+        // user from even seeing the wrong page chrome.
         tenant.invalidate();
         const urlTid = tenant.tenantIdFromUrl;
         const jwtTid = tenant.tenantIdFromJwt;
+        const isOperator = tenant.isOperator;
+        const isOperatorSub = tenant.isOperatorSubdomain;
+
+        // Operator landed on a tenant subdomain → push to www
+        if (isOperator && !isOperatorSub && window.location.hostname.endsWith('.akwadona.com')) {
+            window.location.replace(`https://www.akwadona.com/operator`);
+            return false;
+        }
+
+        // Step 7g — operator on `/` (or any tenant route) → redirect to /operator.
+        // The dashboard / patients / appointments pages call tenant APIs that
+        // would fail with 403 for the operator anyway.
+        if (isOperator && state.url !== '/operator' && !state.url.startsWith('/operator')) {
+            return router.parseUrl('/operator');
+        }
+
+        // Non-operator landed on www → push to their tenant subdomain
+        if (!isOperator && isOperatorSub && window.location.hostname.endsWith('.akwadona.com')) {
+            const correctSlug = Object.entries({
+                'tiryaq': 'T_2572fc71',
+                'alshifaa': 'T_a4b8aef9'
+            }).find(([, id]) => id === jwtTid)?.[0];
+            if (correctSlug) {
+                window.location.replace(`https://${correctSlug}.akwadona.com/`);
+                return false;
+            }
+            // No matching subdomain → sign them out
+            try { oidc.logoff(); } catch { /* ignore */ }
+            sessionStorage.removeItem('accessToken');
+            return false;
+        }
+
         if (urlTid && jwtTid && urlTid !== jwtTid) {
             try { oidc.logoff(); } catch { /* fall through */ }
             sessionStorage.removeItem('accessToken');

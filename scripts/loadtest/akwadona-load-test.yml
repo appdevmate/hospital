@@ -1,0 +1,127 @@
+# Akwadona — Load test scenarios for Artillery
+#
+# Usage:
+#   cd scripts/loadtest
+#   npm install -g artillery   # one-time
+#
+#   # 1. Get a JWT manually (sign in as admin1 in the browser, copy accessToken).
+#   # 2. Export it before running:
+#   $env:AKWADONA_JWT = "eyJraWQiOi..."
+#   $env:AKWADONA_API_URL = "https://jxz59jh15f.execute-api.us-east-1.amazonaws.com"
+#
+#   artillery run akwadona-load-test.yml --output report.json
+#   artillery report report.json --output report.html
+#
+# Three phases simulate increasing load to find the breaking point:
+#   warmup       (60s @ 5  rps)  — proves the cold-start path works
+#   sustained    (300s @ 50 rps) — proves steady-state throughput
+#   peak         (60s @ 200 rps) — proves burst behaviour
+
+config:
+  target: '{{ $processEnvironment.AKWADONA_API_URL }}'
+  phases:
+    - name: 'Warmup'
+      duration: 60
+      arrivalRate: 5
+    - name: 'Sustained'
+      duration: 300
+      arrivalRate: 50
+    - name: 'Peak'
+      duration: 60
+      arrivalRate: 200
+  defaults:
+    headers:
+      Authorization: 'Bearer {{ $processEnvironment.AKWADONA_JWT }}'
+      Content-Type: 'application/json'
+  # Reports per-endpoint p50/p95/p99 latency + error rate.
+  ensure:
+    p95: 1000      # 95th-percentile latency must stay under 1 second
+    maxErrorRate: 1  # error rate must stay under 1%
+
+scenarios:
+  # ───────────────────────────────────────────────────────────────────────
+  # Scenario 1 — Doctor logs in and views their dashboard.
+  # Hits: doctor authentication, appointment list, patient list, calendar.
+  # Weight: 40% of traffic — most common real workflow.
+  # ───────────────────────────────────────────────────────────────────────
+  - name: 'Doctor dashboard'
+    weight: 40
+    flow:
+      - get:
+          url: '/appointments?pageSize=25&tab=upcoming'
+          expect:
+            - statusCode: 200
+      - think: 2
+      - get:
+          url: '/patients?pageSize=25&offset=0&sortOrder=1'
+          expect:
+            - statusCode: 200
+      - think: 3
+
+  # ───────────────────────────────────────────────────────────────────────
+  # Scenario 2 — Admin manages records.
+  # Hits: list, get-by-id, update path.
+  # Weight: 30%.
+  # ───────────────────────────────────────────────────────────────────────
+  - name: 'Admin browse + edit'
+    weight: 30
+    flow:
+      - get:
+          url: '/doctors?pageSize=25'
+          capture:
+            - json: '$.data[0].PK'
+              as: 'doctorPK'
+          expect:
+            - statusCode: 200
+      - think: 1
+      - get:
+          url: '/patients?pageSize=25'
+          capture:
+            - json: '$.data[0].PK'
+              as: 'patientPK'
+          expect:
+            - statusCode: 200
+      - think: 2
+
+  # ───────────────────────────────────────────────────────────────────────
+  # Scenario 3 — Appointment creation (write-heavy).
+  # Hits: encryption + KMS GenerateDataKey + DynamoDB write + audit.
+  # Weight: 20%.
+  # ───────────────────────────────────────────────────────────────────────
+  - name: 'Appointment create'
+    weight: 20
+    flow:
+      - post:
+          url: '/appointments'
+          headers:
+            X-Client-Request-Id: '{{ $uuid }}'
+          json:
+            patientId: 'PATIENT#load-test-patient'
+            patientName: 'Load Test Patient'
+            doctorId: 'DOCTOR#load-test-doctor'
+            doctorName: 'Load Test Doctor'
+            doctorEmail: 'loadtest@example.com'
+            department: 'general'
+            date: '2027-01-15'
+            startTime: '10:00'
+            endTime: '10:30'
+            duration: 30
+            visitType: 'scheduled'
+            chiefComplaint: 'Load test request - synthetic'
+          expect:
+            - statusCode: [201, 400, 409]
+              # 201 = created, 400 = validation (no real patient/doctor), 409 = duplicate.
+              # All three are acceptable in load-test mode.
+
+  # ───────────────────────────────────────────────────────────────────────
+  # Scenario 4 — Lookup by email (HMAC hash query).
+  # Hits: KMS GenerateMac + DynamoDB Query on emailHash-EntityType-index.
+  # Weight: 10%.
+  # ───────────────────────────────────────────────────────────────────────
+  - name: 'Doctor lookup by email'
+    weight: 10
+    flow:
+      - get:
+          url: '/doctors/byEmail?email=admin1@tiryaq.com&type=DOCTOR'
+          expect:
+            - statusCode: [200, 404]

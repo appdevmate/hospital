@@ -30,7 +30,15 @@ export const appConfig: ApplicationConfig = {
         providePrimeNG({ theme: { preset: Aura, options: { darkModeSelector: '.app-dark' } } }),
         provideAuth({
             config: {
+                // ── Step 7h: custom Cognito auth domain ─────────────────────
+                // `authority` stays as the Cognito IDP URL — that's the `iss`
+                // claim in every JWT and is what the library validates against.
+                // `authWellknownEndpointUrl` overrides the discovery URL so the
+                // user is redirected to our branded login at auth.akwadona.com
+                // (Stripe / Vercel / Athenahealth pattern — single auth
+                // surface, never a Cognito-default URL).
                 authority: 'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_RACghntmS',
+                authWellknownEndpointUrl: 'https://auth.akwadona.com/.well-known/openid-configuration',
                 clientId: '2nfjfipi8hri262pjohtpgl45q',
                 redirectUrl: window.location.origin + '/',
                 postLogoutRedirectUri: window.location.origin + '/',

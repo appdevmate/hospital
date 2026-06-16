@@ -48,6 +48,18 @@
   ],
   "dataGroups": [
     {
+      "name": "operator-api",
+      "urls": [
+        "https://jxz59jh15f.execute-api.us-east-1.amazonaws.com/operator/**"
+      ],
+      "cacheConfig": {
+        "maxSize": 1,
+        "maxAge": "0s",
+        "timeout": "30s",
+        "strategy": "freshness"
+      }
+    },
+    {
       "name": "api-reads",
       "urls": [
         "https://jxz59jh15f.execute-api.us-east-1.amazonaws.com/**"
@@ -55,7 +67,7 @@
       "cacheConfig": {
         "maxSize": 500,
         "maxAge": "1d",
-        "timeout": "3s",
+        "timeout": "30s",
         "strategy": "freshness"
       }
     }

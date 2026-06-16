@@ -19,7 +19,7 @@ import { catchError, throwError } from 'rxjs';
  * loop when the discovery document or token endpoint hiccups.
  */
 const API_HOST = 'execute-api.us-east-1.amazonaws.com';
-const OIDC_HOSTS = ['cognito-idp.', 'auth.us-east-1.amazoncognito.com', 'amazoncognito.com'];
+const OIDC_HOSTS = ['cognito-idp.', 'auth.us-east-1.amazoncognito.com', 'amazoncognito.com', 'auth.akwadona.com'];
 
 // Guard so multiple parallel 401s only trigger one Cognito redirect.
 let redirecting = false;
