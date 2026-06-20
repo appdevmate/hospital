@@ -1,0 +1,90 @@
+{
+    "app": {
+        "name": "Akwadona",
+        "tagline": "Plateforme de gestion hospitalière"
+    },
+    "menu": {
+        "dashboard": "Tableau de bord",
+        "calendar": "Calendrier",
+        "appointments": "Rendez-vous",
+        "voiceScribe": "Dictée vocale",
+        "invoices": "Factures",
+        "notifications": "Notifications",
+        "patients": "Patients",
+        "doctors": "Gestion des médecins",
+        "bloodBank": "Banque de sang",
+        "documents": "Documents",
+        "pharmacy": "Pharmacie",
+        "administration": "Administration",
+        "operator": {
+            "tenants": "Clients",
+            "usage": "Utilisation",
+            "compliance": "Conformité",
+            "audit": "Audit"
+        }
+    },
+    "topbar": {
+        "operator": "Opérateur",
+        "phiBlind": "Aveugle aux données patient",
+        "signOut": "Se déconnecter",
+        "profile": "Profil",
+        "offline": "Hors ligne",
+        "syncing": "Synchronisation"
+    },
+    "common": {
+        "save": "Enregistrer",
+        "cancel": "Annuler",
+        "edit": "Modifier",
+        "delete": "Supprimer",
+        "create": "Créer",
+        "update": "Mettre à jour",
+        "search": "Rechercher",
+        "loading": "Chargement…",
+        "yes": "Oui",
+        "no": "Non",
+        "back": "Retour",
+        "next": "Suivant",
+        "submit": "Envoyer",
+        "close": "Fermer",
+        "confirm": "Confirmer",
+        "refresh": "Actualiser",
+        "today": "Aujourd'hui",
+        "language": "Langue"
+    },
+    "status": {
+        "active": "Actif",
+        "inactive": "Inactif",
+        "pending": "En attente",
+        "suspended": "Suspendu",
+        "trial": "Essai"
+    },
+    "operatorConsole": {
+        "title": "Console opérateur Akwadona",
+        "subtitle": "Abonnements · utilisation · conformité · audit",
+        "tenants": "Clients",
+        "selectTenant": "Sélectionnez un client à gauche pour voir les détails.",
+        "noTenants": "Aucun client trouvé.",
+        "subscription": "Abonnement",
+        "platformUsage": "Utilisation de la plateforme",
+        "limits": "Limites",
+        "compliance": "Conformité",
+        "encryption": "Chiffrement (identifiants uniquement — l'opérateur ne peut pas déchiffrer)",
+        "auditToday": "Activité d'audit (aujourd'hui)",
+        "auditNote": "Catégories uniquement — les identifiants d'entité sont supprimés afin que l'opérateur ne sache pas quel patient ou dossier a été consulté.",
+        "noAuditEvents": "Aucun événement d'audit aujourd'hui.",
+        "cards": {
+            "plan": "Forfait",
+            "statusLabel": "Statut",
+            "contractStart": "Début du contrat",
+            "mrr": "RMR (USD)",
+            "apiCalls24h": "Appels API (24h)",
+            "bandwidth30d": "Bande passante (30j, Go)",
+            "activeUsers": "Utilisateurs actifs",
+            "storage": "Stockage (Go)",
+            "estCost": "Coût mensuel estimé (USD)",
+            "rateLimited": "Requêtes limitées (24h)",
+            "rateLimitedHint": "Envisager une mise à niveau",
+            "lastActivity": "Dernière activité"
+        }
+    }
+}

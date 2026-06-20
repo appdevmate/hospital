@@ -13,6 +13,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { SkeletonModule } from 'primeng/skeleton';
+import { TranslatePipe } from '@ngx-translate/core';
 import { OperatorService, TenantSummary, TenantStats, AuditEntry, TenantUpdate } from '@/services/operator.service';
 import { CacheService } from '@/services/cache.service';
 
@@ -32,7 +33,7 @@ import { CacheService } from '@/services/cache.service';
         CommonModule, FormsModule,
         ButtonModule, TableModule, TagModule, CardModule, DialogModule,
         InputTextModule, InputNumberModule, SelectModule, CheckboxModule, ToastModule,
-        SkeletonModule
+        SkeletonModule, TranslatePipe
     ],
     providers: [MessageService],
     template: `
@@ -41,17 +42,17 @@ import { CacheService } from '@/services/cache.service';
         <div class="op-shell">
             <header class="op-header">
                 <div>
-                    <h1>Akwadona Operator Console</h1>
-                    <p class="subtitle">Subscriptions · usage · compliance · audit</p>
+                    <h1>{{ 'operatorConsole.title' | translate }}</h1>
+                    <p class="subtitle">{{ 'operatorConsole.subtitle' | translate }}</p>
                 </div>
-                <span class="zk-badge" title="The operator console cannot see customer data — patient, doctor, or appointment counts are not surfaced here.">PHI-blind ✓</span>
+                <span class="zk-badge" title="The operator console cannot see customer data.">{{ 'topbar.phiBlind' | translate }} ✓</span>
             </header>
 
             <div class="op-body">
                 <!-- Tenant list -->
                 <section class="tenants-panel">
                     <div class="panel-title">
-                        <h2>Tenants</h2>
+                        <h2>{{ 'operatorConsole.tenants' | translate }}</h2>
                         <p-button icon="pi pi-refresh" severity="secondary" [text]="true" size="small" (onClick)="reload()" />
                     </div>
 
@@ -65,7 +66,7 @@ import { CacheService } from '@/services/cache.service';
                             }
                         </ul>
                     } @else if (tenants().length === 0) {
-                        <div class="empty">No tenants found.</div>
+                        <div class="empty">{{ 'operatorConsole.noTenants' | translate }}</div>
                     } @else {
                         <ul class="tenant-list">
                             @for (t of tenants(); track t.slug) {
@@ -90,7 +91,7 @@ import { CacheService } from '@/services/cache.service';
                     @if (!selectedTenant()) {
                         <div class="empty-detail">
                             <i class="pi pi-arrow-left"></i>
-                            <p>Select a tenant on the left to see details.</p>
+                            <p>{{ 'operatorConsole.selectTenant' | translate }}</p>
                         </div>
                     } @else {
                         <div class="detail-header">
@@ -98,50 +99,50 @@ import { CacheService } from '@/services/cache.service';
                                 <h2>{{ selectedTenant()!.name }}</h2>
                                 <p class="subtitle">{{ selectedTenant()!.slug }}.akwadona.com · tenantId <code>{{ selectedTenant()!.tenantId }}</code></p>
                             </div>
-                            <p-button label="Edit" icon="pi pi-pencil" (onClick)="openEdit()" />
+                            <p-button [label]="'common.edit' | translate" icon="pi pi-pencil" (onClick)="openEdit()" />
                         </div>
 
                         <!-- Subscription -->
-                        <h3 class="section-h">Subscription</h3>
+                        <h3 class="section-h">{{ 'operatorConsole.subscription' | translate }}</h3>
                         <div class="kv-grid">
-                            <div><span>Plan</span><strong>{{ stats()?.subscription?.plan || '—' }}</strong></div>
-                            <div><span>Status</span><strong>{{ stats()?.subscription?.status || '—' }}</strong></div>
-                            <div><span>Contract start</span><strong>{{ stats()?.subscription?.contractStart || '—' }}</strong></div>
-                            <div><span>MRR (USD)</span><strong>{{ stats()?.subscription?.mrrUSD ?? '—' }}</strong></div>
+                            <div><span>{{ 'operatorConsole.cards.plan' | translate }}</span><strong>{{ stats()?.subscription?.plan || '—' }}</strong></div>
+                            <div><span>{{ 'operatorConsole.cards.statusLabel' | translate }}</span><strong>{{ stats()?.subscription?.status || '—' }}</strong></div>
+                            <div><span>{{ 'operatorConsole.cards.contractStart' | translate }}</span><strong>{{ stats()?.subscription?.contractStart || '—' }}</strong></div>
+                            <div><span>{{ 'operatorConsole.cards.mrr' | translate }}</span><strong>{{ stats()?.subscription?.mrrUSD ?? '—' }}</strong></div>
                         </div>
 
                         <!-- Platform usage (no business data) -->
-                        <h3 class="section-h">Platform usage</h3>
+                        <h3 class="section-h">{{ 'operatorConsole.platformUsage' | translate }}</h3>
                         <div class="stats-grid">
                             <div class="stat-card">
-                                <div class="stat-label">API calls (24h)</div>
+                                <div class="stat-label">{{ 'operatorConsole.cards.apiCalls24h' | translate }}</div>
                                 <div class="stat-value">{{ stats()?.usage?.apiCalls24h ?? '—' }}</div>
                             </div>
                             <div class="stat-card">
-                                <div class="stat-label">Bandwidth (30d, GB)</div>
+                                <div class="stat-label">{{ 'operatorConsole.cards.bandwidth30d' | translate }}</div>
                                 <div class="stat-value">{{ stats()?.usage?.bandwidthGB30d ?? '—' }}</div>
                             </div>
                             <div class="stat-card">
-                                <div class="stat-label">Active users</div>
+                                <div class="stat-label">{{ 'operatorConsole.cards.activeUsers' | translate }}</div>
                                 <div class="stat-value">{{ stats()?.usage?.activeUsers ?? '—' }}</div>
                             </div>
                             <div class="stat-card">
-                                <div class="stat-label">Storage (GB)</div>
+                                <div class="stat-label">{{ 'operatorConsole.cards.storage' | translate }}</div>
                                 <div class="stat-value">{{ stats()?.usage?.storageGB ?? '—' }}</div>
                             </div>
                             <div class="stat-card">
-                                <div class="stat-label">Est. monthly cost (USD)</div>
+                                <div class="stat-label">{{ 'operatorConsole.cards.estCost' | translate }}</div>
                                 <div class="stat-value">{{ stats()?.usage?.estimatedMonthlyCostUSD ?? '—' }}</div>
                             </div>
                             <div class="stat-card" [class.warn]="(stats()?.usage?.throttle429Count24h ?? 0) > 0">
-                                <div class="stat-label">Rate-limited (24h)</div>
+                                <div class="stat-label">{{ 'operatorConsole.cards.rateLimited' | translate }}</div>
                                 <div class="stat-value">{{ stats()?.usage?.throttle429Count24h ?? '—' }}</div>
                                 @if ((stats()?.usage?.throttle429Count24h ?? 0) > 0) {
-                                    <div class="stat-hint">Consider plan upgrade</div>
+                                    <div class="stat-hint">{{ 'operatorConsole.cards.rateLimitedHint' | translate }}</div>
                                 }
                             </div>
                             <div class="stat-card">
-                                <div class="stat-label">Last activity</div>
+                                <div class="stat-label">{{ 'operatorConsole.cards.lastActivity' | translate }}</div>
                                 <div class="stat-value small">{{ stats()?.lastActivityAt ? (stats()?.lastActivityAt! | date:'short') : '—' }}</div>
                             </div>
                         </div>

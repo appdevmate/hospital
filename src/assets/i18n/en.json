@@ -1,0 +1,90 @@
+{
+    "app": {
+        "name": "Akwadona",
+        "tagline": "Hospital Management Platform"
+    },
+    "menu": {
+        "dashboard": "Dashboard",
+        "calendar": "Calendar",
+        "appointments": "Appointments",
+        "voiceScribe": "Voice Scribe",
+        "invoices": "Invoices",
+        "notifications": "Notifications",
+        "patients": "Patients",
+        "doctors": "Doctors Management",
+        "bloodBank": "Blood Bank",
+        "documents": "Documents",
+        "pharmacy": "Pharmacy",
+        "administration": "Administration",
+        "operator": {
+            "tenants": "Tenants",
+            "usage": "Usage",
+            "compliance": "Compliance",
+            "audit": "Audit"
+        }
+    },
+    "topbar": {
+        "operator": "Operator",
+        "phiBlind": "PHI-blind",
+        "signOut": "Sign out",
+        "profile": "Profile",
+        "offline": "Offline",
+        "syncing": "Syncing"
+    },
+    "common": {
+        "save": "Save",
+        "cancel": "Cancel",
+        "edit": "Edit",
+        "delete": "Delete",
+        "create": "Create",
+        "update": "Update",
+        "search": "Search",
+        "loading": "Loading…",
+        "yes": "Yes",
+        "no": "No",
+        "back": "Back",
+        "next": "Next",
+        "submit": "Submit",
+        "close": "Close",
+        "confirm": "Confirm",
+        "refresh": "Refresh",
+        "today": "Today",
+        "language": "Language"
+    },
+    "status": {
+        "active": "Active",
+        "inactive": "Inactive",
+        "pending": "Pending",
+        "suspended": "Suspended",
+        "trial": "Trial"
+    },
+    "operatorConsole": {
+        "title": "Akwadona Operator Console",
+        "subtitle": "Subscriptions · usage · compliance · audit",
+        "tenants": "Tenants",
+        "selectTenant": "Select a tenant on the left to see details.",
+        "noTenants": "No tenants found.",
+        "subscription": "Subscription",
+        "platformUsage": "Platform usage",
+        "limits": "Limits",
+        "compliance": "Compliance",
+        "encryption": "Encryption (identifiers only — operator cannot decrypt)",
+        "auditToday": "Audit activity (today)",
+        "auditNote": "Categories only — entity ids are stripped so the operator can't tell which patient or record was touched.",
+        "noAuditEvents": "No audit events for today.",
+        "cards": {
+            "plan": "Plan",
+            "statusLabel": "Status",
+            "contractStart": "Contract start",
+            "mrr": "MRR (USD)",
+            "apiCalls24h": "API calls (24h)",
+            "bandwidth30d": "Bandwidth (30d, GB)",
+            "activeUsers": "Active users",
+            "storage": "Storage (GB)",
+            "estCost": "Est. monthly cost (USD)",
+            "rateLimited": "Rate-limited (24h)",
+            "rateLimitedHint": "Consider plan upgrade",
+            "lastActivity": "Last activity"
+        }
+    }
+}

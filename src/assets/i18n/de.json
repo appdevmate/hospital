@@ -1,0 +1,90 @@
+{
+    "app": {
+        "name": "Akwadona",
+        "tagline": "Krankenhaus-Management-Plattform"
+    },
+    "menu": {
+        "dashboard": "Dashboard",
+        "calendar": "Kalender",
+        "appointments": "Termine",
+        "voiceScribe": "Spracheingabe",
+        "invoices": "Rechnungen",
+        "notifications": "Benachrichtigungen",
+        "patients": "Patienten",
+        "doctors": "Ärzteverwaltung",
+        "bloodBank": "Blutbank",
+        "documents": "Dokumente",
+        "pharmacy": "Apotheke",
+        "administration": "Verwaltung",
+        "operator": {
+            "tenants": "Kunden",
+            "usage": "Nutzung",
+            "compliance": "Compliance",
+            "audit": "Audit"
+        }
+    },
+    "topbar": {
+        "operator": "Betreiber",
+        "phiBlind": "Kein Zugriff auf Patientendaten",
+        "signOut": "Abmelden",
+        "profile": "Profil",
+        "offline": "Offline",
+        "syncing": "Synchronisierung"
+    },
+    "common": {
+        "save": "Speichern",
+        "cancel": "Abbrechen",
+        "edit": "Bearbeiten",
+        "delete": "Löschen",
+        "create": "Erstellen",
+        "update": "Aktualisieren",
+        "search": "Suchen",
+        "loading": "Wird geladen…",
+        "yes": "Ja",
+        "no": "Nein",
+        "back": "Zurück",
+        "next": "Weiter",
+        "submit": "Senden",
+        "close": "Schließen",
+        "confirm": "Bestätigen",
+        "refresh": "Aktualisieren",
+        "today": "Heute",
+        "language": "Sprache"
+    },
+    "status": {
+        "active": "Aktiv",
+        "inactive": "Inaktiv",
+        "pending": "Ausstehend",
+        "suspended": "Gesperrt",
+        "trial": "Testphase"
+    },
+    "operatorConsole": {
+        "title": "Akwadona Betreiber-Konsole",
+        "subtitle": "Abonnements · Nutzung · Compliance · Audit",
+        "tenants": "Kunden",
+        "selectTenant": "Wählen Sie links einen Kunden aus, um Details anzuzeigen.",
+        "noTenants": "Keine Kunden gefunden.",
+        "subscription": "Abonnement",
+        "platformUsage": "Plattform-Nutzung",
+        "limits": "Limits",
+        "compliance": "Compliance",
+        "encryption": "Verschlüsselung (nur Kennungen — Betreiber kann nicht entschlüsseln)",
+        "auditToday": "Audit-Aktivität (heute)",
+        "auditNote": "Nur Kategorien — Entitäts-IDs werden entfernt, damit der Betreiber nicht weiß, welcher Patient oder Datensatz angesehen wurde.",
+        "noAuditEvents": "Heute keine Audit-Ereignisse.",
+        "cards": {
+            "plan": "Tarif",
+            "statusLabel": "Status",
+            "contractStart": "Vertragsbeginn",
+            "mrr": "MRR (USD)",
+            "apiCalls24h": "API-Aufrufe (24h)",
+            "bandwidth30d": "Bandbreite (30T, GB)",
+            "activeUsers": "Aktive Benutzer",
+            "storage": "Speicher (GB)",
+            "estCost": "Geschätzte monatl. Kosten (USD)",
+            "rateLimited": "Begrenzte Anfragen (24h)",
+            "rateLimitedHint": "Tarif-Upgrade empfohlen",
+            "lastActivity": "Letzte Aktivität"
+        }
+    }
+}

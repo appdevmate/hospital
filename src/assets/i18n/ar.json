@@ -1,0 +1,90 @@
+{
+    "app": {
+        "name": "أكوادونا",
+        "tagline": "منصة إدارة المستشفيات"
+    },
+    "menu": {
+        "dashboard": "لوحة التحكم",
+        "calendar": "التقويم",
+        "appointments": "المواعيد",
+        "voiceScribe": "التدوين الصوتي",
+        "invoices": "الفواتير",
+        "notifications": "الإشعارات",
+        "patients": "المرضى",
+        "doctors": "إدارة الأطباء",
+        "bloodBank": "بنك الدم",
+        "documents": "المستندات",
+        "pharmacy": "الصيدلية",
+        "administration": "الإدارة",
+        "operator": {
+            "tenants": "العملاء",
+            "usage": "الاستخدام",
+            "compliance": "الامتثال",
+            "audit": "السجل"
+        }
+    },
+    "topbar": {
+        "operator": "مشغل",
+        "phiBlind": "بدون رؤية بيانات المرضى",
+        "signOut": "تسجيل الخروج",
+        "profile": "الملف الشخصي",
+        "offline": "غير متصل",
+        "syncing": "جارٍ المزامنة"
+    },
+    "common": {
+        "save": "حفظ",
+        "cancel": "إلغاء",
+        "edit": "تعديل",
+        "delete": "حذف",
+        "create": "إنشاء",
+        "update": "تحديث",
+        "search": "بحث",
+        "loading": "جارٍ التحميل…",
+        "yes": "نعم",
+        "no": "لا",
+        "back": "رجوع",
+        "next": "التالي",
+        "submit": "إرسال",
+        "close": "إغلاق",
+        "confirm": "تأكيد",
+        "refresh": "تحديث",
+        "today": "اليوم",
+        "language": "اللغة"
+    },
+    "status": {
+        "active": "نشط",
+        "inactive": "غير نشط",
+        "pending": "قيد الانتظار",
+        "suspended": "معلق",
+        "trial": "تجريبي"
+    },
+    "operatorConsole": {
+        "title": "وحدة تحكم مشغل أكوادونا",
+        "subtitle": "الاشتراكات · الاستخدام · الامتثال · السجل",
+        "tenants": "العملاء",
+        "selectTenant": "اختر عميلًا من القائمة لرؤية التفاصيل.",
+        "noTenants": "لا يوجد عملاء.",
+        "subscription": "الاشتراك",
+        "platformUsage": "استخدام المنصة",
+        "limits": "الحدود",
+        "compliance": "الامتثال",
+        "encryption": "التشفير (معرفات فقط — لا يمكن للمشغل فك التشفير)",
+        "auditToday": "نشاط السجل (اليوم)",
+        "auditNote": "الفئات فقط — تتم إزالة معرفات الكيانات حتى لا يعرف المشغل أي مريض أو سجل تم الوصول إليه.",
+        "noAuditEvents": "لا توجد أحداث في السجل اليوم.",
+        "cards": {
+            "plan": "الباقة",
+            "statusLabel": "الحالة",
+            "contractStart": "بداية العقد",
+            "mrr": "الإيراد الشهري (دولار)",
+            "apiCalls24h": "طلبات الواجهة (24 ساعة)",
+            "bandwidth30d": "النطاق الترددي (30 يومًا، جيجابايت)",
+            "activeUsers": "المستخدمون النشطون",
+            "storage": "التخزين (جيجابايت)",
+            "estCost": "التكلفة الشهرية التقديرية (دولار)",
+            "rateLimited": "طلبات مرفوضة (24 ساعة)",
+            "rateLimitedHint": "يُنصح بترقية الباقة",
+            "lastActivity": "آخر نشاط"
+        }
+    }
+}

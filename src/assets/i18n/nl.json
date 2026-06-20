@@ -1,0 +1,90 @@
+{
+    "app": {
+        "name": "Akwadona",
+        "tagline": "Ziekenhuisbeheerplatform"
+    },
+    "menu": {
+        "dashboard": "Dashboard",
+        "calendar": "Kalender",
+        "appointments": "Afspraken",
+        "voiceScribe": "Spraakdictee",
+        "invoices": "Facturen",
+        "notifications": "Meldingen",
+        "patients": "Patiënten",
+        "doctors": "Artsenbeheer",
+        "bloodBank": "Bloedbank",
+        "documents": "Documenten",
+        "pharmacy": "Apotheek",
+        "administration": "Beheer",
+        "operator": {
+            "tenants": "Klanten",
+            "usage": "Gebruik",
+            "compliance": "Naleving",
+            "audit": "Audit"
+        }
+    },
+    "topbar": {
+        "operator": "Beheerder",
+        "phiBlind": "Geen toegang tot patiëntgegevens",
+        "signOut": "Uitloggen",
+        "profile": "Profiel",
+        "offline": "Offline",
+        "syncing": "Synchroniseren"
+    },
+    "common": {
+        "save": "Opslaan",
+        "cancel": "Annuleren",
+        "edit": "Bewerken",
+        "delete": "Verwijderen",
+        "create": "Aanmaken",
+        "update": "Bijwerken",
+        "search": "Zoeken",
+        "loading": "Laden…",
+        "yes": "Ja",
+        "no": "Nee",
+        "back": "Terug",
+        "next": "Volgende",
+        "submit": "Verzenden",
+        "close": "Sluiten",
+        "confirm": "Bevestigen",
+        "refresh": "Vernieuwen",
+        "today": "Vandaag",
+        "language": "Taal"
+    },
+    "status": {
+        "active": "Actief",
+        "inactive": "Inactief",
+        "pending": "In afwachting",
+        "suspended": "Opgeschort",
+        "trial": "Proef"
+    },
+    "operatorConsole": {
+        "title": "Akwadona Beheerconsole",
+        "subtitle": "Abonnementen · gebruik · naleving · audit",
+        "tenants": "Klanten",
+        "selectTenant": "Selecteer een klant links om details te zien.",
+        "noTenants": "Geen klanten gevonden.",
+        "subscription": "Abonnement",
+        "platformUsage": "Platformgebruik",
+        "limits": "Limieten",
+        "compliance": "Naleving",
+        "encryption": "Versleuteling (alleen identificatoren — beheerder kan niet ontsleutelen)",
+        "auditToday": "Auditactiviteit (vandaag)",
+        "auditNote": "Alleen categorieën — entiteits-ID's worden verwijderd zodat de beheerder niet weet welke patiënt of record is bekeken.",
+        "noAuditEvents": "Geen auditgebeurtenissen vandaag.",
+        "cards": {
+            "plan": "Abonnement",
+            "statusLabel": "Status",
+            "contractStart": "Contractstart",
+            "mrr": "MRR (USD)",
+            "apiCalls24h": "API-aanroepen (24u)",
+            "bandwidth30d": "Bandbreedte (30d, GB)",
+            "activeUsers": "Actieve gebruikers",
+            "storage": "Opslag (GB)",
+            "estCost": "Geschatte maandkosten (USD)",
+            "rateLimited": "Beperkte verzoeken (24u)",
+            "rateLimitedHint": "Overweeg een upgrade",
+            "lastActivity": "Laatste activiteit"
+        }
+    }
+}

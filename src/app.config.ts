@@ -1,5 +1,8 @@
 import { ApplicationConfig, isDevMode } from '@angular/core';
-import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import { importProvidersFrom } from '@angular/core';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
@@ -10,6 +13,12 @@ import { provideAuth } from 'angular-auth-oidc-client';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { authInterceptor } from './app/interceptors/auth.interceptor';
 import { offlineQueueInterceptor } from './app/interceptors/offline-queue.interceptor';
+
+// Step I — i18n loader. ngx-translate fetches JSON files from
+// /assets/i18n/{lang}.json at runtime (browser-cached after first load).
+export function translateLoaderFactory(http: HttpClient): TranslateLoader {
+    return new TranslateHttpLoader(http, '/assets/i18n/', '.json');
+}
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -25,6 +34,17 @@ export const appConfig: ApplicationConfig = {
         // into the IndexedDB queue. authInterceptor runs second → adds 401
         // re-login handling for requests that actually reach the network.
         provideHttpClient(withFetch(), withInterceptors([offlineQueueInterceptor, authInterceptor])),
+        // Step I — i18n. TranslateModule.forRoot must run once at app config.
+        importProvidersFrom(
+            TranslateModule.forRoot({
+                loader: {
+                    provide: TranslateLoader,
+                    useFactory: translateLoaderFactory,
+                    deps: [HttpClient]
+                },
+                defaultLanguage: 'en'
+            })
+        ),
         provideAnimationsAsync(),
         providePrimeNG({ theme: { preset: Aura, options: { darkModeSelector: '.app-dark' } } }),
         provideAuth({

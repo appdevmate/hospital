@@ -21,11 +21,14 @@ import { NotificationsService, Notification } from '@/services/notifications.ser
 import { AuthService } from '@/services/auth.service';
 import { OfflineService } from '@/services/offline.service';
 import { TenantService } from '@/services/tenant.service';
+import { TranslatePipe } from '@ngx-translate/core';
+import { I18nService, SUPPORTED_LANGS, LangCode } from '@/services/i18n.service';
+import { SelectModule } from 'primeng/select';
 
 @Component({
     selector: '[app-topbar]',
     standalone: true,
-    imports: [RouterModule, CommonModule, StyleClassModule, FormsModule, Ripple, InputText, ButtonModule, IconField, InputIcon, BadgeModule, PopoverModule, TagModule],
+    imports: [RouterModule, CommonModule, StyleClassModule, FormsModule, Ripple, InputText, ButtonModule, IconField, InputIcon, BadgeModule, PopoverModule, TagModule, SelectModule, TranslatePipe],
     template: `
         <div class="layout-topbar">
             <a class="app-logo" routerLink="/">
@@ -69,6 +72,28 @@ import { TenantService } from '@/services/tenant.service';
             </ul>
 
             <div class="topbar-actions">
+                <!-- Step I — Language switcher. Persists in localStorage,
+                     toggles dir=rtl for Arabic automatically. -->
+                <p-select
+                    class="lang-select"
+                    [options]="langOptions"
+                    [ngModel]="i18n.current()"
+                    (onChange)="onLangChange($event.value)"
+                    optionLabel="label"
+                    optionValue="code"
+                    appendTo="body"
+                    [title]="'common.language' | translate"
+                    styleClass="lang-select-styled">
+                    <ng-template let-opt #selectedItem>
+                        <span class="lang-flag">{{ opt?.flag }}</span>
+                        <span class="lang-code">{{ opt?.code | uppercase }}</span>
+                    </ng-template>
+                    <ng-template let-opt #item>
+                        <span class="lang-flag">{{ opt.flag }}</span>
+                        <span>{{ opt.label }}</span>
+                    </ng-template>
+                </p-select>
+
                 <!-- Offline / sync pill (Phase E) -->
                 @if (!isOnline || pendingCount > 0) {
                     <div class="offline-pill"
@@ -228,6 +253,21 @@ import { TenantService } from '@/services/tenant.service';
                 }
             }
         }
+        // Step I — language switcher
+        .lang-select {
+            margin-right: 0.5rem;
+            .lang-flag { margin-right: 0.4rem; }
+            .lang-code { font-weight: 600; font-size: 0.85rem; color: #374151; }
+            ::ng-deep .p-select {
+                min-width: 5rem;
+                border: 1px solid #e5e7eb;
+                background: #fff;
+            }
+            ::ng-deep .p-select-label { padding: 0.3rem 0.6rem; }
+        }
+        // RTL fix: when <html dir="rtl"> we flip margins
+        :host-context([dir="rtl"]) .lang-select { margin-right: 0; margin-left: 0.5rem; }
+        :host-context([dir="rtl"]) .lang-select .lang-flag { margin-right: 0; margin-left: 0.4rem; }
         .notif-header {
             display: flex;
             align-items: center;
@@ -358,6 +398,13 @@ export class AppTopbar implements OnInit {
     private router = inject(Router);
     private offline = inject(OfflineService);
     private tenant = inject(TenantService);
+
+    // ── Step I — language switcher ────────────────────────────────────────
+    i18n = inject(I18nService);
+    readonly langOptions = SUPPORTED_LANGS.map(l => ({ ...l }));
+    onLangChange(code: LangCode) {
+        if (code) this.i18n.setLang(code);
+    }
 
     // ── Step 2e: tenant display ───────────────────────────────────────────
     // Friendly name pulled from subdomain — read-only label so the doctor

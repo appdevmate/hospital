@@ -81,7 +81,17 @@ If you see `401` instead → token expired, log in again.
 - Audit row written with `before`/`after` (encrypted).
 - UI in Admin Panel for the existing Users tab.
 
-### NEW — Multi-language support (i18n)
+### Multi-language support (i18n) — Phase 1 DONE
+- ✅ `@ngx-translate/core` + http-loader installed.
+- ✅ `I18nService` owns active language; persists in localStorage; auto-toggles `<html dir="rtl">` for Arabic.
+- ✅ 6 translation JSON files in `src/assets/i18n/` (en, ar, fr, es, de, nl).
+- ✅ Top-bar language switcher (flag + code, dropdown with native names).
+- ✅ Operator console + sidebar menu translated.
+- ✅ Runbook: `docs/13-i18n.md`.
+- 🔲 Phase 2 — translate dashboard, patient management, appointments, blood bank, pharmacy (incremental — each component imports TranslatePipe + keys added to JSONs).
+- 🔲 Phase 3 — Cognito Hosted UI custom branding for the login page in 6 languages.
+
+### (Old i18n plan — kept for reference)
 - Languages: **Arabic, English, French, Spanish, German, Dutch**.
 - Stack: Angular `@angular/localize` + `ngx-translate` (runtime switch without rebuild).
 - User picks language from a topbar dropdown; persisted in localStorage + Cognito `custom:locale` attribute (so the choice follows the user across devices).
@@ -117,7 +127,12 @@ If you see `401` instead → token expired, log in again.
   - Operator console shows an "Isolation: dedicated" badge on the tenant detail page.
 - **Not built now.** Stay on Bridge as the default. This sits in the backlog for the day a customer asks.
 
-### NEW — Full IaC kill-switch (`teardown.ps1`)
+### Full IaC kill-switch (`teardown.ps1` + `recover.ps1`) — DONE
+- ✅ `scripts/teardown.ps1` — empties S3 buckets, runs `cdk destroy`, schedules KMS key deletion (7-day pending window), deletes DynamoDB table. Safety-gated with `-ConfirmDestroyData`. Cost after: ~$0.
+- ✅ `scripts/recover.ps1` — cancels pending KMS key deletions, runs `cdk deploy`, re-seeds tenant profile rows, prints frontend deploy + operator-group-restore steps.
+- ✅ Runbook: `docs/12-teardown-and-recover.md`.
+
+### (Original plan — kept for reference)
 - **Goal:** one command that destroys EVERY AWS resource Akwadona uses → bill goes to $0.
 - **Why:** today `npx cdk destroy` leaves KMS keys, DynamoDB table, and non-empty S3 buckets behind (retention defaults). That keeps the bill small but non-zero. For dev / pause-and-resume scenarios we want a real "off button".
 - **Plan:**
@@ -136,7 +151,12 @@ If you see `401` instead → token expired, log in again.
 - **What huge SaaS does:** they don't need this for production, but every serious infra team has a "dev environment teardown" script. Stripe, Vercel, AWS itself all ship one.
 - **Cost when down:** $0 (except a few cents for Route 53 hosted zone + ACM cert if kept). Bill resumes when `recover.ps1` runs.
 
-### NEW — Customer data migration guide
+### Customer data migration — DONE
+- ✅ `docs/11-customer-migration-guide.md` — operator + customer runbook.
+- ✅ `scripts/import-tenant-data.js` — CSV → validate → encrypt PHI → HMAC search fields → DynamoDB → JSON report. Dry-run by default; `--apply` to commit.
+- ✅ `scripts/migration-templates/{patients,doctors,appointments}.csv` + README.
+
+### (Original plan — kept for reference)
 - **Goal:** when a new hospital wants to onboard with their existing patient + doctor records (probably exported from another EMR), we have a documented import path.
 - **Why:** today, the only way to add data is manual UI clicks. A 50,000-patient hospital can't do that.
 - **What huge SaaS does:**
