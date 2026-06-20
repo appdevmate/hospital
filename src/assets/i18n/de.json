@@ -58,6 +58,26 @@
         "suspended": "Gesperrt",
         "trial": "Testphase"
     },
+    "dashboard": {
+        "totalRevenue": "Gesamtumsatz",
+        "pendingInvoices": "Offene Rechnungen",
+        "totalAppointments": "Termine gesamt",
+        "upcoming7Days": "Anstehend (7 Tage)",
+        "todaysAppointments": "Heutige Termine",
+        "noUpcoming": "Keine anstehenden Termine",
+        "noToday": "Heute keine Termine geplant",
+        "viewAll": "Alle anzeigen",
+        "quickOverview": "Kurzübersicht",
+        "invoiceSummary": "Rechnungsübersicht",
+        "totalDoctors": "Ärzte gesamt",
+        "totalPatients": "Patienten gesamt",
+        "appointmentsThisMonth": "Termine diesen Monat",
+        "totalRevenueQAR": "Gesamtumsatz (QAR)",
+        "overdue": "Überfällig",
+        "pending": "Ausstehend",
+        "paid": "Bezahlt",
+        "scheduled": "geplant"
+    },
     "operatorConsole": {
         "title": "Akwadona Betreiber-Konsole",
         "subtitle": "Abonnements · Nutzung · Compliance · Audit",

@@ -58,6 +58,26 @@
         "suspended": "Suspendido",
         "trial": "Prueba"
     },
+    "dashboard": {
+        "totalRevenue": "Ingresos totales",
+        "pendingInvoices": "Facturas pendientes",
+        "totalAppointments": "Total de citas",
+        "upcoming7Days": "Próximas (7 días)",
+        "todaysAppointments": "Citas de hoy",
+        "noUpcoming": "No hay citas próximas",
+        "noToday": "No hay citas para hoy",
+        "viewAll": "Ver todo",
+        "quickOverview": "Resumen rápido",
+        "invoiceSummary": "Resumen de facturas",
+        "totalDoctors": "Total médicos",
+        "totalPatients": "Total pacientes",
+        "appointmentsThisMonth": "Citas este mes",
+        "totalRevenueQAR": "Ingresos totales (QAR)",
+        "overdue": "Vencido",
+        "pending": "Pendiente",
+        "paid": "Pagado",
+        "scheduled": "programado"
+    },
     "operatorConsole": {
         "title": "Consola del operador Akwadona",
         "subtitle": "Suscripciones · uso · cumplimiento · auditoría",

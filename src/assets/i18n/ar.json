@@ -58,6 +58,26 @@
         "suspended": "معلق",
         "trial": "تجريبي"
     },
+    "dashboard": {
+        "totalRevenue": "إجمالي الإيرادات",
+        "pendingInvoices": "الفواتير المعلقة",
+        "totalAppointments": "إجمالي المواعيد",
+        "upcoming7Days": "القادمة (7 أيام)",
+        "todaysAppointments": "مواعيد اليوم",
+        "noUpcoming": "لا توجد مواعيد قادمة",
+        "noToday": "لا توجد مواعيد مجدولة اليوم",
+        "viewAll": "عرض الكل",
+        "quickOverview": "نظرة سريعة",
+        "invoiceSummary": "ملخص الفواتير",
+        "totalDoctors": "إجمالي الأطباء",
+        "totalPatients": "إجمالي المرضى",
+        "appointmentsThisMonth": "مواعيد هذا الشهر",
+        "totalRevenueQAR": "إجمالي الإيرادات (ر.ق)",
+        "overdue": "متأخرة",
+        "pending": "معلقة",
+        "paid": "مدفوعة",
+        "scheduled": "مجدول"
+    },
     "operatorConsole": {
         "title": "وحدة تحكم مشغل أكوادونا",
         "subtitle": "الاشتراكات · الاستخدام · الامتثال · السجل",

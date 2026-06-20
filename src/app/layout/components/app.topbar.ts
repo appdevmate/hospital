@@ -85,11 +85,11 @@ import { SelectModule } from 'primeng/select';
                     [title]="'common.language' | translate"
                     styleClass="lang-select-styled">
                     <ng-template let-opt #selectedItem>
-                        <span class="lang-flag">{{ opt?.flag }}</span>
+                        <i class="pi pi-globe" style="margin-right:0.4rem; color:#6b7280"></i>
                         <span class="lang-code">{{ opt?.code | uppercase }}</span>
                     </ng-template>
                     <ng-template let-opt #item>
-                        <span class="lang-flag">{{ opt.flag }}</span>
+                        <span class="lang-code" style="display:inline-block; width:2rem; color:#6b7280">{{ opt.code | uppercase }}</span>
                         <span>{{ opt.label }}</span>
                     </ng-template>
                 </p-select>

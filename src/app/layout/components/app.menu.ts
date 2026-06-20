@@ -52,7 +52,11 @@ export class AppMenu implements OnInit {
 
         // Subscribe to language changes — rebuild menu when user switches.
         this.t.onLangChange.subscribe(() => this.buildModel(isAdmin, isDoctor, isDeveloper, isPharmacist));
-        this.buildModel(isAdmin, isDoctor, isDeveloper, isPharmacist);
+        // Wait for the first translation load before building (instant()
+        // returns the raw key if the JSON file isn't loaded yet).
+        this.t.get('menu.dashboard').subscribe(() => {
+            this.buildModel(isAdmin, isDoctor, isDeveloper, isPharmacist);
+        });
     }
 
     private buildModel(isAdmin: boolean, isDoctor: boolean, isDeveloper: boolean, isPharmacist: boolean) {

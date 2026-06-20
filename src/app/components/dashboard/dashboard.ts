@@ -8,6 +8,7 @@ import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TooltipModule } from 'primeng/tooltip';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { LayoutService } from '@/layout/service/layout.service';
 import { AuthService } from '@/services/auth.service';
@@ -30,7 +31,7 @@ interface StatCard {
     selector: 'app-dashboard',
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [CommonModule, RouterModule, TagModule, ButtonModule, SkeletonModule, TooltipModule],
+    imports: [CommonModule, RouterModule, TagModule, ButtonModule, SkeletonModule, TooltipModule, TranslatePipe],
     host: { class: 'grid grid-cols-12 gap-8 mb-4' },
     template: `
         <!-- ═══════════════════════════════════════════════ STAT CARDS ══ -->
@@ -54,7 +55,7 @@ interface StatCard {
                         <div class="flex items-center p-4">
                             <i [class]="card.icon + ' text-4xl!'" [ngClass]="textClass(card.color)"></i>
                             <div class="ml-4 min-w-0">
-                                <span class="block uppercase text-xs font-semibold truncate" [ngClass]="textClass(card.color)">{{ card.label }}</span>
+                                <span class="block uppercase text-xs font-semibold truncate" [ngClass]="textClass(card.color)">{{ card.label | translate }}</span>
                                 <span class="block text-2xl font-bold truncate" [ngClass]="textClass(card.color)" [title]="(card.value | number: '1.0-0') + (card.suffix ?? '')"> {{ card.value | number: '1.0-0' }}{{ card.suffix ?? '' }} </span>
                             </div>
                         </div>
@@ -68,7 +69,7 @@ interface StatCard {
         <div class="col-span-12 xl:col-span-6">
             <div class="card h-full">
                 <div class="flex items-center justify-between mb-6">
-                    <h5 class="font-semibold text-lg m-0">Today's Appointments</h5>
+                    <h5 class="font-semibold text-lg m-0">{{ 'dashboard.todaysAppointments' | translate }}</h5>
                     <p-button label="View All" icon="pi pi-arrow-right" iconPos="right" size="small" [text]="true" routerLink="/appointments"></p-button>
                 </div>
 
@@ -122,7 +123,7 @@ interface StatCard {
         <div class="col-span-12 xl:col-span-6">
             <div class="card h-full">
                 <div class="flex items-center justify-between mb-6">
-                    <h5 class="font-semibold text-lg m-0">Upcoming (7 Days)</h5>
+                    <h5 class="font-semibold text-lg m-0">{{ 'dashboard.upcoming7Days' | translate }}</h5>
                     <span class="text-sm text-surface-500">{{ upcomingAppointments().length }} scheduled</span>
                 </div>
 
@@ -168,7 +169,7 @@ interface StatCard {
             <div class="col-span-12 xl:col-span-6">
                 <div class="card h-full">
                     <div class="flex items-center justify-between mb-6">
-                        <h5 class="font-semibold text-lg m-0">Invoice Summary</h5>
+                        <h5 class="font-semibold text-lg m-0">{{ 'dashboard.invoiceSummary' | translate }}</h5>
                         <p-button label="View All" icon="pi pi-arrow-right" iconPos="right" size="small" [text]="true" routerLink="/invoices"></p-button>
                     </div>
 
@@ -218,7 +219,7 @@ interface StatCard {
             <!-- ══ PATIENTS & DOCTORS COUNTS ══ -->
             <div class="col-span-12 xl:col-span-6">
                 <div class="card h-full">
-                    <h5 class="font-semibold text-lg mb-6 m-0">Quick Overview</h5>
+                    <h5 class="font-semibold text-lg mb-6 m-0">{{ 'dashboard.quickOverview' | translate }}</h5>
                     @if (loading()) {
                         @for (i of [1, 2, 3, 4]; track i) {
                             <p-skeleton width="100%" height="2rem" styleClass="mb-3"></p-skeleton>
@@ -228,28 +229,28 @@ interface StatCard {
                             <div class="flex items-center justify-between p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20">
                                 <div class="flex items-center gap-3">
                                     <i class="pi pi-user-plus text-blue-500 text-xl"></i>
-                                    <span class="font-medium text-blue-700 dark:text-blue-300">Total Doctors</span>
+                                    <span class="font-medium text-blue-700 dark:text-blue-300">{{ 'dashboard.totalDoctors' | translate }}</span>
                                 </div>
                                 <span class="text-2xl font-bold text-blue-600">{{ totalDoctors() }}</span>
                             </div>
                             <div class="flex items-center justify-between p-4 rounded-xl bg-orange-50 dark:bg-orange-900/20">
                                 <div class="flex items-center gap-3">
                                     <i class="pi pi-users text-orange-500 text-xl"></i>
-                                    <span class="font-medium text-orange-700 dark:text-orange-300">Total Patients</span>
+                                    <span class="font-medium text-orange-700 dark:text-orange-300">{{ 'dashboard.totalPatients' | translate }}</span>
                                 </div>
                                 <span class="text-2xl font-bold text-orange-600">{{ totalPatients() }}</span>
                             </div>
                             <div class="flex items-center justify-between p-4 rounded-xl bg-green-50 dark:bg-green-900/20">
                                 <div class="flex items-center gap-3">
                                     <i class="pi pi-calendar-check text-green-500 text-xl"></i>
-                                    <span class="font-medium text-green-700 dark:text-green-300">Appointments This Month</span>
+                                    <span class="font-medium text-green-700 dark:text-green-300">{{ 'dashboard.appointmentsThisMonth' | translate }}</span>
                                 </div>
                                 <span class="text-2xl font-bold text-green-600">{{ monthAppointments() }}</span>
                             </div>
                             <div class="flex items-center justify-between p-4 rounded-xl bg-purple-50 dark:bg-purple-900/20">
                                 <div class="flex items-center gap-3">
                                     <i class="pi pi-dollar text-purple-500 text-xl"></i>
-                                    <span class="font-medium text-purple-700 dark:text-purple-300">Total Revenue (QAR)</span>
+                                    <span class="font-medium text-purple-700 dark:text-purple-300">{{ 'dashboard.totalRevenueQAR' | translate }}</span>
                                 </div>
                                 <span class="text-2xl font-bold text-purple-600">{{ totalRevenue() | number: '1.0-0' }}</span>
                             </div>
@@ -400,12 +401,14 @@ export class DashboardComponent implements OnInit {
             this.invoiceSummary.set({ paid, pending, overdue });
             this.recentInvoices.set(allInvoices.slice(0, 5));
 
+            // Step I — labels are translation KEYS now; template's | translate
+            // pipe resolves them to the active language.
             this.stats.set([
-                { label: "Today's Appointments", value: today.length,         icon: 'pi pi-calendar-clock', color: 'purple', svgKey: 'interactions' },
-                { label: 'Upcoming (7 Days)',    value: upcoming.length,      icon: 'pi pi-calendar',       color: 'blue',   svgKey: 'users' },
-                { label: 'Total Appointments',   value: totalAppointments,    icon: 'pi pi-list',           color: 'blue',   svgKey: 'users' },
-                { label: 'Pending Invoices',     value: pending,              icon: 'pi pi-file-invoice',   color: 'orange', svgKey: 'locations' },
-                { label: 'Total Revenue',        value: revenue,              icon: 'pi pi-dollar',         color: 'green',  svgKey: 'rate', suffix: ' QAR' }
+                { label: 'dashboard.todaysAppointments', value: today.length,      icon: 'pi pi-calendar-clock', color: 'purple', svgKey: 'interactions' },
+                { label: 'dashboard.upcoming7Days',      value: upcoming.length,   icon: 'pi pi-calendar',       color: 'blue',   svgKey: 'users' },
+                { label: 'dashboard.totalAppointments',  value: totalAppointments, icon: 'pi pi-list',           color: 'blue',   svgKey: 'users' },
+                { label: 'dashboard.pendingInvoices',    value: pending,           icon: 'pi pi-file-invoice',   color: 'orange', svgKey: 'locations' },
+                { label: 'dashboard.totalRevenue',       value: revenue,           icon: 'pi pi-dollar',         color: 'green',  svgKey: 'rate', suffix: ' QAR' }
             ]);
 
             this.loading.set(false);
@@ -438,10 +441,10 @@ export class DashboardComponent implements OnInit {
             this.pendingInvoices.set(pending);
 
             this.stats.set([
-                { label: "Today's Appointments", value: today.length,        icon: 'pi pi-calendar-clock', color: 'purple', svgKey: 'interactions' },
-                { label: 'Upcoming (7 Days)',    value: upcoming.length,     icon: 'pi pi-calendar',       color: 'blue',   svgKey: 'users' },
-                { label: 'Pending Invoices',     value: pending.length,      icon: 'pi pi-file-invoice',   color: 'orange', svgKey: 'locations' },
-                { label: 'Total Appointments',   value: totalAppointments,   icon: 'pi pi-list',           color: 'green',  svgKey: 'rate' }
+                { label: 'dashboard.todaysAppointments', value: today.length,      icon: 'pi pi-calendar-clock', color: 'purple', svgKey: 'interactions' },
+                { label: 'dashboard.upcoming7Days',      value: upcoming.length,   icon: 'pi pi-calendar',       color: 'blue',   svgKey: 'users' },
+                { label: 'dashboard.pendingInvoices',    value: pending.length,    icon: 'pi pi-file-invoice',   color: 'orange', svgKey: 'locations' },
+                { label: 'dashboard.totalAppointments',  value: totalAppointments, icon: 'pi pi-list',           color: 'green',  svgKey: 'rate' }
             ]);
 
             this.loading.set(false);

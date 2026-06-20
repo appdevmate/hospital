@@ -58,6 +58,26 @@
         "suspended": "Suspended",
         "trial": "Trial"
     },
+    "dashboard": {
+        "totalRevenue": "Total Revenue",
+        "pendingInvoices": "Pending Invoices",
+        "totalAppointments": "Total Appointments",
+        "upcoming7Days": "Upcoming (7 Days)",
+        "todaysAppointments": "Today's Appointments",
+        "noUpcoming": "No upcoming appointments",
+        "noToday": "No appointments scheduled for today",
+        "viewAll": "View All",
+        "quickOverview": "Quick Overview",
+        "invoiceSummary": "Invoice Summary",
+        "totalDoctors": "Total Doctors",
+        "totalPatients": "Total Patients",
+        "appointmentsThisMonth": "Appointments This Month",
+        "totalRevenueQAR": "Total Revenue (QAR)",
+        "overdue": "Overdue",
+        "pending": "Pending",
+        "paid": "Paid",
+        "scheduled": "scheduled"
+    },
     "operatorConsole": {
         "title": "Akwadona Operator Console",
         "subtitle": "Subscriptions · usage · compliance · audit",

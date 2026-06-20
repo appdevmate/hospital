@@ -58,6 +58,26 @@
         "suspended": "Opgeschort",
         "trial": "Proef"
     },
+    "dashboard": {
+        "totalRevenue": "Totale omzet",
+        "pendingInvoices": "Openstaande facturen",
+        "totalAppointments": "Totaal afspraken",
+        "upcoming7Days": "Aankomend (7 dagen)",
+        "todaysAppointments": "Afspraken van vandaag",
+        "noUpcoming": "Geen aankomende afspraken",
+        "noToday": "Geen afspraken gepland voor vandaag",
+        "viewAll": "Alles bekijken",
+        "quickOverview": "Snel overzicht",
+        "invoiceSummary": "Factuuroverzicht",
+        "totalDoctors": "Totaal artsen",
+        "totalPatients": "Totaal patiënten",
+        "appointmentsThisMonth": "Afspraken deze maand",
+        "totalRevenueQAR": "Totale omzet (QAR)",
+        "overdue": "Achterstallig",
+        "pending": "In afwachting",
+        "paid": "Betaald",
+        "scheduled": "gepland"
+    },
     "operatorConsole": {
         "title": "Akwadona Beheerconsole",
         "subtitle": "Abonnementen · gebruik · naleving · audit",

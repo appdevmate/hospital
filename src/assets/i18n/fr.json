@@ -58,6 +58,26 @@
         "suspended": "Suspendu",
         "trial": "Essai"
     },
+    "dashboard": {
+        "totalRevenue": "Chiffre d'affaires total",
+        "pendingInvoices": "Factures en attente",
+        "totalAppointments": "Total des rendez-vous",
+        "upcoming7Days": "À venir (7 jours)",
+        "todaysAppointments": "Rendez-vous d'aujourd'hui",
+        "noUpcoming": "Aucun rendez-vous à venir",
+        "noToday": "Aucun rendez-vous prévu aujourd'hui",
+        "viewAll": "Voir tout",
+        "quickOverview": "Aperçu rapide",
+        "invoiceSummary": "Résumé des factures",
+        "totalDoctors": "Total médecins",
+        "totalPatients": "Total patients",
+        "appointmentsThisMonth": "Rendez-vous ce mois-ci",
+        "totalRevenueQAR": "Chiffre d'affaires total (QAR)",
+        "overdue": "En retard",
+        "pending": "En attente",
+        "paid": "Payé",
+        "scheduled": "planifié"
+    },
     "operatorConsole": {
         "title": "Console opérateur Akwadona",
         "subtitle": "Abonnements · utilisation · conformité · audit",
