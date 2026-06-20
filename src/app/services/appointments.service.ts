@@ -38,10 +38,12 @@ export interface Appointment {
     // Patient
     patientId: string;
     patientName: string;
-    // Doctor & Department
+    // Doctor & Department — Step C.3: doctorId is the canonical foreign key.
+    // doctorEmail is NOT stored on appointment rows — the doctor's current
+    // email is looked up live by doctorId (so it stays correct after a
+    // doctor changes their email).
     doctorId: string;
     doctorName: string;
-    doctorEmail: string;
     department: string;
     specialization?: string | null;
     // Scheduling
@@ -83,7 +85,6 @@ export interface CreateAppointmentRequest {
     patientName: string;
     doctorId: string;
     doctorName: string;
-    doctorEmail: string;
     department: string;
     date: string;
     startTime: string;

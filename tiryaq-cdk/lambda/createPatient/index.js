@@ -15,6 +15,8 @@ const { randomUUID } = require('crypto');
 // can write qidHash / emailHash / phoneHash for searchable lookups, and
 // computeHmac so we can build hashed lock PKs that are tenant-scoped.
 const { encryptItem, stampHashes, computeHmac, PATIENT_PHI_FIELDS, PATIENT_HASH_FIELDS } = require('./crypto');
+// Step 2g — per-tenant rate limit.
+const throttle = require('./throttle');
 
 const REGION     = 'us-east-1';
 const TABLE_NAME = 'Hospital';
@@ -357,6 +359,14 @@ exports.handler = async (event) => {
       body: JSON.stringify({ message: e.message })
     };
   }
+  // Step 2g — per-tenant throttle.
+  {
+    const __role = (event.requestContext?.authorizer?.jwt?.claims || {}).role || 'tenant_user';
+    const __tid = (typeof tenantId !== 'undefined') ? tenantId : (event.requestContext?.authorizer?.jwt?.claims || {}).tenantId;
+    const __limitResponse = await throttle.precheck(event, { tenantId: __tid, role: __role });
+    if (__limitResponse) return __limitResponse;
+  }
+
 
   // Idempotency (Phase D) — return the cached response if we've seen this id.
   const cid = getClientRequestId(event);

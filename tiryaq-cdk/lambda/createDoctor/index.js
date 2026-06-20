@@ -12,6 +12,8 @@ const { randomUUID } = require('crypto');
 // Step 4 — stampHashes + computeHmac. Doctor has THREE uniqueness locks
 // (email, QID, phone) so we need all three hashes for lock PKs.
 const { encryptItem, stampHashes, computeHmac, DOCTOR_PHI_FIELDS, DOCTOR_HASH_FIELDS } = require('./crypto');
+// Step 2g — per-tenant rate limit.
+const throttle = require('./throttle');
 
 const REGION     = 'us-east-1';
 const TABLE_NAME = 'Hospital';
@@ -388,6 +390,14 @@ exports.handler = async (event) => {
       body: JSON.stringify({ message: e.message })
     };
   }
+  // Step 2g — per-tenant throttle.
+  {
+    const __role = (event.requestContext?.authorizer?.jwt?.claims || {}).role || 'tenant_user';
+    const __tid = (typeof tenantId !== 'undefined') ? tenantId : (event.requestContext?.authorizer?.jwt?.claims || {}).tenantId;
+    const __limitResponse = await throttle.precheck(event, { tenantId: __tid, role: __role });
+    if (__limitResponse) return __limitResponse;
+  }
+
 
   const cid = getClientRequestId(event);
   const cached = await checkIdempotency(cid);

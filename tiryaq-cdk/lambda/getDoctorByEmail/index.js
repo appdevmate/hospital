@@ -7,6 +7,8 @@ const { DynamoDBDocumentClient, QueryCommand } = require('@aws-sdk/lib-dynamodb'
 // no longer works. We HMAC the input email with the tenant's KMS HMAC key
 // and Query the new index by emailHash.
 const { decryptItem, computeHmac, DOCTOR_PHI_FIELDS, PATIENT_PHI_FIELDS } = require('./crypto');
+// Step 2g — per-tenant rate limit.
+const throttle = require('./throttle');
 
 const REGION = 'us-east-1';
 const TABLE = 'Hospital';
@@ -53,6 +55,14 @@ exports.handler = async (event) => {
   let tenantId;
   try { tenantId = getTenant(event); }
   catch (e) { return { statusCode: e.statusCode || 403, headers: hdrs, body: JSON.stringify({ message: e.message }) }; }
+  // Step 2g — per-tenant throttle.
+  {
+    const __role = (event.requestContext?.authorizer?.jwt?.claims || {}).role || 'tenant_user';
+    const __tid = (typeof tenantId !== 'undefined') ? tenantId : (event.requestContext?.authorizer?.jwt?.claims || {}).tenantId;
+    const __limitResponse = await throttle.precheck(event, { tenantId: __tid, role: __role });
+    if (__limitResponse) return __limitResponse;
+  }
+
 
   try {
     let email = null;

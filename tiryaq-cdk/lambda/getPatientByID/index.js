@@ -4,6 +4,8 @@ const { DynamoDBDocumentClient, GetCommand } = require('@aws-sdk/lib-dynamodb');
 // Step 3 — PHI envelope decryption. See ./crypto.js (sibling, synced from
 // _shared/crypto.js by scripts/sync-shared-helpers.js).
 const { decryptItem, PATIENT_PHI_FIELDS } = require('./crypto');
+// Step 2g — per-tenant rate limit.
+const throttle = require('./throttle');
 
 const client = new DynamoDBClient({ region: 'us-east-1' });
 const dynamo = DynamoDBDocumentClient.from(client);
@@ -39,6 +41,14 @@ exports.handler = async (event) => {
             body: JSON.stringify({ message: e.message })
         };
     }
+  // Step 2g — per-tenant throttle.
+  {
+    const __role = (event.requestContext?.authorizer?.jwt?.claims || {}).role || 'tenant_user';
+    const __tid = (typeof tenantId !== 'undefined') ? tenantId : (event.requestContext?.authorizer?.jwt?.claims || {}).tenantId;
+    const __limitResponse = await throttle.precheck(event, { tenantId: __tid, role: __role });
+    if (__limitResponse) return __limitResponse;
+  }
+
 
     try {
         const encodedID = event.pathParameters.patientID;

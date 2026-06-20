@@ -17,6 +17,8 @@ const db     = DynamoDBDocumentClient.from(client);
 
 // Step 3 — PHI envelope encryption. ./crypto.js synced from _shared/.
 const { encryptItem, decryptItem, decryptItems, EXAMINATION_PHI_FIELDS } = require('./crypto');
+// Step 2g — per-tenant rate limit.
+const throttle = require('./throttle');
 
 // ── Tenant enforcement (Step 2d) — guard at handler entry. ───────────────────
 function getTenant(event) {
@@ -270,8 +272,16 @@ exports.handler = async (event) => {
     if (method === 'OPTIONS') return res(200, {});
 
     // Step 2d — tenant guard.
-    try { getTenant(event); }
+    let __tenantId;
+    try { __tenantId = getTenant(event); }
     catch (e) { return err(e.statusCode || 403, e.message); }
+
+    // Step 2g — per-tenant throttle.
+    {
+        const role = (event.requestContext?.authorizer?.jwt?.claims || {}).role || 'tenant_user';
+        const limitResponse = await throttle.precheck(event, { tenantId: __tenantId, role });
+        if (limitResponse) return limitResponse;
+    }
 
     // Code review finding 2.1 — only admins or the named doctor themselves
     // may create / patch / sign off an examination. Reject anything else.
@@ -309,9 +319,10 @@ exports.handler = async (event) => {
             examId:          id,
             patientId:       body.patientId,
             patientName:     body.patientName,
+            // Step C.3 — doctorId is canonical. doctorEmail not stored;
+            // looked up live by doctorId at display time.
             doctorId:        body.doctorId,    // validated as required above
             doctorName:      body.doctorName  || '',
-            doctorEmail:     body.doctorEmail.toLowerCase().trim(),
             appointmentId:   body.appointmentId || null,
             date:            body.date        || now.slice(0, 10),
             status:          'draft',
@@ -340,19 +351,22 @@ exports.handler = async (event) => {
         // This allows O(1) lookup of a doctor's patients without scanning exams.
         // ConditionExpression makes this idempotent — safe to call multiple times.
         try {
-            await db.send(new PutCommand({
-                TableName: TABLE_NAME,
-                Item: {
-                    PK:          `DOCTOR#${exam.doctorEmail}`,
-                    SK:          `PATIENT#${exam.patientId}`,
-                    EntityType:  'DOCTOR_PATIENT',
-                    doctorEmail: exam.doctorEmail,
-                    patientId:   exam.patientId,
-                    patientName: exam.patientName,
-                    assignedAt:  now
-                },
-                ConditionExpression: 'attribute_not_exists(PK) AND attribute_not_exists(SK)'
-            }));
+            // Step C.3 — link rows keyed by doctor UUID. doctorEmail not stored.
+            if (exam.doctorId) {
+                await db.send(new PutCommand({
+                    TableName: TABLE_NAME,
+                    Item: {
+                        PK:          `DOCTOR#${exam.doctorId}`,
+                        SK:          `PATIENT#${exam.patientId}`,
+                        EntityType:  'DOCTOR_PATIENT',
+                        doctorId:    exam.doctorId,
+                        patientId:   exam.patientId,
+                        patientName: exam.patientName,
+                        assignedAt:  now
+                    },
+                    ConditionExpression: 'attribute_not_exists(PK) AND attribute_not_exists(SK)'
+                }));
+            }
         } catch (e) {
             // ConditionalCheckFailedException means the relationship already exists — safe to ignore
             if (e.name !== 'ConditionalCheckFailedException') throw e;

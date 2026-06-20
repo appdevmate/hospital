@@ -6,6 +6,8 @@ const { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand, ListO
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const { DynamoDBDocumentClient, GetCommand, PutCommand } = require('@aws-sdk/lib-dynamodb');
+// Step 2g — per-tenant rate limit.
+const throttle = require('./throttle');
 
 const REGION = 'us-east-1';
 const BUCKET = process.env.DOCUMENTS_BUCKET || 'tiryaq-documents';
@@ -123,8 +125,16 @@ exports.handler = async (event) => {
     }
 
     // Step 2d — tenant guard.
-    try { getTenant(event); }
+    let __tenantId;
+    try { __tenantId = getTenant(event); }
     catch (e) { return errResp(e.statusCode || 403, e.message); }
+
+    // Step 2g — per-tenant throttle.
+    {
+        const role = (event.requestContext?.authorizer?.jwt?.claims || {}).role || 'tenant_user';
+        const limitResponse = await throttle.precheck(event, { tenantId: __tenantId, role });
+        if (limitResponse) return limitResponse;
+    }
 
     try {
         // Extract user info from Cognito authorizer

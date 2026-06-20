@@ -49,6 +49,8 @@ export interface TenantStats {
         activeUsers: number | null;
         storageGB: number | null;
         estimatedMonthlyCostUSD: number | null;
+        // Step 2g.5 — how many requests this tenant got 429'd in the last 24h.
+        throttle429Count24h: number | null;
     };
     compliance: {
         baaSigned: boolean;
@@ -107,8 +109,16 @@ export class OperatorService {
         return this.authedGet(Config.buildUrl('operator/tenants'));
     }
 
-    getTenant(slug: string): Observable<any> {
-        return this.authedGet(Config.buildUrl(`operator/tenants/${encodeURIComponent(slug)}`));
+    /**
+     * Step 7i — combined detail call: tenant profile + stats + audit in one
+     * round-trip. Pass `expand: ['stats','audit']` to ask the server to
+     * include them inline on the response (saves 2 extra round-trips).
+     */
+    getTenant(slug: string, opts?: { expand?: ('stats' | 'audit')[]; auditLimit?: number }): Observable<any> {
+        let params = new HttpParams();
+        if (opts?.expand?.length) params = params.set('expand', opts.expand.join(','));
+        if (opts?.auditLimit) params = params.set('limit', String(opts.auditLimit));
+        return this.authedGet(Config.buildUrl(`operator/tenants/${encodeURIComponent(slug)}`), params);
     }
 
     getTenantStats(slug: string): Observable<TenantStats> {

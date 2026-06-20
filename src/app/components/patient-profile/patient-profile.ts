@@ -94,8 +94,9 @@ export class PatientProfileComponent implements OnInit {
                     .createConsultation({
                         patientId: this.plainId,
                         patientName: this.patientName,
-                        doctorEmail: this.auth.current?.email || '',
-                        doctorName: this.auth.current?.name || '',
+                        // Step C.3 — doctorId is canonical. Email looked up live by doctorId.
+                        doctorId:    this.auth.current?.doctorId || '',
+                        doctorName:  this.auth.current?.name || '',
                         appointmentId: appt.appointmentId
                     })
                     .subscribe({

@@ -11,6 +11,7 @@ import { TooltipModule } from 'primeng/tooltip';
 
 import { LayoutService } from '@/layout/service/layout.service';
 import { AuthService } from '@/services/auth.service';
+import { TenantService } from '@/services/tenant.service';
 import { DoctorsService } from '@/services/doctors.service';
 import { PatientsService } from '@/services/patients.service';
 import { AppointmentsService, Appointment } from '@/services/appointments.service';
@@ -316,6 +317,7 @@ interface StatCard {
 })
 export class DashboardComponent implements OnInit {
     auth = inject(AuthService);
+    private tenant = inject(TenantService);
     private layoutService = inject(LayoutService);
     private doctorsService = inject(DoctorsService);
     private patientsService = inject(PatientsService);
@@ -347,6 +349,13 @@ export class DashboardComponent implements OnInit {
     private thisMonthStr = `${this.today.getFullYear()}-${String(this.today.getMonth() + 1).padStart(2, '0')}`;
 
     ngOnInit() {
+        // Step 7g — operators land on /operator, never the tenant dashboard.
+        // Skip every tenant API call (they'd 403 anyway) so the redirect is clean.
+        if (this.tenant.isOperator) {
+            this.loading.set(false);
+            return;
+        }
+
         const doctorEmail = this.auth.isDoctor ? this.auth.current.email : undefined;
 
         if (this.auth.isAdmin || this.auth.isDeveloper) {

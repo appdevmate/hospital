@@ -468,6 +468,9 @@ export class TiryaqStack extends cdk.Stack {
             principal: new iam.ServicePrincipal('cognito-idp.amazonaws.com'),
             sourceArn: userPool.userPoolArn
         });
+        // Step C.3 — pre-token Lambda scans DOCTOR profile rows to resolve
+        // the application doctorId UUID for the signed-in user. Read-only.
+        table.grantReadData(preTokenFn);
 
         const cfnUserPool = userPool.node.defaultChild as cognito.CfnUserPool;
         cfnUserPool.lambdaConfig = {
@@ -533,9 +536,14 @@ export class TiryaqStack extends cdk.Stack {
         // Memory bumped to 512 MB by default — Node.js cold-start scales with
         // CPU which is allocated proportionally to memory; 512 MB roughly
         // halves cold-start time vs the default 128 MB and is still pennies/month.
-        const fn = (id: string, folder: string, handler: string, runtime: lambda.Runtime = lambda.Runtime.NODEJS_18_X, extraEnv: Record<string, string> = {}, opts: { memorySize?: number } = {}) =>
+        // Step 8 — Lambda factory now accepts an optional `functionName` override
+        // so we can rename a deployed Lambda (tiryaq-* → akwadona-*) while
+        // keeping the source folder untouched. Folder structure changes are
+        // cosmetic; the deployed name is what shows up in AWS Console,
+        // CloudWatch logs, and customer-facing artifacts.
+        const fn = (id: string, folder: string, handler: string, runtime: lambda.Runtime = lambda.Runtime.NODEJS_18_X, extraEnv: Record<string, string> = {}, opts: { memorySize?: number; functionName?: string } = {}) =>
             new lambda.Function(this, id, {
-                functionName: folder,
+                functionName: opts.functionName ?? folder,
                 runtime,
                 handler,
                 code: lambda.Code.fromAsset(`lambda/${folder}`),
@@ -547,49 +555,51 @@ export class TiryaqStack extends cdk.Stack {
         // ─────────────────────────────────────────────────────────────────────
         // Lambda functions
         // ─────────────────────────────────────────────────────────────────────
-        const getAllPatientsFn = fn('GetAllPatients', 'getAllPatients', 'index.handler');
-        const getPatientByIDFn = fn('GetPatientByID', 'getPatientByID', 'index.handler');
-        const createPatientFn = fn('CreatePatient', 'createPatient', 'index.handler');
-        const updatePatientFn = fn('UpdatePatient', 'updatePatient', 'index.handler');
-        const deletePatientFn = fn('DeletePatient', 'deletePatient', 'index.handler');
-        const getPatientsDataByFiltersFn = fn('GetPatientsDataByFilters', 'getPatientsDataByFilters', 'index.handler');
-        const getAllDoctorsFn = fn('GetAllDoctors', 'getAllDoctors', 'index.handler');
-        const getDoctorByIDFn = fn('GetDoctorByID', 'getDoctorByID', 'index.handler');
-        const getDoctorByEmailFn = fn('GetDoctorByEmail', 'getDoctorByEmail', 'index.handler', lambda.Runtime.NODEJS_24_X);
-        const createDoctorFn = fn('CreateDoctor', 'createDoctor', 'index.handler');
-        const updateDoctorFn = fn('UpdateDoctor', 'updateDoctor', 'index.handler');
-        const deleteDoctorFn = fn('DeleteDoctor', 'deleteDoctor', 'index.handler');
-        const createPatientPaymentFn = fn('CreatePatientPayment', 'createPatientPayment', 'index.handler');
-        const getAllPaymentsForPatientFn = fn('GetAllPaymentsForPatient', 'getAllPaymentsForPatient', 'index.handler');
-        const listAllPaymentsForPatientByIDFn = fn('ListAllPaymentsForPatientByID', 'listAllPaymentsForPatientByID', 'index.handler');
-        const updatePatientPaymentFn = fn('UpdatePatientPayment', 'updatePatientPayment', 'index.handler');
-        const getPaymentByIDFn = fn('GetPaymentByID', 'getPaymentByID', 'index.handler');
-        const deletePaymentFn = fn('DeletePayment', 'deletePayment', 'index.handler');
-        const getAllInvoicesFn = fn('GetAllInvoices', 'getAllInvoices', 'index.handler', lambda.Runtime.NODEJS_24_X);
+        const getAllPatientsFn = fn('GetAllPatients', 'getAllPatients', 'index.handler', undefined, {}, { functionName: 'akwadona-get-all-patients' });
+        const getPatientByIDFn = fn('GetPatientByID', 'getPatientByID', 'index.handler', undefined, {}, { functionName: 'akwadona-get-patient-by-id' });
+        const createPatientFn = fn('CreatePatient', 'createPatient', 'index.handler', undefined, {}, { functionName: 'akwadona-create-patient' });
+        const updatePatientFn = fn('UpdatePatient', 'updatePatient', 'index.handler', undefined, {}, { functionName: 'akwadona-update-patient' });
+        const deletePatientFn = fn('DeletePatient', 'deletePatient', 'index.handler', undefined, {}, { functionName: 'akwadona-delete-patient' });
+        const getPatientsDataByFiltersFn = fn('GetPatientsDataByFilters', 'getPatientsDataByFilters', 'index.handler', undefined, {}, { functionName: 'akwadona-get-patients-by-filters' });
+        const getAllDoctorsFn = fn('GetAllDoctors', 'getAllDoctors', 'index.handler', undefined, {}, { functionName: 'akwadona-get-all-doctors' });
+        const getDoctorByIDFn = fn('GetDoctorByID', 'getDoctorByID', 'index.handler', undefined, {}, { functionName: 'akwadona-get-doctor-by-id' });
+        const getDoctorByEmailFn = fn('GetDoctorByEmail', 'getDoctorByEmail', 'index.handler', lambda.Runtime.NODEJS_24_X, {}, { functionName: 'akwadona-get-doctor-by-email' });
+        const createDoctorFn = fn('CreateDoctor', 'createDoctor', 'index.handler', undefined, {}, { functionName: 'akwadona-create-doctor' });
+        const updateDoctorFn = fn('UpdateDoctor', 'updateDoctor', 'index.handler', undefined, {}, { functionName: 'akwadona-update-doctor' });
+        const deleteDoctorFn = fn('DeleteDoctor', 'deleteDoctor', 'index.handler', undefined, {}, { functionName: 'akwadona-delete-doctor' });
+        const createPatientPaymentFn = fn('CreatePatientPayment', 'createPatientPayment', 'index.handler', undefined, {}, { functionName: 'akwadona-create-payment' });
+        const getAllPaymentsForPatientFn = fn('GetAllPaymentsForPatient', 'getAllPaymentsForPatient', 'index.handler', undefined, {}, { functionName: 'akwadona-get-payments-for-patient' });
+        const listAllPaymentsForPatientByIDFn = fn('ListAllPaymentsForPatientByID', 'listAllPaymentsForPatientByID', 'index.handler', undefined, {}, { functionName: 'akwadona-list-payments-by-patient' });
+        const updatePatientPaymentFn = fn('UpdatePatientPayment', 'updatePatientPayment', 'index.handler', undefined, {}, { functionName: 'akwadona-update-payment' });
+        const getPaymentByIDFn = fn('GetPaymentByID', 'getPaymentByID', 'index.handler', undefined, {}, { functionName: 'akwadona-get-payment-by-id' });
+        const deletePaymentFn = fn('DeletePayment', 'deletePayment', 'index.handler', undefined, {}, { functionName: 'akwadona-delete-payment' });
+        const getAllInvoicesFn = fn('GetAllInvoices', 'getAllInvoices', 'index.handler', lambda.Runtime.NODEJS_24_X, {}, { functionName: 'akwadona-get-all-invoices' });
         // createPatientSurgeryFn removed (was an unimplemented stub) to free
         // CFN resources for the operator console. Re-add when the surgery
         // module is built out.
-        const listAllSurgeriesForPatientByIDFn = fn('ListAllSurgeriesForPatientByID', 'listAllSurgeriesForPatientByID', 'index.handler');
-        const getSurgeryByIDFn = fn('GetSurgeryByID', 'getSurgeryByID', 'index.handler');
-        const getAllDepartmentsFn = fn('GetAllDepartments', 'getAllDepartments', 'index.handler');
-        const createNewDepartmentFn = fn('CreateNewDepartment', 'createNewDepartment', 'index.handler');
-        const bulkCreateDepartmentsFn = fn('BulkCreateDepartments', 'bulkCreateDepartments', 'index.handler');
-        const deleteAllDepartmentsFn = fn('DeleteAllDepartments', 'deleteAllDepartments', 'index.handler');
-        const getAllSpecializationsFn = fn('GetAllSpecializations', 'getAllSpecializations', 'index.handler');
-        const createNewSpecializationFn = fn('CreateNewSpecialization', 'createNewSpecialization', 'index.handler');
-        const bulkCreateSpecializationsFn = fn('BulkCreateSpecializations', 'bulkCreateSpecializations', 'index.handler');
-        const deleteAllSpecializationsFn = fn('DeleteAllSpecializations', 'deleteAllSpecializations', 'index.handler');
-        const adminPanelFn = fn('TiryaqAdminPanel', 'tiryaq-admin-panel', 'index.handler', lambda.Runtime.NODEJS_20_X);
+        const listAllSurgeriesForPatientByIDFn = fn('ListAllSurgeriesForPatientByID', 'listAllSurgeriesForPatientByID', 'index.handler', undefined, {}, { functionName: 'akwadona-list-surgeries-by-patient' });
+        const getSurgeryByIDFn = fn('GetSurgeryByID', 'getSurgeryByID', 'index.handler', undefined, {}, { functionName: 'akwadona-get-surgery-by-id' });
+        const getAllDepartmentsFn = fn('GetAllDepartments', 'getAllDepartments', 'index.handler', undefined, {}, { functionName: 'akwadona-get-all-departments' });
+        const createNewDepartmentFn = fn('CreateNewDepartment', 'createNewDepartment', 'index.handler', undefined, {}, { functionName: 'akwadona-create-department' });
+        const bulkCreateDepartmentsFn = fn('BulkCreateDepartments', 'bulkCreateDepartments', 'index.handler', undefined, {}, { functionName: 'akwadona-bulk-create-departments' });
+        const deleteAllDepartmentsFn = fn('DeleteAllDepartments', 'deleteAllDepartments', 'index.handler', undefined, {}, { functionName: 'akwadona-delete-all-departments' });
+        const getAllSpecializationsFn = fn('GetAllSpecializations', 'getAllSpecializations', 'index.handler', undefined, {}, { functionName: 'akwadona-get-all-specializations' });
+        const createNewSpecializationFn = fn('CreateNewSpecialization', 'createNewSpecialization', 'index.handler', undefined, {}, { functionName: 'akwadona-create-specialization' });
+        const bulkCreateSpecializationsFn = fn('BulkCreateSpecializations', 'bulkCreateSpecializations', 'index.handler', undefined, {}, { functionName: 'akwadona-bulk-create-specializations' });
+        const deleteAllSpecializationsFn = fn('DeleteAllSpecializations', 'deleteAllSpecializations', 'index.handler', undefined, {}, { functionName: 'akwadona-delete-all-specializations' });
+        // Step 8 — deployed as `akwadona-admin-panel`.
+        const adminPanelFn = fn('TiryaqAdminPanel', 'tiryaq-admin-panel', 'index.handler', lambda.Runtime.NODEJS_20_X, {}, { functionName: 'akwadona-admin-panel' });
         // Step 7 — Operator console backend.
         // Read-mostly Lambda that surfaces tenant metadata, counts, and
         // audit metadata to the operator UI at www.akwadona.com. By
         // convention it never calls KMS Decrypt on tenant data — see the
         // top-of-file comment in tiryaq-operator-console/index.js.
+        // Step 8 — deployed as `akwadona-operator-console`.
         const operatorConsoleFn = fn('TiryaqOperatorConsole', 'tiryaq-operator-console', 'index.handler', lambda.Runtime.NODEJS_20_X, {
             API_ID: 'jxz59jh15f',
             USER_POOL_ID: 'us-east-1_RACghntmS',
             CLOUDFRONT_DISTRIBUTION_ID: 'E1Z1ZKYM74LVA7'
-        });
+        }, { functionName: 'akwadona-operator-console' });
         // Step 7g — platform-admin metrics need CloudWatch + Cognito list access.
         // Read-only — no business data.
         operatorConsoleFn.addToRolePolicy(new iam.PolicyStatement({
@@ -600,17 +610,24 @@ export class TiryaqStack extends cdk.Stack {
             actions: ['cognito-idp:ListUsersInGroup'],
             resources: [userPool.userPoolArn]
         }));
-        const examinationsFn = fn('TiryaqExaminations', 'tiryaq-examinations', 'index.handler', lambda.Runtime.NODEJS_24_X);
-        const pharmacyFn = fn('TiryaqPharmacy', 'tiryaq-pharmacy', 'index.handler', lambda.Runtime.NODEJS_24_X);
-        const documentManagerFn = fn('TiryaqDocumentManager', 'tiryaq-document-manager', 'index.handler', lambda.Runtime.NODEJS_24_X);
-        const auditFn = fn('TiryaqAudit', 'tiryaq-audit', 'index.handler', lambda.Runtime.NODEJS_24_X);
-        const appointmentsFn = fn('TiryaqAppointments', 'tiryaq-appointments', 'index.handler', lambda.Runtime.NODEJS_24_X);
+        // Step 8 — deployed as `akwadona-examinations`.
+        const examinationsFn = fn('TiryaqExaminations', 'tiryaq-examinations', 'index.handler', lambda.Runtime.NODEJS_24_X, {}, { functionName: 'akwadona-examinations' });
+        // Step 8 — deployed as `akwadona-pharmacy`; source folder kept for diff minimality.
+        const pharmacyFn = fn('TiryaqPharmacy', 'tiryaq-pharmacy', 'index.handler', lambda.Runtime.NODEJS_24_X, {}, { functionName: 'akwadona-pharmacy' });
+        // Step 8 — deployed as `akwadona-document-manager`.
+        const documentManagerFn = fn('TiryaqDocumentManager', 'tiryaq-document-manager', 'index.handler', lambda.Runtime.NODEJS_24_X, {}, { functionName: 'akwadona-document-manager' });
+        // Step 8 — deployed as `akwadona-audit`.
+        const auditFn = fn('TiryaqAudit', 'tiryaq-audit', 'index.handler', lambda.Runtime.NODEJS_24_X, {}, { functionName: 'akwadona-audit' });
+        // Step 8 — deployed as `akwadona-appointments`.
+        const appointmentsFn = fn('TiryaqAppointments', 'tiryaq-appointments', 'index.handler', lambda.Runtime.NODEJS_24_X, {}, { functionName: 'akwadona-appointments' });
         // Hospital calendar — replaces the previous external CalendarPlatform SaaS.
         // All calendar data now persists in the Hospital DynamoDB table for
         // PDPPL data-residency + clinical-privacy compliance.
-        const calendarFn = fn('TiryaqCalendar', 'tiryaq-calendar', 'index.handler', lambda.Runtime.NODEJS_20_X);
+        // Step 8 — deployed as `akwadona-calendar`.
+        const calendarFn = fn('TiryaqCalendar', 'tiryaq-calendar', 'index.handler', lambda.Runtime.NODEJS_20_X, {}, { functionName: 'akwadona-calendar' });
         // Blood Bank module — donors / donations / inventory / requests / crossmatch / issue.
-        const bloodbankFn = fn('TiryaqBloodbank', 'tiryaq-bloodbank', 'index.handler', lambda.Runtime.NODEJS_20_X);
+        // Step 8 — deployed as `akwadona-bloodbank`.
+        const bloodbankFn = fn('TiryaqBloodbank', 'tiryaq-bloodbank', 'index.handler', lambda.Runtime.NODEJS_20_X, {}, { functionName: 'akwadona-bloodbank' });
 
         // ─────────────────────────────────────────────────────────────────────
         // ScribeFirst Phase 1 — SOAP generation Lambda.
@@ -619,6 +636,7 @@ export class TiryaqStack extends cdk.Stack {
         // BEDROCK_REGION can differ from AWS_REGION when Bedrock isn't yet
         // available in the data-plane region (e.g. me-south-1 production).
         // ─────────────────────────────────────────────────────────────────────
+        // Step 8 — deployed as `akwadona-scribe`.
         const scribeFn = fn(
             'TiryaqScribe',
             'tiryaq-scribe',
@@ -632,7 +650,8 @@ export class TiryaqStack extends cdk.Stack {
                 // Newer Anthropic models on Bedrock are only invokable through an
                 // inference profile (the "us." prefix), not the bare model ID.
                 BEDROCK_MODEL_ID: 'us.anthropic.claude-haiku-4-5-20251001-v1:0'
-            }
+            },
+            { functionName: 'akwadona-scribe' }
         );
         // Allow Bedrock InvokeModel on the Claude 3.5 Haiku US inference profile.
         // A cross-region inference profile requires permission on BOTH the
@@ -695,12 +714,28 @@ export class TiryaqStack extends cdk.Stack {
             scribeFn
         ];
 
+        // Step 2g.5 — single managed policy shared across every tenant Lambda
+        // for publishing the throttle 429 metric. Using a ManagedPolicy here
+        // (1 CFN resource) instead of one inline statement per Lambda (would
+        // be 40 resources) — keeps us under the 500-resource ceiling.
+        const throttleMetricsPolicy = new iam.ManagedPolicy(this, 'AkwadonaThrottleMetricsPolicy', {
+            managedPolicyName: 'akwadona-throttle-metrics',
+            statements: [new iam.PolicyStatement({
+                actions: ['cloudwatch:PutMetricData'],
+                resources: ['*'],
+                conditions: { StringEquals: { 'cloudwatch:namespace': 'Akwadona/Throttle' } }
+            })]
+        });
+
         allFunctions.forEach((f) => {
             table.grantReadWriteData(f);
             // Compliance: Lambda execution roles must be explicitly granted
             // KMS Encrypt/Decrypt on the data CMK because DynamoDB CUSTOMER_MANAGED
             // encryption requires the caller principal to have key access.
             tiryaqDataKey.grantEncryptDecrypt(f);
+            // Step 2g.5 — attach the shared managed policy (no per-Lambda
+            // policy resource gets created).
+            f.role?.addManagedPolicy(throttleMetricsPolicy);
         });
 
         // Step 7 cleanup — EventBridge warmer removed to free CFN resources
@@ -715,10 +750,26 @@ export class TiryaqStack extends cdk.Stack {
 
         adminPanelFn.addToRolePolicy(
             new iam.PolicyStatement({
-                actions: ['cognito-idp:ListUsers', 'cognito-idp:ListUsersInGroup', 'cognito-idp:AdminDisableUser', 'cognito-idp:AdminEnableUser', 'cognito-idp:AdminSetUserPassword'],
+                actions: [
+                    'cognito-idp:ListUsers',
+                    'cognito-idp:ListUsersInGroup',
+                    'cognito-idp:AdminDisableUser',
+                    'cognito-idp:AdminEnableUser',
+                    'cognito-idp:AdminSetUserPassword',
+                    // Step C.5 — admin can change a user's email attribute.
+                    'cognito-idp:AdminUpdateUserAttributes'
+                ],
                 resources: [userPool.userPoolArn]
             })
         );
+        // Step C.5 — admin-panel needs KMS:GenerateMac on every tenant's HMAC
+        // key so it can refresh the emailHash search index after an email change.
+        Object.values(tenantHmacKeys).forEach(arn => {
+            adminPanelFn.addToRolePolicy(new iam.PolicyStatement({
+                actions: ['kms:GenerateMac'],
+                resources: [arn]
+            }));
+        });
 
         // Documents bucket access is granted on the bucket construct below
         // (see TiryaqDocumentsBucket), so no cross-account inline policy here.
@@ -1023,12 +1074,22 @@ exports.handler = async (event) => {
         route('/specializations', [apigwv2.HttpMethod.POST], createNewSpecializationFn);
         route('/specializations/bulk', [apigwv2.HttpMethod.POST], bulkCreateSpecializationsFn);
         route('/specializations', [apigwv2.HttpMethod.DELETE], deleteAllSpecializationsFn);
-        route('/admin/stats', [apigwv2.HttpMethod.GET], adminPanelFn);
-        route('/admin/users', [apigwv2.HttpMethod.GET], adminPanelFn);
-        route('/admin/users/{username}/disable', [apigwv2.HttpMethod.POST], adminPanelFn);
-        route('/admin/users/{username}/enable', [apigwv2.HttpMethod.POST], adminPanelFn);
-        route('/admin/users/{username}/set-password', [apigwv2.HttpMethod.POST], adminPanelFn);
-        route('/admin/audit', [apigwv2.HttpMethod.GET], adminPanelFn);
+        // Step 2g.5 cleanup — admin-panel routes consolidated into a single
+        // catch-all proxy to free CFN resources (was 7 routes + 1 integration =
+        // 8 resources, now 4 routes + 1 integration = 5 resources, freeing 3).
+        // The Lambda already dispatches via path.includes() / regex tests so
+        // no code change is needed.
+        api.addRoutes({
+            path: '/admin/{proxy+}',
+            methods: [
+                apigwv2.HttpMethod.GET,
+                apigwv2.HttpMethod.POST,
+                apigwv2.HttpMethod.PATCH,
+                apigwv2.HttpMethod.DELETE
+            ],
+            integration: new HttpLambdaIntegration('AdminPanelProxy', adminPanelFn),
+            authorizer
+        });
 
         // Step 7 — Operator console: single catch-all route. We deliberately
         // use {proxy+} + ANY method to keep the resource count low (each

@@ -203,6 +203,49 @@ export class AdminPanelComponent implements OnInit {
         });
     }
 
+    // ── Step C.5 — Change User Email ──────────────────────────────────────────
+    emailTarget: CognitoUser | null = null;
+    showEmailDialog = false;
+    newEmail = '';
+    emailSaving = false;
+
+    openChangeEmail(user: CognitoUser) {
+        this.emailTarget = user;
+        this.newEmail = '';
+        this.showEmailDialog = true;
+    }
+
+    saveEmailChange() {
+        if (!this.emailTarget || !this.newEmail) return;
+        const e = (this.newEmail || '').toLowerCase().trim();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) {
+            this.helpers.notifyError('Validation', 'Email format is invalid');
+            return;
+        }
+        if (e === (this.emailTarget.email || '').toLowerCase().trim()) {
+            this.helpers.notifyError('Validation', 'New email is the same as the current one');
+            return;
+        }
+        this.emailSaving = true;
+        this.adminService.changeUserEmail(this.emailTarget.username, e).subscribe({
+            next: (r) => {
+                this.helpers.notifySuccess(`Email changed: ${r.oldEmail} → ${r.newEmail}`);
+                // Reflect locally so the table updates without a reload.
+                if (this.emailTarget) this.emailTarget.email = r.newEmail;
+                this.showEmailDialog = false;
+                this.newEmail = '';
+                this.emailTarget = null;
+                this.emailSaving = false;
+                this.cdr.markForCheck();
+            },
+            error: (err) => {
+                this.helpers.notifyError('Error', err?.error?.message || 'Could not change email');
+                this.emailSaving = false;
+                this.cdr.markForCheck();
+            }
+        });
+    }
+
     // ── Audit ─────────────────────────────────────────────────────────────────
     loadAudit() {
         this.auditLoading = true;

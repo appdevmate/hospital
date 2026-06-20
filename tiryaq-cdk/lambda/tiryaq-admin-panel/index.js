@@ -12,8 +12,13 @@ const {
     ListUsersInGroupCommand,
     AdminDisableUserCommand,
     AdminEnableUserCommand,
-    AdminSetUserPasswordCommand
+    AdminSetUserPasswordCommand,
+    AdminUpdateUserAttributesCommand
 } = require('@aws-sdk/client-cognito-identity-provider');
+const { KMSClient, GenerateMacCommand } = require('@aws-sdk/client-kms');
+const kms = new KMSClient({ region: 'us-east-1' });
+// Step 2g — per-tenant rate limit.
+const throttle = require('./throttle');
 
 const REGION       = 'us-east-1';
 const TABLE_NAME   = process.env.TABLE_NAME || 'Hospital';
@@ -105,6 +110,22 @@ exports.handler = async (event) => {
     const qs     = event.queryStringParameters || {};
     const params = event.pathParameters || {};
 
+    // Step 2g.5 — route consolidated under /admin/{proxy+}, so pathParameters
+    // contains `proxy` instead of named params. Reconstruct `username` from
+    // the proxy segments so the rest of the handler keeps working unchanged.
+    if (!params.username && params.proxy) {
+        const segs = params.proxy.split('/').filter(Boolean);
+        // Expected shapes:
+        //   stats                                  → no username
+        //   users                                  → no username
+        //   users/<username>/disable               → username = segs[1]
+        //   users/<username>/enable                → "
+        //   users/<username>/set-password          → "
+        //   users/<username>/email                 → "
+        //   audit                                  → no username
+        if (segs[0] === 'users' && segs[1]) params.username = segs[1];
+    }
+
     if (method === 'OPTIONS') return res(200, {});
     if (!isAdmin(event))      return err(403, 'Access denied: admin only');
 
@@ -112,6 +133,14 @@ exports.handler = async (event) => {
     let tenantId;
     try { tenantId = getTenant(event); }
     catch (e) { return err(e.statusCode || 403, e.message); }
+  // Step 2g — per-tenant throttle.
+  {
+    const __role = (event.requestContext?.authorizer?.jwt?.claims || {}).role || 'tenant_user';
+    const __tid = (typeof tenantId !== 'undefined') ? tenantId : (event.requestContext?.authorizer?.jwt?.claims || {}).tenantId;
+    const __limitResponse = await throttle.precheck(event, { tenantId: __tid, role: __role });
+    if (__limitResponse) return __limitResponse;
+  }
+
 
     // Helper: verify a Cognito user belongs to the caller's tenant.
     const verifyUserTenant = async (username) => {
@@ -257,6 +286,140 @@ exports.handler = async (event) => {
             Permanent:  false
         }));
         const response = res(200, { message: `Temporary password set for ${username}. User must change it on next login.` });
+        await storeIdempotency(cid, response);
+        return response;
+    }
+
+    // ── PATCH /admin/users/{username}/email  (Step C.5) ──────────────────────
+    // Change a user's email end-to-end:
+    //   1. Validate caller is admin in the same tenant as the user.
+    //   2. Update Cognito attribute `email` + `email_verified=true`.
+    //   3. Update the doctor profile row's `email` field in DynamoDB.
+    //   4. Refresh the `emailHash` (HMAC under tenant key) so the search
+    //      index points to the new email.
+    //   5. Write an audit row capturing the before/after email (HIPAA — the
+    //      audit row keeps the OLD email as the historical record).
+    //
+    // Nothing else needs updating because Step C.3 made `doctorId` the
+    // canonical foreign key everywhere; email is just a display attribute.
+    if (method === 'PATCH' && /\/admin\/users\/[^/]+\/email$/.test(path)) {
+        const cid = getClientRequestId(event);
+        const cached = await checkIdempotency(cid);
+        if (cached) return cached;
+
+        const body     = JSON.parse(event.body || '{}');
+        const username = params.username;
+        const newEmail = (body.newEmail || '').toLowerCase().trim();
+
+        if (!username)      return err(400, 'username is required');
+        if (!newEmail)      return err(400, 'newEmail is required');
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail))
+                            return err(400, 'newEmail format is invalid');
+        if (!(await verifyUserTenant(username))) return err(404, 'User not found');
+
+        // ── Fetch the Cognito user to know the OLD email + sub ───────────
+        const { Users } = await cognito.send(new ListUsersCommand({
+            UserPoolId: USER_POOL_ID,
+            Filter: `username = "${username}"`,
+            Limit: 1
+        }));
+        const u = (Users || [])[0];
+        if (!u) return err(404, 'User not found');
+        const attrs   = Object.fromEntries((u.Attributes || []).map(a => [a.Name, a.Value]));
+        const oldEmail = (attrs.email || '').toLowerCase().trim();
+        if (oldEmail === newEmail) return res(200, { message: 'Email unchanged', email: oldEmail });
+
+        // ── Update Cognito attribute ──────────────────────────────────────
+        await cognito.send(new AdminUpdateUserAttributesCommand({
+            UserPoolId: USER_POOL_ID,
+            Username:   username,
+            UserAttributes: [
+                { Name: 'email',          Value: newEmail },
+                { Name: 'email_verified', Value: 'true'   }
+            ]
+        }));
+
+        // ── Update the doctor profile row (if this user is a doctor) ──────
+        // Doctor rows have PK = DOCTOR#<doctorId>, attribute email = <addr>.
+        // We resolve the doctor by the OLD email, then update.
+        let doctorProfileUpdated = false;
+        try {
+            const r = await db.send(new QueryCommand({
+                TableName: TABLE_NAME,
+                IndexName: 'tenant-entityType-index',
+                KeyConditionExpression: 'tenantId = :tid AND EntityType = :et',
+                FilterExpression: '#sk = :sk AND #em = :em',
+                ExpressionAttributeNames:  { '#sk': 'SK', '#em': 'email' },
+                ExpressionAttributeValues: {
+                    ':tid': tenantId, ':et': 'DOCTOR', ':sk': 'PROFILE', ':em': oldEmail
+                }
+            }));
+            const doctor = (r.Items || [])[0];
+            if (doctor) {
+                // Recompute the emailHash with this tenant's HMAC key.
+                const hmacKeys = JSON.parse(process.env.TENANT_HMAC_KEYS || '{}');
+                const keyArn = hmacKeys[tenantId];
+                let emailHash = null;
+                if (keyArn) {
+                    const mac = await kms.send(new GenerateMacCommand({
+                        KeyId:        keyArn,
+                        MacAlgorithm: 'HMAC_SHA_256',
+                        Message:      Buffer.from(newEmail)
+                    }));
+                    emailHash = Buffer.from(mac.Mac).toString('base64');
+                }
+                await db.send(new UpdateCommand({
+                    TableName: TABLE_NAME,
+                    Key: { PK: doctor.PK, SK: doctor.SK },
+                    UpdateExpression: emailHash
+                        ? 'SET #em = :em, emailHash = :h, updatedAt = :now'
+                        : 'SET #em = :em, updatedAt = :now',
+                    ExpressionAttributeNames:  { '#em': 'email' },
+                    ExpressionAttributeValues: emailHash
+                        ? { ':em': newEmail, ':h': emailHash, ':now': new Date().toISOString() }
+                        : { ':em': newEmail, ':now': new Date().toISOString() }
+                }));
+                doctorProfileUpdated = true;
+            }
+        } catch (_) { /* doctor row update is best-effort */ }
+
+        // ── Write audit row (HIPAA — old email preserved forever) ────────
+        const callerClaims = event.requestContext?.authorizer?.jwt?.claims || {};
+        const actorEmail   = callerClaims.email || 'unknown';
+        const actorName    = callerClaims.name  || 'unknown';
+        const now          = new Date().toISOString();
+        try {
+            const auditId = require('crypto').randomUUID();
+            await db.send(new PutCommand({
+                TableName: TABLE_NAME,
+                Item: {
+                    PK:           `AUDIT#${now.slice(0, 10)}`,
+                    SK:           `AUDIT#${now}#${auditId}`,
+                    auditId,
+                    EntityType:   'AUDIT',
+                    tenantId,
+                    action:       'ADMIN_CHANGE_USER_EMAIL',
+                    entityType:   'USER',
+                    entityId:     username,
+                    actorEmail,
+                    actorName,
+                    timestamp:    now,
+                    // Plain metadata — emails are NOT PHI on their own and
+                    // the audit log needs both for compliance. Doctor email
+                    // here is the staff identifier, not patient data.
+                    before:       JSON.stringify({ email: oldEmail }),
+                    after:        JSON.stringify({ email: newEmail })
+                }
+            }));
+        } catch (_) { /* audit best-effort */ }
+
+        const response = res(200, {
+            message:              'Email updated',
+            username,
+            oldEmail,
+            newEmail,
+            doctorProfileUpdated
+        });
         await storeIdempotency(cid, response);
         return response;
     }

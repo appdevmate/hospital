@@ -32,6 +32,8 @@ const {
     BatchWriteCommand
 } = require('@aws-sdk/lib-dynamodb');
 const { randomUUID } = require('crypto');
+// Step 2g — per-tenant rate limit.
+const throttle = require('./throttle');
 
 const REGION     = process.env.AWS_REGION || 'us-east-1';
 const TABLE_NAME = process.env.TABLE_NAME || 'Hospital';
@@ -384,8 +386,16 @@ exports.handler = async (event) => {
         if (method === 'OPTIONS') return res(200, {});
 
         // Step 2d — tenant guard.
-        try { getTenant(event); }
+        let __tenantId;
+        try { __tenantId = getTenant(event); }
         catch (e) { return err(e.statusCode || 403, e.message); }
+
+        // Step 2g — per-tenant throttle.
+        {
+            const role = (event.requestContext?.authorizer?.jwt?.claims || {}).role || 'tenant_user';
+            const limitResponse = await throttle.precheck(event, { tenantId: __tenantId, role });
+            if (limitResponse) return limitResponse;
+        }
 
         const actor = getActor(event);
         const route = event.routeKey || `${method} ${event.rawPath || event.path || ''}`;

@@ -3,6 +3,8 @@ const { DynamoDBDocumentClient, ScanCommand, GetCommand, QueryCommand, BatchGetC
 
 // Step 3 — PHI decryption for list endpoints. ./crypto.js synced from _shared/.
 const { decryptItem, decryptItems, PATIENT_PHI_FIELDS } = require('./crypto');
+// Step 2g — per-tenant rate limit. ./throttle.js + ./plan-defaults.js synced from lib/.
+const throttle = require('./throttle');
 
 const REGION     = 'us-east-1';
 const TABLE_NAME = 'Hospital';
@@ -18,6 +20,32 @@ const ALLOWED_SORT_FIELDS = new Set(['name', 'gender', 'insurance', 'status', 'd
 // Inlined from _shared/tenant.js. Reads tenantId from the signed JWT so a
 // client cannot forge it. Every Query is scoped to this tenant via the
 // `tenant-entityType-index` GSI — other tenants' rows are never read.
+// ── Step C.3 — email → doctorId resolver (60 s cache) ──────────────────────
+// Doctor profile rows live at PK = DOCTOR#<UUID>. The JWT only carries the
+// doctor's email. We resolve UUID by scanning the small DOCTOR set + cache.
+const _doctorIdCache = new Map();   // email (lowercased) → { id, fetchedAt }
+const _DOCTOR_ID_CACHE_MS = 60_000;
+
+async function resolveDoctorIdByEmail(email) {
+    const key = (email || '').toLowerCase().trim();
+    if (!key) return null;
+    const cached = _doctorIdCache.get(key);
+    if (cached && Date.now() - cached.fetchedAt < _DOCTOR_ID_CACHE_MS) {
+        return cached.id;
+    }
+    const r = await ddb.send(new ScanCommand({
+        TableName: TABLE_NAME,
+        FilterExpression: '#et = :et AND #sk = :sk AND #em = :em',
+        ExpressionAttributeNames:  { '#et': 'EntityType', '#sk': 'SK', '#em': 'email' },
+        ExpressionAttributeValues: { ':et': 'DOCTOR', ':sk': 'PROFILE', ':em': key }
+    }));
+    const item = (r.Items || [])[0];
+    if (!item) return null;
+    const id = (item.PK || '').slice('DOCTOR#'.length) || null;
+    _doctorIdCache.set(key, { id, fetchedAt: Date.now() });
+    return id;
+}
+
 function getTenant(event) {
   const claims = (event && event.requestContext && event.requestContext.authorizer
                   && (event.requestContext.authorizer.jwt
@@ -41,6 +69,14 @@ exports.handler = async (event) => {
   try { tenantId = getTenant(event); }
   catch (e) { return errResp(e.statusCode || 403, e.message); }
 
+  // ── Per-tenant throttle (Step 2g) ────────────────────────────────────────
+  // Returns null if the request is allowed, or a 429 response if the tenant
+  // has exceeded its plan limits. Operator role + warm-up skip this.
+  const claimsForRole = event.requestContext?.authorizer?.jwt?.claims || {};
+  const role = claimsForRole.role || 'tenant_user';
+  const limitResponse = await throttle.precheck(event, { tenantId, role });
+  if (limitResponse) return limitResponse;
+
   try {
     const qp = event?.queryStringParameters || {};
 
@@ -54,12 +90,18 @@ exports.handler = async (event) => {
     const callerEmail  = (claims['email'] || claims['username'] || '').toLowerCase().trim();
     // ── DOCTOR PATH — scoped to own patients via DOCTOR_PATIENT items ──────
     if (isDoctor && !isAdminOrDev && callerEmail) {
-        const doctorEmail = callerEmail;
+        // Step C.3 — Resolve the caller's doctor profile UUID from their
+        // email. We never use email as a foreign key anymore; the link rows
+        // are keyed by DOCTOR#<doctorId>.
+        const doctorId = await resolveDoctorIdByEmail(callerEmail);
+        if (!doctorId) {
+            return ok({ message: 'Patients retrieved successfully', data: [], lastKey: null, hasMore: false, count: 0, totalCount: 0, pageSize: 25 });
+        }
             // 1. Query relationship items for this doctor
             const relResult = await ddb.send(new QueryCommand({
                 TableName:                 TABLE_NAME,
                 KeyConditionExpression:    'PK = :pk',
-                ExpressionAttributeValues: { ':pk': `DOCTOR#${doctorEmail}` }
+                ExpressionAttributeValues: { ':pk': `DOCTOR#${doctorId}` }
             }));
 
             const relItems = (relResult.Items || []).filter(i => i.SK?.startsWith('PATIENT#'));

@@ -133,9 +133,10 @@ export interface Consultation {
     examId?: string;
     patientId: string;
     patientName: string;
+    // Step C.3 — doctorId is the canonical foreign key. doctorEmail not stored
+    // on consultation rows; looked up live by doctorId at display time.
     doctorId: string;
     doctorName: string;
-    doctorEmail: string;
     date: string;
     status: 'draft' | 'completed';
     signedOffAt: string | null;
@@ -168,7 +169,8 @@ export class ConsultationService {
         });
     }
 
-    createConsultation(data: { patientId: string; patientName: string; doctorEmail: string; doctorName?: string; date?: string; appointmentId?: string }): Observable<Consultation> {
+    // Step C.3 — doctorId is the canonical foreign key.
+    createConsultation(data: { patientId: string; patientName: string; doctorId: string; doctorName?: string; date?: string; appointmentId?: string }): Observable<Consultation> {
         return this.http.post<Consultation>(Config.buildUrl('examinations'), data, { headers: this.headers() });
     }
 

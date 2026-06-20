@@ -14,6 +14,66 @@
     <link rel="manifest" href="manifest.webmanifest" />
     <meta name="theme-color" content="#10b981" />
     <link rel="stylesheet" type="text/css" href="/layout/styles/preloading.css" />
+    <!-- ─────────────────────────────────────────────────────────────────────
+         Step 7i — auth-check shim (Stripe / Vercel pattern).
+
+         Runs BEFORE Angular bootstraps (~5 KB of inline JS). Two goals:
+
+           1. Cold-start, signed-in: rehydrate the access token from
+              localStorage into sessionStorage. The app code reads from
+              sessionStorage everywhere; this mirroring lets the session
+              survive browser-close without touching any service file.
+
+           2. Cold-start, NOT signed-in (no token at all, no ?code= callback
+              on the URL): redirect straight to Cognito /oauth2/authorize.
+              This avoids paying for Angular bootstrap + OIDC library init
+              when we already know the answer is "go log in".
+
+         Runs in < 5 ms. Same trick used by Stripe Dashboard, Vercel,
+         Linear, and Notion.
+    ────────────────────────────────────────────────────────────────────── -->
+    <script>
+        (function () {
+            try {
+                // (1) Rehydrate token from persistent storage.
+                var ls = window.localStorage.getItem('accessToken');
+                if (ls && !window.sessionStorage.getItem('accessToken')) {
+                    window.sessionStorage.setItem('accessToken', ls);
+                }
+
+                // Parse JWT exp claim.
+                var token = window.sessionStorage.getItem('accessToken') || '';
+                var hasFresh = false;
+                if (token && token.split('.').length === 3) {
+                    var part = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+                    var pad = part + new Array((4 - (part.length % 4)) % 4 + 1).join('=');
+                    try {
+                        var exp = JSON.parse(atob(pad)).exp;
+                        hasFresh = (typeof exp === 'number') && (exp * 1000 - Date.now() > 30000);
+                    } catch (_) { hasFresh = false; }
+                }
+
+                // (2) Unauthenticated cold-start → straight to Cognito.
+                var url = window.location.href;
+                var isCallback = url.indexOf('?code=') !== -1 || url.indexOf('&code=') !== -1;
+                if (!hasFresh && !isCallback) {
+                    var origin    = window.location.origin;
+                    var clientId  = '2nfjfipi8hri262pjohtpgl45q';
+                    var redirect  = encodeURIComponent(origin + '/');
+                    // Preserve where the user was heading so authGuard can
+                    // bounce them back after sign-in.
+                    try { localStorage.setItem('returnUrl', window.location.pathname + window.location.search); } catch (_) {}
+                    window.location.replace(
+                        'https://auth.akwadona.com/oauth2/authorize'
+                        + '?client_id=' + clientId
+                        + '&response_type=code'
+                        + '&scope=' + encodeURIComponent('openid email phone profile')
+                        + '&redirect_uri=' + redirect
+                    );
+                }
+            } catch (_) { /* shim never blocks the app */ }
+        })();
+    </script>
 </head>
 
 <body>

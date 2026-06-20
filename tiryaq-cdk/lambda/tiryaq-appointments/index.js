@@ -8,6 +8,8 @@ const {
     DeleteCommand,
     ScanCommand
 } = require('@aws-sdk/lib-dynamodb');
+// Step 2g — per-tenant rate limit.
+const throttle = require('./throttle');
 const { randomUUID } = require('crypto');
 
 const REGION     = 'us-east-1';
@@ -142,16 +144,19 @@ async function writeAudit(action, entityId, actorEmail, actorName, before, after
 }
 
 // ── Write DOCTOR_PATIENT relationship (idempotent) ────────────────────────────
-async function writeDoctorPatientRelation(doctorEmail, patientId, patientName, now, tenantId) {
+// Step C.3 — PK keyed by doctor UUID, never email. doctorEmail not stored
+// (look it up live from the doctor profile when needed).
+async function writeDoctorPatientRelation(doctorId, patientId, patientName, now, tenantId) {
+    if (!doctorId) return;   // no UUID = nothing to write
     try {
         await db.send(new PutCommand({
             TableName: TABLE_NAME,
             Item: {
-                PK:          `DOCTOR#${doctorEmail}`,
+                PK:          `DOCTOR#${doctorId}`,
                 SK:          `PATIENT#${patientId}`,
                 EntityType:  'DOCTOR_PATIENT',
                 tenantId,
-                doctorEmail,
+                doctorId,
                 patientId,
                 patientName,
                 assignedAt:  now
@@ -359,6 +364,13 @@ exports.handler = async (event) => {
     catch (e) { return err(e.statusCode || 403, e.message); }
     caller.tenantId = tenantId;  // expose to helpers downstream (list, audit, etc.)
 
+    // Step 2g — per-tenant throttle.
+    {
+        const role = (event.requestContext?.authorizer?.jwt?.claims || {}).role || 'tenant_user';
+        const limitResponse = await throttle.precheck(event, { tenantId, role });
+        if (limitResponse) return limitResponse;
+    }
+
     // ── POST /appointments ── CREATE ─────────────────────────────────────────
     if (method === 'POST' && !apptId) {
         if (!caller.isAdmin) return err(403, 'Only administrators can create appointments');
@@ -425,9 +437,14 @@ exports.handler = async (event) => {
             patientId:       body.patientId,
             patientName:     body.patientName,
             // Doctor & Department
+            // Step C.3 — doctorId is the canonical foreign key.
+            // doctorEmail is NEVER stored here. The doctor's current email
+            // is looked up live by doctorId at display time, so a change
+            // of email shows the new value everywhere automatically.
+            // The audit log keeps the actor's email as a historical
+            // snapshot — that's the only place an email is captured.
             doctorId:        body.doctorId,
             doctorName:      body.doctorName,
-            doctorEmail:     body.doctorEmail.toLowerCase().trim(),
             department:      body.department,
             specialization:  body.specialization  || null,
             // Scheduling
@@ -481,9 +498,9 @@ exports.handler = async (event) => {
             }));
         } catch (_) {}
 
-        // Write DOCTOR_PATIENT relationship — this is the assignment mechanism
+        // Write DOCTOR_PATIENT relationship — Step C.3 uses doctorId, not email.
         await writeDoctorPatientRelation(
-            appointment.doctorEmail,
+            appointment.doctorId,
             appointment.patientId.replace('PATIENT#', ''),
             appointment.patientName,
             now,
@@ -708,10 +725,10 @@ exports.handler = async (event) => {
             ConditionExpression:       '#__tid = :__tid'
         }));
 
-        // If doctor changed, update DOCTOR_PATIENT relationship
-        if (body.doctorEmail && body.doctorEmail !== appt.doctorEmail) {
+        // If doctor changed, update DOCTOR_PATIENT relationship — Step C.3.
+        if (body.doctorId && body.doctorId !== appt.doctorId) {
             await writeDoctorPatientRelation(
-                body.doctorEmail.toLowerCase().trim(),
+                body.doctorId,
                 appt.patientId,
                 appt.patientName,
                 now,

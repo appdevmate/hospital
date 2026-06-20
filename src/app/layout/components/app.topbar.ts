@@ -480,6 +480,16 @@ export class AppTopbar implements OnInit {
 
         const finish = () => {
             this.oidc.logoffLocal();
+            // Step 7i — wipe the operator/tenant cache on sign-out so the next
+            // user doesn't see the previous user's data on first paint.
+            try {
+                for (let i = localStorage.length - 1; i >= 0; i--) {
+                    const k = localStorage.key(i);
+                    if (k && k.startsWith('akw:')) localStorage.removeItem(k);
+                }
+                localStorage.removeItem('accessToken');
+                localStorage.removeItem('returnUrl');
+            } catch { /* ignore */ }
             window.location.href = `${authority}/logout?client_id=${encodeURIComponent(clientId)}&logout_uri=${encodeURIComponent(window.location.origin + '/')}`;
         };
 

@@ -7,36 +7,73 @@ import { TenantService } from '@/services/tenant.service';
 // Module-level flag — checkAuth() must run ONCE per app load to process the
 // Cognito callback (?code=...&state=...). Calling it on every navigation makes
 // every link click slow because the library does internal work each time.
-// After the first call, we trust the cached sessionStorage token (the 401
-// interceptor will force a re-login if it actually expires).
 let checkAuthDone = false;
 
+/**
+ * Step 7i — warm-session short-circuit (SaaS-grade < 1 s sign-in).
+ *
+ * Stripe / Vercel / Linear all paint the dashboard instantly when a valid
+ * JWT is already in sessionStorage — they do NOT wait for an OIDC discovery
+ * round-trip. We mirror that:
+ *
+ *   - If sessionStorage has a non-expired access token, skip checkAuth().
+ *   - Only call checkAuth() when there's a ?code= callback (cold sign-in).
+ *
+ * Returns true if the cached token is valid and not expired.
+ */
+function hasFreshToken(): boolean {
+    const token = sessionStorage.getItem('accessToken') || '';
+    if (!token || token.split('.').length !== 3) return false;
+    try {
+        const part = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+        const pad = part + '='.repeat((4 - (part.length % 4)) % 4);
+        const exp = JSON.parse(atob(pad))?.exp;
+        if (typeof exp !== 'number') return false;
+        // 30 s safety margin so the 401 interceptor doesn't race with an
+        // expiring token mid-request.
+        return exp * 1000 - Date.now() > 30_000;
+    } catch {
+        return false;
+    }
+}
+
 export const authGuard: CanActivateFn = async (_route, state) => {
-    // inject() calls MUST happen before any await — valid in Angular guards.
     const oidc = inject(OidcSecurityService);
     const router = inject(Router);
     const tenant = inject(TenantService);
 
-    let isAuthenticated = !!sessionStorage.getItem('accessToken');
+    let isAuthenticated = hasFreshToken();
     let accessToken = sessionStorage.getItem('accessToken') || '';
 
-    if (!checkAuthDone) {
-        // First navigation after app boot — process potential ?code and
-        // resolve the auth state from the OIDC library.
+    // Only run the heavy OIDC `checkAuth()` when either:
+    //   (a) we don't yet have a fresh cached token, OR
+    //   (b) the URL contains a `?code=` Cognito callback to exchange.
+    const hasCallback = typeof window !== 'undefined'
+        && window.location.search.includes('code=');
+
+    if (!checkAuthDone && (!isAuthenticated || hasCallback)) {
         try {
             const result = await firstValueFrom(oidc.checkAuth());
             isAuthenticated = result.isAuthenticated;
             accessToken = result.accessToken;
         } catch {
-            // checkAuth() failed → fall through to the unauthenticated path.
+            /* fall through to the unauthenticated path */
         }
+        checkAuthDone = true;
+    } else if (!checkAuthDone) {
+        // Warm session — skip checkAuth() entirely. The library still
+        // schedules silent renewal in the background via its own timers.
         checkAuthDone = true;
     }
 
     if (isAuthenticated) {
         // Persist the token for services that read it from sessionStorage.
+        // Step 7i — also mirror to localStorage so the session survives a
+        // full browser close (Stripe / Vercel pattern). The index.html shim
+        // rehydrates it back into sessionStorage on cold boot.
         if (accessToken) {
             sessionStorage.setItem('accessToken', accessToken);
+            try { localStorage.setItem('accessToken', accessToken); } catch (_) { /* quota */ }
         }
 
         // ── Step 2e + 7 — tenant / operator subdomain check ──────────────
@@ -61,9 +98,20 @@ export const authGuard: CanActivateFn = async (_route, state) => {
 
         // Step 7g — operator on `/` (or any tenant route) → redirect to /operator.
         // The dashboard / patients / appointments pages call tenant APIs that
-        // would fail with 403 for the operator anyway.
+        // would fail with 403 for the operator anyway. Also clear returnUrl
+        // (set during Cognito sign-in as '/') to break the ping-pong between
+        // `/` and `/operator`.
         if (isOperator && state.url !== '/operator' && !state.url.startsWith('/operator')) {
+            localStorage.removeItem('returnUrl');
             return router.parseUrl('/operator');
+        }
+        // Operator already on /operator — wipe any stale returnUrl pointing
+        // to a tenant page so we don't bounce them off later.
+        if (isOperator && state.url.startsWith('/operator')) {
+            const ru = localStorage.getItem('returnUrl');
+            if (ru && !ru.startsWith('/operator')) {
+                localStorage.removeItem('returnUrl');
+            }
         }
 
         // Non-operator landed on www → push to their tenant subdomain
@@ -79,12 +127,14 @@ export const authGuard: CanActivateFn = async (_route, state) => {
             // No matching subdomain → sign them out
             try { oidc.logoff(); } catch { /* ignore */ }
             sessionStorage.removeItem('accessToken');
+            try { localStorage.removeItem('accessToken'); } catch (_) {}
             return false;
         }
 
         if (urlTid && jwtTid && urlTid !== jwtTid) {
             try { oidc.logoff(); } catch { /* fall through */ }
             sessionStorage.removeItem('accessToken');
+            try { localStorage.removeItem('accessToken'); } catch (_) {}
             localStorage.removeItem('userData');
             // Best-effort redirect to the correct subdomain on production.
             // In dev/localhost we just sign them out.

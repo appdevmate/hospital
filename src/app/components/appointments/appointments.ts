@@ -512,7 +512,6 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
         const data: CreateAppointmentRequest = {
             doctorId: this.newAppt.doctorId,
             doctorName: doctor?.name || '',
-            doctorEmail: doctor?.email || '',
             department: this.newAppt.department || doctor?.department || '',
             patientId: this.newAppt.patientId,
             patientName: patient?.name || '',
@@ -637,7 +636,6 @@ export class AppointmentsComponent implements OnInit, AfterViewInit {
             .updateAppointment(this.selectedAppointment.appointmentId, {
                 doctorId: this.editAppt.doctorId,
                 doctorName: doctor?.name || '',
-                doctorEmail: doctor?.email || '',
                 department: this.editAppt.department,
                 // patientId and patientName removed — not updatable
                 date: dateStr,

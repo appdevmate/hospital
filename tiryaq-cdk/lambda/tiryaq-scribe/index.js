@@ -19,6 +19,8 @@ const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const { DynamoDBDocumentClient, PutCommand, GetCommand } = require('@aws-sdk/lib-dynamodb');
 const { BedrockRuntimeClient, InvokeModelCommand } = require('@aws-sdk/client-bedrock-runtime');
 const { randomUUID, createHash } = require('crypto');
+// Step 2g — per-tenant rate limit.
+const throttle = require('./throttle');
 
 const REGION     = process.env.AWS_REGION || 'us-east-1';
 const TABLE_NAME = process.env.TABLE_NAME || 'Hospital';
@@ -324,6 +326,14 @@ exports.handler = async (event) => {
         // Step 2d — tenant guard.
         try { getTenant(event); }
         catch (e) { return err(e.message, e.statusCode || 403); }
+  // Step 2g — per-tenant throttle.
+  {
+    const __role = (event.requestContext?.authorizer?.jwt?.claims || {}).role || 'tenant_user';
+    const __tid = (typeof tenantId !== 'undefined') ? tenantId : (event.requestContext?.authorizer?.jwt?.claims || {}).tenantId;
+    const __limitResponse = await throttle.precheck(event, { tenantId: __tid, role: __role });
+    if (__limitResponse) return __limitResponse;
+  }
+
 
         const actor = getActor(event);
         if (!isDoctorOrAdmin(actor)) {

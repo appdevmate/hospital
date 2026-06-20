@@ -1,6 +1,8 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const { DynamoDBDocumentClient, PutCommand, GetCommand } = require('@aws-sdk/lib-dynamodb');
 const { randomUUID } = require('crypto');
+// Step 2g — per-tenant rate limit.
+const throttle = require('./throttle');
 
 const client = new DynamoDBClient({ region: 'us-east-1' });
 const dynamo = DynamoDBDocumentClient.from(client);
@@ -65,6 +67,14 @@ exports.handler = async (event) => {
     let tenantId;
     try { tenantId = getTenant(event); }
     catch (e) { return { statusCode: e.statusCode || 403, body: JSON.stringify({ message: e.message }) }; }
+  // Step 2g — per-tenant throttle.
+  {
+    const __role = (event.requestContext?.authorizer?.jwt?.claims || {}).role || 'tenant_user';
+    const __tid = (typeof tenantId !== 'undefined') ? tenantId : (event.requestContext?.authorizer?.jwt?.claims || {}).tenantId;
+    const __limitResponse = await throttle.precheck(event, { tenantId: __tid, role: __role });
+    if (__limitResponse) return __limitResponse;
+  }
+
 
     const cid = getClientRequestId(event);
     const cached = await checkIdempotency(cid);

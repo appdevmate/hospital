@@ -5,6 +5,7 @@ import { AppointmentsService, Appointment } from '@/services/appointments.servic
 import { PatientsService, Patient } from '@/services/patients.service';
 import { PharmacyService, PharmacyAlert } from '@/services/pharmacy.service';
 import { PaymentsService, Payment } from '@/services/payments.service';
+import { TenantService } from '@/services/tenant.service';
 
 export interface Notification {
     id: string;
@@ -24,8 +25,16 @@ export class NotificationsService {
     private patientsService = inject(PatientsService);
     private pharmacyService = inject(PharmacyService);
     private paymentsService = inject(PaymentsService);
+    private tenant = inject(TenantService);
 
     getNotifications(isAdmin: boolean, doctorEmail?: string, isPharmacist = false, isDeveloper = false): Observable<Notification[]> {
+        // Step 7g — operators don't see tenant notifications. Return empty
+        // immediately so we don't hit /appointments, /patients, /pharmacy etc.
+        // (which 403 for the operator role anyway).
+        if (this.tenant.isOperator) {
+            return of([]);
+        }
+
         const today = new Date();
         const todayStr = this.toDateStr(today);
         const tomorrowStr = this.toDateStr(new Date(today.getTime() + 24 * 60 * 60 * 1000));

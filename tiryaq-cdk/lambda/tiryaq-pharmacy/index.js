@@ -5,6 +5,8 @@ const {
     UpdateCommand, DeleteCommand, ScanCommand
 } = require('@aws-sdk/lib-dynamodb');
 const { randomUUID } = require('crypto');
+// Step 2g — per-tenant rate limit.
+const throttle = require('./throttle');
 
 const REGION     = 'us-east-1';
 const TABLE_NAME = 'Hospital';
@@ -156,6 +158,13 @@ exports.handler = async (event) => {
     let tenantId;
     try { tenantId = getTenant(event); }
     catch (e) { return err(e.statusCode || 403, e.message); }
+
+    // Step 2g — per-tenant throttle (skipped for operator role + warmup + OPTIONS).
+    {
+        const role = (event.requestContext?.authorizer?.jwt?.claims || {}).role || 'tenant_user';
+        const limitResponse = await throttle.precheck(event, { tenantId, role });
+        if (limitResponse) return limitResponse;
+    }
 
     // ══════════════════════════════════════════════════════════════════════════
     // MEDICATION CATALOG

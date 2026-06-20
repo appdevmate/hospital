@@ -23,6 +23,36 @@
  *     return 403 for any data operation). This lets backfill run while the
  *     pool is live, without locking everyone out.
  */
+// Step C.3 — resolve a doctor's application UUID (doctorId) by their email.
+// The DOCTOR profile row has  PK = DOCTOR#<UUID>, attribute  email = "…".
+// Pre-token runs on every login + every refresh, so we cache per-container.
+const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
+const { DynamoDBDocumentClient, ScanCommand } = require('@aws-sdk/lib-dynamodb');
+const ddb = DynamoDBDocumentClient.from(new DynamoDBClient({ region: 'us-east-1' }));
+const TABLE_NAME = 'Hospital';
+const _doctorIdCache = new Map();
+const _CACHE_MS = 60_000;
+async function lookupDoctorId(email) {
+    const key = (email || '').toLowerCase().trim();
+    if (!key) return null;
+    const c = _doctorIdCache.get(key);
+    if (c && Date.now() - c.fetchedAt < _CACHE_MS) return c.id;
+    try {
+        const r = await ddb.send(new ScanCommand({
+            TableName: TABLE_NAME,
+            FilterExpression: '#et = :et AND #sk = :sk AND #em = :em',
+            ExpressionAttributeNames:  { '#et': 'EntityType', '#sk': 'SK', '#em': 'email' },
+            ExpressionAttributeValues: { ':et': 'DOCTOR', ':sk': 'PROFILE', ':em': key }
+        }));
+        const item = (r.Items || [])[0];
+        const id = item ? ((item.PK || '').slice('DOCTOR#'.length) || null) : null;
+        _doctorIdCache.set(key, { id, fetchedAt: Date.now() });
+        return id;
+    } catch (_) {
+        return null;
+    }
+}
+
 exports.handler = async (event) => {
     if (event && event._warmup) return { ok: true, warmed: true };
 
@@ -37,6 +67,15 @@ exports.handler = async (event) => {
     // them to operator endpoints without using tenantId.
     const groups = (event.request && event.request.groupConfiguration && event.request.groupConfiguration.groupsToOverride) || [];
     const isOperator = Array.isArray(groups) && groups.includes('Operator');
+    const isDoctor   = Array.isArray(groups) && groups.includes('Doctors');
+
+    // Step C.3 — for doctor users, look up the application doctorId UUID
+    // and inject it as a JWT claim. The frontend uses this to send
+    // doctorId on every appointment / consultation create.
+    let doctorId = null;
+    if (isDoctor && attrs.email) {
+        doctorId = await lookupDoctorId(attrs.email);
+    }
 
     const claimsToAddOrOverride = {
         email:    attrs.email || '',
@@ -44,6 +83,7 @@ exports.handler = async (event) => {
         tenantId: tenantId,
         role:     isOperator ? 'operator' : 'tenant_user'
     };
+    if (doctorId) claimsToAddOrOverride.doctorId = doctorId;
 
     event.response = {
         claimsAndScopeOverrideDetails: {

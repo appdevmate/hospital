@@ -49,6 +49,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
                     // Drop the stale token immediately so subsequent calls don't
                     // race against the redirect.
                     try { sessionStorage.removeItem('accessToken'); } catch (_) {}
+                    try { localStorage.removeItem('accessToken'); } catch (_) {}
                     oidc.authorize();
                 }
             }

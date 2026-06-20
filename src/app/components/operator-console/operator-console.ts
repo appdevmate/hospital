@@ -12,7 +12,9 @@ import { SelectModule } from 'primeng/select';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { SkeletonModule } from 'primeng/skeleton';
 import { OperatorService, TenantSummary, TenantStats, AuditEntry, TenantUpdate } from '@/services/operator.service';
+import { CacheService } from '@/services/cache.service';
 
 /**
  * Akwadona Operator Console (Step 7g).
@@ -29,7 +31,8 @@ import { OperatorService, TenantSummary, TenantStats, AuditEntry, TenantUpdate }
     imports: [
         CommonModule, FormsModule,
         ButtonModule, TableModule, TagModule, CardModule, DialogModule,
-        InputTextModule, InputNumberModule, SelectModule, CheckboxModule, ToastModule
+        InputTextModule, InputNumberModule, SelectModule, CheckboxModule, ToastModule,
+        SkeletonModule
     ],
     providers: [MessageService],
     template: `
@@ -53,7 +56,14 @@ import { OperatorService, TenantSummary, TenantStats, AuditEntry, TenantUpdate }
                     </div>
 
                     @if (loading()) {
-                        <div class="empty">Loading…</div>
+                        <ul class="tenant-list">
+                            @for (i of [1,2,3]; track i) {
+                                <li class="skeleton-row">
+                                    <p-skeleton width="70%" height="1rem" styleClass="mb-2"></p-skeleton>
+                                    <p-skeleton width="50%" height="0.75rem"></p-skeleton>
+                                </li>
+                            }
+                        </ul>
                     } @else if (tenants().length === 0) {
                         <div class="empty">No tenants found.</div>
                     } @else {
@@ -122,6 +132,13 @@ import { OperatorService, TenantSummary, TenantStats, AuditEntry, TenantUpdate }
                             <div class="stat-card">
                                 <div class="stat-label">Est. monthly cost (USD)</div>
                                 <div class="stat-value">{{ stats()?.usage?.estimatedMonthlyCostUSD ?? '—' }}</div>
+                            </div>
+                            <div class="stat-card" [class.warn]="(stats()?.usage?.throttle429Count24h ?? 0) > 0">
+                                <div class="stat-label">Rate-limited (24h)</div>
+                                <div class="stat-value">{{ stats()?.usage?.throttle429Count24h ?? '—' }}</div>
+                                @if ((stats()?.usage?.throttle429Count24h ?? 0) > 0) {
+                                    <div class="stat-hint">Consider plan upgrade</div>
+                                }
                             </div>
                             <div class="stat-card">
                                 <div class="stat-label">Last activity</div>
@@ -285,7 +302,9 @@ import { OperatorService, TenantSummary, TenantStats, AuditEntry, TenantUpdate }
             .stat-card { background: #f9fafb; padding: 0.9rem; border-radius: 8px; text-align: center;
                 .stat-label { color: #6b7280; font-size: 0.8rem; }
                 .stat-value { font-size: 1.5rem; font-weight: 700; color: #111827; margin-top: 0.25rem;
-                    &.small { font-size: 0.9rem; font-weight: 500; } } } }
+                    &.small { font-size: 0.9rem; font-weight: 500; } }
+                .stat-hint { font-size: 0.7rem; color: #b45309; margin-top: 0.25rem; }
+                &.warn { background: #fef3c7; border: 1px solid #fbbf24; } } }
         .kv-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem 1rem;
             background: #f9fafb; padding: 0.9rem; border-radius: 8px;
             div { font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;
@@ -294,6 +313,7 @@ import { OperatorService, TenantSummary, TenantStats, AuditEntry, TenantUpdate }
                     code { background: #eef2ff; color: #4338ca; padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.75rem; }
                     .muted { color: #9ca3af; font-weight: 400; } } } }
         .audit-note { color: #9ca3af; font-size: 0.8rem; margin: 0 0 0.5rem; }
+        .skeleton-row { padding: 0.75rem; }
         .edit-form { display: grid; gap: 0.5rem; max-height: 60vh; overflow-y: auto; padding-right: 0.25rem;
             label { font-size: 0.85rem; color: #374151; font-weight: 600; } }
         .cb-row { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;
@@ -304,6 +324,13 @@ import { OperatorService, TenantSummary, TenantStats, AuditEntry, TenantUpdate }
 export class OperatorConsoleComponent {
     private api = inject(OperatorService);
     private toast = inject(MessageService);
+    private cache = inject(CacheService);
+
+    // Step 7i — cache TTLs (SaaS-grade dashboards: paint from cache instantly,
+    // then refresh from network in the background — Stripe / Vercel pattern).
+    private readonly TENANTS_TTL_MS = 60_000;            // 1 min
+    private readonly DETAIL_TTL_MS  = 30_000;            // 30 s
+    private readonly TENANTS_KEY    = 'operator:tenants';
 
     tenants = signal<TenantSummary[]>([]);
     selectedSlug = signal<string | null>(null);
@@ -327,37 +354,86 @@ export class OperatorConsoleComponent {
         { label: 'Enterprise', value: 'enterprise' }
     ];
 
-    constructor() { this.reload(); }
+    constructor() {
+        // Step 7i — paint instantly from cached state, then refresh in
+        // background. This is the Stripe / Vercel pattern: first paint at
+        // < 200 ms even on a cold sign-in, real data arrives shortly after.
+        const cached = this.cache.get<TenantSummary[]>(this.TENANTS_KEY, this.TENANTS_TTL_MS);
+        if (cached && cached.length) {
+            this.tenants.set(cached);
+            this.loading.set(false);
+            // Auto-select the first tenant from cache so the right pane
+            // also paints immediately.
+            this.select(cached[0].slug);
+        }
+        this.reload();
+    }
 
+    /**
+     * Refresh the tenant list from the API. Always runs in the background;
+     * does NOT block first paint (constructor already showed cached data).
+     */
     reload() {
-        this.loading.set(true);
         this.api.listTenants().subscribe({
             next: (r) => {
-                this.tenants.set(r.tenants || []);
+                const list = r.tenants || [];
+                this.tenants.set(list);
+                this.cache.set(this.TENANTS_KEY, list);
                 this.loading.set(false);
-                if (!this.selectedSlug() && r.tenants.length > 0) {
-                    this.select(r.tenants[0].slug);
+                if (!this.selectedSlug() && list.length > 0) {
+                    this.select(list[0].slug);
                 }
             },
             error: (e) => {
+                // Only surface error if nothing painted (no cache).
                 this.loading.set(false);
-                this.toast.add({ severity: 'error', summary: 'Load failed', detail: e?.error?.message || 'Could not load tenants' });
+                if (!this.tenants().length) {
+                    this.toast.add({ severity: 'error', summary: 'Load failed', detail: e?.error?.message || 'Could not load tenants' });
+                }
             }
         });
     }
 
+    /**
+     * Step 7i — single combined detail call. Backend returns tenant + stats
+     * + audit in one round-trip via ?expand=stats,audit. Result is cached
+     * per slug so re-selecting a tenant is instant.
+     */
     select(slug: string) {
         this.selectedSlug.set(slug);
-        this.selectedTenant.set(null);
-        this.stats.set(null);
-        this.audit.set(null);
 
-        this.api.getTenant(slug).subscribe({
-            next: (t) => this.selectedTenant.set(t),
-            error: (e) => this.toast.add({ severity: 'error', summary: 'Tenant load failed', detail: e?.error?.message || '' })
+        // Paint from per-slug detail cache first.
+        const detailKey = `operator:detail:${slug}`;
+        const cached = this.cache.get<any>(detailKey, this.DETAIL_TTL_MS);
+        if (cached) {
+            this.selectedTenant.set(cached.tenant);
+            this.stats.set(cached.stats || null);
+            this.audit.set(cached.audit || null);
+        } else {
+            // No cache — fall back to the list row so the header/limits show
+            // immediately, but blank out stats/audit until the API returns.
+            const row = this.tenants().find(t => t.slug === slug);
+            this.selectedTenant.set(row ? { ...row } : null);
+            this.stats.set(null);
+            this.audit.set(null);
+        }
+
+        // Refresh from network (one request).
+        this.api.getTenant(slug, { expand: ['stats', 'audit'], auditLimit: 50 }).subscribe({
+            next: (t) => {
+                const stats = t.stats || null;
+                const audit = t.audit || null;
+                // Strip expansions before storing the tenant row.
+                const tenant = { ...t };
+                delete tenant.stats;
+                delete tenant.audit;
+                this.selectedTenant.set(tenant);
+                this.stats.set(stats);
+                this.audit.set(audit);
+                this.cache.set(detailKey, { tenant, stats, audit });
+            },
+            error: () => { /* keep cached / partial */ }
         });
-        this.api.getTenantStats(slug).subscribe({ next: (s) => this.stats.set(s), error: () => { /* nice-to-have */ } });
-        this.api.getTenantAudit(slug, { limit: 50 }).subscribe({ next: (a) => this.audit.set(a), error: () => { /* nice-to-have */ } });
     }
 
     openEdit() {

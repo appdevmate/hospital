@@ -7,6 +7,11 @@ export interface CurrentUser {
     name: string;
     email: string;
     username: string;
+    /** Step C.3 — for doctor users, the application doctorId UUID injected
+     *  into the JWT by the pre-token-generation Lambda. Use this as the
+     *  doctor's foreign key when creating appointments / consultations.
+     */
+    doctorId?: string | null;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -20,8 +25,9 @@ export class AuthService {
             const raw = localStorage.getItem('userData');
             const data = raw ? JSON.parse(raw) : {};
 
-            // Read groups from access token
+            // Read groups + doctorId from access token (Step C.3)
             let groups: string[] = [];
+            let doctorId: string | null = null;
             const accessToken = sessionStorage.getItem('accessToken') || '';
             if (accessToken && accessToken.split('.').length === 3) {
                 try {
@@ -29,6 +35,7 @@ export class AuthService {
                     const pad = part + '='.repeat((4 - (part.length % 4)) % 4);
                     const payload = JSON.parse(atob(pad));
                     groups = payload['cognito:groups'] ?? [];
+                    doctorId = payload['doctorId'] ?? null;
                 } catch {}
             }
 
@@ -38,7 +45,8 @@ export class AuthService {
                 role,
                 name: (data.name || '').toLowerCase().trim(),
                 email: (data.email || '').toLowerCase().trim(),
-                username: data.username || ''
+                username: data.username || '',
+                doctorId
             };
             return this._user;
         } catch {

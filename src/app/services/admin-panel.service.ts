@@ -72,6 +72,20 @@ export class AdminPanelService {
         return this.http.post(Config.buildUrl(`admin/users/${encodeURIComponent(username)}/set-password`), { password }, { headers: this.headers() });
     }
 
+    /**
+     * Step C.5 — change a user's email.
+     * Backend updates Cognito + the doctor profile + the emailHash search
+     * index, and writes an audit row. doctorId-keyed records elsewhere stay
+     * untouched (they reference the user by UUID, not email).
+     */
+    changeUserEmail(username: string, newEmail: string): Observable<{ message: string; username: string; oldEmail: string; newEmail: string; doctorProfileUpdated: boolean }> {
+        return this.http.patch<any>(
+            Config.buildUrl(`admin/users/${encodeURIComponent(username)}/email`),
+            { newEmail },
+            { headers: this.headers() }
+        );
+    }
+
     // ── Audit ─────────────────────────────────────────────────────────────────
     getAuditLog(params: { date?: string; entityType?: string; entityId?: string; action?: string; actor?: string; limit?: number }): Observable<{ date: string; count: number; items: AuditItem[] }> {
         let p = new HttpParams();

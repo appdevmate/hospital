@@ -5,6 +5,8 @@ const { DynamoDBDocumentClient, UpdateCommand, TransactWriteCommand, GetCommand,
 // Step 4 — also import stampHashes + PATIENT_HASH_FIELDS to refresh
 // qidHash / emailHash / phoneHash whenever the source field changes.
 const { encryptItem, decryptItem, stampHashes, PATIENT_PHI_FIELDS, PATIENT_HASH_FIELDS } = require('./crypto');
+// Step 2g — per-tenant rate limit.
+const throttle = require('./throttle');
 
 const dynamo  = DynamoDBDocumentClient.from(new DynamoDBClient({ region: 'us-east-1' }));
 const TABLE   = 'Hospital';
@@ -98,6 +100,14 @@ exports.handler = async (event) => {
   let tenantId;
   try { tenantId = getTenant(event); }
   catch (e) { return err(e.statusCode || 403, e.message); }
+  // Step 2g — per-tenant throttle.
+  {
+    const __role = (event.requestContext?.authorizer?.jwt?.claims || {}).role || 'tenant_user';
+    const __tid = (typeof tenantId !== 'undefined') ? tenantId : (event.requestContext?.authorizer?.jwt?.claims || {}).tenantId;
+    const __limitResponse = await throttle.precheck(event, { tenantId: __tid, role: __role });
+    if (__limitResponse) return __limitResponse;
+  }
+
 
   // Idempotency (Phase D)
   const cid = getClientRequestId(event);

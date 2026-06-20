@@ -109,7 +109,12 @@ exports.handler = async (event) => {
             return await listTenants();
         }
         if (method === 'GET' && root === 'tenants' && slug && !action) {
-            return await getTenant(slug);
+            // Step 7i — combined detail call. `?expand=stats,audit` returns
+            // the tenant row + stats + audit in one round-trip so the UI
+            // doesn't need three sequential calls to render the detail page.
+            const expand = ((event.queryStringParameters || {}).expand || '')
+                .split(',').map(s => s.trim()).filter(Boolean);
+            return await getTenant(slug, expand, event.queryStringParameters || {});
         }
         if (method === 'GET' && root === 'tenants' && slug && action === 'stats') {
             return await getTenantStats(slug);
@@ -132,36 +137,50 @@ exports.handler = async (event) => {
 // ── Handlers ────────────────────────────────────────────────────────────────
 
 async function listTenants() {
+    // Perf — list returns the full profile so the UI doesn't need a follow-up
+    // /tenants/{slug} call on selection. Tenant set is tiny (< a few hundred)
+    // so the payload stays small. Strips PHI-adjacent counters defensively.
     const r = await ddb.send(new ScanCommand({
         TableName: TABLE_NAME,
         FilterExpression: '#et = :t',
         ExpressionAttributeNames: { '#et': 'EntityType' },
         ExpressionAttributeValues: { ':t': 'TENANT' }
     }));
-    const tenants = (r.Items || []).map(t => ({
-        slug:          t.slug,
-        tenantId:      t.tenantId,
-        name:          t.name,
-        status:        t.status,
-        plan:          t.plan,
-        contractStart: t.contractStart,
-        createdAt:     t.createdAt,
-        updatedAt:     t.updatedAt
-    }));
+    const tenants = (r.Items || []).map(t => {
+        const o = { ...t };
+        delete o.patientCount;
+        delete o.doctorCount;
+        delete o.appointmentCount;
+        return o;
+    });
     return res(200, { tenants });
 }
 
-async function getTenant(slug) {
+async function getTenant(slug, expand = [], qp = {}) {
     const r = await ddb.send(new GetCommand({
         TableName: TABLE_NAME,
         Key: { PK: `TENANT#${slug}`, SK: 'PROFILE' }
     }));
     if (!r.Item) return err(404, `Tenant ${slug} not found`);
-    // Strip any business counters that might be stored on the profile by mistake.
     const out = { ...r.Item };
     delete out.patientCount;
     delete out.doctorCount;
     delete out.appointmentCount;
+
+    // Step 7i — optional expansions in one round-trip.
+    if (expand.includes('stats')) {
+        try {
+            const statsRes = await getTenantStats(slug);
+            out.stats = JSON.parse(statsRes.body);
+        } catch (e) { out.stats = null; }
+    }
+    if (expand.includes('audit')) {
+        try {
+            const auditRes = await getTenantAudit(slug, qp);
+            out.audit = JSON.parse(auditRes.body);
+        } catch (e) { out.audit = null; }
+    }
+
     return res(200, out);
 }
 
@@ -186,10 +205,11 @@ async function getTenantStats(slug) {
     if (!t.Item) return err(404, `Tenant ${slug} not found`);
 
     // ── Platform-level metrics (best effort) ────────────────────────────────
-    const [apiCalls24h, bandwidthGB30d, activeUsers] = await Promise.all([
+    const [apiCalls24h, bandwidthGB30d, activeUsers, throttle429Count24h] = await Promise.all([
         getApiCalls24h().catch(() => null),
         getBandwidthGB30d().catch(() => null),
-        getActiveUsers(slug).catch(() => null)
+        getActiveUsers(slug).catch(() => null),
+        getThrottle429Count24h(t.Item.tenantId).catch(() => null)
     ]);
 
     return res(200, {
@@ -208,7 +228,10 @@ async function getTenantStats(slug) {
             storageGB:      t.Item.storageUsedGB ?? null,
             // Cost estimate is a future enhancement; null until Cost Explorer
             // per-tenant tagging is in place.
-            estimatedMonthlyCostUSD: null
+            estimatedMonthlyCostUSD: null,
+            // Step 2g.5 — how many requests this tenant got 429'd today.
+            // High number → consider upgrading them to a higher plan.
+            throttle429Count24h
         },
         compliance: {
             baaSigned:      !!t.Item.baaSigned,
@@ -224,6 +247,35 @@ async function getTenantStats(slug) {
         },
         lastActivityAt: t.Item.lastActivityAt || null
     });
+}
+
+/**
+ * Step 2g.5 — Sum of 429s for this tenant in the last 24 h.
+ * Custom metric published by lib/throttle.js on every breach.
+ */
+async function getThrottle429Count24h(tenantId) {
+    if (!tenantId) return 0;
+    const end = new Date();
+    const start = new Date(end.getTime() - 24 * 60 * 60 * 1000);
+    const r = await cw.send(new GetMetricDataCommand({
+        StartTime: start,
+        EndTime: end,
+        MetricDataQueries: [{
+            Id: 'hits',
+            MetricStat: {
+                Metric: {
+                    Namespace: 'Akwadona/Throttle',
+                    MetricName: 'Hits',
+                    Dimensions: [{ Name: 'tenantId', Value: tenantId }]
+                },
+                Period: 86400,
+                Stat: 'Sum'
+            },
+            ReturnData: true
+        }]
+    }));
+    const vals = r.MetricDataResults?.[0]?.Values || [];
+    return vals.length ? Math.round(vals[0]) : 0;
 }
 
 async function getApiCalls24h() {

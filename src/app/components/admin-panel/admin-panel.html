@@ -134,6 +134,9 @@
                                         <p-button icon="pi pi-key" text severity="warn" size="small"
                                             pTooltip="Set Temporary Password" [loading]="actionLoading[user.username]"
                                             (onClick)="openSetPassword(user)" />
+                                        <p-button icon="pi pi-envelope" text severity="info" size="small"
+                                            pTooltip="Change Email" [loading]="actionLoading[user.username]"
+                                            (onClick)="openChangeEmail(user)" />
                                     </div>
                                 </td>
                             </tr>
@@ -244,5 +247,30 @@
         <p-button label="Cancel" severity="secondary" outlined (onClick)="showPasswordDialog = false" />
         <p-button label="Set Password" icon="pi pi-key" severity="warn" [loading]="passwordSaving"
             (onClick)="savePassword()" />
+    </ng-template>
+</p-dialog>
+
+<!-- ── Step C.5 — Change Email Dialog ── -->
+<p-dialog [(visible)]="showEmailDialog" [modal]="true" [closable]="true" header="Change User Email"
+    [style]="{'width':'460px'}" appendTo="body">
+    @if (emailTarget) {
+    <div style="padding: 0.5rem 0;">
+        <div class="mb-4"
+            style="background:var(--p-surface-50);border:1px solid var(--p-surface-200);border-radius:8px;padding:0.875rem 1rem;">
+            <div class="font-semibold">{{ emailTarget.name || emailTarget.username | titlecase }}</div>
+            <div class="text-sm text-surface-400">Current: {{ emailTarget.email }}</div>
+        </div>
+        <label class="field-label">New Email Address</label>
+        <input pInputText [(ngModel)]="newEmail" class="w-full mb-2" type="email" placeholder="new@example.com" />
+        <div class="text-xs text-surface-400 mt-1">
+            <i class="pi pi-info-circle mr-1"></i>
+            Cognito + the doctor profile + the email search index are updated. Audit log keeps the old email forever (HIPAA).
+        </div>
+    </div>
+    }
+    <ng-template pTemplate="footer">
+        <p-button label="Cancel" severity="secondary" outlined (onClick)="showEmailDialog = false" />
+        <p-button label="Change Email" icon="pi pi-envelope" severity="info" [loading]="emailSaving"
+            (onClick)="saveEmailChange()" />
     </ng-template>
 </p-dialog>
