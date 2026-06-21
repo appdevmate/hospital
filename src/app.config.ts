@@ -17,7 +17,8 @@ import { offlineQueueInterceptor } from './app/interceptors/offline-queue.interc
 // Step I — i18n loader. ngx-translate fetches JSON files from
 // /assets/i18n/{lang}.json at runtime (browser-cached after first load).
 export function translateLoaderFactory(http: HttpClient): TranslateLoader {
-    return new TranslateHttpLoader(http, '/assets/i18n/', '.json');
+    // Files live in `public/i18n/` which Angular copies to dist/ root → served at /i18n/.
+    return new TranslateHttpLoader(http, '/i18n/', '.json');
 }
 
 export const appConfig: ApplicationConfig = {
