@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRouteSnapshot, NavigationEnd, Router, RouterModule } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 
 interface Breadcrumb {
+    /** Translation key (e.g. `pages.patients.title`). */
     label: string;
     url?: string;
 }
@@ -12,7 +14,7 @@ interface Breadcrumb {
 @Component({
     selector: '[app-breadcrumb]',
     standalone: true,
-    imports: [CommonModule, RouterModule],
+    imports: [CommonModule, RouterModule, TranslatePipe],
     template: ` <ol>
         <li>
             <a [routerLink]="['/']">
@@ -21,7 +23,7 @@ interface Breadcrumb {
         </li>
         <li class="layout-breadcrumb-chevron">/</li>
         <ng-template ngFor let-item let-last="last" [ngForOf]="breadcrumbs$ | async">
-            <li style="cursor: pointer;">{{ item.label }}</li>
+            <li style="cursor: pointer;">{{ item.label | translate }}</li>
             <li *ngIf="!last" class="layout-breadcrumb-chevron">/</li>
         </ng-template>
     </ol>`,
@@ -34,6 +36,11 @@ export class AppBreadcrumb {
 
     readonly breadcrumbs$ = this._breadcrumbs$.asObservable();
 
+    // Step I — i18n: when the language changes we re-emit the breadcrumbs so
+    // the translate pipe re-renders (the pipe listens on onLangChange anyway,
+    // but re-emitting also covers any inline string callers if added later).
+    private readonly t = inject(TranslateService);
+
     constructor(private router: Router) {
         this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event) => {
             const root = this.router.routerState.snapshot.root;
@@ -41,6 +48,11 @@ export class AppBreadcrumb {
             this.addBreadcrumb(root, [], breadcrumbs);
 
             this._breadcrumbs$.next(breadcrumbs);
+        });
+
+        this.t.onLangChange.subscribe(() => {
+            // Force re-render by re-emitting the current list.
+            this._breadcrumbs$.next(this._breadcrumbs$.getValue());
         });
     }
 

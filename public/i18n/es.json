@@ -105,6 +105,74 @@
             "rateLimited": "Solicitudes limitadas (24h)",
             "rateLimitedHint": "Considerar mejora de plan",
             "lastActivity": "Última actividad"
+        },
+        "limitsPanel": {
+            "ratePerSec": "Tasa (req/s)",
+            "dailyQuota": "Cuota diaria",
+            "storageCap": "Tope de almacenamiento (GB)",
+            "maxUpload": "Subida máxima (MB)"
+        },
+        "compliancePanel": {
+            "baaSigned": "BAA firmado",
+            "dpaSigned": "DPA firmado",
+            "lastAudit": "Última auditoría",
+            "signed": "Firmado",
+            "pending": "Pendiente"
+        },
+        "breadcrumb": "Consola de operador",
+        "kmsDataKey": "Clave de datos KMS",
+        "kmsHmacKey": "Clave HMAC"
+    },
+    "pages": {
+        "patients": {
+            "title": "Pacientes"
+        },
+        "doctors": {
+            "title": "Gestión de médicos"
+        },
+        "appointments": {
+            "title": "Citas"
+        },
+        "bloodBank": {
+            "title": "Banco de sangre"
+        },
+        "pharmacy": {
+            "title": "Farmacia"
+        },
+        "documents": {
+            "title": "Documentos"
+        },
+        "invoices": {
+            "title": "Facturas"
+        },
+        "notifications": {
+            "title": "Notificaciones"
+        },
+        "voiceScribe": {
+            "title": "Dictado por voz"
+        },
+        "calendar": {
+            "title": "Calendario"
+        },
+        "adminPanel": {
+            "title": "Administración"
+        },
+        "userProfile": {
+            "title": "Perfil"
+        },
+        "consultation": {
+            "title": "Consulta"
         }
+    },
+    "actions": {
+        "add": "Añadir",
+        "view": "Ver",
+        "remove": "Eliminar",
+        "filter": "Filtrar",
+        "export": "Exportar",
+        "import": "Importar",
+        "print": "Imprimir",
+        "download": "Descargar",
+        "upload": "Subir"
     }
 }

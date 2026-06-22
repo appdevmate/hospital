@@ -105,6 +105,48 @@
             "rateLimited": "طلبات مرفوضة (24 ساعة)",
             "rateLimitedHint": "يُنصح بترقية الباقة",
             "lastActivity": "آخر نشاط"
-        }
+        },
+        "limitsPanel": {
+            "ratePerSec": "المعدل (طلب/ث)",
+            "dailyQuota": "الحصة اليومية",
+            "storageCap": "حد التخزين (جيجابايت)",
+            "maxUpload": "أقصى حجم رفع (ميجابايت)"
+        },
+        "compliancePanel": {
+            "baaSigned": "اتفاقية BAA موقعة",
+            "dpaSigned": "اتفاقية DPA موقعة",
+            "lastAudit": "آخر مراجعة",
+            "signed": "موقعة",
+            "pending": "قيد الانتظار"
+        },
+        "breadcrumb": "وحدة تحكم المشغل",
+        "kmsDataKey": "مفتاح بيانات KMS",
+        "kmsHmacKey": "مفتاح HMAC"
+    },
+    "pages": {
+        "patients":      { "title": "المرضى" },
+        "doctors":       { "title": "إدارة الأطباء" },
+        "appointments":  { "title": "المواعيد" },
+        "bloodBank":     { "title": "بنك الدم" },
+        "pharmacy":      { "title": "الصيدلية" },
+        "documents":     { "title": "المستندات" },
+        "invoices":      { "title": "الفواتير" },
+        "notifications": { "title": "الإشعارات" },
+        "voiceScribe":   { "title": "التدوين الصوتي" },
+        "calendar":      { "title": "التقويم" },
+        "adminPanel":    { "title": "الإدارة" },
+        "userProfile":   { "title": "الملف الشخصي" },
+        "consultation":  { "title": "الاستشارة" }
+    },
+    "actions": {
+        "add":      "إضافة",
+        "view":     "عرض",
+        "remove":   "إزالة",
+        "filter":   "تصفية",
+        "export":   "تصدير",
+        "import":   "استيراد",
+        "print":    "طباعة",
+        "download": "تنزيل",
+        "upload":   "رفع"
     }
 }

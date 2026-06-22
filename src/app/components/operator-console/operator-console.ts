@@ -148,50 +148,50 @@ import { CacheService } from '@/services/cache.service';
                         </div>
 
                         <!-- Limits -->
-                        <h3 class="section-h">Limits</h3>
+                        <h3 class="section-h">{{ 'operatorConsole.limits' | translate }}</h3>
                         <div class="kv-grid">
-                            <div><span>Rate (req/s)</span><strong>{{ selectedTenant()!.limits?.rps ?? '—' }}</strong></div>
-                            <div><span>Daily quota</span><strong>{{ selectedTenant()!.limits?.dailyQuota ?? '—' }}</strong></div>
-                            <div><span>Storage cap (GB)</span><strong>{{ selectedTenant()!.limits?.storageGB ?? '—' }}</strong></div>
-                            <div><span>Max upload (MB)</span><strong>{{ selectedTenant()!.limits?.maxUploadMB ?? '—' }}</strong></div>
+                            <div><span>{{ 'operatorConsole.limitsPanel.ratePerSec' | translate }}</span><strong>{{ selectedTenant()!.limits?.rps ?? '—' }}</strong></div>
+                            <div><span>{{ 'operatorConsole.limitsPanel.dailyQuota' | translate }}</span><strong>{{ selectedTenant()!.limits?.dailyQuota ?? '—' }}</strong></div>
+                            <div><span>{{ 'operatorConsole.limitsPanel.storageCap' | translate }}</span><strong>{{ selectedTenant()!.limits?.storageGB ?? '—' }}</strong></div>
+                            <div><span>{{ 'operatorConsole.limitsPanel.maxUpload' | translate }}</span><strong>{{ selectedTenant()!.limits?.maxUploadMB ?? '—' }}</strong></div>
                         </div>
 
                         <!-- Compliance -->
-                        <h3 class="section-h">Compliance</h3>
+                        <h3 class="section-h">{{ 'operatorConsole.compliance' | translate }}</h3>
                         <div class="kv-grid">
                             <div>
-                                <span>BAA signed</span>
+                                <span>{{ 'operatorConsole.compliancePanel.baaSigned' | translate }}</span>
                                 <strong>
-                                    <p-tag [value]="stats()?.compliance?.baaSigned ? 'Signed' : 'Pending'" [severity]="stats()?.compliance?.baaSigned ? 'success' : 'warn'" />
+                                    <p-tag [value]="(stats()?.compliance?.baaSigned ? 'operatorConsole.compliancePanel.signed' : 'operatorConsole.compliancePanel.pending') | translate" [severity]="stats()?.compliance?.baaSigned ? 'success' : 'warn'" />
                                     @if (stats()?.compliance?.baaSignedAt) {
                                         <small class="muted">{{ stats()?.compliance?.baaSignedAt | date:'mediumDate' }}</small>
                                     }
                                 </strong>
                             </div>
                             <div>
-                                <span>DPA signed</span>
+                                <span>{{ 'operatorConsole.compliancePanel.dpaSigned' | translate }}</span>
                                 <strong>
-                                    <p-tag [value]="stats()?.compliance?.dpaSigned ? 'Signed' : 'Pending'" [severity]="stats()?.compliance?.dpaSigned ? 'success' : 'warn'" />
+                                    <p-tag [value]="(stats()?.compliance?.dpaSigned ? 'operatorConsole.compliancePanel.signed' : 'operatorConsole.compliancePanel.pending') | translate" [severity]="stats()?.compliance?.dpaSigned ? 'success' : 'warn'" />
                                     @if (stats()?.compliance?.dpaSignedAt) {
                                         <small class="muted">{{ stats()?.compliance?.dpaSignedAt | date:'mediumDate' }}</small>
                                     }
                                 </strong>
                             </div>
-                            <div><span>Last audit</span><strong>{{ stats()?.compliance?.lastAuditDate || '—' }}</strong></div>
+                            <div><span>{{ 'operatorConsole.compliancePanel.lastAudit' | translate }}</span><strong>{{ stats()?.compliance?.lastAuditDate || '—' }}</strong></div>
                         </div>
 
                         <!-- Encryption -->
-                        <h3 class="section-h">Encryption (identifiers only — operator cannot decrypt)</h3>
+                        <h3 class="section-h">{{ 'operatorConsole.encryption' | translate }}</h3>
                         <div class="kv-grid">
-                            <div><span>KMS data key</span><strong><code>{{ stats()?.encryption?.kmsKeyId || '—' }}</code></strong></div>
-                            <div><span>KMS HMAC key</span><strong><code>{{ stats()?.encryption?.hmacKeyId || '—' }}</code></strong></div>
+                            <div><span>{{ 'operatorConsole.kmsDataKey' | translate }}</span><strong><code>{{ stats()?.encryption?.kmsKeyId || '—' }}</code></strong></div>
+                            <div><span>{{ 'operatorConsole.kmsHmacKey' | translate }}</span><strong><code>{{ stats()?.encryption?.hmacKeyId || '—' }}</code></strong></div>
                         </div>
 
                         <!-- Audit (sanitized) -->
-                        <h3 class="section-h">Audit activity (today)</h3>
-                        <p class="audit-note">Categories only — entity ids are stripped so the operator can't tell which patient or record was touched.</p>
+                        <h3 class="section-h">{{ 'operatorConsole.auditToday' | translate }}</h3>
+                        <p class="audit-note">{{ 'operatorConsole.auditNote' | translate }}</p>
                         @if (!audit() || audit()!.items.length === 0) {
-                            <div class="empty">No audit events for today.</div>
+                            <div class="empty">{{ 'operatorConsole.noAuditEvents' | translate }}</div>
                         } @else {
                             <p-table [value]="audit()!.items" [paginator]="true" [rows]="10" class="audit-table">
                                 <ng-template pTemplate="header">
@@ -260,8 +260,8 @@ import { CacheService } from '@/services/cache.service';
                         <input pInputText [(ngModel)]="editForm()!.notes" placeholder="Operator-only notes about this tenant" />
                     </div>
                     <div class="edit-actions">
-                        <p-button label="Cancel" severity="secondary" [text]="true" (onClick)="editOpen = false" />
-                        <p-button label="Save" icon="pi pi-check" (onClick)="saveEdit()" [loading]="saving()" />
+                        <p-button [label]="'common.cancel' | translate" severity="secondary" [text]="true" (onClick)="editOpen = false" />
+                        <p-button [label]="'common.save' | translate" icon="pi pi-check" (onClick)="saveEdit()" [loading]="saving()" />
                     </div>
                 }
             </p-dialog>

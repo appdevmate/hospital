@@ -27,26 +27,29 @@ export const appRoutes: Routes = [
         children: [
             {
                 path: '',
-                data: { breadcrumb: 'Dashboard' },
+                // Step I — i18n: breadcrumb stores a translation KEY instead of a hard-coded
+                // English label. The breadcrumb component resolves it through ngx-translate
+                // so it renders in the user's current language and updates on language switch.
+                data: { breadcrumb: 'menu.dashboard' },
                 loadComponent: () => import('@/components/dashboard/dashboard').then((c) => c.DashboardComponent)
             },
             {
                 path: 'doctors-management',
-                data: { breadcrumb: 'Doctors Management' },
+                data: { breadcrumb: 'pages.doctors.title' },
                 canActivate: [roleGuard(ADMIN_ROLES)],
                 loadComponent: () => import('@/components/Doctors Management/doctors-management').then((c) => c.DoctorsManagementComponent),
                 providers: [ConfirmationService, MessageService]
             },
             {
                 path: 'patients-management',
-                data: { breadcrumb: 'Patients Management' },
+                data: { breadcrumb: 'pages.patients.title' },
                 canActivate: [roleGuard(PATIENTS_ROLES)],
                 loadComponent: () => import('@/components/Patients Management/patients-management').then((c) => c.PatientsManagementComponent),
                 providers: [ConfirmationService, MessageService]
             },
             {
                 path: 'patient-profile/:id',
-                data: { breadcrumb: 'Patient Profile' },
+                data: { breadcrumb: 'pages.patients.title' },
                 canActivate: [roleGuard(PATIENTS_ROLES)],
                 loadComponent: () => import('@/components/patient-profile/patient-profile').then((m) => m.PatientProfileComponent)
             },
@@ -61,7 +64,7 @@ export const appRoutes: Routes = [
             // Blood Bank
             {
                 path: 'blood-bank',
-                data: { breadcrumb: 'Blood Bank' },
+                data: { breadcrumb: 'pages.bloodBank.title' },
                 canActivate: [roleGuard(BLOODBANK_ROLES)],
                 loadComponent: () => import('@/components/blood-bank/blood-bank').then((m) => m.BloodBankComponent)
             },
@@ -69,26 +72,26 @@ export const appRoutes: Routes = [
             // ScribeFirst Phase 1 — voice scribe
             {
                 path: 'voice-scribe',
-                data: { breadcrumb: 'Voice Scribe' },
+                data: { breadcrumb: 'pages.voiceScribe.title' },
                 canActivate: [roleGuard(SCRIBE_ROLES)],
                 loadComponent: () => import('@/components/voice-scribe/voice-scribe').then((m) => m.VoiceScribeComponent)
             },
 
             // Admin panel
-            { path: 'admin-panel', canActivate: [roleGuard(ADMIN_ROLES)], component: AdminPanelComponent },
+            { path: 'admin-panel', data: { breadcrumb: 'pages.adminPanel.title' }, canActivate: [roleGuard(ADMIN_ROLES)], component: AdminPanelComponent },
 
             // Open to all authenticated users
-            { path: 'documents', data: { breadcrumb: 'Documents' }, canActivate: [roleGuard(DOCS_ROLES)], loadComponent: () => import('@/components/documents/document-manager/document-manager').then((m) => m.DocumentManagerComponent) },
-            { path: 'calendar', data: { breadcrumb: 'Calendar' }, loadComponent: () => import('@/components/hospital-calendar/hospital-calendar').then((m) => m.HospitalCalendarComponent) },
-            { path: 'appointments', data: { breadcrumb: 'Appointments' }, loadComponent: () => import('@/components/appointments/appointments').then((m) => m.AppointmentsComponent) },
-            { path: 'invoices', data: { breadcrumb: 'Invoices' }, loadComponent: () => import('@/components/invoices/invoices').then((m) => m.InvoicesComponent) },
-            { path: 'notifications', data: { breadcrumb: 'Notifications' }, loadComponent: () => import('@/components/notifications/notifications').then((m) => m.NotificationsComponent) },
-            { path: 'user-profile', data: { breadcrumb: 'Profile' }, component: UserProfileComponent },
+            { path: 'documents', data: { breadcrumb: 'pages.documents.title' }, canActivate: [roleGuard(DOCS_ROLES)], loadComponent: () => import('@/components/documents/document-manager/document-manager').then((m) => m.DocumentManagerComponent) },
+            { path: 'calendar', data: { breadcrumb: 'pages.calendar.title' }, loadComponent: () => import('@/components/hospital-calendar/hospital-calendar').then((m) => m.HospitalCalendarComponent) },
+            { path: 'appointments', data: { breadcrumb: 'pages.appointments.title' }, loadComponent: () => import('@/components/appointments/appointments').then((m) => m.AppointmentsComponent) },
+            { path: 'invoices', data: { breadcrumb: 'pages.invoices.title' }, loadComponent: () => import('@/components/invoices/invoices').then((m) => m.InvoicesComponent) },
+            { path: 'notifications', data: { breadcrumb: 'pages.notifications.title' }, loadComponent: () => import('@/components/notifications/notifications').then((m) => m.NotificationsComponent) },
+            { path: 'user-profile', data: { breadcrumb: 'pages.userProfile.title' }, component: UserProfileComponent },
 
             // Operator console (www.akwadona.com) — Step 7
             {
                 path: 'operator',
-                data: { breadcrumb: 'Operator Console' },
+                data: { breadcrumb: 'operatorConsole.breadcrumb' },
                 canActivate: [operatorGuard],
                 loadComponent: () => import('@/components/operator-console/operator-console').then((m) => m.OperatorConsoleComponent)
             }

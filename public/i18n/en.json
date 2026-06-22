@@ -105,6 +105,48 @@
             "rateLimited": "Rate-limited (24h)",
             "rateLimitedHint": "Consider plan upgrade",
             "lastActivity": "Last activity"
-        }
+        },
+        "limitsPanel": {
+            "ratePerSec": "Rate (req/s)",
+            "dailyQuota": "Daily quota",
+            "storageCap": "Storage cap (GB)",
+            "maxUpload": "Max upload (MB)"
+        },
+        "compliancePanel": {
+            "baaSigned": "BAA signed",
+            "dpaSigned": "DPA signed",
+            "lastAudit": "Last audit",
+            "signed": "Signed",
+            "pending": "Pending"
+        },
+        "breadcrumb": "Operator Console",
+        "kmsDataKey": "KMS data key",
+        "kmsHmacKey": "KMS HMAC key"
+    },
+    "pages": {
+        "patients":      { "title": "Patients" },
+        "doctors":       { "title": "Doctors Management" },
+        "appointments":  { "title": "Appointments" },
+        "bloodBank":     { "title": "Blood Bank" },
+        "pharmacy":      { "title": "Pharmacy" },
+        "documents":     { "title": "Documents" },
+        "invoices":      { "title": "Invoices" },
+        "notifications": { "title": "Notifications" },
+        "voiceScribe":   { "title": "Voice Scribe" },
+        "calendar":      { "title": "Calendar" },
+        "adminPanel":    { "title": "Administration" },
+        "userProfile":   { "title": "Profile" },
+        "consultation":  { "title": "Consultation" }
+    },
+    "actions": {
+        "add":      "Add",
+        "view":     "View",
+        "remove":   "Remove",
+        "filter":   "Filter",
+        "export":   "Export",
+        "import":   "Import",
+        "print":    "Print",
+        "download": "Download",
+        "upload":   "Upload"
     }
 }

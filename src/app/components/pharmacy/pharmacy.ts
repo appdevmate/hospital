@@ -18,6 +18,7 @@ import { InputIconModule } from 'primeng/inputicon';
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from 'primeng/tabs';
 import { ConfirmationService } from 'primeng/api';
 import { catchError, of, finalize } from 'rxjs';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { PharmacyService, Medication, InventoryItem, PrescriptionQueueItem, DispenseRecord, PurchaseOrder, POItem, PharmacyAlert } from '@/services/pharmacy.service';
 import { HelpersService } from '@/services/helpers-service';
@@ -48,7 +49,8 @@ import { DocumentService } from '@/services/document.service';
         TabList,
         Tab,
         TabPanels,
-        TabPanel
+        TabPanel,
+        TranslatePipe
     ],
     providers: [ConfirmationService],
     templateUrl: './pharmacy.html',

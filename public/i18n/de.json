@@ -105,6 +105,74 @@
             "rateLimited": "Begrenzte Anfragen (24h)",
             "rateLimitedHint": "Tarif-Upgrade empfohlen",
             "lastActivity": "Letzte Aktivität"
+        },
+        "limitsPanel": {
+            "ratePerSec": "Rate (Anfragen/s)",
+            "dailyQuota": "Tageskontingent",
+            "storageCap": "Speicherlimit (GB)",
+            "maxUpload": "Max. Upload (MB)"
+        },
+        "compliancePanel": {
+            "baaSigned": "BAA unterzeichnet",
+            "dpaSigned": "DPA unterzeichnet",
+            "lastAudit": "Letzte Prüfung",
+            "signed": "Unterzeichnet",
+            "pending": "Ausstehend"
+        },
+        "breadcrumb": "Betreiber-Konsole",
+        "kmsDataKey": "KMS-Datenschlüssel",
+        "kmsHmacKey": "HMAC-Schlüssel"
+    },
+    "pages": {
+        "patients": {
+            "title": "Patienten"
+        },
+        "doctors": {
+            "title": "Ärzteverwaltung"
+        },
+        "appointments": {
+            "title": "Termine"
+        },
+        "bloodBank": {
+            "title": "Blutbank"
+        },
+        "pharmacy": {
+            "title": "Apotheke"
+        },
+        "documents": {
+            "title": "Dokumente"
+        },
+        "invoices": {
+            "title": "Rechnungen"
+        },
+        "notifications": {
+            "title": "Benachrichtigungen"
+        },
+        "voiceScribe": {
+            "title": "Spracheingabe"
+        },
+        "calendar": {
+            "title": "Kalender"
+        },
+        "adminPanel": {
+            "title": "Verwaltung"
+        },
+        "userProfile": {
+            "title": "Profil"
+        },
+        "consultation": {
+            "title": "Konsultation"
         }
+    },
+    "actions": {
+        "add": "Hinzufügen",
+        "view": "Ansehen",
+        "remove": "Entfernen",
+        "filter": "Filtern",
+        "export": "Exportieren",
+        "import": "Importieren",
+        "print": "Drucken",
+        "download": "Herunterladen",
+        "upload": "Hochladen"
     }
 }

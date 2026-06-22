@@ -105,6 +105,74 @@
             "rateLimited": "Requêtes limitées (24h)",
             "rateLimitedHint": "Envisager une mise à niveau",
             "lastActivity": "Dernière activité"
+        },
+        "limitsPanel": {
+            "ratePerSec": "Taux (req/s)",
+            "dailyQuota": "Quota quotidien",
+            "storageCap": "Limite de stockage (Go)",
+            "maxUpload": "Taille max d'upload (Mo)"
+        },
+        "compliancePanel": {
+            "baaSigned": "BAA signé",
+            "dpaSigned": "DPA signé",
+            "lastAudit": "Dernier audit",
+            "signed": "Signé",
+            "pending": "En attente"
+        },
+        "breadcrumb": "Console opérateur",
+        "kmsDataKey": "Clé de données KMS",
+        "kmsHmacKey": "Clé HMAC"
+    },
+    "pages": {
+        "patients": {
+            "title": "Patients"
+        },
+        "doctors": {
+            "title": "Gestion des médecins"
+        },
+        "appointments": {
+            "title": "Rendez-vous"
+        },
+        "bloodBank": {
+            "title": "Banque de sang"
+        },
+        "pharmacy": {
+            "title": "Pharmacie"
+        },
+        "documents": {
+            "title": "Documents"
+        },
+        "invoices": {
+            "title": "Factures"
+        },
+        "notifications": {
+            "title": "Notifications"
+        },
+        "voiceScribe": {
+            "title": "Dictée vocale"
+        },
+        "calendar": {
+            "title": "Calendrier"
+        },
+        "adminPanel": {
+            "title": "Administration"
+        },
+        "userProfile": {
+            "title": "Profil"
+        },
+        "consultation": {
+            "title": "Consultation"
         }
+    },
+    "actions": {
+        "add": "Ajouter",
+        "view": "Voir",
+        "remove": "Supprimer",
+        "filter": "Filtrer",
+        "export": "Exporter",
+        "import": "Importer",
+        "print": "Imprimer",
+        "download": "Télécharger",
+        "upload": "Téléverser"
     }
 }

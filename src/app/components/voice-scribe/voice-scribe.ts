@@ -10,6 +10,7 @@ import { DividerModule } from 'primeng/divider';
 import { ToastModule } from 'primeng/toast';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { MessageService } from 'primeng/api';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { ScribeService, SoapDraft } from '@/services/scribe.service';
 
@@ -52,7 +53,8 @@ type Status = 'idle' | 'recording' | 'processing' | 'review' | 'approved' | 'err
         TagModule,
         DividerModule,
         ToastModule,
-        ProgressBarModule
+        ProgressBarModule,
+        TranslatePipe
     ],
     providers: [MessageService],
     templateUrl: './voice-scribe.html',

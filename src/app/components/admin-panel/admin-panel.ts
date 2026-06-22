@@ -17,6 +17,7 @@ import { DividerModule } from 'primeng/divider';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { catchError, of, finalize } from 'rxjs';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { AdminPanelService, AdminStats, CognitoUser, AuditItem } from '@/services/admin-panel.service';
 import { HelpersService } from '@/services/helpers-service';
@@ -45,7 +46,8 @@ import { AuthService } from '@/services/auth.service';
         TabList,
         Tab,
         TabPanels,
-        TabPanel
+        TabPanel,
+        TranslatePipe
     ],
     providers: [ConfirmationService],
     templateUrl: './admin-panel.html',

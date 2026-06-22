@@ -18,12 +18,13 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { CardModule } from 'primeng/card';
 import { SelectModule } from 'primeng/select';
 import { ConfirmationService } from 'primeng/api';
+import { TranslatePipe } from '@ngx-translate/core';
 import { HelpersService } from '@/services/helpers-service';
 
 @Component({
     selector: 'app-document-manager',
     standalone: true,
-    imports: [CommonModule, FormsModule, GenericTableComponent, ButtonModule, FileUploadModule, ProgressBarModule, ToastModule, ConfirmDialogModule, TagModule, ToolbarModule, CardModule, SelectModule, TooltipModule],
+    imports: [CommonModule, FormsModule, GenericTableComponent, ButtonModule, FileUploadModule, ProgressBarModule, ToastModule, ConfirmDialogModule, TagModule, ToolbarModule, CardModule, SelectModule, TooltipModule, TranslatePipe],
     template: `
         <p-toast />
         <p-confirmdialog />
@@ -34,7 +35,7 @@ import { HelpersService } from '@/services/helpers-service';
                 <p-card>
                     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                         <div>
-                            <h2 class="text-2xl font-bold m-0">Document Manager</h2>
+                            <h2 class="text-2xl font-bold m-0">{{ 'pages.documents.title' | translate }}</h2>
                             <p class="text-muted-color mt-1 mb-0">Upload and manage medical documents securely</p>
                         </div>
                         <div class="flex items-center gap-4">

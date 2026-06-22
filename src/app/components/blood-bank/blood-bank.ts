@@ -18,6 +18,7 @@ import { DividerModule } from 'primeng/divider';
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from 'primeng/tabs';
 import { ConfirmationService } from 'primeng/api';
 import { finalize } from 'rxjs';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import {
     BloodBankService, Donor, BBUnit, BBRequest, StockRow,
@@ -35,7 +36,8 @@ import { GENDER_OPTIONS, PHONE_MASK as APP_PHONE_MASK, QID_MASK, BLOOD_TYPE_OPTI
         CommonModule, FormsModule, ButtonModule, TagModule, InputTextModule,
         InputNumberModule, SelectModule, MultiSelectModule, InputMaskModule,
         DatePickerModule, TextareaModule, TableModule, TooltipModule, ConfirmDialogModule,
-        DialogModule, DividerModule, Tabs, TabList, Tab, TabPanels, TabPanel
+        DialogModule, DividerModule, Tabs, TabList, Tab, TabPanels, TabPanel,
+        TranslatePipe
     ],
     providers: [ConfirmationService],
     templateUrl: './blood-bank.html',

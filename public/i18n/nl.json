@@ -105,6 +105,74 @@
             "rateLimited": "Beperkte verzoeken (24u)",
             "rateLimitedHint": "Overweeg een upgrade",
             "lastActivity": "Laatste activiteit"
+        },
+        "limitsPanel": {
+            "ratePerSec": "Snelheid (req/s)",
+            "dailyQuota": "Dagelijks quotum",
+            "storageCap": "Opslaglimiet (GB)",
+            "maxUpload": "Max. upload (MB)"
+        },
+        "compliancePanel": {
+            "baaSigned": "BAA ondertekend",
+            "dpaSigned": "DPA ondertekend",
+            "lastAudit": "Laatste audit",
+            "signed": "Ondertekend",
+            "pending": "In afwachting"
+        },
+        "breadcrumb": "Beheerconsole",
+        "kmsDataKey": "KMS-datasleutel",
+        "kmsHmacKey": "HMAC-sleutel"
+    },
+    "pages": {
+        "patients": {
+            "title": "Patiënten"
+        },
+        "doctors": {
+            "title": "Artsenbeheer"
+        },
+        "appointments": {
+            "title": "Afspraken"
+        },
+        "bloodBank": {
+            "title": "Bloedbank"
+        },
+        "pharmacy": {
+            "title": "Apotheek"
+        },
+        "documents": {
+            "title": "Documenten"
+        },
+        "invoices": {
+            "title": "Facturen"
+        },
+        "notifications": {
+            "title": "Meldingen"
+        },
+        "voiceScribe": {
+            "title": "Spraakdictee"
+        },
+        "calendar": {
+            "title": "Kalender"
+        },
+        "adminPanel": {
+            "title": "Beheer"
+        },
+        "userProfile": {
+            "title": "Profiel"
+        },
+        "consultation": {
+            "title": "Consult"
         }
+    },
+    "actions": {
+        "add": "Toevoegen",
+        "view": "Bekijken",
+        "remove": "Verwijderen",
+        "filter": "Filteren",
+        "export": "Exporteren",
+        "import": "Importeren",
+        "print": "Afdrukken",
+        "download": "Downloaden",
+        "upload": "Uploaden"
     }
 }

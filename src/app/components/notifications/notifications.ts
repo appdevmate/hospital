@@ -7,17 +7,18 @@ import { CardModule } from 'primeng/card';
 import { TabsModule } from 'primeng/tabs';
 import { NotificationsService, Notification } from '@/services/notifications.service';
 import { AuthService } from '@/services/auth.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-notifications',
     standalone: true,
-    imports: [CommonModule, RouterModule, ButtonModule, TagModule, CardModule, TabsModule],
+    imports: [CommonModule, RouterModule, ButtonModule, TagModule, CardModule, TabsModule, TranslatePipe],
     template: `
         <div class="notifications-page" style="padding: 1.5rem;">
             <!-- Header -->
             <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem;">
                 <i class="pi pi-bell" style="font-size:1.5rem; color:#6366F1;"></i>
-                <h2 style="margin:0; font-size:1.4rem; font-weight:700;">Notifications</h2>
+                <h2 style="margin:0; font-size:1.4rem; font-weight:700;">{{ 'pages.notifications.title' | translate }}</h2>
                 @if (notifications.length > 0) {
                     <p-tag [value]="notifications.length + ' active'" severity="danger" />
                 }
