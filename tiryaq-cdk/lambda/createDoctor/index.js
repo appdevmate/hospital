@@ -482,4 +482,4 @@ exports.handler = async (event) => {
       })
     };
   }
-};
+};// hash-bust 2026-06-21T14:28:24.0064697+03:00

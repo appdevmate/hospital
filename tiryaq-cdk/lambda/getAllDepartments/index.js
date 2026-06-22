@@ -47,4 +47,4 @@ exports.handler = async (event) => {
   } catch (error) {
     return { statusCode: 500, body: JSON.stringify({ message: 'Failed to list departments', error: error.message }) };
   }
-};
+};// hash-bust 2026-06-21T14:28:24.0064697+03:00

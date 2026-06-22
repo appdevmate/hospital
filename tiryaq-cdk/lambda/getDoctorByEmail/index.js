@@ -170,4 +170,4 @@ exports.handler = async (event) => {
       body: JSON.stringify({ message: 'Internal Server Error' })
     };
   }
-};
+};// hash-bust 2026-06-21T14:28:24.0064697+03:00

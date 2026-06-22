@@ -130,4 +130,4 @@ exports.handler = async (event) => {
             body: JSON.stringify({ message: 'Failed to fetch invoices.', error: err.message })
         };
     }
-};
+};// hash-bust 2026-06-21T14:28:24.0064697+03:00

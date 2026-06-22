@@ -1061,4 +1061,4 @@ function errResp(status, message) {
     headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
     body: JSON.stringify({ message })
   };
-}
+}// hash-bust 2026-06-21T14:28:24.0064697+03:00

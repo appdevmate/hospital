@@ -117,3 +117,4 @@ exports.handler = async (event) => {
     return { statusCode: 500, body: JSON.stringify({ message: 'Failed to create specializations', error: err.message }) };
   }
 };
+// hash-bust 2026-06-21T14:28:24.0064697+03:00

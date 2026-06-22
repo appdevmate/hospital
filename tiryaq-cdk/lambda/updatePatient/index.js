@@ -239,4 +239,4 @@ exports.handler = async (event) => {
     }
     return err(500, error.message || 'Failed to update patient');
   }
-};
+};// hash-bust 2026-06-21T14:28:24.0064697+03:00
