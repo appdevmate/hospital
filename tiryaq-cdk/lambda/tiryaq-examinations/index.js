@@ -19,6 +19,8 @@ const db     = DynamoDBDocumentClient.from(client);
 const { encryptItem, decryptItem, decryptItems, EXAMINATION_PHI_FIELDS } = require('./crypto');
 // Step 2g — per-tenant rate limit.
 const throttle = require('./throttle');
+// Step 2d-4 — per-row tenant enforcement.
+const { assertRowTenant, mergeTenantCondition } = require('./tenant-guard');
 
 // ── Tenant enforcement (Step 2d) — guard at handler entry. ───────────────────
 function getTenant(event) {
@@ -271,15 +273,17 @@ exports.handler = async (event) => {
 
     if (method === 'OPTIONS') return res(200, {});
 
-    // Step 2d — tenant guard.
-    let __tenantId;
-    try { __tenantId = getTenant(event); }
+    // Step 2d — tenant guard. Renamed to `tenantId` (was `__tenantId`) so
+    // the encryptItem / decryptItem calls below that referenced `tenantId`
+    // actually resolve. This was a latent bug uncovered during 2d-4.
+    let tenantId;
+    try { tenantId = getTenant(event); }
     catch (e) { return err(e.statusCode || 403, e.message); }
 
     // Step 2g — per-tenant throttle.
     {
         const role = (event.requestContext?.authorizer?.jwt?.claims || {}).role || 'tenant_user';
-        const limitResponse = await throttle.precheck(event, { tenantId: __tenantId, role });
+        const limitResponse = await throttle.precheck(event, { tenantId, role });
         if (limitResponse) return limitResponse;
     }
 
@@ -289,6 +293,10 @@ exports.handler = async (event) => {
     if (!caller.isAdmin && !caller.isDoctor) {
         return err(403, 'Access denied: only doctors or admin can use this endpoint');
     }
+
+    // Step 2d-4 — wrap routing in try/catch so tenant-guard 404s reach the
+    // client as proper 404s (and not 500s).
+    try {
 
     // ── POST /examinations ── CREATE ─────────────────────────────────────────
     if (method === 'POST' && !path.includes('/signoff')) {
@@ -316,6 +324,7 @@ exports.handler = async (event) => {
             PK:              `EXAM#${id}`,
             SK:              'PROFILE',
             EntityType:      'EXAMINATION',
+            tenantId, // Step 2d-4
             examId:          id,
             patientId:       body.patientId,
             patientName:     body.patientName,
@@ -359,6 +368,7 @@ exports.handler = async (event) => {
                         PK:          `DOCTOR#${exam.doctorId}`,
                         SK:          `PATIENT#${exam.patientId}`,
                         EntityType:  'DOCTOR_PATIENT',
+                        tenantId, // Step 2d-4
                         doctorId:    exam.doctorId,
                         patientId:   exam.patientId,
                         patientName: exam.patientName,
@@ -384,13 +394,15 @@ exports.handler = async (event) => {
         const patientId   = event.queryStringParameters?.patientId;
         const doctorEmail = event.queryStringParameters?.doctorEmail;
 
-        // Query by doctorEmail using GSI — returns all exams for this doctor
+        // Query by doctorEmail using GSI — returns all exams for this doctor.
+        // Step 2d-4 — also filter by tenantId.
         if (doctorEmail && !patientId) {
             const result = await db.send(new QueryCommand({
                 TableName:                 TABLE_NAME,
                 IndexName:                 'doctorEmail-createdAt-index',
                 KeyConditionExpression:    'doctorEmail = :de',
-                ExpressionAttributeValues: { ':de': doctorEmail.toLowerCase().trim() }
+                FilterExpression:          'tenantId = :tnt',
+                ExpressionAttributeValues: { ':de': doctorEmail.toLowerCase().trim(), ':tnt': tenantId }
             }));
             const items = (result.Items || []).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
             // Step 3 — decrypt PHI on every returned exam before responding.
@@ -401,10 +413,11 @@ exports.handler = async (event) => {
         // Query by patientId using EntityType-index (existing behaviour)
         if (!patientId) return err(400, 'patientId is required');
 
+        // Step 2d-4 — always include tenantId in the filter expression.
         const filterExp  = doctorEmail
-            ? 'patientId = :pid AND doctorEmail = :de'
-            : 'patientId = :pid';
-        const filterVals = { ':et': 'EXAMINATION', ':pid': patientId };
+            ? 'patientId = :pid AND doctorEmail = :de AND tenantId = :tnt'
+            : 'patientId = :pid AND tenantId = :tnt';
+        const filterVals = { ':et': 'EXAMINATION', ':pid': patientId, ':tnt': tenantId };
         if (doctorEmail) filterVals[':de'] = doctorEmail.toLowerCase().trim();
 
         const result = await db.send(new QueryCommand({
@@ -429,6 +442,8 @@ exports.handler = async (event) => {
         }));
 
         if (!result.Item) return err(404, 'Examination not found');
+        // Step 2d-4 — verify row belongs to caller's tenant BEFORE decrypt.
+        assertRowTenant(result.Item, tenantId, { notFoundMessage: 'Examination not found' });
         // Step 3 — decrypt PHI before returning.
         await decryptItem(result.Item, EXAMINATION_PHI_FIELDS, tenantId);
         return res(200, result.Item);
@@ -449,6 +464,8 @@ exports.handler = async (event) => {
         }));
 
         if (!existing.Item) return err(404, 'Examination not found');
+        // Step 2d-4 — verify row belongs to caller's tenant BEFORE decrypt.
+        assertRowTenant(existing.Item, tenantId, { notFoundMessage: 'Examination not found' });
         // Step 3 — decrypt PHI so business logic / validation works on plaintext.
         await decryptItem(existing.Item, EXAMINATION_PHI_FIELDS, tenantId);
         const exam = existing.Item;
@@ -517,13 +534,18 @@ exports.handler = async (event) => {
         values[':__dek'] = fullMerged._kms_dek;
         values[':__v']   = fullMerged._kms_v;
 
-        await db.send(new UpdateCommand({
-            TableName:                 TABLE_NAME,
-            Key:                       { PK: `EXAM#${examId}`, SK: 'PROFILE' },
-            UpdateExpression:          `SET ${setParts.join(', ')}`,
-            ExpressionAttributeNames:  names,
-            ExpressionAttributeValues: values
-        }));
+        // Step 2d-4 — atomic tenant guard.
+        {
+            const g = mergeTenantCondition(null, tenantId);
+            await db.send(new UpdateCommand({
+                TableName:                 TABLE_NAME,
+                Key:                       { PK: `EXAM#${examId}`, SK: 'PROFILE' },
+                UpdateExpression:          `SET ${setParts.join(', ')}`,
+                ExpressionAttributeNames:  { ...names, ...g.ExpressionAttributeNames },
+                ExpressionAttributeValues: { ...values, ...g.ExpressionAttributeValues },
+                ConditionExpression:       g.ConditionExpression
+            }));
+        }
 
         await writeAudit('UPDATE', 'EXAMINATION', examId,
             body.doctorEmail || exam.doctorEmail, body.doctorName || exam.doctorName,
@@ -556,6 +578,8 @@ exports.handler = async (event) => {
         }));
 
         if (!existing.Item) return err(404, 'Examination not found');
+        // Step 2d-4 — tenant guard.
+        assertRowTenant(existing.Item, tenantId, { notFoundMessage: 'Examination not found' });
         const exam = existing.Item;
 
         if (exam.status === 'completed') return err(409, 'Examination already signed off');
@@ -564,13 +588,17 @@ exports.handler = async (event) => {
         if (signOffErrors.length > 0) return err(422, signOffErrors.join(' | '));
 
         const now = new Date().toISOString();
-        await db.send(new UpdateCommand({
-            TableName:                 TABLE_NAME,
-            Key:                       { PK: `EXAM#${examId}`, SK: 'PROFILE' },
-            UpdateExpression:          'SET #status = :status, #signedOffAt = :sat, #updatedAt = :ua',
-            ExpressionAttributeNames:  { '#status': 'status', '#signedOffAt': 'signedOffAt', '#updatedAt': 'updatedAt' },
-            ExpressionAttributeValues: { ':status': 'completed', ':sat': now, ':ua': now }
-        }));
+        {
+            const g = mergeTenantCondition(null, tenantId);
+            await db.send(new UpdateCommand({
+                TableName:                 TABLE_NAME,
+                Key:                       { PK: `EXAM#${examId}`, SK: 'PROFILE' },
+                UpdateExpression:          'SET #status = :status, #signedOffAt = :sat, #updatedAt = :ua',
+                ExpressionAttributeNames:  { '#status': 'status', '#signedOffAt': 'signedOffAt', '#updatedAt': 'updatedAt', ...g.ExpressionAttributeNames },
+                ExpressionAttributeValues: { ':status': 'completed', ':sat': now, ':ua': now, ...g.ExpressionAttributeValues },
+                ConditionExpression:       g.ConditionExpression
+            }));
+        }
 
         await writeAudit('SIGNOFF', 'EXAMINATION', examId,
             body.doctorEmail || exam.doctorEmail, body.doctorName || exam.doctorName,
@@ -581,16 +609,22 @@ exports.handler = async (event) => {
         // appointment — never fail the sign-off on this.
         if (exam.appointmentId) {
             try {
+                // Step 2d-4 — also gate the appointment update by tenantId so
+                // a forged exam.appointmentId can't reach another tenant.
+                const g = mergeTenantCondition(
+                    { ConditionExpression: 'attribute_exists(PK) AND #status <> :cancelled' },
+                    tenantId
+                );
                 await db.send(new UpdateCommand({
                     TableName:                 TABLE_NAME,
                     Key:                       { PK: `APPOINTMENT#${exam.appointmentId}`, SK: 'PROFILE' },
                     UpdateExpression:          'SET #status = :completed, #updatedAt = :ua, #updatedBy = :ub, #checkedOutAt = if_not_exists(#checkedOutAt, :ua)',
-                    ExpressionAttributeNames:  { '#status': 'status', '#updatedAt': 'updatedAt', '#updatedBy': 'updatedBy', '#checkedOutAt': 'checkedOutAt' },
-                    ExpressionAttributeValues: { ':completed': 'completed', ':ua': now, ':ub': (body.doctorEmail || exam.doctorEmail || 'system'), ':cancelled': 'cancelled' },
-                    ConditionExpression:       'attribute_exists(PK) AND #status <> :cancelled'
+                    ExpressionAttributeNames:  { '#status': 'status', '#updatedAt': 'updatedAt', '#updatedBy': 'updatedBy', '#checkedOutAt': 'checkedOutAt', ...g.ExpressionAttributeNames },
+                    ExpressionAttributeValues: { ':completed': 'completed', ':ua': now, ':ub': (body.doctorEmail || exam.doctorEmail || 'system'), ':cancelled': 'cancelled', ...g.ExpressionAttributeValues },
+                    ConditionExpression:       g.ConditionExpression
                 }));
             } catch (e) {
-                // Appointment missing or already cancelled — ignore.
+                // Appointment missing / already cancelled / cross-tenant — ignore.
             }
         }
 
@@ -621,11 +655,24 @@ exports.handler = async (event) => {
         }));
 
         if (!existing.Item) return err(404, 'Examination not found');
+        // Step 2d-4 — tenant guard before delete.
+        assertRowTenant(existing.Item, tenantId, { notFoundMessage: 'Examination not found' });
 
-        await db.send(new DeleteCommand({
-            TableName: TABLE_NAME,
-            Key: { PK: `EXAM#${examId}`, SK: 'PROFILE' }
-        }));
+        {
+            const g = mergeTenantCondition(null, tenantId);
+            try {
+                await db.send(new DeleteCommand({
+                    TableName: TABLE_NAME,
+                    Key: { PK: `EXAM#${examId}`, SK: 'PROFILE' },
+                    ExpressionAttributeNames:  g.ExpressionAttributeNames,
+                    ExpressionAttributeValues: g.ExpressionAttributeValues,
+                    ConditionExpression:       g.ConditionExpression
+                }));
+            } catch (e) {
+                if (e.name === 'ConditionalCheckFailedException') return err(404, 'Examination not found');
+                throw e;
+            }
+        }
 
         await writeAudit('DELETE', 'EXAMINATION', examId,
             'admin', 'admin', existing.Item, null, ipAddress);
@@ -636,7 +683,18 @@ exports.handler = async (event) => {
     }
 
     return err(400, 'Unknown route');
+    } catch (e) {
+        if (e && e.statusCode === 404) {
+            if (e.crossTenantAttempt) {
+                console.warn('cross-tenant attempt', { path, by: event.requestContext?.authorizer?.jwt?.claims?.email });
+            }
+            return err(404, e.message || 'Not found');
+        }
+        console.error('tiryaq-examinations error:', e);
+        return err(500, e.message || 'Internal error');
+    }
 };// hash-bust 2026-06-21T13:57:58.1016493+03:00
 // hash-bust 2026-06-21T14:07:44.7504132+03:00
 // hash-bust 2026-06-21T14:14:23.7665133+03:00
 // hash-bust 2026-06-21T14:28:24.0064697+03:00
+// hash-bust 2d-4 2026-06-22T10:12:07.3705068+03:00

@@ -53,6 +53,8 @@ const {
 const { randomUUID } = require('crypto');
 // Step 2g — per-tenant rate limit.
 const throttle = require('./throttle');
+// Step 2d-4 — per-row tenant enforcement.
+const { assertRowTenant, mergeTenantCondition } = require('./tenant-guard');
 
 const REGION     = process.env.AWS_REGION || 'us-east-1';
 const TABLE_NAME = process.env.TABLE_NAME || 'Hospital';
@@ -169,24 +171,27 @@ function addDays(dateStr, days) {
 }
 
 // ── DONORS ───────────────────────────────────────────────────────────
-async function listDonors() {
+async function listDonors(tenantId) {
+    // Step 2d-4 — scope by tenantId.
     const out = await ddb.send(new QueryCommand({
         TableName: TABLE_NAME,
         IndexName: 'EntityType-index',
         KeyConditionExpression: 'EntityType = :et',
-        FilterExpression: 'attribute_not_exists(deletedAt)',
-        ExpressionAttributeValues: { ':et': 'BB_DONOR' }
+        FilterExpression: 'attribute_not_exists(deletedAt) AND tenantId = :tnt',
+        ExpressionAttributeValues: { ':et': 'BB_DONOR', ':tnt': tenantId }
     }));
     return res(200, (out.Items || []).map(stripKeys));
 }
-async function getDonor(event) {
+async function getDonor(event, tenantId) {
     const id = event.pathParameters?.donorId;
     if (!id) return err(400, 'donorId required');
     const r = await ddb.send(new GetCommand({ TableName: TABLE_NAME, Key: { PK: `DONOR#${id}`, SK: 'PROFILE' } }));
     if (!r.Item || r.Item.deletedAt) return err(404, 'Donor not found');
+    // Step 2d-4 — tenant guard.
+    assertRowTenant(r.Item, tenantId, { notFoundMessage: 'Donor not found' });
     return res(200, stripKeys(r.Item));
 }
-async function createDonor(event, actor) {
+async function createDonor(event, actor, tenantId) {
     const cid = getClientRequestId(event); const cached = await checkIdempotency(cid); if (cached) return cached;
     let body = {}; try { body = JSON.parse(event.body || '{}'); } catch { return err(400, 'Invalid JSON'); }
     if (!body.name) return err(400, 'name required');
@@ -205,6 +210,7 @@ async function createDonor(event, actor) {
     const id = randomUUID();
     const item = {
         PK: `DONOR#${id}`, SK: 'PROFILE', EntityType: 'BB_DONOR', dataClass: 'PHI',
+        tenantId, // Step 2d-4
         donorId: id,
         name:        String(body.name).trim(),
         bloodType:   body.bloodType,
@@ -227,7 +233,7 @@ async function createDonor(event, actor) {
     await storeIdempotency(cid, response);
     return response;
 }
-async function updateDonor(event, actor) {
+async function updateDonor(event, actor, tenantId) {
     const cid = getClientRequestId(event); const cached = await checkIdempotency(cid); if (cached) return cached;
     const id = event.pathParameters?.donorId;
     if (!id) return err(400, 'donorId required');
@@ -239,19 +245,23 @@ async function updateDonor(event, actor) {
     let i = 0;
     for (const k of allowed) {
         const v = body[k];
-        // Never SET an indexed string attribute to null/empty — GSIs reject it.
         if (v === undefined || v === null || v === '') continue;
         const nk = `#k${i}`, vk = `:v${i}`;
         names[nk] = k; values[vk] = v; sets.push(`${nk} = ${vk}`); i++;
     }
+    // Step 2d-4 — merge tenant condition.
+    const guarded = mergeTenantCondition(
+        { ConditionExpression: 'attribute_exists(PK)' },
+        tenantId
+    );
     try {
         const out = await ddb.send(new UpdateCommand({
             TableName: TABLE_NAME,
             Key: { PK: `DONOR#${id}`, SK: 'PROFILE' },
             UpdateExpression: 'SET ' + sets.join(', '),
-            ExpressionAttributeNames: names,
-            ExpressionAttributeValues: values,
-            ConditionExpression: 'attribute_exists(PK)',
+            ExpressionAttributeNames: { ...names, ...guarded.ExpressionAttributeNames },
+            ExpressionAttributeValues: { ...values, ...guarded.ExpressionAttributeValues },
+            ConditionExpression: guarded.ConditionExpression,
             ReturnValues: 'ALL_NEW'
         }));
         const response = res(200, stripKeys(out.Attributes));
@@ -262,48 +272,64 @@ async function updateDonor(event, actor) {
         throw e;
     }
 }
-async function deleteDonor(event, actor) {
+async function deleteDonor(event, actor, tenantId) {
     const cid = getClientRequestId(event); const cached = await checkIdempotency(cid); if (cached) return cached;
     const id = event.pathParameters?.donorId;
     if (!id) return err(400, 'donorId required');
-    await ddb.send(new UpdateCommand({
-        TableName: TABLE_NAME,
-        Key: { PK: `DONOR#${id}`, SK: 'PROFILE' },
-        UpdateExpression: 'SET deletedAt = :d, updatedAt = :d, updatedBy = :ub',
-        ExpressionAttributeValues: { ':d': nowIso(), ':ub': actor.email }
-    }));
+    const guarded = mergeTenantCondition(
+        { ConditionExpression: 'attribute_exists(PK)' },
+        tenantId
+    );
+    try {
+        await ddb.send(new UpdateCommand({
+            TableName: TABLE_NAME,
+            Key: { PK: `DONOR#${id}`, SK: 'PROFILE' },
+            UpdateExpression: 'SET deletedAt = :d, updatedAt = :d, updatedBy = :ub',
+            ExpressionAttributeNames: guarded.ExpressionAttributeNames,
+            ExpressionAttributeValues: { ':d': nowIso(), ':ub': actor.email, ...guarded.ExpressionAttributeValues },
+            ConditionExpression: guarded.ConditionExpression
+        }));
+    } catch (e) {
+        if (e.name === 'ConditionalCheckFailedException') return err(404, 'Donor not found');
+        throw e;
+    }
     const response = res(204, {});
     await storeIdempotency(cid, response);
     return response;
 }
 
 // ── DONATIONS ────────────────────────────────────────────────────────
-async function listAllDonations() {
+async function listAllDonations(tenantId) {
     const out = await ddb.send(new QueryCommand({
         TableName: TABLE_NAME,
         IndexName: 'EntityType-index',
         KeyConditionExpression: 'EntityType = :et',
-        ExpressionAttributeValues: { ':et': 'BB_DONATION' }
+        FilterExpression: 'tenantId = :tnt',
+        ExpressionAttributeValues: { ':et': 'BB_DONATION', ':tnt': tenantId }
     }));
     return res(200, (out.Items || []).map(stripKeys));
 }
-async function listDonorDonations(event) {
+async function listDonorDonations(event, tenantId) {
     const id = event.pathParameters?.donorId;
     if (!id) return err(400, 'donorId required');
+    // Step 2d-4 — tenant filter on PK-scoped query too.
     const out = await ddb.send(new QueryCommand({
         TableName: TABLE_NAME,
         KeyConditionExpression: 'PK = :pk AND begins_with(SK, :s)',
-        ExpressionAttributeValues: { ':pk': `DONOR#${id}`, ':s': 'DONATION#' }
+        FilterExpression: 'tenantId = :tnt',
+        ExpressionAttributeValues: { ':pk': `DONOR#${id}`, ':s': 'DONATION#', ':tnt': tenantId }
     }));
     return res(200, (out.Items || []).map(stripKeys));
 }
-async function createDonation(event, actor) {
+async function createDonation(event, actor, tenantId) {
     const cid = getClientRequestId(event); const cached = await checkIdempotency(cid); if (cached) return cached;
     const donorId = event.pathParameters?.donorId;
     if (!donorId) return err(400, 'donorId required');
     let body = {}; try { body = JSON.parse(event.body || '{}'); } catch { return err(400, 'Invalid JSON'); }
     const r = await ddb.send(new GetCommand({ TableName: TABLE_NAME, Key: { PK: `DONOR#${donorId}`, SK: 'PROFILE' } }));
     if (!r.Item || r.Item.deletedAt) return err(404, 'Donor not found');
+    // Step 2d-4 — donor must belong to caller's tenant.
+    assertRowTenant(r.Item, tenantId, { notFoundMessage: 'Donor not found' });
     const donor = r.Item;
     const collectionDate = body.collectionDate || nowIso().slice(0,10);
     const volumeMl = Number(body.volumeMl) || 450;
@@ -315,6 +341,7 @@ async function createDonation(event, actor) {
     const donation = {
         PK: `DONOR#${donorId}`, SK: `DONATION#${donationId}`,
         EntityType: 'BB_DONATION', dataClass: 'PHI',
+        tenantId, // Step 2d-4
         donationId, donorId,
         donorName:    donor.name,
         bloodType:    donor.bloodType,
@@ -336,6 +363,7 @@ async function createDonation(event, actor) {
         const unit = {
             PK: `BBUNIT#${unitId}`, SK: 'PROFILE',
             EntityType: 'BB_UNIT', dataClass: 'PHI',
+            tenantId, // Step 2d-4
             unitId, donationId, donorId,
             donorName:      donor.name,
             bloodType:      donor.bloodType,
@@ -353,17 +381,21 @@ async function createDonation(event, actor) {
         createdUnits.push(stripKeys(unit));
     }
 
-    // Bump donor stats. updatedAt must be a full ISO datetime — the
-    // dataClass-index GSI rejects a date-only string.
-    try {
-        await ddb.send(new UpdateCommand({
-            TableName: TABLE_NAME,
-            Key: { PK: `DONOR#${donorId}`, SK: 'PROFILE' },
-            UpdateExpression: 'SET lastDonation = :ld, donationCount = if_not_exists(donationCount, :z) + :one, updatedAt = :u',
-            ExpressionAttributeValues: { ':ld': collectionDate, ':z': 0, ':one': 1, ':u': nowIso() }
-        }));
-    } catch (e) {
-        console.error('Failed to bump donor stats', e);
+    // Bump donor stats. Step 2d-4 — tenant condition belt-and-suspenders.
+    {
+        const g = mergeTenantCondition(null, tenantId);
+        try {
+            await ddb.send(new UpdateCommand({
+                TableName: TABLE_NAME,
+                Key: { PK: `DONOR#${donorId}`, SK: 'PROFILE' },
+                UpdateExpression: 'SET lastDonation = :ld, donationCount = if_not_exists(donationCount, :z) + :one, updatedAt = :u',
+                ExpressionAttributeNames: g.ExpressionAttributeNames,
+                ExpressionAttributeValues: { ':ld': collectionDate, ':z': 0, ':one': 1, ':u': nowIso(), ...g.ExpressionAttributeValues },
+                ConditionExpression: g.ConditionExpression
+            }));
+        } catch (e) {
+            console.error('Failed to bump donor stats', e);
+        }
     }
 
     const response = res(201, { donation: stripKeys(donation), units: createdUnits });
@@ -372,13 +404,15 @@ async function createDonation(event, actor) {
 }
 
 // ── UNITS / INVENTORY ───────────────────────────────────────────────
-async function listUnits(event) {
+async function listUnits(event, tenantId) {
     const qp = event.queryStringParameters || {};
+    // Step 2d-4 — tenant filter.
     const out = await ddb.send(new QueryCommand({
         TableName: TABLE_NAME,
         IndexName: 'EntityType-index',
         KeyConditionExpression: 'EntityType = :et',
-        ExpressionAttributeValues: { ':et': 'BB_UNIT' }
+        FilterExpression: 'tenantId = :tnt',
+        ExpressionAttributeValues: { ':et': 'BB_UNIT', ':tnt': tenantId }
     }));
     const today = nowIso().slice(0,10);
     let items = (out.Items || []).map(stripKeys);
@@ -406,7 +440,7 @@ async function listUnits(event) {
     }
     return res(200, items);
 }
-async function updateUnit(event, actor) {
+async function updateUnit(event, actor, tenantId) {
     const cid = getClientRequestId(event); const cached = await checkIdempotency(cid); if (cached) return cached;
     const id = event.pathParameters?.unitId;
     if (!id) return err(400, 'unitId required');
@@ -423,14 +457,18 @@ async function updateUnit(event, actor) {
             names[n] = k; values[v] = body[k]; sets.push(`${n} = ${v}`); i++;
         }
     }
+    const guarded = mergeTenantCondition(
+        { ConditionExpression: 'attribute_exists(PK)' },
+        tenantId
+    );
     try {
         const out = await ddb.send(new UpdateCommand({
             TableName: TABLE_NAME,
             Key: { PK: `BBUNIT#${id}`, SK: 'PROFILE' },
             UpdateExpression: 'SET ' + sets.join(', '),
-            ExpressionAttributeNames: names,
-            ExpressionAttributeValues: values,
-            ConditionExpression: 'attribute_exists(PK)',
+            ExpressionAttributeNames: { ...names, ...guarded.ExpressionAttributeNames },
+            ExpressionAttributeValues: { ...values, ...guarded.ExpressionAttributeValues },
+            ConditionExpression: guarded.ConditionExpression,
             ReturnValues: 'ALL_NEW'
         }));
         const response = res(200, stripKeys(out.Attributes));
@@ -441,27 +479,38 @@ async function updateUnit(event, actor) {
         throw e;
     }
 }
-async function discardUnit(event, actor) {
+async function discardUnit(event, actor, tenantId) {
     const cid = getClientRequestId(event); const cached = await checkIdempotency(cid); if (cached) return cached;
     const id = event.pathParameters?.unitId;
     if (!id) return err(400, 'unitId required');
-    await ddb.send(new UpdateCommand({
-        TableName: TABLE_NAME,
-        Key: { PK: `BBUNIT#${id}`, SK: 'PROFILE' },
-        UpdateExpression: 'SET #status = :s, updatedAt = :u, updatedBy = :ub',
-        ExpressionAttributeNames: { '#status': 'status' },
-        ExpressionAttributeValues: { ':s': 'discarded', ':u': nowIso(), ':ub': actor.email }
-    }));
+    const guarded = mergeTenantCondition(
+        { ConditionExpression: 'attribute_exists(PK)' },
+        tenantId
+    );
+    try {
+        await ddb.send(new UpdateCommand({
+            TableName: TABLE_NAME,
+            Key: { PK: `BBUNIT#${id}`, SK: 'PROFILE' },
+            UpdateExpression: 'SET #status = :s, updatedAt = :u, updatedBy = :ub',
+            ExpressionAttributeNames: { '#status': 'status', ...guarded.ExpressionAttributeNames },
+            ExpressionAttributeValues: { ':s': 'discarded', ':u': nowIso(), ':ub': actor.email, ...guarded.ExpressionAttributeValues },
+            ConditionExpression: guarded.ConditionExpression
+        }));
+    } catch (e) {
+        if (e.name === 'ConditionalCheckFailedException') return err(404, 'Unit not found');
+        throw e;
+    }
     const response = res(204, {});
     await storeIdempotency(cid, response);
     return response;
 }
-async function stockSummary() {
+async function stockSummary(tenantId) {
     const out = await ddb.send(new QueryCommand({
         TableName: TABLE_NAME,
         IndexName: 'EntityType-index',
         KeyConditionExpression: 'EntityType = :et',
-        ExpressionAttributeValues: { ':et': 'BB_UNIT' }
+        FilterExpression: 'tenantId = :tnt',
+        ExpressionAttributeValues: { ':et': 'BB_UNIT', ':tnt': tenantId }
     }));
     const today = nowIso().slice(0,10);
     const stock = {};
@@ -476,13 +525,14 @@ async function stockSummary() {
 }
 
 // ── REQUESTS ─────────────────────────────────────────────────────────
-async function listRequests(event) {
+async function listRequests(event, tenantId) {
     const qp = event.queryStringParameters || {};
     const out = await ddb.send(new QueryCommand({
         TableName: TABLE_NAME,
         IndexName: 'EntityType-index',
         KeyConditionExpression: 'EntityType = :et',
-        ExpressionAttributeValues: { ':et': 'BB_REQUEST' }
+        FilterExpression: 'tenantId = :tnt',
+        ExpressionAttributeValues: { ':et': 'BB_REQUEST', ':tnt': tenantId }
     }));
     let items = (out.Items || []).map(stripKeys);
     if (qp.status)   items = items.filter(r => r.status === qp.status);
@@ -490,13 +540,15 @@ async function listRequests(event) {
     if (qp.patientId) items = items.filter(r => r.patientId === qp.patientId);
     return res(200, items.sort((a,b) => (b.createdAt || '').localeCompare(a.createdAt || '')));
 }
-async function getRequest(event) {
+async function getRequest(event, tenantId) {
     const id = event.pathParameters?.requestId;
     if (!id) return err(400, 'requestId required');
+    // Step 2d-4 — filter the whole sub-tree by tenant.
     const r = await ddb.send(new QueryCommand({
         TableName: TABLE_NAME,
         KeyConditionExpression: 'PK = :pk',
-        ExpressionAttributeValues: { ':pk': `BBREQ#${id}` }
+        FilterExpression: 'tenantId = :tnt',
+        ExpressionAttributeValues: { ':pk': `BBREQ#${id}`, ':tnt': tenantId }
     }));
     if (!r.Items || !r.Items.length) return err(404, 'Request not found');
     const profile = r.Items.find(it => it.SK === 'PROFILE');
@@ -505,7 +557,7 @@ async function getRequest(event) {
     const issues       = r.Items.filter(it => it.SK && it.SK.startsWith('ISSUE#')).map(stripKeys);
     return res(200, { ...stripKeys(profile), crossmatches, issues });
 }
-async function createRequest(event, actor) {
+async function createRequest(event, actor, tenantId) {
     const cid = getClientRequestId(event); const cached = await checkIdempotency(cid); if (cached) return cached;
     let body = {}; try { body = JSON.parse(event.body || '{}'); } catch { return err(400, 'Invalid JSON'); }
     if (!body.patientId)   return err(400, 'patientId required');
@@ -516,6 +568,7 @@ async function createRequest(event, actor) {
     const id = randomUUID();
     const item = {
         PK: `BBREQ#${id}`, SK: 'PROFILE', EntityType: 'BB_REQUEST', dataClass: 'PHI',
+        tenantId, // Step 2d-4
         requestId: id,
         patientId:      body.patientId,
         patientName:    body.patientName,
@@ -537,7 +590,7 @@ async function createRequest(event, actor) {
     await storeIdempotency(cid, response);
     return response;
 }
-async function updateRequest(event, actor) {
+async function updateRequest(event, actor, tenantId) {
     const cid = getClientRequestId(event); const cached = await checkIdempotency(cid); if (cached) return cached;
     const id = event.pathParameters?.requestId;
     if (!id) return err(400, 'requestId required');
@@ -554,14 +607,18 @@ async function updateRequest(event, actor) {
             names[n] = k; values[v] = body[k]; sets.push(`${n} = ${v}`); i++;
         }
     }
+    const guarded = mergeTenantCondition(
+        { ConditionExpression: 'attribute_exists(PK)' },
+        tenantId
+    );
     try {
         const out = await ddb.send(new UpdateCommand({
             TableName: TABLE_NAME,
             Key: { PK: `BBREQ#${id}`, SK: 'PROFILE' },
             UpdateExpression: 'SET ' + sets.join(', '),
-            ExpressionAttributeNames: names,
-            ExpressionAttributeValues: values,
-            ConditionExpression: 'attribute_exists(PK)',
+            ExpressionAttributeNames: { ...names, ...guarded.ExpressionAttributeNames },
+            ExpressionAttributeValues: { ...values, ...guarded.ExpressionAttributeValues },
+            ConditionExpression: guarded.ConditionExpression,
             ReturnValues: 'ALL_NEW'
         }));
         const response = res(200, stripKeys(out.Attributes));
@@ -572,41 +629,57 @@ async function updateRequest(event, actor) {
         throw e;
     }
 }
-async function cancelRequest(event, actor) {
+async function cancelRequest(event, actor, tenantId) {
     const cid = getClientRequestId(event); const cached = await checkIdempotency(cid); if (cached) return cached;
     const id = event.pathParameters?.requestId;
     if (!id) return err(400, 'requestId required');
-    // Free any reserved units pointing at this request.
+    // Step 2d-4 — only THIS tenant's reserved units.
     const unitsOut = await ddb.send(new QueryCommand({
         TableName: TABLE_NAME,
         IndexName: 'EntityType-index',
         KeyConditionExpression: 'EntityType = :et',
-        FilterExpression: 'reservedForRequestId = :r',
-        ExpressionAttributeValues: { ':et': 'BB_UNIT', ':r': id }
+        FilterExpression: 'reservedForRequestId = :r AND tenantId = :tnt',
+        ExpressionAttributeValues: { ':et': 'BB_UNIT', ':r': id, ':tnt': tenantId }
     }));
     for (const u of (unitsOut.Items || [])) {
+        const g = mergeTenantCondition(null, tenantId);
+        try {
+            await ddb.send(new UpdateCommand({
+                TableName: TABLE_NAME,
+                Key: { PK: u.PK, SK: u.SK },
+                UpdateExpression: 'SET #status = :a, reservedForRequestId = :n, reservedUntil = :n, updatedAt = :u',
+                ExpressionAttributeNames: { '#status': 'status', ...g.ExpressionAttributeNames },
+                ExpressionAttributeValues: { ':a': 'available', ':n': null, ':u': nowIso(), ...g.ExpressionAttributeValues },
+                ConditionExpression: g.ConditionExpression
+            }));
+        } catch (e) {
+            if (e.name !== 'ConditionalCheckFailedException') throw e;
+        }
+    }
+    const guarded = mergeTenantCondition(
+        { ConditionExpression: 'attribute_exists(PK)' },
+        tenantId
+    );
+    try {
         await ddb.send(new UpdateCommand({
             TableName: TABLE_NAME,
-            Key: { PK: u.PK, SK: u.SK },
-            UpdateExpression: 'SET #status = :a, reservedForRequestId = :n, reservedUntil = :n, updatedAt = :u',
-            ExpressionAttributeNames: { '#status': 'status' },
-            ExpressionAttributeValues: { ':a': 'available', ':n': null, ':u': nowIso() }
+            Key: { PK: `BBREQ#${id}`, SK: 'PROFILE' },
+            UpdateExpression: 'SET #status = :s, updatedAt = :u, updatedBy = :ub',
+            ExpressionAttributeNames: { '#status': 'status', ...guarded.ExpressionAttributeNames },
+            ExpressionAttributeValues: { ':s': 'cancelled', ':u': nowIso(), ':ub': actor.email, ...guarded.ExpressionAttributeValues },
+            ConditionExpression: guarded.ConditionExpression
         }));
+    } catch (e) {
+        if (e.name === 'ConditionalCheckFailedException') return err(404, 'Request not found');
+        throw e;
     }
-    await ddb.send(new UpdateCommand({
-        TableName: TABLE_NAME,
-        Key: { PK: `BBREQ#${id}`, SK: 'PROFILE' },
-        UpdateExpression: 'SET #status = :s, updatedAt = :u, updatedBy = :ub',
-        ExpressionAttributeNames: { '#status': 'status' },
-        ExpressionAttributeValues: { ':s': 'cancelled', ':u': nowIso(), ':ub': actor.email }
-    }));
     const response = res(204, {});
     await storeIdempotency(cid, response);
     return response;
 }
 
 // ── CROSSMATCH + ISSUE ──────────────────────────────────────────────
-async function addCrossmatch(event, actor) {
+async function addCrossmatch(event, actor, tenantId) {
     const cid = getClientRequestId(event); const cached = await checkIdempotency(cid); if (cached) return cached;
     const reqId = event.pathParameters?.requestId;
     if (!reqId) return err(400, 'requestId required');
@@ -619,6 +692,9 @@ async function addCrossmatch(event, actor) {
     ]);
     if (!reqRow.Item)  return err(404, 'Request not found');
     if (!unitRow.Item) return err(404, 'Unit not found');
+    // Step 2d-4 — BOTH rows must belong to caller's tenant.
+    assertRowTenant(reqRow.Item,  tenantId, { notFoundMessage: 'Request not found' });
+    assertRowTenant(unitRow.Item, tenantId, { notFoundMessage: 'Unit not found'    });
     if (reqRow.Item.status === 'cancelled') return err(409, 'Request is cancelled');
     if (unitRow.Item.status !== 'available' && unitRow.Item.status !== 'reserved') {
         return err(409, `Unit is ${unitRow.Item.status} — cannot crossmatch`);
@@ -631,6 +707,7 @@ async function addCrossmatch(event, actor) {
     const item = {
         PK: `BBREQ#${reqId}`, SK: `XMATCH#${body.unitId}`,
         EntityType: 'BB_CROSSMATCH', dataClass: 'PHI',
+        tenantId, // Step 2d-4
         requestId: reqId, unitId: body.unitId,
         donorBloodType: unitRow.Item.bloodType,
         recipientBloodType: reqRow.Item.bloodType,
@@ -648,20 +725,26 @@ async function addCrossmatch(event, actor) {
     // If compatible, reserve the unit for ~2 hours and bump request status.
     if (declared) {
         const reservedUntil = new Date(Date.now() + 2 * 3600 * 1000).toISOString();
-        await ddb.send(new UpdateCommand({
-            TableName: TABLE_NAME,
-            Key: { PK: `BBUNIT#${body.unitId}`, SK: 'PROFILE' },
-            UpdateExpression: 'SET #status = :s, reservedForRequestId = :r, reservedUntil = :ru, updatedAt = :u',
-            ExpressionAttributeNames: { '#status': 'status' },
-            ExpressionAttributeValues: { ':s': 'reserved', ':r': reqId, ':ru': reservedUntil, ':u': nowIso() }
-        }));
+        {
+            const g = mergeTenantCondition(null, tenantId);
+            await ddb.send(new UpdateCommand({
+                TableName: TABLE_NAME,
+                Key: { PK: `BBUNIT#${body.unitId}`, SK: 'PROFILE' },
+                UpdateExpression: 'SET #status = :s, reservedForRequestId = :r, reservedUntil = :ru, updatedAt = :u',
+                ExpressionAttributeNames: { '#status': 'status', ...g.ExpressionAttributeNames },
+                ExpressionAttributeValues: { ':s': 'reserved', ':r': reqId, ':ru': reservedUntil, ':u': nowIso(), ...g.ExpressionAttributeValues },
+                ConditionExpression: g.ConditionExpression
+            }));
+        }
         if (reqRow.Item.status === 'pending' || reqRow.Item.status === 'approved') {
+            const g = mergeTenantCondition(null, tenantId);
             await ddb.send(new UpdateCommand({
                 TableName: TABLE_NAME,
                 Key: { PK: `BBREQ#${reqId}`, SK: 'PROFILE' },
                 UpdateExpression: 'SET #status = :s, updatedAt = :u',
-                ExpressionAttributeNames: { '#status': 'status' },
-                ExpressionAttributeValues: { ':s': 'crossmatched', ':u': nowIso() }
+                ExpressionAttributeNames: { '#status': 'status', ...g.ExpressionAttributeNames },
+                ExpressionAttributeValues: { ':s': 'crossmatched', ':u': nowIso(), ...g.ExpressionAttributeValues },
+                ConditionExpression: g.ConditionExpression
             }));
         }
     }
@@ -671,7 +754,7 @@ async function addCrossmatch(event, actor) {
     return response;
 }
 
-async function issueUnits(event, actor) {
+async function issueUnits(event, actor, tenantId) {
     const cid = getClientRequestId(event); const cached = await checkIdempotency(cid); if (cached) return cached;
     const reqId = event.pathParameters?.requestId;
     if (!reqId) return err(400, 'requestId required');
@@ -681,13 +764,17 @@ async function issueUnits(event, actor) {
 
     const reqRow = await ddb.send(new GetCommand({ TableName: TABLE_NAME, Key: { PK: `BBREQ#${reqId}`, SK: 'PROFILE' } }));
     if (!reqRow.Item) return err(404, 'Request not found');
+    // Step 2d-4 — request must belong to caller's tenant.
+    assertRowTenant(reqRow.Item, tenantId, { notFoundMessage: 'Request not found' });
     if (reqRow.Item.status === 'cancelled') return err(409, 'Request is cancelled');
 
     // Verify every unit has a compatible crossmatch on file for this request.
+    // Step 2d-4 — filter by tenantId.
     const xmOut = await ddb.send(new QueryCommand({
         TableName: TABLE_NAME,
         KeyConditionExpression: 'PK = :pk AND begins_with(SK, :s)',
-        ExpressionAttributeValues: { ':pk': `BBREQ#${reqId}`, ':s': 'XMATCH#' }
+        FilterExpression: 'tenantId = :tnt',
+        ExpressionAttributeValues: { ':pk': `BBREQ#${reqId}`, ':s': 'XMATCH#', ':tnt': tenantId }
     }));
     const xmByUnit = {};
     for (const x of (xmOut.Items || [])) xmByUnit[x.unitId] = x;
@@ -698,15 +785,23 @@ async function issueUnits(event, actor) {
         if (!xm.compatible)   return err(409, `Unit ${u} crossmatch is incompatible`);
     }
 
-    // Mark each unit issued.
+    // Mark each unit issued — tenant condition prevents marking another
+    // tenant's unit even if a malicious crossmatch row was forged.
     for (const u of unitIds) {
-        await ddb.send(new UpdateCommand({
-            TableName: TABLE_NAME,
-            Key: { PK: `BBUNIT#${u}`, SK: 'PROFILE' },
-            UpdateExpression: 'SET #status = :s, issuedAt = :now, updatedAt = :now',
-            ExpressionAttributeNames: { '#status': 'status' },
-            ExpressionAttributeValues: { ':s': 'issued', ':now': nowIso() }
-        }));
+        const g = mergeTenantCondition(null, tenantId);
+        try {
+            await ddb.send(new UpdateCommand({
+                TableName: TABLE_NAME,
+                Key: { PK: `BBUNIT#${u}`, SK: 'PROFILE' },
+                UpdateExpression: 'SET #status = :s, issuedAt = :now, updatedAt = :now',
+                ExpressionAttributeNames: { '#status': 'status', ...g.ExpressionAttributeNames },
+                ExpressionAttributeValues: { ':s': 'issued', ':now': nowIso(), ...g.ExpressionAttributeValues },
+                ConditionExpression: g.ConditionExpression
+            }));
+        } catch (e) {
+            if (e.name === 'ConditionalCheckFailedException') return err(404, `Unit ${u} not found`);
+            throw e;
+        }
     }
 
     // Record the issue event row.
@@ -714,6 +809,7 @@ async function issueUnits(event, actor) {
     const issueRow = {
         PK: `BBREQ#${reqId}`, SK: `ISSUE#${issueId}`,
         EntityType: 'BB_ISSUE', dataClass: 'PHI',
+        tenantId, // Step 2d-4
         requestId: reqId, issueId,
         unitIds,
         issuedBy: actor.email,
@@ -725,13 +821,17 @@ async function issueUnits(event, actor) {
     await ddb.send(new PutCommand({ TableName: TABLE_NAME, Item: issueRow }));
 
     // Move request to "issued".
-    await ddb.send(new UpdateCommand({
-        TableName: TABLE_NAME,
-        Key: { PK: `BBREQ#${reqId}`, SK: 'PROFILE' },
-        UpdateExpression: 'SET #status = :s, updatedAt = :u, updatedBy = :ub',
-        ExpressionAttributeNames: { '#status': 'status' },
-        ExpressionAttributeValues: { ':s': 'issued', ':u': nowIso(), ':ub': actor.email }
-    }));
+    {
+        const g = mergeTenantCondition(null, tenantId);
+        await ddb.send(new UpdateCommand({
+            TableName: TABLE_NAME,
+            Key: { PK: `BBREQ#${reqId}`, SK: 'PROFILE' },
+            UpdateExpression: 'SET #status = :s, updatedAt = :u, updatedBy = :ub',
+            ExpressionAttributeNames: { '#status': 'status', ...g.ExpressionAttributeNames },
+            ExpressionAttributeValues: { ':s': 'issued', ':u': nowIso(), ':ub': actor.email, ...g.ExpressionAttributeValues },
+            ConditionExpression: g.ConditionExpression
+        }));
+    }
 
     const response = res(201, stripKeys(issueRow));
     await storeIdempotency(cid, response);
@@ -753,14 +853,14 @@ exports.handler = async (event) => {
         if (method === 'OPTIONS') return res(200, {});
 
         // Step 2d — tenant guard.
-        let __tenantId;
-        try { __tenantId = getTenant(event); }
+        let tenantId;
+        try { tenantId = getTenant(event); }
         catch (e) { return err(e.statusCode || 403, e.message); }
 
         // Step 2g — per-tenant throttle.
         {
             const role = (event.requestContext?.authorizer?.jwt?.claims || {}).role || 'tenant_user';
-            const limitResponse = await throttle.precheck(event, { tenantId: __tenantId, role });
+            const limitResponse = await throttle.precheck(event, { tenantId, role });
             if (limitResponse) return limitResponse;
         }
 
@@ -786,34 +886,41 @@ exports.handler = async (event) => {
             return err(403, 'Only admin/pharmacist can issue blood');
         }
 
+        // Step 2d-4 — every handler receives tenantId.
         switch (route) {
             // donors
-            case 'GET /bloodbank/donors':                                return await listDonors();
-            case 'POST /bloodbank/donors':                               return await createDonor(event, actor);
-            case 'GET /bloodbank/donors/{donorId}':                      return await getDonor(event);
-            case 'PATCH /bloodbank/donors/{donorId}':                    return await updateDonor(event, actor);
-            case 'DELETE /bloodbank/donors/{donorId}':                   return await deleteDonor(event, actor);
+            case 'GET /bloodbank/donors':                                return await listDonors(tenantId);
+            case 'POST /bloodbank/donors':                               return await createDonor(event, actor, tenantId);
+            case 'GET /bloodbank/donors/{donorId}':                      return await getDonor(event, tenantId);
+            case 'PATCH /bloodbank/donors/{donorId}':                    return await updateDonor(event, actor, tenantId);
+            case 'DELETE /bloodbank/donors/{donorId}':                   return await deleteDonor(event, actor, tenantId);
             // donations
-            case 'GET /bloodbank/donations':                             return await listAllDonations();
-            case 'GET /bloodbank/donors/{donorId}/donations':            return await listDonorDonations(event);
-            case 'POST /bloodbank/donors/{donorId}/donations':           return await createDonation(event, actor);
+            case 'GET /bloodbank/donations':                             return await listAllDonations(tenantId);
+            case 'GET /bloodbank/donors/{donorId}/donations':            return await listDonorDonations(event, tenantId);
+            case 'POST /bloodbank/donors/{donorId}/donations':           return await createDonation(event, actor, tenantId);
             // units
-            case 'GET /bloodbank/units':                                 return await listUnits(event);
-            case 'PATCH /bloodbank/units/{unitId}':                      return await updateUnit(event, actor);
-            case 'DELETE /bloodbank/units/{unitId}':                     return await discardUnit(event, actor);
-            case 'GET /bloodbank/stock':                                 return await stockSummary();
+            case 'GET /bloodbank/units':                                 return await listUnits(event, tenantId);
+            case 'PATCH /bloodbank/units/{unitId}':                      return await updateUnit(event, actor, tenantId);
+            case 'DELETE /bloodbank/units/{unitId}':                     return await discardUnit(event, actor, tenantId);
+            case 'GET /bloodbank/stock':                                 return await stockSummary(tenantId);
             // requests
-            case 'GET /bloodbank/requests':                              return await listRequests(event);
-            case 'POST /bloodbank/requests':                             return await createRequest(event, actor);
-            case 'GET /bloodbank/requests/{requestId}':                  return await getRequest(event);
-            case 'PATCH /bloodbank/requests/{requestId}':                return await updateRequest(event, actor);
-            case 'DELETE /bloodbank/requests/{requestId}':               return await cancelRequest(event, actor);
-            case 'POST /bloodbank/requests/{requestId}/crossmatch':      return await addCrossmatch(event, actor);
-            case 'POST /bloodbank/requests/{requestId}/issue':           return await issueUnits(event, actor);
+            case 'GET /bloodbank/requests':                              return await listRequests(event, tenantId);
+            case 'POST /bloodbank/requests':                             return await createRequest(event, actor, tenantId);
+            case 'GET /bloodbank/requests/{requestId}':                  return await getRequest(event, tenantId);
+            case 'PATCH /bloodbank/requests/{requestId}':                return await updateRequest(event, actor, tenantId);
+            case 'DELETE /bloodbank/requests/{requestId}':               return await cancelRequest(event, actor, tenantId);
+            case 'POST /bloodbank/requests/{requestId}/crossmatch':      return await addCrossmatch(event, actor, tenantId);
+            case 'POST /bloodbank/requests/{requestId}/issue':           return await issueUnits(event, actor, tenantId);
             default:
                 return err(404, `Unknown blood-bank route: ${route}`);
         }
     } catch (e) {
+        if (e && e.statusCode === 404) {
+            if (e.crossTenantAttempt) {
+                console.warn('cross-tenant attempt', { route: event.routeKey, by: event.requestContext?.authorizer?.jwt?.claims?.email });
+            }
+            return err(404, e.message || 'Not found');
+        }
         console.error('tiryaq-bloodbank error:', e);
         return err(500, e.message || 'Internal error');
     }
@@ -822,3 +929,4 @@ exports.handler = async (event) => {
 // hash-bust 2026-06-21T14:07:44.7504132+03:00
 // hash-bust 2026-06-21T14:14:23.7665133+03:00
 // hash-bust 2026-06-21T14:28:24.0064697+03:00
+// hash-bust 2d-4 2026-06-22T10:12:07.3705068+03:00

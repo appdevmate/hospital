@@ -21,6 +21,8 @@ const { BedrockRuntimeClient, InvokeModelCommand } = require('@aws-sdk/client-be
 const { randomUUID, createHash } = require('crypto');
 // Step 2g — per-tenant rate limit.
 const throttle = require('./throttle');
+// Step 2d-4 — per-row tenant enforcement.
+const { assertRowTenant } = require('./tenant-guard');
 
 const REGION     = process.env.AWS_REGION || 'us-east-1';
 const TABLE_NAME = process.env.TABLE_NAME || 'Hospital';
@@ -169,7 +171,7 @@ async function splitTranscriptToSoap(transcript) {
 // Handlers
 // ─────────────────────────────────────────────────────────────────────
 
-async function createSession(event, actor) {
+async function createSession(event, actor, tenantId) {
     let body = {};
     try { body = JSON.parse(event.body || '{}'); } catch (_) { return err('Invalid JSON body'); }
 
@@ -185,6 +187,7 @@ async function createSession(event, actor) {
         PK: `SCRIBE#${sessionId}`,
         SK: 'SESSION',
         EntityType: 'SCRIBE_SESSION',
+        tenantId, // Step 2d-4 — stamp on every new row
         sessionId,
         consentGiven: true,
         consentTimestamp: nowIso(),
@@ -200,7 +203,7 @@ async function createSession(event, actor) {
     return ok({ sessionId, status: 'CREATED' }, 201);
 }
 
-async function generateSoap(event, actor) {
+async function generateSoap(event, actor, tenantId) {
     const sessionId = event.pathParameters?.id;
     if (!sessionId) return err('Missing session id', 400);
 
@@ -215,13 +218,15 @@ async function generateSoap(event, actor) {
         return err('Transcript too long — split the consultation into multiple sessions.', 400);
     }
 
-    // Verify session exists and belongs to actor.
+    // Verify session exists, belongs to this tenant, AND to this actor.
     const got = await ddb.send(new GetCommand({
         TableName: TABLE_NAME,
         Key: { PK: `SCRIBE#${sessionId}`, SK: 'SESSION' }
     }));
     const session = got.Item;
     if (!session) return err('Session not found', 404);
+    // Step 2d-4 — tenant guard before per-user check.
+    assertRowTenant(session, tenantId, { notFoundMessage: 'Session not found' });
     if (session.startedBy !== actor.email && !actor.groups.includes('Admin')) {
         return err('Forbidden — session belongs to another doctor', 403);
     }
@@ -235,8 +240,11 @@ async function generateSoap(event, actor) {
     }
 
     // Persist transcript hash + SOAP draft on the session row.
+    // Defensively re-stamp tenantId (Step 2d-4) in case the existing row
+    // pre-dates Step 2d-4 and is missing it.
     const updated = withCompliance({
         ...session,
+        tenantId,
         status: 'SOAP_GENERATED',
         transcriptDurationSec: Number(body.durationSec) || null,
         transcriptLength: transcript.length,
@@ -249,7 +257,7 @@ async function generateSoap(event, actor) {
     return ok({ sessionId, soap });
 }
 
-async function approveSession(event, actor) {
+async function approveSession(event, actor, tenantId) {
     const sessionId = event.pathParameters?.id;
     if (!sessionId) return err('Missing session id', 400);
 
@@ -262,6 +270,8 @@ async function approveSession(event, actor) {
     }));
     const session = got.Item;
     if (!session) return err('Session not found', 404);
+    // Step 2d-4 — tenant guard before per-user check.
+    assertRowTenant(session, tenantId, { notFoundMessage: 'Session not found' });
     if (session.startedBy !== actor.email && !actor.groups.includes('Admin')) {
         return err('Forbidden — session belongs to another doctor', 403);
     }
@@ -271,6 +281,7 @@ async function approveSession(event, actor) {
 
     const updated = withCompliance({
         ...session,
+        tenantId, // Step 2d-4 defensive re-stamp
         status: 'APPROVED',
         approvedAt: nowIso(),
         approvedBy: actor.email,
@@ -286,6 +297,7 @@ async function approveSession(event, actor) {
         PK: `SCRIBE#${sessionId}`,
         SK: `AUDIT#${auditTs}`,
         EntityType: 'AUDIT',
+        tenantId, // Step 2d-4
         action: 'SCRIBE_APPROVED',
         actor: actor.email,
         sessionId,
@@ -300,7 +312,7 @@ async function approveSession(event, actor) {
     return ok({ sessionId, status: 'APPROVED', approvedAt: updated.approvedAt });
 }
 
-async function getSession(event, actor) {
+async function getSession(event, actor, tenantId) {
     const sessionId = event.pathParameters?.id;
     if (!sessionId) return err('Missing session id', 400);
 
@@ -310,6 +322,8 @@ async function getSession(event, actor) {
     }));
     const session = got.Item;
     if (!session) return err('Session not found', 404);
+    // Step 2d-4 — tenant guard hides existence on cross-tenant probe.
+    assertRowTenant(session, tenantId, { notFoundMessage: 'Session not found' });
     if (session.startedBy !== actor.email && !actor.groups.includes('Admin')) {
         return err('Forbidden', 403);
     }
@@ -323,17 +337,18 @@ async function getSession(event, actor) {
 exports.handler = async (event) => {
     if (event && event._warmup) return { ok: true, warmed: true };
     try {
-        // Step 2d — tenant guard.
-        try { getTenant(event); }
+        // Step 2d — tenant guard. Capture tenantId so we can pass it to
+        // every handler (Step 2d-4) for row stamping + read enforcement.
+        let tenantId;
+        try { tenantId = getTenant(event); }
         catch (e) { return err(e.message, e.statusCode || 403); }
-  // Step 2g — per-tenant throttle.
-  {
-    const __role = (event.requestContext?.authorizer?.jwt?.claims || {}).role || 'tenant_user';
-    const __tid = (typeof tenantId !== 'undefined') ? tenantId : (event.requestContext?.authorizer?.jwt?.claims || {}).tenantId;
-    const __limitResponse = await throttle.precheck(event, { tenantId: __tid, role: __role });
-    if (__limitResponse) return __limitResponse;
-  }
 
+        // Step 2g — per-tenant throttle.
+        {
+            const role = (event.requestContext?.authorizer?.jwt?.claims || {}).role || 'tenant_user';
+            const limitResponse = await throttle.precheck(event, { tenantId, role });
+            if (limitResponse) return limitResponse;
+        }
 
         const actor = getActor(event);
         if (!isDoctorOrAdmin(actor)) {
@@ -343,17 +358,25 @@ exports.handler = async (event) => {
         const route = event.routeKey || `${event.requestContext?.http?.method} ${event.rawPath}`;
         switch (route) {
             case 'POST /scribe/sessions':
-                return await createSession(event, actor);
+                return await createSession(event, actor, tenantId);
             case 'POST /scribe/sessions/{id}/soap':
-                return await generateSoap(event, actor);
+                return await generateSoap(event, actor, tenantId);
             case 'POST /scribe/sessions/{id}/approve':
-                return await approveSession(event, actor);
+                return await approveSession(event, actor, tenantId);
             case 'GET /scribe/sessions/{id}':
-                return await getSession(event, actor);
+                return await getSession(event, actor, tenantId);
             default:
                 return err(`Unknown route: ${route}`, 404);
         }
     } catch (e) {
+        // Step 2d-4 — translate tenant-guard 404s without leaking the
+        // cross-tenant attempt to the caller; log server-side for audit.
+        if (e && e.statusCode === 404) {
+            if (e.crossTenantAttempt) {
+                console.warn('cross-tenant attempt', { route: event.routeKey, by: event.requestContext?.authorizer?.jwt?.claims?.email });
+            }
+            return err(e.message || 'Not found', 404);
+        }
         console.error('tiryaq-scribe handler error:', e);
         return err(e.message || 'Internal error', 500);
     }
@@ -362,3 +385,4 @@ exports.handler = async (event) => {
 // hash-bust 2026-06-21T14:07:44.7504132+03:00
 // hash-bust 2026-06-21T14:14:23.7665133+03:00
 // hash-bust 2026-06-21T14:28:24.0064697+03:00
+// hash-bust 2d-4 2026-06-22T10:12:07.3705068+03:00

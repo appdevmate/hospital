@@ -34,6 +34,8 @@ const {
 const { randomUUID } = require('crypto');
 // Step 2g — per-tenant rate limit.
 const throttle = require('./throttle');
+// Step 2d-4 — per-row tenant enforcement.
+const { assertRowTenant, mergeTenantCondition } = require('./tenant-guard');
 
 const REGION     = process.env.AWS_REGION || 'us-east-1';
 const TABLE_NAME = process.env.TABLE_NAME || 'Hospital';
@@ -147,12 +149,14 @@ function canWrite(actor) {
 }
 
 // ── Calendars ───────────────────────────────────────────────────────
-async function listCalendars() {
+async function listCalendars(tenantId) {
+    // Step 2d-4 — only this tenant's calendars.
     const out = await ddb.send(new QueryCommand({
         TableName: TABLE_NAME,
         IndexName: 'EntityType-index',
         KeyConditionExpression: 'EntityType = :et',
-        ExpressionAttributeValues: { ':et': 'CALENDAR' }
+        FilterExpression: 'tenantId = :tnt',
+        ExpressionAttributeValues: { ':et': 'CALENDAR', ':tnt': tenantId }
     }));
     const calendars = (out.Items || []).map(it => ({
         calendarId:  it.calendarId,
@@ -163,7 +167,7 @@ async function listCalendars() {
     return res(200, calendars);
 }
 
-async function createCalendar(event, actor) {
+async function createCalendar(event, actor, tenantId) {
     const cid = getClientRequestId(event);
     const cached = await checkIdempotency(cid);
     if (cached) return cached;
@@ -177,6 +181,7 @@ async function createCalendar(event, actor) {
         PK: `CALENDAR#${calendarId}`,
         SK: 'PROFILE',
         EntityType: 'CALENDAR',
+        tenantId, // Step 2d-4
         calendarId,
         name,
         description
@@ -196,23 +201,32 @@ async function createCalendar(event, actor) {
     return response;
 }
 
-async function deleteCalendar(event, actor) {
+async function deleteCalendar(event, actor, tenantId) {
     const cid = getClientRequestId(event);
     const cached = await checkIdempotency(cid);
     if (cached) return cached;
     const calendarId = event.pathParameters?.calendarId;
     if (!calendarId) return err(400, 'Missing calendarId');
 
-    // Cascade: query every EVENT# under this calendar, then batch-delete them.
+    // Step 2d-4 — verify parent calendar belongs to this tenant BEFORE cascade.
+    const profile = await ddb.send(new GetCommand({
+        TableName: TABLE_NAME,
+        Key: { PK: `CALENDAR#${calendarId}`, SK: 'PROFILE' }
+    }));
+    if (!profile.Item) return err(404, 'Calendar not found');
+    assertRowTenant(profile.Item, tenantId, { notFoundMessage: 'Calendar not found' });
+
+    // Cascade: query every EVENT# under this calendar (defensively also
+    // filter on tenantId), then batch-delete them.
     const evOut = await ddb.send(new QueryCommand({
         TableName: TABLE_NAME,
         KeyConditionExpression: 'PK = :pk AND begins_with(SK, :ev)',
-        ExpressionAttributeValues: { ':pk': `CALENDAR#${calendarId}`, ':ev': 'EVENT#' },
+        FilterExpression: 'tenantId = :tnt',
+        ExpressionAttributeValues: { ':pk': `CALENDAR#${calendarId}`, ':ev': 'EVENT#', ':tnt': tenantId },
         ProjectionExpression: 'PK, SK'
     }));
     const events = evOut.Items || [];
 
-    // Batch-delete events 25 at a time.
     for (let i = 0; i < events.length; i += 25) {
         const batch = events.slice(i, i + 25);
         await ddb.send(new BatchWriteCommand({
@@ -222,11 +236,20 @@ async function deleteCalendar(event, actor) {
         }));
     }
 
-    // Delete the calendar profile itself.
-    await ddb.send(new DeleteCommand({
-        TableName: TABLE_NAME,
-        Key: { PK: `CALENDAR#${calendarId}`, SK: 'PROFILE' }
-    }));
+    // Atomic tenant guard on the profile delete.
+    const g = mergeTenantCondition(null, tenantId);
+    try {
+        await ddb.send(new DeleteCommand({
+            TableName: TABLE_NAME,
+            Key: { PK: `CALENDAR#${calendarId}`, SK: 'PROFILE' },
+            ExpressionAttributeNames:  g.ExpressionAttributeNames,
+            ExpressionAttributeValues: g.ExpressionAttributeValues,
+            ConditionExpression:       g.ConditionExpression
+        }));
+    } catch (e) {
+        if (e.name === 'ConditionalCheckFailedException') return err(404, 'Calendar not found');
+        throw e;
+    }
 
     const response = res(204, {});
     await storeIdempotency(cid, response);
@@ -234,14 +257,17 @@ async function deleteCalendar(event, actor) {
 }
 
 // ── Events ───────────────────────────────────────────────────────────
-async function listEvents(event) {
+async function listEvents(event, tenantId) {
     const calendarId = event.pathParameters?.calendarId;
     if (!calendarId) return err(400, 'Missing calendarId');
 
+    // Step 2d-4 — filter on tenantId. A guessed calendarId from another
+    // tenant returns an empty list, not their events.
     const out = await ddb.send(new QueryCommand({
         TableName: TABLE_NAME,
         KeyConditionExpression: 'PK = :pk AND begins_with(SK, :ev)',
-        ExpressionAttributeValues: { ':pk': `CALENDAR#${calendarId}`, ':ev': 'EVENT#' }
+        FilterExpression: 'tenantId = :tnt',
+        ExpressionAttributeValues: { ':pk': `CALENDAR#${calendarId}`, ':ev': 'EVENT#', ':tnt': tenantId }
     }));
     const events = (out.Items || []).map(it => ({
         eventId:     it.eventId,
@@ -256,7 +282,7 @@ async function listEvents(event) {
     return res(200, events);
 }
 
-async function createEvent(event, actor) {
+async function createEvent(event, actor, tenantId) {
     const cid = getClientRequestId(event);
     const cached = await checkIdempotency(cid);
     if (cached) return cached;
@@ -269,18 +295,20 @@ async function createEvent(event, actor) {
     if (!body.startDate) return err(400, 'startDate is required');
     if (!body.endDate)   return err(400, 'endDate is required');
 
-    // Confirm parent calendar exists.
+    // Step 2d-4 — confirm parent calendar exists AND belongs to caller.
     const parent = await ddb.send(new GetCommand({
         TableName: TABLE_NAME,
         Key: { PK: `CALENDAR#${calendarId}`, SK: 'PROFILE' }
     }));
     if (!parent.Item) return err(404, 'Calendar not found');
+    assertRowTenant(parent.Item, tenantId, { notFoundMessage: 'Calendar not found' });
 
     const eventId = randomUUID();
     const item = withCompliance({
         PK: `CALENDAR#${calendarId}`,
         SK: `EVENT#${eventId}`,
         EntityType: 'CALENDAR_EVENT',
+        tenantId, // Step 2d-4
         eventId,
         calendarId,
         name:        String(body.name),
@@ -306,7 +334,7 @@ async function createEvent(event, actor) {
     return response;
 }
 
-async function updateEvent(event, actor) {
+async function updateEvent(event, actor, tenantId) {
     const cid = getClientRequestId(event);
     const cached = await checkIdempotency(cid);
     if (cached) return cached;
@@ -333,14 +361,19 @@ async function updateEvent(event, actor) {
     }
     sets.push('#updatedAt = :updatedAt', '#lastModifiedBy = :lastModifiedBy');
 
+    // Step 2d-4 — merge tenant condition with existence check.
+    const guarded = mergeTenantCondition(
+        { ConditionExpression: 'attribute_exists(PK) AND attribute_exists(SK)' },
+        tenantId
+    );
     try {
         const out = await ddb.send(new UpdateCommand({
             TableName: TABLE_NAME,
             Key: { PK: `CALENDAR#${calendarId}`, SK: `EVENT#${eventId}` },
             UpdateExpression: 'SET ' + sets.join(', '),
-            ExpressionAttributeNames: names,
-            ExpressionAttributeValues: values,
-            ConditionExpression: 'attribute_exists(PK) AND attribute_exists(SK)',
+            ExpressionAttributeNames: { ...names, ...guarded.ExpressionAttributeNames },
+            ExpressionAttributeValues: { ...values, ...guarded.ExpressionAttributeValues },
+            ConditionExpression: guarded.ConditionExpression,
             ReturnValues: 'ALL_NEW'
         }));
         const it = out.Attributes;
@@ -362,17 +395,27 @@ async function updateEvent(event, actor) {
     }
 }
 
-async function deleteEvent(event) {
+async function deleteEvent(event, tenantId) {
     const cid = getClientRequestId(event);
     const cached = await checkIdempotency(cid);
     if (cached) return cached;
     const calendarId = event.pathParameters?.calendarId;
     const eventId    = event.pathParameters?.eventId;
     if (!calendarId || !eventId) return err(400, 'Missing calendarId or eventId');
-    await ddb.send(new DeleteCommand({
-        TableName: TABLE_NAME,
-        Key: { PK: `CALENDAR#${calendarId}`, SK: `EVENT#${eventId}` }
-    }));
+    // Step 2d-4 — atomic tenant guard on the delete.
+    const g = mergeTenantCondition(null, tenantId);
+    try {
+        await ddb.send(new DeleteCommand({
+            TableName: TABLE_NAME,
+            Key: { PK: `CALENDAR#${calendarId}`, SK: `EVENT#${eventId}` },
+            ExpressionAttributeNames:  g.ExpressionAttributeNames,
+            ExpressionAttributeValues: g.ExpressionAttributeValues,
+            ConditionExpression:       g.ConditionExpression
+        }));
+    } catch (e) {
+        if (e.name === 'ConditionalCheckFailedException') return err(404, 'Event not found');
+        throw e;
+    }
     const response = res(204, {});
     await storeIdempotency(cid, response);
     return response;
@@ -386,14 +429,14 @@ exports.handler = async (event) => {
         if (method === 'OPTIONS') return res(200, {});
 
         // Step 2d — tenant guard.
-        let __tenantId;
-        try { __tenantId = getTenant(event); }
+        let tenantId;
+        try { tenantId = getTenant(event); }
         catch (e) { return err(e.statusCode || 403, e.message); }
 
         // Step 2g — per-tenant throttle.
         {
             const role = (event.requestContext?.authorizer?.jwt?.claims || {}).role || 'tenant_user';
-            const limitResponse = await throttle.precheck(event, { tenantId: __tenantId, role });
+            const limitResponse = await throttle.precheck(event, { tenantId, role });
             if (limitResponse) return limitResponse;
         }
 
@@ -407,18 +450,26 @@ exports.handler = async (event) => {
             return err(403, 'Forbidden — calendar writes are admin/doctor only');
         }
 
+        // Step 2d-4 — every handler receives tenantId.
         switch (route) {
-            case 'GET /calendars':                              return await listCalendars();
-            case 'POST /calendars':                             return await createCalendar(event, actor);
-            case 'DELETE /calendars/{calendarId}':              return await deleteCalendar(event, actor);
-            case 'GET /calendars/{calendarId}/events':          return await listEvents(event);
-            case 'POST /calendars/{calendarId}/events':         return await createEvent(event, actor);
-            case 'PATCH /calendars/{calendarId}/events/{eventId}':  return await updateEvent(event, actor);
-            case 'DELETE /calendars/{calendarId}/events/{eventId}': return await deleteEvent(event);
+            case 'GET /calendars':                              return await listCalendars(tenantId);
+            case 'POST /calendars':                             return await createCalendar(event, actor, tenantId);
+            case 'DELETE /calendars/{calendarId}':              return await deleteCalendar(event, actor, tenantId);
+            case 'GET /calendars/{calendarId}/events':          return await listEvents(event, tenantId);
+            case 'POST /calendars/{calendarId}/events':         return await createEvent(event, actor, tenantId);
+            case 'PATCH /calendars/{calendarId}/events/{eventId}':  return await updateEvent(event, actor, tenantId);
+            case 'DELETE /calendars/{calendarId}/events/{eventId}': return await deleteEvent(event, tenantId);
             default:
                 return err(404, `Unknown calendar route: ${route}`);
         }
     } catch (e) {
+        // Step 2d-4 — surface tenant-guard 404s without leaking cross-tenant.
+        if (e && e.statusCode === 404) {
+            if (e.crossTenantAttempt) {
+                console.warn('cross-tenant attempt', { route: event.routeKey, by: event.requestContext?.authorizer?.jwt?.claims?.email });
+            }
+            return err(404, e.message || 'Not found');
+        }
         console.error('tiryaq-calendar error:', e);
         return err(500, e.message || 'Internal error');
     }
@@ -427,3 +478,4 @@ exports.handler = async (event) => {
 // hash-bust 2026-06-21T14:07:44.7504132+03:00
 // hash-bust 2026-06-21T14:14:23.7665133+03:00
 // hash-bust 2026-06-21T14:28:24.0064697+03:00
+// hash-bust 2d-4 2026-06-22T10:12:07.3705068+03:00

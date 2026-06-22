@@ -116,6 +116,21 @@ function canAccessFolder(groups, folder) {
     return groups.some(g => allowed.includes(g.trim()));
 }
 
+// ── Step 2d-4 — S3 key tenant isolation ──────────────────────────────────────
+// Old key format: folder/<userId>/<ts>_<file>  → /list with prefix `folder/`
+// returned every tenant's files (cross-tenant leak).
+// New key format: folder/<tenantId>/<userId>/<ts>_<file>
+// List prefix is now folder/<callerTenantId>/, download/delete verify the
+// key's tenant segment matches the caller's tenantId. Legacy keys
+// (folder/<userId>/...) are admin-only as a migration bridge.
+function tenantUserPrefix(folder, tenantId, uid) {
+    return folder + '/' + tenantId + '/' + uid + '/';
+}
+function keyTenant(key) {
+    const parts = (key || '').split('/');
+    return parts.length >= 3 ? parts[1] : null;
+}
+
 exports.handler = async (event) => {
     if (event && event._warmup) return { ok: true, warmed: true };
     // Handle CORS preflight
@@ -125,14 +140,14 @@ exports.handler = async (event) => {
     }
 
     // Step 2d — tenant guard.
-    let __tenantId;
-    try { __tenantId = getTenant(event); }
+    let tenantId;
+    try { tenantId = getTenant(event); }
     catch (e) { return errResp(e.statusCode || 403, e.message); }
 
     // Step 2g — per-tenant throttle.
     {
         const role = (event.requestContext?.authorizer?.jwt?.claims || {}).role || 'tenant_user';
-        const limitResponse = await throttle.precheck(event, { tenantId: __tenantId, role });
+        const limitResponse = await throttle.precheck(event, { tenantId, role });
         if (limitResponse) return limitResponse;
     }
 
@@ -202,10 +217,10 @@ exports.handler = async (event) => {
                 return errResp(400, 'File too large. Maximum: ' + (MAX_FILE_SIZE / 1024 / 1024) + ' MB');
             }
 
-            // Build the S3 key: folder/userId/timestamp_filename
+            // Step 2d-4 — S3 key now includes tenantId segment for isolation.
             const safeName = sanitizeFilename(fileName);
             const timestamp = Date.now();
-            const key = folder + '/' + userId + '/' + timestamp + '_' + safeName;
+            const key = tenantUserPrefix(folder, tenantId, userId) + timestamp + '_' + safeName;
 
             // Generate the pre-signed upload URL
             const command = new PutObjectCommand({
@@ -214,6 +229,7 @@ exports.handler = async (event) => {
                 ContentType: contentType,
                 Metadata: {
                     'uploaded-by': userId,
+                    'tenant-id':   tenantId,
                     'original-name': fileName
                 }
             });
@@ -250,11 +266,18 @@ exports.handler = async (event) => {
             if (!canAccessFolder(groups, folder)) {
                 return errResp(403, 'You do not have permission to download from this folder');
             }
-            // Per-resource check: non-admin users may only fetch keys uploaded
-            // by themselves (key format is `folder/<userId>/...`).
-            const keyOwner = key.split('/')[1];
-            if (!isAdminLike && keyOwner && keyOwner !== userId) {
-                return errResp(403, 'You may only download your own files');
+            // Step 2d-4 — key tenant check. New: folder/<tenantId>/<userId>/...
+            // Legacy: folder/<userId>/... — admin-only as migration bridge.
+            const tenantInKey = keyTenant(key);
+            const isLegacy = tenantInKey !== tenantId;
+            if (!isLegacy) {
+                const keyOwner = key.split('/')[2];
+                if (!isAdminLike && keyOwner && keyOwner !== userId) {
+                    return errResp(403, 'You may only download your own files');
+                }
+            } else {
+                if (!isAdminLike) return errResp(404, 'Not found');
+                console.warn('legacy doc download', { key, by: userId });
             }
 
             const command = new GetObjectCommand({
@@ -289,8 +312,8 @@ exports.handler = async (event) => {
                 return errResp(403, 'You do not have permission to list this folder');
             }
 
-            // Build the prefix to search
-            let searchPrefix = folder + '/';
+            // Step 2d-4 — only THIS tenant's slice of the folder.
+            let searchPrefix = folder + '/' + tenantId + '/';
             if (prefix) {
                 searchPrefix += prefix;
             }
@@ -305,15 +328,16 @@ exports.handler = async (event) => {
 
             const files = (result.Contents || [])
                 .filter(function (item) {
-                    return !item.Key.endsWith('/'); // Exclude folder markers
+                    return !item.Key.endsWith('/');
                 })
                 .map(function (item) {
+                    // folder/<tenantId>/<userId>/<ts>_<file>
                     const parts = item.Key.split('/');
                     return {
                         key: item.Key,
                         fileName: parts[parts.length - 1] || '',
                         folder: parts[0] || '',
-                        uploadedBy: parts[1] || 'unknown',
+                        uploadedBy: parts[2] || 'unknown',
                         size: item.Size,
                         lastModified: item.LastModified
                     };
@@ -347,9 +371,17 @@ exports.handler = async (event) => {
             if (!canAccessFolder(groups, folder)) {
                 return errResp(403, 'You do not have permission to delete from this folder');
             }
-            const keyOwner = key.split('/')[1];
-            if (!isAdminLike && keyOwner && keyOwner !== userId) {
-                return errResp(403, 'You may only delete your own files');
+            // Step 2d-4 — same tenant check as download.
+            const tenantInKey = keyTenant(key);
+            const isLegacy = tenantInKey !== tenantId;
+            if (!isLegacy) {
+                const keyOwner = key.split('/')[2];
+                if (!isAdminLike && keyOwner && keyOwner !== userId) {
+                    return errResp(403, 'You may only delete your own files');
+                }
+            } else {
+                if (!isAdminLike) return errResp(404, 'Not found');
+                console.warn('legacy doc delete', { key, by: userId });
             }
 
             const command = new DeleteObjectCommand({
@@ -425,3 +457,4 @@ function errResp(status, message) {
 // hash-bust 2026-06-21T14:07:44.7504132+03:00
 // hash-bust 2026-06-21T14:14:23.7665133+03:00
 // hash-bust 2026-06-21T14:28:24.0064697+03:00
+// hash-bust 2d-4 2026-06-22T10:12:07.3705068+03:00

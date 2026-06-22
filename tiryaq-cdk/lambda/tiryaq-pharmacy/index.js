@@ -7,6 +7,8 @@ const {
 const { randomUUID } = require('crypto');
 // Step 2g — per-tenant rate limit.
 const throttle = require('./throttle');
+// Step 2d-4 — per-row tenant enforcement.
+const { assertRowTenant, mergeTenantCondition } = require('./tenant-guard');
 
 const REGION     = 'us-east-1';
 const TABLE_NAME = 'Hospital';
@@ -166,17 +168,22 @@ exports.handler = async (event) => {
         if (limitResponse) return limitResponse;
     }
 
+    // Step 2d-4 — wrap routing so tenant-guard 404s reach the client cleanly.
+    try {
+
     // ══════════════════════════════════════════════════════════════════════════
     // MEDICATION CATALOG
     // ══════════════════════════════════════════════════════════════════════════
 
     // GET /pharmacy/medications
     if (method === 'GET' && path.endsWith('/medications') && !params.medId) {
+        // Step 2d-4 — scope by tenantId.
         const result = await db.send(new QueryCommand({
             TableName:                 TABLE_NAME,
             IndexName:                 'EntityType-index',
             KeyConditionExpression:    'EntityType = :et',
-            ExpressionAttributeValues: { ':et': 'MEDICATION' }
+            FilterExpression:          'tenantId = :tnt',
+            ExpressionAttributeValues: { ':et': 'MEDICATION', ':tnt': tenantId }
         }));
         const meds = (result.Items || []).sort((a,b) => (a.name||'').localeCompare(b.name||''));
         return res(200, meds);
@@ -198,6 +205,7 @@ exports.handler = async (event) => {
             PK:                `MED#${id}`,
             SK:                'PROFILE',
             EntityType:        'MEDICATION',
+            tenantId, // Step 2d-4
             medId:             id,
             name:              body.name.trim(),
             genericName:       body.genericName?.trim() || null,
@@ -222,6 +230,7 @@ exports.handler = async (event) => {
             PK:          `MED#${id}`,
             SK:          'INVENTORY',
             EntityType:  'INVENTORY',
+            tenantId, // Step 2d-4
             medId:       id,
             medName:     med.name,
             stockQty:    0,
@@ -264,15 +273,27 @@ exports.handler = async (event) => {
             }
         });
 
-        await db.send(new UpdateCommand({
-            TableName:                 TABLE_NAME,
-            Key:                       { PK: `MED#${medId}`, SK: 'PROFILE' },
-            UpdateExpression:          `SET ${expParts.join(', ')}`,
-            ExpressionAttributeNames:  names,
-            ExpressionAttributeValues: values
-        }));
+        // Step 2d-4 — atomic tenant guard with existence check.
+        const guardedMed = mergeTenantCondition(
+            { ConditionExpression: 'attribute_exists(PK)' },
+            tenantId
+        );
+        try {
+            await db.send(new UpdateCommand({
+                TableName:                 TABLE_NAME,
+                Key:                       { PK: `MED#${medId}`, SK: 'PROFILE' },
+                UpdateExpression:          `SET ${expParts.join(', ')}`,
+                ExpressionAttributeNames:  { ...names, ...guardedMed.ExpressionAttributeNames },
+                ExpressionAttributeValues: { ...values, ...guardedMed.ExpressionAttributeValues },
+                ConditionExpression:       guardedMed.ConditionExpression
+            }));
+        } catch (e) {
+            if (e.name === 'ConditionalCheckFailedException') return err(404, 'Medication not found');
+            throw e;
+        }
 
         const updated = await db.send(new GetCommand({ TableName: TABLE_NAME, Key: { PK: `MED#${medId}`, SK: 'PROFILE' } }));
+        assertRowTenant(updated.Item, tenantId, { notFoundMessage: 'Medication not found' });
         const response = res(200, updated.Item);
         await storeIdempotency(cid, response);
         return response;
@@ -286,12 +307,33 @@ exports.handler = async (event) => {
         if (cachedResp) return cachedResp;
         const medId = params.medId;
 
-        // Check stock before delete
+        // Check stock before delete — and verify the inventory row is ours.
         const inv = await db.send(new GetCommand({ TableName: TABLE_NAME, Key: { PK: `MED#${medId}`, SK: 'INVENTORY' } }));
-        if (inv.Item?.stockQty > 0) return err(409, `Cannot delete medication with ${inv.Item.stockQty} units in stock. Adjust stock to 0 first.`);
+        if (!inv.Item) return err(404, 'Medication not found');
+        assertRowTenant(inv.Item, tenantId, { notFoundMessage: 'Medication not found' });
+        if (inv.Item.stockQty > 0) return err(409, `Cannot delete medication with ${inv.Item.stockQty} units in stock. Adjust stock to 0 first.`);
 
-        await db.send(new DeleteCommand({ TableName: TABLE_NAME, Key: { PK: `MED#${medId}`, SK: 'PROFILE' } }));
-        await db.send(new DeleteCommand({ TableName: TABLE_NAME, Key: { PK: `MED#${medId}`, SK: 'INVENTORY' } }));
+        // Step 2d-4 — atomic tenant guards on both deletes.
+        const guardedDel = mergeTenantCondition(null, tenantId);
+        try {
+            await db.send(new DeleteCommand({
+                TableName: TABLE_NAME,
+                Key: { PK: `MED#${medId}`, SK: 'PROFILE' },
+                ExpressionAttributeNames:  guardedDel.ExpressionAttributeNames,
+                ExpressionAttributeValues: guardedDel.ExpressionAttributeValues,
+                ConditionExpression:       guardedDel.ConditionExpression
+            }));
+            await db.send(new DeleteCommand({
+                TableName: TABLE_NAME,
+                Key: { PK: `MED#${medId}`, SK: 'INVENTORY' },
+                ExpressionAttributeNames:  guardedDel.ExpressionAttributeNames,
+                ExpressionAttributeValues: guardedDel.ExpressionAttributeValues,
+                ConditionExpression:       guardedDel.ConditionExpression
+            }));
+        } catch (e) {
+            if (e.name === 'ConditionalCheckFailedException') return err(404, 'Medication not found');
+            throw e;
+        }
         const response = res(200, { message: 'Medication deleted', medId });
         await storeIdempotency(cid, response);
         return response;
@@ -303,16 +345,20 @@ exports.handler = async (event) => {
 
     // GET /pharmacy/inventory
     if (method === 'GET' && path.endsWith('/inventory')) {
+        // Step 2d-4 — scope by tenantId.
         const result = await db.send(new QueryCommand({
             TableName:                 TABLE_NAME,
             IndexName:                 'EntityType-index',
             KeyConditionExpression:    'EntityType = :et',
-            ExpressionAttributeValues: { ':et': 'INVENTORY' }
+            FilterExpression:          'tenantId = :tnt',
+            ExpressionAttributeValues: { ':et': 'INVENTORY', ':tnt': tenantId }
         }));
 
-        // Fetch reorder points from medication profiles
+        // Fetch reorder points from medication profiles. Drop cross-tenant
+        // strays silently (defence in depth).
         const items = await Promise.all((result.Items || []).map(async inv => {
             const med = await db.send(new GetCommand({ TableName: TABLE_NAME, Key: { PK: `MED#${inv.medId}`, SK: 'PROFILE' } }));
+            if (med.Item && med.Item.tenantId !== tenantId) med.Item = null;
             const reorderPoint = med.Item?.reorderPoint || 10;
             const daysToExpiry = daysUntil(inv.expiryDate);
             return {
@@ -351,6 +397,8 @@ exports.handler = async (event) => {
 
         const inv = await db.send(new GetCommand({ TableName: TABLE_NAME, Key: { PK: `MED#${medId}`, SK: 'INVENTORY' } }));
         if (!inv.Item) return err(404, 'Inventory record not found');
+        // Step 2d-4 — tenant guard.
+        assertRowTenant(inv.Item, tenantId, { notFoundMessage: 'Inventory record not found' });
 
         // For deductions, quantity should be negative
         const delta = body.adjustmentType === 'correction' ? body.quantity : Math.abs(body.quantity) * (['expired','damaged'].includes(body.adjustmentType) ? -1 : 1);
@@ -378,13 +426,21 @@ exports.handler = async (event) => {
         if (body.batchNumber){ updateExp.push('#batchNumber = :bn'); updateNames['#batchNumber'] = 'batchNumber'; updateValues[':bn']  = body.batchNumber; }
         if (body.location)   { updateExp.push('#location = :loc');   updateNames['#location']    = 'location';   updateValues[':loc'] = body.location; }
 
-        await db.send(new UpdateCommand({
-            TableName:                 TABLE_NAME,
-            Key:                       { PK: `MED#${medId}`, SK: 'INVENTORY' },
-            UpdateExpression:          `SET ${updateExp.join(', ')}`,
-            ExpressionAttributeNames:  updateNames,
-            ExpressionAttributeValues: updateValues
-        }));
+        // Step 2d-4 — atomic tenant guard.
+        const guardedInv = mergeTenantCondition(null, tenantId);
+        try {
+            await db.send(new UpdateCommand({
+                TableName:                 TABLE_NAME,
+                Key:                       { PK: `MED#${medId}`, SK: 'INVENTORY' },
+                UpdateExpression:          `SET ${updateExp.join(', ')}`,
+                ExpressionAttributeNames:  { ...updateNames, ...guardedInv.ExpressionAttributeNames },
+                ExpressionAttributeValues: { ...updateValues, ...guardedInv.ExpressionAttributeValues },
+                ConditionExpression:       guardedInv.ConditionExpression
+            }));
+        } catch (e) {
+            if (e.name === 'ConditionalCheckFailedException') return err(404, 'Inventory record not found');
+            throw e;
+        }
 
         const response = res(200, { message: 'Stock updated', adjustment, newQty });
         await storeIdempotency(cid, response);
@@ -399,11 +455,13 @@ exports.handler = async (event) => {
     if (method === 'GET' && path.endsWith('/prescriptions')) {
         const status = qs.status || 'ordered'; // ordered | dispensed | cancelled
 
+        // Step 2d-4 — only this tenant's exams.
         const result = await db.send(new QueryCommand({
             TableName:                 TABLE_NAME,
             IndexName:                 'EntityType-index',
             KeyConditionExpression:    'EntityType = :et',
-            ExpressionAttributeValues: { ':et': 'EXAMINATION' }
+            FilterExpression:          'tenantId = :tnt',
+            ExpressionAttributeValues: { ':et': 'EXAMINATION', ':tnt': tenantId }
         }));
 
         const pending = [];
@@ -411,14 +469,17 @@ exports.handler = async (event) => {
             const rxs = (exam.prescriptions || []).filter(rx => rx.status === status);
             if (rxs.length === 0) continue;
 
-            // Fetch patient allergies for allergy check
+            // Fetch patient allergies — silently skip if patient belongs to
+            // another tenant (defensive; should not happen).
             let patientAllergies = [];
             try {
                 const patient = await db.send(new GetCommand({
                     TableName: TABLE_NAME,
                     Key: { PK: `PATIENT#${exam.patientId}`, SK: 'PROFILE' }
                 }));
-                patientAllergies = patient.Item?.allergies || [];
+                if (patient.Item && patient.Item.tenantId === tenantId) {
+                    patientAllergies = patient.Item.allergies || [];
+                }
             } catch (_) {}
 
             rxs.forEach(rx => {
@@ -461,9 +522,10 @@ exports.handler = async (event) => {
         if (!body.medId)          return err(400, 'medId is required — select the inventory medication');
         if (!body.quantityDispensed) return err(400, 'quantityDispensed is required');
 
-        // Get exam and find prescription
+        // Get exam and find prescription. Step 2d-4 — exam must be ours.
         const exam = await db.send(new GetCommand({ TableName: TABLE_NAME, Key: { PK: `EXAM#${body.examId}`, SK: 'PROFILE' } }));
         if (!exam.Item) return err(404, 'Examination not found');
+        assertRowTenant(exam.Item, tenantId, { notFoundMessage: 'Examination not found' });
 
         const rxIndex = (exam.Item.prescriptions || []).findIndex(rx => rx.id === body.prescriptionId);
         if (rxIndex === -1) return err(404, 'Prescription not found in this examination');
@@ -472,19 +534,24 @@ exports.handler = async (event) => {
         if (rx.status === 'dispensed') return err(409, 'This prescription has already been dispensed');
         if (rx.status === 'cancelled') return err(409, 'This prescription has been cancelled');
 
-        // Check inventory
+        // Check inventory. Step 2d-4 — inventory row must be ours.
         const inv = await db.send(new GetCommand({ TableName: TABLE_NAME, Key: { PK: `MED#${body.medId}`, SK: 'INVENTORY' } }));
         if (!inv.Item) return err(404, 'Medication not found in inventory');
+        assertRowTenant(inv.Item, tenantId, { notFoundMessage: 'Medication not found in inventory' });
         if (inv.Item.stockQty < body.quantityDispensed) {
             return err(409, `Insufficient stock. Available: ${inv.Item.stockQty}, Requested: ${body.quantityDispensed}`);
         }
 
-        // Allergy check
+        // Allergy check — silently skip if cross-tenant.
         let allergyWarnings = [];
         try {
             const patient = await db.send(new GetCommand({ TableName: TABLE_NAME, Key: { PK: `PATIENT#${exam.Item.patientId}`, SK: 'PROFILE' } }));
             const med = await db.send(new GetCommand({ TableName: TABLE_NAME, Key: { PK: `MED#${body.medId}`, SK: 'PROFILE' } }));
-            allergyWarnings = checkAllergies(med.Item?.name || '', med.Item?.genericName || '', patient.Item?.allergies || []);
+            const patientOk = patient.Item && patient.Item.tenantId === tenantId;
+            const medOk     = med.Item     && med.Item.tenantId     === tenantId;
+            if (patientOk && medOk) {
+                allergyWarnings = checkAllergies(med.Item.name || '', med.Item.genericName || '', patient.Item.allergies || []);
+            }
         } catch (_) {}
 
         // If allergy warning and override not confirmed — return warning for frontend to show
@@ -506,6 +573,7 @@ const dispense = {
     PK:                  `DISPENSE#${dispenseId}`,
     SK:                  'PROFILE',
     EntityType:          'DISPENSE',
+    tenantId, // Step 2d-4
     dispenseId,
     examId:              body.examId,
     prescriptionId:      body.prescriptionId,
@@ -546,23 +614,33 @@ const dispense = {
             reason: `Dispensed for ${exam.Item.patientName} — Exam ${body.examId}`,
             actorEmail: actor.email, actorName: actor.name, timestamp: now, dispenseId
         };
-        await db.send(new UpdateCommand({
-            TableName: TABLE_NAME,
-            Key: { PK: `MED#${body.medId}`, SK: 'INVENTORY' },
-            UpdateExpression: 'SET #qty = :qty, #lu = :lu, #adj = list_append(if_not_exists(#adj, :empty), :a)',
-            ExpressionAttributeNames: { '#qty': 'stockQty', '#lu': 'lastUpdated', '#adj': 'adjustments' },
-            ExpressionAttributeValues: { ':qty': newQty, ':lu': now, ':a': [adjustment], ':empty': [] }
-        }));
+        // Step 2d-4 — atomic tenant guards on both follow-up writes.
+        {
+            const g = mergeTenantCondition(null, tenantId);
+            await db.send(new UpdateCommand({
+                TableName: TABLE_NAME,
+                Key: { PK: `MED#${body.medId}`, SK: 'INVENTORY' },
+                UpdateExpression: 'SET #qty = :qty, #lu = :lu, #adj = list_append(if_not_exists(#adj, :empty), :a)',
+                ExpressionAttributeNames: { '#qty': 'stockQty', '#lu': 'lastUpdated', '#adj': 'adjustments', ...g.ExpressionAttributeNames },
+                ExpressionAttributeValues: { ':qty': newQty, ':lu': now, ':a': [adjustment], ':empty': [], ...g.ExpressionAttributeValues },
+                ConditionExpression: g.ConditionExpression
+            }));
+        }
 
         // Update prescription status on exam to 'dispensed'
         const updatedPrescriptions = [...exam.Item.prescriptions];
         updatedPrescriptions[rxIndex] = { ...rx, status: 'dispensed', dispensedAt: now, dispenseId };
-        await db.send(new UpdateCommand({
-            TableName: TABLE_NAME,
-            Key: { PK: `EXAM#${body.examId}`, SK: 'PROFILE' },
-            UpdateExpression: 'SET prescriptions = :rx, updatedAt = :ua',
-            ExpressionAttributeValues: { ':rx': updatedPrescriptions, ':ua': now }
-        }));
+        {
+            const g = mergeTenantCondition(null, tenantId);
+            await db.send(new UpdateCommand({
+                TableName: TABLE_NAME,
+                Key: { PK: `EXAM#${body.examId}`, SK: 'PROFILE' },
+                UpdateExpression: 'SET prescriptions = :rx, updatedAt = :ua',
+                ExpressionAttributeNames: g.ExpressionAttributeNames,
+                ExpressionAttributeValues: { ':rx': updatedPrescriptions, ':ua': now, ...g.ExpressionAttributeValues },
+                ConditionExpression: g.ConditionExpression
+            }));
+        }
 
         const response = res(201, { dispense, newStock: newQty, allergyWarnings });
         await storeIdempotency(cid, response);
@@ -572,14 +650,17 @@ const dispense = {
     // GET /pharmacy/dispense
     if (method === 'GET' && path.endsWith('/dispense')) {
         const patientId = qs.patientId;
+        // Step 2d-4 — always tenant-scope; optionally also filter by patient.
+        const filter = patientId ? 'tenantId = :tnt AND patientId = :pid' : 'tenantId = :tnt';
+        const values = patientId
+            ? { ':et': 'DISPENSE', ':tnt': tenantId, ':pid': patientId }
+            : { ':et': 'DISPENSE', ':tnt': tenantId };
         const result = await db.send(new QueryCommand({
             TableName: TABLE_NAME,
             IndexName: 'EntityType-index',
             KeyConditionExpression: 'EntityType = :et',
-            FilterExpression: patientId ? 'patientId = :pid' : undefined,
-            ExpressionAttributeValues: patientId
-                ? { ':et': 'DISPENSE', ':pid': patientId }
-                : { ':et': 'DISPENSE' }
+            FilterExpression: filter,
+            ExpressionAttributeValues: values
         }));
         const items = (result.Items || []).sort((a,b) => b.dispensedAt.localeCompare(a.dispensedAt));
         return res(200, items);
@@ -591,11 +672,13 @@ const dispense = {
 
     // GET /pharmacy/purchase-orders
     if (method === 'GET' && path.endsWith('/purchase-orders')) {
+        // Step 2d-4 — tenant scope.
         const result = await db.send(new QueryCommand({
             TableName: TABLE_NAME,
             IndexName: 'EntityType-index',
             KeyConditionExpression: 'EntityType = :et',
-            ExpressionAttributeValues: { ':et': 'PURCHASE_ORDER' }
+            FilterExpression: 'tenantId = :tnt',
+            ExpressionAttributeValues: { ':et': 'PURCHASE_ORDER', ':tnt': tenantId }
         }));
         const items = (result.Items || []).sort((a,b) => b.createdAt.localeCompare(a.createdAt));
         return res(200, items);
@@ -634,6 +717,7 @@ const dispense = {
             PK:           `PO#${id}`,
             SK:           'PROFILE',
             EntityType:   'PURCHASE_ORDER',
+            tenantId, // Step 2d-4
             poId:         id,
             poNumber:     `PO-${Date.now()}`,
             status:       'draft',   // draft | submitted | ordered | partially_received | received | cancelled
@@ -672,6 +756,8 @@ const dispense = {
 
         const existing = await db.send(new GetCommand({ TableName: TABLE_NAME, Key: { PK: `PO#${poId}`, SK: 'PROFILE' } }));
         if (!existing.Item) return err(404, 'Purchase order not found');
+        // Step 2d-4 — tenant guard.
+        assertRowTenant(existing.Item, tenantId, { notFoundMessage: 'Purchase order not found' });
         const po = existing.Item;
 
         const validTransitions = {
@@ -706,20 +792,26 @@ const dispense = {
         if (body.status === 'ordered')            { expParts.push('#orderedAt = :oa');   names['#orderedAt']   = 'orderedAt';   values[':oa'] = now; }
         if (body.status === 'received')           { expParts.push('#receivedAt = :ra');  names['#receivedAt']  = 'receivedAt';  values[':ra'] = now; }
 
-        await db.send(new UpdateCommand({
-            TableName:                 TABLE_NAME,
-            Key:                       { PK: `PO#${poId}`, SK: 'PROFILE' },
-            UpdateExpression:          `SET ${expParts.join(', ')}`,
-            ExpressionAttributeNames:  names,
-            ExpressionAttributeValues: values
-        }));
+        // Step 2d-4 — atomic tenant guard on PO write.
+        {
+            const g = mergeTenantCondition(null, tenantId);
+            await db.send(new UpdateCommand({
+                TableName:                 TABLE_NAME,
+                Key:                       { PK: `PO#${poId}`, SK: 'PROFILE' },
+                UpdateExpression:          `SET ${expParts.join(', ')}`,
+                ExpressionAttributeNames:  { ...names, ...g.ExpressionAttributeNames },
+                ExpressionAttributeValues: { ...values, ...g.ExpressionAttributeValues },
+                ConditionExpression:       g.ConditionExpression
+            }));
+        }
 
-        // If status = received, auto-update inventory for each item
+        // If status = received, auto-update inventory for each item.
         if (body.status === 'received' && body.items) {
             for (const item of body.items) {
                 if (!item.medId || !item.received) continue;
                 const inv = await db.send(new GetCommand({ TableName: TABLE_NAME, Key: { PK: `MED#${item.medId}`, SK: 'INVENTORY' } }));
                 if (!inv.Item) continue;
+                if (inv.Item.tenantId !== tenantId) continue; // Step 2d-4 skip cross-tenant
                 const newQty = (inv.Item.stockQty || 0) + item.received;
                 const adjustment = {
                     id: randomUUID(), type: 'received',
@@ -729,17 +821,20 @@ const dispense = {
                     expiryDate:  item.expiryDate  || null,
                     actorEmail: actor.email, actorName: actor.name, timestamp: now, poId
                 };
+                const g = mergeTenantCondition(null, tenantId);
                 await db.send(new UpdateCommand({
                     TableName: TABLE_NAME,
                     Key: { PK: `MED#${item.medId}`, SK: 'INVENTORY' },
                     UpdateExpression: 'SET #qty = :qty, #lu = :lu, #adj = list_append(if_not_exists(#adj, :empty), :a), #batch = :batch, #expiry = :expiry',
-                    ExpressionAttributeNames: { '#qty': 'stockQty', '#lu': 'lastUpdated', '#adj': 'adjustments', '#batch': 'batchNumber', '#expiry': 'expiryDate' },
-                    ExpressionAttributeValues: { ':qty': newQty, ':lu': now, ':a': [adjustment], ':empty': [], ':batch': item.batchNumber || inv.Item.batchNumber || null, ':expiry': item.expiryDate || inv.Item.expiryDate || null }
+                    ExpressionAttributeNames: { '#qty': 'stockQty', '#lu': 'lastUpdated', '#adj': 'adjustments', '#batch': 'batchNumber', '#expiry': 'expiryDate', ...g.ExpressionAttributeNames },
+                    ExpressionAttributeValues: { ':qty': newQty, ':lu': now, ':a': [adjustment], ':empty': [], ':batch': item.batchNumber || inv.Item.batchNumber || null, ':expiry': item.expiryDate || inv.Item.expiryDate || null, ...g.ExpressionAttributeValues },
+                    ConditionExpression: g.ConditionExpression
                 }));
             }
         }
 
         const updated = await db.send(new GetCommand({ TableName: TABLE_NAME, Key: { PK: `PO#${poId}`, SK: 'PROFILE' } }));
+        assertRowTenant(updated.Item, tenantId, { notFoundMessage: 'Purchase order not found' });
         const response = res(200, updated.Item);
         await storeIdempotency(cid, response);
         return response;
@@ -751,16 +846,19 @@ const dispense = {
 
     // GET /pharmacy/alerts
     if (method === 'GET' && path.endsWith('/alerts')) {
+        // Step 2d-4 — only this tenant's inventory.
         const invResult = await db.send(new QueryCommand({
             TableName: TABLE_NAME,
             IndexName: 'EntityType-index',
             KeyConditionExpression: 'EntityType = :et',
-            ExpressionAttributeValues: { ':et': 'INVENTORY' }
+            FilterExpression: 'tenantId = :tnt',
+            ExpressionAttributeValues: { ':et': 'INVENTORY', ':tnt': tenantId }
         }));
 
         const alerts = [];
         for (const inv of (invResult.Items || [])) {
             const med = await db.send(new GetCommand({ TableName: TABLE_NAME, Key: { PK: `MED#${inv.medId}`, SK: 'PROFILE' } }));
+            if (med.Item && med.Item.tenantId !== tenantId) med.Item = null; // skip cross-tenant
             const reorderPoint = med.Item?.reorderPoint || 10;
             const daysToExpiry = daysUntil(inv.expiryDate);
 
@@ -782,7 +880,18 @@ const dispense = {
     }
 
     return err(400, 'Unknown pharmacy route');
+    } catch (e) {
+        if (e && e.statusCode === 404) {
+            if (e.crossTenantAttempt) {
+                console.warn('cross-tenant attempt', { path, by: event.requestContext?.authorizer?.jwt?.claims?.email });
+            }
+            return err(404, e.message || 'Not found');
+        }
+        console.error('tiryaq-pharmacy error:', e);
+        return err(500, e.message || 'Internal error');
+    }
 };// hash-bust 2026-06-21T13:57:58.1016493+03:00
 // hash-bust 2026-06-21T14:07:44.7504132+03:00
 // hash-bust 2026-06-21T14:14:23.7665133+03:00
 // hash-bust 2026-06-21T14:28:24.0064697+03:00
+// hash-bust 2d-4 2026-06-22T10:12:07.3705068+03:00
