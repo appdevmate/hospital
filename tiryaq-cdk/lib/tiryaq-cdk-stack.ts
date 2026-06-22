@@ -440,9 +440,13 @@ export class TiryaqStack extends cdk.Stack {
 
         // Step 7 — Add `Operator` group for Akwadona platform staff. Members
         // of this group access the operator console at www.akwadona.com,
-        // bypass tenantId checks, but have NO kms:Decrypt on any tenant key
-        // (enforced by the key-policy condition that matches only Lambda
-        // execution roles, not human-derived JWT claims).
+        // bypass tenantId checks, but have NO kms:Decrypt on any tenant key.
+        // Two independent layers enforce this:
+        //   1. KMS key-policy condition matches only tenant Lambda
+        //      execution roles, not human-derived JWT claims.
+        //   2. Step 9 — explicit IAM DENY on kms:Decrypt + sibling actions
+        //      on the operator Lambda role itself (see operatorConsoleFn
+        //      addToRolePolicy block below). Explicit DENY beats any ALLOW.
         ['Admin', 'Developers', 'Doctors', 'Pharmacists', 'Operator'].forEach((groupName) => {
             new cognito.CfnUserPoolGroup(this, `Group${groupName}`, {
                 userPoolId: userPool.userPoolId,
@@ -609,6 +613,40 @@ export class TiryaqStack extends cdk.Stack {
         operatorConsoleFn.addToRolePolicy(new iam.PolicyStatement({
             actions: ['cognito-idp:ListUsersInGroup'],
             resources: [userPool.userPoolArn]
+        }));
+        // ─────────────────────────────────────────────────────────────────────
+        // Step 9 — Hardened operator IAM (zero-knowledge defense-in-depth).
+        //
+        // An explicit DENY on every tenant CMK guarantees the operator
+        // Lambda can NEVER decrypt, encrypt, derive a data key, or compute
+        // HMACs against patient data — even if a future code change
+        // accidentally grants kms:* on '*', or a key-policy update opens
+        // the door. In IAM evaluation, an explicit DENY always overrides
+        // any ALLOW (whether identity-based, resource-based, or session-
+        // policy-based). This is the technical proof of our public claim:
+        //   "Akwadona platform staff cannot read patient data."
+        //
+        // Onboarding: each new tenant entry in `tenantKeys` / `tenantHmacKeys`
+        // is automatically picked up by Object.values() below — no manual
+        // sync required.
+        // ─────────────────────────────────────────────────────────────────────
+        const allTenantCmkArns = [
+            ...Object.values(tenantKeys),
+            ...Object.values(tenantHmacKeys)
+        ];
+        operatorConsoleFn.addToRolePolicy(new iam.PolicyStatement({
+            effect: iam.Effect.DENY,
+            actions: [
+                'kms:Decrypt',
+                'kms:Encrypt',
+                'kms:GenerateDataKey',
+                'kms:GenerateDataKey*',
+                'kms:GenerateDataKeyWithoutPlaintext',
+                'kms:GenerateMac',
+                'kms:VerifyMac',
+                'kms:ReEncrypt*'
+            ],
+            resources: allTenantCmkArns
         }));
         // Step 8 — deployed as `akwadona-examinations`.
         const examinationsFn = fn('TiryaqExaminations', 'tiryaq-examinations', 'index.handler', lambda.Runtime.NODEJS_24_X, {}, { functionName: 'akwadona-examinations' });
