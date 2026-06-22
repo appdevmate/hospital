@@ -51,15 +51,17 @@ $results
 Expected output for Free-plan tenant: ~600 × `200` + ~100 × `429`.
 If you see `401` instead → token expired, log in again.
 
-### Step 2d-4 — Per-row tenant enforcement (big domain Lambdas)
-- Apply `tenantId` partition check on every read/write in:
-  - `tiryaq-pharmacy`
-  - `tiryaq-bloodbank`
-  - `tiryaq-scribe`
-  - `tiryaq-calendar`
-  - `tiryaq-document-manager`
-- Reject (403) if `claim.tenantId !== row.tenantId`.
-- Add unit tests that try cross-tenant reads with two seeded tenants.
+### Step 2d-4 — Per-row tenant enforcement (big domain Lambdas) — DONE
+- ✅ 2d-4.1 — Shared `_shared/tenant-guard.js` helper + `sync-shared-helpers.js` rewrite (per-helper target lists).
+- ✅ 2d-4.2 — `tiryaq-bloodbank` — every read guarded, every write conditioned, every Put stamped.
+- ✅ 2d-4.3 — `tiryaq-pharmacy` — including cross-domain reads (PATIENT / EXAM / MED).
+- ✅ 2d-4.4 — `tiryaq-examinations` — fixed latent `tenantId` undefined bug while wiring.
+- ✅ 2d-4.5 — `tiryaq-calendar` — calendar + events + cascade delete.
+- ✅ 2d-4.6 — `tiryaq-scribe` — fixed latent `getTenant` discarded return value.
+- ✅ 2d-4.7 — `tiryaq-document-manager` — closed S3 cross-tenant listing leak by adding `tenantId` segment to every S3 key (legacy keys still admin-readable until migration).
+- ✅ 2d-4.8 — Runbook + test plan at `docs/14-tenant-row-enforcement.md`.
+- 🔲 2d-4.9 — Migration script to rewrite legacy S3 keys (`folder/<userId>/...` → `folder/<tenantId>/<userId>/...`) so the legacy admin-only branch can be removed.
+- 🔲 2d-4.10 — Cross-tenant probe automated test (CI). Seed 2 tenants, try every guessed-id read, expect 404 every time.
 
 ### Step 8 — AWS resource rename `tiryaq-*` → `akwadona-*` (Phase A DONE)
 - ✅ Phase A — All 39 CDK-managed Lambdas now `akwadona-*` (10 originally prefixed + 27 camelCase + 2 patient ones from initial test). Runbook at `docs/09-rename-runbook.md`.

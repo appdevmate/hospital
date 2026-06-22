@@ -583,3 +583,7 @@ hospital/
 5. **Operator Console at `www.akwadona.com/operator`** is where YOU monitor your customers' subscriptions, usage, and billing — without ever touching their clinical data.
 
 When a customer asks a question and you're stuck: open this file. It covers the 95% case.
+
+
+
+aws cloudfront list-invalidations --distribution-id E1Z1ZKYM74LVA7 --max-items 1
