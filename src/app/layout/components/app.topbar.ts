@@ -527,16 +527,34 @@ export class AppTopbar implements OnInit {
 
         const finish = () => {
             this.oidc.logoffLocal();
-            // Step 7i — wipe the operator/tenant cache on sign-out so the next
-            // user doesn't see the previous user's data on first paint.
+            // Nuke EVERY browser-side trace of the previous session before
+            // redirecting to Cognito /logout. Without this the SPA boots,
+            // reads the stale token from sessionStorage / localStorage /
+            // service-worker cache, and treats the user as still signed in.
             try {
+                // localStorage — app cache + token mirror.
                 for (let i = localStorage.length - 1; i >= 0; i--) {
                     const k = localStorage.key(i);
-                    if (k && k.startsWith('akw:')) localStorage.removeItem(k);
+                    if (k && (k.startsWith('akw:') || k.includes('token') || k.includes('Token') || k.includes('oidc'))) {
+                        localStorage.removeItem(k);
+                    }
                 }
                 localStorage.removeItem('accessToken');
                 localStorage.removeItem('returnUrl');
-            } catch { /* ignore */ }
+                // sessionStorage — angular-auth-oidc-client's default home.
+                sessionStorage.clear();
+                // Service worker — without unregister, the next page load is
+                // served from the SW cache (stale auth state, stale UI).
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.getRegistrations().then(rs => {
+                        rs.forEach(r => r.unregister());
+                    }).catch(() => { /* ignore */ });
+                }
+                // SW caches — explicit drop in case unregister is async.
+                if (typeof caches !== 'undefined' && caches.keys) {
+                    caches.keys().then(ks => ks.forEach(k => caches.delete(k))).catch(() => { /* ignore */ });
+                }
+            } catch { /* ignore — never block logout */ }
             window.location.href = `${authority}/logout?client_id=${encodeURIComponent(clientId)}&logout_uri=${encodeURIComponent(window.location.origin + '/')}`;
         };
 
