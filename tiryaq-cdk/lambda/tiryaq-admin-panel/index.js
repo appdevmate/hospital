@@ -15,8 +15,10 @@ const {
     AdminSetUserPasswordCommand,
     AdminUpdateUserAttributesCommand
 } = require('@aws-sdk/client-cognito-identity-provider');
-const { KMSClient, GenerateMacCommand } = require('@aws-sdk/client-kms');
-const kms = new KMSClient({ region: 'us-east-1' });
+// Step 76 fix — emailHash recomputation now goes through the shared crypto
+// helper so it works for tenants whose KMS HMAC key ARN lives in the DDB
+// TENANT row (wizard-onboarded tenants), not just env-var-bound tenants.
+const crypto = require('./crypto');
 // Step 2g — per-tenant rate limit.
 const throttle = require('./throttle');
 
@@ -357,17 +359,12 @@ exports.handler = async (event) => {
             const doctor = (r.Items || [])[0];
             if (doctor) {
                 // Recompute the emailHash with this tenant's HMAC key.
-                const hmacKeys = JSON.parse(process.env.TENANT_HMAC_KEYS || '{}');
-                const keyArn = hmacKeys[tenantId];
+                // crypto.computeHmac resolves the key ARN from env var first
+                // then falls back to the DDB TENANT row — so this works for
+                // both static (Tiryaq/Alshifaa) and wizard-onboarded tenants.
                 let emailHash = null;
-                if (keyArn) {
-                    const mac = await kms.send(new GenerateMacCommand({
-                        KeyId:        keyArn,
-                        MacAlgorithm: 'HMAC_SHA_256',
-                        Message:      Buffer.from(newEmail)
-                    }));
-                    emailHash = Buffer.from(mac.Mac).toString('base64');
-                }
+                try { emailHash = await crypto.computeHmac(newEmail, tenantId); }
+                catch (_) { /* no HMAC key for this tenant — skip hash update */ }
                 await db.send(new UpdateCommand({
                     TableName: TABLE_NAME,
                     Key: { PK: doctor.PK, SK: doctor.SK },
@@ -468,3 +465,4 @@ exports.handler = async (event) => {
 };// hash-bust 2026-06-21T14:07:44.7504132+03:00
 // hash-bust 2026-06-21T14:14:23.7665133+03:00
 // hash-bust 2026-06-21T14:28:24.0064697+03:00
+// hash-bust admin-email-hmac-fix 2026-06-23T18:40:57.6694186+03:00

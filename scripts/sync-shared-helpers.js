@@ -35,7 +35,13 @@ const CRYPTO_TARGETS = [
     'getPatientsDataByFilters', 'deletePatient',
     'createDoctor', 'updateDoctor', 'getDoctorByID', 'getDoctorByEmail',
     'getAllDoctors', 'deleteDoctor',
-    'tiryaq-appointments', 'tiryaq-examinations'
+    'tiryaq-appointments', 'tiryaq-examinations',
+    // Step 76 / fix: admin-panel calls computeHmac() to refresh emailHash when
+    // an admin changes a user's email. Pre-Phase-1 it parsed TENANT_HMAC_KEYS
+    // env var inline; for wizard-created tenants the key ARN lives in the
+    // TENANT DDB row, so admin-panel must use the shared crypto.js with
+    // its DDB fallback.
+    'tiryaq-admin-panel'
 ];
 
 // Throttle + plan defaults (Step 2g) — auto-discovered: every Lambda folder
