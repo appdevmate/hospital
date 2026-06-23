@@ -224,6 +224,32 @@ const MODULES = [
         listQuery: (body) => 'patientId=' + encodeURIComponent(body.patientId),
         idField: 'examId',
         patchBody: () => ({ chiefComplaint: 'Hijacked ' + rand() })
+    },
+    // Scribe session - voice consultation recording. Only POST and GET-by-id
+    // are exposed; there are no PATCH/DELETE/LIST routes (sessions accumulate
+    // and are reaped by a separate background job). So the probe covers
+    // exactly GET-by-id cross-tenant + same-tenant own-GET. No cleanup
+    // possible - test rows persist; the audit team scrubs them periodically.
+    {
+        name: 'scribe.session',
+        createUrl: '/scribe/sessions',
+        createBody: () => ({ consentGiven: true }),
+        itemPath: (id) => '/scribe/sessions/' + id,
+        idField: 'sessionId',
+        methods: ['GET']
+    },
+    // Calendar - hospital schedule resource. POST creates a calendar; DELETE
+    // by id removes it; GET (list) returns the caller's tenant's calendars.
+    // There is no GET-by-id and no PATCH route, so the probe covers DELETE
+    // + LIST cross-tenant patterns + standard cleanup.
+    {
+        name: 'calendar',
+        createUrl: '/calendars',
+        createBody: () => ({ name: 'Probe Calendar ' + rand() }),
+        itemPath: (id) => '/calendars/' + id,
+        listUrl: '/calendars',
+        idField: 'calendarId',
+        methods: ['DELETE', 'LIST']
     }
 ];
 
