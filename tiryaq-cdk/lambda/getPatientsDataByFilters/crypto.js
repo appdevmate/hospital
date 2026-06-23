@@ -54,18 +54,22 @@
 
 const crypto = require('crypto');
 const { KMSClient, GenerateDataKeyCommand, DecryptCommand, GenerateMacCommand } = require('@aws-sdk/client-kms');
+const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
+const { DynamoDBDocumentClient, QueryCommand } = require('@aws-sdk/lib-dynamodb');
 
-const REGION   = process.env.AWS_REGION || 'us-east-1';
-const KEY_SPEC = 'AES_256';
+const REGION    = process.env.AWS_REGION || 'us-east-1';
+const TABLE_NAME = process.env.TABLE_NAME || 'Hospital';
+const KEY_SPEC  = 'AES_256';
 const ALGORITHM = 'aes-256-gcm';
-const VERSION  = 1;
+const VERSION   = 1;
 
 const DEK_FIELD     = '_kms_dek';   // base64 KMS-encrypted DEK
 const VERSION_FIELD = '_kms_v';     // format version, currently 1
 
 const kms = new KMSClient({ region: REGION });
+const ddb = DynamoDBDocumentClient.from(new DynamoDBClient({ region: REGION }));
 
-// Parse TENANT_KEYS once and cache. Env var is JSON: { "T_xxx": "arn:..." }
+// Parse TENANT_KEYS / TENANT_HMAC_KEYS env vars once. JSON: { "T_xxx": "arn:..." }
 let _tenantKeys = null;
 function _tenantKeyMap() {
     if (_tenantKeys) return _tenantKeys;
@@ -74,20 +78,72 @@ function _tenantKeyMap() {
     return _tenantKeys;
 }
 
-/** Return the KMS key ARN for a tenant. Throws if unknown tenant. */
-function keyArnForTenant(tenantId) {
-    const arn = _tenantKeyMap()[tenantId];
-    if (!arn) {
-        const e = new Error(`No KMS key configured for tenant ${tenantId}`);
-        e.statusCode = 500;
-        throw e;
+let _tenantHmacKeys = null;
+function _tenantHmacKeyMap() {
+    if (_tenantHmacKeys) return _tenantHmacKeys;
+    try { _tenantHmacKeys = JSON.parse(process.env.TENANT_HMAC_KEYS || '{}'); }
+    catch (_) { _tenantHmacKeys = {}; }
+    return _tenantHmacKeys;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Onboarding wizard support (Phase 1).
+//
+// Pre-wizard: tenants are baked into the CDK stack as env-var maps; the only
+// way to add a new tenant was to redeploy the stack. That doesn't scale.
+//
+// Post-wizard: each TENANT profile row in DDB also carries `kmsKeyArn` and
+// `kmsHmacKeyArn`. When a tenant's id is NOT in the env-var map, we fall
+// back to a DDB lookup. Results are cached in process memory for 60 seconds
+// to keep the per-request KMS path fast (warm containers see zero DDB cost).
+//
+// Existing Tiryaq + Alshifaa continue resolving from the env-var maps —
+// they're backfilled with the same ARNs in the DDB row for consistency, but
+// the env-var path wins so the hot path is unchanged for current tenants.
+// ─────────────────────────────────────────────────────────────────────────────
+const TENANT_KEY_CACHE_MS = 60_000;
+const _tenantKeyDdbCache  = new Map(); // tenantId -> { dataArn, hmacArn, fetchedAt }
+
+async function _loadTenantKeysFromDdb(tenantId) {
+    const cached = _tenantKeyDdbCache.get(tenantId);
+    if (cached && Date.now() - cached.fetchedAt < TENANT_KEY_CACHE_MS) return cached;
+    try {
+        const r = await ddb.send(new QueryCommand({
+            TableName:                 TABLE_NAME,
+            IndexName:                 'EntityType-index',
+            KeyConditionExpression:    'EntityType = :et',
+            FilterExpression:          'tenantId = :tnt',
+            ExpressionAttributeValues: { ':et': 'TENANT', ':tnt': tenantId }
+        }));
+        const row = (r.Items || [])[0] || {};
+        const entry = {
+            dataArn:   row.kmsKeyArn     || null,
+            hmacArn:   row.kmsHmacKeyArn || null,
+            fetchedAt: Date.now()
+        };
+        _tenantKeyDdbCache.set(tenantId, entry);
+        return entry;
+    } catch (_) {
+        // Surface DDB unavailability as "unknown tenant" to the caller's
+        // existing error handler — preserves the previous behaviour.
+        return { dataArn: null, hmacArn: null, fetchedAt: Date.now() };
     }
-    return arn;
+}
+
+/** Return the KMS key ARN for a tenant. Async — checks env var first, DDB second. Throws if unknown. */
+async function keyArnForTenant(tenantId) {
+    const fromEnv = _tenantKeyMap()[tenantId];
+    if (fromEnv) return fromEnv;
+    const ddbRow = await _loadTenantKeysFromDdb(tenantId);
+    if (ddbRow.dataArn) return ddbRow.dataArn;
+    const e = new Error(`No KMS key configured for tenant ${tenantId}`);
+    e.statusCode = 500;
+    throw e;
 }
 
 /** Generate a fresh DEK from KMS. Returns { plaintextDek, encryptedDek } as Buffers. */
 async function generateDek(tenantId) {
-    const KeyId = keyArnForTenant(tenantId);
+    const KeyId = await keyArnForTenant(tenantId);
     const r = await kms.send(new GenerateDataKeyCommand({ KeyId, KeySpec: KEY_SPEC }));
     return {
         plaintextDek: Buffer.from(r.Plaintext),
@@ -97,7 +153,7 @@ async function generateDek(tenantId) {
 
 /** Decrypt a wrapped DEK via KMS. Returns Buffer(32). */
 async function decryptDek(encryptedDek, tenantId) {
-    const KeyId = keyArnForTenant(tenantId);
+    const KeyId = await keyArnForTenant(tenantId);
     const r = await kms.send(new DecryptCommand({
         CiphertextBlob: encryptedDek,
         KeyId
@@ -234,22 +290,15 @@ async function decryptItems(items, fieldNames, tenantId) {
 // same hash, so caching is safe and avoids extra KMS calls.
 // ─────────────────────────────────────────────────────────────────────────────
 
-let _tenantHmacKeys = null;
-function _tenantHmacKeyMap() {
-    if (_tenantHmacKeys) return _tenantHmacKeys;
-    try { _tenantHmacKeys = JSON.parse(process.env.TENANT_HMAC_KEYS || '{}'); }
-    catch (_) { _tenantHmacKeys = {}; }
-    return _tenantHmacKeys;
-}
-
-function hmacKeyArnForTenant(tenantId) {
-    const arn = _tenantHmacKeyMap()[tenantId];
-    if (!arn) {
-        const e = new Error(`No KMS HMAC key configured for tenant ${tenantId}`);
-        e.statusCode = 500;
-        throw e;
-    }
-    return arn;
+/** Return the KMS HMAC key ARN for a tenant. Async — env var first, DDB fallback. Throws if unknown. */
+async function hmacKeyArnForTenant(tenantId) {
+    const fromEnv = _tenantHmacKeyMap()[tenantId];
+    if (fromEnv) return fromEnv;
+    const ddbRow = await _loadTenantKeysFromDdb(tenantId);
+    if (ddbRow.hmacArn) return ddbRow.hmacArn;
+    const e = new Error(`No KMS HMAC key configured for tenant ${tenantId}`);
+    e.statusCode = 500;
+    throw e;
 }
 
 // In-memory LRU-ish cache of (tenantId|value) → MAC. Bounded so a Lambda
@@ -278,7 +327,7 @@ async function computeHmac(value, tenantId) {
     const cacheKey = `${tenantId}|${norm}`;
     if (_hmacCache.has(cacheKey)) return _hmacCache.get(cacheKey);
 
-    const KeyId = hmacKeyArnForTenant(tenantId);
+    const KeyId = await hmacKeyArnForTenant(tenantId);
     const r = await kms.send(new GenerateMacCommand({
         KeyId,
         MacAlgorithm: 'HMAC_SHA_256',

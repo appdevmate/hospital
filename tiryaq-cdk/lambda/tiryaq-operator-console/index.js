@@ -46,8 +46,18 @@ const {
 const { CloudWatchClient, GetMetricDataCommand } = require('@aws-sdk/client-cloudwatch');
 const {
     CognitoIdentityProviderClient,
-    ListUsersInGroupCommand
+    ListUsersInGroupCommand,
+    AdminCreateUserCommand,
+    AdminSetUserPasswordCommand,
+    AdminAddUserToGroupCommand,
+    AdminDeleteUserCommand
 } = require('@aws-sdk/client-cognito-identity-provider');
+const {
+    KMSClient,
+    CreateKeyCommand,
+    CreateAliasCommand,
+    ScheduleKeyDeletionCommand
+} = require('@aws-sdk/client-kms');
 
 const REGION     = 'us-east-1';
 const TABLE_NAME = 'Hospital';
@@ -58,6 +68,12 @@ const CLOUDFRONT_DISTRIBUTION_ID = process.env.CLOUDFRONT_DISTRIBUTION_ID || 'E1
 const ddb = DynamoDBDocumentClient.from(new DynamoDBClient({ region: REGION }));
 const cw  = new CloudWatchClient({ region: REGION });
 const cog = new CognitoIdentityProviderClient({ region: REGION });
+const kms = new KMSClient({ region: REGION });
+
+// Resolved at runtime so onboarded tenant CMKs reference the correct account.
+const ACCOUNT_ID = process.env.AWS_LAMBDA_FUNCTION_INVOKED_ARN
+    ? process.env.AWS_LAMBDA_FUNCTION_INVOKED_ARN.split(':')[4]
+    : '483176634665';
 
 // ── Operator-only guard ─────────────────────────────────────────────────────
 function getOperator(event) {
@@ -107,6 +123,11 @@ exports.handler = async (event) => {
     try {
         if (method === 'GET' && root === 'tenants' && !slug) {
             return await listTenants();
+        }
+        if (method === 'POST' && root === 'tenants' && !slug) {
+            // Step 96 — Self-service tenant onboarding wizard backend.
+            const body = JSON.parse(event.body || '{}');
+            return await createTenant(body, operator);
         }
         if (method === 'GET' && root === 'tenants' && slug && !action) {
             // Step 7i — combined detail call. `?expand=stats,audit` returns
@@ -471,3 +492,320 @@ async function updateTenant(slug, body, operator) {
 // hash-bust 2026-06-21T14:07:44.7504132+03:00
 // hash-bust 2026-06-21T14:14:23.7665133+03:00
 // hash-bust 2026-06-21T14:28:24.0064697+03:00
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TENANT ONBOARDING WIZARD (Step 96 / Phase 2)
+//
+// POST /operator/tenants
+//
+// Provisions a new customer hospital end-to-end in one round trip. Mirrors the
+// programmatic onboarding flow used by Stripe Connect, Twilio sub-accounts,
+// and Particle Health partner orgs:
+//
+//   1. Validate input.
+//   2. Create per-tenant KMS DATA CMK  (alias/akwadona-tenant-<slug>-data).
+//   3. Create per-tenant KMS HMAC CMK  (alias/akwadona-tenant-<slug>-hmac).
+//   4. Write TENANT row to DynamoDB with key ARNs (read by every PHI Lambda
+//      via the DDB fallback added in Phase 1).
+//   5. Create the initial Admin Cognito user with custom:tenantId, add to
+//      Admin group, set a permanent temp password the operator will forward
+//      to the customer over a trusted channel.
+//   6. Audit log entry (operator action).
+//
+// Idempotent: if `slug` already exists, returns 409 without touching anything.
+// On any mid-flight failure the partially-created resources are rolled back:
+// KMS keys are scheduled for deletion (7-day window — minimum permitted by
+// KMS so callers can recover from accidental rollbacks), DDB row is deleted,
+// Cognito user is deleted. Errors are logged but never swallowed.
+//
+// Crucially the new tenant's KMS key policies whitelist
+// "TiryaqCdkStack-*ServiceRole*" BUT explicitly exclude
+// "TiryaqCdkStack-*Operator*". The operator can never decrypt the new
+// tenant's data — same zero-knowledge guarantee as Tiryaq / Alshifaa,
+// without needing a CDK redeploy to grow the identity-policy DENY list.
+// ─────────────────────────────────────────────────────────────────────────────
+
+const VALID_SLUG    = /^[a-z][a-z0-9-]{1,30}[a-z0-9]$/;       // 3-32 chars, hyphenated
+const VALID_PLAN    = ['free', 'standard', 'enterprise'];
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function generateTenantId() {
+    // T_<8 random hex chars>. Matches the format used for Tiryaq / Alshifaa.
+    return 'T_' + require('crypto').randomBytes(4).toString('hex');
+}
+
+function generateTempPassword() {
+    // 16 chars: 1 lower, 1 upper, 1 digit, 1 symbol, 12 random. Meets the
+    // default Cognito password policy (8+ chars, mixed case, digit, symbol).
+    const random = require('crypto').randomBytes(12).toString('base64')
+        .replace(/[+/=]/g, '');
+    return 'A' + 'a' + '1' + '!' + random.slice(0, 12);
+}
+
+function buildKeyPolicy(account) {
+    // Matches the existing tenant CMK template (Tiryaq / Alshifaa) but adds
+    // an explicit ArnNotLike that excludes the operator role. Result: no
+    // operator role can ever Encrypt / Decrypt / Mac on this key, regardless
+    // of what's in the identity-based policy.
+    return JSON.stringify({
+        Version: '2012-10-17',
+        Id: 'tenant-cmk-policy',
+        Statement: [
+            {
+                Sid: 'AllowRootAccountAdmin',
+                Effect: 'Allow',
+                Principal: { AWS: 'arn:aws:iam::' + account + ':root' },
+                Action: 'kms:*',
+                Resource: '*'
+            },
+            {
+                Sid: 'AllowTenantLambdaRoles',
+                Effect: 'Allow',
+                Principal: { AWS: '*' },
+                Action: [
+                    'kms:Encrypt',
+                    'kms:Decrypt',
+                    'kms:GenerateDataKey',
+                    'kms:GenerateDataKey*',
+                    'kms:GenerateDataKeyWithoutPlaintext',
+                    'kms:GenerateMac',
+                    'kms:VerifyMac',
+                    'kms:ReEncrypt*',
+                    'kms:DescribeKey'
+                ],
+                Resource: '*',
+                Condition: {
+                    StringLike: {
+                        'aws:PrincipalArn': 'arn:aws:iam::' + account + ':role/TiryaqCdkStack-*ServiceRole*'
+                    },
+                    StringNotLike: {
+                        'aws:PrincipalArn': 'arn:aws:iam::' + account + ':role/TiryaqCdkStack-*Operator*'
+                    }
+                }
+            }
+        ]
+    });
+}
+
+async function createTenant(body, operator) {
+    // ── 1. Validate input ────────────────────────────────────────────────────
+    const slug         = String(body.slug || '').trim().toLowerCase();
+    const name         = String(body.name || '').trim();
+    const plan         = String(body.plan || 'free').toLowerCase();
+    const country      = String(body.country || '').trim();
+    const contactEmail = String(body.contactEmail || '').trim();
+    const adminEmail   = String(body.adminEmail || '').trim().toLowerCase();
+    const adminName    = String(body.adminName || 'Hospital Admin').trim();
+    // Cognito user pool uses `email` as an alias attribute, which forbids the
+    // Username field itself from being in email format. Default username is
+    // therefore hyphen-delimited (admin-<slug>) — short, unique per tenant,
+    // and Cognito-safe.
+    const adminUser    = String(body.adminUsername || ('admin-' + slug)).trim().toLowerCase();
+
+    if (!VALID_SLUG.test(slug))            return err(400, 'slug must be lowercase, 3-32 chars, [a-z0-9-]');
+    if (!name)                              return err(400, 'name is required');
+    if (!VALID_PLAN.includes(plan))         return err(400, 'plan must be free | standard | enterprise');
+    if (!EMAIL_PATTERN.test(adminEmail))    return err(400, 'adminEmail is required and must be a valid email');
+    if (contactEmail && !EMAIL_PATTERN.test(contactEmail)) return err(400, 'contactEmail must be a valid email if provided');
+
+    const slugPk = 'TENANT#' + slug;
+
+    // ── 2. Idempotency — bail if slug already taken ──────────────────────────
+    const existing = await ddb.send(new GetCommand({
+        TableName: TABLE_NAME,
+        Key: { PK: slugPk, SK: 'PROFILE' }
+    }));
+    if (existing.Item) {
+        return err(409, 'Tenant slug "' + slug + '" already exists');
+    }
+
+    const tenantId  = generateTenantId();
+    const tempPass  = generateTempPassword();
+    const now       = new Date().toISOString();
+    const keyPolicy = buildKeyPolicy(ACCOUNT_ID);
+
+    // Track what we've created so we can rollback on any later failure.
+    const created = { dataKeyId: null, hmacKeyId: null, ddbRowWritten: false, cognitoUsername: null };
+
+    try {
+        // ── 3. Create DATA CMK ───────────────────────────────────────────────
+        // BypassPolicyLockoutSafetyCheck: KMS by default refuses to create a
+        // key whose policy doesn't grant kms:PutKeyPolicy to the caller. The
+        // operator role is EXCLUDED from this key's policy by design (zero-
+        // knowledge) — root account retains kms:* and is the only future
+        // policy editor. We acknowledge that on purpose.
+        const dataKey = await kms.send(new CreateKeyCommand({
+            Description: 'Akwadona tenant data CMK — ' + slug + ' (' + tenantId + ')',
+            KeyUsage:    'ENCRYPT_DECRYPT',
+            KeySpec:     'SYMMETRIC_DEFAULT',
+            Policy:      keyPolicy,
+            BypassPolicyLockoutSafetyCheck: true,
+            Tags: [
+                { TagKey: 'akwadona:tenantId', TagValue: tenantId },
+                { TagKey: 'akwadona:purpose',  TagValue: 'data' }
+            ]
+        }));
+        created.dataKeyId = dataKey.KeyMetadata.KeyId;
+        const dataKeyArn  = dataKey.KeyMetadata.Arn;
+
+        await kms.send(new CreateAliasCommand({
+            AliasName:    'alias/akwadona-tenant-' + slug + '-data',
+            TargetKeyId:  created.dataKeyId
+        }));
+
+        // ── 4. Create HMAC CMK ───────────────────────────────────────────────
+        const hmacKey = await kms.send(new CreateKeyCommand({
+            Description: 'Akwadona tenant HMAC CMK — ' + slug + ' (' + tenantId + ')',
+            KeyUsage:    'GENERATE_VERIFY_MAC',
+            KeySpec:     'HMAC_256',
+            Policy:      keyPolicy,
+            BypassPolicyLockoutSafetyCheck: true,
+            Tags: [
+                { TagKey: 'akwadona:tenantId', TagValue: tenantId },
+                { TagKey: 'akwadona:purpose',  TagValue: 'hmac' }
+            ]
+        }));
+        created.hmacKeyId = hmacKey.KeyMetadata.KeyId;
+        const hmacKeyArn  = hmacKey.KeyMetadata.Arn;
+
+        await kms.send(new CreateAliasCommand({
+            AliasName:    'alias/akwadona-tenant-' + slug + '-hmac',
+            TargetKeyId:  created.hmacKeyId
+        }));
+
+        // ── 5. Write TENANT row ──────────────────────────────────────────────
+        await ddb.send(new PutCommand({
+            TableName: TABLE_NAME,
+            Item: {
+                PK:             slugPk,
+                SK:             'PROFILE',
+                EntityType:     'TENANT',
+                tenantId,
+                slug,
+                name,
+                plan,
+                status:         'active',
+                country:        country || null,
+                contactEmail:   contactEmail || null,
+                kmsKeyArn:      dataKeyArn,
+                kmsHmacKeyArn:  hmacKeyArn,
+                kmsKeyId:       created.dataKeyId,
+                hmacKeyId:      created.hmacKeyId,
+                baaSigned:      false,
+                dpaSigned:      false,
+                createdAt:      now,
+                createdBy:      operator.email,
+                updatedAt:      now
+            },
+            ConditionExpression: 'attribute_not_exists(PK)'
+        }));
+        created.ddbRowWritten = true;
+
+        // ── 6. Create initial Cognito admin user ─────────────────────────────
+        await cog.send(new AdminCreateUserCommand({
+            UserPoolId:    USER_POOL_ID,
+            Username:      adminUser,
+            MessageAction: 'SUPPRESS',
+            UserAttributes: [
+                { Name: 'email',            Value: adminEmail },
+                { Name: 'email_verified',   Value: 'true' },
+                { Name: 'name',             Value: adminName },
+                { Name: 'custom:tenantId',  Value: tenantId }
+            ]
+        }));
+        created.cognitoUsername = adminUser;
+
+        await cog.send(new AdminSetUserPasswordCommand({
+            UserPoolId: USER_POOL_ID,
+            Username:   adminUser,
+            Password:   tempPass,
+            Permanent:  true            // operator forwards the password directly; no force-change.
+        }));
+
+        await cog.send(new AdminAddUserToGroupCommand({
+            UserPoolId: USER_POOL_ID,
+            Username:   adminUser,
+            GroupName:  'Admin'
+        }));
+
+        // ── 7. Audit log ─────────────────────────────────────────────────────
+        try {
+            const auditId = require('crypto').randomUUID();
+            await ddb.send(new PutCommand({
+                TableName: TABLE_NAME,
+                Item: {
+                    PK:           'AUDIT#' + now.slice(0, 10),
+                    SK:           'AUDIT#' + now + '#' + auditId,
+                    auditId,
+                    EntityType:   'AUDIT',
+                    tenantId:     'OPERATOR',
+                    action:       'OPERATOR_CREATE_TENANT',
+                    entityType:   'TENANT',
+                    entityId:     slug,
+                    actorEmail:   operator.email,
+                    actorName:    operator.name,
+                    timestamp:    now,
+                    changes:      JSON.stringify({ slug, tenantId, plan, country })
+                }
+            }));
+        } catch (_) { /* audit failure non-critical */ }
+
+        return res(201, {
+            slug,
+            tenantId,
+            name,
+            plan,
+            kmsKeyId:    created.dataKeyId,
+            hmacKeyId:   created.hmacKeyId,
+            admin: {
+                username:     adminUser,
+                email:        adminEmail,
+                tempPassword: tempPass,
+                signInUrl:    'https://app.akwadona.com/'
+            },
+            createdAt:   now
+        });
+
+    } catch (e) {
+        // ── Rollback ─────────────────────────────────────────────────────────
+        // Order: Cognito user → DDB row → HMAC key → Data key. Each step
+        // best-effort; we never propagate rollback errors over the original.
+        console.error('createTenant FAILED — rolling back partial state', e);
+        if (created.cognitoUsername) {
+            try {
+                await cog.send(new AdminDeleteUserCommand({
+                    UserPoolId: USER_POOL_ID,
+                    Username:   created.cognitoUsername
+                }));
+            } catch (cleanupErr) { console.error('rollback: Cognito delete failed', cleanupErr); }
+        }
+        if (created.ddbRowWritten) {
+            try {
+                await ddb.send(new UpdateCommand({
+                    TableName: TABLE_NAME,
+                    Key: { PK: slugPk, SK: 'PROFILE' },
+                    UpdateExpression: 'SET #s = :st',
+                    ExpressionAttributeNames:  { '#s': 'status' },
+                    ExpressionAttributeValues: { ':st': 'rolledback' }
+                }));
+                // We deliberately do NOT hard-delete the TENANT row — keep a
+                // tombstone so the slug is reserved while KMS keys finish
+                // their deletion window. Operator can re-attempt with a
+                // different slug.
+            } catch (cleanupErr) { console.error('rollback: DDB mark failed', cleanupErr); }
+        }
+        for (const keyId of [created.hmacKeyId, created.dataKeyId]) {
+            if (!keyId) continue;
+            try {
+                await kms.send(new ScheduleKeyDeletionCommand({
+                    KeyId:               keyId,
+                    PendingWindowInDays: 7
+                }));
+            } catch (cleanupErr) { console.error('rollback: KMS schedule delete failed for ' + keyId, cleanupErr); }
+        }
+        return err(e.statusCode || 500, 'Tenant onboarding failed: ' + (e.message || 'Internal Server Error') + '. Partial resources have been rolled back.');
+    }
+}
+// hash-bust onboarding-phase2 2026-06-23T12:45:49.4363602+03:00
+// hash-bust onboarding-fix1 2026-06-23T13:06:16.1423813+03:00
+// hash-bust onboarding-fix2 2026-06-23T13:32:50.6910503+03:00

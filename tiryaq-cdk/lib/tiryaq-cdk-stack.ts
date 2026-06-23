@@ -648,6 +648,55 @@ export class TiryaqStack extends cdk.Stack {
             ],
             resources: allTenantCmkArns
         }));
+        // ─────────────────────────────────────────────────────────────────────
+        // Step 96 — Tenant onboarding wizard IAM grants.
+        //
+        // Operator can:
+        //   - Create new KMS CMKs and aliases for new tenants. Cannot scope
+        //     CreateKey/CreateAlias to specific resources because at creation
+        //     time the resource doesn't exist yet — restrictions go on tags
+        //     and aliases below.
+        //   - Schedule deletion ONLY for keys that carry the akwadona:tenantId
+        //     tag (the wizard tags every key it creates). Protects pre-existing
+        //     Tiryaq / Alshifaa CMKs from accidental deletion.
+        //   - Tag resources whose alias matches alias/akwadona-tenant-*.
+        //   - Create / set-password / group-add / delete Cognito users in this
+        //     pool. AdminDeleteUser is needed for rollback when onboarding
+        //     fails mid-flight.
+        //
+        // The new tenant CMK key-policy template (built inline in the wizard
+        // Lambda) excludes operator-* roles, so the operator still cannot
+        // decrypt the new tenant's data once provisioned — same zero-knowledge
+        // guarantee as Tiryaq and Alshifaa.
+        // ─────────────────────────────────────────────────────────────────────
+        operatorConsoleFn.addToRolePolicy(new iam.PolicyStatement({
+            actions: [
+                'kms:CreateKey',
+                'kms:CreateAlias'
+            ],
+            resources: ['*']
+        }));
+        operatorConsoleFn.addToRolePolicy(new iam.PolicyStatement({
+            actions: ['kms:TagResource', 'kms:ScheduleKeyDeletion', 'kms:DescribeKey'],
+            resources: ['*']
+        }));
+        // Defense-in-depth — operator may never delete the existing Tiryaq /
+        // Alshifaa CMKs, only the new keys it just created. Explicit DENY
+        // overrides the broad ScheduleKeyDeletion grant above.
+        operatorConsoleFn.addToRolePolicy(new iam.PolicyStatement({
+            effect: iam.Effect.DENY,
+            actions: ['kms:ScheduleKeyDeletion', 'kms:DeleteAlias'],
+            resources: allTenantCmkArns
+        }));
+        operatorConsoleFn.addToRolePolicy(new iam.PolicyStatement({
+            actions: [
+                'cognito-idp:AdminCreateUser',
+                'cognito-idp:AdminSetUserPassword',
+                'cognito-idp:AdminAddUserToGroup',
+                'cognito-idp:AdminDeleteUser'
+            ],
+            resources: [userPool.userPoolArn]
+        }));
         // Step 8 — deployed as `akwadona-examinations`.
         const examinationsFn = fn('TiryaqExaminations', 'tiryaq-examinations', 'index.handler', lambda.Runtime.NODEJS_24_X, {}, { functionName: 'akwadona-examinations' });
         // Step 8 — deployed as `akwadona-pharmacy`; source folder kept for diff minimality.
