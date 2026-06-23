@@ -64,6 +64,26 @@ if (-not $FrontendOnly) {
         Write-Host 'Backend deploy complete.' -ForegroundColor Green
     }
     finally { Pop-Location }
+
+    # ── Phase 1b: Cross-tenant isolation probe (post-deploy gate) ────────────
+    # Step 2d-4.10 — automated regression test that proves the per-row tenant
+    # enforcement built in Steps 2d-4.1 through 2d-4.8 still holds after this
+    # deploy. Runs ONLY when credentials for both probe users are present in
+    # the environment; otherwise the probe is silently skipped (so iteration
+    # speed is not blocked). When run, a failure ABORTS the release pipeline.
+    $probeScript = Join-Path $RepoRoot 'scripts\cross-tenant-probe.js'
+    $haveCreds   = $env:TIRYAQ_USERNAME -and $env:TIRYAQ_PASSWORD `
+               -and $env:ALSHIFAA_USERNAME -and $env:ALSHIFAA_PASSWORD
+    if ((Test-Path $probeScript) -and $haveCreds) {
+        Write-Step 'Cross-tenant isolation probe'
+        node $probeScript
+        if ($LASTEXITCODE -ne 0) {
+            throw "Cross-tenant probe FAILED (exit $LASTEXITCODE) — release ABORTED. See output above."
+        }
+        Write-Host 'Cross-tenant probe passed.' -ForegroundColor Green
+    } elseif (Test-Path $probeScript) {
+        Write-Host 'Cross-tenant probe SKIPPED — set TIRYAQ_USERNAME/PASSWORD + ALSHIFAA_USERNAME/PASSWORD to enable.' -ForegroundColor Yellow
+    }
 }
 
 # ── Phase 2: Frontend (build + publish) ──────────────────────────────────────
