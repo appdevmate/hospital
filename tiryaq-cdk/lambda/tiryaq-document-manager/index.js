@@ -126,9 +126,24 @@ function canAccessFolder(groups, folder) {
 function tenantUserPrefix(folder, tenantId, uid) {
     return folder + '/' + tenantId + '/' + uid + '/';
 }
+/**
+ * Step 76 fix — distinguish three S3 key shapes:
+ *   1. LEGACY  (`folder/<userId>/...`)            -> parts[1] is NOT a tenantId
+ *   2. NEW     (`folder/<tenantId>/<userId>/...`) -> parts[1] starts with T_
+ *   3. INVALID (anything else)                    -> null
+ *
+ * Returns the tenantId IF the key is shape 2, else null. The previous
+ * implementation returned `parts[1]` for any key, which conflated "legacy"
+ * (admin bridge bypass allowed) with "cross-tenant" (must be blocked).
+ * That bug let a tenant-admin from one hospital download files from another.
+ */
+function isTenantSegment(s) {
+    return typeof s === 'string' && /^T_[A-Za-z0-9]+$/.test(s);
+}
 function keyTenant(key) {
     const parts = (key || '').split('/');
-    return parts.length >= 3 ? parts[1] : null;
+    if (parts.length >= 3 && isTenantSegment(parts[1])) return parts[1];
+    return null; // legacy or invalid - caller treats as legacy-bridge
 }
 
 exports.handler = async (event) => {
@@ -266,18 +281,27 @@ exports.handler = async (event) => {
             if (!canAccessFolder(groups, folder)) {
                 return errResp(403, 'You do not have permission to download from this folder');
             }
-            // Step 2d-4 — key tenant check. New: folder/<tenantId>/<userId>/...
-            // Legacy: folder/<userId>/... — admin-only as migration bridge.
+            // Step 2d-4 + Step 76 fix — key tenant check.
+            //   tenantInKey === tenantId         -> same tenant: ownership check
+            //   tenantInKey is some OTHER T_xxx  -> CROSS-TENANT: hard 404 (no admin bypass)
+            //   tenantInKey === null             -> legacy key (no tenantId segment): admin bridge
             const tenantInKey = keyTenant(key);
-            const isLegacy = tenantInKey !== tenantId;
-            if (!isLegacy) {
+            if (tenantInKey && tenantInKey !== tenantId) {
+                // Cross-tenant download attempt. Return 404 (not 403) per OWASP A01:2021
+                // so we don't confirm whether the key exists.
+                console.warn('cross-tenant doc download blocked', { key, by: userId, callerTenant: tenantId });
+                return errResp(404, 'Not found');
+            }
+            if (tenantInKey === null) {
+                // Legacy key (`folder/<userId>/...`) - admin-only migration bridge.
+                if (!isAdminLike) return errResp(404, 'Not found');
+                console.warn('legacy doc download', { key, by: userId });
+            } else {
+                // Same-tenant key (`folder/<tenantId>/<userId>/...`) - ownership check.
                 const keyOwner = key.split('/')[2];
                 if (!isAdminLike && keyOwner && keyOwner !== userId) {
                     return errResp(403, 'You may only download your own files');
                 }
-            } else {
-                if (!isAdminLike) return errResp(404, 'Not found');
-                console.warn('legacy doc download', { key, by: userId });
             }
 
             const command = new GetObjectCommand({
@@ -371,17 +395,23 @@ exports.handler = async (event) => {
             if (!canAccessFolder(groups, folder)) {
                 return errResp(403, 'You do not have permission to delete from this folder');
             }
-            // Step 2d-4 — same tenant check as download.
+            // Step 2d-4 + Step 76 fix — same tenant check as download.
+            //   tenantInKey === tenantId         -> same tenant: ownership check
+            //   tenantInKey is some OTHER T_xxx  -> CROSS-TENANT: hard 404 (no admin bypass)
+            //   tenantInKey === null             -> legacy key: admin bridge
             const tenantInKey = keyTenant(key);
-            const isLegacy = tenantInKey !== tenantId;
-            if (!isLegacy) {
+            if (tenantInKey && tenantInKey !== tenantId) {
+                console.warn('cross-tenant doc delete blocked', { key, by: userId, callerTenant: tenantId });
+                return errResp(404, 'Not found');
+            }
+            if (tenantInKey === null) {
+                if (!isAdminLike) return errResp(404, 'Not found');
+                console.warn('legacy doc delete', { key, by: userId });
+            } else {
                 const keyOwner = key.split('/')[2];
                 if (!isAdminLike && keyOwner && keyOwner !== userId) {
                     return errResp(403, 'You may only delete your own files');
                 }
-            } else {
-                if (!isAdminLike) return errResp(404, 'Not found');
-                console.warn('legacy doc delete', { key, by: userId });
             }
 
             const command = new DeleteObjectCommand({
@@ -459,3 +489,4 @@ function errResp(status, message) {
 // hash-bust 2026-06-21T14:28:24.0064697+03:00
 // hash-bust 2d-4 2026-06-22T10:12:07.3705068+03:00
 // hash-bust phase1 2026-06-23T12:29:38.1273700+03:00
+// hash-bust docs-xtenant-fix 2026-06-23T18:52:32.9772512+03:00

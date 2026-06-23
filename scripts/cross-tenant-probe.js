@@ -253,6 +253,115 @@ const MODULES = [
     }
 ];
 
+// ────────────────────────────────────────────────────────────────────────
+//  Documents probe (custom - doesn't fit the generic CRUD spec).
+//
+//  Flow:
+//    1. Tenant A POST /documents/upload-url -> returns presigned PUT URL + key
+//    2. Tenant A HTTPS PUT to the presigned URL -> file lands in S3
+//    3. Tenant A GET /documents/list?folder=... -> file appears
+//    4. Tenant B GET /documents/list?folder=... -> file MUST NOT appear
+//    5. Tenant B POST /documents/download-url with A's key -> MUST 404
+//    6. Tenant B DELETE /documents/delete with A's key   -> MUST 404
+//    7. Tenant A POST /documents/download-url on own key -> 200
+//    8. Tenant A DELETE /documents/delete on own key      -> 200 (cleanup)
+//
+//  The folder used is 'consultation-reports' which is Admin-accessible per
+//  the canAccessFolder() ACL.
+// ────────────────────────────────────────────────────────────────────────
+async function probeDocuments(tokenA, tokenB) {
+    const name = 'documents';
+    // Pick a folder both admins can write to. ALLOWED_FOLDERS in the Lambda
+    // are: doctors-documents, patients-documents, lab-results, prescriptions,
+    // radiology-images, pharmacy-approvals. lab-results is Admin-accessible
+    // and not in the daily-use path, so probe artifacts won't disrupt UI.
+    const folder = 'lab-results';
+    console.log(`\n${C.cyan}${C.bold}> ${name}${C.reset}`);
+
+    // 1. Get presigned upload URL.
+    const uploadReq = await httpRequest('POST', API_BASE + '/documents/upload-url', tokenA, {
+        folder,
+        fileName:    'probe-' + rand() + '.txt',
+        contentType: 'text/plain'
+    });
+    if (uploadReq.status !== 200 && uploadReq.status !== 201) {
+        record(name, 'A POST /upload-url', false,
+            `status ${uploadReq.status}: ${JSON.stringify(uploadReq.body).slice(0, 200)}`);
+        return;
+    }
+    const uploadUrl = uploadReq.body && uploadReq.body.uploadUrl;
+    const key       = uploadReq.body && uploadReq.body.key;
+    if (!uploadUrl || !key) {
+        record(name, 'A POST /upload-url', false, 'no uploadUrl/key in response');
+        return;
+    }
+    record(name, 'A POST /upload-url', true, 'key=' + key.slice(0, 60) + '...');
+
+    // 2. Upload the actual file content (HTTPS PUT to S3 presigned URL).
+    const putRes = await rawPut(uploadUrl, 'text/plain', Buffer.from('probe file ' + rand()));
+    if (putRes.status !== 200) {
+        record(name, 'A PUT to S3', false, 'status ' + putRes.status);
+        return;
+    }
+    record(name, 'A PUT to S3', true, '200');
+
+    try {
+        // 3. Tenant A lists - file should appear.
+        const listA = await httpRequest('GET', API_BASE + '/documents/list?folder=' + folder, tokenA);
+        const aFiles = (listA.body && listA.body.files) || [];
+        const aFinds = aFiles.some((f) => f && f.key === key);
+        record(name, 'A LIST contains own file', aFinds, aFinds ? 'found' : 'NOT FOUND');
+
+        // 4. Tenant B lists - file must NOT appear (path-prefixed isolation).
+        const listB = await httpRequest('GET', API_BASE + '/documents/list?folder=' + folder, tokenB);
+        const bFiles = (listB.body && listB.body.files) || [];
+        const bFinds = bFiles.some((f) => f && f.key === key);
+        record(name, 'B LIST excludes A file', !bFinds,
+            bFinds ? 'LEAK - file present in tenant B list' : bFiles.length + ' items in B, A key absent');
+
+        // 5. Tenant B tries to get a download URL for A's key -> must 404.
+        //    (Pre-fix this returned 200 for admin tokens because isLegacy was
+        //    true for cross-tenant keys and admin-bypass took over.)
+        const dlB = await httpRequest('POST', API_BASE + '/documents/download-url', tokenB, { key });
+        record(name, 'B POST /download-url -> 404', dlB.status === 404, 'got ' + dlB.status);
+
+        // 6. Tenant B tries to delete A's key -> must 404.
+        const delB = await httpRequest('DELETE', API_BASE + '/documents/delete', tokenB, { key });
+        record(name, 'B DELETE -> 404', delB.status === 404, 'got ' + delB.status);
+
+        // 7. Tenant A can still download own file.
+        const dlA = await httpRequest('POST', API_BASE + '/documents/download-url', tokenA, { key });
+        record(name, 'A POST /download-url -> 200', dlA.status === 200, 'got ' + dlA.status);
+    } finally {
+        // 8. Cleanup.
+        const cleanup = await httpRequest('DELETE', API_BASE + '/documents/delete', tokenA, { key });
+        record(name, 'A cleanup DELETE', cleanup.status === 200 || cleanup.status === 204,
+            'got ' + cleanup.status);
+    }
+}
+
+// Raw HTTPS PUT to a presigned S3 URL (no Authorization header - signature
+// is embedded in the query string).
+function rawPut(url, contentType, body) {
+    return new Promise((resolve, reject) => {
+        const u = new URL(url);
+        const req = https.request({
+            method:   'PUT',
+            hostname: u.hostname,
+            port:     u.port || 443,
+            path:     u.pathname + u.search,
+            headers:  { 'Content-Type': contentType, 'Content-Length': body.length }
+        }, (res) => {
+            let raw = '';
+            res.on('data', (c) => raw += c);
+            res.on('end', () => resolve({ status: res.statusCode, body: raw }));
+        });
+        req.on('error', reject);
+        req.write(body);
+        req.end();
+    });
+}
+
 (async () => {
     console.log(`${C.bold}Akwadona - Cross-tenant isolation probe${C.reset}`);
     console.log(dim('API base   : ' + API_BASE));
@@ -305,6 +414,11 @@ const MODULES = [
         try { await probeModule(spec, tokenA, tokenB); }
         catch (e) { record(spec.name, 'probe runner', false, 'threw: ' + e.message); }
     }
+
+    // Documents has a non-CRUD shape (presigned S3 PUT + key-addressed
+    // delete/download) so it gets a dedicated probe function.
+    try { await probeDocuments(tokenA, tokenB); }
+    catch (e) { record('documents', 'probe runner', false, 'threw: ' + e.message); }
 
     const passed = results.filter((r) => r.passed).length;
     const total  = results.length;
