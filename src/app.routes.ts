@@ -94,6 +94,13 @@ export const appRoutes: Routes = [
                 data: { breadcrumb: 'operatorConsole.breadcrumb' },
                 canActivate: [operatorGuard],
                 loadComponent: () => import('@/components/operator-console/operator-console').then((m) => m.OperatorConsoleComponent)
+            },
+            // Step 96 — Tenant onboarding wizard. Operator-only.
+            {
+                path: 'operator/onboard',
+                data: { breadcrumb: 'Onboard tenant' },
+                canActivate: [operatorGuard],
+                loadComponent: () => import('@/components/operator-console/tenant-onboarding-wizard').then((m) => m.TenantOnboardingWizardComponent)
             }
         ]
     },

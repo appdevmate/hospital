@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
@@ -53,7 +54,12 @@ import { CacheService } from '@/services/cache.service';
                 <section class="tenants-panel">
                     <div class="panel-title">
                         <h2>{{ 'operatorConsole.tenants' | translate }}</h2>
-                        <p-button icon="pi pi-refresh" severity="secondary" [text]="true" size="small" (onClick)="reload()" />
+                        <div class="panel-actions">
+                            <p-button icon="pi pi-plus" label="Onboard"
+                                      severity="primary" size="small"
+                                      (onClick)="onboard()" />
+                            <p-button icon="pi pi-refresh" severity="secondary" [text]="true" size="small" (onClick)="reload()" />
+                        </div>
                     </div>
 
                     @if (loading()) {
@@ -287,6 +293,7 @@ import { CacheService } from '@/services/cache.service';
         }
         .panel-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;
             h2 { margin: 0; font-size: 1.1rem; } }
+        .panel-actions { display: flex; gap: 0.5rem; align-items: center; }
         .tenant-list { list-style: none; padding: 0; margin: 0;
             li { padding: 0.75rem; border-radius: 8px; cursor: pointer; border: 1px solid transparent;
                 &:hover { background: #f9fafb; }
@@ -326,6 +333,10 @@ export class OperatorConsoleComponent {
     private api = inject(OperatorService);
     private toast = inject(MessageService);
     private cache = inject(CacheService);
+    private router = inject(Router);
+
+    /** Step 96 — open the multi-step onboarding wizard. */
+    onboard() { this.router.navigate(['/operator/onboard']); }
 
     // Step 7i — cache TTLs (SaaS-grade dashboards: paint from cache instantly,
     // then refresh from network in the background — Stripe / Vercel pattern).

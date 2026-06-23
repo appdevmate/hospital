@@ -78,6 +78,39 @@ export interface AuditEntry {
     timestamp: string;
 }
 
+/**
+ * Tenant onboarding wizard payload — sent to POST /operator/tenants. Backend
+ * provisions per-tenant KMS data + HMAC CMKs, writes the TENANT profile row,
+ * and creates the initial admin Cognito user. Returns a temp password the
+ * operator must forward to the customer over a trusted channel.
+ */
+export interface NewTenantRequest {
+    slug: string;
+    name: string;
+    plan: 'free' | 'standard' | 'enterprise';
+    country?: string;
+    contactEmail?: string;
+    adminEmail: string;
+    adminName: string;
+    adminUsername?: string;
+}
+
+export interface NewTenantResponse {
+    slug: string;
+    tenantId: string;
+    name: string;
+    plan: string;
+    kmsKeyId: string;
+    hmacKeyId: string;
+    admin: {
+        username: string;
+        email: string;
+        tempPassword: string;
+        signInUrl: string;
+    };
+    createdAt: string;
+}
+
 export interface TenantUpdate {
     status?: string;
     plan?: string;
@@ -137,6 +170,21 @@ export class OperatorService {
             switchMap((token) => this.http.patch<any>(
                 Config.buildUrl(`operator/tenants/${encodeURIComponent(slug)}`),
                 updates,
+                { headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) }
+            ))
+        );
+    }
+
+    /**
+     * Step 96 — self-service tenant onboarding. Backend performs all the
+     * KMS / DynamoDB / Cognito provisioning atomically and rolls back on
+     * any partial failure.
+     */
+    createTenant(payload: NewTenantRequest): Observable<NewTenantResponse> {
+        return this.oidc.getAccessToken().pipe(
+            switchMap((token) => this.http.post<NewTenantResponse>(
+                Config.buildUrl('operator/tenants'),
+                payload,
                 { headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) }
             ))
         );

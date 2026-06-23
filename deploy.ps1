@@ -65,8 +65,8 @@ if (-not $FrontendOnly) {
     }
     finally { Pop-Location }
 
-    # ── Phase 1b: Cross-tenant isolation probe (post-deploy gate) ────────────
-    # Step 2d-4.10 — automated regression test that proves the per-row tenant
+    # Phase 1b: Cross-tenant isolation probe (post-deploy gate).
+    # Step 2d-4.10 - automated regression test that proves the per-row tenant
     # enforcement built in Steps 2d-4.1 through 2d-4.8 still holds after this
     # deploy. Runs ONLY when credentials for both probe users are present in
     # the environment; otherwise the probe is silently skipped (so iteration
@@ -78,11 +78,11 @@ if (-not $FrontendOnly) {
         Write-Step 'Cross-tenant isolation probe'
         node $probeScript
         if ($LASTEXITCODE -ne 0) {
-            throw "Cross-tenant probe FAILED (exit $LASTEXITCODE) — release ABORTED. See output above."
+            throw "Cross-tenant probe FAILED (exit $LASTEXITCODE) - release ABORTED. See output above."
         }
         Write-Host 'Cross-tenant probe passed.' -ForegroundColor Green
     } elseif (Test-Path $probeScript) {
-        Write-Host 'Cross-tenant probe SKIPPED — set TIRYAQ_USERNAME/PASSWORD + ALSHIFAA_USERNAME/PASSWORD to enable.' -ForegroundColor Yellow
+        Write-Host 'Cross-tenant probe SKIPPED - set TIRYAQ_USERNAME/PASSWORD + ALSHIFAA_USERNAME/PASSWORD to enable.' -ForegroundColor Yellow
     }
 }
 
