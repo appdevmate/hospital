@@ -166,11 +166,10 @@ export const authGuard: CanActivateFn = async (_route, state) => {
         return true;
     }
 
-    // Not authenticated — save where the user was heading, then go to Cognito.
-    // Using localStorage so the value survives the Cognito round-trip + works
-    // when a new tab opens a deep link (sessionStorage is per-tab/can be flaky).
-    // Only the URL path is stored — no tokens — so no XSS surface increase.
+    // Not authenticated — save where the user was heading, then go to our
+    // custom Angular /login (Phase 1). Previously this called oidc.authorize()
+    // which redirected to the Cognito Hosted UI (English-only). We now own
+    // the sign-in UX in the app, fully translated and themed.
     localStorage.setItem('returnUrl', state.url);
-    oidc.authorize();
-    return false;
+    return router.parseUrl('/login');
 };

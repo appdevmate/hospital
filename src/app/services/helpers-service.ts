@@ -17,9 +17,11 @@ export class HelpersService {
     redirectToLogin(): void {
         this.notifyError('Session Expired', 'Please log in again');
         // Capture full path + query so the user returns to the exact page after re-login.
-        // localStorage so it survives the Cognito round-trip (sessionStorage flaky here).
+        // localStorage so it survives any hard navigation reliably.
         localStorage.setItem('returnUrl', window.location.pathname + window.location.search);
-        setTimeout(() => this.oidc.authorize(), this.SESSION_EXPIRED_DELAY_MS);
+        // Phase 1 / Step 102 - go to our custom Angular /login instead of
+        // bouncing through Cognito Hosted UI.
+        setTimeout(() => { window.location.href = '/login'; }, this.SESSION_EXPIRED_DELAY_MS);
     }
 
     notifySuccess(message: string) {

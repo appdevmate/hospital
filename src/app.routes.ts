@@ -105,5 +105,9 @@ export const appRoutes: Routes = [
         ]
     },
     { path: 'notfound', loadComponent: () => import('@/components/notfound/notfound').then((c) => c.Notfound) },
+    // Phase 1 / Step 102 - custom Arabic-aware sign-in page. PUBLIC route
+    // (no authGuard) and outside AppLayout so the sign-in screen renders
+    // chromeless without the topbar/menu shell.
+    { path: 'login', loadComponent: () => import('@/components/auth/login/login.component').then((c) => c.LoginComponent) },
     { path: '**', redirectTo: '/notfound' }
 ];

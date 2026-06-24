@@ -14,24 +14,16 @@
     <link rel="manifest" href="manifest.webmanifest" />
     <meta name="theme-color" content="#10b981" />
     <link rel="stylesheet" type="text/css" href="/layout/styles/preloading.css" />
-    <!-- ─────────────────────────────────────────────────────────────────────
-         Step 7i — auth-check shim (Stripe / Vercel pattern).
-
-         Runs BEFORE Angular bootstraps (~5 KB of inline JS). Two goals:
-
-           1. Cold-start, signed-in: rehydrate the access token from
-              localStorage into sessionStorage. The app code reads from
-              sessionStorage everywhere; this mirroring lets the session
-              survive browser-close without touching any service file.
-
-           2. Cold-start, NOT signed-in (no token at all, no ?code= callback
-              on the URL): redirect straight to Cognito /oauth2/authorize.
-              This avoids paying for Angular bootstrap + OIDC library init
-              when we already know the answer is "go log in".
-
-         Runs in < 5 ms. Same trick used by Stripe Dashboard, Vercel,
-         Linear, and Notion.
-    ────────────────────────────────────────────────────────────────────── -->
+    <!-- Step 7i + Step 102 (Phase 1 of Hosted-UI replacement).
+         Pre-Angular auth shim. Two goals:
+           1. Rehydrate the access token from localStorage to sessionStorage
+              so the session survives a browser close.
+           2. If the user is NOT signed in and is not already at /login,
+              redirect to /login BEFORE Angular boots. Saves ~300 ms vs
+              waiting for the router guard to render the same page.
+         Pre-Phase-1 step 2 redirected to Cognito Hosted UI - that path
+         is dead now that we own the sign-in UX in-app.
+    -->
     <script>
         (function () {
             try {
@@ -53,23 +45,13 @@
                     } catch (_) { hasFresh = false; }
                 }
 
-                // (2) Unauthenticated cold-start → straight to Cognito.
-                var url = window.location.href;
-                var isCallback = url.indexOf('?code=') !== -1 || url.indexOf('&code=') !== -1;
-                if (!hasFresh && !isCallback) {
-                    var origin    = window.location.origin;
-                    var clientId  = '2nfjfipi8hri262pjohtpgl45q';
-                    var redirect  = encodeURIComponent(origin + '/');
-                    // Preserve where the user was heading so authGuard can
-                    // bounce them back after sign-in.
-                    try { localStorage.setItem('returnUrl', window.location.pathname + window.location.search); } catch (_) {}
-                    window.location.replace(
-                        'https://auth.akwadona.com/oauth2/authorize'
-                        + '?client_id=' + clientId
-                        + '&response_type=code'
-                        + '&scope=' + encodeURIComponent('openid email phone profile')
-                        + '&redirect_uri=' + redirect
-                    );
+                // (2) Not signed in + not already on /login -> go to /login.
+                var path = window.location.pathname || '/';
+                var atLogin = path === '/login' || path.indexOf('/login') === 0;
+                if (!hasFresh && !atLogin) {
+                    // Preserve where the user was heading.
+                    try { localStorage.setItem('returnUrl', path + window.location.search); } catch (_) {}
+                    window.location.replace('/login');
                 }
             } catch (_) { /* shim never blocks the app */ }
         })();

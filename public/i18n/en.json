@@ -31,6 +31,27 @@
         "offline": "Offline",
         "syncing": "Syncing"
     },
+    "auth": {
+        "welcomeBack": "Welcome back",
+        "signInToContinue": "Sign in to continue to Akwadona.",
+        "username": "Username",
+        "password": "Password",
+        "signIn": "Sign in",
+        "signingIn": "Signing in…",
+        "forgotPassword": "Forgot password?",
+        "rememberMe": "Remember me",
+        "language": "Language",
+        "errors": {
+            "missingCredentials": "Username and password are required.",
+            "invalidCredentials": "Incorrect username or password.",
+            "userNotFound": "User not found.",
+            "userDisabled": "This account has been disabled. Contact your administrator.",
+            "newPasswordRequired": "Your administrator requires you to change your password before signing in.",
+            "tooManyAttempts": "Too many sign-in attempts. Try again in a few minutes.",
+            "networkError": "Cannot reach the authentication service. Check your connection.",
+            "unknown": "Sign-in failed. Please try again."
+        }
+    },
     "common": {
         "save": "Save",
         "cancel": "Cancel",

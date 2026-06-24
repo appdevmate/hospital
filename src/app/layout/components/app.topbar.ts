@@ -23,6 +23,7 @@ import { OfflineService } from '@/services/offline.service';
 import { TenantService } from '@/services/tenant.service';
 import { TranslatePipe } from '@ngx-translate/core';
 import { I18nService, SUPPORTED_LANGS, LangCode } from '@/services/i18n.service';
+import { CognitoAuthService } from '@/services/cognito-auth.service';
 import { SelectModule } from 'primeng/select';
 
 @Component({
@@ -394,6 +395,7 @@ export class AppTopbar implements OnInit {
     private auth = inject(AuthService);
     private notificationsService = inject(NotificationsService);
     private oidc = inject(OidcSecurityService);
+    private cognitoAuth = inject(CognitoAuthService);
     private http = inject(HttpClient);
     private router = inject(Router);
     private offline = inject(OfflineService);
@@ -520,54 +522,42 @@ export class AppTopbar implements OnInit {
     }
 
     // ── Logout ────────────────────────────────────────────────────────────
-    logout() {
-        const clientId = '2nfjfipi8hri262pjohtpgl45q';
-        const authority = 'https://auth.akwadona.com';
-        const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
-
-        const finish = () => {
-            this.oidc.logoffLocal();
-            // Nuke EVERY browser-side trace of the previous session before
-            // redirecting to Cognito /logout. Without this the SPA boots,
-            // reads the stale token from sessionStorage / localStorage /
-            // service-worker cache, and treats the user as still signed in.
-            try {
-                // localStorage — app cache + token mirror.
-                for (let i = localStorage.length - 1; i >= 0; i--) {
-                    const k = localStorage.key(i);
-                    if (k && (k.startsWith('akw:') || k.includes('token') || k.includes('Token') || k.includes('oidc'))) {
-                        localStorage.removeItem(k);
-                    }
+    /**
+     * Phase 1 / Step 102 - sign out flow now lives entirely in-app:
+     *   1. cognitoAuth.signOut() revokes the refresh token at Cognito and
+     *      clears the access/id/refresh tokens from session + local storage.
+     *   2. Nuke the rest of the cached app state (oidc-lib state, returnUrl,
+     *      service worker registrations + caches) so the next page paint
+     *      starts from a clean slate.
+     *   3. Hard-redirect to /login. We use location.href rather than the
+     *      Angular Router so the service worker reload completes before
+     *      the user lands on the login form.
+     */
+    async logout(): Promise<void> {
+        try { this.oidc.logoffLocal(); } catch { /* ignore */ }
+        try { await this.cognitoAuth.signOut(); } catch { /* ignore */ }
+        try {
+            for (let i = localStorage.length - 1; i >= 0; i--) {
+                const k = localStorage.key(i);
+                if (k && (k.startsWith('akw:') || k.includes('token') || k.includes('Token') || k.includes('oidc'))) {
+                    localStorage.removeItem(k);
                 }
-                localStorage.removeItem('accessToken');
-                localStorage.removeItem('returnUrl');
-                // sessionStorage — angular-auth-oidc-client's default home.
-                sessionStorage.clear();
-                // Service worker — without unregister, the next page load is
-                // served from the SW cache (stale auth state, stale UI).
-                if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker.getRegistrations().then(rs => {
-                        rs.forEach(r => r.unregister());
-                    }).catch(() => { /* ignore */ });
-                }
-                // SW caches — explicit drop in case unregister is async.
-                if (typeof caches !== 'undefined' && caches.keys) {
-                    caches.keys().then(ks => ks.forEach(k => caches.delete(k))).catch(() => { /* ignore */ });
-                }
-            } catch { /* ignore — never block logout */ }
-            window.location.href = `${authority}/logout?client_id=${encodeURIComponent(clientId)}&logout_uri=${encodeURIComponent(window.location.origin + '/')}`;
-        };
-
-        this.oidc.getRefreshToken().subscribe({
-            next: (refreshToken) => {
-                if (refreshToken) {
-                    const body = new URLSearchParams({ token: refreshToken, token_type_hint: 'refresh_token', client_id: clientId }).toString();
-                    this.http.post(`${authority}/oauth2/revoke`, body, { headers }).subscribe({ next: finish, error: finish });
-                } else {
-                    finish();
-                }
-            },
-            error: () => finish()
-        });
+            }
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('idToken');
+            localStorage.removeItem('refreshToken');
+            localStorage.removeItem('returnUrl');
+            sessionStorage.clear();
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(rs => {
+                    rs.forEach(r => r.unregister());
+                }).catch(() => { /* ignore */ });
+            }
+            if (typeof caches !== 'undefined' && caches.keys) {
+                caches.keys().then(ks => ks.forEach(k => caches.delete(k))).catch(() => { /* ignore */ });
+            }
+        } catch { /* never block logout on cleanup errors */ }
+        // Hard redirect so the page reloads against the now-empty storage.
+        window.location.href = '/login';
     }
 }
