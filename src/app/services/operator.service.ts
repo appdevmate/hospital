@@ -111,6 +111,49 @@ export interface NewTenantResponse {
     createdAt: string;
 }
 
+/**
+ * Step 106 - operator user-management types.
+ */
+export interface OperatorUser {
+    username:      string;
+    email:         string | null;
+    name:          string | null;
+    emailVerified: boolean;
+    tenantId:      string | null;
+    gender:        string | null;
+    status:        string;
+    enabled:       boolean;
+    createdAt:     string;
+    groups:        string[];
+}
+
+export interface NewUserRequest {
+    username:      string;          // Cognito-safe (NOT email format)
+    email:         string;
+    name:          string;
+    group:         'Admin' | 'Doctors' | 'Pharmacists' | 'Developers';
+    gender?:       string;
+    tempPassword?: string;
+    permanent?:    boolean;          // default true
+}
+
+export interface NewUserResponse {
+    username:      string;
+    email:         string;
+    name:          string;
+    tenantId:      string;
+    group:         string;
+    tempPassword:  string;
+    permanent:     boolean;
+}
+
+export interface UpdateUserRequest {
+    email?:  string;
+    name?:   string;
+    gender?: string;
+    group?:  string;
+}
+
 export interface TenantUpdate {
     status?: string;
     plan?: string;
@@ -185,6 +228,73 @@ export class OperatorService {
             switchMap((token) => this.http.post<NewTenantResponse>(
                 Config.buildUrl('operator/tenants'),
                 payload,
+                { headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) }
+            ))
+        );
+    }
+
+    // ──────────────────────────────────────────────────────────────────
+    //  Step 106 - operator user management (Keycloak-style).
+    // ──────────────────────────────────────────────────────────────────
+
+    listTenantUsers(slug: string): Observable<{ tenantId: string; users: OperatorUser[] }> {
+        return this.authedGet(Config.buildUrl('operator/tenants/' + encodeURIComponent(slug) + '/users'));
+    }
+
+    createTenantUser(slug: string, payload: NewUserRequest): Observable<NewUserResponse> {
+        return this.oidc.getAccessToken().pipe(
+            switchMap((token) => this.http.post<NewUserResponse>(
+                Config.buildUrl('operator/tenants/' + encodeURIComponent(slug) + '/users'),
+                payload,
+                { headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) }
+            ))
+        );
+    }
+
+    updateUser(username: string, body: UpdateUserRequest): Observable<{ username: string; updated: string[] }> {
+        return this.oidc.getAccessToken().pipe(
+            switchMap((token) => this.http.patch<any>(
+                Config.buildUrl('operator/users/' + encodeURIComponent(username)),
+                body,
+                { headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) }
+            ))
+        );
+    }
+
+    resetUserPassword(username: string, body: { newPassword?: string; permanent?: boolean } = {}): Observable<{ username: string; tempPassword: string; permanent: boolean }> {
+        return this.oidc.getAccessToken().pipe(
+            switchMap((token) => this.http.post<any>(
+                Config.buildUrl('operator/users/' + encodeURIComponent(username) + '/reset-password'),
+                body,
+                { headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) }
+            ))
+        );
+    }
+
+    disableUser(username: string): Observable<{ username: string; enabled: boolean }> {
+        return this.oidc.getAccessToken().pipe(
+            switchMap((token) => this.http.post<any>(
+                Config.buildUrl('operator/users/' + encodeURIComponent(username) + '/disable'),
+                {},
+                { headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) }
+            ))
+        );
+    }
+
+    enableUser(username: string): Observable<{ username: string; enabled: boolean }> {
+        return this.oidc.getAccessToken().pipe(
+            switchMap((token) => this.http.post<any>(
+                Config.buildUrl('operator/users/' + encodeURIComponent(username) + '/enable'),
+                {},
+                { headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) }
+            ))
+        );
+    }
+
+    deleteUser(username: string): Observable<{ username: string; deleted: boolean }> {
+        return this.oidc.getAccessToken().pipe(
+            switchMap((token) => this.http.delete<any>(
+                Config.buildUrl('operator/users/' + encodeURIComponent(username)),
                 { headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) }
             ))
         );

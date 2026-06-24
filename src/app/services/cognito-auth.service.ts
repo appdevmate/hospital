@@ -30,6 +30,14 @@ export type SignInResult =
     | { kind: 'challenge'; challenge: 'NEW_PASSWORD_REQUIRED' | 'SMS_MFA' | 'SOFTWARE_TOKEN_MFA'; session: string; username: string }
     | { kind: 'error'; code: string; message: string };
 
+export type ForgotPasswordResult =
+    | { kind: 'ok'; destination: string; deliveryMedium: string }
+    | { kind: 'error'; code: string; message: string };
+
+export type ConfirmForgotPasswordResult =
+    | { kind: 'ok' }
+    | { kind: 'error'; code: string; message: string };
+
 /**
  * Codes the UI maps to user-friendly translation keys. Anything else
  * collapses to `unknown` so we never surface raw AWS exception names.
@@ -40,9 +48,12 @@ const KNOWN_ERROR_CODES = new Set<string>([
     'UserNotConfirmedException',
     'PasswordResetRequiredException',
     'InvalidParameterException',
+    'InvalidPasswordException',
     'TooManyRequestsException',
     'TooManyFailedAttemptsException',
-    'LimitExceededException'
+    'LimitExceededException',
+    'CodeMismatchException',
+    'ExpiredCodeException'
 ]);
 
 @Injectable({ providedIn: 'root' })
@@ -81,6 +92,59 @@ export class CognitoAuthService {
         }
     }
 
+    /**
+     * Phase 3 - respond to a NEW_PASSWORD_REQUIRED challenge from the
+     * preceding InitiateAuth. Cognito returns this when an admin created
+     * the user with a temp password and the user is on first sign-in.
+     *
+     * On success the response carries the same AuthenticationResult shape
+     * as a normal sign-in (access + id + refresh tokens). We persist them
+     * immediately so the caller can navigate straight into the app.
+     */
+    async respondToNewPasswordChallenge(username: string, session: string, newPassword: string): Promise<SignInResult> {
+        if (!username || !session || !newPassword) {
+            return { kind: 'error', code: 'MissingCredentials', message: 'username/session/newPassword required' };
+        }
+        try {
+            // The Akwadona Cognito pool was provisioned with `gender` AND
+            // `name` as required attributes. When an admin creates a user
+            // from the Cognito Console without setting either, the
+            // NEW_PASSWORD_REQUIRED flow MUST supply them or Cognito rejects
+            // with InvalidParameterException. We default both to safe
+            // placeholders so first-login never deadlocks on a missing
+            // attribute; the user can update them later in their profile.
+            const safeName = username.indexOf('@') >= 0 ? username.split('@')[0] : username;
+            const r = await this.cognitoCall('RespondToAuthChallenge', {
+                ChallengeName: 'NEW_PASSWORD_REQUIRED',
+                ClientId:      CLIENT_ID,
+                Session:       session,
+                ChallengeResponses: {
+                    USERNAME:                 username,
+                    NEW_PASSWORD:             newPassword,
+                    'userAttributes.gender':  'prefer_not_to_say',
+                    'userAttributes.name':    safeName
+                }
+            });
+            // Cognito may chain another challenge (e.g. MFA). For now we only
+            // know how to drive NEW_PASSWORD_REQUIRED; chained MFA falls out
+            // as a generic error which the UI maps to "contact your admin".
+            if (r.ChallengeName) {
+                return { kind: 'error', code: 'UnsupportedChallenge', message: r.ChallengeName };
+            }
+            const auth = r.AuthenticationResult || {};
+            this.persistTokens(auth.AccessToken, auth.IdToken, auth.RefreshToken, auth.ExpiresIn);
+            return {
+                kind: 'ok',
+                accessToken:  auth.AccessToken,
+                idToken:      auth.IdToken,
+                refreshToken: auth.RefreshToken,
+                expiresIn:    auth.ExpiresIn
+            };
+        } catch (e: any) {
+            return this.toErrorResult(e);
+        }
+    }
+
     /** Refresh the access + id tokens using the stored refresh token. */
     async refresh(): Promise<boolean> {
         const refreshToken = sessionStorage.getItem('refreshToken') || localStorage.getItem('refreshToken');
@@ -98,6 +162,53 @@ export class CognitoAuthService {
             return true;
         } catch (_) {
             return false;
+        }
+    }
+
+    /**
+     * Step 1 of forgot-password: ask Cognito to email a one-time code to the
+     * user's verified email address. We always surface the same generic
+     * "ok" message to the UI for unknown/disabled users so the response
+     * cannot be used to probe whether an account exists (OWASP A07).
+     */
+    async forgotPassword(username: string): Promise<ForgotPasswordResult> {
+        if (!username || !username.trim()) {
+            return { kind: 'error', code: 'MissingUsername', message: 'username is required' };
+        }
+        try {
+            const r = await this.cognitoCall('ForgotPassword', {
+                ClientId: CLIENT_ID,
+                Username: username.trim()
+            });
+            const d = (r && r.CodeDeliveryDetails) || {};
+            return {
+                kind:            'ok',
+                destination:     d.Destination     || 'your email',
+                deliveryMedium:  d.DeliveryMedium  || 'EMAIL'
+            };
+        } catch (e: any) {
+            return this.toForgotErrorResult(e);
+        }
+    }
+
+    /**
+     * Step 2 of forgot-password: confirm the emailed code and set the new
+     * password. On success the caller redirects to /login.
+     */
+    async confirmForgotPassword(username: string, code: string, newPassword: string): Promise<ConfirmForgotPasswordResult> {
+        if (!username || !username.trim()) return { kind: 'error', code: 'MissingUsername', message: 'username is required' };
+        if (!code || !code.trim())          return { kind: 'error', code: 'MissingCode',     message: 'code is required' };
+        if (!newPassword)                   return { kind: 'error', code: 'MissingPassword', message: 'new password is required' };
+        try {
+            await this.cognitoCall('ConfirmForgotPassword', {
+                ClientId:          CLIENT_ID,
+                Username:          username.trim(),
+                ConfirmationCode:  code.trim(),
+                Password:          newPassword
+            });
+            return { kind: 'ok' };
+        } catch (e: any) {
+            return this.toForgotErrorResult(e);
         }
     }
 
@@ -178,5 +289,14 @@ export class CognitoAuthService {
         // Network / CORS / DNS failure — surface as a distinct code so the
         // UI can render "check your connection" instead of "wrong password".
         return { kind: 'error', code: 'NetworkError', message: e?.message || 'Network error' };
+    }
+
+    /** Same shape as toErrorResult but typed for ForgotPasswordResult /
+     *  ConfirmForgotPasswordResult unions. Maps additional exception names
+     *  specific to the password-reset flow (CodeMismatchException,
+     *  ExpiredCodeException, InvalidPasswordException). */
+    private toForgotErrorResult(e: any): any {
+        const code = (e && typeof e.code === 'string') ? e.code : 'NetworkError';
+        return { kind: 'error', code, message: e?.message || code };
     }
 }

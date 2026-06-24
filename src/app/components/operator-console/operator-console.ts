@@ -17,6 +17,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { TranslatePipe } from '@ngx-translate/core';
 import { OperatorService, TenantSummary, TenantStats, AuditEntry, TenantUpdate } from '@/services/operator.service';
 import { CacheService } from '@/services/cache.service';
+import { TenantUsersComponent } from './tenant-users.component';
 
 /**
  * Akwadona Operator Console (Step 7g).
@@ -34,7 +35,8 @@ import { CacheService } from '@/services/cache.service';
         CommonModule, FormsModule,
         ButtonModule, TableModule, TagModule, CardModule, DialogModule,
         InputTextModule, InputNumberModule, SelectModule, CheckboxModule, ToastModule,
-        SkeletonModule, TranslatePipe
+        SkeletonModule, TranslatePipe,
+        TenantUsersComponent
     ],
     providers: [MessageService],
     template: `
@@ -192,6 +194,9 @@ import { CacheService } from '@/services/cache.service';
                             <div><span>{{ 'operatorConsole.kmsDataKey' | translate }}</span><strong><code>{{ stats()?.encryption?.kmsKeyId || '—' }}</code></strong></div>
                             <div><span>{{ 'operatorConsole.kmsHmacKey' | translate }}</span><strong><code>{{ stats()?.encryption?.hmacKeyId || '—' }}</code></strong></div>
                         </div>
+
+                        <!-- Step 106 - Users management (Keycloak-style) -->
+                        <app-tenant-users [slug]="selectedSlug()"></app-tenant-users>
 
                         <!-- Audit (sanitized) -->
                         <h3 class="section-h">{{ 'operatorConsole.auditToday' | translate }}</h3>

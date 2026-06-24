@@ -46,11 +46,17 @@ const {
 const { CloudWatchClient, GetMetricDataCommand } = require('@aws-sdk/client-cloudwatch');
 const {
     CognitoIdentityProviderClient,
+    ListUsersCommand,
     ListUsersInGroupCommand,
     AdminCreateUserCommand,
     AdminSetUserPasswordCommand,
     AdminAddUserToGroupCommand,
-    AdminDeleteUserCommand
+    AdminRemoveUserFromGroupCommand,
+    AdminDeleteUserCommand,
+    AdminDisableUserCommand,
+    AdminEnableUserCommand,
+    AdminUpdateUserAttributesCommand,
+    AdminListGroupsForUserCommand
 } = require('@aws-sdk/client-cognito-identity-provider');
 const {
     KMSClient,
@@ -146,6 +152,27 @@ exports.handler = async (event) => {
         if (method === 'PATCH' && root === 'tenants' && slug && !action) {
             const body = JSON.parse(event.body || '{}');
             return await updateTenant(slug, body, operator);
+        }
+        // Step 106 - operator user management (Keycloak-style).
+        if (method === 'GET' && root === 'tenants' && slug && action === 'users') {
+            return await listTenantUsers(slug);
+        }
+        if (method === 'POST' && root === 'tenants' && slug && action === 'users') {
+            return await createTenantUser(slug, JSON.parse(event.body || '{}'), operator);
+        }
+        // /operator/users/{username}/... — direct user actions (already-known username).
+        if (root === 'users' && slug && !action) {
+            if (method === 'PATCH')  return await updateUser(slug, JSON.parse(event.body || '{}'), operator);
+            if (method === 'DELETE') return await deleteUser(slug, operator);
+        }
+        if (root === 'users' && slug && action === 'reset-password' && method === 'POST') {
+            return await resetUserPassword(slug, JSON.parse(event.body || '{}'), operator);
+        }
+        if (root === 'users' && slug && action === 'disable' && method === 'POST') {
+            return await disableUser(slug, operator);
+        }
+        if (root === 'users' && slug && action === 'enable' && method === 'POST') {
+            return await enableUser(slug, operator);
         }
 
         return err(404, `Unknown operator route: ${method} ${path}`);
@@ -710,7 +737,11 @@ async function createTenant(body, operator) {
                 { Name: 'email',            Value: adminEmail },
                 { Name: 'email_verified',   Value: 'true' },
                 { Name: 'name',             Value: adminName },
-                { Name: 'custom:tenantId',  Value: tenantId }
+                { Name: 'custom:tenantId',  Value: tenantId },
+                // The Cognito pool requires `gender`. Default neutrally so
+                // the new admin is not blocked on first sign-in; they can
+                // update it later in their profile.
+                { Name: 'gender',           Value: 'prefer_not_to_say' }
             ]
         }));
         created.cognitoUsername = adminUser;
@@ -806,6 +837,230 @@ async function createTenant(body, operator) {
         return err(e.statusCode || 500, 'Tenant onboarding failed: ' + (e.message || 'Internal Server Error') + '. Partial resources have been rolled back.');
     }
 }
+// ─────────────────────────────────────────────────────────────────────────────
+// OPERATOR USER MANAGEMENT (Step 106 / Keycloak-style)
+//
+// Lets platform staff manage customer admin / doctor / pharmacist accounts
+// from a single console. PHI is still off-limits (existing IAM DENY on
+// tenant CMKs + key-policy exclusion of operator-* roles); user identity
+// records are business data, not PHI, so this is allowed.
+//
+// Endpoints:
+//   GET    /operator/tenants/{slug}/users
+//   POST   /operator/tenants/{slug}/users
+//   PATCH  /operator/users/{username}
+//   POST   /operator/users/{username}/reset-password
+//   POST   /operator/users/{username}/disable
+//   POST   /operator/users/{username}/enable
+//   DELETE /operator/users/{username}
+//
+// All routes write an OPERATOR_* audit row (entityType='COGNITO_USER',
+// entityId=username) for forensic traceability.
+// ─────────────────────────────────────────────────────────────────────────────
+
+const TENANT_USER_GROUPS = ['Admin', 'Doctors', 'Pharmacists', 'Developers'];
+
+function attr(user, name) {
+    return ((user.Attributes || []).find(a => a.Name === name) || {}).Value || null;
+}
+
+function mapUser(user, groups) {
+    return {
+        username:    user.Username,
+        email:       attr(user, 'email'),
+        name:        attr(user, 'name'),
+        emailVerified: attr(user, 'email_verified') === 'true',
+        tenantId:    attr(user, 'custom:tenantId'),
+        gender:      attr(user, 'gender'),
+        status:      user.UserStatus,
+        enabled:     user.Enabled,
+        createdAt:   user.UserCreateDate,
+        groups:      groups || []
+    };
+}
+
+async function userGroups(username) {
+    try {
+        const r = await cog.send(new AdminListGroupsForUserCommand({ UserPoolId: USER_POOL_ID, Username: username }));
+        return (r.Groups || []).map(g => g.GroupName);
+    } catch (_) { return []; }
+}
+
+async function tenantSlugToId(slug) {
+    const t = await ddb.send(new GetCommand({
+        TableName: TABLE_NAME,
+        Key: { PK: 'TENANT#' + slug, SK: 'PROFILE' },
+        ProjectionExpression: 'tenantId'
+    }));
+    return t.Item ? t.Item.tenantId : null;
+}
+
+function strongTempPassword() {
+    const random = require('crypto').randomBytes(12).toString('base64').replace(/[+/=]/g, '');
+    return 'A' + 'a' + '1' + '!' + random.slice(0, 12);
+}
+
+async function writeAudit(operator, action, entityId, changes) {
+    const now = new Date().toISOString();
+    const auditId = require('crypto').randomUUID();
+    try {
+        await ddb.send(new PutCommand({
+            TableName: TABLE_NAME,
+            Item: {
+                PK:         'AUDIT#' + now.slice(0, 10),
+                SK:         'AUDIT#' + now + '#' + auditId,
+                auditId,
+                EntityType: 'AUDIT',
+                tenantId:   'OPERATOR',
+                action,
+                entityType: 'COGNITO_USER',
+                entityId,
+                actorEmail: operator.email,
+                actorName:  operator.name,
+                timestamp:  now,
+                changes:    JSON.stringify(changes || {})
+            }
+        }));
+    } catch (_) { /* non-critical */ }
+}
+
+async function listTenantUsers(slug) {
+    const tenantId = await tenantSlugToId(slug);
+    if (!tenantId) return err(404, 'Tenant ' + slug + ' not found');
+
+    // Cognito's Filter expression does not support custom attributes, so we
+    // page through and drop foreign-tenant rows client-side. Tiny pools so OK.
+    const matches = [];
+    let token = undefined;
+    do {
+        const r = await cog.send(new ListUsersCommand({ UserPoolId: USER_POOL_ID, Limit: 60, PaginationToken: token }));
+        for (const u of (r.Users || [])) {
+            const tid = ((u.Attributes || []).find(a => a.Name === 'custom:tenantId') || {}).Value;
+            if (tid === tenantId) matches.push(u);
+        }
+        token = r.PaginationToken;
+    } while (token);
+
+    // Enrich each user with their group memberships.
+    const enriched = [];
+    for (const u of matches) enriched.push(mapUser(u, await userGroups(u.Username)));
+    return res(200, { tenantId, users: enriched });
+}
+
+async function createTenantUser(slug, body, operator) {
+    const tenantId = await tenantSlugToId(slug);
+    if (!tenantId) return err(404, 'Tenant ' + slug + ' not found');
+
+    const username = String(body.username || '').trim().toLowerCase();
+    const email    = String(body.email    || '').trim().toLowerCase();
+    const name     = String(body.name     || '').trim();
+    const group    = String(body.group    || 'Admin').trim();
+    const gender   = String(body.gender   || 'prefer_not_to_say').trim();
+    const tempPass = String(body.tempPassword || strongTempPassword());
+    const permanent = body.permanent !== false; // default true so user signs in directly.
+
+    if (!username || username.indexOf('@') >= 0) return err(400, 'username is required and cannot be in email format');
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return err(400, 'valid email is required');
+    if (!name) return err(400, 'name is required');
+    if (!TENANT_USER_GROUPS.includes(group)) return err(400, 'group must be one of: ' + TENANT_USER_GROUPS.join(', '));
+
+    try {
+        await cog.send(new AdminCreateUserCommand({
+            UserPoolId:    USER_POOL_ID,
+            Username:      username,
+            MessageAction: 'SUPPRESS',
+            UserAttributes: [
+                { Name: 'email',           Value: email },
+                { Name: 'email_verified',  Value: 'true' },
+                { Name: 'name',            Value: name },
+                { Name: 'gender',          Value: gender },
+                { Name: 'custom:tenantId', Value: tenantId }
+            ]
+        }));
+        await cog.send(new AdminSetUserPasswordCommand({
+            UserPoolId: USER_POOL_ID,
+            Username:   username,
+            Password:   tempPass,
+            Permanent:  permanent
+        }));
+        await cog.send(new AdminAddUserToGroupCommand({
+            UserPoolId: USER_POOL_ID,
+            Username:   username,
+            GroupName:  group
+        }));
+        await writeAudit(operator, 'OPERATOR_CREATE_USER', username, { tenantId, email, group, permanent });
+        return res(201, { username, email, name, tenantId, group, tempPassword: tempPass, permanent });
+    } catch (e) {
+        // Best-effort rollback if Cognito created the user but we hit an
+        // error before setting password / group.
+        try { await cog.send(new AdminDeleteUserCommand({ UserPoolId: USER_POOL_ID, Username: username })); } catch (_) {}
+        return err(e.statusCode || 500, e.message || 'create-user failed');
+    }
+}
+
+async function updateUser(username, body, operator) {
+    const updates = [];
+    if (typeof body.email === 'string')    updates.push({ Name: 'email',          Value: body.email.trim().toLowerCase() });
+    if (typeof body.email === 'string')    updates.push({ Name: 'email_verified', Value: 'true' });
+    if (typeof body.name === 'string')     updates.push({ Name: 'name',           Value: body.name.trim() });
+    if (typeof body.gender === 'string')   updates.push({ Name: 'gender',         Value: body.gender.trim() });
+    if (updates.length === 0 && !body.group) return err(400, 'no editable fields in request');
+
+    if (updates.length) {
+        await cog.send(new AdminUpdateUserAttributesCommand({
+            UserPoolId:     USER_POOL_ID,
+            Username:       username,
+            UserAttributes: updates
+        }));
+    }
+    if (typeof body.group === 'string') {
+        if (!TENANT_USER_GROUPS.includes(body.group)) return err(400, 'invalid group');
+        // Remove from all tenant groups, then add to the requested one.
+        for (const g of TENANT_USER_GROUPS) {
+            try {
+                await cog.send(new AdminRemoveUserFromGroupCommand({ UserPoolId: USER_POOL_ID, Username: username, GroupName: g }));
+            } catch (_) { /* user wasn't in that group */ }
+        }
+        await cog.send(new AdminAddUserToGroupCommand({ UserPoolId: USER_POOL_ID, Username: username, GroupName: body.group }));
+    }
+    await writeAudit(operator, 'OPERATOR_UPDATE_USER', username, body);
+    return res(200, { username, updated: Object.keys(body) });
+}
+
+async function resetUserPassword(username, body, operator) {
+    const newPass   = String(body.newPassword || strongTempPassword());
+    const permanent = body.permanent !== false;
+    await cog.send(new AdminSetUserPasswordCommand({
+        UserPoolId: USER_POOL_ID,
+        Username:   username,
+        Password:   newPass,
+        Permanent:  permanent
+    }));
+    await writeAudit(operator, 'OPERATOR_RESET_PASSWORD', username, { permanent });
+    return res(200, { username, tempPassword: newPass, permanent });
+}
+
+async function disableUser(username, operator) {
+    await cog.send(new AdminDisableUserCommand({ UserPoolId: USER_POOL_ID, Username: username }));
+    await writeAudit(operator, 'OPERATOR_DISABLE_USER', username, {});
+    return res(200, { username, enabled: false });
+}
+
+async function enableUser(username, operator) {
+    await cog.send(new AdminEnableUserCommand({ UserPoolId: USER_POOL_ID, Username: username }));
+    await writeAudit(operator, 'OPERATOR_ENABLE_USER', username, {});
+    return res(200, { username, enabled: true });
+}
+
+async function deleteUser(username, operator) {
+    await cog.send(new AdminDeleteUserCommand({ UserPoolId: USER_POOL_ID, Username: username }));
+    await writeAudit(operator, 'OPERATOR_DELETE_USER', username, {});
+    return res(200, { username, deleted: true });
+}
+
 // hash-bust onboarding-phase2 2026-06-23T12:45:49.4363602+03:00
 // hash-bust onboarding-fix1 2026-06-23T13:06:16.1423813+03:00
 // hash-bust onboarding-fix2 2026-06-23T13:32:50.6910503+03:00
+// hash-bust gender-default 2026-06-24T10:06:58.9727043+03:00
+// hash-bust user-mgmt 2026-06-24T10:47:43.5498759+03:00
+// hash-bust user-mgmt 2026-06-24T11:06:47.7799176+03:00

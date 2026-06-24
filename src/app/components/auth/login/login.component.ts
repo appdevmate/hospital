@@ -47,8 +47,13 @@ import { I18nService, SUPPORTED_LANGS } from '@/services/i18n.service';
                     <p class="tagline">{{ 'app.tagline' | translate }}</p>
                 </header>
 
-                <h2>{{ 'auth.welcomeBack' | translate }}</h2>
-                <p class="subtitle">{{ 'auth.signInToContinue' | translate }}</p>
+                @if (stage() === 'signin') {
+                    <h2>{{ 'auth.welcomeBack' | translate }}</h2>
+                    <p class="subtitle">{{ 'auth.signInToContinue' | translate }}</p>
+                } @else {
+                    <h2>{{ 'auth.changeRequiredTitle' | translate }}</h2>
+                    <p class="subtitle">{{ 'auth.changeRequiredSubtitle' | translate }}</p>
+                }
 
                 <form (submit)="onSubmit($event)" autocomplete="on">
                     <label class="field">
@@ -59,7 +64,7 @@ import { I18nService, SUPPORTED_LANGS } from '@/services/i18n.service';
                                autocomplete="username"
                                autofocus
                                [(ngModel)]="username"
-                               [disabled]="loading()" />
+                               [disabled]="loading() || stage() === 'newPassword'" />
                     </label>
 
                     <label class="field">
@@ -68,11 +73,37 @@ import { I18nService, SUPPORTED_LANGS } from '@/services/i18n.service';
                                     name="password"
                                     [feedback]="false"
                                     [toggleMask]="true"
-                                    [disabled]="loading()"
+                                    [disabled]="loading() || stage() === 'newPassword'"
                                     inputStyleClass="w-full"
                                     styleClass="w-full"
                                     autocomplete="current-password"></p-password>
                     </label>
+
+                    @if (stage() === 'newPassword') {
+                        <label class="field">
+                            <span>{{ 'auth.newPassword' | translate }}</span>
+                            <p-password [(ngModel)]="newPassword"
+                                        name="newPassword"
+                                        [feedback]="true"
+                                        [toggleMask]="true"
+                                        [disabled]="loading()"
+                                        inputStyleClass="w-full"
+                                        styleClass="w-full"
+                                        autocomplete="new-password"></p-password>
+                        </label>
+
+                        <label class="field">
+                            <span>{{ 'auth.confirmNewPassword' | translate }}</span>
+                            <p-password [(ngModel)]="confirmPassword"
+                                        name="confirmPassword"
+                                        [feedback]="false"
+                                        [toggleMask]="true"
+                                        [disabled]="loading()"
+                                        inputStyleClass="w-full"
+                                        styleClass="w-full"
+                                        autocomplete="new-password"></p-password>
+                        </label>
+                    }
 
                     @if (error()) {
                         <p-message severity="error"
@@ -81,11 +112,22 @@ import { I18nService, SUPPORTED_LANGS } from '@/services/i18n.service';
                     }
 
                     <p-button type="submit"
-                              [label]="(loading() ? 'auth.signingIn' : 'auth.signIn') | translate"
+                              [label]="submitLabel() | translate"
                               [disabled]="loading()"
                               [loading]="loading()"
-                              icon="pi pi-sign-in"
+                              [icon]="stage() === 'newPassword' ? 'pi pi-save' : 'pi pi-sign-in'"
                               styleClass="w-full submit-btn"></p-button>
+
+                    @if (stage() === 'signin') {
+                        <p-button type="button"
+                                  [label]="'auth.forgotPassword' | translate"
+                                  severity="secondary"
+                                  [text]="true"
+                                  size="small"
+                                  [disabled]="loading()"
+                                  (onClick)="goForgotPassword()"
+                                  styleClass="w-full"></p-button>
+                    }
                 </form>
 
                 <footer class="login-footer">
@@ -144,20 +186,39 @@ export class LoginComponent {
 
     username = '';
     password = '';
+    newPassword = '';
+    confirmPassword = '';
 
     readonly loading = signal(false);
     readonly error   = signal<string | null>(null);
+
+    /** 'signin' = username + password; 'newPassword' = NEW_PASSWORD_REQUIRED challenge. */
+    readonly stage   = signal<'signin' | 'newPassword'>('signin');
+    /** Cognito Session string captured from the challenge - required to respond. */
+    private challengeSession: string | null = null;
 
     readonly currentLang = this.i18n.current;
     readonly langOptions = SUPPORTED_LANGS.map((l) => ({ code: l.code, label: l.label }));
 
     changeLang(code: string): void { this.i18n.setLang(code as any); }
 
+    goForgotPassword(): void { this.router.navigate(['/forgot-password']); }
+
+    submitLabel(): string {
+        if (this.loading()) {
+            return this.stage() === 'newPassword' ? 'auth.saving' : 'auth.signingIn';
+        }
+        return this.stage() === 'newPassword' ? 'auth.saveAndSignIn' : 'auth.signIn';
+    }
+
     async onSubmit(ev: Event): Promise<void> {
         ev.preventDefault();
         if (this.loading()) return;
-
         this.error.set(null);
+
+        if (this.stage() === 'newPassword') {
+            return this.onSubmitNewPassword();
+        }
 
         if (!this.username.trim() || !this.password) {
             this.error.set('missingCredentials');
@@ -169,24 +230,65 @@ export class LoginComponent {
         this.loading.set(false);
 
         if (result.kind === 'ok') {
-            // Send the user where they were heading (or root if nothing pending).
-            const returnUrl = this.route.snapshot.queryParamMap.get('return')
-                           || localStorage.getItem('returnUrl')
-                           || '/';
-            localStorage.removeItem('returnUrl');
-            this.router.navigateByUrl(returnUrl.startsWith('/') && !returnUrl.startsWith('//') ? returnUrl : '/');
+            this.completeSignIn();
             return;
         }
 
         if (result.kind === 'challenge') {
-            // Phase 3 will handle NEW_PASSWORD_REQUIRED inline. For Phase 1
-            // surface a message so the operator knows to reset the password.
-            this.error.set('newPasswordRequired');
+            if (result.challenge === 'NEW_PASSWORD_REQUIRED') {
+                // Phase 3 - flip the form into "set new password" mode and
+                // keep the session so we can answer the challenge.
+                this.challengeSession = result.session;
+                this.stage.set('newPassword');
+                return;
+            }
+            // MFA challenges not yet implemented inline - surface a clear
+            // message and ask the user to contact their administrator.
+            this.error.set('unknown');
             return;
         }
 
-        // Map AWS exception codes to translation keys.
         this.error.set(mapErrorCode(result.code));
+    }
+
+    /** Submit handler for the NEW_PASSWORD_REQUIRED stage. */
+    private async onSubmitNewPassword(): Promise<void> {
+        if (!this.newPassword) { this.error.set('missingCredentials'); return; }
+        if (this.newPassword !== this.confirmPassword) { this.error.set('passwordMismatch'); return; }
+        if (!this.challengeSession) {
+            // Session somehow lost - bounce back to step 1.
+            this.stage.set('signin');
+            this.error.set('unknown');
+            return;
+        }
+
+        this.loading.set(true);
+        const r = await this.auth.respondToNewPasswordChallenge(
+            this.username.trim(),
+            this.challengeSession,
+            this.newPassword
+        );
+        this.loading.set(false);
+
+        if (r.kind === 'ok') {
+            this.completeSignIn();
+            return;
+        }
+        if (r.kind === 'error') {
+            // InvalidPasswordException -> passwordTooWeak, anything else -> generic.
+            this.error.set(r.code === 'InvalidPasswordException' ? 'passwordTooWeak' : mapErrorCode(r.code));
+            return;
+        }
+        // Chained challenge (e.g. MFA) - not supported in Phase 3.
+        this.error.set('unknown');
+    }
+
+    private completeSignIn(): void {
+        const returnUrl = this.route.snapshot.queryParamMap.get('return')
+                       || localStorage.getItem('returnUrl')
+                       || '/';
+        localStorage.removeItem('returnUrl');
+        this.router.navigateByUrl(returnUrl.startsWith('/') && !returnUrl.startsWith('//') ? returnUrl : '/');
     }
 }
 

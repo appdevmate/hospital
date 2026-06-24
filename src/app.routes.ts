@@ -109,5 +109,7 @@ export const appRoutes: Routes = [
     // (no authGuard) and outside AppLayout so the sign-in screen renders
     // chromeless without the topbar/menu shell.
     { path: 'login', loadComponent: () => import('@/components/auth/login/login.component').then((c) => c.LoginComponent) },
+    // Phase 2 / Step 103 - custom forgot-password flow.
+    { path: 'forgot-password', loadComponent: () => import('@/components/auth/forgot-password/forgot-password.component').then((c) => c.ForgotPasswordComponent) },
     { path: '**', redirectTo: '/notfound' }
 ];

@@ -693,7 +693,14 @@ export class TiryaqStack extends cdk.Stack {
                 'cognito-idp:AdminCreateUser',
                 'cognito-idp:AdminSetUserPassword',
                 'cognito-idp:AdminAddUserToGroup',
-                'cognito-idp:AdminDeleteUser'
+                'cognito-idp:AdminRemoveUserFromGroup',
+                'cognito-idp:AdminDeleteUser',
+                // Step 106 - user management UI.
+                'cognito-idp:ListUsers',
+                'cognito-idp:AdminUpdateUserAttributes',
+                'cognito-idp:AdminDisableUser',
+                'cognito-idp:AdminEnableUser',
+                'cognito-idp:AdminListGroupsForUser'
             ],
             resources: [userPool.userPoolArn]
         }));

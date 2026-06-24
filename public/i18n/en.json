@@ -41,6 +41,28 @@
         "forgotPassword": "Forgot password?",
         "rememberMe": "Remember me",
         "language": "Language",
+        "backToSignIn": "Back to sign in",
+        "changeRequiredTitle": "Set a new password",
+        "changeRequiredSubtitle": "Your administrator set you up with a temporary password. Choose a new one to finish signing in.",
+        "newPassword": "New password",
+        "confirmNewPassword": "Confirm new password",
+        "saveAndSignIn": "Save and sign in",
+        "saving": "Saving…",
+        "forgot": {
+            "requestTitle": "Reset your password",
+            "requestSubtitle": "Enter your username and we will email you a verification code.",
+            "sendCode": "Send code",
+            "sending": "Sending…",
+            "codeSentTitle": "Check your email",
+            "codeSentSubtitle": "We sent a 6-digit code to {{destination}}. Enter it below with your new password.",
+            "verificationCode": "Verification code",
+            "newPassword": "New password",
+            "confirmNewPassword": "Confirm new password",
+            "resetPassword": "Reset password",
+            "resetting": "Resetting…",
+            "resendCode": "Resend code",
+            "resetSuccess": "Password reset. Sign in with your new password."
+        },
         "errors": {
             "missingCredentials": "Username and password are required.",
             "invalidCredentials": "Incorrect username or password.",
@@ -49,7 +71,14 @@
             "newPasswordRequired": "Your administrator requires you to change your password before signing in.",
             "tooManyAttempts": "Too many sign-in attempts. Try again in a few minutes.",
             "networkError": "Cannot reach the authentication service. Check your connection.",
-            "unknown": "Sign-in failed. Please try again."
+            "unknown": "Sign-in failed. Please try again.",
+            "missingUsername": "Please enter your username.",
+            "missingCode": "Please enter the code from your email.",
+            "passwordMismatch": "The two passwords do not match.",
+            "passwordTooWeak": "Password must be at least 8 characters with uppercase, lowercase, digit, and symbol.",
+            "invalidCode": "The code is incorrect or has expired.",
+            "expiredCode": "The code has expired. Request a new one.",
+            "resetUnavailable": "Password reset is not available for this account. Contact your administrator."
         }
     },
     "common": {
