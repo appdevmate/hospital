@@ -68,12 +68,17 @@ export const authGuard: CanActivateFn = async (_route, state) => {
 
     if (isAuthenticated) {
         // Persist the token for services that read it from sessionStorage.
-        // Step 7i — also mirror to localStorage so the session survives a
-        // full browser close (Stripe / Vercel pattern). The index.html shim
-        // rehydrates it back into sessionStorage on cold boot.
+        // Step 7i / Phase 4 - mirror to localStorage ONLY if Remember me
+        // is opted-in. Pre-Phase-4 this always mirrored, which silently
+        // overrode the user's choice to NOT persist their session.
         if (accessToken) {
             sessionStorage.setItem('accessToken', accessToken);
-            try { localStorage.setItem('accessToken', accessToken); } catch (_) { /* quota */ }
+            const remember = (localStorage.getItem('akw:rememberMe') ?? 'true') !== 'false';
+            if (remember) {
+                try { localStorage.setItem('accessToken', accessToken); } catch (_) { /* quota */ }
+            } else {
+                try { localStorage.removeItem('accessToken'); } catch (_) {}
+            }
         }
 
         // ── Step 2e + 7 — tenant / operator subdomain check ──────────────

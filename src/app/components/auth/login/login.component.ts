@@ -6,10 +6,12 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { SelectModule } from 'primeng/select';
+import { CheckboxModule } from 'primeng/checkbox';
 import { CardModule } from 'primeng/card';
 import { MessageModule } from 'primeng/message';
 import { TranslatePipe } from '@ngx-translate/core';
 import { CognitoAuthService } from '@/services/cognito-auth.service';
+import { RefreshSchedulerService } from '@/services/refresh-scheduler.service';
 import { I18nService, SUPPORTED_LANGS } from '@/services/i18n.service';
 
 /**
@@ -37,7 +39,7 @@ import { I18nService, SUPPORTED_LANGS } from '@/services/i18n.service';
     imports: [
         CommonModule, FormsModule,
         ButtonModule, InputTextModule, PasswordModule, SelectModule,
-        CardModule, MessageModule, TranslatePipe
+        CheckboxModule, CardModule, MessageModule, TranslatePipe
     ],
     template: `
         <div class="login-shell">
@@ -102,6 +104,14 @@ import { I18nService, SUPPORTED_LANGS } from '@/services/i18n.service';
                                         inputStyleClass="w-full"
                                         styleClass="w-full"
                                         autocomplete="new-password"></p-password>
+                        </label>
+                    }
+
+                    @if (stage() === 'signin') {
+                        <label class="remember-row">
+                            <p-checkbox [(ngModel)]="rememberMe" name="rememberMe" binary="true"
+                                        (onChange)="persistRememberMe()"></p-checkbox>
+                            <span>{{ 'auth.rememberMe' | translate }}</span>
                         </label>
                     }
 
@@ -176,18 +186,29 @@ import { I18nService, SUPPORTED_LANGS } from '@/services/i18n.service';
         .lang-row { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; font-size: 0.85rem; color: var(--text-color-secondary); }
         :host ::ng-deep .p-password { display: block; }
         :host ::ng-deep .p-password input { width: 100%; }
+        .remember-row { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--text-color-secondary); cursor: pointer; }
     `]
 })
 export class LoginComponent {
-    private auth   = inject(CognitoAuthService);
-    private i18n   = inject(I18nService);
-    private router = inject(Router);
-    private route  = inject(ActivatedRoute);
+    private auth      = inject(CognitoAuthService);
+    private scheduler = inject(RefreshSchedulerService);
+    private i18n      = inject(I18nService);
+    private router    = inject(Router);
+    private route     = inject(ActivatedRoute);
 
     username = '';
     password = '';
     newPassword = '';
     confirmPassword = '';
+
+    // Phase 4 - controls whether tokens persist to localStorage (survives
+    // browser close) vs sessionStorage-only. Read from localStorage so the
+    // checkbox remembers the user's previous choice between visits.
+    rememberMe = (localStorage.getItem('akw:rememberMe') ?? 'true') !== 'false';
+
+    persistRememberMe(): void {
+        try { localStorage.setItem('akw:rememberMe', this.rememberMe ? 'true' : 'false'); } catch (_) {}
+    }
 
     readonly loading = signal(false);
     readonly error   = signal<string | null>(null);
@@ -224,6 +245,10 @@ export class LoginComponent {
             this.error.set('missingCredentials');
             return;
         }
+
+        // Phase 4 - capture Remember-me state at submit time so it can't
+        // race with the p-checkbox onChange event.
+        this.persistRememberMe();
 
         this.loading.set(true);
         const result = await this.auth.signIn(this.username.trim(), this.password);
@@ -284,6 +309,10 @@ export class LoginComponent {
     }
 
     private completeSignIn(): void {
+        // Phase 4 - start silent token refresh so the 1-hour access token
+        // is renewed in the background long before it expires.
+        this.scheduler.start();
+
         const returnUrl = this.route.snapshot.queryParamMap.get('return')
                        || localStorage.getItem('returnUrl')
                        || '/';

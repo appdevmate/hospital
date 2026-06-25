@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { ToastModule } from 'primeng/toast';
+import { RefreshSchedulerService } from '@/services/refresh-scheduler.service';
 
 @Component({
   selector: 'app-root',
@@ -14,9 +15,16 @@ import { ToastModule } from 'primeng/toast';
   `
 })
 export class AppComponent implements OnInit {
-  private router = inject(Router);
+  private router    = inject(Router);
+  private scheduler = inject(RefreshSchedulerService);
 
   ngOnInit(): void {
+    // Phase 4 - start the silent token refresher on app cold boot. If the
+    // user is already signed in from a previous tab (sessionStorage has
+    // tokens) the scheduler picks up the existing expiry and refreshes
+    // before it elapses. If no session is present this is a no-op.
+    this.scheduler.start();
+
     // Fallback deep-link restore. If, after the Cognito callback, the app
     // lands on '/' but localStorage has a pending `returnUrl`, navigate to it.
     // This catches the right-click → Open in new tab case where the auth

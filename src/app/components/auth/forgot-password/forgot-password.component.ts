@@ -10,6 +10,8 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { CognitoAuthService } from '@/services/cognito-auth.service';
+import { I18nService, SUPPORTED_LANGS, LangCode } from '@/services/i18n.service';
+import { SelectModule } from 'primeng/select';
 
 /**
  * Akwadona - Forgot password flow (Phase 2 of Hosted-UI replacement).
@@ -33,7 +35,7 @@ import { CognitoAuthService } from '@/services/cognito-auth.service';
     imports: [
         CommonModule, FormsModule,
         ButtonModule, InputTextModule, PasswordModule, MessageModule, ToastModule,
-        TranslatePipe
+        SelectModule, TranslatePipe
     ],
     providers: [MessageService],
     template: `
@@ -142,11 +144,22 @@ import { CognitoAuthService } from '@/services/cognito-auth.service';
                 }
 
                 <footer class="login-footer">
+                    <div class="lang-row">
+                        <span>{{ 'auth.language' | translate }}:</span>
+                        <p-select [options]="langOptions"
+                                  [ngModel]="currentLang()"
+                                  (ngModelChange)="changeLang($event)"
+                                  optionLabel="label"
+                                  optionValue="code"
+                                  appendTo="body"
+                                  [style]="{ width: '8rem' }"></p-select>
+                    </div>
                     <p-button [label]="'auth.backToSignIn' | translate"
                               icon="pi pi-arrow-left"
                               severity="secondary"
                               [text]="true"
                               size="small"
+                              styleClass="mt-2"
                               (onClick)="goLogin()"></p-button>
                 </footer>
             </div>
@@ -167,6 +180,8 @@ import { CognitoAuthService } from '@/services/cognito-auth.service';
         .field input { width: 100%; font-size: 1rem; }
         .submit-btn { margin-top: 0.5rem; }
         .login-footer { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--surface-200); text-align: center; }
+        .lang-row { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; font-size: 0.85rem; color: var(--text-color-secondary); margin-bottom: 0.75rem; }
+        :host ::ng-deep .mt-2 { margin-top: 0.5rem; }
         :host ::ng-deep .p-password { display: block; }
         :host ::ng-deep .p-password input { width: 100%; }
     `]
@@ -176,6 +191,11 @@ export class ForgotPasswordComponent {
     private router = inject(Router);
     private toast  = inject(MessageService);
     private t      = inject(TranslateService);
+    private i18n   = inject(I18nService);
+
+    readonly currentLang = this.i18n.current;
+    readonly langOptions = SUPPORTED_LANGS.map((l) => ({ code: l.code, label: l.label }));
+    changeLang(code: string): void { this.i18n.setLang(code as LangCode); }
 
     username = '';
     code     = '';

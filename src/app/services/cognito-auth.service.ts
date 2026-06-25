@@ -238,18 +238,38 @@ export class CognitoAuthService {
     //  Internal helpers
     // ──────────────────────────────────────────────────────────────────
 
+    /**
+     * Persist tokens to sessionStorage (always) + localStorage (only when
+     * the user opted in via "Remember me"). Reads `akw:rememberMe` flag
+     * from localStorage; if absent (most users), defaults to true to keep
+     * the prior behaviour of sessions surviving browser close.
+     */
     private persistTokens(accessToken?: string, idToken?: string, refreshToken?: string, expiresIn?: number): void {
+        const remember = (localStorage.getItem('akw:rememberMe') ?? 'true') !== 'false';
+
         if (accessToken) {
             sessionStorage.setItem('accessToken', accessToken);
-            try { localStorage.setItem('accessToken', accessToken); } catch (_) { /* quota */ }
+            if (remember) {
+                try { localStorage.setItem('accessToken', accessToken); } catch (_) { /* quota */ }
+            } else {
+                try { localStorage.removeItem('accessToken'); } catch (_) {}
+            }
         }
         if (idToken) {
             sessionStorage.setItem('idToken', idToken);
-            try { localStorage.setItem('idToken', idToken); } catch (_) { /* quota */ }
+            if (remember) {
+                try { localStorage.setItem('idToken', idToken); } catch (_) {}
+            } else {
+                try { localStorage.removeItem('idToken'); } catch (_) {}
+            }
         }
         if (refreshToken) {
             sessionStorage.setItem('refreshToken', refreshToken);
-            try { localStorage.setItem('refreshToken', refreshToken); } catch (_) { /* quota */ }
+            if (remember) {
+                try { localStorage.setItem('refreshToken', refreshToken); } catch (_) {}
+            } else {
+                try { localStorage.removeItem('refreshToken'); } catch (_) {}
+            }
         }
         if (expiresIn) {
             const expiresAt = Date.now() + expiresIn * 1000;
