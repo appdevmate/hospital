@@ -1,0 +1,297 @@
+{
+    "UserPool": {
+        "Id": "us-east-1_RACghntmS",
+        "Name": "tiryaq-user-pool",
+        "Policies": {
+            "PasswordPolicy": {
+                "MinimumLength": 12,
+                "RequireUppercase": true,
+                "RequireLowercase": true,
+                "RequireNumbers": true,
+                "RequireSymbols": true,
+                "TemporaryPasswordValidityDays": 3
+            },
+            "SignInPolicy": {
+                "AllowedFirstAuthFactors": [
+                    "PASSWORD"
+                ]
+            }
+        },
+        "DeletionProtection": "INACTIVE",
+        "LambdaConfig": {},
+        "LastModifiedDate": "2026-06-24T16:29:37.526000+03:00",
+        "CreationDate": "2026-04-30T09:34:22.881000+03:00",
+        "SchemaAttributes": [
+            {
+                "Name": "profile",
+                "AttributeDataType": "String",
+                "DeveloperOnlyAttribute": false,
+                "Mutable": true,
+                "Required": false,
+                "StringAttributeConstraints": {
+                    "MinLength": "0",
+                    "MaxLength": "2048"
+                }
+            },
+            {
+                "Name": "address",
+                "AttributeDataType": "String",
+                "DeveloperOnlyAttribute": false,
+                "Mutable": true,
+                "Required": false,
+                "StringAttributeConstraints": {
+                    "MinLength": "0",
+                    "MaxLength": "2048"
+                }
+            },
+            {
+                "Name": "birthdate",
+                "AttributeDataType": "String",
+                "DeveloperOnlyAttribute": false,
+                "Mutable": true,
+                "Required": false,
+                "StringAttributeConstraints": {
+                    "MinLength": "10",
+                    "MaxLength": "10"
+                }
+            },
+            {
+                "Name": "gender",
+                "AttributeDataType": "String",
+                "DeveloperOnlyAttribute": false,
+                "Mutable": true,
+                "Required": true,
+                "StringAttributeConstraints": {
+                    "MinLength": "0",
+                    "MaxLength": "2048"
+                }
+            },
+            {
+                "Name": "preferred_username",
+                "AttributeDataType": "String",
+                "DeveloperOnlyAttribute": false,
+                "Mutable": true,
+                "Required": false,
+                "StringAttributeConstraints": {
+                    "MinLength": "0",
+                    "MaxLength": "2048"
+                }
+            },
+            {
+                "Name": "updated_at",
+                "AttributeDataType": "Number",
+                "DeveloperOnlyAttribute": false,
+                "Mutable": true,
+                "Required": false,
+                "NumberAttributeConstraints": {
+                    "MinValue": "0"
+                }
+            },
+            {
+                "Name": "website",
+                "AttributeDataType": "String",
+                "DeveloperOnlyAttribute": false,
+                "Mutable": true,
+                "Required": false,
+                "StringAttributeConstraints": {
+                    "MinLength": "0",
+                    "MaxLength": "2048"
+                }
+            },
+            {
+                "Name": "picture",
+                "AttributeDataType": "String",
+                "DeveloperOnlyAttribute": false,
+                "Mutable": true,
+                "Required": false,
+                "StringAttributeConstraints": {
+                    "MinLength": "0",
+                    "MaxLength": "2048"
+                }
+            },
+            {
+                "Name": "identities",
+                "AttributeDataType": "String",
+                "DeveloperOnlyAttribute": false,
+                "Mutable": true,
+                "Required": false,
+                "StringAttributeConstraints": {}
+            },
+            {
+                "Name": "sub",
+                "AttributeDataType": "String",
+                "DeveloperOnlyAttribute": false,
+                "Mutable": false,
+                "Required": true,
+                "StringAttributeConstraints": {
+                    "MinLength": "1",
+                    "MaxLength": "2048"
+                }
+            },
+            {
+                "Name": "phone_number",
+                "AttributeDataType": "String",
+                "DeveloperOnlyAttribute": false,
+                "Mutable": true,
+                "Required": false,
+                "StringAttributeConstraints": {
+                    "MinLength": "0",
+                    "MaxLength": "2048"
+                }
+            },
+            {
+                "Name": "phone_number_verified",
+                "AttributeDataType": "Boolean",
+                "DeveloperOnlyAttribute": false,
+                "Mutable": true,
+                "Required": false
+            },
+            {
+                "Name": "zoneinfo",
+                "AttributeDataType": "String",
+                "DeveloperOnlyAttribute": false,
+                "Mutable": true,
+                "Required": false,
+                "StringAttributeConstraints": {
+                    "MinLength": "0",
+                    "MaxLength": "2048"
+                }
+            },
+            {
+                "Name": "custom:tenantId",
+                "AttributeDataType": "String",
+                "DeveloperOnlyAttribute": false,
+                "Mutable": true,
+                "Required": false,
+                "StringAttributeConstraints": {
+                    "MinLength": "1",
+                    "MaxLength": "64"
+                }
+            },
+            {
+                "Name": "locale",
+                "AttributeDataType": "String",
+                "DeveloperOnlyAttribute": false,
+                "Mutable": true,
+                "Required": false,
+                "StringAttributeConstraints": {
+                    "MinLength": "0",
+                    "MaxLength": "2048"
+                }
+            },
+            {
+                "Name": "email",
+                "AttributeDataType": "String",
+                "DeveloperOnlyAttribute": false,
+                "Mutable": true,
+                "Required": true,
+                "StringAttributeConstraints": {
+                    "MinLength": "0",
+                    "MaxLength": "2048"
+                }
+            },
+            {
+                "Name": "email_verified",
+                "AttributeDataType": "Boolean",
+                "DeveloperOnlyAttribute": false,
+                "Mutable": true,
+                "Required": false
+            },
+            {
+                "Name": "given_name",
+                "AttributeDataType": "String",
+                "DeveloperOnlyAttribute": false,
+                "Mutable": true,
+                "Required": false,
+                "StringAttributeConstraints": {
+                    "MinLength": "0",
+                    "MaxLength": "2048"
+                }
+            },
+            {
+                "Name": "family_name",
+                "AttributeDataType": "String",
+                "DeveloperOnlyAttribute": false,
+                "Mutable": true,
+                "Required": false,
+                "StringAttributeConstraints": {
+                    "MinLength": "0",
+                    "MaxLength": "2048"
+                }
+            },
+            {
+                "Name": "middle_name",
+                "AttributeDataType": "String",
+                "DeveloperOnlyAttribute": false,
+                "Mutable": true,
+                "Required": false,
+                "StringAttributeConstraints": {
+                    "MinLength": "0",
+                    "MaxLength": "2048"
+                }
+            },
+            {
+                "Name": "name",
+                "AttributeDataType": "String",
+                "DeveloperOnlyAttribute": false,
+                "Mutable": true,
+                "Required": true,
+                "StringAttributeConstraints": {
+                    "MinLength": "0",
+                    "MaxLength": "2048"
+                }
+            },
+            {
+                "Name": "nickname",
+                "AttributeDataType": "String",
+                "DeveloperOnlyAttribute": false,
+                "Mutable": true,
+                "Required": false,
+                "StringAttributeConstraints": {
+                    "MinLength": "0",
+                    "MaxLength": "2048"
+                }
+            }
+        ],
+        "AliasAttributes": [
+            "email"
+        ],
+        "VerificationMessageTemplate": {
+            "DefaultEmailOption": "CONFIRM_WITH_CODE"
+        },
+        "UserAttributeUpdateSettings": {
+            "AttributesRequireVerificationBeforeUpdate": []
+        },
+        "MfaConfiguration": "OFF",
+        "EstimatedNumberOfUsers": 8,
+        "EmailConfiguration": {
+            "SourceArn": "arn:aws:ses:us-east-1:483176634665:identity/akwadona.com",
+            "ReplyToEmailAddress": "noreply@akwadona.com",
+            "EmailSendingAccount": "DEVELOPER",
+            "From": "Akwadona <noreply@akwadona.com>"
+        },
+        "SmsConfiguration": {
+            "SnsCallerArn": "arn:aws:iam::483176634665:role/TiryaqCdkStack-TiryaqUserPoolsmsRole419A988E-LBzV2kFhgL1p",
+            "ExternalId": "TiryaqCdkStackTiryaqUserPoolF4EBF73A",
+            "SnsRegion": "us-east-1"
+        },
+        "UserPoolTags": {},
+        "SmsConfigurationFailure": "SNSSandbox",
+        "Domain": "tiryaq-hospital",
+        "CustomDomain": "auth.akwadona.com",
+        "AdminCreateUserConfig": {
+            "AllowAdminCreateUserOnly": false,
+            "UnusedAccountValidityDays": 3
+        },
+        "Arn": "arn:aws:cognito-idp:us-east-1:483176634665:userpool/us-east-1_RACghntmS",
+        "AccountRecoverySetting": {
+            "RecoveryMechanisms": [
+                {
+                    "Priority": 1,
+                    "Name": "verified_email"
+                }
+            ]
+        },
+        "UserPoolTier": "PLUS"
+    }
+}

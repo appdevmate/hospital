@@ -1,0 +1,960 @@
+const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
+const {
+    DynamoDBDocumentClient,
+    PutCommand,
+    GetCommand,
+    QueryCommand,
+    UpdateCommand,
+    DeleteCommand,
+    ScanCommand
+} = require('@aws-sdk/lib-dynamodb');
+// Step 2g — per-tenant rate limit.
+const throttle = require('./throttle');
+const { randomUUID } = require('crypto');
+
+const REGION     = 'us-east-1';
+const TABLE_NAME = 'Hospital';
+
+const client = new DynamoDBClient({ region: REGION });
+const db     = DynamoDBDocumentClient.from(client);
+
+// Step 3 — PHI envelope encryption. ./crypto.js synced from _shared/.
+const { encryptItem, decryptItem, decryptItems, APPOINTMENT_PHI_FIELDS } = require('./crypto');
+
+// ── Tenant enforcement (Step 2d) ─────────────────────────────────────────────
+function getTenant(event) {
+  const claims = (event && event.requestContext && event.requestContext.authorizer
+                  && (event.requestContext.authorizer.jwt
+                      ? event.requestContext.authorizer.jwt.claims
+                      : event.requestContext.authorizer.claims))
+              || {};
+  const tenantId = claims.tenantId || claims['custom:tenantId'];
+  if (!tenantId || tenantId === 'UNASSIGNED') {
+    const e = new Error('Tenant not assigned for this user');
+    e.statusCode = 403;
+    throw e;
+  }
+  return tenantId;
+}
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+// CORS headers are injected by API Gateway HTTP API's corsPreflight
+// allow-list (see akwadona-cdk-stack.ts). Do NOT echo wildcard CORS headers
+// here — they would override the allow-list and re-open every origin.
+function res(statusCode, body) {
+    return {
+        statusCode,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+    };
+}
+function err(statusCode, message) {
+    return res(statusCode, { error: message, message });
+}
+
+// ── Extract caller identity from JWT claims ───────────────────────────────────
+function getCaller(event) {
+    const claims   = event.requestContext?.authorizer?.jwt?.claims
+                  || event.requestContext?.authorizer?.claims || {};
+    const groups   = claims['cognito:groups'] || '';
+    const groupArr = Array.isArray(groups) ? groups
+        : String(groups).trim().replace(/^\[/, '').replace(/\]$/, '').split(/[, ]+/).filter(Boolean);
+
+    return {
+        email:       (claims['email'] || claims['username'] || '').toLowerCase().trim(),
+        name:        claims['name'] || '',
+        isAdmin:     groupArr.some(g => ['Admin', 'Developers'].includes(g.trim())),
+        isDoctor:    groupArr.some(g => g.trim() === 'Doctors'),
+        isPharmacist:groupArr.some(g => g.trim() === 'Pharmacists')
+    };
+}
+
+// ── Idempotency (Phase D) ─────────────────────────────────────────────────────
+// The frontend offline-queue interceptor sends `X-Client-Request-Id` on every
+// mutating call. If we've already processed that id, return the cached response
+// instead of running the write a second time. Records auto-expire in 24h via
+// the table's TTL on `expiresAt`.
+function getClientRequestId(event) {
+    const h = event.headers || {};
+    return h['x-client-request-id'] || h['X-Client-Request-Id'] || null;
+}
+
+async function checkIdempotency(cid) {
+    if (!cid) return null;
+    try {
+        const r = await db.send(new GetCommand({
+            TableName: TABLE_NAME,
+            Key: { PK: `IDEMP#${cid}`, SK: 'PROFILE' }
+        }));
+        if (r.Item && r.Item.response) return JSON.parse(r.Item.response);
+    } catch (_) {}
+    return null;
+}
+
+async function storeIdempotency(cid, response) {
+    if (!cid) return;
+    try {
+        await db.send(new PutCommand({
+            TableName: TABLE_NAME,
+            Item: {
+                PK:              `IDEMP#${cid}`,
+                SK:              'PROFILE',
+                EntityType:      'IDEMPOTENCY',
+                clientRequestId: cid,
+                response:        JSON.stringify(response),
+                dataClass:       'SYSTEM',
+                createdAt:       new Date().toISOString(),
+                updatedAt:       new Date().toISOString(),
+                expiresAt:       Math.floor(Date.now() / 1000) + 86400 // 24h TTL
+            }
+        }));
+    } catch (_) {}
+}
+
+// ── Audit Trail ───────────────────────────────────────────────────────────────
+// Step 3 — `before` / `after` are JSON snapshots of the appointment, which
+// contains PHI (chiefComplaint, notes). Encrypt these two fields with the
+// tenant's KMS key before storing so audit logs are PHI-blind too.
+async function writeAudit(action, entityId, actorEmail, actorName, before, after, ipAddress, tenantId) {
+    const auditId = randomUUID();
+    const now     = new Date().toISOString();
+    try {
+        const item = {
+            PK:            `AUDIT#${now.slice(0, 10)}`,
+            SK:            `AUDIT#${now}#${auditId}`,
+            auditId,
+            EntityType:    'AUDIT',
+            tenantId,
+            action,
+            entityType:    'APPOINTMENT',
+            entityId,
+            actorEmail:    actorEmail || 'unknown',
+            actorName:     actorName  || 'unknown',
+            ipAddress:     ipAddress  || 'unknown',
+            timestamp:     now,
+            before:        before ? JSON.stringify(before) : null,
+            after:         after  ? JSON.stringify(after)  : null
+        };
+        // Encrypt the PHI snapshots before persisting.
+        await encryptItem(item, ['before', 'after'], tenantId);
+        await db.send(new PutCommand({ TableName: TABLE_NAME, Item: item }));
+    } catch (e) {
+        // audit write failure is non-critical
+    }
+}
+
+// ── Write DOCTOR_PATIENT relationship (idempotent) ────────────────────────────
+// Step C.3 — PK keyed by doctor UUID, never email. doctorEmail not stored
+// (look it up live from the doctor profile when needed).
+async function writeDoctorPatientRelation(doctorId, patientId, patientName, now, tenantId) {
+    if (!doctorId) return;   // no UUID = nothing to write
+    try {
+        await db.send(new PutCommand({
+            TableName: TABLE_NAME,
+            Item: {
+                PK:          `DOCTOR#${doctorId}`,
+                SK:          `PATIENT#${patientId}`,
+                EntityType:  'DOCTOR_PATIENT',
+                tenantId,
+                doctorId,
+                patientId,
+                patientName,
+                assignedAt:  now
+            },
+            ConditionExpression: 'attribute_not_exists(PK) AND attribute_not_exists(SK)'
+        }));
+    } catch (e) {
+        if (e.name !== 'ConditionalCheckFailedException') throw e;
+        // Already exists — safe to ignore
+    }
+}
+
+// ── Validation ────────────────────────────────────────────────────────────────
+const VALID_VISIT_TYPES = ['walk-in', 'scheduled', 'emergency', 'referral', 'follow-up', 'check-up'];
+const VALID_PRIORITIES  = ['routine', 'urgent', 'emergency'];
+const VALID_STATUSES    = ['scheduled', 'checked-in', 'in-progress', 'completed', 'cancelled', 'no-show'];
+
+function validateAppointment(body) {
+    const errors = [];
+    if (!body.patientId)   errors.push('patientId is required');
+    if (!body.patientName) errors.push('patientName is required');
+    if (!body.doctorId)    errors.push('doctorId is required');
+    if (!body.doctorName)  errors.push('doctorName is required');
+    if (!body.doctorEmail) errors.push('doctorEmail is required');
+    if (!body.department)  errors.push('department is required');
+    if (!body.date)        errors.push('date is required');
+    if (!body.startTime)   errors.push('startTime is required');
+    if (!body.endTime)     errors.push('endTime is required');
+    if (body.visitType && !VALID_VISIT_TYPES.includes(body.visitType)) errors.push(`visitType must be one of: ${VALID_VISIT_TYPES.join(', ')}`);
+    if (body.priority  && !VALID_PRIORITIES.includes(body.priority))   errors.push(`priority must be one of: ${VALID_PRIORITIES.join(', ')}`);
+    if (body.status    && !VALID_STATUSES.includes(body.status))       errors.push(`status must be one of: ${VALID_STATUSES.join(', ')}`);
+    if (body.status === 'cancelled' && !body.cancelReason)             errors.push('cancelReason is required when cancelling');
+    return errors;
+}
+
+// ── Duty-day validation (#2) ────────────────────────────────────────────────
+const DAY_NAMES = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+
+async function getDoctorDutyDays(doctorId) {
+    if (!doctorId) return null;
+    try {
+        const r = await db.send(new GetCommand({ TableName: TABLE_NAME, Key: { PK: doctorId, SK: 'PROFILE' } }));
+        // Return the raw stored values so error messages can show them as-is.
+        return Array.isArray(r.Item?.dutyDays) ? r.Item.dutyDays : null;
+    } catch (_) {
+        return null;
+    }
+}
+
+// 'YYYY-MM-DD' → lowercase weekday name (UTC-safe, avoids off-by-one).
+function weekdayOf(dateStr) {
+    const d = new Date(`${dateStr}T00:00:00Z`);
+    return isNaN(d.getTime()) ? null : DAY_NAMES[d.getUTCDay()];
+}
+
+// ── Doctor same-time conflict (allow many per day, block overlap) ────────────
+// 'HH:mm' → minutes since 00:00. Returns NaN for missing/invalid.
+function toMin(t) {
+    if (!t || typeof t !== 'string') return NaN;
+    const [h, m] = t.split(':').map(Number);
+    if (isNaN(h) || isNaN(m)) return NaN;
+    return h * 60 + m;
+}
+async function findDoctorOverlap({ doctorId, date, startTime, endTime, ignoreApptId }) {
+    if (!doctorId || !date || !startTime) return null;
+    const s = toMin(startTime);
+    const e = toMin(endTime || startTime);
+    if (isNaN(s)) return null;
+    try {
+        const out = await db.send(new QueryCommand({
+            TableName:                 TABLE_NAME,
+            IndexName:                 'EntityType-index',
+            KeyConditionExpression:    'EntityType = :et',
+            FilterExpression:          '#doctorId = :d AND #date = :date AND #status <> :cancelled',
+            ExpressionAttributeNames:  { '#doctorId': 'doctorId', '#date': 'date', '#status': 'status' },
+            ExpressionAttributeValues: { ':et': 'APPOINTMENT', ':d': doctorId, ':date': date, ':cancelled': 'cancelled' }
+        }));
+        for (const it of (out.Items || [])) {
+            if (ignoreApptId && it.appointmentId === ignoreApptId) continue;
+            const is = toMin(it.startTime);
+            const ie = toMin(it.endTime || it.startTime);
+            if (isNaN(is)) continue;
+            // Overlap if s < ie AND e > is. Touching ends (e === is) is allowed.
+            if (s < ie && e > is) {
+                return it;
+            }
+        }
+    } catch (_) {}
+    return null;
+}
+
+// Normalise a weekday token to its 3-letter lowercase prefix so stored
+// abbreviations ("Fri", "Mon") and full names ("Friday") compare equal.
+// mon/tue/wed/thu/fri/sat/sun are all unique in their first 3 letters.
+function normDay(d) {
+    return String(d).toLowerCase().slice(0, 3);
+}
+
+// ── Calendar mirroring (#4) ────────────────────────────────────────────────
+// Find the doctor's calendar (tagged with doctorEmail) or create one.
+async function findOrCreateDoctorCalendar(doctorEmail, doctorName, now) {
+    if (!doctorEmail && !doctorName) return null;
+    // 1) Prefer an existing calendar matched by doctorEmail attribute.
+    let q = await db.send(new QueryCommand({
+        TableName:                 TABLE_NAME,
+        IndexName:                 'EntityType-index',
+        KeyConditionExpression:    'EntityType = :et',
+        FilterExpression:          'doctorEmail = :de',
+        ExpressionAttributeValues: { ':et': 'CALENDAR', ':de': doctorEmail || '__nope__' }
+    }));
+    if (q.Items && q.Items.length) return q.Items[0].calendarId;
+
+    // 2) Fall back to the calendar created by the duty-shift system, which
+    //    names calendars after the plain doctor name (no "Dr." prefix).
+    //    This ensures appointment events show on the SAME calendar the doctor
+    //    sees their duty shifts on.
+    if (doctorName) {
+        q = await db.send(new QueryCommand({
+            TableName:                 TABLE_NAME,
+            IndexName:                 'EntityType-index',
+            KeyConditionExpression:    'EntityType = :et',
+            FilterExpression:          '#n = :n',
+            ExpressionAttributeNames:  { '#n': 'name' },
+            ExpressionAttributeValues: { ':et': 'CALENDAR', ':n': doctorName }
+        }));
+        if (q.Items && q.Items.length) {
+            // Backfill the doctorEmail attribute so the email-based path
+            // finds it next time (saves the scan).
+            if (doctorEmail && !q.Items[0].doctorEmail) {
+                try {
+                    await db.send(new UpdateCommand({
+                        TableName: TABLE_NAME,
+                        Key: { PK: q.Items[0].PK, SK: q.Items[0].SK },
+                        UpdateExpression: 'SET doctorEmail = :de, updatedAt = :u',
+                        ExpressionAttributeValues: { ':de': doctorEmail, ':u': now }
+                    }));
+                } catch (_) {}
+            }
+            return q.Items[0].calendarId;
+        }
+    }
+
+    // 3) Nothing found — create one matching the duty-shift naming scheme.
+    const calendarId = randomUUID();
+    await db.send(new PutCommand({
+        TableName: TABLE_NAME,
+        Item: {
+            PK:          `CALENDAR#${calendarId}`,
+            SK:          'PROFILE',
+            EntityType:  'CALENDAR',
+            calendarId,
+            name:        doctorName || doctorEmail,
+            description: `Calendar for ${doctorName || doctorEmail}`,
+            doctorEmail: doctorEmail || null,
+            dataClass:   'PHI',
+            createdAt:   now,
+            updatedAt:   now
+        },
+        ConditionExpression: 'attribute_not_exists(PK)'
+    }));
+    return calendarId;
+}
+
+// Create a CALENDAR_EVENT mirroring the appointment on the doctor's calendar.
+async function createCalendarEventForAppointment(appt, now) {
+    const calendarId = await findOrCreateDoctorCalendar(appt.doctorEmail, appt.doctorName, now);
+    if (!calendarId) return;
+    const eventId = randomUUID();
+    await db.send(new PutCommand({
+        TableName: TABLE_NAME,
+        Item: {
+            PK:            `CALENDAR#${calendarId}`,
+            SK:            `EVENT#${eventId}`,
+            EntityType:    'CALENDAR_EVENT',
+            eventId,
+            calendarId,
+            name:          `Appointment: ${appt.patientName}`,
+            description:   `${appt.visitType || 'visit'} · ${appt.department || ''}`.trim(),
+            startDate:     `${appt.date}T${appt.startTime}:00`,
+            endDate:       `${appt.date}T${appt.endTime}:00`,
+            color:         '#10b981',
+            recurrence:    null,
+            appointmentId: appt.appointmentId,
+            dataClass:     'PHI',
+            createdAt:     now,
+            updatedAt:     now
+        }
+    }));
+}
+
+// ── Handler ───────────────────────────────────────────────────────────────────
+exports.handler = async (event) => {
+    if (event && event._warmup) return { ok: true, warmed: true };
+    const method    = event.requestContext?.http?.method || event.httpMethod;
+    const path      = event.rawPath || event.path || '';
+    const apptId    = event.pathParameters?.apptId;
+    const caller    = getCaller(event);
+    const ipAddress = event.requestContext?.http?.sourceIp || 'unknown';
+
+    if (method === 'OPTIONS') return res(200, {});
+
+    // ── Tenant enforcement (Step 2d) ─────────────────────────────────────────
+    let tenantId;
+    try { tenantId = getTenant(event); }
+    catch (e) { return err(e.statusCode || 403, e.message); }
+    caller.tenantId = tenantId;  // expose to helpers downstream (list, audit, etc.)
+
+    // Step 2g — per-tenant throttle.
+    {
+        const role = (event.requestContext?.authorizer?.jwt?.claims || {}).role || 'tenant_user';
+        const limitResponse = await throttle.precheck(event, { tenantId, role });
+        if (limitResponse) return limitResponse;
+    }
+
+    // ── POST /appointments ── CREATE ─────────────────────────────────────────
+    if (method === 'POST' && !apptId) {
+        if (!caller.isAdmin) return err(403, 'Only administrators can create appointments');
+
+        // Idempotency: if this clientRequestId was processed already, return
+        // the cached response so an offline-queue replay never double-creates.
+        const cid = getClientRequestId(event);
+        const cached = await checkIdempotency(cid);
+        if (cached) return cached;
+
+        const body = JSON.parse(event.body || '{}');
+        const validationErrors = validateAppointment(body);
+        if (validationErrors.length > 0) return err(400, validationErrors.join(' | '));
+
+        // #2 — appointment date must fall on one of the doctor's duty days.
+        const dutyDays = await getDoctorDutyDays(body.doctorId);
+        if (dutyDays && dutyDays.length) {
+            const wd = weekdayOf(body.date);
+            const allowed = dutyDays.map(normDay);
+            if (wd && !allowed.includes(normDay(wd))) {
+                return err(400, `Doctor is not on duty on ${wd}. Duty days: ${dutyDays.join(', ')}.`);
+            }
+        }
+
+        // Reject appointments whose end time has already passed.
+        if (body.date && body.endTime) {
+            const slotEndIso = `${body.date}T${body.endTime}:00`;
+            const slotEnd = Date.parse(slotEndIso);
+            if (!isNaN(slotEnd) && slotEnd <= Date.now()) {
+                return err(400, 'The selected date/time has already passed.');
+            }
+        }
+
+        // Doctor may hold multiple appointments per day BUT not overlapping
+        // time slots. Block exact same time or overlapping intervals.
+        const conflict = await findDoctorOverlap({
+            doctorId:  body.doctorId,
+            date:      body.date,
+            startTime: body.startTime,
+            endTime:   body.endTime
+        });
+        if (conflict) {
+            return err(409, `Doctor already has an appointment at ${conflict.startTime}-${conflict.endTime} on ${body.date}.`);
+        }
+
+        const id  = randomUUID();
+        const now = new Date().toISOString();
+
+        // Calculate duration from start/end time if not provided
+        let duration = body.duration;
+        if (!duration && body.startTime && body.endTime) {
+            const [sh, sm] = body.startTime.split(':').map(Number);
+            const [eh, em] = body.endTime.split(':').map(Number);
+            duration = (eh * 60 + em) - (sh * 60 + sm);
+        }
+
+        const appointment = {
+            PK:              `APPOINTMENT#${id}`,
+            SK:              'PROFILE',
+            EntityType:      'APPOINTMENT',
+            tenantId,
+            appointmentId:   id,
+            // Patient
+            patientId:       body.patientId,
+            patientName:     body.patientName,
+            // Doctor & Department
+            // Step C.3 — doctorId is the canonical foreign key.
+            // doctorEmail is NEVER stored here. The doctor's current email
+            // is looked up live by doctorId at display time, so a change
+            // of email shows the new value everywhere automatically.
+            // The audit log keeps the actor's email as a historical
+            // snapshot — that's the only place an email is captured.
+            doctorId:        body.doctorId,
+            doctorName:      body.doctorName,
+            department:      body.department,
+            specialization:  body.specialization  || null,
+            // Scheduling
+            date:            body.date,
+            startTime:       body.startTime,
+            endTime:         body.endTime,
+            duration:        duration || 30,
+            // Classification
+            visitType:       body.visitType  || 'scheduled',
+            priority:        body.priority   || 'routine',
+            status:          body.status     || 'scheduled',
+            // Referral
+            referredBy:      body.referredBy     || null,
+            referredByName:  body.referredByName || null,
+            // Clinical link
+            encounterId:     null,
+            // Flow tracking
+            checkedInAt:     null,
+            checkedOutAt:    null,
+            cancelReason:    null,
+            cancelledAt:     null,
+            cancelledBy:     null,
+            // Notes
+            notes:           body.notes          || null,
+            chiefComplaint:  body.chiefComplaint  || null,
+            // Audit
+            createdBy:       caller.email,
+            createdByName:   caller.name,
+            updatedBy:       caller.email,
+            createdAt:       now,
+            // Avoid updatedAt: null — fails dataClass-index GSI validation (S required).
+            updatedAt:       now
+        };
+
+        // Step 3 — encrypt PHI fields (chiefComplaint, notes, cancelReason)
+        // before writing. The audit row written below keeps a snapshot of
+        // the *plaintext* `appointment` object so the operator console
+        // still gets nothing — see writeAudit, which itself never logs PHI.
+        const appointmentToStore = { ...appointment };
+        await encryptItem(appointmentToStore, APPOINTMENT_PHI_FIELDS, tenantId);
+        await db.send(new PutCommand({ TableName: TABLE_NAME, Item: appointmentToStore }));
+
+        // Per-tenant counter (Step 2d).
+        try {
+            await db.send(new UpdateCommand({
+                TableName: TABLE_NAME,
+                Key: { PK: `COUNTER#APPOINTMENTS#${tenantId}`, SK: 'TOTAL' },
+                UpdateExpression: 'ADD #t :one SET updatedAt = :u, tenantId = :tid, EntityType = :et',
+                ExpressionAttributeNames: { '#t': 'total' },
+                ExpressionAttributeValues: { ':one': 1, ':u': now, ':tid': tenantId, ':et': 'COUNTER' }
+            }));
+        } catch (_) {}
+
+        // Write DOCTOR_PATIENT relationship — Step C.3 uses doctorId, not email.
+        await writeDoctorPatientRelation(
+            appointment.doctorId,
+            appointment.patientId.replace('PATIENT#', ''),
+            appointment.patientName,
+            now,
+            tenantId
+        );
+
+        await writeAudit('CREATE', id, caller.email, caller.name, null, appointment, ipAddress, tenantId);
+
+        // #4 — mirror the appointment onto the doctor's calendar (non-critical).
+        try { await createCalendarEventForAppointment(appointment, now); } catch (_) {}
+
+        const response = res(201, appointment);
+        await storeIdempotency(cid, response);
+        return response;
+    }
+
+    // ── GET /appointments ── LIST (paginated) ────────────────────────────────
+    //
+    // Query params (all optional):
+    //   pageSize    : 1-100, default 25
+    //   nextToken   : opaque base64 cursor from the previous response
+    //   tab         : 'upcoming' (today+future) | 'past' | 'all' (default upcoming)
+    //   dateFrom    : YYYY-MM-DD lower bound (inclusive)
+    //   dateTo      : YYYY-MM-DD upper bound (inclusive)
+    //   date        : exact date YYYY-MM-DD (overrides from/to)
+    //   status      : scheduled | checked-in | in-progress | completed | cancelled | no-show
+    //   priority    : routine | urgent | emergency
+    //   visitType   : walk-in | scheduled | emergency | referral | follow-up | check-up
+    //   doctorId    : APPOINTMENT.doctorId exact match
+    //   patientId   : APPOINTMENT.patientId exact match
+    //   q           : free-text — patientName / doctorName / department / chiefComplaint
+    //   sortDir     : asc | desc — default depends on tab (upcoming = asc, past = desc)
+    //
+    // Response: { data: Appointment[], nextToken: string|null, hasMore: bool, count, pageSize }
+    if (method === 'GET' && !apptId) {
+        return await listAppointmentsPaged(event, caller);
+    }
+
+    // ── GET /appointments/{apptId} ── GET ONE ────────────────────────────────
+    if (method === 'GET' && apptId) {
+        const result = await db.send(new GetCommand({
+            TableName: TABLE_NAME,
+            Key: { PK: `APPOINTMENT#${apptId}`, SK: 'PROFILE' }
+        }));
+        // Step 2d — cross-tenant → 404 (no existence disclosure).
+        if (!result.Item || result.Item.tenantId !== tenantId) return err(404, 'Appointment not found');
+        // Step 3 — decrypt PHI before returning to the authorised caller.
+        await decryptItem(result.Item, APPOINTMENT_PHI_FIELDS, tenantId);
+        return res(200, result.Item);
+    }
+
+    // ── PATCH /appointments/{apptId} ── UPDATE ───────────────────────────────
+    if (method === 'PATCH' && apptId) {
+        // Idempotency check (Phase D) — returns cached response on replay.
+        const cid = getClientRequestId(event);
+        const cached = await checkIdempotency(cid);
+        if (cached) return cached;
+
+        const body = JSON.parse(event.body || '{}');
+
+        const existing = await db.send(new GetCommand({
+            TableName: TABLE_NAME,
+            Key: { PK: `APPOINTMENT#${apptId}`, SK: 'PROFILE' }
+        }));
+        // Step 2d — cross-tenant → 404.
+        if (!existing.Item || existing.Item.tenantId !== tenantId) return err(404, 'Appointment not found');
+        // Step 3 — decrypt PHI on the existing row so business logic
+        // below (status, cancel reason checks) sees plaintext.
+        await decryptItem(existing.Item, APPOINTMENT_PHI_FIELDS, tenantId);
+        const appt = existing.Item;
+
+        // Admins update any appointment. Doctors may edit/cancel only their OWN
+        // appointment, and must not reassign it to another doctor or patient.
+        if (!caller.isAdmin) {
+            if (!(caller.isDoctor && appt.doctorEmail === caller.email)) {
+                return err(403, 'Unauthorized to update this appointment');
+            }
+            if (body.doctorEmail && body.doctorEmail.toLowerCase().trim() !== caller.email) {
+                return err(403, 'Doctors cannot reassign an appointment to another doctor');
+            }
+            if (body.patientId && body.patientId !== appt.patientId) {
+                return err(403, 'Doctors cannot change the patient on an appointment');
+            }
+        }
+
+        // ── Block edits to cancelled or past appointments ────────────────────
+        // The frontend hides the edit action; this is the server-side
+        // enforcement (security boundary — never trust the client).
+        //   - A cancelled appointment is terminal: no further modification.
+        //   - A past-dated appointment cannot have its details edited. Pure
+        //     status transitions (e.g. cancel, no-show) are still allowed.
+        const todayStr    = new Date().toISOString().slice(0, 10); // UTC YYYY-MM-DD
+        const isCancelled = appt.status === 'cancelled';
+        const isPast      = !!appt.date && appt.date < todayStr;
+        const EDIT_FIELDS = [
+            'date', 'startTime', 'endTime', 'duration', 'visitType', 'priority',
+            'doctorId', 'doctorName', 'doctorEmail', 'department', 'specialization',
+            'patientId', 'patientName', 'referredBy', 'referredByName'
+        ];
+        const isEdit = EDIT_FIELDS.some((f) => body[f] !== undefined);
+        if (isCancelled) {
+            return err(409, 'This appointment is cancelled and can no longer be modified.');
+        }
+        if (isPast && isEdit) {
+            return err(409, 'This appointment date has passed and can no longer be edited.');
+        }
+
+        // Validate status transition
+        if (body.status && !VALID_STATUSES.includes(body.status)) {
+            return err(400, `Invalid status. Must be one of: ${VALID_STATUSES.join(', ')}`);
+        }
+        if (body.status === 'cancelled' && !body.cancelReason) {
+            return err(400, 'cancelReason is required when cancelling');
+        }
+
+        // #2 — if date or doctor is changing, re-validate against duty days.
+        if (body.date || body.doctorId) {
+            const effDoctorId = body.doctorId || appt.doctorId;
+            const effDate     = body.date || appt.date;
+            const dutyDays    = await getDoctorDutyDays(effDoctorId);
+            if (dutyDays && dutyDays.length) {
+                const wd = weekdayOf(effDate);
+                const allowed = dutyDays.map(normDay);
+                if (wd && !allowed.includes(normDay(wd))) {
+                    return err(400, `Doctor is not on duty on ${wd}. Duty days: ${dutyDays.join(', ')}.`);
+                }
+            }
+        }
+
+        // Doctor same-time overlap check on edits (skip cancelling/no-op edits).
+        if ((body.date || body.startTime || body.endTime || body.doctorId) && body.status !== 'cancelled') {
+            const conflict = await findDoctorOverlap({
+                doctorId:     body.doctorId  || appt.doctorId,
+                date:         body.date      || appt.date,
+                startTime:    body.startTime || appt.startTime,
+                endTime:      body.endTime   || appt.endTime,
+                ignoreApptId: appt.appointmentId
+            });
+            if (conflict) {
+                return err(409, `Doctor already has an appointment at ${conflict.startTime}-${conflict.endTime} on ${body.date || appt.date}.`);
+            }
+        }
+
+        const now      = new Date().toISOString();
+        // Always stamp who/when on every update (#3 audit requirement).
+        const setParts = ['#updatedAt = :updatedAt', '#updatedBy = :updatedBy'];
+        const names    = { '#updatedAt': 'updatedAt', '#updatedBy': 'updatedBy' };
+        const values   = { ':updatedAt': now, ':updatedBy': caller.email };
+
+        const updatableFields = [
+            'status', 'date', 'startTime', 'endTime', 'duration',
+            'visitType', 'priority', 'notes', 'chiefComplaint',
+            'checkedInAt', 'checkedOutAt', 'cancelReason', 'encounterId',
+            'doctorId', 'doctorName', 'doctorEmail', 'department', 'specialization',
+            'referredBy', 'referredByName'
+        ];
+
+        updatableFields.forEach(field => {
+            if (body[field] !== undefined) {
+                setParts.push(`#${field} = :${field}`);
+                names[`#${field}`]  = field;
+                values[`:${field}`] = body[field];
+            }
+        });
+
+        // Auto-set checkedInAt when status changes to checked-in
+        if (body.status === 'checked-in' && !appt.checkedInAt) {
+            setParts.push('#checkedInAt = :checkedInAt');
+            names['#checkedInAt']  = 'checkedInAt';
+            values[':checkedInAt'] = now;
+        }
+        // Auto-set checkedOutAt when status changes to completed
+        if (body.status === 'completed' && !appt.checkedOutAt) {
+            setParts.push('#checkedOutAt = :checkedOutAt');
+            names['#checkedOutAt']  = 'checkedOutAt';
+            values[':checkedOutAt'] = now;
+        }
+        // Auto-set cancellation audit fields when status changes to cancelled (#7)
+        if (body.status === 'cancelled') {
+            setParts.push('#cancelledAt = :cancelledAt', '#cancelledBy = :cancelledBy');
+            names['#cancelledAt']  = 'cancelledAt';
+            names['#cancelledBy']  = 'cancelledBy';
+            values[':cancelledAt'] = appt.cancelledAt || now; // preserve first cancel time
+            values[':cancelledBy'] = caller.email;
+        }
+
+        // Step 3 — PHI fields in the update need to be encrypted before going
+        // into the SET expression. Build a temporary item containing only the
+        // changed PHI values, re-encrypt with a fresh DEK that wraps ALL the
+        // row's PHI (so the wrapped DEK is consistent), then read the
+        // encrypted strings back into `values`. We also have to write the
+        // new `_kms_dek` and `_kms_v` so the row stays internally consistent.
+        const fullMerged = { ...appt };
+        for (const [k, v] of Object.entries(body)) {
+            if (k === 'PK' || k === 'SK' || k === 'EntityType' || k === 'tenantId') continue;
+            if (v !== undefined && v !== null) fullMerged[k] = v;
+        }
+        delete fullMerged._kms_dek;
+        delete fullMerged._kms_v;
+        await encryptItem(fullMerged, APPOINTMENT_PHI_FIELDS, tenantId);
+        // Overwrite values[:<field>] for any PHI field present in the body
+        // with its ciphertext from fullMerged.
+        for (const phiField of APPOINTMENT_PHI_FIELDS) {
+            if (`:${phiField}` in values && fullMerged[phiField] !== undefined) {
+                values[`:${phiField}`] = fullMerged[phiField];
+            }
+        }
+        // Always re-write _kms_dek + _kms_v so the wrapped DEK matches.
+        setParts.push('#__dek = :__dek', '#__v = :__v');
+        names['#__dek'] = '_kms_dek';
+        names['#__v']   = '_kms_v';
+        values[':__dek'] = fullMerged._kms_dek;
+        values[':__v']   = fullMerged._kms_v;
+
+        // Step 2d — defence-in-depth ConditionExpression on the write itself.
+        await db.send(new UpdateCommand({
+            TableName:                 TABLE_NAME,
+            Key:                       { PK: `APPOINTMENT#${apptId}`, SK: 'PROFILE' },
+            UpdateExpression:          `SET ${setParts.join(', ')}`,
+            ExpressionAttributeNames:  { ...names, '#__tid': 'tenantId' },
+            ExpressionAttributeValues: { ...values, ':__tid': tenantId },
+            ConditionExpression:       '#__tid = :__tid'
+        }));
+
+        // If doctor changed, update DOCTOR_PATIENT relationship — Step C.3.
+        if (body.doctorId && body.doctorId !== appt.doctorId) {
+            await writeDoctorPatientRelation(
+                body.doctorId,
+                appt.patientId,
+                appt.patientName,
+                now,
+                tenantId
+            );
+        }
+
+        await writeAudit('UPDATE', apptId, caller.email, caller.name, appt, body, ipAddress, tenantId);
+
+        const updated = await db.send(new GetCommand({
+            TableName: TABLE_NAME,
+            Key: { PK: `APPOINTMENT#${apptId}`, SK: 'PROFILE' }
+        }));
+
+        // Step 3 — decrypt before returning to the authorised caller.
+        if (updated.Item) await decryptItem(updated.Item, APPOINTMENT_PHI_FIELDS, tenantId);
+
+        const response = res(200, updated.Item);
+        await storeIdempotency(cid, response);
+        return response;
+    }
+
+    // ── DELETE /appointments/{apptId} ── ADMIN ONLY ──────────────────────────
+    if (method === 'DELETE' && apptId) {
+        if (!caller.isAdmin) return err(403, 'Only administrators can delete appointments');
+
+        // Idempotency check (Phase D) — replays of the same delete are no-ops.
+        const cid = getClientRequestId(event);
+        const cached = await checkIdempotency(cid);
+        if (cached) return cached;
+
+        const existing = await db.send(new GetCommand({
+            TableName: TABLE_NAME,
+            Key: { PK: `APPOINTMENT#${apptId}`, SK: 'PROFILE' }
+        }));
+        // Step 2d — cross-tenant → 404.
+        if (!existing.Item || existing.Item.tenantId !== tenantId) return err(404, 'Appointment not found');
+
+        await db.send(new DeleteCommand({
+            TableName: TABLE_NAME,
+            Key: { PK: `APPOINTMENT#${apptId}`, SK: 'PROFILE' },
+            ConditionExpression: 'tenantId = :tid',
+            ExpressionAttributeValues: { ':tid': tenantId }
+        }));
+
+        // Per-tenant counter (Step 2d).
+        try {
+            await db.send(new UpdateCommand({
+                TableName: TABLE_NAME,
+                Key: { PK: `COUNTER#APPOINTMENTS#${tenantId}`, SK: 'TOTAL' },
+                UpdateExpression: 'ADD #t :neg SET updatedAt = :u, tenantId = :tid, EntityType = :et',
+                ExpressionAttributeNames: { '#t': 'total' },
+                ExpressionAttributeValues: { ':neg': -1, ':u': new Date().toISOString(), ':tid': tenantId, ':et': 'COUNTER' }
+            }));
+        } catch (_) {}
+
+        await writeAudit('DELETE', apptId, caller.email, caller.name, existing.Item, null, ipAddress, tenantId);
+
+        const response = res(200, { message: 'Appointment deleted', appointmentId: apptId });
+        await storeIdempotency(cid, response);
+        return response;
+    }
+
+    return err(400, 'Unknown route');
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Paginated list — production scale (10M+ rows)
+// ─────────────────────────────────────────────────────────────────────────────
+const MAX_PAGE_SIZE = 100;
+const DEFAULT_PAGE_SIZE = 25;
+// Safety cap on how many pages of upstream DynamoDB results we'll burn while
+// trying to fill one client page (filter expressions may discard rows after
+// the read). At 1MB/page this gives ~10 MB scanned per request worst case.
+const MAX_UPSTREAM_PAGES = 10;
+
+function encodeNextToken(lek) {
+    if (!lek) return null;
+    return Buffer.from(JSON.stringify(lek)).toString('base64');
+}
+function decodeNextToken(t) {
+    if (!t) return undefined;
+    try { return JSON.parse(Buffer.from(t, 'base64').toString('utf8')); } catch { return undefined; }
+}
+function textMatch(item, q) {
+    if (!q) return true;
+    const fields = [item.patientName, item.doctorName, item.department, item.chiefComplaint, item.notes];
+    return fields.some(v => typeof v === 'string' && v.toLowerCase().includes(q));
+}
+
+async function listAppointmentsPaged(event, caller) {
+    const qp = event.queryStringParameters || {};
+    const pageSize = Math.min(Math.max(parseInt(qp.pageSize, 10) || DEFAULT_PAGE_SIZE, 1), MAX_PAGE_SIZE);
+    let startKey   = decodeNextToken(qp.nextToken);
+    const tab      = (qp.tab || 'upcoming').toLowerCase();
+    const today    = new Date().toISOString().slice(0, 10);
+    const q        = (qp.q || '').trim().toLowerCase();
+
+    // Build the FilterExpression once. The same shape works for both indices.
+    const exprNames  = {};
+    const exprValues = {};
+    const parts      = [];
+    if (qp.date) {
+        parts.push('#d = :d'); exprNames['#d'] = 'date'; exprValues[':d'] = qp.date;
+    } else {
+        if (qp.dateFrom) {
+            parts.push('#d >= :dFrom');
+            exprNames['#d'] = 'date'; exprValues[':dFrom'] = qp.dateFrom;
+        }
+        if (qp.dateTo) {
+            parts.push('#d <= :dTo');
+            exprNames['#d'] = 'date'; exprValues[':dTo'] = qp.dateTo;
+        }
+        if (tab === 'upcoming') {
+            parts.push('#d >= :today');
+            exprNames['#d'] = 'date'; exprValues[':today'] = today;
+        } else if (tab === 'past') {
+            parts.push('#d < :today');
+            exprNames['#d'] = 'date'; exprValues[':today'] = today;
+        }
+    }
+    // Multi-value filters arrive as comma-separated strings (one query param =
+    // one HTTP request, no array semantics on API Gateway HTTP API v2).
+    const inList = (raw, prefix, attrName, expressionAlias) => {
+        if (!raw) return;
+        const values = String(raw).split(',').map(s => s.trim()).filter(Boolean);
+        if (!values.length) return;
+        const placeholders = values.map((v, i) => {
+            const ph = `:${prefix}${i}`;
+            exprValues[ph] = v;
+            return ph;
+        });
+        if (attrName) {
+            exprNames[expressionAlias] = attrName;
+            parts.push(`${expressionAlias} IN (${placeholders.join(', ')})`);
+        } else {
+            parts.push(`${expressionAlias} IN (${placeholders.join(', ')})`);
+        }
+    };
+    inList(qp.status,    'st',  'status',    '#s');
+    inList(qp.priority,  'pr',  null,        'priority');
+    inList(qp.visitType, 'vt',  null,        'visitType');
+    if (qp.doctorId)  { parts.push('doctorId = :dId');  exprValues[':dId'] = qp.doctorId; }
+    if (qp.patientId) { parts.push('patientId = :pId'); exprValues[':pId'] = qp.patientId; }
+
+    // Default sort: upcoming → ascending (soonest first); past → descending.
+    const sortDir = (qp.sortDir || (tab === 'past' ? 'desc' : 'asc')).toLowerCase();
+    const ScanIndexForward = sortDir !== 'desc';
+
+    // Choose the index.
+    const baseParams = {
+        TableName:                 TABLE_NAME,
+        Limit:                     pageSize,
+        ScanIndexForward
+    };
+
+    // Step 2d — always force a tenant-scope predicate. For the doctor's index
+    // (which uses doctorEmail as PK) we add it as a FilterExpression. For
+    // the admin path we switch to the per-tenant GSI partitioned by tenantId.
+    if (caller.isDoctor && !caller.isAdmin) {
+        baseParams.IndexName              = 'doctorEmail-createdAt-index';
+        baseParams.KeyConditionExpression = 'doctorEmail = :de';
+        baseParams.ExpressionAttributeValues = { ':de': caller.email, ':__tid': caller.tenantId, ...exprValues };
+        parts.push('#__tid = :__tid');
+        exprNames['#__tid'] = 'tenantId';
+    } else {
+        baseParams.IndexName              = 'tenant-entityType-index';
+        baseParams.KeyConditionExpression = 'tenantId = :tid AND EntityType = :et';
+        baseParams.ExpressionAttributeValues = { ':tid': caller.tenantId, ':et': 'APPOINTMENT', ...exprValues };
+    }
+    if (parts.length) {
+        baseParams.FilterExpression = parts.join(' AND ');
+        baseParams.ExpressionAttributeNames = exprNames;
+    }
+
+    // FilterExpression runs AFTER DynamoDB's per-page read, so a strict filter
+    // may leave us with 0 items even though `LastEvaluatedKey` is set. Loop
+    // forward (bounded by MAX_UPSTREAM_PAGES) until we either fill the page or
+    // exhaust the data.
+    const collected = [];
+    let lastKey = startKey;
+    let upstreamPages = 0;
+
+    while (collected.length < pageSize && upstreamPages < MAX_UPSTREAM_PAGES) {
+        const params = { ...baseParams, ExclusiveStartKey: lastKey };
+        const r = await db.send(new QueryCommand(params));
+        upstreamPages++;
+
+        for (const it of (r.Items || [])) {
+            if (caller.isDoctor && it.EntityType !== 'APPOINTMENT') continue;
+            // Step 2d — defence-in-depth tenant check.
+            if (it.tenantId !== caller.tenantId) continue;
+            if (q && !textMatch(it, q)) continue;
+            collected.push(it);
+            if (collected.length >= pageSize) break;
+        }
+
+        lastKey = r.LastEvaluatedKey;
+        if (!lastKey) break;
+    }
+
+    // Best-effort total — per-tenant counter row maintained on create/delete.
+    let totalRecords = null;
+    const filterActive = !!(qp.date || qp.dateFrom || qp.dateTo || qp.status || qp.priority || qp.visitType || qp.doctorId || qp.patientId || q);
+    if (!filterActive && !(caller.isDoctor && !caller.isAdmin)) {
+        try {
+            const c = await db.send(new GetCommand({
+                TableName: TABLE_NAME,
+                Key: { PK: `COUNTER#APPOINTMENTS#${caller.tenantId}`, SK: 'TOTAL' }
+            }));
+            totalRecords = c.Item?.total ?? null;
+        } catch (_) {}
+    }
+
+    // Step 3 — bulk-decrypt PHI on the returned page before sending to client.
+    await decryptItems(collected, APPOINTMENT_PHI_FIELDS, caller.tenantId);
+
+    return res(200, {
+        data:         collected,
+        nextToken:    encodeNextToken(lastKey),
+        hasMore:      !!lastKey,
+        count:        collected.length,
+        pageSize,
+        totalRecords
+    });
+}// hash-bust 2026-06-21T14:07:44.7504132+03:00
+// hash-bust 2026-06-21T14:14:23.7665133+03:00
+// hash-bust 2026-06-21T14:28:24.0064697+03:00
+// hash-bust phase1 2026-06-23T12:29:38.1273700+03:00

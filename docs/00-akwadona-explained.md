@@ -587,3 +587,7 @@ When a customer asks a question and you're stuck: open this file. It covers the 
 
 
 aws cloudfront list-invalidations --distribution-id E1Z1ZKYM74LVA7 --max-items 1
+
+
+HTTP 201                                                                                                                
+{"slug":"probe-co-c86853","tenantId":"T_fd6b1de5","name":"Probe Hospital Co.","plan":"free","kmsKeyId":"5c185d6b-77c5-4116-a65c-e28ccd0e9862","hmacKeyId":"c98e6d3f-d13d-4f36-bf65-50c9100039be","admin":{"username":"admin-probe-co-c86853","email":"admin@probe-co.local","tempPassword":"Aa1!QwnjU3vCeCBy","signInUrl":"https://app.akwadona.com/"},"createdAt":"2026-06-23T10:35:18.020Z"}

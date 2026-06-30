@@ -1,0 +1,60 @@
+{
+    "UserPoolClient": {
+        "UserPoolId": "us-east-1_RACghntmS",
+        "ClientName": "Akwadona",
+        "ClientId": "2nfjfipi8hri262pjohtpgl45q",
+        "LastModifiedDate": "2026-06-25T10:51:17.602000+03:00",
+        "CreationDate": "2026-04-30T09:34:25.979000+03:00",
+        "RefreshTokenValidity": 30,
+        "AccessTokenValidity": 60,
+        "IdTokenValidity": 60,
+        "TokenValidityUnits": {
+            "AccessToken": "minutes",
+            "IdToken": "minutes",
+            "RefreshToken": "days"
+        },
+        "ExplicitAuthFlows": [
+            "ALLOW_CUSTOM_AUTH",
+            "ALLOW_REFRESH_TOKEN_AUTH",
+            "ALLOW_USER_PASSWORD_AUTH",
+            "ALLOW_USER_SRP_AUTH"
+        ],
+        "SupportedIdentityProviders": [
+            "COGNITO"
+        ],
+        "CallbackURLs": [
+            "http://localhost:4200/",
+            "https://akwadona.com",
+            "https://akwadona.com/",
+            "https://alshifaa.akwadona.com/",
+            "https://d6i7iwknkj0bg.cloudfront.net/",
+            "https://tiryaq.akwadona.com/",
+            "https://www.akwadona.com",
+            "https://www.akwadona.com/"
+        ],
+        "LogoutURLs": [
+            "http://localhost:4200/",
+            "https://akwadona.com",
+            "https://akwadona.com/",
+            "https://alshifaa.akwadona.com/",
+            "https://d6i7iwknkj0bg.cloudfront.net/",
+            "https://tiryaq.akwadona.com/",
+            "https://www.akwadona.com",
+            "https://www.akwadona.com/"
+        ],
+        "AllowedOAuthFlows": [
+            "code"
+        ],
+        "AllowedOAuthScopes": [
+            "email",
+            "openid",
+            "phone",
+            "profile"
+        ],
+        "AllowedOAuthFlowsUserPoolClient": true,
+        "PreventUserExistenceErrors": "ENABLED",
+        "EnableTokenRevocation": true,
+        "EnablePropagateAdditionalUserContextData": false,
+        "AuthSessionValidity": 3
+    }
+}

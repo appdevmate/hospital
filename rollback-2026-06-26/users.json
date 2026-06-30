@@ -1,0 +1,252 @@
+{
+    "Users": [
+        {
+            "Username": "pharmacist1",
+            "Attributes": [
+                {
+                    "Name": "email",
+                    "Value": "pharmacist1@tiryaq.com"
+                },
+                {
+                    "Name": "email_verified",
+                    "Value": "true"
+                },
+                {
+                    "Name": "name",
+                    "Value": "Pharmacist One"
+                },
+                {
+                    "Name": "gender",
+                    "Value": "Male"
+                },
+                {
+                    "Name": "custom:tenantId",
+                    "Value": "T_2572fc71"
+                },
+                {
+                    "Name": "sub",
+                    "Value": "9488a448-70b1-703e-1773-8cd21db7a20d"
+                }
+            ],
+            "UserCreateDate": "2026-04-30T09:35:31.103000+03:00",
+            "UserLastModifiedDate": "2026-06-13T00:48:03.702000+03:00",
+            "Enabled": true,
+            "UserStatus": "CONFIRMED"
+        },
+        {
+            "Username": "staha",
+            "Attributes": [
+                {
+                    "Name": "email",
+                    "Value": "sami.t.taha98@gmail.com"
+                },
+                {
+                    "Name": "email_verified",
+                    "Value": "true"
+                },
+                {
+                    "Name": "custom:tenantId",
+                    "Value": "T_2572fc71"
+                },
+                {
+                    "Name": "sub",
+                    "Value": "e4b8e458-4021-70dd-9945-f5ac17b66b9b"
+                }
+            ],
+            "UserCreateDate": "2026-06-24T16:34:26.961000+03:00",
+            "UserLastModifiedDate": "2026-06-25T10:41:18.401000+03:00",
+            "Enabled": true,
+            "UserStatus": "CONFIRMED"
+        },
+        {
+            "Username": "sami",
+            "Attributes": [
+                {
+                    "Name": "email",
+                    "Value": "sami@akwadona.com"
+                },
+                {
+                    "Name": "email_verified",
+                    "Value": "true"
+                },
+                {
+                    "Name": "name",
+                    "Value": "Sami Toufic Taha"
+                },
+                {
+                    "Name": "gender",
+                    "Value": "Male"
+                },
+                {
+                    "Name": "sub",
+                    "Value": "84987478-8011-7028-ebb5-d7ea9958d499"
+                }
+            ],
+            "UserCreateDate": "2026-06-15T14:31:39.817000+03:00",
+            "UserLastModifiedDate": "2026-06-15T15:07:32.372000+03:00",
+            "Enabled": true,
+            "UserStatus": "CONFIRMED"
+        },
+        {
+            "Username": "doctor2",
+            "Attributes": [
+                {
+                    "Name": "email",
+                    "Value": "rmansour@alshifaa.com"
+                },
+                {
+                    "Name": "email_verified",
+                    "Value": "true"
+                },
+                {
+                    "Name": "name",
+                    "Value": "Roula Mansour"
+                },
+                {
+                    "Name": "gender",
+                    "Value": "Male"
+                },
+                {
+                    "Name": "custom:tenantId",
+                    "Value": "T_a4b8aef9"
+                },
+                {
+                    "Name": "sub",
+                    "Value": "c458e438-b061-7099-703e-18176a1f9092"
+                }
+            ],
+            "UserCreateDate": "2026-05-20T14:01:22.278000+03:00",
+            "UserLastModifiedDate": "2026-06-13T14:45:51.130000+03:00",
+            "Enabled": true,
+            "UserStatus": "CONFIRMED"
+        },
+        {
+            "Username": "admin2",
+            "Attributes": [
+                {
+                    "Name": "email",
+                    "Value": "admin1@alshifaa.com"
+                },
+                {
+                    "Name": "email_verified",
+                    "Value": "true"
+                },
+                {
+                    "Name": "name",
+                    "Value": "Al Shifaa Admin"
+                },
+                {
+                    "Name": "gender",
+                    "Value": "Male"
+                },
+                {
+                    "Name": "custom:tenantId",
+                    "Value": "T_a4b8aef9"
+                },
+                {
+                    "Name": "sub",
+                    "Value": "3428f478-f0c1-7002-7022-22b20e47127a"
+                }
+            ],
+            "UserCreateDate": "2026-04-30T09:35:26.516000+03:00",
+            "UserLastModifiedDate": "2026-06-13T14:32:58.376000+03:00",
+            "Enabled": true,
+            "UserStatus": "CONFIRMED"
+        },
+        {
+            "Username": "doctor1",
+            "Attributes": [
+                {
+                    "Name": "email",
+                    "Value": "orashidi@tiryaq.com"
+                },
+                {
+                    "Name": "email_verified",
+                    "Value": "true"
+                },
+                {
+                    "Name": "name",
+                    "Value": "Omar Rashidi"
+                },
+                {
+                    "Name": "gender",
+                    "Value": "Male"
+                },
+                {
+                    "Name": "custom:tenantId",
+                    "Value": "T_2572fc71"
+                },
+                {
+                    "Name": "sub",
+                    "Value": "c478c498-1091-70e0-f815-309d88f8cf81"
+                }
+            ],
+            "UserCreateDate": "2026-04-30T09:35:29.460000+03:00",
+            "UserLastModifiedDate": "2026-06-15T11:21:42.912000+03:00",
+            "Enabled": true,
+            "UserStatus": "CONFIRMED"
+        },
+        {
+            "Username": "admin1",
+            "Attributes": [
+                {
+                    "Name": "email",
+                    "Value": "admin1@tiryaq.com"
+                },
+                {
+                    "Name": "email_verified",
+                    "Value": "true"
+                },
+                {
+                    "Name": "name",
+                    "Value": "Tiryaq Admin"
+                },
+                {
+                    "Name": "gender",
+                    "Value": "Male"
+                },
+                {
+                    "Name": "custom:tenantId",
+                    "Value": "T_2572fc71"
+                },
+                {
+                    "Name": "sub",
+                    "Value": "64c84418-0071-7049-95b4-086aafb71090"
+                }
+            ],
+            "UserCreateDate": "2026-05-20T14:18:40.605000+03:00",
+            "UserLastModifiedDate": "2026-06-13T14:32:48.820000+03:00",
+            "Enabled": true,
+            "UserStatus": "CONFIRMED"
+        },
+        {
+            "Username": "admin-nabd",
+            "Attributes": [
+                {
+                    "Name": "email",
+                    "Value": "admin1@nabd.com"
+                },
+                {
+                    "Name": "email_verified",
+                    "Value": "true"
+                },
+                {
+                    "Name": "name",
+                    "Value": "Nabd Admin"
+                },
+                {
+                    "Name": "custom:tenantId",
+                    "Value": "T_567e806a"
+                },
+                {
+                    "Name": "sub",
+                    "Value": "e448d448-5021-7018-8935-b45a37e68716"
+                }
+            ],
+            "UserCreateDate": "2026-06-23T14:08:57.146000+03:00",
+            "UserLastModifiedDate": "2026-06-23T14:08:57.664000+03:00",
+            "Enabled": true,
+            "UserStatus": "CONFIRMED"
+        }
+    ]
+}

@@ -1,0 +1,82 @@
+{
+    "Stacks": [
+        {
+            "StackId": "arn:aws:cloudformation:us-east-1:483176634665:stack/TiryaqCdkStack/76c829c0-445e-11f1-b77a-0e0d7ba0bdc9",
+            "StackName": "TiryaqCdkStack",
+            "ChangeSetId": "arn:aws:cloudformation:us-east-1:483176634665:changeSet/cdk-deploy-change-set/9bc73085-6608-4fc6-85fd-ab6b4145b51f",
+            "Description": "Tiryaq Hospital Platform.",
+            "Parameters": [
+                {
+                    "ParameterKey": "BootstrapVersion",
+                    "ParameterValue": "/cdk-bootstrap/hnb659fds/version",
+                    "ResolvedValue": "30"
+                }
+            ],
+            "CreationTime": "2026-04-30T06:33:13.921000+00:00",
+            "LastUpdatedTime": "2026-06-24T08:08:40.438000+00:00",
+            "RollbackConfiguration": {},
+            "StackStatus": "UPDATE_COMPLETE",
+            "DisableRollback": false,
+            "NotificationARNs": [],
+            "Capabilities": [
+                "CAPABILITY_IAM",
+                "CAPABILITY_NAMED_IAM",
+                "CAPABILITY_AUTO_EXPAND"
+            ],
+            "Outputs": [
+                {
+                    "OutputKey": "ApiUrl",
+                    "OutputValue": "https://jxz59jh15f.execute-api.us-east-1.amazonaws.com",
+                    "Description": "HTTP API URL ? update Config.ts tiryaqUrl"
+                },
+                {
+                    "OutputKey": "CloudFrontUrl",
+                    "OutputValue": "https://d6i7iwknkj0bg.cloudfront.net",
+                    "Description": "Frontend URL ? update callbackUrls + logoutUrls then redeploy"
+                },
+                {
+                    "OutputKey": "UserPoolId",
+                    "OutputValue": "us-east-1_RACghntmS",
+                    "Description": "Cognito User Pool ID ? update app.config.ts authority"
+                },
+                {
+                    "OutputKey": "AppClientId",
+                    "OutputValue": "2nfjfipi8hri262pjohtpgl45q",
+                    "Description": "Cognito App Client ID ? update app.config.ts clientId"
+                },
+                {
+                    "OutputKey": "DocumentsBucketName",
+                    "OutputValue": "tiryaq-documents-483176634665-us-east-1",
+                    "Description": "Documents bucket (uploads via pre-signed URLs)"
+                },
+                {
+                    "OutputKey": "CognitoAuthority",
+                    "OutputValue": "https://cognito-idp.us-east-1.amazonaws.com/us-east-1_RACghntmS",
+                    "Description": "Cognito authority URL ? update app.config.ts"
+                },
+                {
+                    "OutputKey": "DistributionId",
+                    "OutputValue": "E1Z1ZKYM74LVA7",
+                    "Description": "CloudFront Distribution ID ? cache invalidation"
+                },
+                {
+                    "OutputKey": "S3BucketName",
+                    "OutputValue": "tiryaqcdkstack-tiryaqfrontendbucket18b23106-jsz6deto6hub",
+                    "Description": "S3 bucket ? ng build + aws s3 sync"
+                }
+            ],
+            "RoleARN": "arn:aws:iam::483176634665:role/cdk-hnb659fds-cfn-exec-role-483176634665-us-east-1",
+            "Tags": [],
+            "EnableTerminationProtection": false,
+            "DriftInformation": {
+                "StackDriftStatus": "NOT_CHECKED"
+            },
+            "LastOperations": [
+                {
+                    "OperationType": "UPDATE_STACK",
+                    "OperationId": "5ba0cfd3-a370-482d-89e7-567d9ecec17e"
+                }
+            ]
+        }
+    ]
+}

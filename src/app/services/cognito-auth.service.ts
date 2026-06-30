@@ -23,7 +23,7 @@ import { Injectable } from '@angular/core';
 
 const REGION    = 'us-east-1';
 const ENDPOINT  = `https://cognito-idp.${REGION}.amazonaws.com/`;
-const CLIENT_ID = '2nfjfipi8hri262pjohtpgl45q';
+const CLIENT_ID = '23pcbal348t491an3o6mofbjrb';
 
 export type SignInResult =
     | { kind: 'ok'; accessToken: string; idToken: string; refreshToken: string; expiresIn: number }
@@ -262,6 +262,27 @@ export class CognitoAuthService {
             } else {
                 try { localStorage.removeItem('idToken'); } catch (_) {}
             }
+
+            // Mirror IdToken claims into localStorage `userData` so the topbar
+            // can show the user's name/email. The OIDC library would normally
+            // populate this via /oauth2/userInfo, but we skip that round-trip
+            // (see app.config.ts) and use the custom InitiateAuth flow, so we
+            // hydrate userData manually here.
+            try {
+                const part = idToken.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+                const pad = part + '='.repeat((4 - (part.length % 4)) % 4);
+                const claims = JSON.parse(atob(pad));
+                const userData = {
+                    name:     claims['name']     || '',
+                    email:    claims['email']    || '',
+                    username: claims['cognito:username'] || claims['username'] || '',
+                    tenantId: claims['tenantId'] || claims['custom:tenantId'] || '',
+                    role:     claims['role']     || '',
+                    doctorId: claims['doctorId'] || ''
+                };
+                localStorage.setItem('userData', JSON.stringify(userData));
+                window.dispatchEvent(new CustomEvent('userDataChanged', { detail: userData }));
+            } catch (_) { /* malformed token */ }
         }
         if (refreshToken) {
             sessionStorage.setItem('refreshToken', refreshToken);

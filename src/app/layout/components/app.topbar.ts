@@ -442,6 +442,10 @@ export class AppTopbar implements OnInit {
     // ── Lifecycle ─────────────────────────────────────────────────────────
     constructor() {
         this.oidc.userData$.pipe(take(10)).subscribe(({ userData }) => {
+            // The OIDC library may emit `userData: null` when userInfo is
+            // skipped (see app.config.ts). Don't overwrite the userData we
+            // hydrated from the IdToken in cognito-auth.service#persistTokens.
+            if (!userData) return;
             localStorage.setItem('userData', JSON.stringify(userData));
             window.dispatchEvent(new CustomEvent('userDataChanged', { detail: userData }));
             this.username = userData?.username;

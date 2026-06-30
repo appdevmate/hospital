@@ -1,0 +1,170 @@
+{
+    "Aliases": [
+        {
+            "AliasName": "alias/akwadona-tenant-alshifaa",
+            "AliasArn": "arn:aws:kms:us-east-1:483176634665:alias/akwadona-tenant-alshifaa",
+            "TargetKeyId": "c1c1657b-b3f9-41a9-a816-dee382e00bb1",
+            "CreationDate": "2026-06-14T08:32:11.462000+03:00",
+            "LastUpdatedDate": "2026-06-14T08:32:11.462000+03:00"
+        },
+        {
+            "AliasName": "alias/akwadona-tenant-alshifaa-hmac",
+            "AliasArn": "arn:aws:kms:us-east-1:483176634665:alias/akwadona-tenant-alshifaa-hmac",
+            "TargetKeyId": "0a23ea33-4659-4f37-a4a2-a62366010bcd",
+            "CreationDate": "2026-06-15T12:02:49.926000+03:00",
+            "LastUpdatedDate": "2026-06-15T12:02:49.926000+03:00"
+        },
+        {
+            "AliasName": "alias/akwadona-tenant-nabd-data",
+            "AliasArn": "arn:aws:kms:us-east-1:483176634665:alias/akwadona-tenant-nabd-data",
+            "TargetKeyId": "8e238877-821a-44fd-90be-c5cbcbb09e3e",
+            "CreationDate": "2026-06-23T14:08:56.383000+03:00",
+            "LastUpdatedDate": "2026-06-23T14:08:56.383000+03:00"
+        },
+        {
+            "AliasName": "alias/akwadona-tenant-nabd-hmac",
+            "AliasArn": "arn:aws:kms:us-east-1:483176634665:alias/akwadona-tenant-nabd-hmac",
+            "TargetKeyId": "c6a7461b-e3e6-4385-8ace-6a72540a83c7",
+            "CreationDate": "2026-06-23T14:08:56.584000+03:00",
+            "LastUpdatedDate": "2026-06-23T14:08:56.584000+03:00"
+        },
+        {
+            "AliasName": "alias/akwadona-tenant-probe-co-5bdc75-data",
+            "AliasArn": "arn:aws:kms:us-east-1:483176634665:alias/akwadona-tenant-probe-co-5bdc75-data",
+            "TargetKeyId": "99aa1f69-68aa-4139-b6f3-1bb05d98f662",
+            "CreationDate": "2026-06-23T13:08:37.278000+03:00",
+            "LastUpdatedDate": "2026-06-23T13:08:37.278000+03:00"
+        },
+        {
+            "AliasName": "alias/akwadona-tenant-probe-co-5bdc75-hmac",
+            "AliasArn": "arn:aws:kms:us-east-1:483176634665:alias/akwadona-tenant-probe-co-5bdc75-hmac",
+            "TargetKeyId": "c762be6e-d3ac-4795-b963-691d115ff433",
+            "CreationDate": "2026-06-23T13:08:37.528000+03:00",
+            "LastUpdatedDate": "2026-06-23T13:08:37.528000+03:00"
+        },
+        {
+            "AliasName": "alias/akwadona-tenant-probe-co-c86853-data",
+            "AliasArn": "arn:aws:kms:us-east-1:483176634665:alias/akwadona-tenant-probe-co-c86853-data",
+            "TargetKeyId": "5c185d6b-77c5-4116-a65c-e28ccd0e9862",
+            "CreationDate": "2026-06-23T13:35:18.270000+03:00",
+            "LastUpdatedDate": "2026-06-23T13:35:18.270000+03:00"
+        },
+        {
+            "AliasName": "alias/akwadona-tenant-probe-co-c86853-hmac",
+            "AliasArn": "arn:aws:kms:us-east-1:483176634665:alias/akwadona-tenant-probe-co-c86853-hmac",
+            "TargetKeyId": "c98e6d3f-d13d-4f36-bf65-50c9100039be",
+            "CreationDate": "2026-06-23T13:35:18.407000+03:00",
+            "LastUpdatedDate": "2026-06-23T13:35:18.407000+03:00"
+        },
+        {
+            "AliasName": "alias/akwadona-tenant-tiryaq",
+            "AliasArn": "arn:aws:kms:us-east-1:483176634665:alias/akwadona-tenant-tiryaq",
+            "TargetKeyId": "11b1386b-51c2-41ab-b5ba-aa6eb9a0e8a6",
+            "CreationDate": "2026-06-14T08:28:27.864000+03:00",
+            "LastUpdatedDate": "2026-06-14T08:28:27.864000+03:00"
+        },
+        {
+            "AliasName": "alias/akwadona-tenant-tiryaq-hmac",
+            "AliasArn": "arn:aws:kms:us-east-1:483176634665:alias/akwadona-tenant-tiryaq-hmac",
+            "TargetKeyId": "601f8aab-f37c-4786-a557-afc12cb864e8",
+            "CreationDate": "2026-06-15T11:33:08.336000+03:00",
+            "LastUpdatedDate": "2026-06-15T11:33:08.336000+03:00"
+        },
+        {
+            "AliasName": "alias/akwadona/audit",
+            "AliasArn": "arn:aws:kms:us-east-1:483176634665:alias/akwadona/audit",
+            "TargetKeyId": "4e3f7379-daff-40a5-aeb0-7ae8f995f4c9",
+            "CreationDate": "2026-06-25T10:50:34.920000+03:00",
+            "LastUpdatedDate": "2026-06-25T10:50:34.920000+03:00"
+        },
+        {
+            "AliasName": "alias/akwadona/data",
+            "AliasArn": "arn:aws:kms:us-east-1:483176634665:alias/akwadona/data",
+            "TargetKeyId": "e3a8b67f-a9c4-4d10-bbd1-31a64ff7b328",
+            "CreationDate": "2026-06-25T10:50:32.955000+03:00",
+            "LastUpdatedDate": "2026-06-25T10:50:32.955000+03:00"
+        },
+        {
+            "AliasName": "alias/aws/acm",
+            "AliasArn": "arn:aws:kms:us-east-1:483176634665:alias/aws/acm",
+            "TargetKeyId": "9335b280-d5f0-4c99-947f-9a6ee81ff149",
+            "CreationDate": "2026-05-03T10:05:43.283000+03:00",
+            "LastUpdatedDate": "2026-05-03T10:05:43.283000+03:00"
+        },
+        {
+            "AliasName": "alias/aws/dynamodb",
+            "AliasArn": "arn:aws:kms:us-east-1:483176634665:alias/aws/dynamodb",
+            "TargetKeyId": "f5b35aa1-1115-4710-907b-ca86f7d726b3",
+            "CreationDate": "2026-04-19T08:23:23.678000+03:00",
+            "LastUpdatedDate": "2026-04-19T08:23:23.678000+03:00"
+        },
+        {
+            "AliasName": "alias/aws/ebs",
+            "AliasArn": "arn:aws:kms:us-east-1:483176634665:alias/aws/ebs"
+        },
+        {
+            "AliasName": "alias/aws/elasticfilesystem",
+            "AliasArn": "arn:aws:kms:us-east-1:483176634665:alias/aws/elasticfilesystem"
+        },
+        {
+            "AliasName": "alias/aws/es",
+            "AliasArn": "arn:aws:kms:us-east-1:483176634665:alias/aws/es"
+        },
+        {
+            "AliasName": "alias/aws/glue",
+            "AliasArn": "arn:aws:kms:us-east-1:483176634665:alias/aws/glue"
+        },
+        {
+            "AliasName": "alias/aws/kinesisvideo",
+            "AliasArn": "arn:aws:kms:us-east-1:483176634665:alias/aws/kinesisvideo"
+        },
+        {
+            "AliasName": "alias/aws/lambda",
+            "AliasArn": "arn:aws:kms:us-east-1:483176634665:alias/aws/lambda",
+            "TargetKeyId": "7039b386-435a-4626-9317-e2c7ae0e380e",
+            "CreationDate": "2026-04-09T09:40:27.342000+03:00",
+            "LastUpdatedDate": "2026-04-09T09:40:27.342000+03:00"
+        },
+        {
+            "AliasName": "alias/aws/rds",
+            "AliasArn": "arn:aws:kms:us-east-1:483176634665:alias/aws/rds"
+        },
+        {
+            "AliasName": "alias/aws/redshift",
+            "AliasArn": "arn:aws:kms:us-east-1:483176634665:alias/aws/redshift"
+        },
+        {
+            "AliasName": "alias/aws/redshifttest",
+            "AliasArn": "arn:aws:kms:us-east-1:483176634665:alias/aws/redshifttest"
+        },
+        {
+            "AliasName": "alias/aws/s3",
+            "AliasArn": "arn:aws:kms:us-east-1:483176634665:alias/aws/s3",
+            "TargetKeyId": "534ad5e4-df1b-482d-baa6-f4b00bc1f5e2",
+            "CreationDate": "2026-04-09T09:38:33.218000+03:00",
+            "LastUpdatedDate": "2026-04-09T09:38:33.218000+03:00"
+        },
+        {
+            "AliasName": "alias/aws/ssm",
+            "AliasArn": "arn:aws:kms:us-east-1:483176634665:alias/aws/ssm"
+        },
+        {
+            "AliasName": "alias/aws/xray",
+            "AliasArn": "arn:aws:kms:us-east-1:483176634665:alias/aws/xray"
+        },
+        {
+            "AliasName": "alias/tiryaq/audit",
+            "AliasArn": "arn:aws:kms:us-east-1:483176634665:alias/tiryaq/audit",
+            "TargetKeyId": "4e3f7379-daff-40a5-aeb0-7ae8f995f4c9",
+            "CreationDate": "2026-04-30T09:33:56.175000+03:00",
+            "LastUpdatedDate": "2026-04-30T09:33:56.175000+03:00"
+        },
+        {
+            "AliasName": "alias/tiryaq/data",
+            "AliasArn": "arn:aws:kms:us-east-1:483176634665:alias/tiryaq/data",
+            "TargetKeyId": "e3a8b67f-a9c4-4d10-bbd1-31a64ff7b328",
+            "CreationDate": "2026-04-30T09:33:56.265000+03:00",
+            "LastUpdatedDate": "2026-04-30T09:33:56.265000+03:00"
+        }
+    ]
+}

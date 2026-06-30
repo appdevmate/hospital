@@ -1,0 +1,168 @@
+{
+    "Items": [
+        {
+            "contractStart": {
+                "S": "2026-01-01"
+            },
+            "limits": {
+                "M": {
+                    "maxUploadMB": {
+                        "N": "50"
+                    },
+                    "rps": {
+                        "N": "100"
+                    },
+                    "dailyQuota": {
+                        "N": "1000000"
+                    },
+                    "storageGB": {
+                        "N": "500"
+                    }
+                }
+            },
+            "updatedAt": {
+                "S": "2026-06-16T05:55:37.583Z"
+            },
+            "tenantId": {
+                "S": "T_a4b8aef9"
+            },
+            "status": {
+                "S": "active"
+            },
+            "plan": {
+                "S": "enterprise"
+            },
+            "slug": {
+                "S": "alshifaa"
+            },
+            "createdAt": {
+                "S": "2026-06-16T05:55:37.583Z"
+            },
+            "SK": {
+                "S": "PROFILE"
+            },
+            "PK": {
+                "S": "TENANT#alshifaa"
+            },
+            "name": {
+                "S": "Alshifaa Hospital"
+            },
+            "EntityType": {
+                "S": "TENANT"
+            }
+        },
+        {
+            "contactEmail": {
+                "S": "contact@nabd.com"
+            },
+            "hmacKeyId": {
+                "S": "c6a7461b-e3e6-4385-8ace-6a72540a83c7"
+            },
+            "tenantId": {
+                "S": "T_567e806a"
+            },
+            "status": {
+                "S": "active"
+            },
+            "plan": {
+                "S": "enterprise"
+            },
+            "slug": {
+                "S": "nabd"
+            },
+            "createdAt": {
+                "S": "2026-06-23T11:08:55.871Z"
+            },
+            "country": {
+                "S": "QA"
+            },
+            "createdBy": {
+                "S": "sami@akwadona.com"
+            },
+            "name": {
+                "S": "Nabd"
+            },
+            "dpaSigned": {
+                "BOOL": false
+            },
+            "EntityType": {
+                "S": "TENANT"
+            },
+            "updatedAt": {
+                "S": "2026-06-23T11:08:55.871Z"
+            },
+            "baaSigned": {
+                "BOOL": false
+            },
+            "SK": {
+                "S": "PROFILE"
+            },
+            "kmsHmacKeyArn": {
+                "S": "arn:aws:kms:us-east-1:483176634665:key/c6a7461b-e3e6-4385-8ace-6a72540a83c7"
+            },
+            "PK": {
+                "S": "TENANT#nabd"
+            },
+            "kmsKeyArn": {
+                "S": "arn:aws:kms:us-east-1:483176634665:key/8e238877-821a-44fd-90be-c5cbcbb09e3e"
+            },
+            "kmsKeyId": {
+                "S": "8e238877-821a-44fd-90be-c5cbcbb09e3e"
+            }
+        },
+        {
+            "contractStart": {
+                "S": "2026-01-01"
+            },
+            "limits": {
+                "M": {
+                    "dailyQuota": {
+                        "N": "1000000"
+                    },
+                    "maxUploadMB": {
+                        "N": "50"
+                    },
+                    "rps": {
+                        "N": "100"
+                    },
+                    "storageGB": {
+                        "N": "500"
+                    }
+                }
+            },
+            "updatedAt": {
+                "S": "2026-06-16T05:55:37.583Z"
+            },
+            "status": {
+                "S": "active"
+            },
+            "tenantId": {
+                "S": "T_2572fc71"
+            },
+            "plan": {
+                "S": "enterprise"
+            },
+            "slug": {
+                "S": "tiryaq"
+            },
+            "createdAt": {
+                "S": "2026-06-16T05:55:37.583Z"
+            },
+            "SK": {
+                "S": "PROFILE"
+            },
+            "PK": {
+                "S": "TENANT#tiryaq"
+            },
+            "name": {
+                "S": "Tiryaq Hospital"
+            },
+            "EntityType": {
+                "S": "TENANT"
+            }
+        }
+    ],
+    "Count": 3,
+    "ScannedCount": 487,
+    "ConsumedCapacity": null
+}
