@@ -25,7 +25,7 @@ This is the same architecture used by Athenahealth, Particle Health, and Redox.
 | `tiryaq` | `T_2572fc71` | `alias/akwadona-tenant-tiryaq` | `11b1386b-...` |
 | `alshifaa` | `T_a4b8aef9` | `alias/akwadona-tenant-alshifaa` | `c1c1657b-...` |
 
-Keys live in the Akwadona AWS account (`483176634665`) in `us-east-1`. They were created via AWS Console wizard with the standard policy in `tiryaq-cdk-stack.ts` (see `tenantKeys` constant).
+Keys live in the Akwadona AWS account (`483176634665`) in `us-east-1`. They were created via AWS Console wizard with the standard policy in `akwadona-cdk-stack.ts` (see `tenantKeys` constant).
 
 ### Envelope encryption
 
@@ -68,9 +68,9 @@ Non-PHI fields (`PK`, `SK`, `EntityType`, `tenantId`, timestamps, FK references)
 |---|---|---|
 | Patient | name, dob, qid, phone, email, medicalHistory, notes, allergies, medications, bloodGroup | createPatient, updatePatient, getPatientByID, getAllPatients, getPatientsDataByFilters |
 | Doctor | name, dob, qid, phone, email, licenseNumber, education, notes | createDoctor, updateDoctor, getDoctorByID, getDoctorByEmail, getAllDoctors |
-| Appointment | chiefComplaint, notes, cancelReason | tiryaq-appointments |
-| Audit log (appointment) | before, after JSON snapshots | tiryaq-appointments (writeAudit helper) |
-| Examination / consultation | chiefComplaint, notes, diagnosis, findings, prescription_text | tiryaq-examinations |
+| Appointment | chiefComplaint, notes, cancelReason | akwadona-appointments |
+| Audit log (appointment) | before, after JSON snapshots | akwadona-appointments (writeAudit helper) |
+| Examination / consultation | chiefComplaint, notes, diagnosis, findings, prescription_text | akwadona-examinations |
 
 Deferred (queued in Task #74): pharmacy, blood bank, calendar, document manager, scribe.
 
@@ -80,13 +80,13 @@ Frontend never sees ciphertext — the app reads plaintext via Lambda decrypt + 
 
 ## Who can decrypt — the zero-knowledge claim
 
-The per-tenant key policy (`tiryaq-cdk/lib/tiryaq-cdk-stack.ts`, KMS console) grants:
+The per-tenant key policy (`akwadona-cdk/lib/akwadona-cdk-stack.ts`, KMS console) grants:
 
 | Principal | Encrypt | Decrypt | Notes |
 |---|---|---|---|
 | **Root account** (`arn:aws:iam::483176634665:root`) | ✓ | ✓ | Standard AWS recommendation for emergencies. Logged in CloudTrail. |
 | **`hospital-deploy-user`** | ✗ | ✗ | Can manage the key (enable / disable / tag / schedule delete) but cannot use it. |
-| **Lambda execution roles** matching `TiryaqCdkStack-*ServiceRole*` | ✓ | ✓ | The only path used by live traffic. |
+| **Lambda execution roles** matching `AkwadonaCdkStack-*ServiceRole*` | ✓ | ✓ | The only path used by live traffic. |
 | Any future operator-console role | ✗ | ✗ | Step 7 by design — operator console reads only metadata and aggregates. |
 | Any other IAM user / role in this account | ✗ | ✗ | No statement matches them. |
 
@@ -143,10 +143,10 @@ Manual emergency rotation: create a new CMK, update the `tenantKeys` map in CDK,
 2. Alias: `akwadona-tenant-<slug>` → tags Product/Akwadona, Tenant/`<slug>`, TenantId/`T_<id>`.
 3. Apply the standard key policy template (root admin + deploy user management + Lambda role usage condition).
 4. Note the ARN.
-5. Edit `tiryaq-cdk/lib/tiryaq-cdk-stack.ts` → add new `tenantId → ARN` to `tenantKeys` map.
+5. Edit `akwadona-cdk/lib/akwadona-cdk-stack.ts` → add new `tenantId → ARN` to `tenantKeys` map.
 6. Edit `scripts/backfill-encrypt-phi.js` → add new entry to `TENANT_KEYS` map (same as CDK).
 7. Edit `src/app/services/tenant.service.ts` → add new slug → tenantId mapping.
-8. `cd tiryaq-cdk && npx cdk deploy --require-approval never`
+8. `cd akwadona-cdk && npx cdk deploy --require-approval never`
 9. Add the slug to API Gateway CORS allow list in CDK (`tenantSlugs` array) — same redeploy.
 10. Run `scripts/backfill-create-tenants.js` to create the TENANT row.
 
@@ -154,10 +154,10 @@ Manual emergency rotation: create a new CMK, update the `tenantKeys` map in CDK,
 
 When a new PHI field appears (e.g. `insuranceProvider`):
 
-1. Add the field name to the appropriate `*_PHI_FIELDS` constant in `tiryaq-cdk/lambda/_shared/crypto.js`.
+1. Add the field name to the appropriate `*_PHI_FIELDS` constant in `akwadona-cdk/lambda/_shared/crypto.js`.
 2. Add the same field to `scripts/backfill-encrypt-phi.js`'s `PHI_BY_ENTITY` map.
 3. `node scripts/sync-shared-helpers.js`
-4. `cd tiryaq-cdk && npx cdk deploy --require-approval never`
+4. `cd akwadona-cdk && npx cdk deploy --require-approval never`
 5. `node scripts/backfill-encrypt-phi.js` (the script will re-process and pick up the new field on the next pass — note: existing rows with `_kms_dek` are skipped today; for adding fields to an already-encrypted row a forced-re-encrypt mode needs implementing).
 
 ### Forgotten key — disaster recovery
@@ -226,15 +226,13 @@ Run these and screenshot for the compliance binder:
 2. **Console** → KMS → Customer managed keys → click `alias/akwadona-tenant-tiryaq` → Key policy → confirm no human principal has Encrypt or Decrypt.
 3. **Run** `aws kms generate-data-key --key-id arn:aws:kms:us-east-1:483176634665:key/11b1386b-51c2-41ab-b5ba-aa6eb9a0e8a6 --key-spec AES_256 --region us-east-1` as `hospital-deploy-user` → expect `AccessDeniedException` → save the output as Exhibit A in the compliance binder.
 4. **App** → sign in → patients list shows readable names → confirms Lambda decryption works end-to-end.
-5. **CloudTrail** → search Decrypt events → all rows show the principal as a `TiryaqCdkStack-*ServiceRole*` ARN → no human in the list.
+5. **CloudTrail** → search Decrypt events → all rows show the principal as a `AkwadonaCdkStack-*ServiceRole*` ARN → no human in the list.
 
 ---
 
 ## Open follow-ups
 
-- **Task #73** — software per-tenant API throttling (depends on Step 7 operator console).
-- **Task #74** — per-row enforcement + PHI encryption on the remaining big domain Lambdas (before any second tenant gets real data).
-- **Task #75** — AWS resource rename `tiryaq-*` → `akwadona-*` (post Step 6).
-- **Task #76** — Admin Change-Email endpoint (coordinated Cognito + DDB update).
-- **Step 4** — HMAC-hashed search fields so QID / email / phone lookups still work despite ciphertext storage.
-- **Step 5** — full compliance docs + HIPAA BAA + GDPR DPA templates.
+All Step-3 follow-ups (Tasks #73–#76, Steps 4 & 5) are DONE. See:
+- `04-hashed-search-fields.md` for the HMAC search design (Step 4)
+- `05a/05b/05c/05f-compliance-*.md` for the HIPAA / PDPPL / GDPR mappings + BAA / DPA templates (Step 5)
+- `akwadona-multitenant-setup.md` Open follow-ups for the latest backlog

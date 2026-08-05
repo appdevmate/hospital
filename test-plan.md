@@ -1,6 +1,6 @@
-# Tiryaq Hospital Platform — Full Test Plan
+# Akwadona Platform — Full Test Plan
 
-**URL:** https://dlh976jc3xp7c.cloudfront.net  
+**URL:** https://d37kqu4c91mlc4.cloudfront.net  
 **Test accounts:**
 
 | Username | Password | Role |
@@ -17,16 +17,18 @@
 ### 1.1 Login
 | # | Action | Expected |
 |---|---|---|
-| 1 | Navigate to the app URL | Redirected to Cognito managed login page with styled background |
-| 2 | Enter wrong password | Error message shown on login page |
+| 1 | Navigate to the app URL (e.g. `tiryaq.akwadona.com`) | Lands on the Akwadona custom Angular login page (branded, with language picker + Remember-me checkbox) — no Cognito Hosted UI redirect |
+| 2 | Enter wrong password | Inline error message shown on the login form (`NotAuthorizedException` mapped to localized text) |
 | 3 | Login as `admin1 / Admin@12345` | Redirected to dashboard |
 | 4 | Verify topbar shows "Admin One" and `admin1@tiryaq.com` | Correct name and email shown |
+| 4a | First-login user (Status `FORCE_CHANGE_PASSWORD`) | After password entry, app shows the in-app "Change Password" screen and completes the `NEW_PASSWORD_REQUIRED` challenge before routing to dashboard |
+| 4b | Click "Forgot password?" → enter username → receive 6-digit code via email from `noreply@akwadona.com` → enter code + new password | Resets password, returns to login, sign-in works |
 
 ### 1.2 Logout
 | # | Action | Expected |
 |---|---|---|
-| 5 | Click avatar → Sign Out | Redirected to Cognito logout, then back to login page |
-| 6 | After logout, navigate to `https://dlh976jc3xp7c.cloudfront.net/patients-management` directly | Redirected to login — not allowed in |
+| 5 | Click avatar → Sign Out | Tokens cleared from session/local storage, routed back to `/login` (no Hosted UI roundtrip) |
+| 6 | After logout, navigate to `https://d37kqu4c91mlc4.cloudfront.net/patients-management` directly | Redirected to login — not allowed in |
 | 7 | Login again | Works correctly |
 
 ---

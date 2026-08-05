@@ -25,7 +25,7 @@ How a brand-new hospital (let's call them "City Hospital") brings their existing
 What huge SaaS does: Athenahealth has a 1-day "tenant provisioning" SLA. We're at ~30 minutes of manual work today.
 
 1. AWS Console → KMS → create two new symmetric keys: one for data encryption, one for HMAC. Tag them `tenant=<slug>`.
-2. Update `tiryaq-cdk/lib/tiryaq-cdk-stack.ts`:
+2. Update `akwadona-cdk/lib/akwadona-cdk-stack.ts`:
    - Add the new tenant ID + KMS ARN to `tenantKeys`.
    - Add the new tenant ID + HMAC ARN to `tenantHmacKeys`.
 3. Run `scripts/seed-tenants.ps1` (or extend it to take a new slug as parameter).

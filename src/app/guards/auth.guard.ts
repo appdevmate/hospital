@@ -90,8 +90,6 @@ export const authGuard: CanActivateFn = async (_route, state) => {
         // The backend would already refuse the data — this prevents the
         // user from even seeing the wrong page chrome.
         tenant.invalidate();
-        const urlTid = tenant.tenantIdFromUrl;
-        const jwtTid = tenant.tenantIdFromJwt;
         const isOperator = tenant.isOperator;
         const isOperatorSub = tenant.isOperatorSubdomain;
 
@@ -119,36 +117,33 @@ export const authGuard: CanActivateFn = async (_route, state) => {
             }
         }
 
-        // Non-operator landed on www → push to their tenant subdomain
+        // Non-operator landed on www → push to their tenant subdomain.
+        // Step 7j — the JWT now carries `tenantSlug` (minted by the
+        // pre-token-generation Lambda from the TENANT profile row), so no
+        // hardcoded slug→tenantId map is needed anymore.
+        const jwtSlug = tenant.tenantSlugFromJwt;
         if (!isOperator && isOperatorSub && window.location.hostname.endsWith('.akwadona.com')) {
-            const correctSlug = Object.entries({
-                'tiryaq': 'T_2572fc71',
-                'alshifaa': 'T_a4b8aef9'
-            }).find(([, id]) => id === jwtTid)?.[0];
-            if (correctSlug) {
-                window.location.replace(`https://${correctSlug}.akwadona.com/`);
+            if (jwtSlug) {
+                window.location.replace(`https://${jwtSlug}.akwadona.com/`);
                 return false;
             }
-            // No matching subdomain → sign them out
+            // No slug claim in the token → sign them out
             try { oidc.logoff(); } catch { /* ignore */ }
             sessionStorage.removeItem('accessToken');
             try { localStorage.removeItem('accessToken'); } catch (_) {}
             return false;
         }
 
-        if (urlTid && jwtTid && urlTid !== jwtTid) {
+        // Tenant user on the WRONG tenant subdomain → sign out + redirect
+        // to their own subdomain. Compared by slug (JWT is authoritative).
+        const urlSlug = tenant.slug;
+        if (!isOperator && urlSlug && urlSlug !== 'www' && jwtSlug && urlSlug !== jwtSlug) {
             try { oidc.logoff(); } catch { /* fall through */ }
             sessionStorage.removeItem('accessToken');
             try { localStorage.removeItem('accessToken'); } catch (_) {}
             localStorage.removeItem('userData');
-            // Best-effort redirect to the correct subdomain on production.
-            // In dev/localhost we just sign them out.
-            const correctSlug = Object.entries({
-                'tiryaq': 'T_2572fc71',
-                'alshifaa': 'T_a4b8aef9'
-            }).find(([, id]) => id === jwtTid)?.[0];
-            if (correctSlug && window.location.hostname.endsWith('.akwadona.com')) {
-                window.location.replace(`https://${correctSlug}.akwadona.com${state.url}`);
+            if (window.location.hostname.endsWith('.akwadona.com')) {
+                window.location.replace(`https://${jwtSlug}.akwadona.com${state.url}`);
             }
             return false;
         }

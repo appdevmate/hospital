@@ -1,7 +1,7 @@
 # Akwadona — Lambda & Infrastructure Documentation
 
 > **Product name:** Akwadona. **Customers (tenants):** Tiryaq, Alshifaa, ...
-> Internal AWS resource names (`TiryaqCdkStack`, `tiryaq-*` Lambdas, `tiryaq-user-pool`, S3 buckets) are kept as-is for now; they are infrastructure identifiers, not the product brand. A separate migration step will rename them.
+> All AWS resources have been renamed to the `akwadona-*` convention: CDK stack `AkwadonaCdkStack`, Lambdas `akwadona-*`, Cognito pool `akwadona-user-pool` (`us-east-1_KkINt5vOF`), S3 buckets `akwadona-*`, KMS aliases `alias/akwadona/*`. The legacy `tiryaq-*` resources from the first stack have been destroyed (one audit bucket remains under COMPLIANCE Object Lock until ~2033).
 
 > **Multi-tenant model (Step 2):** Pooled tenancy — one DynamoDB table, one Cognito pool, one set of Lambdas, scoped per customer by the opaque `tenantId` claim in the signed JWT. Each row carries `tenantId`; reads use the `tenant-entityType-index` GSI; writes use ConditionExpression `tenantId = :tid`. Full design and per-Lambda coverage status: see `akwadona-multitenant-setup.md`.
 
@@ -51,7 +51,7 @@ Bedrock (LLM for the voice-scribe SOAP split)
 
 ## 2. Infrastructure (CDK stack)
 
-The whole infrastructure is described in `tiryaq-cdk/lib/tiryaq-cdk-stack.ts`. One stack: **TiryaqCdkStack**.
+The whole infrastructure is described in `akwadona-cdk/lib/akwadona-cdk-stack.ts`. One stack: **AkwadonaCdkStack**.
 
 **Compute**
 
@@ -62,21 +62,22 @@ The whole infrastructure is described in `tiryaq-cdk/lib/tiryaq-cdk-stack.ts`. O
 **Storage**
 
 - DynamoDB table `Hospital` — single table, PK/SK = String, **customer-managed KMS** encryption, point-in-time recovery on.
-- S3 `TiryaqFrontendBucket` (SPA) and `TiryaqDocumentsBucket` (PHI uploads) — both KMS-encrypted, block-public-access on, versioning on.
+- S3 `AkwadonaFrontendBucket` (SPA) and `AkwadonaDocumentsBucket` (PHI uploads) — both KMS-encrypted, block-public-access on, versioning on.
 - Access-logs bucket for CloudFront + S3.
 
 **Networking & edge**
 
 - API Gateway HTTP API v2 (cheaper / faster than REST API v1).
 - CloudFront distribution with OAC to the S3 origin; SPA fallback rewrites 403/404 to `/index.html`.
-- `tiryaq-edge-stack.ts` (us-east-1) defines a WAFv2 rate-limit ACL — **currently commented out** in the main stack to avoid the $5 base charge; re-enable by uncommenting `webAclId` in the CloudFront distribution.
+- `akwadona-edge-stack.ts` (us-east-1) defines a WAFv2 rate-limit ACL — **currently commented out** in the main stack to avoid the $5 base charge; re-enable by uncommenting `webAclId` in the CloudFront distribution.
 
 **Identity & access**
 
-- Cognito User Pool `Tiryaq` with hosted UI, OIDC v2, refresh tokens.
-- Groups: `Admin`, `Developers`, `Doctors`, `Pharmacists`. (`Patients` is defined but not yet exposed.)
-- `cognito-pre-token-generation` Lambda enriches the access token with `email` + `name` so the frontend doesn't need a second call.
-- KMS customer-managed key (CMK) for table + buckets; every Lambda's role has `kms:Encrypt`/`Decrypt`.
+- Cognito User Pool `akwadona-user-pool` (`us-east-1_KkINt5vOF`). Sign-in UX is a **custom Angular login** in the SPA — no Hosted UI. The OIDC library is still configured for token refresh and session-end via the `auth.akwadona.com` custom domain, but authentication calls go through `InitiateAuth` REST directly (`USER_PASSWORD_AUTH` + `RespondToAuthChallenge` for first-login + `ForgotPassword`).
+- Groups: `Admin`, `Developers`, `Doctors`, `Pharmacists`, `Operator`. (`Patients` is defined but not yet exposed.)
+- `cognito-pre-token-generation` Lambda (V3_0 trigger) enriches the JWTs with `email`, `name`, `tenantId`, `role` (`operator` / `tenant_user`), and `doctorId` (for doctor users), so the frontend never needs a `/userInfo` round-trip.
+- SES wired as the email sender — Cognito sends from `noreply@akwadona.com` (DKIM-signed). See `16-ses-setup.md`.
+- KMS customer-managed keys: stack-level data + audit CMKs (encrypt the DDB table and audit bucket), plus per-tenant CMKs (`alias/akwadona-tenant-<slug>`) and HMAC keys (`alias/akwadona-tenant-<slug>-hmac`) for envelope encryption + searchable hashed fields. Every Lambda's role is whitelisted by the `AkwadonaCdkStack-*ServiceRole*` ArnLike in each tenant CMK's key policy.
 
 **Warmer**
 
@@ -205,7 +206,7 @@ Each section below: **Business purpose → Routes → What it does → Side effe
 
 ### 4.3 Appointments
 
-#### `tiryaq-appointments`
+#### `akwadona-appointments`
 - **Purpose** — the whole appointment lifecycle.
 - **Routes** — `POST/GET/PATCH/DELETE /appointments[/{apptId}]`.
 - **What it does**
@@ -217,21 +218,21 @@ Each section below: **Business purpose → Routes → What it does → Side effe
 
 ### 4.4 Examinations (consultations)
 
-#### `tiryaq-examinations`
+#### `akwadona-examinations`
 - **Purpose** — doctor's SOAP form (sections, diagnosis, prescriptions, lab/radiology orders, sign-off).
 - **Routes** — `POST /examinations`, `PATCH /examinations/{id}/sections`, `POST /examinations/{id}/signoff`, `DELETE /examinations/{id}`.
 - **What it does** — Doctor/Admin/Dev only; doctor can only write into an exam where `doctorEmail` matches their own; sign-off requires at least one primary diagnosis + chief complaint; on sign-off the linked appointment is marked `completed`.
 
 ### 4.5 Pharmacy
 
-#### `tiryaq-pharmacy`
+#### `akwadona-pharmacy`
 - **Purpose** — medications, inventory, prescription queue, dispense, purchase orders, alerts.
 - **Routes** — `/pharmacy/medications`, `/pharmacy/inventory`, `/pharmacy/prescriptions`, `/pharmacy/dispense`, `/pharmacy/purchase-orders`, `/pharmacy/alerts`.
 - **What it does** — Pharmacist/Admin/Dev only; dispense decrements stock and writes a history row; POs walk `draft → submitted → ordered → partially_received → received`.
 
 ### 4.6 Blood Bank
 
-#### `tiryaq-bloodbank`
+#### `akwadona-bloodbank`
 - **Purpose** — donors, donations, unit inventory, transfusion requests with cross-match + issue.
 - **Routes** — see `docs/blood-bank.md` (now folded into §4.6).
 
@@ -251,13 +252,13 @@ Issue:         POST /bloodbank/requests/{requestId}/issue
 
 ### 4.7 Calendar
 
-#### `tiryaq-calendar`
+#### `akwadona-calendar`
 - **Purpose** — one calendar per doctor; holds duty shifts + auto-created appointment events.
 - **Routes** — `GET/POST /calendars`, `DELETE /calendars/{id}`, `GET/POST /calendars/{id}/events`, `PATCH/DELETE /calendars/{id}/events/{eventId}`.
 
 ### 4.8 Documents
 
-#### `tiryaq-document-manager`
+#### `akwadona-document-manager`
 - **Purpose** — upload/download/list/delete documents via S3 presigned URLs.
 - **Routes** — `POST /documents/upload-url`, `POST /documents/download-url`, `GET /documents/list`, `GET /documents/folders`, `DELETE /documents/delete`.
 - **What it does**
@@ -267,21 +268,21 @@ Issue:         POST /bloodbank/requests/{requestId}/issue
 
 ### 4.9 Admin panel
 
-#### `tiryaq-admin-panel`
+#### `akwadona-admin-panel`
 - **Purpose** — admin user management.
 - **Routes** — `GET /admin/stats`, `GET /admin/users`, `POST /admin/users/{u}/disable`, `POST /admin/users/{u}/enable`, `POST /admin/users/{u}/set-password`, `GET /admin/audit`.
 - **What it does** — admin/developer only; wraps Cognito Admin APIs; audit endpoint queries `AUDIT#YYYY-MM-DD` partition.
 
 ### 4.10 Voice Scribe
 
-#### `tiryaq-scribe`
+#### `akwadona-scribe`
 - **Purpose** — turn dictation into SOAP via Bedrock Claude Haiku.
 - **Routes** — `POST /scribe/sessions`, `GET /scribe/sessions/{id}`, `POST /scribe/sessions/{id}/soap`, `POST /scribe/sessions/{id}/approve`.
 - **What it does** — Doctor/Admin only; stores session + transcript + SOAP output.
 
 ### 4.11 Audit
 
-#### `tiryaq-audit`
+#### `akwadona-audit`
 - **Purpose** — compliance forensic queries.
 - **Routes** — `GET /audit?date=&entityType=&entityId=&action=&actor=`.
 
@@ -332,7 +333,7 @@ Issue:         POST /bloodbank/requests/{requestId}/issue
 
 - Mutating Lambdas write to `AUDIT#YYYY-MM-DD / AUDIT#<entity>#<id>#<ts>`.
 - Captures `actorEmail`, `actorName`, `before`, `after`, `ipAddress`.
-- Queried via `tiryaq-audit`.
+- Queried via `akwadona-audit`.
 
 ### 5.3 Counters
 
@@ -386,7 +387,7 @@ Issue:         POST /bloodbank/requests/{requestId}/issue
 
 ### 6.4 CORS
 
-- API Gateway `corsPreflight.allowOrigins` whitelist: `https://akwadona.com`, `https://www.akwadona.com`, `https://d6i7iwknkj0bg.cloudfront.net`.
+- API Gateway `corsPreflight.allowOrigins` whitelist: `https://akwadona.com`, `https://www.akwadona.com`, `https://d37kqu4c91mlc4.cloudfront.net`.
 - `allowHeaders` includes `Content-Type`, `Authorization`, `X-Client-Request-Id`.
 
 ### 6.5 Secrets
@@ -421,7 +422,7 @@ Install once on a clean Windows / macOS box.
   git clone https://github.com/appdevmate/hospital.git
   cd hospital
   npm install
-  cd tiryaq-cdk
+  cd akwadona-cdk
   npm install
   cd ..\scripts
   npm install        # only needed if you run seed / cleanup scripts
@@ -434,14 +435,14 @@ Install once on a clean Windows / macOS box.
 ### 7.2 Backend deploy (CDK)
 
 ```powershell
-cd "C:\Users\Sami Toufic Taha\Desktop\aws apps\hospital\tiryaq-cdk"
+cd "C:\Users\Sami Toufic Taha\Desktop\aws apps\hospital\akwadona-cdk"
 npm run build
 npx cdk deploy --require-approval never
 ```
 
 What happens:
 
-- `npm run build` compiles `tiryaq-cdk-stack.ts` → `.js`.
+- `npm run build` compiles `akwadona-cdk-stack.ts` → `.js`.
 - `cdk deploy` synthesizes the CloudFormation template + uploads each Lambda's `lambda/<folder>` as a zip asset to the CDK assets bucket.
 - CloudFormation rolls out only the changed resources.
 - Typical time: **2–3 minutes**.
@@ -456,8 +457,8 @@ Tips:
 ```powershell
 cd "C:\Users\Sami Toufic Taha\Desktop\aws apps\hospital"
 npm run build
-aws s3 sync dist/verona-ng/browser s3://tiryaqcdkstack-tiryaqfrontendbucket18b23106-jsz6deto6hub --delete
-aws cloudfront create-invalidation --distribution-id E1Z1ZKYM74LVA7 --paths "/*"
+aws s3 sync dist/verona-ng/browser s3://akwadonacdkstack-akwadonafrontendbuckete011c800-tal731ksbepv --delete
+aws cloudfront create-invalidation --distribution-id EMIDMHCZ9PRK4 --paths "/*"
 ```
 
 Tips:
@@ -472,7 +473,7 @@ If you're deploying into a brand-new account:
 
 ```powershell
 # 1. Bootstrap the CDK toolkit (one-time per account+region)
-cd "C:\Users\Sami Toufic Taha\Desktop\aws apps\hospital\tiryaq-cdk"
+cd "C:\Users\Sami Toufic Taha\Desktop\aws apps\hospital\akwadona-cdk"
 npx cdk bootstrap aws://ACCOUNT_ID/us-east-1
 
 # 2. Deploy the main stack
@@ -480,7 +481,7 @@ npm run build
 npx cdk deploy --require-approval never
 
 # 3. Capture the outputs into your frontend config
-aws cloudformation describe-stacks --stack-name TiryaqCdkStack --region us-east-1 --query "Stacks[0].Outputs"
+aws cloudformation describe-stacks --stack-name AkwadonaCdkStack --region us-east-1 --query "Stacks[0].Outputs"
 ```
 
 Then:
@@ -495,27 +496,27 @@ Then:
 ```
 Account             = 483176634665
 Region              = us-east-1
-Stack               = TiryaqCdkStack
-ApiUrl              = https://jxz59jh15f.execute-api.us-east-1.amazonaws.com
-AppClientId         = 2nfjfipi8hri262pjohtpgl45q
-CloudFrontUrl       = https://d6i7iwknkj0bg.cloudfront.net
-DistributionId      = E1Z1ZKYM74LVA7
-S3BucketName        = tiryaqcdkstack-tiryaqfrontendbucket18b23106-jsz6deto6hub
-UserPoolId          = us-east-1_RACghntmS
-CognitoAuthority    = https://cognito-idp.us-east-1.amazonaws.com/us-east-1_RACghntmS
-DocumentsBucketName = tiryaq-documents-483176634665-us-east-1
+Stack               = AkwadonaCdkStack
+ApiUrl              = https://a2s6jk35d9.execute-api.us-east-1.amazonaws.com
+AppClientId         = 5i94ivu752m12uivl62v99pu4
+CloudFrontUrl       = https://d37kqu4c91mlc4.cloudfront.net
+DistributionId      = EMIDMHCZ9PRK4
+S3BucketName        = akwadonacdkstack-akwadonafrontendbuckete011c800-tal731ksbepv
+UserPoolId          = us-east-1_KkINt5vOF
+CognitoAuthority    = https://cognito-idp.us-east-1.amazonaws.com/us-east-1_KkINt5vOF
+DocumentsBucketName = akwadona-documents-483176634665-us-east-1
 ```
 
 To discover them again any time:
 
 ```powershell
-aws cloudformation describe-stacks --stack-name TiryaqCdkStack --region us-east-1 --query "Stacks[0].Outputs"
+aws cloudformation describe-stacks --stack-name AkwadonaCdkStack --region us-east-1 --query "Stacks[0].Outputs"
 ```
 
 ### 7.6 Domain + DNS (`akwadona.com`)
 
 - Apex `akwadona.com` → CloudFront distribution (alias record at the DNS provider).
-- Subdomain `www.akwadona.com` → CNAME to `d6i7iwknkj0bg.cloudfront.net`.
+- Subdomain `www.akwadona.com` → CNAME to `d37kqu4c91mlc4.cloudfront.net`.
 - Both hostnames must be added to the **CloudFront distribution → Alternate domain names (CNAMEs)** list.
 - ACM certificate (us-east-1) must cover both.
 - Cognito **App client → Allowed callback URLs** + **Sign-out URLs** must include both `https://akwadona.com/` and `https://www.akwadona.com/`.
@@ -530,7 +531,7 @@ Two paths:
    ```powershell
    git revert <bad-commit>
    git push
-   cd tiryaq-cdk
+   cd akwadona-cdk
    npm run build
    npx cdk deploy --require-approval never
    ```
@@ -593,7 +594,7 @@ Items that would push past $5/month:
 
 ### 8.4 Budget alert
 
-A `Tiryaq-5-USD` AWS Budget is in place; alerts emailed at 80% actual and 100% forecast.
+A `Akwadona-5-USD` AWS Budget is in place; alerts emailed at 80% actual and 100% forecast.
 
 ### 8.5 CloudFormation resource ceiling
 
@@ -630,11 +631,11 @@ Findings from the comprehensive review of June 2026. Severity: 🔴 high · 🟠
 
 ### 9.3 Clean code / naming
 
-- **Mixed casing**: most Lambdas folder-named camelCase (`createPatient`) but newer ones kebab-case with prefix (`tiryaq-appointments`). Inconsistent but not blocking — the camelCase ones are older CRUD, the prefixed ones are domain workspaces.
+- **Mixed casing**: most Lambdas folder-named camelCase (`createPatient`) but newer ones kebab-case with prefix (`akwadona-appointments`). Inconsistent but not blocking — the camelCase ones are older CRUD, the prefixed ones are domain workspaces.
 - **Dead code**: ~400 lines of commented-out code at the top of `Patients Management/new-patient.ts`, `edit-patient.ts`, and `getAllDoctors/index.js`. Remove on next touch.
 - **Duplicated role-helper functions**: `isAdmin(event)`, `isAdminOrDeveloper(event)`, `getCaller(event)` re-implemented in 8 Lambdas with subtle variations. Should live in `lambda/_shared/auth.js` but CDK packages per-folder so each must inline. Acceptable trade-off — but extract to a Lambda layer eventually.
 - **Magic strings**: group names checked as raw strings (`'Admin'`, `'Doctors'`) — extract to a single constant.
-- **Hard-coded IDs**: `Config.tiryaqUrl`, Cognito clientId, distribution ID, S3 bucket name are baked into source. Workable for one environment, friction for multi-env. Move to `assets/runtime-config.json` baked at deploy time.
+- **Hard-coded IDs**: `Config.apiBaseUrl`, Cognito clientId, distribution ID, S3 bucket name are baked into source. Workable for one environment, friction for multi-env. Move to `assets/runtime-config.json` baked at deploy time.
 
 ### 9.4 Architecture
 

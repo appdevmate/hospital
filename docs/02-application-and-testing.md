@@ -37,15 +37,18 @@ Top-level modules: **Patients · Doctors · Appointments · Consultations · Voi
 
 ## 2. How to sign in
 
-1. Visit `https://akwadona.com` (or `https://www.akwadona.com`).
-2. You'll be redirected to the Cognito hosted login page.
-3. Enter username (email) + password.
-4. After login the app lands on the dashboard.
-5. Session lives in `sessionStorage` (lasts until the tab closes). Tokens refresh automatically.
+1. Visit `https://akwadona.com` (or `https://www.akwadona.com`) — or your tenant's subdomain like `https://tiryaq.akwadona.com`.
+2. The Akwadona-branded login page is served by the Angular app itself (no Cognito Hosted UI). Username + password fields, language picker, Remember-me checkbox.
+3. Behind the scenes the app calls Cognito `InitiateAuth` via REST (`USER_PASSWORD_AUTH` flow). On success it stores the JWTs and routes the user to the dashboard.
+4. Session lives in `sessionStorage` by default. Tick **Remember me** to also persist tokens in `localStorage` so the session survives a browser restart.
+5. First-time users land on a **Change Password** screen (handled in-app by responding to Cognito's `NEW_PASSWORD_REQUIRED` challenge).
+6. Tokens refresh automatically via the refresh-token flow, also called over REST.
 
-**Sign out** — click your avatar in the top right → **Sign Out**.
+**Sign out** — click your avatar in the top right → **Sign Out**. Clears both storages and routes back to `/login`.
 
-**Forgot your password** — click the link on the login page; Cognito sends a reset code.
+**Forgot your password** — click the link on the login page. The custom Angular flow calls Cognito `ForgotPassword`, which emails a 6-digit code via SES from `noreply@akwadona.com` (DKIM-signed). Enter code + new password on the same page to reset.
+
+**Why custom, not Hosted UI** — full control over branding, i18n (6 languages), and UX consistency. The Cognito Hosted UI is English-only and unbranded.
 
 ---
 
@@ -339,7 +342,7 @@ Findings from the comprehensive review of June 2026.
 
 - **Dead commented-out code** at the top of `new-patient.ts`, `edit-patient.ts` (~400 lines each) — earlier component versions left commented in. Delete on next touch.
 - **`@HostBinding` on dashboard** uses 12-col Tailwind grid but the stat cards now use a nested 5-col grid. Mixed but readable.
-- **Hard-coded config** (`Config.tiryaqUrl`, Cognito client id, distribution id) baked into source. Move to a runtime `assets/runtime-config.json` to support multi-env later.
+- **Hard-coded config** (`Config.apiBaseUrl`, Cognito client id, distribution id) baked into source. Move to a runtime `assets/runtime-config.json` to support multi-env later.
 - **`HelpersService.notifySuccess/notifyInfo/notifyError`** — three near-duplicate methods; only `notifySuccess` short-circuits via `wasOfflineEnqueueRecent`. Other two should too.
 
 ### 7.4 Style
@@ -360,7 +363,7 @@ Findings from the comprehensive review of June 2026.
 | "Doctor already has an appointment …" on first try | Genuine overlap with another row | Pick a different time. |
 | "email already exists" on doctor create | Orphan EMAIL/QID/PHONE lock from a previous failed attempt | `node scripts/cleanup-doctor-locks.js`. |
 | New tab opens akwadona.com root instead of the deep link | Cognito hosted UI strips deep links | Already handled — `authGuard` saves `returnUrl` in localStorage and the AppComponent fallback navigates to it after sign-in. |
-| Login from `www.akwadona.com` fails with S3 `AccessDenied` | DNS for `www` was pointed at S3 not CloudFront | Now fixed — `www` CNAME to `d6i7iwknkj0bg.cloudfront.net`. |
+| Login from `www.akwadona.com` fails with S3 `AccessDenied` | DNS for `www` was pointed at S3 not CloudFront | Now fixed — `www` CNAME to `d37kqu4c91mlc4.cloudfront.net`. |
 
 ---
 

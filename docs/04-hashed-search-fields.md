@@ -198,9 +198,9 @@ For every new tenant onboarding (in addition to the Step 2 + Step 3 steps):
 2. Alias: `akwadona-tenant-<slug>-hmac`.
 3. Tags: `Product=Akwadona`, `Tenant=<slug>`, `TenantId=T_<id>`, `Purpose=HmacSearchFields`.
 4. Apply the standard HMAC key policy (root admin + deploy user management + Lambda role usage).
-5. Add the new tenantId → HMAC key ARN to `tenantHmacKeys` in `tiryaq-cdk-stack.ts`.
+5. Add the new tenantId → HMAC key ARN to `tenantHmacKeys` in `akwadona-cdk-stack.ts`.
 6. Add the same entry to `scripts/backfill-hash-search-fields.js` `TENANT_HMAC_KEYS`.
-7. `cd tiryaq-cdk && npx cdk deploy --require-approval never`.
+7. `cd akwadona-cdk && npx cdk deploy --require-approval never`.
 
 ### Backfilling existing rows
 

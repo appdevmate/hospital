@@ -23,17 +23,17 @@
 
 ## How it works (data flow)
 
-1. Operator (you) signs in at `www.akwadona.com` with `sami@akwadona.com`.
-2. Cognito issues a JWT with claim `role: operator`.
+1. Operator (you) signs in at `www.akwadona.com` with Cognito username `sami` (email `sami.t.taha98@gmail.com`) via the custom Angular login.
+2. Cognito issues a JWT. The pre-token-generation Lambda injects `role: operator` and `tenantId: OPERATOR` because the user is in the `Operator` group.
 3. Frontend `OperatorConsoleComponent` calls `/operator/*` endpoints with `Authorization: Bearer <jwt>`.
 4. API Gateway verifies the JWT signature.
-5. The `tiryaq-operator-console` Lambda re-checks `claims.role === 'operator'` (defense-in-depth).
+5. The `akwadona-operator-console` Lambda re-checks `claims.role === 'operator'` (defense-in-depth).
 6. Lambda reads only metadata rows (tenant profile, counters, stripped audit).
 7. Frontend renders the dashboard.
 
 ## Auth roles
 
-- All users live in a single Cognito User Pool (`tiryaq-user-pool`).
+- All users live in a single Cognito User Pool (`akwadona-user-pool`).
 - The `Operator` group marks platform staff.
 - Pre-token-generation Lambda inspects the user's groups:
   - In `Operator` group → JWT gets `role: operator` (no `tenantId`).
@@ -42,9 +42,9 @@
 ## Files (Step 7)
 
 ### Backend
-- `tiryaq-cdk/lambda/tiryaq-operator-console/index.js` — operator Lambda.
-- `tiryaq-cdk/lib/tiryaq-cdk-stack.ts` — wires the Lambda + `/operator/{proxy+}` route.
-- `tiryaq-cdk/lambda/cognito-pre-token-generation/index.js` — injects `role` claim.
+- `akwadona-cdk/lambda/akwadona-operator-console/index.js` — operator Lambda.
+- `akwadona-cdk/lib/akwadona-cdk-stack.ts` — wires the Lambda + `/operator/{proxy+}` route.
+- `akwadona-cdk/lambda/cognito-pre-token-generation/index.js` — injects `role` claim.
 
 ### Frontend
 - `src/app/services/operator.service.ts` — typed HTTP client.
@@ -87,7 +87,7 @@ Anything else in the request body is silently ignored (allow-list).
 
 ### Hardening track (future)
 
-- Create a **separate** Lambda execution role for `tiryaq-operator-console`.
+- Create a **separate** Lambda execution role for `akwadona-operator-console`.
 - Attach an explicit **DENY** statement on `kms:Decrypt` for all `T_*` tenant keys.
 - That way the IAM layer itself blocks accidental PHI access — not just the code.
 - Tracked under the per-tenant-throttling / hardening task list.
@@ -104,7 +104,7 @@ Anything else in the request body is silently ignored (allow-list).
 
 ## How to onboard a new operator
 
-1. AWS Console → Cognito → User Pools → `tiryaq-user-pool` → Users.
+1. AWS Console → Cognito → User Pools → `akwadona-user-pool` → Users.
 2. Create the user (`new.operator@akwadona.com`) and confirm.
 3. Add them to the **Operator** group.
 4. They get a JWT with `role: operator` on next login.
@@ -115,7 +115,7 @@ Anything else in the request body is silently ignored (allow-list).
 (Not handled by the console UI yet — manual for now.)
 
 1. Add the slug → tenantId mapping to:
-   - `tiryaq-cdk/lib/tiryaq-cdk-stack.ts` (`tenantKeys` + `tenantHmacKeys`).
+   - `akwadona-cdk/lib/akwadona-cdk-stack.ts` (`tenantKeys` + `tenantHmacKeys`).
    - `src/app/services/tenant.service.ts` (`TENANTS` map).
    - `scripts/lib/tenant-ids.js`.
 2. Create a per-tenant KMS CMK + HMAC key in the AWS Console.
@@ -126,12 +126,12 @@ Anything else in the request body is silently ignored (allow-list).
 
 ## Manual UAT checklist
 
-- [ ] `sami@akwadona.com` signs in at `www.akwadona.com` → Operator Console loads.
+- [ ] Operator user `sami` (email `sami.t.taha98@gmail.com`) signs in at `www.akwadona.com` → Operator Console loads.
 - [ ] Topbar shows purple **Operator** badge (no tenant pill).
 - [ ] Tenant list shows Tiryaq + Alshifaa.
 - [ ] Clicking a tenant shows its counts (patients, doctors, appointments).
 - [ ] Audit table shows recent metadata — no `before` / `after` fields visible.
-- [ ] **Edit** dialog updates plan + limits → audit row written with `actorEmail=sami@akwadona.com`.
+- [ ] **Edit** dialog updates plan + limits → audit row written with `actorEmail=sami.t.taha98@gmail.com`.
 - [ ] An operator visiting `tiryaq.akwadona.com` gets redirected to `www.akwadona.com/operator`.
 - [ ] A tenant user (any non-operator) visiting `www.akwadona.com` gets bounced to their tenant subdomain.
 

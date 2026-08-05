@@ -25,7 +25,7 @@
 
 ## The shared helper — `_shared/tenant-guard.js`
 
-Master copy at `tiryaq-cdk/lambda/_shared/tenant-guard.js`. Synced by `scripts/sync-shared-helpers.js` into every target Lambda folder before `cdk deploy`.
+Master copy at `akwadona-cdk/lambda/_shared/tenant-guard.js`. Synced by `scripts/sync-shared-helpers.js` into every target Lambda folder before `cdk deploy`.
 
 Public API:
 
@@ -44,12 +44,12 @@ Public API:
 
 | Lambda | DDB calls | Tenant refs before | Tenant refs after | Notes |
 |---|---|---|---|---|
-| tiryaq-bloodbank | 39 | 7 | 66 | Donors, donations, units, requests, crossmatches, issues — every row stamped + guarded |
-| tiryaq-pharmacy | 35 | 7 | 42 | Medications, inventory, dispense, POs, alerts — cross-domain reads (PATIENT/EXAM/MED) also tenant-checked |
-| tiryaq-examinations | 22 | 14 | 35 | **Fixed latent bug**: existing crypto calls referenced undefined `tenantId` (was `__tenantId`); renamed for consistency |
-| tiryaq-calendar | 16 | 6 | 25 | Calendars + events; cascade-delete also tenant-scoped |
-| tiryaq-scribe | 8 | 5 | 18 | Scribe sessions + audit rows; **fixed latent bug**: getTenant return value was discarded |
-| tiryaq-document-manager | 3 | 6 | 24 | No PHI rows in DDB — S3 key prefix rewritten to isolate listings per tenant |
+| akwadona-bloodbank | 39 | 7 | 66 | Donors, donations, units, requests, crossmatches, issues — every row stamped + guarded |
+| akwadona-pharmacy | 35 | 7 | 42 | Medications, inventory, dispense, POs, alerts — cross-domain reads (PATIENT/EXAM/MED) also tenant-checked |
+| akwadona-examinations | 22 | 14 | 35 | **Fixed latent bug**: existing crypto calls referenced undefined `tenantId` (was `__tenantId`); renamed for consistency |
+| akwadona-calendar | 16 | 6 | 25 | Calendars + events; cascade-delete also tenant-scoped |
+| akwadona-scribe | 8 | 5 | 18 | Scribe sessions + audit rows; **fixed latent bug**: getTenant return value was discarded |
+| akwadona-document-manager | 3 | 6 | 24 | No PHI rows in DDB — S3 key prefix rewritten to isolate listings per tenant |
 
 ## Per-row stamping — every `Put` now carries `tenantId`
 
@@ -74,9 +74,9 @@ Public API:
 
 ## Latent bugs uncovered + fixed
 
-- **tiryaq-examinations**: 7 calls to `encryptItem(..., tenantId)` referenced an undefined `tenantId` symbol (the variable was named `__tenantId`). Encryption likely worked because the helper tolerated undefined, but cross-tenant key separation was effectively broken. Fixed by renaming the variable.
-- **tiryaq-scribe**: router called `getTenant(event)` but discarded the return value. Throttle had to re-derive tenantId from claims as a fallback. Fixed by capturing properly.
-- **tiryaq-document-manager**: `/list` exposed every tenant's files. Fixed by switching the S3 key prefix to include `tenantId`.
+- **akwadona-examinations**: 7 calls to `encryptItem(..., tenantId)` referenced an undefined `tenantId` symbol (the variable was named `__tenantId`). Encryption likely worked because the helper tolerated undefined, but cross-tenant key separation was effectively broken. Fixed by renaming the variable.
+- **akwadona-scribe**: router called `getTenant(event)` but discarded the return value. Throttle had to re-derive tenantId from claims as a fallback. Fixed by capturing properly.
+- **akwadona-document-manager**: `/list` exposed every tenant's files. Fixed by switching the S3 key prefix to include `tenantId`.
 
 ## What the helpers do at the wire level
 

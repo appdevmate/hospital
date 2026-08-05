@@ -40,7 +40,7 @@ Akwadona is a cloud-hosted hospital management platform. It stores and processes
 | Tenant isolation | ✓ Cryptographic — different KMS keys, indexed per tenant, three-layer Lambda enforcement | `akwadona-multitenant-setup.md` |
 | Authentication | ✓ AWS Cognito, OAuth 2.0, MFA-eligible | `01-lambda-and-infrastructure.md` |
 | Authorization | ✓ Tenant claim in JWT + role-based gating in every Lambda | `akwadona-multitenant-setup.md` |
-| Audit logging | ✓ Encrypted before/after snapshots, 7-year retention | `tiryaq-cdk/lambda/tiryaq-appointments/index.js` writeAudit() |
+| Audit logging | ✓ Encrypted before/after snapshots, 7-year retention | `akwadona-cdk/lambda/akwadona-appointments/index.js` writeAudit() |
 | Backup & recovery | ✓ DynamoDB PITR (35 days), S3 versioning, KMS deletion window | `01-lambda-and-infrastructure.md` |
 | Vulnerability management | ✓ Code review on every release, AWS-managed runtime patching | Internal review process |
 | Workforce training | ✓ Annual data-protection training | HR onboarding checklist |
@@ -56,7 +56,7 @@ The strongest claim Akwadona makes to customers:
 
 The proof in one paragraph:
 
-Every PHI field is encrypted with a per-tenant KMS Customer-Managed Key. The decrypt permission on each key is granted ONLY to Lambda execution roles (via a key-policy condition matching `TiryaqCdkStack-*ServiceRole*`). No human IAM principal — including Akwadona engineers, the deploy user, or even the AWS account root in day-to-day operation — has decrypt. CloudTrail records every Decrypt call with the calling principal. Any human-principal decrypt would be visible and trigger immediate investigation.
+Every PHI field is encrypted with a per-tenant KMS Customer-Managed Key. The decrypt permission on each key is granted ONLY to Lambda execution roles (via a key-policy condition matching `AkwadonaCdkStack-*ServiceRole*`). No human IAM principal — including Akwadona engineers, the deploy user, or even the AWS account root in day-to-day operation — has decrypt. CloudTrail records every Decrypt call with the calling principal. Any human-principal decrypt would be visible and trigger immediate investigation.
 
 Empirical exhibits in the compliance binder:
 
@@ -88,10 +88,10 @@ For each compliance requirement, the file that proves it:
 
 Code-level evidence:
 
-- `tiryaq-cdk/lib/tiryaq-cdk-stack.ts` — infrastructure-as-code (tenant key maps, IAM policies, table schema, GSIs).
-- `tiryaq-cdk/lambda/_shared/crypto.js` — envelope encryption + HMAC helper (the security primitives).
-- `tiryaq-cdk/lambda/_shared/compliance.js` — data-class tagging + retention constants.
-- Every `tiryaq-cdk/lambda/<name>/index.js` — application code that ties primitives to API endpoints.
+- `akwadona-cdk/lib/akwadona-cdk-stack.ts` — infrastructure-as-code (tenant key maps, IAM policies, table schema, GSIs).
+- `akwadona-cdk/lambda/_shared/crypto.js` — envelope encryption + HMAC helper (the security primitives).
+- `akwadona-cdk/lambda/_shared/compliance.js` — data-class tagging + retention constants.
+- Every `akwadona-cdk/lambda/<name>/index.js` — application code that ties primitives to API endpoints.
 
 ---
 

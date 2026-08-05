@@ -54,7 +54,7 @@ If any step fails, the partial state is rolled back automatically:
 
 ## How the new admin signs in for the first time
 
-1. Open the sign-in URL the operator sent (https://app.akwadona.com/).
+1. Open the sign-in URL the operator sent (https://<slug>.akwadona.com/, e.g. https://tiryaq.akwadona.com/).
 2. Enter the username (`admin-<slug>`) and the temp password.
 3. The admin lands directly in the app — no force-change-password step because the operator already set the password as `Permanent: true`.
 4. As soon as possible, the admin should:
@@ -94,7 +94,7 @@ After rollback, the slug remains "reserved" in DDB with `status = rolledback`. T
 ## KMS key lifecycle
 
 - **Creation** — Wizard creates with `BypassPolicyLockoutSafetyCheck: true` because the operator role is deliberately excluded from the key policy. Only the AWS root account retains `kms:*`.
-- **Active life** — Indefinite. Tenant Lambdas use the keys via the `aws:PrincipalArn` `ArnLike TiryaqCdkStack-*ServiceRole*` condition.
+- **Active life** — Indefinite. Tenant Lambdas use the keys via the `aws:PrincipalArn` `ArnLike AkwadonaCdkStack-*ServiceRole*` condition.
 - **Deletion** — Minimum 7-day pending window (operator may extend up to 30 days). During pending window, data encrypted with the key cannot be decrypted. Used as a safety net before permanent deletion.
 - **Rotation** — Not enabled by default for new tenants. To enable, an operator/root user can call `kms:EnableKeyRotation` on the data CMK (HMAC keys do not support rotation).
 
@@ -113,7 +113,7 @@ aws kms schedule-key-deletion --key-id $kmsKeyId  --pending-window-in-days 7
 aws kms schedule-key-deletion --key-id $hmacKeyId --pending-window-in-days 7
 
 # 2. Delete the admin Cognito user
-aws cognito-idp admin-delete-user --user-pool-id us-east-1_RACghntmS --username $username
+aws cognito-idp admin-delete-user --user-pool-id us-east-1_KkINt5vOF --username $username
 
 # 3. Delete the TENANT row
 $key = @"
@@ -128,13 +128,13 @@ Data rows (patients, doctors, appointments, etc.) for the deleted tenant remain 
 
 Every new tenant gets the same defense-in-depth guarantee as Tiryaq and Alshifaa:
 
-- **Key policy** whitelists `arn:aws:iam::<account>:role/TiryaqCdkStack-*ServiceRole*` **AND** excludes `*Operator*` via `StringNotLike`. The operator role can never decrypt the new tenant's data, even though it created the key.
+- **Key policy** whitelists `arn:aws:iam::<account>:role/AkwadonaCdkStack-*ServiceRole*` **AND** excludes `*Operator*` via `StringNotLike`. The operator role can never decrypt the new tenant's data, even though it created the key.
 - **Identity policy** (operator role) — the existing explicit DENY on `kms:Decrypt`/`Encrypt`/`GenerateDataKey*`/`GenerateMac` already covers the original 4 tenant CMKs. New tenant CMKs are protected by the key-policy `ArnNotLike` layer (the IAM DENY list does not auto-grow to include them, by design — IAM doesn't allow Lambda principals to modify their own role policy).
 - **Audit log** records every `OPERATOR_CREATE_TENANT`. The clinical entity ids inside the audit are stripped before returning to the operator console (no `entityType` or `entityId`).
 
 ## IAM grants the operator console needs (CDK)
 
-Already wired in `tiryaq-cdk/lib/tiryaq-cdk-stack.ts`:
+Already wired in `akwadona-cdk/lib/akwadona-cdk-stack.ts`:
 
 ```ts
 operatorConsoleFn.addToRolePolicy({
@@ -164,16 +164,16 @@ The DENY ensures the operator can never accidentally delete an existing tenant's
 - **HTTP 409 "Tenant slug already exists"** — Pick a different slug. The previous slug may be in `status = rolledback` waiting on its KMS keys.
 - **HTTP 400 "slug must be lowercase, 3-32 chars"** — Slug regex is `^[a-z][a-z0-9-]{1,30}[a-z0-9]$`. Must start with a letter, end with alphanumeric, hyphens allowed in the middle only.
 - **HTTP 500 "Username cannot be of email format"** — Bug in older wizard code; admin username is now `admin-<slug>` not `admin@<slug>`. Pull latest and redeploy.
-- **HTTP 500 "Tenant onboarding failed: The new key policy will not allow you to update the key policy"** — KMS lockout safety check fired. Wizard sets `BypassPolicyLockoutSafetyCheck: true` so this should not happen; if it does, the Lambda code drifted. Verify `tiryaq-operator-console/index.js` still has the flag set.
+- **HTTP 500 "Tenant onboarding failed: The new key policy will not allow you to update the key policy"** — KMS lockout safety check fired. Wizard sets `BypassPolicyLockoutSafetyCheck: true` so this should not happen; if it does, the Lambda code drifted. Verify `akwadona-operator-console/index.js` still has the flag set.
 - **New admin can't sign in** — Confirm the username is `admin-<slug>` (not the email). The user pool uses email as an alias, not as the primary username.
 - **New tenant Lambda gets `No KMS key configured for tenant T_<id>` error** — The DDB fallback isn't finding the row. Check `aws dynamodb get-item --key {"PK":{"S":"TENANT#<slug>"},"SK":{"S":"PROFILE"}}` returns a row with both `kmsKeyArn` and `kmsHmacKeyArn` populated.
 
 ## File map
 
 ```
-tiryaq-cdk/lambda/_shared/crypto.js                   ← async key resolution + DDB fallback (Phase 1)
-tiryaq-cdk/lambda/tiryaq-operator-console/index.js    ← POST /operator/tenants handler   (Phase 2)
-tiryaq-cdk/lib/tiryaq-cdk-stack.ts                    ← IAM grants for KMS + Cognito     (Phase 3)
+akwadona-cdk/lambda/_shared/crypto.js                   ← async key resolution + DDB fallback (Phase 1)
+akwadona-cdk/lambda/akwadona-operator-console/index.js    ← POST /operator/tenants handler   (Phase 2)
+akwadona-cdk/lib/akwadona-cdk-stack.ts                    ← IAM grants for KMS + Cognito     (Phase 3)
 src/app/services/operator.service.ts                  ← createTenant() API method        (Phase 4)
 src/app/components/operator-console/
     tenant-onboarding-wizard.ts                       ← 4-step Angular form               (Phase 4)

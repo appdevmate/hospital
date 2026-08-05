@@ -125,7 +125,7 @@ This is where the Akwadona implementation lives. Each control mapped to a concre
 
 | Status | Akwadona implementation |
 |---|---|
-| ✓ Required | **Three audit layers.** (1) `tiryaq-appointments` writes `AUDIT#YYYY-MM-DD` rows with `before`/`after` snapshots, both encrypted with the tenant's CMK. (2) CloudTrail logs every AWS API call. (3) CloudWatch Logs hold Lambda execution traces for 1 month. Retention: 7 years on the audit table via Compliance Update 06. |
+| ✓ Required | **Three audit layers.** (1) `akwadona-appointments` writes `AUDIT#YYYY-MM-DD` rows with `before`/`after` snapshots, both encrypted with the tenant's CMK. (2) CloudTrail logs every AWS API call. (3) CloudWatch Logs hold Lambda execution traces for 1 month. Retention: 7 years on the audit table via Compliance Update 06. |
 
 ### (c)(1) Integrity
 
@@ -137,7 +137,7 @@ This is where the Akwadona implementation lives. Each control mapped to a concre
 
 | Status | Akwadona implementation |
 |---|---|
-| ✓ Required | AWS Cognito user pool. OAuth 2.0 authorization-code flow. JWT signed by Cognito, validated by API Gateway JWT authorizer before any Lambda runs. |
+| ✓ Required | AWS Cognito user pool. Custom Akwadona-branded Angular login calls `InitiateAuth` (`USER_PASSWORD_AUTH`) over REST — no Hosted UI. Cognito issues a JWT signed by its private key; API Gateway's JWT authorizer validates the signature on every request before any Lambda runs. First-login users complete the `NEW_PASSWORD_REQUIRED` challenge in-app; password resets go through `ForgotPassword` + DKIM-signed SES emails from `noreply@akwadona.com`. |
 
 ### (e)(1) Transmission Security
 
@@ -154,13 +154,13 @@ For an auditor / customer legal review, here are the file references that prove 
 
 | HIPAA control | Akwadona evidence file |
 |---|---|
-| Access control (a)(2)(iv) — Encryption | `docs/03-encryption-and-zero-knowledge.md`, `tiryaq-cdk/lambda/_shared/crypto.js` |
-| Access management (a)(4)(ii)(B) — Per-tenant isolation | `docs/akwadona-multitenant-setup.md`, `tiryaq-cdk/lib/tiryaq-cdk-stack.ts` (tenant-entityType-index) |
+| Access control (a)(2)(iv) — Encryption | `docs/03-encryption-and-zero-knowledge.md`, `akwadona-cdk/lambda/_shared/crypto.js` |
+| Access management (a)(4)(ii)(B) — Per-tenant isolation | `docs/akwadona-multitenant-setup.md`, `akwadona-cdk/lib/akwadona-cdk-stack.ts` (tenant-entityType-index) |
 | Search lookups without PHI leak | `docs/04-hashed-search-fields.md` |
-| Audit log encryption | `tiryaq-cdk/lambda/tiryaq-appointments/index.js` writeAudit() |
+| Audit log encryption | `akwadona-cdk/lambda/akwadona-appointments/index.js` writeAudit() |
 | Idempotency / replay protection | `docs/01-lambda-and-infrastructure.md` Phase D |
 | Contingency plan / offline mode | Phase E + F in `docs/02-application-and-testing.md` |
-| Person authentication | Cognito config in `tiryaq-cdk/lib/tiryaq-cdk-stack.ts` (lines 338–404) |
+| Person authentication | Cognito config in `akwadona-cdk/lib/akwadona-cdk-stack.ts` (lines 338–404) |
 | Transmission security | CloudFront + ACM in CDK stack |
 
 ---

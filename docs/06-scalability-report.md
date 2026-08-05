@@ -205,7 +205,7 @@ Notes:
 In priority order:
 
 1. **DEK cache in Lambda memory** — biggest single throughput win for read-heavy workloads. Estimated 1 day of work. Reduces KMS Decrypt by ~70% in steady state.
-2. **Reserved Lambda concurrency per critical function** — protects `tiryaq-appointments` and `getAllPatients` from starvation by other functions. CDK change.
+2. **Reserved Lambda concurrency per critical function** — protects `akwadona-appointments` and `getAllPatients` from starvation by other functions. CDK change.
 3. **DynamoDB DAX or in-Lambda LRU for tenant TENANT#<slug> profile rows** — read-mostly, small dataset, cache forever.
 4. **Per-tenant API Gateway throttling** — already designed (Task #73). Prevents one customer from starving others.
 5. **CloudFront caching for static reference data** (departments, specializations).

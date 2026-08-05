@@ -1,16 +1,17 @@
-# Tiryaq Hospital Platform — User Roles & Permissions
+# Akwadona Platform — User Roles & Permissions
 
 ## Overview
 
 The platform has 5 active roles. Each role is assigned in **AWS Cognito** via user groups. When a user logs in, their group membership is read from the Access Token and mapped to a role in the app.
 
-| Cognito Group | App Role |
-|---|---|
-| `Admin` | `admin` |
-| `Developers` | `developer` |
-| `Doctors` | `doctor` |
-| `Pharmacists` | `pharmacist` |
-| — | `unknown` (no group assigned) |
+| Cognito Group | App Role | Scope |
+|---|---|---|
+| `Operator` | `operator` | Akwadona platform staff. Lives at `www.akwadona.com/operator`. Sees tenant subscriptions / usage / audit metadata. **Cannot decrypt any tenant's PHI** (KMS key policies explicitly exclude `AkwadonaCdkStack-*Operator*` ARNs). JWT carries `tenantId=OPERATOR`. |
+| `Admin` | `admin` | Tenant administrator (per hospital). Manages users, departments, billing within that tenant. |
+| `Developers` | `developer` | Tenant-scope developer / power user. |
+| `Doctors` | `doctor` | Tenant-scope clinician. |
+| `Pharmacists` | `pharmacist` | Tenant-scope pharmacy staff. |
+| — | `unknown` (no group assigned) | Lands on the dashboard with no module access. Used as a guardrail. |
 
 ---
 

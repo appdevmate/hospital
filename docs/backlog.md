@@ -16,9 +16,9 @@ Anything below that bar is wrong by default. The conversation rule "act as a sen
 ## Pending tasks
 
 ### Step 2g — Per-tenant API throttling (DONE)
-- ✅ 2g.1 — Plan defaults + DynamoDB counter schema (see `tiryaq-cdk/lambda/lib/plan-defaults.js`, `docs/08-throttling.md`).
-- ✅ 2g.2 — Shared throttle module `tiryaq-cdk/lambda/lib/throttle.js`.
-- ✅ 2g.3 — Wired into 7 high-traffic Lambdas: getAllPatients, tiryaq-pharmacy, tiryaq-appointments, tiryaq-bloodbank, tiryaq-document-manager, tiryaq-calendar, tiryaq-examinations.
+- ✅ 2g.1 — Plan defaults + DynamoDB counter schema (see `akwadona-cdk/lambda/lib/plan-defaults.js`, `docs/08-throttling.md`).
+- ✅ 2g.2 — Shared throttle module `akwadona-cdk/lambda/lib/throttle.js`.
+- ✅ 2g.3 — Wired into 7 high-traffic Lambdas: getAllPatients, akwadona-pharmacy, akwadona-appointments, akwadona-bloodbank, akwadona-document-manager, akwadona-calendar, akwadona-examinations.
 - ✅ 2g.4 — Wired into all 23 remaining tenant Lambdas via batch script (createPatientSurgery removed earlier — not applicable).
 - ✅ 2g.5 — Per-tenant 429 count published as CloudWatch metric `Akwadona/Throttle/Hits` and surfaced on the operator Usage card with amber highlight when > 0.
 - 🔲 2g.6 — Load test verifying the limits clamp at the configured numbers. Optional verification.
@@ -39,7 +39,7 @@ $pad = $payload + ('=' * ((4 - ($payload.Length % 4)) % 4))
 $results = @{}
 $i = 0
 1..700 | ForEach-Object {
-    $code = curl.exe -s -o NUL -w "%{http_code}" -H "Authorization: Bearer $token" "https://jxz59jh15f.execute-api.us-east-1.amazonaws.com/patients?pageSize=1"
+    $code = curl.exe -s -o NUL -w "%{http_code}" -H "Authorization: Bearer $token" "https://a2s6jk35d9.execute-api.us-east-1.amazonaws.com/patients?pageSize=1"
     if (-not $results.ContainsKey($code)) { $results[$code] = 0 }
     $results[$code]++
     $i++
@@ -53,21 +53,22 @@ If you see `401` instead → token expired, log in again.
 
 ### Step 2d-4 — Per-row tenant enforcement (big domain Lambdas) — DONE
 - ✅ 2d-4.1 — Shared `_shared/tenant-guard.js` helper + `sync-shared-helpers.js` rewrite (per-helper target lists).
-- ✅ 2d-4.2 — `tiryaq-bloodbank` — every read guarded, every write conditioned, every Put stamped.
-- ✅ 2d-4.3 — `tiryaq-pharmacy` — including cross-domain reads (PATIENT / EXAM / MED).
-- ✅ 2d-4.4 — `tiryaq-examinations` — fixed latent `tenantId` undefined bug while wiring.
-- ✅ 2d-4.5 — `tiryaq-calendar` — calendar + events + cascade delete.
-- ✅ 2d-4.6 — `tiryaq-scribe` — fixed latent `getTenant` discarded return value.
-- ✅ 2d-4.7 — `tiryaq-document-manager` — closed S3 cross-tenant listing leak by adding `tenantId` segment to every S3 key (legacy keys still admin-readable until migration).
+- ✅ 2d-4.2 — `akwadona-bloodbank` — every read guarded, every write conditioned, every Put stamped.
+- ✅ 2d-4.3 — `akwadona-pharmacy` — including cross-domain reads (PATIENT / EXAM / MED).
+- ✅ 2d-4.4 — `akwadona-examinations` — fixed latent `tenantId` undefined bug while wiring.
+- ✅ 2d-4.5 — `akwadona-calendar` — calendar + events + cascade delete.
+- ✅ 2d-4.6 — `akwadona-scribe` — fixed latent `getTenant` discarded return value.
+- ✅ 2d-4.7 — `akwadona-document-manager` — closed S3 cross-tenant listing leak by adding `tenantId` segment to every S3 key (legacy keys still admin-readable until migration).
 - ✅ 2d-4.8 — Runbook + test plan at `docs/14-tenant-row-enforcement.md`.
 - 🔲 2d-4.9 — Migration script to rewrite legacy S3 keys (`folder/<userId>/...` → `folder/<tenantId>/<userId>/...`) so the legacy admin-only branch can be removed.
 - 🔲 2d-4.10 — Cross-tenant probe automated test (CI). Seed 2 tenants, try every guessed-id read, expect 404 every time.
 
-### Step 8 — AWS resource rename `tiryaq-*` → `akwadona-*` (Phase A DONE)
-- ✅ Phase A — All 39 CDK-managed Lambdas now `akwadona-*` (10 originally prefixed + 27 camelCase + 2 patient ones from initial test). Runbook at `docs/09-rename-runbook.md`.
-- ✅ All renames completed without downtime (in-place rename, API Gateway routes auto-updated by CloudFormation).
-- 🔲 Phase B — stack rename, S3 bucket renames, API Gateway display name, Cognito User Pool display name. Requires planned maintenance window. Deferred.
-- 🔲 Cleanup — `tiryaq-seed`, `tiryaq-create-users` (manually-created utilities) + `cognito-pre-token-generation` (left alone to avoid breaking the trigger). Low priority.
+### Step 8 — AWS resource rename `tiryaq-*` → `akwadona-*` (COMPLETE)
+- ✅ Phase A — All 39 CDK-managed Lambdas renamed.
+- ✅ Phase B — Full rename via teardown + rebuild on 2026-06-30. New `AkwadonaCdkStack` deployed fresh. Old `TiryaqCdkStack` destroyed; one `tiryaq-audit-*` bucket survives under COMPLIANCE Object Lock until ~2033. New audit bucket uses suffix `akwadona-audit-v2-*` to avoid the v1 name conflict.
+- ✅ Stack name, S3 buckets, KMS aliases, API Gateway, Cognito user pool, CloudFront aliases — all renamed to `akwadona-*` / `AkwadonaCdkStack`.
+- ✅ Custom Cognito domain `auth.akwadona.com` re-attached to new pool.
+- ✅ Frontend redeployed with new pool/client/API IDs.
 
 ### (Old Step 8 plan — kept for reference)
 - Rename: Lambda functions, S3 buckets, CloudFront distribution alias, CDK stack name, log groups, IAM roles.
@@ -91,7 +92,11 @@ If you see `401` instead → token expired, log in again.
 - ✅ Operator console + sidebar menu translated.
 - ✅ Runbook: `docs/13-i18n.md`.
 - 🔲 Phase 2 — translate dashboard, patient management, appointments, blood bank, pharmacy (incremental — each component imports TranslatePipe + keys added to JSONs).
-- 🔲 Phase 3 — Cognito Hosted UI custom branding for the login page in 6 languages.
+- ✅ Phase 3 — login / forgot-password / first-login-challenge pages are translated. They are custom Angular components (Hosted UI was replaced), so they use the same `ngx-translate` pipeline as the rest of the app.
+
+### SES production-access approval (PENDING)
+- ✅ SES domain identity verified, DKIM signed, MAIL-FROM subdomain configured, Cognito wired to send via `noreply@akwadona.com`.
+- 🔲 Submit / chase the `put-account-details --production-access-enabled` request — currently sandboxed (200 emails / 24h cap, recipients must be verified). Required before non-verified recipients can receive password-reset codes.
 
 ### (Old i18n plan — kept for reference)
 - Languages: **Arabic, English, French, Spanish, German, Dutch**.

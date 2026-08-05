@@ -53,13 +53,14 @@ export class NotificationsService {
             sources['patients'] = this.patientsService.getPatientsPage({ pageSize: 200 }).pipe(catchError(() => of({ data: [] })));
         }
 
-        // Pharmacy alerts — admin, pharmacist, developer
-        if (isAdmin || isPharmacist || isDeveloper) {
+        // Pharmacy alerts + pending prescriptions — PHARMACISTS ONLY.
+        // HIPAA minimum-necessary (45 CFR 164.502(b)): the UI must not even
+        // REQUEST data a role has no need for. The pharmacy Lambda already
+        // enforces this with a 403 for non-pharmacists (canAccessPharmacy);
+        // calling it for admins/developers just produced console 403 noise.
+        // Same pattern as Epic/Cerner role-scoped dashboards.
+        if (isPharmacist) {
             sources['pharmacyAlerts'] = this.pharmacyService.getAlerts().pipe(catchError(() => of({ count: 0, alerts: [] })));
-        }
-
-        // Pending prescriptions — admin, pharmacist, developer
-        if (isAdmin || isPharmacist || isDeveloper) {
             sources['pendingPrescriptions'] = this.pharmacyService.getPrescriptions('ordered').pipe(catchError(() => of([])));
         }
 

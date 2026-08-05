@@ -32,7 +32,7 @@ Artillery doesn't handle OAuth flows. Sign in manually first:
 
 ```powershell
 $env:AKWADONA_JWT = "eyJraWQiOi..."   # paste here
-$env:AKWADONA_API_URL = "https://jxz59jh15f.execute-api.us-east-1.amazonaws.com"
+$env:AKWADONA_API_URL = "https://a2s6jk35d9.execute-api.us-east-1.amazonaws.com"
 ```
 
 JWT expires after 1 hour — re-fetch if test takes longer.

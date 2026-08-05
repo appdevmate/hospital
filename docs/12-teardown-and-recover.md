@@ -27,6 +27,7 @@ Two PowerShell scripts that flip Akwadona between "live in AWS" and "$0 / not ru
 | ACM certificate `auth.akwadona.com` | **Stays** (free; survives for next deploy) |
 | Route 53 hosted zone (if any) | **Stays** (~$0.50/month) |
 | GoDaddy domain | **Stays** (not AWS) |
+| Audit bucket (`akwadona-audit-v2-*`) | **Stays** — COMPLIANCE Object Lock, 7-year retention (HIPAA WORM). Cannot be deleted until retention expires (~2033). On next deploy, increment the version suffix in CDK if the existing audit bucket blocks. |
 
 **Expected monthly bill after teardown:** roughly $0. Maybe $0.50 if you keep a Route 53 zone.
 
@@ -55,7 +56,7 @@ What it does (in order):
 3. Runs `scripts/seed-tenants.ps1` to repopulate Tiryaq + Alshifaa profile rows.
 4. Prints the **manual** next steps you need to do:
    - Build + sync the Angular frontend.
-   - Re-add `sami@akwadona.com` to the `Operator` Cognito group (Console → Cognito → User Pool → Groups → Operator → Add Users).
+   - Re-create the operator user. Cognito username is `sami` (not the email). Email attribute `sami.t.taha98@gmail.com`. Add to the `Operator` group. See `15-tenant-onboarding-wizard.md` for the operator-user CLI snippet.
 
 Takes ~5–8 minutes.
 

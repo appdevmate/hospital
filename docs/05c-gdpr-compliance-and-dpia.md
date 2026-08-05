@@ -294,7 +294,7 @@ Annual DPIA review scheduled. Triggers for ad-hoc review: new tenant onboarding,
 | GDPR control | Akwadona evidence file |
 |---|---|
 | Art. 5(1)(f) integrity & confidentiality | `docs/03-encryption-and-zero-knowledge.md`, `docs/04-hashed-search-fields.md` |
-| Art. 5(1)(e) storage limitation | `tiryaq-cdk/lambda/_shared/compliance.js` (RETENTION) |
+| Art. 5(1)(e) storage limitation | `akwadona-cdk/lambda/_shared/compliance.js` (RETENTION) |
 | Art. 25 by design & by default | `docs/akwadona-multitenant-setup.md`, all of `docs/03-*` and `docs/04-*` |
 | Art. 28 processor | `docs/05e-dpa-template.md` (DPA) |
 | Art. 30 records of processing | This document + per-tenant DPA registry |

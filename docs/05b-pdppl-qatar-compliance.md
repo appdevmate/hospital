@@ -203,14 +203,14 @@ For an audit or hospital legal review, point to:
 
 | PDPPL Article | Evidence file |
 |---|---|
-| Art. 7 retention | `tiryaq-cdk/lambda/_shared/compliance.js` (RETENTION constants) |
+| Art. 7 retention | `akwadona-cdk/lambda/_shared/compliance.js` (RETENTION constants) |
 | Art. 8 minimisation | `docs/03-encryption-and-zero-knowledge.md` field tables |
 | Art. 9 confidentiality | `docs/03-encryption-and-zero-knowledge.md` (encryption), `docs/04-hashed-search-fields.md` (search), `docs/akwadona-multitenant-setup.md` (tenant isolation) |
-| Art. 11 subject rights | `tiryaq-cdk/lambda/getPatientByID/`, `updatePatient/`, `deletePatient/` |
+| Art. 11 subject rights | `akwadona-cdk/lambda/getPatientByID/`, `updatePatient/`, `deletePatient/` |
 | Art. 14 cross-border | Current AWS region `us-east-1` + DPA section 7 (notice to customer) |
 | Art. 16 special nature | `docs/03-encryption-and-zero-knowledge.md` (entire Step 3 design) |
 | Art. 19 breach notification | `docs/05f-compliance-overview.md` incident playbook |
-| NCSA NIA | `tiryaq-cdk/lambda/_shared/compliance.js` (DATA_CLASS) |
+| NCSA NIA | `akwadona-cdk/lambda/_shared/compliance.js` (DATA_CLASS) |
 
 ---
 

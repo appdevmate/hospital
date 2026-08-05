@@ -792,7 +792,9 @@ async function createTenant(body, operator) {
                 username:     adminUser,
                 email:        adminEmail,
                 tempPassword: tempPass,
-                signInUrl:    'https://app.akwadona.com/'
+                // Each tenant signs in on their own subdomain (matches the
+                // wildcard cert + CloudFront aliases + auth guard routing).
+                signInUrl:    `https://${slug}.akwadona.com/`
             },
             createdAt:   now
         });

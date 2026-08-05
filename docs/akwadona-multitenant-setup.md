@@ -24,10 +24,10 @@ Both IDs are deterministic: `T_` + first 8 hex chars of `SHA-256("AKWADONA_TENAN
 
 ## Infrastructure references
 
-- CloudFront distribution: `E1Z1ZKYM74LVA7` → `d6i7iwknkj0bg.cloudfront.net`
+- CloudFront distribution: `EMIDMHCZ9PRK4` → `d37kqu4c91mlc4.cloudfront.net`
 - AWS account: `483176634665`
-- Cognito user pool: `tiryaq-user-pool` (region `us-east-1`) — single pool serves all tenants
-- App client: `Tiryaq` (`2nfjfipi8hri262pjohtpgl45q`)
+- Cognito user pool: `akwadona-user-pool` (region `us-east-1`) — single pool serves all tenants
+- App client: `akwadona-app-client` (`5i94ivu752m12uivl62v99pu4`)
 - DynamoDB table: `Hospital` (region `us-east-1`)
 - ACM wildcard cert: `*.akwadona.com` in `us-east-1`
 - Domain registrar: GoDaddy
@@ -45,9 +45,9 @@ Done in earlier work — verified live.
 
 To add a future tenant subdomain (e.g. `newhospital.akwadona.com`):
 
-1. GoDaddy → add CNAME `newhospital` → `d6i7iwknkj0bg.cloudfront.net`.
-2. CloudFront `E1Z1ZKYM74LVA7` → Alternate domain names → add `newhospital.akwadona.com` → save.
-3. Cognito → app client `Tiryaq` → callback + sign-out URLs → add the new subdomain (both with and without trailing slash) → save.
+1. GoDaddy → add CNAME `newhospital` → `d37kqu4c91mlc4.cloudfront.net`.
+2. CloudFront `EMIDMHCZ9PRK4` → Alternate domain names → add `newhospital.akwadona.com` → save.
+3. Cognito → app client `akwadona-app-client` → callback + sign-out URLs → add the new subdomain (both with and without trailing slash) → save.
 4. DNS propagation: 5–60 min.
 
 ---
@@ -64,19 +64,19 @@ To add a future tenant subdomain (e.g. `newhospital.akwadona.com`):
 
 ## Cognito — `custom:tenantId`
 
-- Added as a custom attribute on `tiryaq-user-pool` (Step 2a, CDK).
+- Added as a custom attribute on `akwadona-user-pool` (Step 2a, CDK).
 - Every user has exactly one tenantId. Users not yet assigned default to `UNASSIGNED` (rejected by every Lambda).
 - Pre-token-generation Lambda (`cognito-pre-token-generation`) injects the attribute into both the **access token** and the **ID token** as a `tenantId` claim, so backend Lambdas and the frontend both read it directly.
 
 **Onboarding a new user to a tenant (operator action):**
 
-Via Console: Cognito → User Pools → `tiryaq-user-pool` → Users → click user → edit attributes → set `custom:tenantId` → save.
+Via Console: Cognito → User Pools → `akwadona-user-pool` → Users → click user → edit attributes → set `custom:tenantId` → save.
 
 Via CLI:
 
 ```powershell
 aws cognito-idp admin-update-user-attributes `
-    --user-pool-id us-east-1_RACghntmS `
+    --user-pool-id us-east-1_KkINt5vOF `
     --username <username> `
     --user-attributes Name=custom:tenantId,Value=T_<id> `
     --region us-east-1
@@ -117,7 +117,7 @@ Legacy global counters (`COUNTER#PATIENTS` etc.) remain on disk but are no longe
 
 ## Lambda enforcement — 3 layers of defence
 
-Every PHI-touching Lambda implements all three layers. The pattern is documented in `tiryaq-cdk/lambda/_shared/tenant.js` (reference copy) and inlined into each Lambda's `index.js`.
+Every PHI-touching Lambda implements all three layers. The pattern is documented in `akwadona-cdk/lambda/_shared/tenant.js` (reference copy) and inlined into each Lambda's `index.js`.
 
 **Layer 1 — Entry guard.** First line of the handler reads `tenantId` from the JWT. If the user has no tenant (claim is missing or `UNASSIGNED`), return 403 before touching the database.
 
@@ -127,8 +127,8 @@ Every PHI-touching Lambda implements all three layers. The pattern is documented
 
 **Coverage status (June 2026):**
 
-- Full 3-layer enforcement: `createPatient`, `getAllPatients`, `getPatientByID`, `updatePatient`, `deletePatient`, `getPatientsDataByFilters`, `createDoctor`, `getAllDoctors`, `getDoctorByID`, `getDoctorByEmail`, `updateDoctor`, `deleteDoctor`, `tiryaq-appointments`, `createPatientPayment`, `getAllPaymentsForPatient`, `listAllPaymentsForPatientByID`, `getPaymentByID`, `updatePatientPayment`, `deletePayment`, `getSurgeryByID`, `listAllSurgeriesForPatientByID`, `getAllInvoices`, `tiryaq-audit`, `tiryaq-admin-panel`.
-- Entry guard only (per-row enforcement queued as task #74): `tiryaq-bloodbank`, `tiryaq-calendar`, `tiryaq-document-manager`, `tiryaq-examinations`, `tiryaq-pharmacy`, `tiryaq-scribe`. Safe today (Tiryaq is the only customer with data); must be completed before any second tenant goes active.
+- Full 3-layer enforcement: `createPatient`, `getAllPatients`, `getPatientByID`, `updatePatient`, `deletePatient`, `getPatientsDataByFilters`, `createDoctor`, `getAllDoctors`, `getDoctorByID`, `getDoctorByEmail`, `updateDoctor`, `deleteDoctor`, `akwadona-appointments`, `createPatientPayment`, `getAllPaymentsForPatient`, `listAllPaymentsForPatientByID`, `getPaymentByID`, `updatePatientPayment`, `deletePayment`, `getSurgeryByID`, `listAllSurgeriesForPatientByID`, `getAllInvoices`, `akwadona-audit`, `akwadona-admin-panel`.
+- Entry guard only (per-row enforcement queued as task #74): `akwadona-bloodbank`, `akwadona-calendar`, `akwadona-document-manager`, `akwadona-examinations`, `akwadona-pharmacy`, `akwadona-scribe`. Safe today (Tiryaq is the only customer with data); must be completed before any second tenant goes active.
 
 ---
 
@@ -188,8 +188,9 @@ Re-runs are safe — already-tagged rows / users are skipped.
 
 ## Open follow-ups
 
-- **Task #74** — finish per-row tenant enforcement on `tiryaq-bloodbank`, `tiryaq-calendar`, `tiryaq-document-manager`, `tiryaq-examinations`, `tiryaq-pharmacy`, `tiryaq-scribe`.
-- **Task #73** — software per-tenant API throttling (operator-editable in Step 7).
-- **Task #75** — rename `tiryaq-*` AWS resources → `akwadona-*` (Cognito hosted domain, CDK stack, Lambdas, S3 buckets) in a planned coordinated migration after Step 6.
-- **Step 3 (next)** — per-tenant KMS keys + envelope encryption so Akwadona literally cannot decrypt customer PHI.
-- **Step 7** — operator console at `www.akwadona.com`.
+- **Task #74** — DONE. Per-row tenant enforcement is wired across all big-domain Lambdas.
+- **Task #73** — DONE. Software per-tenant API throttling is live (operator-editable).
+- **Task #75** — DONE. AWS resource rename completed (teardown + rebuild). All `tiryaq-*` resources destroyed; new stack is `AkwadonaCdkStack` with `akwadona-*` Lambdas, S3 buckets, Cognito pool, KMS aliases. One legacy `tiryaq-audit-*` bucket remains under COMPLIANCE Object Lock until ~2033.
+- **Step 3** — DONE. Per-tenant KMS keys + envelope encryption are live.
+- **Step 7** — DONE. Operator console at `www.akwadona.com` shipped.
+- **Next** — SES production-access approval (currently sandboxed).

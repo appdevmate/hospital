@@ -1,4 +1,4 @@
-# Tiryaq Hospital — Full Test Plan
+# Akwadona Platform — Full Test Plan
 
 **Document version:** 2.1
 **Last updated:** 2026-05-13 (post-ScribeFirst, post-pharmacy-route-alignment, post-CORS-cleanup)
@@ -9,6 +9,20 @@
 - **Keep** `DEPARTMENT#`, `SPECIALIZATION#`, `COUNTER#`, `MED#` (and `INVENTORY` SKs), and all `AUDIT#YYYY-MM-DD` rows (PDPPL retention; do not delete audit history).
 - After cleanup, reset counters manually: set `COUNTER#PATIENTS / TOTAL.total = 0` and `COUNTER#DOCTORS / TOTAL.total = 0`. The seed Lambda no longer auto-resets these on `cdk deploy`.
 - Use Chrome or Edge (Voice Scribe needs the Web Speech API).
+
+## 0. Auth flow (custom Angular login)
+
+The Cognito Hosted UI is no longer used. The Akwadona Angular app serves its own `/login`, `/forgot-password`, and `/change-password` (first-login challenge) pages. All flows call Cognito over REST.
+
+| # | Action | Expected |
+|---|---|---|
+| 0.1 | Open `tiryaq.akwadona.com` (or any tenant subdomain) | Lands on the Akwadona-branded login page. Language picker visible. Remember-me checkbox visible. NO redirect to `auth.akwadona.com`. |
+| 0.2 | Sign in with valid credentials | `InitiateAuth` succeeds, JWTs stored in `sessionStorage` (plus `localStorage` if Remember-me ticked), routed to dashboard. |
+| 0.3 | Sign in with wrong password | Inline error on the login form (localized). |
+| 0.4 | Sign in as a fresh user (Status `FORCE_CHANGE_PASSWORD`) | In-app "Change Password" screen completes the `NEW_PASSWORD_REQUIRED` challenge, then dashboard. |
+| 0.5 | Click "Forgot password?" → enter username | Email with 6-digit code from `noreply@akwadona.com` (DKIM-signed); enter code + new password → routed back to login. |
+| 0.6 | Click avatar → Sign Out | Tokens cleared, routed to `/login`. |
+| 0.7 | While signed-in, change language in topbar | UI re-renders in the chosen language (including the login page on next sign-out). |
 
 ---
 
@@ -39,7 +53,7 @@
 | `COUNTER#DOCTORS / TOTAL` | Always exactly 1 record, value increments |
 | `COUNTER#PATIENTS / TOTAL` | Always exactly 1 record, value increments |
 
-> **Calendar migration note (2026-05-18):** Hospital calendar data now lives in the Hospital table (CALENDAR#/EVENT#). The previous external `CalendarPlatform` SaaS API has been retired for PDPPL data residency + clinical privacy. Old test plan revisions that referenced `TENANT#tiryaq-hospital-001` PartiQL queries are no longer applicable.
+> **Calendar migration note (2026-05-18):** Hospital calendar data now lives in the Hospital table (CALENDAR#/EVENT#). The previous external `CalendarPlatform` SaaS API has been retired for PDPPL data residency + clinical privacy. Old test plan revisions that referenced `TENANT#akwadona-hospital-001` PartiQL queries are no longer applicable.
 
 ---
 
@@ -88,7 +102,7 @@ SELECT * FROM "Hospital" WHERE PK = 'CALENDAR#<calendarId>' AND begins_with(SK, 
 ```
 Expected: duty shift events with `description = 'DUTY_SHIFT'`, `color = '#10B981'`, `EntityType = 'CALENDAR_EVENT'`
 
-**Verify in DevTools Network tab:** calendar calls now hit `https://jxz59jh15f.execute-api.us-east-1.amazonaws.com/calendars` (the Tiryaq API) with an `Authorization: Bearer ...` header — NOT the old `od8gx8kld8…` endpoint with an `x-api-key` header.
+**Verify in DevTools Network tab:** calendar calls now hit `https://a2s6jk35d9.execute-api.us-east-1.amazonaws.com/calendars` (the Akwadona API) with an `Authorization: Bearer ...` header — NOT the old `od8gx8kld8…` endpoint with an `x-api-key` header.
 
 ---
 
@@ -401,7 +415,7 @@ Expected: 1 audit row with `action = 'SCRIBE_APPROVED'`, `dataClass = 'AUDIT'`
 - Verify upload completes, file appears in the list
 
 **Verify in S3 Console:**
-- Bucket: `tiryaq-documents` → `patients-documents/` → uploaded file is present
+- Bucket: `akwadona-documents` → `patients-documents/` → uploaded file is present
 
 - Click Download → file opens correctly
 - Click Delete → file disappears from list and from S3
@@ -444,11 +458,11 @@ Expected: rows with the actor email matching the admin who performed the change
 
 - Open DevTools → Network tab
 - Hit each of these from `https://www.akwadona.com`:
-  - `GET /pharmacy/alerts` (tiryaq-pharmacy)
-  - `GET /examinations` (tiryaq-examinations)
-  - `GET /appointments` (tiryaq-appointments)
-  - `GET /admin/audit` (tiryaq-admin-panel)
-  - `GET /documents/folders` (tiryaq-document-manager)
+  - `GET /pharmacy/alerts` (akwadona-pharmacy)
+  - `GET /examinations` (akwadona-examinations)
+  - `GET /appointments` (akwadona-appointments)
+  - `GET /admin/audit` (akwadona-admin-panel)
+  - `GET /documents/folders` (akwadona-document-manager)
 - All 5 should return 200 with no CORS error in console
 - Response headers should include `Access-Control-Allow-Origin: https://www.akwadona.com` (added by API Gateway, not the Lambda)
 
@@ -457,7 +471,7 @@ Expected: rows with the actor email matching the admin who performed the change
 - In a separate browser tab, run from DevTools console (anywhere outside the allow-list):
 
 ```js
-fetch('https://jxz59jh15f.execute-api.us-east-1.amazonaws.com/pharmacy/alerts', {
+fetch('https://a2s6jk35d9.execute-api.us-east-1.amazonaws.com/pharmacy/alerts', {
   method: 'OPTIONS',
   headers: { 'Origin': 'https://evil.example', 'Access-Control-Request-Method': 'GET' }
 }).then(r => console.log('status', r.status, 'allow-origin', r.headers.get('access-control-allow-origin')));

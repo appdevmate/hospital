@@ -42,14 +42,14 @@ Each hospital we serve is called a **tenant** — like an apartment tenant: they
 - **What it is:** A piece of code that runs only when a request arrives, then disappears. AWS spins up a fresh "container" for each invocation.
 - **Why it exists (objective):** to remove the cost and operational burden of running servers 24/7. You pay per millisecond of execution instead of paying for an idle machine.
 - **Real-life example:** A food truck that only opens when a customer arrives, serves them, and shuts down. No rent on an idle restaurant.
-- **How Akwadona uses it:** ~30 Lambda functions, one per backend task: `tiryaq-getAllPatients`, `tiryaq-createDoctor`, `tiryaq-operator-console`, etc.
+- **How Akwadona uses it:** ~30 Lambda functions, one per backend task: `akwadona-getAllPatients`, `akwadona-createDoctor`, `akwadona-operator-console`, etc.
 
 ### 3.2 API Gateway
 
 - **What it is:** The single public HTTPS endpoint in front of all our Lambdas. It routes incoming HTTP requests to the right Lambda.
 - **Why it exists (objective):** to enforce shared concerns once (CORS, JWT validation, rate limiting, logging, TLS termination) instead of each Lambda re-implementing them.
 - **Real-life example:** A hotel reception desk. Every visitor passes through reception, gets verified, then is sent to the right floor.
-- **How Akwadona uses it:** one HTTP API (`jxz59jh15f.execute-api.us-east-1.amazonaws.com`) with a JWT authorizer attached to every protected route.
+- **How Akwadona uses it:** one HTTP API (`a2s6jk35d9.execute-api.us-east-1.amazonaws.com`) with a JWT authorizer attached to every protected route.
 
 ### 3.3 DynamoDB
 
@@ -63,21 +63,21 @@ Each hospital we serve is called a **tenant** — like an apartment tenant: they
 - **What it is:** Amazon's file storage. You upload files, you can download them later. Unlimited size, very cheap.
 - **Why it exists (objective):** to store files (images, PDFs, lab reports) that are too big or wrong-shaped for a database. DynamoDB has a 400 KB row limit; S3 has no practical limit.
 - **Real-life example:** A giant warehouse with unlimited shelves. You give a box, get a receipt, retrieve it later by receipt number.
-- **How Akwadona uses it:** two buckets — one holds the Angular app's static files (HTML/CSS/JS), one (`tiryaq-documents-…`) holds uploaded patient documents and lab reports.
+- **How Akwadona uses it:** two buckets — one holds the Angular app's static files (HTML/CSS/JS), one (`akwadona-documents-…`) holds uploaded patient documents and lab reports.
 
 ### 3.5 CloudFront — CDN (Content Delivery Network)
 
 - **What it is:** Amazon's network of "edge servers" spread across hundreds of cities. Copies of our files live at every edge.
 - **Why it exists (objective):** to make web pages load fast for users no matter where they are in the world. Without CloudFront, every doctor in Qatar would download our JS files from Virginia → slow.
 - **Real-life example:** Instead of shipping pizza from Italy to every customer worldwide, Domino's opens a branch in every major city. The customer picks up locally.
-- **How Akwadona uses it:** one CloudFront distribution (`E1Z1ZKYM74LVA7`) caches the Angular app. A doctor in Doha gets the app from the Bahrain or Mumbai edge in milliseconds.
+- **How Akwadona uses it:** one CloudFront distribution (`EMIDMHCZ9PRK4`) caches the Angular app. A doctor in Doha gets the app from the Bahrain or Mumbai edge in milliseconds.
 
 ### 3.6 Cognito
 
 - **What it is:** Amazon's user-management and login service.
 - **Why it exists (objective):** so we don't have to build our own login system (which is hard to do safely). Cognito handles password storage, password resets, multi-factor auth, social login, and OAuth2/OIDC.
 - **Real-life example:** A passport office. Every user gets an account once. To enter the country, they show their passport (JWT) which the passport office issued.
-- **How Akwadona uses it:** one User Pool (`us-east-1_RACghntmS`). All hospital users + Akwadona staff live in it. Groups (`Admin`, `Doctor`, `Pharmacist`, `Operator`) decide what role they have. Login page is at `auth.akwadona.com`.
+- **How Akwadona uses it:** one User Pool (`us-east-1_KkINt5vOF`). All hospital users + Akwadona staff live in it. Groups (`Admin`, `Doctor`, `Pharmacist`, `Operator`) decide what role they have. Login page is at `auth.akwadona.com`.
 
 ### 3.7 KMS — Key Management Service
 
@@ -108,7 +108,7 @@ Each hospital we serve is called a **tenant** — like an apartment tenant: they
 - **What it is:** A way to describe AWS infrastructure as code (TypeScript). You write code, run `cdk deploy`, AWS builds the matching infrastructure.
 - **Why it exists (objective):** to make infrastructure repeatable, reviewable, and recoverable. Without CDK, you build things by clicking around the AWS Console — and if your account is wiped, you can't rebuild from memory.
 - **Real-life example:** Architectural blueprints. Workers build a building from the blueprint. If the building burns down, you rebuild from the same blueprint.
-- **How Akwadona uses it:** the file `tiryaq-cdk/lib/tiryaq-cdk-stack.ts` describes our whole AWS setup. `npx cdk deploy` brings up the entire system from scratch in ~5 minutes.
+- **How Akwadona uses it:** the file `akwadona-cdk/lib/akwadona-cdk-stack.ts` describes our whole AWS setup. `npx cdk deploy` brings up the entire system from scratch in ~5 minutes.
 
 ### 3.11 ACM — AWS Certificate Manager
 
@@ -277,7 +277,7 @@ Each hospital we serve is called a **tenant** — like an apartment tenant: they
 - **What it is:** A documented set of endpoints (URLs) that one program calls to use another program's features.
 - **Why it exists (objective):** so programs can talk without humans in the middle. The browser calls our API to add a patient; no human types in the database.
 - **Real-life example:** A restaurant menu. The diner orders by number; the kitchen knows what to make. The menu is the contract.
-- **How Akwadona uses it:** we expose ~50 API endpoints under `jxz59jh15f.execute-api.us-east-1.amazonaws.com/*`.
+- **How Akwadona uses it:** we expose ~50 API endpoints under `a2s6jk35d9.execute-api.us-east-1.amazonaws.com/*`.
 
 ### 4.23 REST
 
@@ -376,7 +376,7 @@ Each hospital we serve is called a **tenant** — like an apartment tenant: they
 - **What it is:** Describing servers, databases, networks in code instead of clicking around the AWS Console.
 - **Why it exists (objective):** to make infrastructure reviewable (in git), repeatable, and recoverable.
 - **Real-life example:** The recipe in a cookbook — anyone with the recipe can reproduce the dish.
-- **How Akwadona uses it:** CDK is our IaC tool. The `tiryaq-cdk/` folder is our infrastructure recipe.
+- **How Akwadona uses it:** CDK is our IaC tool. The `akwadona-cdk/` folder is our infrastructure recipe.
 
 ### 4.36 Region / Availability Zone (AZ)
 
@@ -528,7 +528,7 @@ Operator console at `www.akwadona.com/operator` hits the same API Gateway but on
 | Is our data encrypted? | Yes — AES-256 at rest, TLS 1.2+ in transit, per-hospital KMS keys. |
 | Can we have our own database? | Today: no (shared DynamoDB, isolated by `tenantId`). Premium Isolation tier (planned): yes — dedicated DDB + IAM role. |
 | Do you sign a BAA? | Yes — see `docs/05d-baa-template.md`. |
-| Where's the login page? | `auth.akwadona.com` — our branded domain. Never an AWS-default URL. |
+| Where's the login page? | The Akwadona Angular app serves it directly at your subdomain (e.g. `tiryaq.akwadona.com/login`). Branded, translated into 6 languages, never an AWS-default URL. (`auth.akwadona.com` is our Cognito-side OIDC domain — used by the SDK for token refresh, not for the user-facing login screen.) |
 | What if your platform is hacked? | Patient data is encrypted with YOUR key. Attackers stealing our DB get random bytes. We notify you within 24 h regardless. |
 | Can our admin reset a doctor's password? | Yes — Admin Panel → Users → Reset Password. Cognito handles the new-password flow. |
 | Can we white-label the UI? | Tenant pill shows your hospital name. Logo/colors: planned. |
@@ -560,13 +560,13 @@ hospital/
 │   │   ├── interceptors/         # HTTP middleware (JWT, retry, offline queue)
 │   │   └── layout/               # Topbar, sidebar, menu
 │   └── index.html                # Entry HTML + auth-check shim
-├── tiryaq-cdk/                   # Infrastructure (backend blueprint)
+├── akwadona-cdk/                   # Infrastructure (backend blueprint)
 │   ├── bin/                      # CDK entry point
 │   ├── lib/
-│   │   └── tiryaq-cdk-stack.ts   # Whole AWS architecture in one file
+│   │   └── akwadona-cdk-stack.ts   # Whole AWS architecture in one file
 │   └── lambda/                   # Each subfolder = one Lambda function
-│       ├── tiryaq-operator-console/
-│       ├── tiryaq-pharmacy/
+│       ├── akwadona-operator-console/
+│       ├── akwadona-pharmacy/
 │       ├── …                     # ~30 Lambdas
 │       └── lib/                  # Shared modules (plan-defaults, future throttle)
 └── scripts/                      # Helpers (seed data, load tests, deploy ps1)
@@ -583,11 +583,3 @@ hospital/
 5. **Operator Console at `www.akwadona.com/operator`** is where YOU monitor your customers' subscriptions, usage, and billing — without ever touching their clinical data.
 
 When a customer asks a question and you're stuck: open this file. It covers the 95% case.
-
-
-
-aws cloudfront list-invalidations --distribution-id E1Z1ZKYM74LVA7 --max-items 1
-
-
-HTTP 201                                                                                                                
-{"slug":"probe-co-c86853","tenantId":"T_fd6b1de5","name":"Probe Hospital Co.","plan":"free","kmsKeyId":"5c185d6b-77c5-4116-a65c-e28ccd0e9862","hmacKeyId":"c98e6d3f-d13d-4f36-bf65-50c9100039be","admin":{"username":"admin-probe-co-c86853","email":"admin@probe-co.local","tempPassword":"Aa1!QwnjU3vCeCBy","signInUrl":"https://app.akwadona.com/"},"createdAt":"2026-06-23T10:35:18.020Z"}

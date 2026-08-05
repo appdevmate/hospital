@@ -32,6 +32,31 @@ const ddb = DynamoDBDocumentClient.from(new DynamoDBClient({ region: 'us-east-1'
 const TABLE_NAME = 'Hospital';
 const _doctorIdCache = new Map();
 const _CACHE_MS = 60_000;
+
+// Step 7j — resolve the tenant's URL slug from its opaque tenantId so the
+// frontend can redirect users to their own subdomain WITHOUT a hardcoded
+// slug→tenantId map (which broke after every teardown/rebuild).
+// TENANT rows: PK = TENANT#<slug>, SK = PROFILE, attribute tenantId = T_xxx.
+const _slugCache = new Map();
+async function lookupTenantSlug(tenantId) {
+    if (!tenantId || tenantId === 'UNASSIGNED' || tenantId === 'OPERATOR') return null;
+    const c = _slugCache.get(tenantId);
+    if (c && Date.now() - c.fetchedAt < _CACHE_MS) return c.slug;
+    try {
+        const r = await ddb.send(new ScanCommand({
+            TableName: TABLE_NAME,
+            FilterExpression: '#et = :et AND #sk = :sk AND #tid = :tid',
+            ExpressionAttributeNames:  { '#et': 'EntityType', '#sk': 'SK', '#tid': 'tenantId' },
+            ExpressionAttributeValues: { ':et': 'TENANT', ':sk': 'PROFILE', ':tid': tenantId }
+        }));
+        const item = (r.Items || [])[0];
+        const slug = item ? (item.slug || (item.PK || '').slice('TENANT#'.length) || null) : null;
+        _slugCache.set(tenantId, { slug, fetchedAt: Date.now() });
+        return slug;
+    } catch (_) {
+        return null;
+    }
+}
 async function lookupDoctorId(email) {
     const key = (email || '').toLowerCase().trim();
     if (!key) return null;
@@ -77,13 +102,18 @@ exports.handler = async (event) => {
         doctorId = await lookupDoctorId(attrs.email);
     }
 
+    // Step 7j — inject the tenant's URL slug so the frontend can route the
+    // user to their own subdomain without hardcoded maps.
+    const tenantSlug = isOperator ? null : await lookupTenantSlug(tenantId);
+
     const claimsToAddOrOverride = {
         email:    attrs.email || '',
         name:     attrs.name  || '',
         tenantId: tenantId,
         role:     isOperator ? 'operator' : 'tenant_user'
     };
-    if (doctorId) claimsToAddOrOverride.doctorId = doctorId;
+    if (doctorId)   claimsToAddOrOverride.doctorId   = doctorId;
+    if (tenantSlug) claimsToAddOrOverride.tenantSlug = tenantSlug;
 
     event.response = {
         claimsAndScopeOverrideDetails: {

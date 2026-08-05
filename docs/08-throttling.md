@@ -17,7 +17,7 @@ Akwadona uses the same pattern: per-tenant token bucket, plan-default limits, op
 
 ## Plan defaults (Step 2g.1)
 
-Source of truth: `tiryaq-cdk/lambda/lib/plan-defaults.js`.
+Source of truth: `akwadona-cdk/lambda/lib/plan-defaults.js`.
 
 | Plan                   | `rps` (per-second soft cap) | `dailyQuota` (UTC day) | Effective req / min |
 |------------------------|---------------------------:|------------------------:|--------------------:|

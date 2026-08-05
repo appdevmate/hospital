@@ -1,27 +1,35 @@
 # =============================================================================
 # Akwadona -- Full teardown script (T.1).
 #
-# What this script does:
-#   1. Empties the S3 buckets (CDK refuses to delete non-empty buckets).
-#   2. Runs `npx cdk destroy --force` -- removes Lambdas, API Gateway,
-#      CloudFront, Cognito user pool + groups + domain, IAM roles, log groups,
-#      custom resources.
-#   3. Schedules per-tenant KMS key deletion (7-day wait -- AWS minimum) so
-#      the monthly KMS bill ($1/key/month) stops accruing.
-#   4. Deletes the `Hospital` DynamoDB table (CDK retains it by default).
-#   5. Prints what remains (ACM cert is free; Route 53 zone if applicable
-#      ~ $0.50/month).
+# What this script does (in order):
+#   1. EMPTIES all non-audit akwadona-* S3 buckets in bulk (versions + delete
+#      markers, batched via delete-objects). Prevents cdk destroy from
+#      leaving retained non-empty buckets.
+#   2. Deletes the Cognito user pool + any custom domain (retained by default).
+#   3. Disables DynamoDB deletion protection on `Hospital` and deletes it.
+#   4. Runs `npx cdk destroy AkwadonaCdkStack --force`.
+#   5. Post-destroy cleanup for anything CDK's RETAIN policy left behind:
+#      - Deletes leftover non-audit S3 buckets.
+#      - Schedules ALL Akwadona-related KMS keys for 7-day deletion — both
+#        stack-level (data + audit CMKs from RETAIN) and per-tenant CMKs
+#        created by the wizard (discovered via akwadona:tenantId tag).
+#      - Deletes stray KMS aliases pointing at pending-deletion keys.
+#      - Deletes orphan Lambda + akwadona CloudWatch log groups.
 #
-# After teardown the AWS bill is essentially $0 -- except the Route 53 hosted
-# zone if you keep DNS active so the brand domain stays reachable.
+# What is intentionally NOT destroyed (must stay):
+#   - Audit bucket(s) `akwadona-audit-*` — COMPLIANCE Object Lock with
+#     ~7-year retention. The CDK stack always creates a fresh audit bucket
+#     with a version suffix (v2, v3, ...) on redeploy — older ones remain
+#     until their retention window expires (~2033 for the earliest).
+#   - ACM certificates (free; survive for next deploy).
+#   - Route 53 hosted zone (if any).
+#   - GoDaddy domain.
 #
 # Safety: this script DESTROYS DATA. Run with -ConfirmDestroyData:
 #
 #     .\scripts\teardown.ps1 -ConfirmDestroyData
 #
-# Recovery: run `.\scripts\recover.ps1` to rebuild everything from CDK. The
-# DynamoDB rows you had are gone forever; KMS keys can be un-deleted only
-# inside the 7-day pending-deletion window.
+# Recovery: run `.\scripts\recover.ps1` to rebuild the stack from CDK.
 # =============================================================================
 
 param(
@@ -30,19 +38,12 @@ param(
 
 $ErrorActionPreference = 'Continue'
 
-# --- Hardcoded resource IDs (from CDK outputs) -------------------------------
-$STACK_NAME       = 'TiryaqCdkStack'
-$FRONTEND_BUCKET  = 'tiryaqcdkstack-tiryaqfrontendbucket18b23106-jsz6deto6hub'
-$DOCUMENTS_BUCKET = 'tiryaq-documents-483176634665-us-east-1'
-$DDB_TABLE        = 'Hospital'
-
-# Per-tenant KMS keys (from earlier deployment). Two tenants only today.
-$KMS_KEYS = @(
-    'arn:aws:kms:us-east-1:483176634665:key/11b1386b-51c2-41ab-b5ba-aa6eb9a0e8a6',  # Tiryaq data
-    'arn:aws:kms:us-east-1:483176634665:key/c1c1657b-b3f9-41a9-a816-dee382e00bb1',  # Alshifaa data
-    'arn:aws:kms:us-east-1:483176634665:key/601f8aab-f37c-4786-a557-afc12cb864e8',  # Tiryaq HMAC
-    'arn:aws:kms:us-east-1:483176634665:key/0a23ea33-4659-4f37-a4a2-a62366010bcd'   # Alshifaa HMAC
-)
+# --- Configuration -----------------------------------------------------------
+$STACK_NAME     = 'AkwadonaCdkStack'
+$DDB_TABLE      = 'Hospital'
+$USER_POOL_NAME = 'akwadona-user-pool'
+$CDK_FOLDER     = "$PSScriptRoot\..\akwadona-cdk"
+$TMP_DEL_JSON   = "$env:TEMP\akw-del.json"
 
 # --- Safety gate -------------------------------------------------------------
 if (-not $ConfirmDestroyData) {
@@ -59,62 +60,200 @@ if (-not $ConfirmDestroyData) {
 Write-Host "=== Akwadona teardown ===" -ForegroundColor Cyan
 Write-Host "Starting at $(Get-Date -Format 'HH:mm:ss')."
 
-# --- Step 1: Empty S3 buckets -----------------------------------------------
-Write-Host ""
-Write-Host "--- Step 1: Emptying S3 buckets ---" -ForegroundColor Cyan
-foreach ($b in @($FRONTEND_BUCKET, $DOCUMENTS_BUCKET)) {
-    Write-Host "Emptying s3://$b ..."
-    aws s3 rm "s3://$b" --recursive --quiet 2>$null
-    # Also remove any versioned object markers (if versioning ever enabled)
-    $versions = aws s3api list-object-versions --bucket $b --query "Versions[].{Key:Key,VersionId:VersionId}" --output json 2>$null
-    if ($versions -and $versions -ne '[]') {
-        try {
-            $vs = $versions | ConvertFrom-Json
-            foreach ($v in $vs) {
-                aws s3api delete-object --bucket $b --key $v.Key --version-id $v.VersionId 2>$null | Out-Null
-            }
-        } catch { }
-    }
+# --- Helper: empty a bucket by batch-deleting all versions + delete markers ---
+function Empty-Bucket {
+    param([string]$Bucket, [switch]$BypassGovernance)
+    Write-Host "  Emptying $Bucket ..."
+    $safety = 0
+    do {
+        $page = aws s3api list-object-versions --bucket $Bucket --max-keys 1000 --output json 2>$null | ConvertFrom-Json
+        $items = @()
+        if ($page.Versions)      { $items += $page.Versions      | ForEach-Object { @{Key=$_.Key; VersionId=$_.VersionId} } }
+        if ($page.DeleteMarkers) { $items += $page.DeleteMarkers | ForEach-Object { @{Key=$_.Key; VersionId=$_.VersionId} } }
+        if ($items.Count -eq 0) { break }
+        $payload = @{Objects=$items; Quiet=$true} | ConvertTo-Json -Depth 5 -Compress
+        $payload | Out-File -Encoding ascii -FilePath $TMP_DEL_JSON
+        if ($BypassGovernance) {
+            aws s3api delete-objects --bucket $Bucket --delete "file://$TMP_DEL_JSON" --bypass-governance-retention 2>$null | Out-Null
+        } else {
+            aws s3api delete-objects --bucket $Bucket --delete "file://$TMP_DEL_JSON" 2>$null | Out-Null
+        }
+        Write-Host "    drained $($items.Count)"
+        $safety++
+    } while ($items.Count -ge 1000 -and $safety -lt 200)
 }
 
-# --- Step 2: CDK destroy -----------------------------------------------------
+# --- Step 1: Empty non-audit akwadona-* S3 buckets ---------------------------
 Write-Host ""
-Write-Host "--- Step 2: CDK destroy (Lambdas, API GW, CloudFront, Cognito, IAM) ---" -ForegroundColor Cyan
-Push-Location "$PSScriptRoot\..\tiryaq-cdk"
-npx cdk destroy --force
+Write-Host "--- Step 1: Empty non-audit akwadona-* S3 buckets ---" -ForegroundColor Cyan
+$buckets = aws s3api list-buckets --query "Buckets[?starts_with(Name,'akwadona') || starts_with(Name,'akwadonacdkstack')].Name" --output json | ConvertFrom-Json
+foreach ($b in $buckets) {
+    if ($b -like 'akwadona-audit*') {
+        Write-Host "  SKIP $b (Object Lock — retained until ~2033)" -ForegroundColor Yellow
+        continue
+    }
+    Empty-Bucket -Bucket $b
+}
+
+# --- Step 2: Delete Cognito user pool + custom domain ------------------------
+Write-Host ""
+Write-Host "--- Step 2: Delete Cognito user pool + custom domain ---" -ForegroundColor Cyan
+$pools = aws cognito-idp list-user-pools --max-results 60 --query "UserPools[?Name=='$USER_POOL_NAME']" --output json | ConvertFrom-Json
+foreach ($p in $pools) {
+    $cd = aws cognito-idp describe-user-pool --user-pool-id $p.Id --query "UserPool.CustomDomain" --output text 2>$null
+    if ($cd -and $cd -ne 'None' -and $cd -ne '') {
+        Write-Host "  Detach custom domain $cd"
+        aws cognito-idp delete-user-pool-domain --user-pool-id $p.Id --domain $cd 2>$null
+    }
+    Write-Host "  Deleting pool: $($p.Name) ($($p.Id))"
+    aws cognito-idp delete-user-pool --user-pool-id $p.Id 2>&1 | Out-Null
+}
+
+# --- Step 3: Delete DynamoDB Hospital table ----------------------------------
+Write-Host ""
+Write-Host "--- Step 3: Deleting DynamoDB table '$DDB_TABLE' ---" -ForegroundColor Cyan
+aws dynamodb update-table --table-name $DDB_TABLE --no-deletion-protection-enabled 2>$null | Out-Null
+aws dynamodb delete-table --table-name $DDB_TABLE 2>$null | Out-Null
+Write-Host "  Delete requested (~30 sec to disappear)."
+
+# --- Step 4: cdk destroy -----------------------------------------------------
+Write-Host ""
+Write-Host "--- Step 4: cdk destroy $STACK_NAME ---" -ForegroundColor Cyan
+Push-Location $CDK_FOLDER
+$env:CDK_DEPLOY_ACCOUNT = '483176634665'
+$env:CDK_DEPLOY_REGION  = 'us-east-1'
+npx cdk destroy $STACK_NAME --force
 Pop-Location
 
-# --- Step 3: Schedule KMS key deletion --------------------------------------
+# --- Step 5a: Delete leftover non-audit S3 buckets (CDK RETAIN policy) -------
 Write-Host ""
-Write-Host "--- Step 3: Scheduling per-tenant KMS key deletion (7-day window) ---" -ForegroundColor Cyan
-foreach ($k in $KMS_KEYS) {
-    Write-Host "Scheduling deletion: $k"
-    aws kms schedule-key-deletion --key-id $k --pending-window-in-days 7 --output text 2>$null
+Write-Host "--- Step 5a: Delete leftover non-audit S3 buckets ---" -ForegroundColor Cyan
+$leftover = aws s3api list-buckets --query "Buckets[?starts_with(Name,'akwadona') || starts_with(Name,'akwadonacdkstack')].Name" --output json | ConvertFrom-Json
+foreach ($b in $leftover) {
+    if ($b -like 'akwadona-audit*') { continue }
+    Empty-Bucket -Bucket $b
+    aws s3api delete-bucket --bucket $b 2>$null
+    Write-Host "  Deleted $b"
 }
 
-# --- Step 4: Delete DynamoDB table ------------------------------------------
+# --- Step 5b: Schedule ALL Akwadona KMS keys for 7-day deletion --------------
 Write-Host ""
-Write-Host "--- Step 4: Deleting DynamoDB table '$DDB_TABLE' ---" -ForegroundColor Cyan
-aws dynamodb delete-table --table-name $DDB_TABLE --output text 2>$null
+Write-Host "--- Step 5b: Schedule Akwadona KMS keys for 7-day deletion ---" -ForegroundColor Cyan
+Write-Host "  Covers stack-level data + audit CMKs (RETAIN policy) AND per-tenant CMKs (wizard-created)."
+$allKeys = aws kms list-keys --query "Keys[].KeyId" --output json | ConvertFrom-Json
+$scheduled = 0
+foreach ($k in $allKeys) {
+    $meta = aws kms describe-key --key-id $k --query "KeyMetadata.{State:KeyState,Desc:Description}" --output json 2>$null | ConvertFrom-Json
+    if (-not $meta -or $meta.State -ne 'Enabled') { continue }
+    $isAkwadona = $false
+    # Match by description (stack-level keys)
+    if ($meta.Desc -and ($meta.Desc -like '*Akwadona*' -or $meta.Desc -like '*akwadona*')) { $isAkwadona = $true }
+    # Match by tag (per-tenant keys)
+    if (-not $isAkwadona) {
+        $tag = aws kms list-resource-tags --key-id $k --query "Tags[?TagKey=='akwadona:tenantId'].TagValue" --output text 2>$null
+        if ($tag -and $tag.Trim().Length -gt 0) { $isAkwadona = $true }
+    }
+    if ($isAkwadona) {
+        aws kms schedule-key-deletion --key-id $k --pending-window-in-days 7 --output text 2>$null | Out-Null
+        Write-Host "  Scheduled: $k  ($($meta.Desc))"
+        $scheduled++
+    }
+}
+Write-Host "  Scheduled $scheduled CMKs for deletion."
 
-# --- Step 5: Summary --------------------------------------------------------
+# --- Step 5c: Delete stray akwadona aliases (they point at pending keys) -----
+Write-Host ""
+Write-Host "--- Step 5c: Delete stray akwadona-* KMS aliases ---" -ForegroundColor Cyan
+$aliases = aws kms list-aliases --query "Aliases[?contains(AliasName,'akwadona')].AliasName" --output json | ConvertFrom-Json
+foreach ($a in $aliases) {
+    aws kms delete-alias --alias-name $a 2>$null
+    Write-Host "  Deleted alias: $a"
+}
+
+# --- Step 5d: Delete leftover Secrets Manager entries (/akwadona/seed-users/*)
+# The AkwadonaUsersFunction Lambda stores each seed user's temp password in
+# Secrets Manager as /akwadona/seed-users/<username>. These secrets survive
+# `cdk destroy` (no CFN link) and cost ~$0.40 each per month if not cleaned up.
+# recover.ps1 will re-create them automatically when the seed users are
+# recreated by the users-function custom resource.
+Write-Host ""
+Write-Host "--- Step 5d: Delete leftover Secrets Manager entries ---" -ForegroundColor Cyan
+$secrets = aws secretsmanager list-secrets --query "SecretList[?starts_with(Name,'/akwadona/seed-users/') || contains(Name,'akwadona')].Name" --output json | ConvertFrom-Json
+foreach ($s in $secrets) {
+    aws secretsmanager delete-secret --secret-id $s --force-delete-without-recovery 2>$null | Out-Null
+    Write-Host "  Deleted: $s"
+}
+Write-Host "  Deleted $($secrets.Count) secret(s)."
+
+# --- Step 5e: Delete orphan Lambda + akwadona log groups ---------------------
+Write-Host ""
+Write-Host "--- Step 5d: Delete orphan Lambda + akwadona log groups ---" -ForegroundColor Cyan
+$liveFns = @(aws lambda list-functions --query "Functions[].FunctionName" --output json | ConvertFrom-Json)
+$logGroups = @()
+$nt = $null
+do {
+    if ($nt) {
+        $r = aws logs describe-log-groups --log-group-name-prefix '/aws/lambda/' --next-token $nt --output json | ConvertFrom-Json
+    } else {
+        $r = aws logs describe-log-groups --log-group-name-prefix '/aws/lambda/' --output json | ConvertFrom-Json
+    }
+    $logGroups += $r.logGroups
+    $nt = $r.nextToken
+} while ($nt)
+
+$orphans = 0
+foreach ($lg in $logGroups) {
+    $fn = $lg.logGroupName.Replace('/aws/lambda/', '')
+    if ($fn -notin $liveFns) {
+        aws logs delete-log-group --log-group-name $lg.logGroupName 2>$null
+        $orphans++
+    }
+}
+Write-Host "  Deleted $orphans orphan /aws/lambda/* log groups"
+
+$other = aws logs describe-log-groups --query "logGroups[?contains(logGroupName,'kwadona')].logGroupName" --output json | ConvertFrom-Json
+foreach ($lg in $other) { aws logs delete-log-group --log-group-name $lg 2>$null }
+Write-Host "  Deleted $($other.Count) other akwadona-named log groups"
+
+# --- Step 6: Auto-bump the audit bucket version suffix in the CDK stack ------
+# The old audit bucket cannot be deleted (COMPLIANCE Object Lock), so the next
+# deploy MUST use a new bucket name or CFN fails with "already exists".
+Write-Host ""
+Write-Host "--- Step 6: Bump audit bucket suffix in CDK stack ---" -ForegroundColor Cyan
+$stackFile = "$CDK_FOLDER\lib\akwadona-cdk-stack.ts"
+$content = Get-Content -Raw -Path $stackFile
+if ($content -match 'akwadona-audit-v(\d+)-') {
+    $cur  = [int]$Matches[1]
+    $next = $cur + 1
+    $content = $content -replace "akwadona-audit-v$cur-", "akwadona-audit-v$next-"
+    Set-Content -Path $stackFile -Value $content -Encoding UTF8 -NoNewline
+    Write-Host "  Bumped audit bucket suffix: v$cur -> v$next"
+} else {
+    Write-Host "  WARNING: could not find audit bucket suffix pattern. Bump manually!" -ForegroundColor Yellow
+}
+
+# --- Summary -----------------------------------------------------------------
 Write-Host ""
 Write-Host "=== Teardown complete ===" -ForegroundColor Green
 Write-Host "Finished at $(Get-Date -Format 'HH:mm:ss')."
 Write-Host ""
-Write-Host "What's gone (no bill):" -ForegroundColor Green
-Write-Host "  - All Lambdas, API Gateway, CloudFront, Cognito"
-Write-Host "  - S3 buckets (after CDK destroy)"
-Write-Host "  - DynamoDB table 'Hospital'"
-Write-Host "  - IAM roles + policies + log groups"
+Write-Host "What is GONE (no bill):" -ForegroundColor Green
+Write-Host "  - All Lambdas, API Gateway, CloudFront, Cognito, IAM, log groups"
+Write-Host "  - Non-audit S3 buckets (frontend + documents + access-logs)"
+Write-Host "  - DynamoDB table '$DDB_TABLE'"
 Write-Host ""
-Write-Host "What's pending (charge stops after deletion):" -ForegroundColor Yellow
-Write-Host "  - 4 KMS keys -- scheduled for deletion in 7 days. Cancel inside"
-Write-Host "    the window with: aws kms cancel-key-deletion --key-id <ARN>"
+Write-Host "What is PENDING (charge stops after deletion):" -ForegroundColor Yellow
+Write-Host "  - $scheduled Akwadona KMS keys -- scheduled for deletion in 7 days."
+Write-Host "    Cancel inside the window with:"
+Write-Host "        aws kms cancel-key-deletion --key-id <ARN>"
 Write-Host ""
-Write-Host "What remains (small / free):" -ForegroundColor Cyan
-Write-Host "  - ACM certificate for auth.akwadona.com -- free."
+Write-Host "What REMAINS (immutable / free / trivial):" -ForegroundColor Cyan
+Write-Host "  - Audit bucket(s) (COMPLIANCE Object Lock, ~7-year retention)."
+Write-Host "  - ACM certificates for akwadona.com + auth.akwadona.com -- free."
 Write-Host "  - Route 53 hosted zone (if any) -- ~ `$0.50/month."
 Write-Host "  - GoDaddy domain renewal (not AWS)."
+Write-Host ""
+Write-Host "NEW audit bucket will be created on next deploy with the next version"
+Write-Host "suffix (v2 -> v3 -> ...). Bump the version in CDK if needed."
 Write-Host ""
 Write-Host "To rebuild: .\scripts\recover.ps1" -ForegroundColor Cyan

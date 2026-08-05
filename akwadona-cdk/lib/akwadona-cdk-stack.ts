@@ -188,7 +188,7 @@ export class AkwadonaStack extends cdk.Stack {
         // Versioning is mandatory for Object Lock.
         // ─────────────────────────────────────────────────────────────────────
         const auditBucket = new s3.Bucket(this, 'AkwadonaAuditBucket', {
-            bucketName: `akwadona-audit-v2-${accountId}-${region}`,
+            bucketName: `akwadona-audit-v4-${accountId}-${region}`,
             blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
             encryption: s3.BucketEncryption.KMS,
             encryptionKey: akwadonaAuditKey,
@@ -473,6 +473,18 @@ export class AkwadonaStack extends cdk.Stack {
             principal: new iam.ServicePrincipal('cognito-idp.amazonaws.com'),
             sourceArn: userPool.userPoolArn
         });
+
+        // Step 7j — keep the pre-token Lambda WARM. Cognito hard-caps trigger
+        // execution at 5 seconds; a Node cold start (+ DDB slug/doctor lookups)
+        // can exceed that and the user sees a 504 on their FIRST login attempt.
+        // A 5-minute EventBridge ping keeps one container hot. The handler
+        // short-circuits on `_warmup` so the ping costs ~1 ms of compute.
+        new events.Rule(this, 'PreTokenWarmerRule', {
+            schedule: events.Schedule.rate(cdk.Duration.minutes(5)),
+            targets: [new eventsTargets.LambdaFunction(preTokenFn, {
+                event: events.RuleTargetInput.fromObject({ _warmup: true })
+            })]
+        });
         // Step C.3 — pre-token Lambda scans DOCTOR profile rows to resolve
         // the application doctorId UUID for the signed-in user. Read-only.
         table.grantReadData(preTokenFn);
@@ -498,10 +510,10 @@ export class AkwadonaStack extends cdk.Stack {
         // `akwadona-tenant-<slug>`, apply the standard key policy template,
         // then add its tenantId → ARN entry below and redeploy.
         // ─────────────────────────────────────────────────────────────────────
-        const tenantKeys: Record<string, string> = {
-            'T_2572fc71': 'arn:aws:kms:us-east-1:483176634665:key/11b1386b-51c2-41ab-b5ba-aa6eb9a0e8a6', // Akwadona
-            'T_a4b8aef9': 'arn:aws:kms:us-east-1:483176634665:key/c1c1657b-b3f9-41a9-a816-dee382e00bb1'  // Alshifaa
-        };
+        // Empty — every tenant is now onboarded via the operator wizard, which
+        // writes its data + HMAC key ARNs into the TENANT#<slug>/PROFILE row.
+        // The crypto helper reads those from DDB at runtime.
+        const tenantKeys: Record<string, string> = {};
 
         // ─────────────────────────────────────────────────────────────────────
         // Step 4 — Per-tenant KMS HMAC keys for searchable hashed fields.
@@ -517,10 +529,9 @@ export class AkwadonaStack extends cdk.Stack {
         // KMS HMAC keys keep the secret inside the FIPS 140-2 HSM — the
         // hashing call goes to KMS, the Lambda never sees the secret.
         // ─────────────────────────────────────────────────────────────────────
-        const tenantHmacKeys: Record<string, string> = {
-            'T_2572fc71': 'arn:aws:kms:us-east-1:483176634665:key/601f8aab-f37c-4786-a557-afc12cb864e8', // Akwadona HMAC
-            'T_a4b8aef9': 'arn:aws:kms:us-east-1:483176634665:key/0a23ea33-4659-4f37-a4a2-a62366010bcd'  // Alshifaa HMAC
-        };
+        // Empty for the same reason as tenantKeys — wizard writes HMAC ARN
+        // to the TENANT row; crypto helper resolves it at runtime.
+        const tenantHmacKeys: Record<string, string> = {};
 
         // ─────────────────────────────────────────────────────────────────────
         // Shared Lambda environment + helper
@@ -600,10 +611,10 @@ export class AkwadonaStack extends cdk.Stack {
         // convention it never calls KMS Decrypt on tenant data — see the
         // top-of-file comment in akwadona-operator-console/index.js.
         // Step 8 — deployed as `akwadona-operator-console`.
+        // API_ID + CLOUDFRONT_DISTRIBUTION_ID are wired via addEnvironment
+        // further down (once `api` and `distribution` are constructed).
         const operatorConsoleFn = fn('AkwadonaOperatorConsole', 'akwadona-operator-console', 'index.handler', lambda.Runtime.NODEJS_20_X, {
-            API_ID: 'jxz59jh15f',
-            USER_POOL_ID: 'us-east-1_RACghntmS',
-            CLOUDFRONT_DISTRIBUTION_ID: 'E1Z1ZKYM74LVA7'
+            USER_POOL_ID: userPool.userPoolId
         }, { functionName: 'akwadona-operator-console' });
         // Step 7g — platform-admin metrics need CloudWatch + Cognito list access.
         // Read-only — no business data.
@@ -635,6 +646,28 @@ export class AkwadonaStack extends cdk.Stack {
             ...Object.values(tenantKeys),
             ...Object.values(tenantHmacKeys)
         ];
+        // Only add the DENY when there are hardcoded tenant CMKs. Wizard-
+        // onboarded tenants get their DENY the same way — via a wildcard on
+        // `alias/akwadona-tenant-*` in a second statement below.
+        if (allTenantCmkArns.length > 0) {
+            operatorConsoleFn.addToRolePolicy(new iam.PolicyStatement({
+                effect: iam.Effect.DENY,
+                actions: [
+                    'kms:Decrypt',
+                    'kms:Encrypt',
+                    'kms:GenerateDataKey',
+                    'kms:GenerateDataKey*',
+                    'kms:GenerateDataKeyWithoutPlaintext',
+                    'kms:GenerateMac',
+                    'kms:VerifyMac',
+                    'kms:ReEncrypt*'
+                ],
+                resources: allTenantCmkArns
+            }));
+        }
+        // Wildcard DENY for any current + future wizard-created tenant CMKs.
+        // The resource-based key policy on each CMK already excludes the operator
+        // role via StringNotLike; this identity-side DENY is defense in depth.
         operatorConsoleFn.addToRolePolicy(new iam.PolicyStatement({
             effect: iam.Effect.DENY,
             actions: [
@@ -647,7 +680,12 @@ export class AkwadonaStack extends cdk.Stack {
                 'kms:VerifyMac',
                 'kms:ReEncrypt*'
             ],
-            resources: allTenantCmkArns
+            resources: [`arn:aws:kms:${region}:${accountId}:key/*`],
+            conditions: {
+                'ForAnyValue:StringLike': {
+                    'kms:ResourceAliases': 'alias/akwadona-tenant-*'
+                }
+            }
         }));
         // ─────────────────────────────────────────────────────────────────────
         // Step 96 — Tenant onboarding wizard IAM grants.
@@ -681,14 +719,16 @@ export class AkwadonaStack extends cdk.Stack {
             actions: ['kms:TagResource', 'kms:ScheduleKeyDeletion', 'kms:DescribeKey'],
             resources: ['*']
         }));
-        // Defense-in-depth — operator may never delete the existing Akwadona /
-        // Alshifaa CMKs, only the new keys it just created. Explicit DENY
-        // overrides the broad ScheduleKeyDeletion grant above.
-        operatorConsoleFn.addToRolePolicy(new iam.PolicyStatement({
-            effect: iam.Effect.DENY,
-            actions: ['kms:ScheduleKeyDeletion', 'kms:DeleteAlias'],
-            resources: allTenantCmkArns
-        }));
+        // Defense-in-depth — operator may never delete pre-existing tenant
+        // CMKs, only the new keys it just created. Explicit DENY overrides
+        // the broad ScheduleKeyDeletion grant above.
+        if (allTenantCmkArns.length > 0) {
+            operatorConsoleFn.addToRolePolicy(new iam.PolicyStatement({
+                effect: iam.Effect.DENY,
+                actions: ['kms:ScheduleKeyDeletion', 'kms:DeleteAlias'],
+                resources: allTenantCmkArns
+            }));
+        }
         operatorConsoleFn.addToRolePolicy(new iam.PolicyStatement({
             actions: [
                 'cognito-idp:AdminCreateUser',
@@ -1293,14 +1333,25 @@ exports.handler = async (event) => {
             'arn:aws:acm:us-east-1:483176634665:certificate/c03903c3-12c3-46dd-9d63-4e40a72bb2be'
         );
 
+        // ── Two-phase alias deploy (rebuild runbook) ─────────────────────────
+        // After a full teardown, GoDaddy CNAMEs still point at the DESTROYED
+        // CloudFront domain. CloudFront's anti-hijack check then rejects
+        // attaching our aliases to the new distribution ("DNS record points to
+        // another CloudFront distribution") and the whole stack rolls back.
+        // Fix: deploy phase 1 WITHOUT aliases (cdk deploy -c skipAliases=1),
+        // repoint GoDaddy at the fresh d*.cloudfront.net domain, then deploy
+        // phase 2 normally to attach the aliases. recover.ps1 automates this.
+        const skipAliases = !!this.node.tryGetContext('skipAliases');
         const distribution = new cloudfront.Distribution(this, 'AkwadonaDistribution', {
-            domainNames: [
-                'akwadona.com',
-                'www.akwadona.com',
-                'tiryaq.akwadona.com',
-                'alshifaa.akwadona.com'
-            ],
-            certificate: siteCert,
+            ...(skipAliases ? {} : {
+                domainNames: [
+                    'akwadona.com',
+                    'www.akwadona.com',
+                    'tiryaq.akwadona.com',
+                    'alshifaa.akwadona.com'
+                ],
+                certificate: siteCert
+            }),
             defaultBehavior: {
                 origin: cloudfrontOrigins.S3BucketOrigin.withOriginAccessControl(siteBucket, {
                     originAccessControl: oac
@@ -1329,6 +1380,12 @@ exports.handler = async (event) => {
             ],
             comment: 'Akwadona Hospital Platform'
         });
+
+        // Now that `api` and `distribution` exist, wire their IDs into the
+        // operator Lambda's env — used by the operator console for API +
+        // CloudFront management calls.
+        operatorConsoleFn.addEnvironment('API_ID', api.apiId);
+        operatorConsoleFn.addEnvironment('CLOUDFRONT_DISTRIBUTION_ID', distribution.distributionId);
 
         siteBucket.addToResourcePolicy(
             new iam.PolicyStatement({

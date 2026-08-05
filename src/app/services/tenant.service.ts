@@ -20,18 +20,12 @@ import { Injectable } from '@angular/core';
  * redirect them to their own subdomain — never serve the wrong tenant's
  * data even by mistake.
  *
- * Deterministic slug → tenantId map (mirror of scripts/lib/tenant-ids.js):
- *   tiryaq   → T_2572fc71
- *   alshifaa → T_a4b8aef9
- *
- * Updated by the operator when a new customer is onboarded. Frontend
- * doesn't need to recompute — just declare known slugs here.
+ * Slug resolution (Step 7j): the JWT now carries a `tenantSlug` claim
+ * minted by the pre-token-generation Lambda (looked up from the TENANT
+ * profile row in DynamoDB). NO hardcoded slug → tenantId map — hardcoded
+ * IDs broke after every teardown/rebuild because wizard-generated tenant
+ * IDs are random.
  */
-
-const TENANTS: Record<string, { tenantId: string; displayName: string }> = {
-    tiryaq:   { tenantId: 'T_2572fc71', displayName: 'Tiryaq Hospital' },
-    alshifaa: { tenantId: 'T_a4b8aef9', displayName: 'Alshifaa Hospital' }
-};
 
 @Injectable({ providedIn: 'root' })
 export class TenantService {
@@ -45,20 +39,29 @@ export class TenantService {
         return this._slug;
     }
 
-    /** Friendly name shown in UI, e.g. "Tiryaq Hospital". */
+    /** Friendly name shown in UI, e.g. "Tiryaq". Derived from the slug. */
     get displayName(): string {
         const s = this.slug;
-        if (!s) return 'Akwadona';
-        return TENANTS[s]?.displayName ?? s;
+        if (!s || s === 'www') return 'Akwadona';
+        return s.charAt(0).toUpperCase() + s.slice(1);
     }
 
     /**
      * tenantId resolved from the URL slug. UI-only — backend trusts only
-     * the JWT claim. Returns null if subdomain is unknown.
+     * the JWT claim. We can only resolve it when the URL slug matches the
+     * JWT's tenantSlug claim (there is no client-side slug→id map anymore).
      */
     get tenantIdFromUrl(): string | null {
         const s = this.slug;
-        return s ? (TENANTS[s]?.tenantId ?? null) : null;
+        if (!s || s === 'www') return null;
+        // If the URL slug matches the JWT's slug, the URL "resolves" to the
+        // JWT's tenantId. If it doesn't match, we can't resolve it → null.
+        return s === this.tenantSlugFromJwt ? this.tenantIdFromJwt : null;
+    }
+
+    /** URL slug carried by the current access token (authoritative). */
+    get tenantSlugFromJwt(): string | null {
+        return this.jwtClaims()?.tenantSlug || null;
     }
 
     /** tenantId carried by the current access token (authoritative). */
@@ -101,11 +104,11 @@ export class TenantService {
      * should sign them out and redirect.
      */
     subdomainMatchesJwt(): boolean {
-        const urlTid = this.tenantIdFromUrl;
-        const jwtTid = this.tenantIdFromJwt;
+        const urlSlug = this.slug;
+        const jwtSlug = this.tenantSlugFromJwt;
         // If we can't resolve either side, refuse to claim a match.
-        if (!urlTid || !jwtTid) return false;
-        return urlTid === jwtTid;
+        if (!urlSlug || !jwtSlug) return false;
+        return urlSlug === jwtSlug;
     }
 
     /** Reset cached values — call after sign-out / token refresh. */
