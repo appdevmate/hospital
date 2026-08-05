@@ -100,13 +100,31 @@ Write-Host ""
 Write-Host "--- Step 2: Delete Cognito user pool + custom domain ---" -ForegroundColor Cyan
 $pools = aws cognito-idp list-user-pools --max-results 60 --query "UserPools[?Name=='$USER_POOL_NAME']" --output json | ConvertFrom-Json
 foreach ($p in $pools) {
+    # (a) Detach custom domain and WAIT until it is really gone -- the pool
+    #     cannot be deleted while a domain is attached.
     $cd = aws cognito-idp describe-user-pool --user-pool-id $p.Id --query "UserPool.CustomDomain" --output text 2>$null
     if ($cd -and $cd -ne 'None' -and $cd -ne '') {
         Write-Host "  Detach custom domain $cd"
         aws cognito-idp delete-user-pool-domain --user-pool-id $p.Id --domain $cd 2>$null
+        for ($i = 0; $i -lt 30; $i++) {
+            $st = aws cognito-idp describe-user-pool-domain --domain $cd --query "DomainDescription.Status" --output text 2>$null
+            if (-not $st -or $st -eq 'None') { break }
+            Start-Sleep -Seconds 10
+        }
     }
+    # (b) Deletion protection is ACTIVE on this pool (CDK default) -- delete
+    #     fails silently without this. THIS was the recurring "pool survives
+    #     teardown" bug.
+    aws cognito-idp update-user-pool --user-pool-id $p.Id --deletion-protection INACTIVE 2>$null | Out-Null
+    # (c) Delete + VERIFY loudly instead of swallowing errors.
     Write-Host "  Deleting pool: $($p.Name) ($($p.Id))"
-    aws cognito-idp delete-user-pool --user-pool-id $p.Id 2>&1 | Out-Null
+    aws cognito-idp delete-user-pool --user-pool-id $p.Id
+    $still = aws cognito-idp list-user-pools --max-results 60 --query "UserPools[?Id=='$($p.Id)']|[0].Id" --output text 2>$null
+    if ($still -and $still -ne 'None') {
+        Write-Host "  ERROR: pool $($p.Id) STILL EXISTS -- delete manually!" -ForegroundColor Red
+    } else {
+        Write-Host "  Verified deleted." -ForegroundColor Green
+    }
 }
 
 # --- Step 3: Delete DynamoDB Hospital table ----------------------------------

@@ -8,13 +8,13 @@
 #      stack WITHOUT CloudFront aliases. This dodges CloudFront's anti-hijack
 #      check, which rejects aliases while GoDaddy CNAMEs still point at the
 #      old (destroyed) distribution.
-#   3. Prompts you to repoint GoDaddy CNAMEs (www / tiryaq / alshifaa) at the
-#      NEW CloudFront domain, then verifies DNS before continuing.
+#   3. Upserts Route 53 records (NO manual DNS work): apex ALIAS +
+#      www/tiryaq/alshifaa CNAMEs -> new CloudFront domain, then waits for
+#      the change to be INSYNC.
 #   4. PHASE 2 deploy: normal `cdk deploy` -- attaches the aliases.
-#   5. Cognito custom domain auth.akwadona.com:
-#      prompts you to DELETE the stale `auth` CNAME first (Cognito checks
-#      DNS), creates the domain, then prompts you to re-add the CNAME
-#      pointing at the new Cognito CloudFront target.
+#   5. Cognito custom domain auth.akwadona.com: deletes the stale `auth`
+#      record from Route 53, creates the Cognito domain, then upserts the
+#      `auth` CNAME at the new Cognito CloudFront target. Fully automatic.
 #   6. Ensures the PreTokenGeneration V3 trigger is attached (safety net).
 #   7. Patches frontend config files with the new pool / client / API IDs
 #      straight from the stack outputs (no manual editing).
@@ -40,7 +40,11 @@ $USER_POOL_NAME = 'akwadona-user-pool'
 $CDK_FOLDER     = "$PSScriptRoot\..\akwadona-cdk"
 $APP_FOLDER     = "$PSScriptRoot\.."
 $FRONTEND_DIST  = 'dist\verona-ng\browser'
-$GODADDY_NS     = 'ns43.domaincontrol.com'
+# Route 53 hosted zone for akwadona.com (created once, survives teardowns).
+# GoDaddy's only remaining job is domain ownership -- DNS lives here.
+$R53_ZONE_ID    = 'Z07074793TXLIBMDZZY3I'
+# CloudFront's fixed global hosted zone ID (same for every distribution).
+$CF_HOSTED_ZONE = 'Z2FDTNDATAQYW2'
 $OPERATOR_USER  = 'sami'
 $OPERATOR_EMAIL = 'sami.t.taha98@gmail.com'
 $OPERATOR_NAME  = 'Sami'
@@ -51,6 +55,25 @@ function Get-StackOutput {
     param([string]$Key)
     return aws cloudformation describe-stacks --stack-name $STACK_NAME `
         --query "Stacks[0].Outputs[?OutputKey=='$Key'].OutputValue|[0]" --output text 2>$null
+}
+
+# Upsert a batch of Route 53 records and wait until the change is INSYNC.
+function Set-R53Records {
+    param([array]$Changes)
+    $batch = @{ Changes = $Changes } | ConvertTo-Json -Depth 10 -Compress
+    $tmp = "$env:TEMP\akw-r53.json"
+    $batch | Out-File -Encoding ascii -FilePath $tmp
+    $changeId = aws route53 change-resource-record-sets --hosted-zone-id $R53_ZONE_ID `
+        --change-batch "file://$tmp" --query "ChangeInfo.Id" --output text
+    Remove-Item $tmp -ErrorAction SilentlyContinue
+    if (-not $changeId) { Write-Host "  Route 53 change FAILED" -ForegroundColor Red; return $false }
+    for ($i = 0; $i -lt 30; $i++) {
+        $st = aws route53 get-change --id $changeId --query "ChangeInfo.Status" --output text 2>$null
+        if ($st -eq 'INSYNC') { return $true }
+        Start-Sleep -Seconds 5
+    }
+    Write-Host "  Route 53 change still PENDING after 150s (usually fine, continuing)" -ForegroundColor Yellow
+    return $true
 }
 
 Write-Host "=== Akwadona recover ===" -ForegroundColor Cyan
@@ -98,27 +121,37 @@ $cfDomain = (Get-StackOutput 'CloudFrontUrl') -replace '^https://', ''
 $distId   = Get-StackOutput 'DistributionId'
 Write-Host "  New CloudFront domain: $cfDomain"
 
-# --- Step 3: Repoint GoDaddy site CNAMEs -------------------------------------
+# --- Step 3: Upsert Route 53 records -> new CloudFront (fully automatic) -----
 Write-Host ""
-Write-Host "--- Step 3: Repoint GoDaddy CNAMEs at the new CloudFront ---" -ForegroundColor Cyan
-Write-Host ""
-Write-Host "  In GoDaddy DNS Manager, set these CNAME records (TTL 600):" -ForegroundColor Yellow
-foreach ($a in $SITE_ALIASES) {
-    Write-Host "    $a  ->  $cfDomain" -ForegroundColor Yellow
-}
-Write-Host ""
-Read-Host "  Press ENTER once you have updated GoDaddy"
-
-foreach ($a in $SITE_ALIASES) {
-    $ok = $false
-    for ($i = 0; $i -lt 12; $i++) {
-        $r = Resolve-DnsName "$a.akwadona.com" -Type CNAME -Server $GODADDY_NS -ErrorAction SilentlyContinue |
-             Where-Object { $_.NameHost } | Select-Object -First 1
-        if ($r -and $r.NameHost -eq $cfDomain) { $ok = $true; break }
-        Start-Sleep -Seconds 10
+Write-Host "--- Step 3: Upsert Route 53 records -> $cfDomain ---" -ForegroundColor Cyan
+$changes = @()
+# Apex ALIAS (A) record -- points akwadona.com itself at CloudFront.
+$changes += @{
+    Action = 'UPSERT'
+    ResourceRecordSet = @{
+        Name = 'akwadona.com.'
+        Type = 'A'
+        AliasTarget = @{
+            HostedZoneId = $CF_HOSTED_ZONE
+            DNSName = "$cfDomain."
+            EvaluateTargetHealth = $false
+        }
     }
-    if ($ok) { Write-Host "  OK   $a.akwadona.com -> $cfDomain" -ForegroundColor Green }
-    else     { Write-Host "  FAIL $a.akwadona.com does not resolve to $cfDomain yet (continuing anyway)" -ForegroundColor Red }
+}
+# Subdomain CNAMEs.
+foreach ($a in $SITE_ALIASES) {
+    $changes += @{
+        Action = 'UPSERT'
+        ResourceRecordSet = @{
+            Name = "$a.akwadona.com."
+            Type = 'CNAME'
+            TTL  = 300
+            ResourceRecords = @(@{ Value = $cfDomain })
+        }
+    }
+}
+if (Set-R53Records -Changes $changes) {
+    Write-Host "  Apex + $($SITE_ALIASES -join '/') -> $cfDomain (INSYNC)" -ForegroundColor Green
 }
 
 # --- Step 4: PHASE 2 deploy (attach aliases) ---------------------------------
@@ -142,14 +175,19 @@ $domainStatus = aws cognito-idp describe-user-pool-domain --domain auth.akwadona
 if ($domainStatus -and $domainStatus -ne 'None') {
     Write-Host "  Custom domain already exists (status: $domainStatus). Skipping creation."
 } else {
-    $authCname = Resolve-DnsName 'auth.akwadona.com' -Type CNAME -Server $GODADDY_NS -ErrorAction SilentlyContinue |
-                 Where-Object { $_.NameHost } | Select-Object -First 1
-    if ($authCname) {
-        Write-Host ""
-        Write-Host "  The stale 'auth' CNAME points at $($authCname.NameHost)." -ForegroundColor Yellow
-        Write-Host "  DELETE the 'auth' CNAME record in GoDaddy now (Cognito refuses to" -ForegroundColor Yellow
-        Write-Host "  create the domain while DNS points at another CloudFront)." -ForegroundColor Yellow
-        Read-Host "  Press ENTER once deleted"
+    # Delete any stale `auth` record first -- Cognito refuses to create the
+    # domain while DNS points at another (destroyed) CloudFront distribution.
+    $stale = aws route53 list-resource-record-sets --hosted-zone-id $R53_ZONE_ID `
+        --query "ResourceRecordSets[?Name=='auth.akwadona.com.']|[0]" --output json 2>$null | ConvertFrom-Json
+    if ($stale -and $stale.Type) {
+        Write-Host "  Deleting stale 'auth' record ($($stale.Type))..."
+        # DELETE requires the record set exactly as currently stored.
+        $delJson = @{ Changes = @(@{ Action = 'DELETE'; ResourceRecordSet = $stale }) } | ConvertTo-Json -Depth 10 -Compress
+        $tmp = "$env:TEMP\akw-r53-del.json"
+        $delJson | Out-File -Encoding ascii -FilePath $tmp
+        aws route53 change-resource-record-sets --hosted-zone-id $R53_ZONE_ID --change-batch "file://$tmp" --output text 2>$null | Out-Null
+        Remove-Item $tmp -ErrorAction SilentlyContinue
+        Start-Sleep -Seconds 15
     }
 
     $certArn = aws acm list-certificates --region us-east-1 --query "CertificateSummaryList[?DomainName=='*.akwadona.com' || DomainName=='akwadona.com']|[0].CertificateArn" --output text
@@ -159,10 +197,17 @@ if ($domainStatus -and $domainStatus -ne 'None') {
         --custom-domain-config CertificateArn=$certArn `
         --query "CloudFrontDomain" --output text
     if ($authCf -and $authCf -ne 'None') {
-        Write-Host ""
-        Write-Host "  Cognito domain created. Now ADD this CNAME in GoDaddy (TTL 600):" -ForegroundColor Yellow
-        Write-Host "    auth  ->  $authCf" -ForegroundColor Yellow
-        Read-Host "  Press ENTER once added"
+        Write-Host "  Cognito domain created. Upserting 'auth' CNAME -> $authCf"
+        $ok = Set-R53Records -Changes @(@{
+            Action = 'UPSERT'
+            ResourceRecordSet = @{
+                Name = 'auth.akwadona.com.'
+                Type = 'CNAME'
+                TTL  = 300
+                ResourceRecords = @(@{ Value = $authCf })
+            }
+        })
+        if ($ok) { Write-Host "  auth.akwadona.com -> $authCf (INSYNC)" -ForegroundColor Green }
     } else {
         Write-Host "  Domain creation failed -- create manually later. See docs/12." -ForegroundColor Red
     }
