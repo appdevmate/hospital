@@ -49,7 +49,6 @@ $OPERATOR_USER  = 'sami'
 $OPERATOR_EMAIL = 'sami.t.taha98@gmail.com'
 $OPERATOR_NAME  = 'Sami'
 $OPERATOR_PASS  = 'Apps@1234567'
-$SITE_ALIASES   = @('www', 'tiryaq', 'alshifaa')
 
 function Get-StackOutput {
     param([string]$Key)
@@ -138,20 +137,21 @@ $changes += @{
         }
     }
 }
-# Subdomain CNAMEs.
-foreach ($a in $SITE_ALIASES) {
-    $changes += @{
-        Action = 'UPSERT'
-        ResourceRecordSet = @{
-            Name = "$a.akwadona.com."
-            Type = 'CNAME'
-            TTL  = 300
-            ResourceRecords = @(@{ Value = $cfDomain })
-        }
+# Wildcard CNAME -- covers www + EVERY tenant slug (present and future).
+# New wizard-onboarded tenants work instantly with no DNS change.
+# The specific `auth` record (upserted in Step 5) beats the wildcard,
+# so Cognito's custom domain keeps routing to its own CloudFront.
+$changes += @{
+    Action = 'UPSERT'
+    ResourceRecordSet = @{
+        Name = '*.akwadona.com.'
+        Type = 'CNAME'
+        TTL  = 300
+        ResourceRecords = @(@{ Value = $cfDomain })
     }
 }
 if (Set-R53Records -Changes $changes) {
-    Write-Host "  Apex + $($SITE_ALIASES -join '/') -> $cfDomain (INSYNC)" -ForegroundColor Green
+    Write-Host "  Apex + *.akwadona.com -> $cfDomain (INSYNC)" -ForegroundColor Green
 }
 
 # --- Step 4: PHASE 2 deploy (attach aliases) ---------------------------------

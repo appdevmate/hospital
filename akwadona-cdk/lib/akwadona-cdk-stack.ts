@@ -1344,11 +1344,14 @@ exports.handler = async (event) => {
         const skipAliases = !!this.node.tryGetContext('skipAliases');
         const distribution = new cloudfront.Distribution(this, 'AkwadonaDistribution', {
             ...(skipAliases ? {} : {
+                // Wildcard alias: ANY tenant slug (nabd.akwadona.com, ...)
+                // works instantly after wizard onboarding -- no CDK redeploy,
+                // no DNS change. The ACM cert already covers *.akwadona.com.
+                // auth.akwadona.com still routes to Cognito's own CloudFront
+                // because its SPECIFIC alias + DNS record beat the wildcard.
                 domainNames: [
                     'akwadona.com',
-                    'www.akwadona.com',
-                    'tiryaq.akwadona.com',
-                    'alshifaa.akwadona.com'
+                    '*.akwadona.com'
                 ],
                 certificate: siteCert
             }),
