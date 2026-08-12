@@ -1,5 +1,5 @@
 export class Config {
-    private static readonly apiBaseUrl = 'https://n8dk0y1bj7.execute-api.us-east-1.amazonaws.com';
+    private static readonly apiBaseUrl = 'https://vbsex10bd6.execute-api.us-east-1.amazonaws.com';
     private static readonly environment = 'development';
 
     static getEnvironment(): string {

@@ -63,17 +63,17 @@ export const appConfig: ApplicationConfig = {
                 //
                 // This is the Stripe / Vercel / Athenahealth pattern: one
                 // branded auth domain in front, AWS-managed IDP behind it.
-                authority: 'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_PXRIWC8SK',
+                authority: 'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_bpipvSdQi',
                 authWellknownEndpoints: {
-                    issuer:                'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_PXRIWC8SK',
-                    jwksUri:               'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_PXRIWC8SK/.well-known/jwks.json',
+                    issuer:                'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_bpipvSdQi',
+                    jwksUri:               'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_bpipvSdQi/.well-known/jwks.json',
                     authorizationEndpoint: 'https://auth.akwadona.com/oauth2/authorize',
                     tokenEndpoint:         'https://auth.akwadona.com/oauth2/token',
                     userInfoEndpoint:      'https://auth.akwadona.com/oauth2/userInfo',
                     endSessionEndpoint:    'https://auth.akwadona.com/logout',
                     revocationEndpoint:    'https://auth.akwadona.com/oauth2/revoke'
                 },
-                clientId: '2gq65qfu5016iplpvssmfl75f6',
+                clientId: '4r9fcr8f54pmubmmbnuldi9fqc',
                 redirectUrl: window.location.origin + '/',
                 postLogoutRedirectUri: window.location.origin + '/',
                 responseType: 'code',

@@ -100,15 +100,22 @@ Write-Host ""
 Write-Host "--- Step 2: Delete Cognito user pool + custom domain ---" -ForegroundColor Cyan
 $pools = aws cognito-idp list-user-pools --max-results 60 --query "UserPools[?Name=='$USER_POOL_NAME']" --output json | ConvertFrom-Json
 foreach ($p in $pools) {
-    # (a) Detach custom domain and WAIT until it is really gone -- the pool
-    #     cannot be deleted while a domain is attached.
+    # (a) A pool can carry TWO domains: the custom domain (auth.akwadona.com)
+    #     AND the CDK-managed prefix domain (xxx.auth.us-east-1.amazoncognito.com).
+    #     BOTH must be gone before delete-user-pool succeeds. Detach each and
+    #     WAIT until really gone.
+    $domains = @()
     $cd = aws cognito-idp describe-user-pool --user-pool-id $p.Id --query "UserPool.CustomDomain" --output text 2>$null
-    if ($cd -and $cd -ne 'None' -and $cd -ne '') {
-        Write-Host "  Detach custom domain $cd"
-        aws cognito-idp delete-user-pool-domain --user-pool-id $p.Id --domain $cd 2>$null
+    if ($cd -and $cd -ne 'None' -and $cd -ne '') { $domains += $cd }
+    $pd = aws cognito-idp describe-user-pool --user-pool-id $p.Id --query "UserPool.Domain" --output text 2>$null
+    if ($pd -and $pd -ne 'None' -and $pd -ne '' -and $pd -ne $cd) { $domains += $pd }
+    foreach ($d in $domains) {
+        Write-Host "  Detach domain $d"
+        aws cognito-idp delete-user-pool-domain --user-pool-id $p.Id --domain $d 2>$null
         for ($i = 0; $i -lt 30; $i++) {
-            $st = aws cognito-idp describe-user-pool-domain --domain $cd --query "DomainDescription.Status" --output text 2>$null
+            $st = aws cognito-idp describe-user-pool-domain --domain $d --query "DomainDescription.Status" --output text 2>$null
             if (-not $st -or $st -eq 'None') { break }
+            Write-Host "    domain status: $st -- waiting..."
             Start-Sleep -Seconds 10
         }
     }
