@@ -188,7 +188,7 @@ export class AkwadonaStack extends cdk.Stack {
         // Versioning is mandatory for Object Lock.
         // ─────────────────────────────────────────────────────────────────────
         const auditBucket = new s3.Bucket(this, 'AkwadonaAuditBucket', {
-            bucketName: `akwadona-audit-v6-${accountId}-${region}`,
+            bucketName: `akwadona-audit-v7-${accountId}-${region}`,
             blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
             encryption: s3.BucketEncryption.KMS,
             encryptionKey: akwadonaAuditKey,
