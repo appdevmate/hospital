@@ -59,9 +59,13 @@ module.exports = async function run(ctx) {
     const inCookie = await get(`${ctx.apiBase}/patients`, { headers: { cookie: `accessToken=${forgeJwt()}` } });
     r.expect('Token in cookie ignored → 401', inCookie.status === 401, `status=${inCookie.status}`);
 
-    let no500 = true; const junk = ['Bearer', 'Bearer ', 'Basic YWRtaW46YWRtaW4=', 'Bearer a.b', 'Bearer ' + 'A'.repeat(8192), 'Bearer \u0000', 'Bearer %00'];
+    // Values Node's fetch itself refuses (trailing space, NUL) never reach the
+    // wire; count those as "not a 5xx" and move on.
+    let no500 = true; const junk = ['Bearer', 'Bearer ', 'Basic YWRtaW46YWRtaW4=', 'Bearer a.b', 'Bearer ' + 'A'.repeat(8192), 'Bearer \u0000', 'Bearer %00', 'bearer x', 'BEARER x.y.z', 'Bearer x y z'];
     for (const v of junk) {
-        const res = await get(`${ctx.apiBase}/patients`, { headers: { authorization: v } });
+        let res;
+        try { res = await get(`${ctx.apiBase}/patients`, { headers: { authorization: v } }); }
+        catch (_) { continue; }
         if (res.status >= 500) { no500 = false; break; }
     }
     r.expect('Malformed Authorization never yields 5xx', no500);

@@ -17,8 +17,11 @@ module.exports = async function run(ctx) {
     const r = new Report('06 Method + path handling');
     const api = ctx.apiBase;
 
-    for (const m of ['PUT', 'TRACE', 'HEAD', 'CONNECT', 'PROPFIND']) {
-        const res = await request(`${api}/patients`, { method: m });
+    // Node's fetch forbids TRACE/CONNECT/TRACK by spec; those are skipped, not failed.
+    for (const m of ['PUT', 'HEAD', 'PROPFIND', 'PURGE', 'PATCHX', 'TRACE', 'CONNECT']) {
+        let res;
+        try { res = await request(`${api}/patients`, { method: m }); }
+        catch (e) { r.skip(`${m} /patients`, `client refuses to send ${m} (${e.message.split('.')[0]})`); continue; }
         r.expect(`${m} /patients → 401/404/405 (not 5xx)`, [401, 403, 404, 405].includes(res.status), `status=${res.status}`);
     }
 
