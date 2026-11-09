@@ -150,6 +150,19 @@ $changes += @{
         ResourceRecords = @(@{ Value = $cfDomain })
     }
 }
+# 2026-11-09 fix -- delete any SPECIFIC CNAMEs left by older recover runs
+# (www / tiryaq / alshifaa / any slug) that still point at a destroyed
+# distribution. A specific record beats the wildcard, so a stale one makes
+# that hostname unreachable even though the wildcard is correct.
+$stale = aws route53 list-resource-record-sets --hosted-zone-id $R53_ZONE_ID `
+    --query "ResourceRecordSets[?Type=='CNAME' && ends_with(Name,'.akwadona.com.') && Name!='\\052.akwadona.com.' && Name!='auth.akwadona.com.' && !contains(Name,'_domainkey')]" `
+    --output json 2>$null | ConvertFrom-Json
+foreach ($r in @($stale)) {
+    if ($r -and $r.ResourceRecords -and $r.ResourceRecords[0].Value -ne $cfDomain) {
+        Write-Host "  Removing stale CNAME $($r.Name) -> $($r.ResourceRecords[0].Value)"
+        $changes += @{ Action = 'DELETE'; ResourceRecordSet = $r }
+    }
+}
 if (Set-R53Records -Changes $changes) {
     Write-Host "  Apex + *.akwadona.com -> $cfDomain (INSYNC)" -ForegroundColor Green
 }
