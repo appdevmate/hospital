@@ -203,7 +203,8 @@ foreach ($a in $aliases) {
 # recreated by the users-function custom resource.
 Write-Host ""
 Write-Host "--- Step 5d: Delete leftover Secrets Manager entries ---" -ForegroundColor Cyan
-$secrets = aws secretsmanager list-secrets --query "SecretList[?starts_with(Name,'/akwadona/seed-users/') || contains(Name,'akwadona')].Name" --output json | ConvertFrom-Json
+# 2026-11-09: also match legacy /tiryaq/ secrets (8 of them billed $3.20/month unnoticed through Oct 2026).
+$secrets = aws secretsmanager list-secrets --query "SecretList[?starts_with(Name,'/akwadona/') || starts_with(Name,'/tiryaq/') || contains(Name,'akwadona') || contains(Name,'tiryaq')].Name" --output json | ConvertFrom-Json
 foreach ($s in $secrets) {
     aws secretsmanager delete-secret --secret-id $s --force-delete-without-recovery 2>$null | Out-Null
     Write-Host "  Deleted: $s"
