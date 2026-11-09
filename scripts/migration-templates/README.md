@@ -43,4 +43,4 @@ The operator runs `import-tenant-data.js` WITHOUT the `--apply` flag first. That
 - After a successful import, the operator deletes the original CSV from S3.
 - The data lives in Akwadona's DynamoDB, encrypted with **your hospital's dedicated KMS key**.
 
-See `docs/11-customer-migration-guide.md` for the full operator runbook.
+See `AKW-ADR-11-Architecture-Decision-Log.md` for the full operator runbook.

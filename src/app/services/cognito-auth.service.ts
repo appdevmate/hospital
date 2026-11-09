@@ -23,7 +23,7 @@ import { Injectable } from '@angular/core';
 
 const REGION    = 'us-east-1';
 const ENDPOINT  = `https://cognito-idp.${REGION}.amazonaws.com/`;
-const CLIENT_ID = '4r9fcr8f54pmubmmbnuldi9fqc';
+const CLIENT_ID = '6ndnfufmo100mq1rrmte7pqmhg';
 
 export type SignInResult =
     | { kind: 'ok'; accessToken: string; idToken: string; refreshToken: string; expiresIn: number }

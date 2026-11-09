@@ -375,7 +375,7 @@ exports.handler = async (event) => {
   if (!isAdminOrDeveloper(event)) {
     return {
       statusCode: 403,
-      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+      headers: { 'Content-Type': 'application/json'},
       body: JSON.stringify({ message: 'Access denied: creating doctors is admin-only' })
     };
   }
@@ -386,7 +386,7 @@ exports.handler = async (event) => {
   catch (e) {
     return {
       statusCode: e.statusCode || 403,
-      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+      headers: { 'Content-Type': 'application/json'},
       body: JSON.stringify({ message: e.message })
     };
   }
@@ -413,7 +413,7 @@ exports.handler = async (event) => {
       if (doctors.length === 0) {
         return {
           statusCode: 400,
-          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+          headers: { 'Content-Type': 'application/json'},
           body: JSON.stringify({ message: 'doctors array is empty' })
         };
       }
@@ -426,10 +426,7 @@ exports.handler = async (event) => {
       return {
         statusCode,
         headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-          'Access-Control-Allow-Methods': 'POST, OPTIONS'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           message: results.failed.length > 0
@@ -450,10 +447,7 @@ exports.handler = async (event) => {
     const response = {
       statusCode: 201,
       headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         message: 'Doctor created successfully',
@@ -473,9 +467,7 @@ exports.handler = async (event) => {
     return {
       statusCode: isValidation ? 400 : 500,
       headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      },
+        'Content-Type': 'application/json'},
       body: JSON.stringify({
         message: error.message,
         error: error.message

@@ -45,7 +45,7 @@ Designate a security official.
 
 | Sub-requirement | Status | Akwadona implementation |
 |---|---|---|
-| (ii)(A) Authorization / Supervision | ✓ Required | IAM users via SSO, MFA required on all admin actions. Engineer access to production limited to deploy user + named on-call rota. |
+| (ii)(A) Authorization / Supervision | ✓ Required | AWS-console access for engineers via IAM users with MFA. Application MFA for end users is OPTIONAL (TOTP) as of 2026-10-29 — REQUIRED for Operator/Admin is an open action item. Engineer access to production limited to deploy user + named on-call rota. |
 | (ii)(B) Workforce Clearance | ✓ Required | Background check on all engineers with production access. NDA in employment contract. |
 | (ii)(C) Termination Procedures | ✓ Required | On employee exit: IAM credentials disabled within 1 business day; SSO revoked immediately; tracked in HR offboarding checklist. |
 

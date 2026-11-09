@@ -37,7 +37,7 @@ exports.handler = async (event) => {
     catch (e) {
         return {
             statusCode: e.statusCode || 403,
-            headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+            headers: { 'Content-Type': 'application/json'},
             body: JSON.stringify({ message: e.message })
         };
     }

@@ -145,20 +145,75 @@ async function keyArnForTenant(tenantId) {
 async function generateDek(tenantId) {
     const KeyId = await keyArnForTenant(tenantId);
     const r = await kms.send(new GenerateDataKeyCommand({ KeyId, KeySpec: KEY_SPEC }));
-    return {
-        plaintextDek: Buffer.from(r.Plaintext),
-        encryptedDek: Buffer.from(r.CiphertextBlob)
-    };
+    const plaintextDek = Buffer.from(r.Plaintext);
+    const encryptedDek = Buffer.from(r.CiphertextBlob);
+    // Prime the cache so "create then immediately read back" costs no KMS call.
+    _dekCacheSet(encryptedDek.toString('base64'), plaintextDek);
+    return { plaintextDek, encryptedDek };
 }
 
-/** Decrypt a wrapped DEK via KMS. Returns Buffer(32). */
+// ─────────────────────────────────────────────────────────────────────────────
+// 2026-10-29 performance fix — DEK cache.
+//
+// Every row carries its own wrapped DEK, so listing N rows used to cost N
+// synchronous KMS Decrypt calls (~10–20 ms each, ~$0.03 per 10k). Repeat
+// reads of the SAME rows (page back/forward, open detail after list,
+// re-sort) paid again every time. This cache maps the wrapped-DEK ciphertext
+// (base64) → plaintext DEK for a short window so a warm container decrypts
+// a previously-seen row with zero KMS calls.
+//
+// Security notes:
+//   - The cache key is the wrapped DEK, which is already stored in DynamoDB
+//     next to the ciphertext; knowing it without KMS access reveals nothing.
+//   - Plaintext DEKs live only in this Lambda's process memory, which is
+//     isolated per function + per execution environment. This is the same
+//     model as the AWS Encryption SDK's caching CMM.
+//   - Short TTL + bounded size + wipe-on-evict limit exposure.
+//   - The operator Lambda never calls this path (explicit IAM DENY on
+//     kms:Decrypt for tenant keys), so the cache cannot help an operator.
+// ─────────────────────────────────────────────────────────────────────────────
+const DEK_CACHE_TTL_MS = 5 * 60 * 1000;   // 5 minutes
+const DEK_CACHE_MAX    = 2000;             // ~64 KB of key material at 32 B each
+const _dekCache        = new Map();        // wrappedB64 -> { dek: Buffer, at: number }
+
+function _dekCacheGet(wrappedB64) {
+    const hit = _dekCache.get(wrappedB64);
+    if (!hit) return null;
+    if (Date.now() - hit.at > DEK_CACHE_TTL_MS) {
+        hit.dek.fill(0);
+        _dekCache.delete(wrappedB64);
+        return null;
+    }
+    // Hand out a copy so callers can `fill(0)` their own buffer without
+    // corrupting the cached one.
+    return Buffer.from(hit.dek);
+}
+
+function _dekCacheSet(wrappedB64, dek) {
+    if (_dekCache.size >= DEK_CACHE_MAX) {
+        // Evict the oldest entry (Map preserves insertion order).
+        const oldestKey = _dekCache.keys().next().value;
+        const oldest = _dekCache.get(oldestKey);
+        if (oldest) oldest.dek.fill(0);
+        _dekCache.delete(oldestKey);
+    }
+    _dekCache.set(wrappedB64, { dek: Buffer.from(dek), at: Date.now() });
+}
+
+/** Decrypt a wrapped DEK via KMS (cached). Returns Buffer(32). */
 async function decryptDek(encryptedDek, tenantId) {
+    const wrappedB64 = Buffer.isBuffer(encryptedDek) ? encryptedDek.toString('base64') : String(encryptedDek);
+    const cached = _dekCacheGet(wrappedB64);
+    if (cached) return cached;
+
     const KeyId = await keyArnForTenant(tenantId);
     const r = await kms.send(new DecryptCommand({
-        CiphertextBlob: encryptedDek,
+        CiphertextBlob: Buffer.isBuffer(encryptedDek) ? encryptedDek : Buffer.from(encryptedDek, 'base64'),
         KeyId
     }));
-    return Buffer.from(r.Plaintext);
+    const dek = Buffer.from(r.Plaintext);
+    _dekCacheSet(wrappedB64, dek);
+    return dek;
 }
 
 /**
@@ -262,13 +317,28 @@ async function decryptItem(item, fieldNames, tenantId) {
 }
 
 /**
- * Decrypt a list of items in parallel. Same DEK is decrypted per item
- * (one KMS call per item). For very large lists, callers should consider
- * caching DEKs by their ciphertext.
+ * Decrypt a list of items with bounded parallelism.
+ *
+ * 2026-10-29 — was an unbounded Promise.all: a 3,000-row sorted list fired
+ * 3,000 simultaneous KMS Decrypt calls, which is how we trip KMS's shared
+ * per-account request quota and surface as sporadic ThrottlingException.
+ * Now at most DECRYPT_CONCURRENCY calls are in flight; the DEK cache above
+ * means repeated rows cost no KMS call at all.
  */
+const DECRYPT_CONCURRENCY = 32;
+
 async function decryptItems(items, fieldNames, tenantId) {
     if (!items || !items.length) return items;
-    return Promise.all(items.map(it => decryptItem(it, fieldNames, tenantId)));
+    let next = 0;
+    const worker = async () => {
+        while (next < items.length) {
+            const i = next++;
+            await decryptItem(items[i], fieldNames, tenantId);
+        }
+    };
+    const workers = Array.from({ length: Math.min(DECRYPT_CONCURRENCY, items.length) }, worker);
+    await Promise.all(workers);
+    return items;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

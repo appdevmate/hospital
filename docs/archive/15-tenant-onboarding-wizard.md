@@ -113,7 +113,7 @@ aws kms schedule-key-deletion --key-id $kmsKeyId  --pending-window-in-days 7
 aws kms schedule-key-deletion --key-id $hmacKeyId --pending-window-in-days 7
 
 # 2. Delete the admin Cognito user
-aws cognito-idp admin-delete-user --user-pool-id us-east-1_KkINt5vOF --username $username
+aws cognito-idp admin-delete-user --user-pool-id us-east-1_bpipvSdQi --username $username
 
 # 3. Delete the TENANT row
 $key = @"

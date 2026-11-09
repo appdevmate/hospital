@@ -26,8 +26,21 @@
 // Step C.3 — resolve a doctor's application UUID (doctorId) by their email.
 // The DOCTOR profile row has  PK = DOCTOR#<UUID>, attribute  email = "…".
 // Pre-token runs on every login + every refresh, so we cache per-container.
+//
+// 2026-10-29 fixes:
+//   1. Both lookups were full-table Scans — inside Cognito's hard 5-second
+//      trigger cap. On a cold container with a growing table that is a 504
+//      on the user's first login. Now GSI Queries (single-digit ms).
+//   2. The doctor lookup filtered on plaintext `email`, but Step 3 encrypts
+//      DOCTOR.email — so any doctor created after Step 3 was never found,
+//      got no `doctorId` claim, and saw zero patients. Now we compute the
+//      tenant HMAC (same as getDoctorByEmail) and hit
+//      emailHash-EntityType-index; we fall back to email-index only for
+//      legacy plaintext rows that pre-date the encryption backfill.
+//      Needs kms:GenerateMac on alias/akwadona-tenant-* (granted in CDK).
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
-const { DynamoDBDocumentClient, ScanCommand } = require('@aws-sdk/lib-dynamodb');
+const { DynamoDBDocumentClient, QueryCommand } = require('@aws-sdk/lib-dynamodb');
+const { computeHmac } = require('./crypto');
 const ddb = DynamoDBDocumentClient.from(new DynamoDBClient({ region: 'us-east-1' }));
 const TABLE_NAME = 'Hospital';
 const _doctorIdCache = new Map();
@@ -43,11 +56,14 @@ async function lookupTenantSlug(tenantId) {
     const c = _slugCache.get(tenantId);
     if (c && Date.now() - c.fetchedAt < _CACHE_MS) return c.slug;
     try {
-        const r = await ddb.send(new ScanCommand({
+        const r = await ddb.send(new QueryCommand({
             TableName: TABLE_NAME,
-            FilterExpression: '#et = :et AND #sk = :sk AND #tid = :tid',
+            IndexName: 'tenant-entityType-index',
+            KeyConditionExpression: '#tid = :tid AND #et = :et',
+            FilterExpression: '#sk = :sk',
             ExpressionAttributeNames:  { '#et': 'EntityType', '#sk': 'SK', '#tid': 'tenantId' },
-            ExpressionAttributeValues: { ':et': 'TENANT', ':sk': 'PROFILE', ':tid': tenantId }
+            ExpressionAttributeValues: { ':et': 'TENANT', ':sk': 'PROFILE', ':tid': tenantId },
+            Limit: 5
         }));
         const item = (r.Items || [])[0];
         const slug = item ? (item.slug || (item.PK || '').slice('TENANT#'.length) || null) : null;
@@ -57,25 +73,56 @@ async function lookupTenantSlug(tenantId) {
         return null;
     }
 }
-async function lookupDoctorId(email) {
+
+function _doctorIdFromItem(item) {
+    return item ? ((item.PK || '').slice('DOCTOR#'.length) || null) : null;
+}
+
+async function lookupDoctorId(email, tenantId) {
     const key = (email || '').toLowerCase().trim();
     if (!key) return null;
-    const c = _doctorIdCache.get(key);
+    const cacheKey = `${tenantId || ''}|${key}`;
+    const c = _doctorIdCache.get(cacheKey);
     if (c && Date.now() - c.fetchedAt < _CACHE_MS) return c.id;
-    try {
-        const r = await ddb.send(new ScanCommand({
-            TableName: TABLE_NAME,
-            FilterExpression: '#et = :et AND #sk = :sk AND #em = :em',
-            ExpressionAttributeNames:  { '#et': 'EntityType', '#sk': 'SK', '#em': 'email' },
-            ExpressionAttributeValues: { ':et': 'DOCTOR', ':sk': 'PROFILE', ':em': key }
-        }));
-        const item = (r.Items || [])[0];
-        const id = item ? ((item.PK || '').slice('DOCTOR#'.length) || null) : null;
-        _doctorIdCache.set(key, { id, fetchedAt: Date.now() });
-        return id;
-    } catch (_) {
-        return null;
+
+    let id = null;
+
+    // Primary path — HMAC lookup (works for encrypted DOCTOR rows).
+    if (tenantId && tenantId !== 'UNASSIGNED' && tenantId !== 'OPERATOR') {
+        try {
+            const emailHash = await computeHmac(key, tenantId);
+            const r = await ddb.send(new QueryCommand({
+                TableName: TABLE_NAME,
+                IndexName: 'emailHash-EntityType-index',
+                KeyConditionExpression: '#eh = :eh AND #et = :et',
+                FilterExpression: '#sk = :sk AND #tid = :tid',
+                ExpressionAttributeNames:  { '#eh': 'emailHash', '#et': 'EntityType', '#sk': 'SK', '#tid': 'tenantId' },
+                ExpressionAttributeValues: { ':eh': emailHash, ':et': 'DOCTOR', ':sk': 'PROFILE', ':tid': tenantId },
+                Limit: 5
+            }));
+            id = _doctorIdFromItem((r.Items || [])[0]);
+        } catch (_) { /* fall through to legacy path */ }
     }
+
+    // Legacy path — plaintext email-index for rows that pre-date Step 3.
+    if (!id) {
+        try {
+            const r = await ddb.send(new QueryCommand({
+                TableName: TABLE_NAME,
+                IndexName: 'email-index',
+                KeyConditionExpression: '#em = :em AND #et = :et',
+                FilterExpression: '#sk = :sk',
+                ExpressionAttributeNames:  { '#em': 'email', '#et': 'EntityType', '#sk': 'SK' },
+                ExpressionAttributeValues: { ':em': key, ':et': 'DOCTOR', ':sk': 'PROFILE' },
+                Limit: 5
+            }));
+            const rows = (r.Items || []).filter(it => !tenantId || !it.tenantId || it.tenantId === tenantId);
+            id = _doctorIdFromItem(rows[0]);
+        } catch (_) { /* give up — caller tolerates null */ }
+    }
+
+    _doctorIdCache.set(cacheKey, { id, fetchedAt: Date.now() });
+    return id;
 }
 
 exports.handler = async (event) => {
@@ -99,7 +146,7 @@ exports.handler = async (event) => {
     // doctorId on every appointment / consultation create.
     let doctorId = null;
     if (isDoctor && attrs.email) {
-        doctorId = await lookupDoctorId(attrs.email);
+        doctorId = await lookupDoctorId(attrs.email, tenantId);
     }
 
     // Step 7j — inject the tenant's URL slug so the frontend can route the

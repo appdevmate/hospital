@@ -27,7 +27,7 @@ Both IDs are deterministic: `T_` + first 8 hex chars of `SHA-256("AKWADONA_TENAN
 - CloudFront distribution: `EMIDMHCZ9PRK4` → `d37kqu4c91mlc4.cloudfront.net`
 - AWS account: `483176634665`
 - Cognito user pool: `akwadona-user-pool` (region `us-east-1`) — single pool serves all tenants
-- App client: `akwadona-app-client` (`5i94ivu752m12uivl62v99pu4`)
+- App client: `akwadona-app-client` (`4r9fcr8f54pmubmmbnuldi9fqc`)
 - DynamoDB table: `Hospital` (region `us-east-1`)
 - ACM wildcard cert: `*.akwadona.com` in `us-east-1`
 - Domain registrar: GoDaddy
@@ -76,7 +76,7 @@ Via CLI:
 
 ```powershell
 aws cognito-idp admin-update-user-attributes `
-    --user-pool-id us-east-1_KkINt5vOF `
+    --user-pool-id us-east-1_bpipvSdQi `
     --username <username> `
     --user-attributes Name=custom:tenantId,Value=T_<id> `
     --region us-east-1

@@ -1,0 +1,251 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1300" font-family="Segoe UI, Arial, sans-serif">
+  <defs>
+    <marker id="arrR3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1e293b"/>
+    </marker>
+  </defs>
+
+  <!-- Header -->
+  <text x="40" y="52" font-size="30" font-weight="700" fill="#0f172a">Hashing vs HMAC — Fingerprints for Safe Comparison</text>
+  <text x="40" y="84" font-size="16" fill="#475569">Hashing is one-way. HMAC adds a secret key so the fingerprint stays inside one hospital.</text>
+
+  <!-- Divider line -->
+  <line x1="700" y1="120" x2="700" y2="900" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="6 4"/>
+
+  <!-- LEFT SIDE: Hashing -->
+  <g>
+    <rect x="40" y="130" width="640" height="40" rx="8" fill="#7c3aed"/>
+    <text x="360" y="157" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">HASHING (§4.6) — one-way, no key</text>
+  </g>
+
+  <!-- Hashing flow -->
+  <!-- Input -->
+  <g>
+    <rect x="60" y="200" width="180" height="100" rx="10" fill="#fff" stroke="#2563eb" stroke-width="2"/>
+    <text x="150" y="230" text-anchor="middle" font-size="13" font-weight="700" fill="#1e293b">Input</text>
+    <text x="150" y="258" text-anchor="middle" font-size="12" font-family="Consolas, monospace" fill="#2563eb">"mypassword123"</text>
+    <text x="150" y="282" text-anchor="middle" font-size="11" fill="#64748b">(a password typed at login)</text>
+  </g>
+  <line x1="243" y1="250" x2="283" y2="250" stroke="#1e293b" stroke-width="2" marker-end="url(#arrR3)"/>
+
+  <!-- SHA-256 engine -->
+  <g>
+    <rect x="290" y="200" width="180" height="100" rx="10" fill="#faf5ff" stroke="#7c3aed" stroke-width="2"/>
+    <!-- blender icon -->
+    <path d="M345 220 L395 220 L390 265 L350 265 Z" fill="none" stroke="#7c3aed" stroke-width="2"/>
+    <line x1="355" y1="230" x2="385" y2="260" stroke="#7c3aed" stroke-width="1"/>
+    <line x1="385" y1="230" x2="355" y2="260" stroke="#7c3aed" stroke-width="1"/>
+    <text x="380" y="245" font-size="13" font-weight="700" fill="#1e293b">SHA-256</text>
+    <text x="380" y="285" text-anchor="middle" font-size="11" fill="#64748b">(no key, no secret)</text>
+  </g>
+  <line x1="473" y1="250" x2="513" y2="250" stroke="#1e293b" stroke-width="2" marker-end="url(#arrR3)"/>
+
+  <!-- Output -->
+  <g>
+    <rect x="520" y="200" width="160" height="100" rx="10" fill="#fff" stroke="#16a34a" stroke-width="2"/>
+    <text x="600" y="226" text-anchor="middle" font-size="13" font-weight="700" fill="#1e293b">Fingerprint</text>
+    <text x="600" y="252" text-anchor="middle" font-size="10" font-family="Consolas, monospace" fill="#16a34a">5d41402abc4b</text>
+    <text x="600" y="266" text-anchor="middle" font-size="10" font-family="Consolas, monospace" fill="#16a34a">2a76b9719d91</text>
+    <text x="600" y="280" text-anchor="middle" font-size="10" font-family="Consolas, monospace" fill="#16a34a">1017c592...</text>
+    <text x="600" y="296" text-anchor="middle" font-size="10" fill="#64748b">(32 bytes, always same length)</text>
+  </g>
+
+  <!-- Hashing: key properties -->
+  <g>
+    <rect x="60" y="330" width="620" height="200" rx="10" fill="#faf5ff" stroke="#7c3aed" stroke-width="1"/>
+    <text x="80" y="358" font-size="14" font-weight="700" fill="#7c3aed">Key properties</text>
+    <text x="80" y="385" font-size="12" fill="#1e293b">• Same input always gives the same fingerprint.</text>
+    <text x="80" y="405" font-size="12" fill="#1e293b">• You cannot reverse the fingerprint back to the input.</text>
+    <text x="80" y="425" font-size="12" fill="#1e293b">• Any tiny change in the input makes a totally different fingerprint.</text>
+    <text x="80" y="453" font-size="13" font-weight="700" fill="#334155">Where Akwadona uses it:</text>
+    <text x="80" y="473" font-size="12" fill="#1e293b">• <tspan font-weight="600">Password check in Cognito.</tspan> We store the hash, never the password.</text>
+    <text x="80" y="493" font-size="12" fill="#1e293b">  On login, Cognito hashes what the user typed and compares.</text>
+    <text x="80" y="513" font-size="12" fill="#1e293b">• A few internal identifiers that only need equality checks.</text>
+  </g>
+
+  <!-- Hashing: the problem -->
+  <g>
+    <rect x="60" y="550" width="620" height="200" rx="10" fill="#fef2f2" stroke="#dc2626" stroke-width="1"/>
+    <text x="80" y="578" font-size="14" font-weight="700" fill="#dc2626">Why plain hashing is NOT enough for PHI like email</text>
+    <text x="80" y="605" font-size="12" fill="#1e293b">If every hospital hashed <tspan font-family="Consolas, monospace">"john@gmail.com"</tspan> with plain SHA-256,</text>
+    <text x="80" y="623" font-size="12" fill="#1e293b">the fingerprint would be the <tspan font-weight="700">same at every hospital</tspan>.</text>
+    <text x="80" y="650" font-size="12" fill="#1e293b">An attacker who stole DynamoDB from several tenants could cross-reference:</text>
+    <text x="80" y="668" font-size="12" fill="#1e293b">"Row with fingerprint 7e3f... exists at Tiryaq AND at Alshifaa".</text>
+    <text x="80" y="686" font-size="12" fill="#1e293b">That is a cross-tenant data leak — exactly what multi-tenancy must prevent.</text>
+    <text x="80" y="716" font-size="12" font-weight="700" fill="#dc2626">Solution: mix in a per-tenant secret &#8594; HMAC (see right side).</text>
+  </g>
+
+  <!-- RIGHT SIDE: HMAC -->
+  <g>
+    <rect x="720" y="130" width="640" height="40" rx="8" fill="#dc2626"/>
+    <text x="1040" y="157" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">HMAC (§4.7) — one-way WITH a tenant secret</text>
+  </g>
+
+  <!-- HMAC flow -->
+  <!-- Input -->
+  <g>
+    <rect x="740" y="200" width="180" height="100" rx="10" fill="#fff" stroke="#2563eb" stroke-width="2"/>
+    <text x="830" y="226" text-anchor="middle" font-size="13" font-weight="700" fill="#1e293b">Input</text>
+    <text x="830" y="254" text-anchor="middle" font-size="11" font-family="Consolas, monospace" fill="#2563eb">"john@gmail.com"</text>
+    <text x="830" y="276" text-anchor="middle" font-size="11" fill="#64748b">(a patient's email, in plaintext</text>
+    <text x="830" y="290" text-anchor="middle" font-size="11" fill="#64748b">from the request body)</text>
+  </g>
+  <line x1="923" y1="250" x2="953" y2="250" stroke="#1e293b" stroke-width="2" marker-end="url(#arrR3)"/>
+
+  <!-- Plus tenant key -->
+  <g>
+    <rect x="960" y="200" width="180" height="100" rx="10" fill="#fffbeb" stroke="#ca8a04" stroke-width="2"/>
+    <!-- key icon -->
+    <circle cx="988" cy="238" r="8" fill="none" stroke="#ca8a04" stroke-width="2"/>
+    <line x1="995" y1="238" x2="1020" y2="238" stroke="#ca8a04" stroke-width="2"/>
+    <line x1="1013" y1="238" x2="1013" y2="246" stroke="#ca8a04" stroke-width="2"/>
+    <line x1="1020" y1="238" x2="1020" y2="248" stroke="#ca8a04" stroke-width="2"/>
+    <text x="1035" y="242" font-size="13" font-weight="700" fill="#1e293b">+ Tenant HMAC key</text>
+    <text x="975" y="268" font-size="11" font-family="Consolas, monospace" fill="#ca8a04">alias/akwadona-</text>
+    <text x="975" y="282" font-size="11" font-family="Consolas, monospace" fill="#ca8a04">tenant-tiryaq-hmac</text>
+    <text x="975" y="296" font-size="10" fill="#64748b">(KMS HMAC_256 key)</text>
+  </g>
+  <line x1="1143" y1="250" x2="1173" y2="250" stroke="#1e293b" stroke-width="2" marker-end="url(#arrR3)"/>
+
+  <!-- Output -->
+  <g>
+    <rect x="1180" y="200" width="170" height="100" rx="10" fill="#fff" stroke="#16a34a" stroke-width="2"/>
+    <text x="1265" y="226" text-anchor="middle" font-size="13" font-weight="700" fill="#1e293b">Fingerprint</text>
+    <text x="1265" y="252" text-anchor="middle" font-size="10" font-family="Consolas, monospace" fill="#16a34a">a1b2c3d4e5f6</text>
+    <text x="1265" y="266" text-anchor="middle" font-size="10" font-family="Consolas, monospace" fill="#16a34a">7890abcdef12</text>
+    <text x="1265" y="280" text-anchor="middle" font-size="10" font-family="Consolas, monospace" fill="#16a34a">34567890...</text>
+    <text x="1265" y="296" text-anchor="middle" font-size="10" fill="#64748b">(stored as `emailHash`)</text>
+  </g>
+
+  <!-- HMAC: key properties -->
+  <g>
+    <rect x="720" y="330" width="640" height="200" rx="10" fill="#fef2f2" stroke="#dc2626" stroke-width="1"/>
+    <text x="740" y="358" font-size="14" font-weight="700" fill="#dc2626">Key properties</text>
+    <text x="740" y="385" font-size="12" fill="#1e293b">• Same input + <tspan font-weight="700">same key</tspan> = same fingerprint (deterministic — we rely on this).</text>
+    <text x="740" y="405" font-size="12" fill="#1e293b">• Same input + <tspan font-weight="700">different key</tspan> = different fingerprint (tenant isolation).</text>
+    <text x="740" y="425" font-size="12" fill="#1e293b">• Still one-way — you cannot reverse the fingerprint back to the input.</text>
+    <text x="740" y="453" font-size="13" font-weight="700" fill="#334155">Where Akwadona uses it:</text>
+    <text x="740" y="473" font-size="12" fill="#1e293b">• <tspan font-weight="600">Searchable PHI.</tspan> Patient email, Qatari ID, phone.</text>
+    <text x="740" y="493" font-size="12" fill="#1e293b">  Stored encrypted (nameEnc …) + fingerprint (emailHash, qidHash …).</text>
+    <text x="740" y="513" font-size="12" fill="#1e293b">• To search: HMAC the user's query the same way, look up by fingerprint.</text>
+  </g>
+
+  <!-- HMAC: cross-tenant isolation example -->
+  <g>
+    <rect x="720" y="550" width="640" height="200" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+    <text x="740" y="578" font-size="14" font-weight="700" fill="#16a34a">How tenant isolation works in practice</text>
+    <text x="740" y="605" font-size="12" fill="#1e293b">Same email <tspan font-family="Consolas, monospace">"john@gmail.com"</tspan>, two hospitals:</text>
+    <text x="760" y="630" font-size="12" font-family="Consolas, monospace" fill="#1e293b">at Tiryaq    &#8594; HMAC( "john@...", tiryaq-key )     &#8594; <tspan fill="#16a34a">a1b2c3d4...</tspan></text>
+    <text x="760" y="650" font-size="12" font-family="Consolas, monospace" fill="#1e293b">at Alshifaa  &#8594; HMAC( "john@...", alshifaa-key )   &#8594; <tspan fill="#dc2626">9f8e7d6c...</tspan></text>
+    <text x="740" y="680" font-size="12" fill="#1e293b">Attacker who steals BOTH rows cannot tell they are the same person,</text>
+    <text x="740" y="696" font-size="12" fill="#1e293b">because the two keys live in separate KMS CMKs and never leave KMS.</text>
+    <text x="740" y="725" font-size="12" font-weight="700" fill="#16a34a">Cross-tenant isolation is cryptographic, not just policy.</text>
+  </g>
+
+  <!-- 5 feature cards (bottom row) -->
+  <text x="40" y="800" font-size="18" font-weight="700" fill="#0f172a">The five things to remember</text>
+
+  <g>
+    <rect x="40" y="820" width="250" height="200" rx="10" fill="#faf5ff" stroke="#7c3aed" stroke-width="1"/>
+    <circle cx="68" cy="848" r="18" fill="#7c3aed"/>
+    <text x="68" y="855" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">1</text>
+    <text x="98" y="855" font-size="15" font-weight="700" fill="#1e293b">Hashing</text>
+    <text x="55" y="886" font-size="12" fill="#334155">One-way crush.</text>
+    <text x="55" y="906" font-size="12" fill="#334155">No key, no secret.</text>
+    <text x="55" y="934" font-size="12" fill="#475569">Good for passwords,</text>
+    <text x="55" y="950" font-size="12" fill="#475569">bad for cross-tenant data.</text>
+    <text x="55" y="978" font-size="11" fill="#64748b">Algorithm: SHA-256.</text>
+    <text x="55" y="996" font-size="11" fill="#64748b">Cognito does this for us.</text>
+  </g>
+
+  <g>
+    <rect x="305" y="820" width="250" height="200" rx="10" fill="#fef2f2" stroke="#dc2626" stroke-width="1"/>
+    <circle cx="333" cy="848" r="18" fill="#dc2626"/>
+    <text x="333" y="855" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">2</text>
+    <text x="363" y="855" font-size="15" font-weight="700" fill="#1e293b">HMAC</text>
+    <text x="320" y="886" font-size="12" fill="#334155">One-way crush + key.</text>
+    <text x="320" y="906" font-size="12" fill="#334155">Key stays in KMS.</text>
+    <text x="320" y="934" font-size="12" fill="#475569">Good for searchable PHI</text>
+    <text x="320" y="950" font-size="12" fill="#475569">across tenants.</text>
+    <text x="320" y="978" font-size="11" fill="#64748b">Algorithm: HMAC-SHA256.</text>
+    <text x="320" y="996" font-size="11" fill="#64748b">One KMS key per tenant.</text>
+  </g>
+
+  <g>
+    <rect x="570" y="820" width="250" height="200" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+    <circle cx="598" cy="848" r="18" fill="#16a34a"/>
+    <text x="598" y="855" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">3</text>
+    <text x="628" y="855" font-size="15" font-weight="700" fill="#1e293b">Deterministic</text>
+    <text x="585" y="886" font-size="12" fill="#334155">Same input + same key</text>
+    <text x="585" y="906" font-size="12" fill="#334155">= same fingerprint.</text>
+    <text x="585" y="934" font-size="12" fill="#475569">This is what makes</text>
+    <text x="585" y="950" font-size="12" fill="#475569">search work:</text>
+    <text x="585" y="978" font-size="11" fill="#64748b">HMAC the query the same way,</text>
+    <text x="585" y="996" font-size="11" fill="#64748b">lookup by matching fingerprint.</text>
+  </g>
+
+  <g>
+    <rect x="835" y="820" width="250" height="200" rx="10" fill="#fffbeb" stroke="#ca8a04" stroke-width="1"/>
+    <circle cx="863" cy="848" r="18" fill="#ca8a04"/>
+    <text x="863" y="855" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">4</text>
+    <text x="893" y="855" font-size="15" font-weight="700" fill="#1e293b">Per-tenant key</text>
+    <text x="850" y="886" font-size="12" fill="#334155">One HMAC CMK per hospital.</text>
+    <text x="850" y="906" font-size="12" fill="#334155">Alias: `-hmac` suffix.</text>
+    <text x="850" y="934" font-size="12" fill="#475569">Breaks cross-tenant</text>
+    <text x="850" y="950" font-size="12" fill="#475569">correlation attacks.</text>
+    <text x="850" y="978" font-size="11" fill="#64748b">Even AWS cannot export</text>
+    <text x="850" y="996" font-size="11" fill="#64748b">the key material.</text>
+  </g>
+
+  <g>
+    <rect x="1100" y="820" width="260" height="200" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1"/>
+    <circle cx="1128" cy="848" r="18" fill="#2563eb"/>
+    <text x="1128" y="855" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">5</text>
+    <text x="1158" y="855" font-size="15" font-weight="700" fill="#1e293b">Still private</text>
+    <text x="1115" y="886" font-size="12" fill="#334155">Neither hash nor HMAC</text>
+    <text x="1115" y="906" font-size="12" fill="#334155">reveals the original.</text>
+    <text x="1115" y="934" font-size="12" fill="#475569">So fingerprints are safe</text>
+    <text x="1115" y="950" font-size="12" fill="#475569">to store in DynamoDB</text>
+    <text x="1115" y="966" font-size="12" fill="#475569">next to the encrypted PHI.</text>
+    <text x="1115" y="994" font-size="11" fill="#64748b">(Encrypted PHI = §4.8 envelope.)</text>
+  </g>
+
+  <!-- Three summary panels -->
+  <g>
+    <rect x="40" y="1050" width="430" height="170" rx="10" fill="#fff" stroke="#cbd5e1"/>
+    <text x="60" y="1080" font-size="14" font-weight="700" fill="#0891b2">How the pieces fit</text>
+    <text x="60" y="1105" font-size="12" fill="#1e293b">SHA-256 is the engine inside both.</text>
+    <text x="60" y="1129" font-size="12" fill="#1e293b">HMAC wraps the engine with a key.</text>
+    <text x="60" y="1153" font-size="12" fill="#1e293b">Hashing &#8594; passwords (Cognito).</text>
+    <text x="60" y="1177" font-size="12" fill="#1e293b">HMAC &#8594; searchable PHI (Akwadona).</text>
+    <text x="60" y="1201" font-size="11" fill="#64748b">The envelope (§4.8) locks the PHI itself;</text>
+    <text x="60" y="1215" font-size="11" fill="#64748b">HMAC fingerprints make it searchable.</text>
+  </g>
+
+  <g>
+    <rect x="485" y="1050" width="430" height="170" rx="10" fill="#fff" stroke="#cbd5e1"/>
+    <text x="505" y="1080" font-size="14" font-weight="700" fill="#16a34a">Why both exist</text>
+    <text x="505" y="1105" font-size="12" fill="#1e293b">1. We need to CHECK sensitive data</text>
+    <text x="505" y="1121" font-size="12" fill="#1e293b">    without STORING it. &#8594; hashing.</text>
+    <text x="505" y="1145" font-size="12" fill="#1e293b">2. We need to SEARCH sensitive data</text>
+    <text x="505" y="1161" font-size="12" fill="#1e293b">    without DECRYPTING it. &#8594; HMAC.</text>
+    <text x="505" y="1185" font-size="12" fill="#1e293b">3. Both must survive a stolen backup</text>
+    <text x="505" y="1201" font-size="12" fill="#1e293b">    AND stay tenant-isolated.</text>
+  </g>
+
+  <g>
+    <rect x="930" y="1050" width="430" height="170" rx="10" fill="#fff" stroke="#cbd5e1"/>
+    <text x="950" y="1080" font-size="14" font-weight="700" fill="#7c3aed">Real-life analogies</text>
+    <text x="950" y="1105" font-size="12" fill="#1e293b">Hashing = a blender.</text>
+    <text x="950" y="1121" font-size="12" fill="#1e293b">Apple goes in, applesauce comes out.</text>
+    <text x="950" y="1137" font-size="12" fill="#1e293b">You cannot un-blend.</text>
+    <text x="950" y="1161" font-size="12" fill="#1e293b">HMAC = a rubber stamp with a</text>
+    <text x="950" y="1177" font-size="12" fill="#1e293b">secret insert inside the stamp body.</text>
+    <text x="950" y="1193" font-size="12" fill="#1e293b">Two companies with "identical" stamps</text>
+    <text x="950" y="1209" font-size="12" fill="#1e293b">make distinguishable prints.</text>
+  </g>
+
+  <!-- Result banner -->
+  <rect x="40" y="1245" width="1320" height="50" rx="10" fill="#0f172a"/>
+  <text x="700" y="1276" text-anchor="middle" font-size="16" font-weight="600" fill="#fff">Result: passwords safe (hashing). PHI searchable AND tenant-isolated (HMAC).</text>
+</svg>

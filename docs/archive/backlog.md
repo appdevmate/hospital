@@ -39,7 +39,7 @@ $pad = $payload + ('=' * ((4 - ($payload.Length % 4)) % 4))
 $results = @{}
 $i = 0
 1..700 | ForEach-Object {
-    $code = curl.exe -s -o NUL -w "%{http_code}" -H "Authorization: Bearer $token" "https://a2s6jk35d9.execute-api.us-east-1.amazonaws.com/patients?pageSize=1"
+    $code = curl.exe -s -o NUL -w "%{http_code}" -H "Authorization: Bearer $token" "https://vbsex10bd6.execute-api.us-east-1.amazonaws.com/patients?pageSize=1"
     if (-not $results.ContainsKey($code)) { $results[$code] = 0 }
     $results[$code]++
     $i++

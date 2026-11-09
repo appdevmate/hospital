@@ -101,9 +101,7 @@ function getOperator(event) {
 }
 
 const hdrs = {
-    'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*'
-};
+    'Content-Type': 'application/json'};
 function res(statusCode, body) { return { statusCode, headers: hdrs, body: JSON.stringify(body) }; }
 function err(statusCode, message) { return res(statusCode, { error: message, message }); }
 
@@ -188,9 +186,12 @@ async function listTenants() {
     // Perf — list returns the full profile so the UI doesn't need a follow-up
     // /tenants/{slug} call on selection. Tenant set is tiny (< a few hundred)
     // so the payload stays small. Strips PHI-adjacent counters defensively.
-    const r = await ddb.send(new ScanCommand({
+    // 2026-10-29 perf fix — was a full-table Scan; EntityType-index returns
+    // only the TENANT rows.
+    const r = await ddb.send(new QueryCommand({
         TableName: TABLE_NAME,
-        FilterExpression: '#et = :t',
+        IndexName: 'EntityType-index',
+        KeyConditionExpression: '#et = :t',
         ExpressionAttributeNames: { '#et': 'EntityType' },
         ExpressionAttributeValues: { ':t': 'TENANT' }
     }));

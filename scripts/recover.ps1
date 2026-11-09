@@ -190,6 +190,24 @@ if ($domainStatus -and $domainStatus -ne 'None') {
         Start-Sleep -Seconds 15
     }
 
+    # 2026-11-09 fix -- the wildcard *.akwadona.com CNAME (Step 3) makes
+    # auth.akwadona.com resolve to OUR distribution, so Cognito rejects the
+    # custom domain ("points to another CloudFront distribution"). Remove the
+    # wildcard, create the domain, then restore it together with the `auth`
+    # record. www/tenants are unresolvable for ~2 minutes during this window.
+    Write-Host "  Temporarily removing wildcard *.akwadona.com (Cognito anti-hijack check)..."
+    $wild = aws route53 list-resource-record-sets --hosted-zone-id $R53_ZONE_ID `
+        --query "ResourceRecordSets[?Name=='\\052.akwadona.com.']|[0]" --output json 2>$null | ConvertFrom-Json
+    if ($wild -and $wild.Type) {
+        $wild.Name = '*.akwadona.com.'
+        $delJson = @{ Changes = @(@{ Action = 'DELETE'; ResourceRecordSet = $wild }) } | ConvertTo-Json -Depth 10 -Compress
+        $tmp = "$env:TEMP\akw-r53-delwild.json"
+        $delJson | Out-File -Encoding ascii -FilePath $tmp
+        aws route53 change-resource-record-sets --hosted-zone-id $R53_ZONE_ID --change-batch "file://$tmp" --output text 2>$null | Out-Null
+        Remove-Item $tmp -ErrorAction SilentlyContinue
+        Start-Sleep -Seconds 90
+    }
+
     $certArn = aws acm list-certificates --region us-east-1 --query "CertificateSummaryList[?DomainName=='*.akwadona.com' || DomainName=='akwadona.com']|[0].CertificateArn" --output text
     $authCf = aws cognito-idp create-user-pool-domain `
         --user-pool-id $poolId `
@@ -197,19 +215,17 @@ if ($domainStatus -and $domainStatus -ne 'None') {
         --custom-domain-config CertificateArn=$certArn `
         --query "CloudFrontDomain" --output text
     if ($authCf -and $authCf -ne 'None') {
-        Write-Host "  Cognito domain created. Upserting 'auth' CNAME -> $authCf"
-        $ok = Set-R53Records -Changes @(@{
-            Action = 'UPSERT'
-            ResourceRecordSet = @{
-                Name = 'auth.akwadona.com.'
-                Type = 'CNAME'
-                TTL  = 300
-                ResourceRecords = @(@{ Value = $authCf })
-            }
-        })
-        if ($ok) { Write-Host "  auth.akwadona.com -> $authCf (INSYNC)" -ForegroundColor Green }
+        Write-Host "  Cognito domain created. Upserting 'auth' CNAME -> $authCf and restoring wildcard -> $cfDomain"
+        $ok = Set-R53Records -Changes @(
+            @{ Action = 'UPSERT'; ResourceRecordSet = @{ Name = 'auth.akwadona.com.'; Type = 'CNAME'; TTL = 300; ResourceRecords = @(@{ Value = $authCf }) } },
+            @{ Action = 'UPSERT'; ResourceRecordSet = @{ Name = '*.akwadona.com.';    Type = 'CNAME'; TTL = 300; ResourceRecords = @(@{ Value = $cfDomain }) } }
+        )
+        if ($ok) { Write-Host "  auth.akwadona.com -> $authCf, *.akwadona.com -> $cfDomain (INSYNC)" -ForegroundColor Green }
     } else {
-        Write-Host "  Domain creation failed -- create manually later. See docs/12." -ForegroundColor Red
+        Write-Host "  Domain creation failed. Restoring wildcard; create the Cognito domain manually (AKW-OPS-08 §6)." -ForegroundColor Red
+        if ($wild -and $wild.Type) {
+            Set-R53Records -Changes @(@{ Action = 'UPSERT'; ResourceRecordSet = @{ Name = '*.akwadona.com.'; Type = 'CNAME'; TTL = 300; ResourceRecords = @(@{ Value = $cfDomain }) } }) | Out-Null
+        }
     }
 }
 
@@ -317,6 +333,6 @@ Write-Host "     https://www.akwadona.com  ($OPERATOR_USER / $OPERATOR_PASS)."
 Write-Host "     TIP: first attempt within 5 min of deploy may 504 until the"
 Write-Host "     pre-token warmer fires. Use a fresh InPrivate window if the"
 Write-Host "     service worker serves a stale bundle (Clear site data)."
-Write-Host "  2. Onboard tenants via the operator wizard (docs/17-test-fixtures.md)."
+Write-Host "  2. Onboard tenants via the operator wizard (AKW-OPS-08-Operations-Runbook.md)."
 Write-Host "  3. Cognito custom domain takes ~5 min to go ACTIVE:"
 Write-Host "     aws cognito-idp describe-user-pool-domain --domain auth.akwadona.com --query DomainDescription.Status --output text"

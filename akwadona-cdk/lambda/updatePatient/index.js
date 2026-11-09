@@ -63,10 +63,7 @@ async function storeIdempotency(cid, response) {
 const toLower = (v) => (typeof v === 'string' ? v.toLowerCase() : v ?? null);
 
 const hdrs = {
-  'Content-Type': 'application/json',
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'Content-Type,Authorization',
-  'Access-Control-Allow-Methods': 'GET,POST,PATCH,DELETE,OPTIONS'
+  'Content-Type': 'application/json'
 };
 
 const ok  = (body)          => ({ statusCode: 200, headers: hdrs, body: JSON.stringify(body) });

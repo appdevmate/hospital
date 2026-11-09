@@ -1,64 +1,108 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
-const { DynamoDBDocumentClient, ScanCommand, GetCommand, QueryCommand, BatchGetCommand } = require('@aws-sdk/lib-dynamodb');
+const { DynamoDBDocumentClient, GetCommand, QueryCommand, BatchGetCommand } = require('@aws-sdk/lib-dynamodb');
 
 // Step 3 — PHI decryption for list endpoints. ./crypto.js synced from _shared/.
-const { decryptItem, decryptItems, PATIENT_PHI_FIELDS } = require('./crypto');
+const { decryptItems, computeHmac, PATIENT_PHI_FIELDS } = require('./crypto');
 // Step 2g — per-tenant rate limit. ./throttle.js + ./plan-defaults.js synced from lib/.
 const throttle = require('./throttle');
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 2026-10-29 rewrite of the list/search path. What changed and why:
+//
+//   1. NO MORE FULL-TABLE SCANS. The sorted path and the filtered count both
+//      Scanned the entire Hospital table (every tenant, every entity type)
+//      on every page load. Everything is now a Query on
+//      tenant-entityType-index, bounded by this tenant's PATIENT rows.
+//
+//   2. NAME / DOB / SEARCH FILTERS ACTUALLY WORK. `name` and `dob` are
+//      encrypted at rest (PATIENT_PHI_FIELDS), so the old
+//      `contains(#name, :v)` FilterExpression ran against ciphertext and
+//      never matched. Those filters now run in memory AFTER decryption.
+//      Plaintext-safe filters (gender, insurance, status, deletedAt) still
+//      run server-side in the Query's FilterExpression.
+//
+//   3. DOCTOR PATH USES THE JWT. The pre-token Lambda already injects
+//      `doctorId`; we read that first and only fall back to an HMAC lookup
+//      on emailHash-EntityType-index (the old plaintext-email Scan could not
+//      find any doctor created after Step 3).
+//
+//   4. CORS headers are no longer echoed from Lambda — API Gateway's
+//      corsPreflight allow-list is the single source of truth.
+//
+// Two execution paths remain:
+//   FAST  — no sort, no encrypted-field filter: Query with DynamoDB cursor
+//           pagination exactly as before (cheapest possible).
+//   FULL  — sort requested OR name/dob/search filter: load every matching
+//           PATIENT row for the tenant (plaintext filters applied by Dynamo),
+//           decrypt in bulk (DEK cache + bounded concurrency in crypto.js),
+//           filter + sort in memory, offset-slice. totalCount is exact.
+//           Cost is O(tenant patients), not O(table). See docs/45 §7 for the
+//           per-tenant-DEK follow-up that will make this O(page).
+// ─────────────────────────────────────────────────────────────────────────────
 
 const REGION     = 'us-east-1';
 const TABLE_NAME = 'Hospital';
 const COUNTER_PK = 'COUNTER#PATIENTS';
 const COUNTER_SK = 'TOTAL';
+const TENANT_GSI = 'tenant-entityType-index';
 
 const ddb = DynamoDBDocumentClient.from(new DynamoDBClient({ region: REGION }));
 
-const VALID_OPERATORS    = ['contains', 'startsWith', 'endsWith', 'notContains', 'equals', 'notEquals'];
+const VALID_OPERATORS     = ['contains', 'startsWith', 'endsWith', 'notContains', 'equals', 'notEquals'];
 const ALLOWED_SORT_FIELDS = new Set(['name', 'gender', 'insurance', 'status', 'dob', 'timestamp']);
+// Fields that are ciphertext in DynamoDB — must be filtered post-decrypt.
+const ENCRYPTED_FILTER_FIELDS = new Set(['name', 'dob']);
+// Hard ceiling on rows loaded in the FULL path, as a safety valve.
+const FULL_LOAD_MAX_ROWS = 20_000;
 
 // ── Tenant enforcement (Step 2d) ─────────────────────────────────────────────
 // Inlined from _shared/tenant.js. Reads tenantId from the signed JWT so a
 // client cannot forge it. Every Query is scoped to this tenant via the
 // `tenant-entityType-index` GSI — other tenants' rows are never read.
-// ── Step C.3 — email → doctorId resolver (60 s cache) ──────────────────────
-// Doctor profile rows live at PK = DOCTOR#<UUID>. The JWT only carries the
-// doctor's email. We resolve UUID by scanning the small DOCTOR set + cache.
-const _doctorIdCache = new Map();   // email (lowercased) → { id, fetchedAt }
-const _DOCTOR_ID_CACHE_MS = 60_000;
-
-async function resolveDoctorIdByEmail(email) {
-    const key = (email || '').toLowerCase().trim();
-    if (!key) return null;
-    const cached = _doctorIdCache.get(key);
-    if (cached && Date.now() - cached.fetchedAt < _DOCTOR_ID_CACHE_MS) {
-        return cached.id;
-    }
-    const r = await ddb.send(new ScanCommand({
-        TableName: TABLE_NAME,
-        FilterExpression: '#et = :et AND #sk = :sk AND #em = :em',
-        ExpressionAttributeNames:  { '#et': 'EntityType', '#sk': 'SK', '#em': 'email' },
-        ExpressionAttributeValues: { ':et': 'DOCTOR', ':sk': 'PROFILE', ':em': key }
-    }));
-    const item = (r.Items || [])[0];
-    if (!item) return null;
-    const id = (item.PK || '').slice('DOCTOR#'.length) || null;
-    _doctorIdCache.set(key, { id, fetchedAt: Date.now() });
-    return id;
-}
-
 function getTenant(event) {
   const claims = (event && event.requestContext && event.requestContext.authorizer
-                  && (event.requestContext.authorizer.jwt
-                      ? event.requestContext.authorizer.jwt.claims
-                      : event.requestContext.authorizer.claims))
-              || {};
+    && event.requestContext.authorizer.jwt && event.requestContext.authorizer.jwt.claims) || {};
   const tenantId = claims.tenantId || claims['custom:tenantId'];
   if (!tenantId || tenantId === 'UNASSIGNED') {
-    const err = new Error('Tenant not assigned for this user');
-    err.statusCode = 403;
-    throw err;
+    const e = new Error('Forbidden: user has no tenant assignment');
+    e.statusCode = 403;
+    throw e;
   }
   return tenantId;
+}
+
+// ── Step C.3 — doctorId resolver ─────────────────────────────────────────────
+// Preferred source is the JWT claim. Fallback (legacy users whose token was
+// issued before the pre-token fix) is an HMAC lookup, cached 60 s.
+const _doctorIdCache = new Map();   // `${tenantId}|${email}` → { id, fetchedAt }
+const _DOCTOR_ID_CACHE_MS = 60_000;
+
+async function resolveDoctorId(claims, tenantId) {
+    if (claims.doctorId) return String(claims.doctorId);
+    const email = (claims.email || claims.username || '').toLowerCase().trim();
+    if (!email) return null;
+    const cacheKey = `${tenantId}|${email}`;
+    const cached = _doctorIdCache.get(cacheKey);
+    if (cached && Date.now() - cached.fetchedAt < _DOCTOR_ID_CACHE_MS) return cached.id;
+
+    let id = null;
+    try {
+        const emailHash = await computeHmac(email, tenantId);
+        const r = await ddb.send(new QueryCommand({
+            TableName: TABLE_NAME,
+            IndexName: 'emailHash-EntityType-index',
+            KeyConditionExpression: '#eh = :eh AND #et = :et',
+            FilterExpression: '#sk = :sk AND #tid = :tid',
+            ExpressionAttributeNames:  { '#eh': 'emailHash', '#et': 'EntityType', '#sk': 'SK', '#tid': 'tenantId' },
+            ExpressionAttributeValues: { ':eh': emailHash, ':et': 'DOCTOR', ':sk': 'PROFILE', ':tid': tenantId },
+            Limit: 5
+        }));
+        const item = (r.Items || [])[0];
+        id = item ? ((item.PK || '').slice('DOCTOR#'.length) || null) : null;
+    } catch (_) { id = null; }
+
+    _doctorIdCache.set(cacheKey, { id, fetchedAt: Date.now() });
+    return id;
 }
 
 exports.handler = async (event) => {
@@ -70,10 +114,8 @@ exports.handler = async (event) => {
   catch (e) { return errResp(e.statusCode || 403, e.message); }
 
   // ── Per-tenant throttle (Step 2g) ────────────────────────────────────────
-  // Returns null if the request is allowed, or a 429 response if the tenant
-  // has exceeded its plan limits. Operator role + warm-up skip this.
-  const claimsForRole = event.requestContext?.authorizer?.jwt?.claims || {};
-  const role = claimsForRole.role || 'tenant_user';
+  const claims = event.requestContext?.authorizer?.jwt?.claims || {};
+  const role   = claims.role || 'tenant_user';
   const limitResponse = await throttle.precheck(event, { tenantId, role });
   if (limitResponse) return limitResponse;
 
@@ -81,90 +123,80 @@ exports.handler = async (event) => {
     const qp = event?.queryStringParameters || {};
 
     // ── Identify caller from JWT token ────────────────────────────────────
-    const claims       = event.requestContext?.authorizer?.jwt?.claims || {};
     const groups       = claims['cognito:groups'] || '';
     const groupArr     = Array.isArray(groups) ? groups
         : String(groups).trim().replace(/^\[/, '').replace(/\]$/, '').split(/[, ]+/).filter(Boolean);
     const isAdminOrDev = groupArr.some(g => ['Admin', 'Developers'].includes(g.trim()));
     const isDoctor     = groupArr.some(g => g.trim() === 'Doctors');
-    const callerEmail  = (claims['email'] || claims['username'] || '').toLowerCase().trim();
+
     // ── DOCTOR PATH — scoped to own patients via DOCTOR_PATIENT items ──────
-    if (isDoctor && !isAdminOrDev && callerEmail) {
-        // Step C.3 — Resolve the caller's doctor profile UUID from their
-        // email. We never use email as a foreign key anymore; the link rows
-        // are keyed by DOCTOR#<doctorId>.
-        const doctorId = await resolveDoctorIdByEmail(callerEmail);
+    if (isDoctor && !isAdminOrDev) {
+        const doctorId = await resolveDoctorId(claims, tenantId);
         if (!doctorId) {
             return ok({ message: 'Patients retrieved successfully', data: [], lastKey: null, hasMore: false, count: 0, totalCount: 0, pageSize: 25 });
         }
-            // 1. Query relationship items for this doctor
-            const relResult = await ddb.send(new QueryCommand({
-                TableName:                 TABLE_NAME,
-                KeyConditionExpression:    'PK = :pk',
-                ExpressionAttributeValues: { ':pk': `DOCTOR#${doctorId}` }
-            }));
-
-            const relItems = (relResult.Items || []).filter(i => i.SK?.startsWith('PATIENT#'));
-
-            if (relItems.length === 0) {
-                return ok({ message: 'Patients retrieved successfully', data: [], lastKey: null, hasMore: false, count: 0, totalCount: 0, pageSize: 25 });
-            }
-
-            // 2. Batch get patient records — DynamoDB limit is 100 per call
-            const keys = relItems.map(i => ({
-    PK: i.patientId.startsWith('PATIENT#') ? i.patientId : `PATIENT#${i.patientId}`,
-    SK: 'PROFILE'
-}));
-            const batches = [];
-            for (let i = 0; i < keys.length; i += 100) batches.push(keys.slice(i, i + 100));
-
-            const patients = [];
-            for (const batch of batches) {
-                const batchResult = await ddb.send(new BatchGetCommand({
-                    RequestItems: { [TABLE_NAME]: { Keys: batch } }
-                }));
-                const items = batchResult.Responses?.[TABLE_NAME] || [];
-                const matched = items
-                    // Defence-in-depth (Step 2d): even if a doctor↔patient
-                    // relationship row leaked across tenants, drop any
-                    // patient whose tenantId doesn't match the caller's.
-                    .filter(p => p.tenantId === tenantId)
-                    // Filter out soft-deleted patients
-                    .filter(p => !p.deletedAt || p.deletedAt === '' || p.deletedAt === 'null' || p.deletedAt === '<empty>');
-                // Step 3 — bulk-decrypt PHI for the matched page in parallel.
-                await decryptItems(matched, PATIENT_PHI_FIELDS, tenantId);
-                matched.forEach(p => patients.push(normalizePatient(p)));
-            }
-
-            patients.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
-
-            return ok({
-                message:     'Patients retrieved successfully',
-                data:        patients,
-                lastKey:     null,
-                hasMore:     false,
-                count:       patients.length,
-                totalCount:  patients.length,
-                pageSize:    patients.length
-            });
+        // 1. Query relationship items for this doctor
+        const relResult = await ddb.send(new QueryCommand({
+            TableName:                 TABLE_NAME,
+            KeyConditionExpression:    'PK = :pk',
+            ExpressionAttributeValues: { ':pk': `DOCTOR#${doctorId}` }
+        }));
+        const relItems = (relResult.Items || []).filter(i => i.SK?.startsWith('PATIENT#'));
+        if (relItems.length === 0) {
+            return ok({ message: 'Patients retrieved successfully', data: [], lastKey: null, hasMore: false, count: 0, totalCount: 0, pageSize: 25 });
         }
 
-        // ── ADMIN / DEFAULT PATH — full paginated scan ────────────────────────
-        const pageSize  = clampInt(qp.pageSize, 25, 1, 100);
-        const offset    = clampInt(qp.offset, 0, 0, 1_000_000);
-        const sortField = sanitizeSortField(qp.sortField);
-        const sortOrder = parseInt(qp.sortOrder, 10) === -1 ? -1 : 1;
+        // 2. Batch get patient records — DynamoDB limit is 100 per call
+        const keys = relItems.map(i => ({
+            PK: i.patientId.startsWith('PATIENT#') ? i.patientId : `PATIENT#${i.patientId}`,
+            SK: 'PROFILE'
+        }));
+        const batches = [];
+        for (let i = 0; i < keys.length; i += 100) batches.push(keys.slice(i, i + 100));
 
-        const { dynamoStartKey, cursor } = parseLastKey(qp.lastKey);
-        const filters = parseFilterParameters(qp);
-        const { filterExpression, expressionAttributeNames, expressionAttributeValues } = buildFilterExpression(filters);
+        const patients = [];
+        for (const batch of batches) {
+            const batchResult = await ddb.send(new BatchGetCommand({
+                RequestItems: { [TABLE_NAME]: { Keys: batch } }
+            }));
+            const items = batchResult.Responses?.[TABLE_NAME] || [];
+            const matched = items
+                // Defence-in-depth (Step 2d): drop any patient whose tenantId
+                // doesn't match the caller's, even if a link row leaked.
+                .filter(p => p.tenantId === tenantId)
+                .filter(p => !isDeleted(p));
+            await decryptItems(matched, PATIENT_PHI_FIELDS, tenantId);
+            matched.forEach(p => patients.push(normalizePatient(p)));
+        }
 
-        const result = !sortField
-            ? await scanUnsorted(filterExpression, expressionAttributeNames, expressionAttributeValues, pageSize, dynamoStartKey, offset, tenantId)
-            : await scanSorted(filterExpression, expressionAttributeNames, expressionAttributeValues, pageSize, dynamoStartKey, sortField, sortOrder, cursor, offset, tenantId);
+        patients.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
 
-        const totalCount = await getFilteredCount(filters, tenantId);
+        return ok({
+            message:    'Patients retrieved successfully',
+            data:       patients,
+            lastKey:    null,
+            hasMore:    false,
+            count:      patients.length,
+            totalCount: patients.length,
+            pageSize:   patients.length
+        });
+    }
 
+    // ── ADMIN / DEFAULT PATH ──────────────────────────────────────────────
+    const pageSize  = clampInt(qp.pageSize, 25, 1, 100);
+    const offset    = clampInt(qp.offset, 0, 0, 1_000_000);
+    const sortField = sanitizeSortField(qp.sortField);
+    const sortOrder = parseInt(qp.sortOrder, 10) === -1 ? -1 : 1;
+    const filters   = parseFilterParameters(qp);
+
+    const needsFullLoad = !!sortField || hasEncryptedFieldFilter(filters);
+
+    if (!needsFullLoad) {
+        // FAST path — Dynamo cursor pagination over the tenant GSI.
+        const { dynamoStartKey } = parseLastKey(qp.lastKey, tenantId);
+        const { filterExpression, names, values } = buildPlaintextFilter(filters);
+        const result = await queryPage(tenantId, filterExpression, names, values, pageSize, dynamoStartKey, offset);
+        const totalCount = await countPlaintext(tenantId, filters, filterExpression, names, values);
         return ok({
             message:    'Patients retrieved successfully',
             data:       result.patients,
@@ -174,22 +206,56 @@ exports.handler = async (event) => {
             totalCount,
             pageSize
         });
-
-    } catch (err) {
-        return errResp(500, err?.message || 'Internal Server Error');
     }
+
+    // FULL path — load, decrypt, filter, sort, slice.
+    const { filterExpression, names, values } = buildPlaintextFilter(filters);
+    const all = await loadAllTenantPatients(tenantId, filterExpression, names, values);
+    const filtered = applyEncryptedFilters(all, filters);
+    const sorted   = sortField ? sortArray(filtered, sortField, sortOrder) : filtered;
+
+    // Offset may arrive either as ?offset=N or inside lastKey as {offset:N}.
+    const { cursorOffset } = parseLastKey(qp.lastKey, tenantId);
+    const start = cursorOffset != null ? cursorOffset : offset;
+    const page  = sorted.slice(start, start + pageSize);
+    const hasMore = start + pageSize < sorted.length;
+
+    return ok({
+        message:    'Patients retrieved successfully',
+        data:       page,
+        lastKey:    hasMore ? encodeURIComponent(JSON.stringify({ offset: start + pageSize })) : null,
+        hasMore,
+        count:      page.length,
+        totalCount: sorted.length,
+        pageSize
+    });
+
+  } catch (err) {
+    console.error('getAllPatients error', { message: err?.message, name: err?.name });
+    return errResp(500, 'Internal Server Error');
+  }
 };
 
 /* ---------------------------- parsing helpers ---------------------------- */
-function parseLastKey(raw) {
-    if (!raw) return { dynamoStartKey: undefined, cursor: null };
+// Accepts three cursor shapes:
+//   { PK, SK }                       — legacy table-key cursor
+//   { dynamo: {...}, cursor: {...} } — legacy sorted cursor (we ignore `cursor`
+//                                      and treat it as an offset-less restart)
+//   { offset: N }                    — new FULL-path cursor
+// A legacy table-key cursor is upgraded with the GSI keys so it can be used
+// as ExclusiveStartKey on tenant-entityType-index.
+function parseLastKey(raw, tenantId) {
+    if (!raw) return { dynamoStartKey: undefined, cursorOffset: null };
     try {
         const obj = JSON.parse(decodeURIComponent(raw));
-        if (obj && obj.PK && obj.SK) return { dynamoStartKey: obj, cursor: null };
-        if (obj && ('dynamo' in obj || 'cursor' in obj)) return { dynamoStartKey: obj.dynamo || undefined, cursor: obj.cursor || null };
-        return { dynamoStartKey: obj, cursor: null };
+        if (obj && typeof obj.offset === 'number') return { dynamoStartKey: undefined, cursorOffset: Math.max(0, obj.offset) };
+        const key = obj && obj.dynamo ? obj.dynamo : obj;
+        if (key && key.PK && key.SK) {
+            return { dynamoStartKey: { PK: key.PK, SK: key.SK, tenantId, EntityType: 'PATIENT' }, cursorOffset: null };
+        }
+        return { dynamoStartKey: undefined, cursorOffset: null };
     } catch {
-        return { dynamoStartKey: undefined, cursor: null };
+        return { dynamoStartKey: undefined, cursorOffset: null };
     }
 }
 
@@ -229,7 +295,12 @@ function parseFilterParameters(qp) {
     return filters;
 }
 
-/* ------------------------- filter-expression build ------------------------- */
+function hasEncryptedFieldFilter(filters) {
+    // `search` spans name (encrypted) so it always needs the FULL path.
+    return !!(filters.name || filters.dobFrom || filters.dobTo || filters.search);
+}
+
+/* ------------------------- server-side filter build ------------------------ */
 function buildFilterCondition(fieldName, filter, names, values, vKey) {
     if (!filter || filter.value == null || filter.value === '') return null;
     const nameKey = `#${fieldName}`; names[nameKey] = fieldName;
@@ -256,95 +327,90 @@ function buildFilterCondition(fieldName, filter, names, values, vKey) {
     }
 }
 
-function buildFilterExpression(filters) {
+// Only PLAINTEXT fields go to DynamoDB. The GSI key condition already pins
+// tenantId + EntityType=PATIENT, so we do not repeat those (DynamoDB rejects
+// key attributes inside a Query FilterExpression).
+function buildPlaintextFilter(filters) {
     const conditions = [];
-    const names  = { '#pk': 'PK', '#sk': 'SK', '#entityType': 'EntityType' };
-    const values = { ':pfx': 'PATIENT#', ':sk': 'PROFILE', ':entityType': 'PATIENT' };
-    conditions.push('begins_with(#pk, :pfx) AND #sk = :sk AND #entityType = :entityType');
+    const names  = { '#pk': 'PK', '#sk': 'SK' };
+    const values = { ':pfx': 'PATIENT#', ':sk': 'PROFILE' };
+    conditions.push('begins_with(#pk, :pfx) AND #sk = :sk');
 
     names['#deletedAt'] = 'deletedAt';
     values[':nullType']    = 'NULL';
     values[':empty']       = '';
     values[':emptyMarker'] = '<empty>';
     values[':nullStr']     = 'null';
-
     if (filters.showDeleted) {
         conditions.push('(attribute_exists(#deletedAt) AND NOT attribute_type(#deletedAt, :nullType) AND #deletedAt <> :empty AND #deletedAt <> :emptyMarker AND #deletedAt <> :nullStr)');
     } else {
         conditions.push('(attribute_not_exists(#deletedAt) OR attribute_type(#deletedAt, :nullType) OR #deletedAt = :empty OR #deletedAt = :emptyMarker OR #deletedAt = :nullStr)');
     }
 
-    if (filters.search) {
-        const ors = [];
-        ['name', 'gender', 'insurance', 'status'].forEach((f, i) => {
-            const c = buildFilterCondition(f, filters.search, names, values, `search${i}`);
-            if (c) ors.push(c);
-        });
-        if (ors.length) conditions.push(`(${ors.join(' OR ')})`);
-    }
-
-    const fName   = buildFilterCondition('name',      filters.name,      names, values, 'nameF');   if (fName)   conditions.push(fName);
     const fGender = buildFilterCondition('gender',    filters.gender,    names, values, 'genderF'); if (fGender) conditions.push(fGender);
     const fIns    = buildFilterCondition('insurance', filters.insurance, names, values, 'insF');    if (fIns)    conditions.push(fIns);
     const fStatus = buildFilterCondition('status',    filters.status,    names, values, 'statusF'); if (fStatus) conditions.push(fStatus);
 
-    if (filters.dobFrom) { names['#dob'] = 'dob'; values[':dobFrom'] = filters.dobFrom; conditions.push('#dob >= :dobFrom'); }
-    if (filters.dobTo)   { names['#dob'] = 'dob'; values[':dobTo']   = filters.dobTo;   conditions.push('#dob <= :dobTo'); }
-
-    return { filterExpression: conditions.join(' AND '), expressionAttributeNames: names, expressionAttributeValues: values };
+    return { filterExpression: conditions.join(' AND '), names, values };
 }
 
-/* ------------------------------ scan paths ------------------------------ */
-async function scanUnsorted(filterExpression, names, values, pageSize, startKey, offset = 0, tenantId) {
-    // Step 2d: Query the per-tenant GSI `tenant-entityType-index` so the
-    // Lambda physically never reads another tenant's rows. The legacy
-    // builder may still include `#entityType = :patientType` — that
-    // references the index's sort key, which DynamoDB rejects in a
-    // FilterExpression on a Query; strip it (and its value) before
-    // sending. Same for any stray `tenantId` predicate the builder may
-    // grow in the future.
-    const cleanFilter = (filterExpression || '')
-        .replace(/\s*AND\s*#entityType\s*=\s*:[a-zA-Z]+\s*/i, ' ')
-        .replace(/^\s*#entityType\s*=\s*:[a-zA-Z]+\s*AND\s*/i, '')
-        .trim();
-    const cleanValues = { ...(values || {}) };
-    delete cleanValues[':entityType'];
-    delete cleanValues[':patientType'];
-    const cleanNames = { ...(names || {}) };
-    if (!cleanFilter.includes('#entityType')) delete cleanNames['#entityType'];
+/* ------------------------- in-memory (post-decrypt) filters ---------------- */
+function matchText(haystack, filter) {
+    if (!filter || filter.value == null || filter.value === '') return true;
+    const h  = (haystack ?? '').toString().toLowerCase();
+    const op = filter.operator || 'contains';
+    const vals = Array.isArray(filter.value) ? filter.value.map(v => String(v).toLowerCase()) : [String(filter.value).toLowerCase()];
+    switch (op) {
+        case 'equals':      return vals.includes(h);
+        case 'notEquals':   return !vals.includes(h);
+        case 'startsWith':  return vals.some(v => h.startsWith(v));
+        case 'endsWith':    return vals.some(v => h.endsWith(v));
+        case 'notContains': return !vals.some(v => h.includes(v));
+        case 'contains':
+        default:            return vals.some(v => h.includes(v));
+    }
+}
 
+function applyEncryptedFilters(items, filters) {
+    return items.filter(p => {
+        if (filters.name && !matchText(p.name, filters.name)) return false;
+        if (filters.dobFrom && !(p.dob && p.dob >= filters.dobFrom)) return false;
+        if (filters.dobTo   && !(p.dob && p.dob <= filters.dobTo))   return false;
+        if (filters.search) {
+            const hit = ['name', 'gender', 'insurance', 'status'].some(f => matchText(p[f], filters.search));
+            if (!hit) return false;
+        }
+        return true;
+    });
+}
+
+/* ------------------------------ query paths ------------------------------ */
+async function queryPage(tenantId, filterExpression, names, values, pageSize, startKey, offset = 0) {
     const patients = []; let currentLastKey = startKey; let lastPatientKey = null; let skipped = 0;
     const maxIterations = 50; let iterations = 0;
 
     while (patients.length < pageSize && iterations++ < maxIterations) {
         const params = {
             TableName: TABLE_NAME,
-            IndexName: 'tenant-entityType-index',
-            KeyConditionExpression: 'tenantId = :tid AND EntityType = :et',
+            IndexName: TENANT_GSI,
+            KeyConditionExpression: '#tid = :tid AND #et = :et',
+            FilterExpression: filterExpression,
             Limit: Math.max(pageSize * 3, 50),
-            ExpressionAttributeValues: { ...cleanValues, ':tid': tenantId, ':et': 'PATIENT' }
+            ExpressionAttributeNames:  { ...names, '#tid': 'tenantId', '#et': 'EntityType' },
+            ExpressionAttributeValues: { ...values, ':tid': tenantId, ':et': 'PATIENT' }
         };
-        if (Object.keys(cleanNames).length) params.ExpressionAttributeNames = cleanNames;
-        if (cleanFilter) params.FilterExpression = cleanFilter;
         if (currentLastKey) params.ExclusiveStartKey = currentLastKey;
 
         const res = await ddb.send(new QueryCommand(params));
         const items = res.Items || [];
 
-        // Step 3 — decrypt the page once; cheaper than per-item awaits in the loop.
-        await decryptItems(
-            items.filter(it => it.PK?.startsWith('PATIENT#') && it.SK === 'PROFILE'),
-            PATIENT_PHI_FIELDS,
-            tenantId
-        );
+        await decryptItems(items, PATIENT_PHI_FIELDS, tenantId);
 
         for (const it of items) {
-            if (it.PK?.startsWith('PATIENT#') && it.SK === 'PROFILE') {
-                if (startKey == null && offset > 0 && skipped < offset) { skipped++; continue; }
-                patients.push(normalizePatient(it));
-                lastPatientKey = { PK: it.PK, SK: it.SK };
-                if (patients.length >= pageSize) break;
-            }
+            if (startKey == null && offset > 0 && skipped < offset) { skipped++; continue; }
+            patients.push(normalizePatient(it));
+            lastPatientKey = { PK: it.PK, SK: it.SK };
+            if (patients.length >= pageSize) break;
         }
         currentLastKey = res.LastEvaluatedKey;
         if (!currentLastKey) break;
@@ -355,61 +421,62 @@ async function scanUnsorted(filterExpression, names, values, pageSize, startKey,
     return { patients, hasMore, nextKey };
 }
 
-async function scanSorted(filterExpression, names, values, pageSize, startKey, sortField, sortOrder, cursor, offset = 0, tenantId) {
-    const buffer = []; let currentLastKey = startKey;
-    const maxIterations = 50; let iterations = 0;
+async function loadAllTenantPatients(tenantId, filterExpression, names, values) {
+    const rows = []; let lastKey;
+    do {
+        const params = {
+            TableName: TABLE_NAME,
+            IndexName: TENANT_GSI,
+            KeyConditionExpression: '#tid = :tid AND #et = :et',
+            FilterExpression: filterExpression,
+            ExpressionAttributeNames:  { ...names, '#tid': 'tenantId', '#et': 'EntityType' },
+            ExpressionAttributeValues: { ...values, ':tid': tenantId, ':et': 'PATIENT' }
+        };
+        if (lastKey) params.ExclusiveStartKey = lastKey;
+        const res = await ddb.send(new QueryCommand(params));
+        for (const it of (res.Items || [])) rows.push(it);
+        lastKey = res.LastEvaluatedKey;
+    } while (lastKey && rows.length < FULL_LOAD_MAX_ROWS);
 
-    // Step 2d — sort path uses a raw Scan, so we add `tenantId = :tid` to
-    // the FilterExpression. Defence-in-depth: even if the filter were
-    // ever broken, the post-Scan loop below also drops any item whose
-    // tenantId doesn't match.
-    const tenantPredicate = '#__tid = :__tid';
-    const augmentedNames  = { ...(names || {}), '#__tid': 'tenantId' };
-    const augmentedValues = { ...(values || {}), ':__tid': tenantId };
-    const augmentedFilter = filterExpression
-        ? `${filterExpression} AND ${tenantPredicate}`
-        : tenantPredicate;
+    await decryptItems(rows, PATIENT_PHI_FIELDS, tenantId);
+    return rows.map(normalizePatient);
+}
 
-    while (iterations++ < maxIterations) {
-        const batchSize = Math.max(pageSize * 3, 50);
-        const params = { TableName: TABLE_NAME, Limit: batchSize, FilterExpression: augmentedFilter, ExpressionAttributeNames: augmentedNames, ExpressionAttributeValues: augmentedValues };
-        if (currentLastKey) params.ExclusiveStartKey = currentLastKey;
+/* --------------------------------- count --------------------------------- */
+async function countPlaintext(tenantId, filters, filterExpression, names, values) {
+    const hasPlaintextFilters = filters.gender || filters.insurance || filters.status || filters.showDeleted;
+    if (!hasPlaintextFilters) return await getTotalPatients(tenantId);
 
-        const res = await ddb.send(new ScanCommand(params));
-        const items = res.Items || [];
-        currentLastKey = res.LastEvaluatedKey;
+    let count = 0, lastKey;
+    do {
+        const params = {
+            TableName: TABLE_NAME,
+            IndexName: TENANT_GSI,
+            KeyConditionExpression: '#tid = :tid AND #et = :et',
+            FilterExpression: filterExpression,
+            Select: 'COUNT',
+            ExpressionAttributeNames:  { ...names, '#tid': 'tenantId', '#et': 'EntityType' },
+            ExpressionAttributeValues: { ...values, ':tid': tenantId, ':et': 'PATIENT' }
+        };
+        if (lastKey) params.ExclusiveStartKey = lastKey;
+        const res = await ddb.send(new QueryCommand(params));
+        count += res.Count || 0;
+        lastKey = res.LastEvaluatedKey;
+    } while (lastKey);
+    return count;
+}
 
-        // Step 3 — decrypt matching patient rows on this page before normalize.
-        const matched = items.filter(it =>
-            it.PK?.startsWith('PATIENT#') && it.SK === 'PROFILE'
-            && it.EntityType === 'PATIENT' && it.tenantId === tenantId
-        );
-        await decryptItems(matched, PATIENT_PHI_FIELDS, tenantId);
-        for (const it of matched) {
-            buffer.push(normalizePatient(it));
-        }
-
-        let eligible = sortArray(buffer, sortField, sortOrder);
-        eligible = afterCursor(eligible, cursor, sortField, sortOrder);
-        if (!cursor && startKey == null && offset > 0 && eligible.length > offset) eligible = eligible.slice(offset);
-
-        if (eligible.length >= pageSize) {
-            const page = eligible.slice(0, pageSize);
-            const last = page[page.length - 1];
-            const nextKeyObj = { dynamo: currentLastKey || null, cursor: { sortField, sortOrder, sortValue: sortValueOf(last, sortField), pk: last.PK, sk: last.SK } };
-            return { patients: page, hasMore: true, nextKey: encodeURIComponent(JSON.stringify(nextKeyObj)) };
-        }
-        if (!currentLastKey) break;
-    }
-
-    let eligible = sortArray(buffer, sortField, sortOrder);
-    eligible = afterCursor(eligible, cursor, sortField, sortOrder);
-    if (!cursor && startKey == null && offset > 0 && eligible.length > offset) eligible = eligible.slice(offset);
-
-    const page = eligible.slice(0, pageSize);
-    const last = page[page.length - 1] || null;
-    const nextKeyObj = last ? { dynamo: null, cursor: { sortField, sortOrder, sortValue: sortValueOf(last, sortField), pk: last.PK, sk: last.SK } } : null;
-    return { patients: page, hasMore: !!nextKeyObj, nextKey: nextKeyObj ? encodeURIComponent(JSON.stringify(nextKeyObj)) : null };
+// Per-tenant counter (Step 2d). New layout: COUNTER#PATIENTS#<tenantId>.
+async function getTotalPatients(tenantId) {
+    try {
+        const res = await ddb.send(new GetCommand({
+            TableName: TABLE_NAME,
+            Key: { PK: `${COUNTER_PK}#${tenantId}`, SK: COUNTER_SK },
+            ProjectionExpression: '#t',
+            ExpressionAttributeNames: { '#t': 'total' }
+        }));
+        return res.Item?.total ?? 0;
+    } catch { return 0; }
 }
 
 /* ----------------------------- sort utilities ---------------------------- */
@@ -431,52 +498,12 @@ function sortValueOf(item, field) {
     return (v ?? '').toString().toLowerCase();
 }
 function tie(a, b, order) { if (a.PK < b.PK) return -order; if (a.PK > b.PK) return order; return 0; }
-function afterCursor(sorted, cursor, field, order) {
-    if (!cursor || cursor.sortField !== field || cursor.sortOrder !== order) return sorted;
-    const curVal = cursor.sortValue, curPk = cursor.pk;
-    return sorted.filter(item => {
-        const v = sortValueOf(item, field);
-        if (v === curVal) return item.PK > curPk;
-        return order === 1 ? v > curVal : v < curVal;
-    });
-}
-
-/* --------------------------------- count --------------------------------- */
-async function getFilteredCount(filters, tenantId) {
-    const hasFilters = filters.search || filters.name || filters.gender || filters.insurance || filters.status || filters.dobFrom || filters.dobTo || filters.showDeleted;
-    if (!hasFilters) return await getTotalPatients(tenantId);
-
-    const { filterExpression, expressionAttributeNames, expressionAttributeValues } = buildFilterExpression(filters);
-    // Add tenant filter for count — same defence-in-depth as scanSorted.
-    const augmentedFilter = `${filterExpression} AND #__tid = :__tid`;
-    const augmentedNames  = { ...expressionAttributeNames, '#__tid': 'tenantId' };
-    const augmentedValues = { ...expressionAttributeValues, ':__tid': tenantId };
-    let count = 0, lastEvaluatedKey;
-    do {
-        const params = { TableName: TABLE_NAME, Select: 'COUNT', FilterExpression: augmentedFilter, ExpressionAttributeNames: augmentedNames, ExpressionAttributeValues: augmentedValues };
-        if (lastEvaluatedKey) params.ExclusiveStartKey = lastEvaluatedKey;
-        const res = await ddb.send(new ScanCommand(params));
-        count += res.Count || 0;
-        lastEvaluatedKey = res.LastEvaluatedKey;
-    } while (lastEvaluatedKey);
-    return count;
-}
-
-// Per-tenant counter (Step 2d). New layout: COUNTER#PATIENTS#<tenantId>.
-// Legacy COUNTER#PATIENTS row is still there but no longer incremented.
-async function getTotalPatients(tenantId) {
-    try {
-        const res = await ddb.send(new GetCommand({
-            TableName: TABLE_NAME,
-            Key: { PK: `${COUNTER_PK}#${tenantId}`, SK: COUNTER_SK },
-            ProjectionExpression: '#t',
-            ExpressionAttributeNames: { '#t': 'total' }
-        }));
-        return res.Item?.total ?? 0;
-    } catch { return 0; }
-}
 
 /* --------------------------------- misc ---------------------------------- */
+function isDeleted(p) {
+    return !!(p.deletedAt && p.deletedAt !== '' && p.deletedAt !== 'null' && p.deletedAt !== '<empty>');
+}
+
 function normalizePatient(it) {
     return {
         PK:             it.PK,
@@ -506,10 +533,12 @@ function normalizePatient(it) {
 
 function clampInt(val, def, min, max) { const n = parseInt(val, 10); return Number.isFinite(n) ? Math.min(Math.max(n, min), max) : def; }
 
+// CORS headers intentionally omitted — API Gateway corsPreflight injects the
+// matching Access-Control-Allow-Origin for allow-listed origins.
 function ok(body) {
     return {
         statusCode: 200,
-        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'Content-Type, Authorization', 'Access-Control-Allow-Methods': 'GET,OPTIONS' },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
     };
 }
@@ -517,7 +546,8 @@ function ok(body) {
 function errResp(status, message) {
     return {
         statusCode: status,
-        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message })
     };
-}// hash-bust 2026-06-21T14:28:24.0064697+03:00
+}
+// hash-bust 2026-10-29

@@ -1,7 +1,7 @@
 'use strict';
 
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
-const { DynamoDBDocumentClient, ScanCommand, UpdateCommand } = require('@aws-sdk/lib-dynamodb');
+const { DynamoDBDocumentClient, QueryCommand, UpdateCommand } = require('@aws-sdk/lib-dynamodb');
 const { CloudWatchClient, PutMetricDataCommand } = require('@aws-sdk/client-cloudwatch');
 const { resolveLimits } = require('./plan-defaults');
 
@@ -34,9 +34,13 @@ async function getProfile(tenantId) {
         return cached.profile;
     }
     try {
-        const r = await ddb.send(new ScanCommand({
+        // 2026-10-29 perf fix — was a full-table Scan on every cache miss
+        // (every Lambda, every 60 s). EntityType-index returns only the
+        // handful of TENANT rows.
+        const r = await ddb.send(new QueryCommand({
             TableName: TABLE_NAME,
-            FilterExpression: '#et = :t',
+            IndexName: 'EntityType-index',
+            KeyConditionExpression: '#et = :t',
             ExpressionAttributeNames: { '#et': 'EntityType' },
             ExpressionAttributeValues: { ':t': 'TENANT' }
         }));
@@ -63,11 +67,12 @@ function secondsToNextUtcMidnight(date) {
 }
 
 function tooManyRequests(retryAfterSec, message, headers) {
+    // CORS headers come from API Gateway's corsPreflight allow-list; never
+    // echo a wildcard from Lambda (defence in depth if that config changes).
     return {
         statusCode: 429,
         headers: Object.assign({
             'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
             'Retry-After': String(retryAfterSec)
         }, headers || {}),
         body: JSON.stringify({ error: 'rate_limited', message: message, retryAfter: retryAfterSec })
@@ -75,11 +80,17 @@ function tooManyRequests(retryAfterSec, message, headers) {
 }
 
 async function incrementWindow(pk, sk, ttlSec) {
+    // 2026-10-29 bug fix — this wrote the expiry to an attribute named `ttl`,
+    // but the table's TTL attribute (CDK: timeToLiveAttribute) is `expiresAt`.
+    // Result: no throttle counter was EVER swept — ~1,440 minute rows + 1 day
+    // row per tenant per day accumulated forever and slowed every Scan.
+    // Writing `expiresAt` lets DynamoDB delete them for free. Existing stale
+    // rows: run scripts/purge-throttle-counters.js once (see docs/18 §9).
     const r = await ddb.send(new UpdateCommand({
         TableName: TABLE_NAME,
         Key: { PK: pk, SK: sk },
         UpdateExpression: 'ADD #c :one SET #t = :ttl, #et = :et',
-        ExpressionAttributeNames: { '#c': 'count', '#t': 'ttl', '#et': 'EntityType' },
+        ExpressionAttributeNames: { '#c': 'count', '#t': 'expiresAt', '#et': 'EntityType' },
         ExpressionAttributeValues: { ':one': 1, ':ttl': ttlSec, ':et': 'THROTTLE_COUNTER' },
         ReturnValues: 'UPDATED_NEW'
     }));

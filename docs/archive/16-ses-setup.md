@@ -83,7 +83,11 @@ If you see `AlreadyExistsException` the policy is in place — that's fine.
 ### Switch Cognito to SES
 
 ```powershell
-$poolId      = 'us-east-1_RACghntmS'
+# NOTE: the pool ID below is the CURRENT user pool as of 2026-10-02.
+# The June 2026 teardown + rebuild changed it from `us-east-1_RACghntmS` (Tiryaq era).
+# If the stack is torn down again, re-read the current value from
+# `aws cognito-idp list-user-pools --max-results 10` before running this script.
+$poolId      = 'us-east-1_bpipvSdQi'
 $emailConfig = '{"EmailSendingAccount":"DEVELOPER","From":"Akwadona <noreply@akwadona.com>","SourceArn":"arn:aws:ses:us-east-1:483176634665:identity/akwadona.com","ReplyToEmailAddress":"noreply@akwadona.com"}'
 
 aws cognito-idp update-user-pool --user-pool-id $poolId --email-configuration $emailConfig

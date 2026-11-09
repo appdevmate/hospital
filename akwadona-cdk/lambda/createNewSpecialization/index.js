@@ -36,7 +36,34 @@ async function storeIdempotency(cid, response) {
   } catch (_) {}
 }
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 2026-10-29 security fix — authorization gate.
+// Departments / specializations are GLOBAL reference data shared by every
+// tenant. This handler previously ran for ANY valid JWT, so a doctor or
+// pharmacist from any hospital could mutate or wipe the list for all
+// hospitals. Mutations now require the Admin or Developers Cognito group,
+// or the platform operator role. Reads (getAll*) are unchanged.
+// ─────────────────────────────────────────────────────────────────────────────
+function requireAdminOrOperator(event) {
+  const claims = (event && event.requestContext && event.requestContext.authorizer
+    && event.requestContext.authorizer.jwt && event.requestContext.authorizer.jwt.claims) || {};
+  if (claims.role === 'operator') return null;
+  const groups = claims['cognito:groups'] || '';
+  const arr = Array.isArray(groups) ? groups
+    : String(groups).trim().replace(/^\[/, '').replace(/\]$/, '').split(/[,\s]+/).filter(Boolean);
+  const ok = arr.some(g => ['Admin', 'Developers'].includes(String(g).trim()));
+  if (ok) return null;
+  return {
+    statusCode: 403,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: 'Forbidden: reference data can only be changed by an Admin or Developer' })
+  };
+}
+
 exports.handler = async (event) => {
+  const __authDenied = requireAdminOrOperator(event);
+  if (__authDenied) return __authDenied;
   const cid = getClientRequestId(event);
   const cached = await checkIdempotency(cid);
   if (cached) return cached;

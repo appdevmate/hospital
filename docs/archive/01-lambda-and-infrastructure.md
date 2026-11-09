@@ -1,7 +1,7 @@
 # Akwadona — Lambda & Infrastructure Documentation
 
 > **Product name:** Akwadona. **Customers (tenants):** Tiryaq, Alshifaa, ...
-> All AWS resources have been renamed to the `akwadona-*` convention: CDK stack `AkwadonaCdkStack`, Lambdas `akwadona-*`, Cognito pool `akwadona-user-pool` (`us-east-1_KkINt5vOF`), S3 buckets `akwadona-*`, KMS aliases `alias/akwadona/*`. The legacy `tiryaq-*` resources from the first stack have been destroyed (one audit bucket remains under COMPLIANCE Object Lock until ~2033).
+> All AWS resources have been renamed to the `akwadona-*` convention: CDK stack `AkwadonaCdkStack`, Lambdas `akwadona-*`, Cognito pool `akwadona-user-pool` (`us-east-1_bpipvSdQi`), S3 buckets `akwadona-*`, KMS aliases `alias/akwadona/*`. The legacy `tiryaq-*` resources from the first stack have been destroyed (one audit bucket remains under COMPLIANCE Object Lock until ~2033).
 
 > **Multi-tenant model (Step 2):** Pooled tenancy — one DynamoDB table, one Cognito pool, one set of Lambdas, scoped per customer by the opaque `tenantId` claim in the signed JWT. Each row carries `tenantId`; reads use the `tenant-entityType-index` GSI; writes use ConditionExpression `tenantId = :tid`. Full design and per-Lambda coverage status: see `akwadona-multitenant-setup.md`.
 
@@ -33,7 +33,7 @@ Browser (Angular SPA on CloudFront)
 API Gateway HTTP API (JWT authorizer via Cognito User Pool)
         │
         ▼
-Lambdas (Node 18 / 20 / 24, 512 MB memory, 30 s timeout)
+Lambdas (Node 20 default — raised from 18 on 2026-10-29 — some on 24; 512 MB memory, 30 s timeout)
         │
         ▼
 DynamoDB single table "Hospital" (1 PK/SK + 7 GSIs, KMS-encrypted)
@@ -56,7 +56,7 @@ The whole infrastructure is described in `akwadona-cdk/lib/akwadona-cdk-stack.ts
 **Compute**
 
 - 41 Lambda functions, all 512 MB memory, 30 s timeout.
-- Runtimes: Node.js 18.x, 20.x, 24.x (mixed — newer Lambdas on 24.x).
+- Runtimes: Node.js 20.x by default (the CDK `fn()` factory default was raised from 18.x on 2026-10-29 because AWS ended Node 18 security patches in Sept 2025); the aggregate Lambdas (examinations, pharmacy, document-manager, audit, appointments, get-doctor-by-email, get-all-invoices) run 24.x.
 - `Code.fromAsset('lambda/<folder>')` per Lambda — each folder packaged independently.
 
 **Storage**
@@ -73,7 +73,7 @@ The whole infrastructure is described in `akwadona-cdk/lib/akwadona-cdk-stack.ts
 
 **Identity & access**
 
-- Cognito User Pool `akwadona-user-pool` (`us-east-1_KkINt5vOF`). Sign-in UX is a **custom Angular login** in the SPA — no Hosted UI. The OIDC library is still configured for token refresh and session-end via the `auth.akwadona.com` custom domain, but authentication calls go through `InitiateAuth` REST directly (`USER_PASSWORD_AUTH` + `RespondToAuthChallenge` for first-login + `ForgotPassword`).
+- Cognito User Pool `akwadona-user-pool` (`us-east-1_bpipvSdQi`). Sign-in UX is a **custom Angular login** in the SPA — no Hosted UI. The OIDC library is still configured for token refresh and session-end via the `auth.akwadona.com` custom domain, but authentication calls go through `InitiateAuth` REST directly (`USER_PASSWORD_AUTH` + `RespondToAuthChallenge` for first-login + `ForgotPassword`).
 - Groups: `Admin`, `Developers`, `Doctors`, `Pharmacists`, `Operator`. (`Patients` is defined but not yet exposed.)
 - `cognito-pre-token-generation` Lambda (V3_0 trigger) enriches the JWTs with `email`, `name`, `tenantId`, `role` (`operator` / `tenant_user`), and `doctorId` (for doctor users), so the frontend never needs a `/userInfo` round-trip.
 - SES wired as the email sender — Cognito sends from `noreply@akwadona.com` (DKIM-signed). See `16-ses-setup.md`.
@@ -497,13 +497,13 @@ Then:
 Account             = 483176634665
 Region              = us-east-1
 Stack               = AkwadonaCdkStack
-ApiUrl              = https://a2s6jk35d9.execute-api.us-east-1.amazonaws.com
-AppClientId         = 5i94ivu752m12uivl62v99pu4
+ApiUrl              = https://vbsex10bd6.execute-api.us-east-1.amazonaws.com
+AppClientId         = 4r9fcr8f54pmubmmbnuldi9fqc
 CloudFrontUrl       = https://d37kqu4c91mlc4.cloudfront.net
 DistributionId      = EMIDMHCZ9PRK4
 S3BucketName        = akwadonacdkstack-akwadonafrontendbuckete011c800-tal731ksbepv
-UserPoolId          = us-east-1_KkINt5vOF
-CognitoAuthority    = https://cognito-idp.us-east-1.amazonaws.com/us-east-1_KkINt5vOF
+UserPoolId          = us-east-1_bpipvSdQi
+CognitoAuthority    = https://cognito-idp.us-east-1.amazonaws.com/us-east-1_bpipvSdQi
 DocumentsBucketName = akwadona-documents-483176634665-us-east-1
 ```
 

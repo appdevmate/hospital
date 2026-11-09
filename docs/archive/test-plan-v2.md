@@ -102,7 +102,7 @@ SELECT * FROM "Hospital" WHERE PK = 'CALENDAR#<calendarId>' AND begins_with(SK, 
 ```
 Expected: duty shift events with `description = 'DUTY_SHIFT'`, `color = '#10B981'`, `EntityType = 'CALENDAR_EVENT'`
 
-**Verify in DevTools Network tab:** calendar calls now hit `https://a2s6jk35d9.execute-api.us-east-1.amazonaws.com/calendars` (the Akwadona API) with an `Authorization: Bearer ...` header — NOT the old `od8gx8kld8…` endpoint with an `x-api-key` header.
+**Verify in DevTools Network tab:** calendar calls now hit `https://vbsex10bd6.execute-api.us-east-1.amazonaws.com/calendars` (the Akwadona API) with an `Authorization: Bearer ...` header — NOT the old `od8gx8kld8…` endpoint with an `x-api-key` header.
 
 ---
 
@@ -471,7 +471,7 @@ Expected: rows with the actor email matching the admin who performed the change
 - In a separate browser tab, run from DevTools console (anywhere outside the allow-list):
 
 ```js
-fetch('https://a2s6jk35d9.execute-api.us-east-1.amazonaws.com/pharmacy/alerts', {
+fetch('https://vbsex10bd6.execute-api.us-east-1.amazonaws.com/pharmacy/alerts', {
   method: 'OPTIONS',
   headers: { 'Origin': 'https://evil.example', 'Access-Control-Request-Method': 'GET' }
 }).then(r => console.log('status', r.status, 'allow-origin', r.headers.get('access-control-allow-origin')));

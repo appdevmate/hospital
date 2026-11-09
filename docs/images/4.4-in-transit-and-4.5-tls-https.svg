@@ -1,0 +1,251 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1300" font-family="Segoe UI, Arial, sans-serif">
+  <defs>
+    <marker id="arrR2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1e293b"/>
+    </marker>
+    <marker id="arrL2" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M10,0 L0,5 L10,10 z" fill="#1e293b"/>
+    </marker>
+  </defs>
+
+  <!-- Header -->
+  <text x="40" y="52" font-size="30" font-weight="700" fill="#0f172a">Encryption in Transit — TLS 1.2+ Everywhere</text>
+  <text x="40" y="84" font-size="16" fill="#475569">Every byte between browser and backend is scrambled by TLS. The ACM certificate is what makes it trustworthy.</text>
+
+  <!-- MAIN FLOW -->
+  <text x="40" y="130" font-size="16" font-weight="700" fill="#0891b2">THE TLS HANDSHAKE — happens once per connection</text>
+
+  <!-- 1. Browser -->
+  <g>
+    <rect x="40" y="155" width="200" height="130" rx="12" fill="#fff" stroke="#2563eb" stroke-width="3"/>
+    <!-- browser icon -->
+    <rect x="60" y="178" width="60" height="40" rx="4" fill="none" stroke="#2563eb" stroke-width="2"/>
+    <line x1="60" y1="190" x2="120" y2="190" stroke="#2563eb" stroke-width="2"/>
+    <circle cx="68" cy="184" r="2" fill="#2563eb"/>
+    <circle cx="76" cy="184" r="2" fill="#2563eb"/>
+    <text x="135" y="196" font-size="15" font-weight="700" fill="#1e293b">Browser</text>
+    <text x="55" y="238" font-size="12" fill="#334155">Doctor opens:</text>
+    <text x="55" y="256" font-size="12" font-family="Consolas, monospace" fill="#2563eb">tiryaq.akwadona.com</text>
+    <text x="55" y="278" font-size="11" fill="#64748b">Expects padlock in URL bar</text>
+  </g>
+
+  <!-- arrow 1 -->
+  <line x1="245" y1="220" x2="285" y2="220" stroke="#1e293b" stroke-width="2" marker-end="url(#arrR2)"/>
+  <text x="265" y="210" text-anchor="middle" font-size="11" fill="#1e293b" font-weight="600">1</text>
+  <text x="265" y="238" text-anchor="middle" font-size="10" fill="#475569">ClientHello</text>
+
+  <!-- 2. CloudFront -->
+  <g>
+    <rect x="290" y="155" width="200" height="130" rx="12" fill="#fff" stroke="#7c3aed" stroke-width="3"/>
+    <!-- cloud icon -->
+    <path d="M315 195 a15 15 0 0 1 30 0 a12 12 0 0 1 12 12 h-54 a12 12 0 0 1 12 -12z" fill="#7c3aed"/>
+    <text x="378" y="196" font-size="15" font-weight="700" fill="#1e293b">CloudFront</text>
+    <text x="305" y="236" font-size="12" fill="#334155">Edge nearest doctor</text>
+    <text x="305" y="254" font-size="11" fill="#64748b">(e.g. Bahrain, Mumbai)</text>
+    <text x="305" y="275" font-size="11" fill="#64748b">Presents the ACM cert</text>
+  </g>
+
+  <line x1="495" y1="220" x2="535" y2="220" stroke="#1e293b" stroke-width="2" marker-end="url(#arrR2)"/>
+  <text x="515" y="210" text-anchor="middle" font-size="11" fill="#1e293b" font-weight="600">2</text>
+  <text x="515" y="238" text-anchor="middle" font-size="10" fill="#475569">Cert</text>
+
+  <!-- 3. ACM certificate -->
+  <g>
+    <rect x="540" y="155" width="220" height="130" rx="12" fill="#fff" stroke="#dc2626" stroke-width="3"/>
+    <!-- cert icon -->
+    <rect x="560" y="178" width="34" height="40" rx="3" fill="none" stroke="#dc2626" stroke-width="2"/>
+    <line x1="565" y1="190" x2="589" y2="190" stroke="#dc2626" stroke-width="1.5"/>
+    <line x1="565" y1="198" x2="589" y2="198" stroke="#dc2626" stroke-width="1.5"/>
+    <circle cx="577" cy="211" r="4" fill="#dc2626"/>
+    <text x="608" y="196" font-size="15" font-weight="700" fill="#1e293b">ACM Certificate</text>
+    <text x="555" y="236" font-size="12" font-family="Consolas, monospace" fill="#334155">*.akwadona.com</text>
+    <text x="555" y="255" font-size="11" fill="#64748b">Signed by AWS public CA</text>
+    <text x="555" y="275" font-size="11" fill="#64748b">Auto-renewed, free</text>
+  </g>
+
+  <line x1="765" y1="220" x2="805" y2="220" stroke="#1e293b" stroke-width="2" marker-end="url(#arrR2)"/>
+  <text x="785" y="210" text-anchor="middle" font-size="11" fill="#1e293b" font-weight="600">3</text>
+  <text x="785" y="238" text-anchor="middle" font-size="10" fill="#475569">Verify</text>
+
+  <!-- 4. Browser verifies -->
+  <g>
+    <rect x="810" y="155" width="230" height="130" rx="12" fill="#fff" stroke="#16a34a" stroke-width="3"/>
+    <!-- check icon -->
+    <circle cx="830" cy="195" r="14" fill="#16a34a"/>
+    <path d="M823 196 l5 5 l9 -10" stroke="#fff" stroke-width="3" fill="none"/>
+    <text x="852" y="200" font-size="15" font-weight="700" fill="#1e293b">Browser verifies</text>
+    <text x="825" y="236" font-size="12" fill="#334155">Trusts AWS CA?    yes</text>
+    <text x="825" y="254" font-size="12" fill="#334155">Domain matches?   yes</text>
+    <text x="825" y="272" font-size="12" fill="#334155">Not expired?      yes</text>
+  </g>
+
+  <line x1="1045" y1="220" x2="1085" y2="220" stroke="#1e293b" stroke-width="2" marker-end="url(#arrR2)"/>
+  <text x="1065" y="210" text-anchor="middle" font-size="11" fill="#1e293b" font-weight="600">4</text>
+  <text x="1065" y="238" text-anchor="middle" font-size="10" fill="#475569">Session key</text>
+
+  <!-- 5. Session established -->
+  <g>
+    <rect x="1090" y="155" width="270" height="130" rx="12" fill="#fff" stroke="#ea580c" stroke-width="3"/>
+    <!-- padlock closed -->
+    <rect x="1108" y="185" width="22" height="18" rx="2" fill="#ea580c"/>
+    <path d="M1112 185 v-6 a7 7 0 0 1 14 0 v6" fill="none" stroke="#ea580c" stroke-width="2.5"/>
+    <text x="1140" y="196" font-size="15" font-weight="700" fill="#1e293b">TLS session open</text>
+    <text x="1105" y="232" font-size="12" fill="#334155">Both sides share a</text>
+    <text x="1105" y="250" font-size="12" fill="#334155">symmetric AES key.</text>
+    <text x="1105" y="272" font-size="11" fill="#64748b">All traffic now encrypted,</text>
+    <text x="1105" y="286" font-size="11" fill="#64748b">both directions.</text>
+  </g>
+
+  <!-- Return channel -->
+  <text x="40" y="330" font-size="14" font-weight="700" fill="#475569">AFTER THE HANDSHAKE — every request + response is encrypted</text>
+  <g>
+    <rect x="40" y="345" width="1320" height="60" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+    <text x="60" y="378" font-size="13" fill="#1e293b" font-weight="600">Browser</text>
+    <text x="140" y="378" font-size="13" fill="#475569">&#8596; (encrypted bytes) &#8596;</text>
+    <text x="310" y="378" font-size="13" fill="#1e293b" font-weight="600">CloudFront</text>
+    <text x="415" y="378" font-size="13" fill="#475569">&#8596; (encrypted bytes, TLS 1.2+) &#8596;</text>
+    <text x="675" y="378" font-size="13" fill="#1e293b" font-weight="600">API Gateway</text>
+    <text x="790" y="378" font-size="13" fill="#475569">&#8596; (encrypted bytes, inside AWS VPC) &#8596;</text>
+    <text x="1095" y="378" font-size="13" fill="#1e293b" font-weight="600">Lambda</text>
+    <text x="1175" y="378" font-size="13" fill="#475569">&#8596; DynamoDB / KMS</text>
+  </g>
+
+  <!-- ACM Certificates panel -->
+  <g>
+    <rect x="40" y="430" width="650" height="150" rx="12" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
+    <text x="60" y="460" font-size="14" font-weight="700" fill="#dc2626">ACM certificates we hold (us-east-1)</text>
+    <text x="60" y="488" font-size="13" fill="#1e293b">• <tspan font-family="Consolas, monospace">akwadona.com</tspan> &#8212; the apex domain</text>
+    <text x="60" y="508" font-size="13" fill="#1e293b">• <tspan font-family="Consolas, monospace">*.akwadona.com</tspan> &#8212; wildcard, covers every tenant subdomain</text>
+    <text x="60" y="528" font-size="13" fill="#1e293b">• <tspan font-family="Consolas, monospace">auth.akwadona.com</tspan> &#8212; Cognito custom domain</text>
+    <text x="60" y="556" font-size="12" fill="#64748b">All issued free by AWS Certificate Manager, renewed automatically before expiry.</text>
+  </g>
+
+  <!-- GoDaddy DNS panel -->
+  <g>
+    <rect x="710" y="430" width="650" height="150" rx="12" fill="#fffbeb" stroke="#ca8a04" stroke-width="2"/>
+    <text x="730" y="460" font-size="14" font-weight="700" fill="#ca8a04">How the domain reaches CloudFront</text>
+    <text x="730" y="488" font-size="13" fill="#1e293b">1. GoDaddy holds the registration for <tspan font-family="Consolas, monospace">akwadona.com</tspan>.</text>
+    <text x="730" y="508" font-size="13" fill="#1e293b">2. GoDaddy DNS has CNAME rows pointing each subdomain to CloudFront.</text>
+    <text x="730" y="528" font-size="13" fill="#1e293b">3. CloudFront answers with the ACM certificate for that hostname.</text>
+    <text x="730" y="556" font-size="12" fill="#64748b">Route 53 could do the same, but we chose GoDaddy for simplicity.</text>
+  </g>
+
+  <!-- 5 feature cards -->
+  <text x="40" y="620" font-size="18" font-weight="700" fill="#0f172a">The five moving parts</text>
+
+  <g>
+    <rect x="40" y="640" width="250" height="200" rx="10" fill="#fef2f2" stroke="#dc2626" stroke-width="1"/>
+    <circle cx="68" cy="668" r="18" fill="#dc2626"/>
+    <text x="68" y="675" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">1</text>
+    <text x="98" y="675" font-size="15" font-weight="700" fill="#1e293b">ACM</text>
+    <text x="55" y="706" font-size="12" font-weight="700" fill="#334155">Certificate Manager</text>
+    <text x="55" y="726" font-size="12" fill="#475569">Issues certs for free.</text>
+    <text x="55" y="742" font-size="12" fill="#475569">Auto-renews before expiry.</text>
+    <text x="55" y="770" font-size="11" fill="#64748b">We never touch certs</text>
+    <text x="55" y="786" font-size="11" fill="#64748b">— no cron, no paid vendor.</text>
+    <text x="55" y="816" font-size="11" fill="#64748b">Cert must sit in us-east-1</text>
+    <text x="55" y="830" font-size="11" fill="#64748b">for CloudFront to use it.</text>
+  </g>
+
+  <g>
+    <rect x="305" y="640" width="250" height="200" rx="10" fill="#faf5ff" stroke="#7c3aed" stroke-width="1"/>
+    <circle cx="333" cy="668" r="18" fill="#7c3aed"/>
+    <text x="333" y="675" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">2</text>
+    <text x="363" y="675" font-size="15" font-weight="700" fill="#1e293b">CloudFront</text>
+    <text x="320" y="706" font-size="12" font-weight="700" fill="#334155">The front door</text>
+    <text x="320" y="726" font-size="12" fill="#475569">Terminates browser TLS.</text>
+    <text x="320" y="742" font-size="12" fill="#475569">Presents ACM cert.</text>
+    <text x="320" y="762" font-size="12" fill="#475569">Decrypts, re-encrypts</text>
+    <text x="320" y="778" font-size="12" fill="#475569">to API Gateway.</text>
+    <text x="320" y="806" font-size="11" fill="#64748b">Viewer protocol:</text>
+    <text x="320" y="822" font-size="11" fill="#64748b">"Redirect HTTP to HTTPS"</text>
+  </g>
+
+  <g>
+    <rect x="570" y="640" width="250" height="200" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+    <circle cx="598" cy="668" r="18" fill="#16a34a"/>
+    <text x="598" y="675" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">3</text>
+    <text x="628" y="675" font-size="15" font-weight="700" fill="#1e293b">TLS 1.2+ floor</text>
+    <text x="585" y="706" font-size="12" font-weight="700" fill="#334155">Old protocols rejected</text>
+    <text x="585" y="726" font-size="12" fill="#475569">No SSLv3, no TLS 1.0,</text>
+    <text x="585" y="742" font-size="12" fill="#475569">no TLS 1.1.</text>
+    <text x="585" y="770" font-size="12" fill="#475569">Set on CloudFront's</text>
+    <text x="585" y="786" font-size="12" fill="#475569">"Minimum TLS version"</text>
+    <text x="585" y="802" font-size="12" fill="#475569">setting.</text>
+    <text x="585" y="824" font-size="11" fill="#64748b">Satisfies HIPAA 164.312(e).</text>
+  </g>
+
+  <g>
+    <rect x="835" y="640" width="250" height="200" rx="10" fill="#fff7ed" stroke="#ea580c" stroke-width="1"/>
+    <circle cx="863" cy="668" r="18" fill="#ea580c"/>
+    <text x="863" y="675" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">4</text>
+    <text x="893" y="675" font-size="15" font-weight="700" fill="#1e293b">API Gateway TLS</text>
+    <text x="850" y="706" font-size="12" font-weight="700" fill="#334155">Backend hop</text>
+    <text x="850" y="726" font-size="12" fill="#475569">Even CloudFront &#8594; AGW</text>
+    <text x="850" y="742" font-size="12" fill="#475569">goes over TLS 1.2+.</text>
+    <text x="850" y="770" font-size="12" fill="#475569">Lambda invocation</text>
+    <text x="850" y="786" font-size="12" fill="#475569">stays inside AWS VPC,</text>
+    <text x="850" y="802" font-size="12" fill="#475569">still encrypted.</text>
+    <text x="850" y="824" font-size="11" fill="#64748b">No plaintext anywhere.</text>
+  </g>
+
+  <g>
+    <rect x="1100" y="640" width="260" height="200" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1"/>
+    <circle cx="1128" cy="668" r="18" fill="#2563eb"/>
+    <text x="1128" y="675" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">5</text>
+    <text x="1158" y="675" font-size="15" font-weight="700" fill="#1e293b">The padlock</text>
+    <text x="1115" y="706" font-size="12" font-weight="700" fill="#334155">What the user sees</text>
+    <text x="1115" y="726" font-size="12" fill="#475569">Padlock icon in URL bar</text>
+    <text x="1115" y="742" font-size="12" fill="#475569">= TLS handshake OK</text>
+    <text x="1115" y="770" font-size="12" fill="#475569">+ cert valid</text>
+    <text x="1115" y="786" font-size="12" fill="#475569">+ domain matches</text>
+    <text x="1115" y="802" font-size="12" fill="#475569">+ not expired</text>
+    <text x="1115" y="824" font-size="11" fill="#64748b">No padlock = don't type a password.</text>
+  </g>
+
+  <!-- Three summary panels -->
+  <g>
+    <rect x="40" y="880" width="430" height="195" rx="10" fill="#fff" stroke="#cbd5e1"/>
+    <text x="60" y="910" font-size="14" font-weight="700" fill="#0891b2">How the pieces fit</text>
+    <text x="60" y="935" font-size="12" fill="#1e293b">GoDaddy DNS points subdomain</text>
+    <text x="60" y="951" font-size="12" fill="#1e293b">to CloudFront.</text>
+    <text x="60" y="975" font-size="12" fill="#1e293b">CloudFront presents ACM cert.</text>
+    <text x="60" y="999" font-size="12" fill="#1e293b">Browser verifies cert against the</text>
+    <text x="60" y="1015" font-size="12" fill="#1e293b">AWS CA root it already trusts.</text>
+    <text x="60" y="1039" font-size="12" fill="#1e293b">Session key is negotiated.</text>
+    <text x="60" y="1059" font-size="12" fill="#1e293b">All traffic — browser to Lambda —</text>
+    <text x="60" y="1075" font-size="12" fill="#1e293b">rides encrypted channels end to end.</text>
+  </g>
+
+  <g>
+    <rect x="485" y="880" width="430" height="195" rx="10" fill="#fff" stroke="#cbd5e1"/>
+    <text x="505" y="910" font-size="14" font-weight="700" fill="#16a34a">Why it exists</text>
+    <text x="505" y="935" font-size="12" fill="#1e293b">1. Stop eavesdroppers on the</text>
+    <text x="505" y="951" font-size="12" fill="#1e293b">    network reading PHI in flight.</text>
+    <text x="505" y="975" font-size="12" fill="#1e293b">2. Prove the domain is really ours,</text>
+    <text x="505" y="991" font-size="12" fill="#1e293b">    not a phishing clone.</text>
+    <text x="505" y="1015" font-size="12" fill="#1e293b">3. Meet HIPAA §164.312(e)</text>
+    <text x="505" y="1031" font-size="12" fill="#1e293b">    (transmission security).</text>
+    <text x="505" y="1055" font-size="12" fill="#1e293b">4. Meet PDPPL + GDPR transit</text>
+    <text x="505" y="1071" font-size="12" fill="#1e293b">    encryption obligations.</text>
+  </g>
+
+  <g>
+    <rect x="930" y="880" width="430" height="195" rx="10" fill="#fff" stroke="#cbd5e1"/>
+    <text x="950" y="910" font-size="14" font-weight="700" fill="#7c3aed">Real-life analogy</text>
+    <text x="950" y="935" font-size="12" fill="#1e293b">HTTPS = sealed armoured car.</text>
+    <text x="950" y="951" font-size="12" fill="#1e293b">HTTP = open postcard.</text>
+    <text x="950" y="979" font-size="12" fill="#1e293b">ACM = notarised business licence</text>
+    <text x="950" y="995" font-size="12" fill="#1e293b">— proves the car company is</text>
+    <text x="950" y="1011" font-size="12" fill="#1e293b">who it claims to be.</text>
+    <text x="950" y="1039" font-size="12" fill="#1e293b">CloudFront = the regional depot</text>
+    <text x="950" y="1055" font-size="12" fill="#1e293b">that hands you the armoured car</text>
+    <text x="950" y="1071" font-size="12" fill="#1e293b">nearest to your city.</text>
+  </g>
+
+  <!-- Result banner -->
+  <rect x="40" y="1100" width="1320" height="60" rx="10" fill="#0f172a"/>
+  <text x="700" y="1136" text-anchor="middle" font-size="16" font-weight="600" fill="#fff">Result: anyone sniffing the network (cafe WiFi, hotel LAN, mobile tower) sees random bytes, not patient data.</text>
+
+  <text x="40" y="1190" font-size="11" fill="#94a3b8">Services: ACM (us-east-1, free + auto-renew) · CloudFront (viewer TLS termination) · API Gateway (backend TLS floor) · GoDaddy DNS (CNAME targets).</text>
+</svg>

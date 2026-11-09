@@ -208,7 +208,7 @@ Mitigations:
 
 Mitigations:
 
-- MFA enforced on all admin accounts.
+- MFA available (TOTP) on all accounts; enforcement for Operator/Admin accounts is an open action item (Cognito pool is `Mfa.OPTIONAL` as of 2026-10-29).
 - IAM credentials are short-lived where possible (SSO).
 - Even with full IAM access, the attacker cannot decrypt PHI (key policy condition matches only the Lambda role pattern).
 - Deletion of KMS keys requires 30-day waiting window — gives the security team time to react.

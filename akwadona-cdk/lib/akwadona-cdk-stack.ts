@@ -13,6 +13,9 @@ import * as cr from 'aws-cdk-lib/custom-resources';
 import * as events from 'aws-cdk-lib/aws-events';
 import * as eventsTargets from 'aws-cdk-lib/aws-events-targets';
 import * as acm from 'aws-cdk-lib/aws-certificatemanager';
+import * as cloudwatch from 'aws-cdk-lib/aws-cloudwatch';
+import * as cwActions from 'aws-cdk-lib/aws-cloudwatch-actions';
+import * as sns from 'aws-cdk-lib/aws-sns';
 
 export interface AkwadonaStackProps extends cdk.StackProps {
     /** ARN of the CloudFront-scoped WAFv2 WebACL created in the edge (us-east-1) stack. */
@@ -245,14 +248,21 @@ export class AkwadonaStack extends cdk.Stack {
         // fail with "Cannot perform more than one GSI creation or deletion
         // in a single update".
         //
-        // Current GSIs (all created on fresh deploy):
-        //   1. EntityType-index          — main query index
+        // Current GSIs (all created on fresh deploy) — NINE as of 2026-10:
+        //   1. EntityType-index          — main query index (TENANT list, reference data)
         //   2. PatientID-index           — patient-related queries
-        //   3. email-index               — lookup by email
-        //   4. doctorEmail-createdAt-index — doctor email + date queries
+        //   3. email-index               — lookup DOCTOR by plaintext email (staff
+        //                                  email is PII, kept plaintext for this GSI;
+        //                                  PATIENT email is encrypted — use #9)
+        //   4. doctorEmail-createdAt-index — doctor email + date queries (invoices)
         //   5. GSI1                      — generic GSI (GSI1PK + GSI1SK)
-        //   6. GSI2                      — name search (name_prefix + name_lower)
+        //   6. GSI2                      — name_prefix + name_lower. NOT populated
+        //                                  for PATIENT/DOCTOR since Step 3 encrypted
+        //                                  `name`; name search is now post-decrypt
+        //                                  in-memory (see getAllPatients).
         //   7. dataClass-index           — PDPPL breach scoping (Update 06)
+        //   8. tenant-entityType-index   — THE per-tenant list index (Step 2)
+        //   9. emailHash-EntityType-index — HMAC lookup for encrypted PATIENT email (Step 4)
         //
         // Compliance — every item written to this table SHOULD include a
         // `dataClass` attribute drawn from { PHI, PII, PUBLIC, AUDIT, SYSTEM }
@@ -399,13 +409,15 @@ export class AkwadonaStack extends cdk.Stack {
                 requireSymbols: true,
                 tempPasswordValidity: cdk.Duration.days(3)
             },
-            // Compliance regression: MFA fully disabled (REQUIRED -> OPTIONAL
-            // -> OFF) by request. The two-step path was needed because
-            // Cognito refuses REQUIRED -> OFF directly on a live pool.
-            // Re-enable by restoring Mfa.REQUIRED and re-deploying.
-            mfa: cognito.Mfa.OFF,
-            // mfaSecondFactor not needed when mfa is OFF.
-            // mfaSecondFactor: { sms: true, otp: true },
+            // 2026-10-29 security fix — MFA was OFF (disabled "by request" in
+            // a prior step). OPTIONAL re-opens enrolment without forcing
+            // anyone through setup on next login: existing users keep working,
+            // users who enrol a TOTP app get a second factor. The custom
+            // Angular login already handles the SOFTWARE_TOKEN_MFA challenge
+            // (cognito-auth.service.ts). Move to Mfa.REQUIRED once every
+            // Operator / Admin has enrolled — that is a product decision.
+            mfa: cognito.Mfa.OPTIONAL,
+            mfaSecondFactor: { sms: false, otp: true },
             accountRecovery: cognito.AccountRecovery.EMAIL_ONLY,
             standardThreatProtectionMode: cognito.StandardThreatProtectionMode.FULL_FUNCTION,
             deviceTracking: {
@@ -426,8 +438,25 @@ export class AkwadonaStack extends cdk.Stack {
             oAuth: {
                 flows: { authorizationCodeGrant: true },
                 scopes: [cognito.OAuthScope.OPENID, cognito.OAuthScope.EMAIL, cognito.OAuthScope.PHONE, cognito.OAuthScope.PROFILE],
-                callbackUrls: ['http://localhost:4200/', 'https://d6i7iwknkj0bg.cloudfront.net/'],
-                logoutUrls: ['http://localhost:4200/', 'https://d6i7iwknkj0bg.cloudfront.net/']
+                // 2026-10-29 — d6i7iwknkj0bg was the Tiryaq-era distribution
+                // destroyed in the 2026-06-30 teardown. Current raw CloudFront
+                // domain is d378t54x9p802t. The custom Angular login uses
+                // InitiateAuth (no OAuth redirect), so these lists only matter
+                // if the Hosted UI is ever used; kept accurate regardless.
+                callbackUrls: [
+                    'http://localhost:4200/',
+                    'https://d378t54x9p802t.cloudfront.net/',
+                    'https://www.akwadona.com/',
+                    'https://tiryaq.akwadona.com/',
+                    'https://alshifaa.akwadona.com/'
+                ],
+                logoutUrls: [
+                    'http://localhost:4200/',
+                    'https://d378t54x9p802t.cloudfront.net/',
+                    'https://www.akwadona.com/',
+                    'https://tiryaq.akwadona.com/',
+                    'https://alshifaa.akwadona.com/'
+                ]
             },
             accessTokenValidity: cdk.Duration.hours(1),
             idTokenValidity: cdk.Duration.hours(1),
@@ -485,9 +514,21 @@ export class AkwadonaStack extends cdk.Stack {
                 event: events.RuleTargetInput.fromObject({ _warmup: true })
             })]
         });
-        // Step C.3 — pre-token Lambda scans DOCTOR profile rows to resolve
-        // the application doctorId UUID for the signed-in user. Read-only.
+        // Step C.3 — pre-token Lambda resolves the application doctorId UUID
+        // for the signed-in user. Read-only on the table.
         table.grantReadData(preTokenFn);
+        // 2026-10-29 — the lookup now HMACs the e-mail (DOCTOR.email is
+        // encrypted since Step 3) and Queries emailHash-EntityType-index.
+        // GenerateMac on tenant HMAC keys only; no Decrypt — the pre-token
+        // Lambda still cannot read PHI. Merges into the existing DefaultPolicy
+        // (no new CFN resource).
+        preTokenFn.addToRolePolicy(new iam.PolicyStatement({
+            actions: ['kms:GenerateMac'],
+            resources: [`arn:aws:kms:${region}:${accountId}:key/*`],
+            conditions: {
+                'ForAnyValue:StringLike': { 'kms:ResourceAliases': 'alias/akwadona-tenant-*' }
+            }
+        }));
 
         const cfnUserPool = userPool.node.defaultChild as cognito.CfnUserPool;
         cfnUserPool.lambdaConfig = {
@@ -557,7 +598,12 @@ export class AkwadonaStack extends cdk.Stack {
         // keeping the source folder untouched. Folder structure changes are
         // cosmetic; the deployed name is what shows up in AWS Console,
         // CloudWatch logs, and customer-facing artifacts.
-        const fn = (id: string, folder: string, handler: string, runtime: lambda.Runtime = lambda.Runtime.NODEJS_18_X, extraEnv: Record<string, string> = {}, opts: { memorySize?: number; functionName?: string } = {}) =>
+        // 2026-10-29 — default runtime raised from NODEJS_18_X (AWS stopped
+        // security patches for Node 18 on Lambda in Sept 2025) to NODEJS_20_X.
+        // 27 CRUD Lambdas pick this up; the handlers use plain CommonJS +
+        // @aws-sdk v3 and have no Node-18-specific code. Runtime is an
+        // in-place CFN update (no function replacement).
+        const fn = (id: string, folder: string, handler: string, runtime: lambda.Runtime = lambda.Runtime.NODEJS_20_X, extraEnv: Record<string, string> = {}, opts: { memorySize?: number; functionName?: string } = {}) =>
             new lambda.Function(this, id, {
                 functionName: opts.functionName ?? folder,
                 runtime,
@@ -715,13 +761,47 @@ export class AkwadonaStack extends cdk.Stack {
             ],
             resources: ['*']
         }));
+        // DescribeKey + TagResource stay broad: the wizard needs them on keys
+        // whose ARN it only learns after CreateKey returns.
         operatorConsoleFn.addToRolePolicy(new iam.PolicyStatement({
-            actions: ['kms:TagResource', 'kms:ScheduleKeyDeletion', 'kms:DescribeKey'],
+            actions: ['kms:TagResource', 'kms:DescribeKey'],
             resources: ['*']
         }));
-        // Defense-in-depth — operator may never delete pre-existing tenant
-        // CMKs, only the new keys it just created. Explicit DENY overrides
-        // the broad ScheduleKeyDeletion grant above.
+        // ── 2026-10-29 security fix ─────────────────────────────────────────
+        // ScheduleKeyDeletion was previously allowed on '*' with NO condition,
+        // and the protective DENY below was gated on `allTenantCmkArns.length
+        // > 0` — which is always 0 now that the wizard onboards tenants. Net
+        // effect: the operator role could schedule deletion of ANY key in the
+        // account, including alias/akwadona/data (the table key) and every
+        // live tenant CMK. Two layers now:
+        //   1. ALLOW only on keys that carry the `akwadona:tenantId` tag the
+        //      wizard stamps at CreateKey time. Platform keys and anything
+        //      not created by the wizard are structurally out of reach.
+        //   2. Explicit DENY on the live tenants by tag value. Add a new
+        //      tenantId here once its onboarding is confirmed healthy; until
+        //      then the wizard's rollback path can still clean up a failed
+        //      onboarding for that tenant.
+        // ───────────────────────────────────────────────────────────────────
+        operatorConsoleFn.addToRolePolicy(new iam.PolicyStatement({
+            actions: ['kms:ScheduleKeyDeletion'],
+            resources: ['*'],
+            conditions: {
+                Null: { 'aws:ResourceTag/akwadona:tenantId': 'false' }
+            }
+        }));
+        const PROTECTED_TENANT_IDS = [
+            'T_2572fc71', // tiryaq
+            'T_a4b8aef9'  // alshifaa
+        ];
+        operatorConsoleFn.addToRolePolicy(new iam.PolicyStatement({
+            effect: iam.Effect.DENY,
+            actions: ['kms:ScheduleKeyDeletion', 'kms:DeleteAlias', 'kms:DisableKey'],
+            resources: ['*'],
+            conditions: {
+                StringEquals: { 'aws:ResourceTag/akwadona:tenantId': PROTECTED_TENANT_IDS }
+            }
+        }));
+        // Legacy path — kept for any future hard-coded entries.
         if (allTenantCmkArns.length > 0) {
             operatorConsoleFn.addToRolePolicy(new iam.PolicyStatement({
                 effect: iam.Effect.DENY,
@@ -779,7 +859,7 @@ export class AkwadonaStack extends cdk.Stack {
             lambda.Runtime.NODEJS_20_X,
             {
                 BEDROCK_REGION: 'us-east-1',
-                // Claude 3.5 Haiku via the US cross-region inference profile.
+                // Claude Haiku 4.5 via the US cross-region inference profile.
                 // The original claude-3-haiku-20240307 model was retired/marked
                 // legacy by the provider, which caused InvokeModel AccessDenied.
                 // Newer Anthropic models on Bedrock are only invokable through an
@@ -788,7 +868,7 @@ export class AkwadonaStack extends cdk.Stack {
             },
             { functionName: 'akwadona-scribe' }
         );
-        // Allow Bedrock InvokeModel on the Claude 3.5 Haiku US inference profile.
+        // Allow Bedrock InvokeModel on the Claude Haiku 4.5 US inference profile.
         // A cross-region inference profile requires permission on BOTH the
         // profile ARN and the underlying foundation-model ARNs in every region
         // the profile can route to (us-east-1 / us-east-2 / us-west-2).
@@ -805,35 +885,46 @@ export class AkwadonaStack extends cdk.Stack {
         );
 
         // ─────────────────────────────────────────────────────────────────────
-        // DynamoDB permissions
+        // DynamoDB permissions — least privilege (2026-10-29 security fix).
+        //
+        // Previously every Lambda got grantReadWriteData on the whole table,
+        // so a bug or injection in GET /patients could delete rows. Now:
+        //   readOnlyFunctions  → GetItem/Query/Scan/BatchGet
+        //                       + UpdateItem ONLY on THROTTLE#* rows (the
+        //                         shared throttle.js counter increments)
+        //   readWriteFunctions → full read/write (they genuinely mutate)
+        // Same number of CFN resources as before (one inline policy per
+        // role) so this does not touch the 500-resource budget.
         // ─────────────────────────────────────────────────────────────────────
-        const allFunctions = [
+        const readOnlyFunctions = [
             getAllPatientsFn,
             getPatientByIDFn,
-            createPatientFn,
-            updatePatientFn,
-            deletePatientFn,
             getPatientsDataByFiltersFn,
             getAllDoctorsFn,
             getDoctorByIDFn,
             getDoctorByEmailFn,
-            createDoctorFn,
-            updateDoctorFn,
-            deleteDoctorFn,
-            createPatientPaymentFn,
             getAllPaymentsForPatientFn,
             listAllPaymentsForPatientByIDFn,
-            updatePatientPaymentFn,
             getPaymentByIDFn,
-            deletePaymentFn,
             getAllInvoicesFn,
             listAllSurgeriesForPatientByIDFn,
             getSurgeryByIDFn,
             getAllDepartmentsFn,
+            getAllSpecializationsFn
+        ];
+        const readWriteFunctions = [
+            createPatientFn,
+            updatePatientFn,
+            deletePatientFn,
+            createDoctorFn,
+            updateDoctorFn,
+            deleteDoctorFn,
+            createPatientPaymentFn,
+            updatePatientPaymentFn,
+            deletePaymentFn,
             createNewDepartmentFn,
             bulkCreateDepartmentsFn,
             deleteAllDepartmentsFn,
-            getAllSpecializationsFn,
             createNewSpecializationFn,
             bulkCreateSpecializationsFn,
             deleteAllSpecializationsFn,
@@ -848,6 +939,7 @@ export class AkwadonaStack extends cdk.Stack {
             bloodbankFn,
             scribeFn
         ];
+        const allFunctions = [...readOnlyFunctions, ...readWriteFunctions];
 
         // Step 2g.5 — single managed policy shared across every tenant Lambda
         // for publishing the throttle 429 metric. Using a ManagedPolicy here
@@ -862,8 +954,23 @@ export class AkwadonaStack extends cdk.Stack {
             })]
         });
 
-        allFunctions.forEach((f) => {
+        readOnlyFunctions.forEach((f) => {
+            table.grantReadData(f);
+            // throttle.js (inlined in every Lambda) increments a per-tenant
+            // counter row on every request. Scope that single write to the
+            // THROTTLE# partition so a read Lambda can never touch PHI rows.
+            f.addToRolePolicy(new iam.PolicyStatement({
+                actions: ['dynamodb:UpdateItem'],
+                resources: [table.tableArn],
+                conditions: {
+                    'ForAllValues:StringLike': { 'dynamodb:LeadingKeys': ['THROTTLE#*'] }
+                }
+            }));
+        });
+        readWriteFunctions.forEach((f) => {
             table.grantReadWriteData(f);
+        });
+        allFunctions.forEach((f) => {
             // Compliance: Lambda execution roles must be explicitly granted
             // KMS Encrypt/Decrypt on the data CMK because DynamoDB CUSTOMER_MANAGED
             // encryption requires the caller principal to have key access.
@@ -1148,7 +1255,9 @@ exports.handler = async (event) => {
 
         const allowedOrigins = [
             'http://localhost:4200',
-            'https://d6i7iwknkj0bg.cloudfront.net',
+            // 2026-10-29 — replaced dead Tiryaq-era d6i7iwknkj0bg with the
+            // current raw CloudFront domain (fallback when DNS is mid-change).
+            'https://d378t54x9p802t.cloudfront.net',
             'https://akwadona.com',
             'https://www.akwadona.com',
             ...tenantOrigins
@@ -1169,6 +1278,25 @@ exports.handler = async (event) => {
                 maxAge: cdk.Duration.minutes(10)
             }
         });
+
+        // ─────────────────────────────────────────────────────────────────────
+        // 2026-10-29 security fix — stage-level throttling.
+        // The per-tenant throttle in throttle.js runs INSIDE the Lambda, so a
+        // flood still pays for every invocation and can exhaust the account's
+        // Lambda concurrency before the app-level limiter says no. This
+        // first-line limit is enforced by API Gateway before any Lambda runs.
+        // Numbers: 2 tenants × Enterprise plan (500 r/s) would be 1,000 r/s;
+        // 200 r/s sustained + 500 burst is >10× current peak and leaves room
+        // to raise when a third tenant signs. Zero new CFN resources (it is
+        // a property on the existing $default stage).
+        // ─────────────────────────────────────────────────────────────────────
+        const defaultStage = api.defaultStage?.node.defaultChild as apigwv2.CfnStage | undefined;
+        if (defaultStage) {
+            defaultStage.defaultRouteSettings = {
+                throttlingBurstLimit: 500,
+                throttlingRateLimit: 200
+            };
+        }
 
         const route = (path: string, methods: apigwv2.HttpMethod[], handler: lambda.Function) =>
             api.addRoutes({
@@ -1413,9 +1541,20 @@ exports.handler = async (event) => {
         const documentsBucket = new s3.Bucket(this, 'AkwadonaDocumentsBucket', {
             bucketName: `akwadona-documents-${accountId}-${region}`,
             blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
-            encryption: s3.BucketEncryption.S3_MANAGED,
+            // 2026-10-29 security fix — was S3_MANAGED (SSE-S3). Patient
+            // documents (lab reports, DICOM) are PHI and were the one store
+            // NOT under the customer-managed key. Existing objects keep their
+            // old SSE-S3 envelope until rewritten; new uploads use the CMK.
+            // documentManagerFn already has grantEncryptDecrypt on this key
+            // (allFunctions loop), and pre-signed PUT/GET URLs inherit the
+            // signer's KMS permission, so browser uploads keep working.
+            encryption: s3.BucketEncryption.KMS,
+            encryptionKey: akwadonaDataKey,
+            bucketKeyEnabled: true,
             enforceSSL: true,
             versioned: true,
+            serverAccessLogsBucket: accessLogsBucket,
+            serverAccessLogsPrefix: 's3-access/documents/',
             removalPolicy: cdk.RemovalPolicy.RETAIN,
             cors: [
                 {
@@ -1431,8 +1570,71 @@ exports.handler = async (event) => {
         documentManagerFn.addEnvironment('DOCUMENTS_BUCKET', documentsBucket.bucketName);
 
         // ─────────────────────────────────────────────────────────────────────
+        // 2026-10-29 — Alarms (there were none; docs claimed ten).
+        //
+        // CFN budget: the stack sits at 493/500. This block adds exactly
+        // three resources (1 topic + 2 alarms) → 496. The e-mail subscription
+        // is deliberately NOT in CDK so the address is not committed to git
+        // and so we keep one more slot free. Subscribe once after deploy:
+        //
+        //   aws sns subscribe --topic-arn <AlarmTopicArn output> \
+        //     --protocol email --notification-endpoint you@example.com
+        //
+        // then click the confirmation link AWS e-mails you.
+        //
+        // Alarm 1 — API 5xx. Any server error in a 5-minute window is worth
+        //           a look at this traffic level; raise the threshold when
+        //           real volume makes single blips noisy.
+        // Alarm 2 — Lambda errors across ALL functions (account-wide metric,
+        //           no dimension). Catches the updatedAt:null class of bug
+        //           that takes one endpoint down while everything else is
+        //           green.
+        // Next alarms to add when the stack is split (see docs/45): DynamoDB
+        // UserErrors + ThrottledRequests, Cognito SignInThrottles, pre-token
+        // Lambda Duration p99 > 4 s (Cognito's 5 s cap).
+        // ─────────────────────────────────────────────────────────────────────
+        const alarmTopic = new sns.Topic(this, 'AkwadonaAlarmTopic', {
+            topicName: 'akwadona-alarms',
+            displayName: 'Akwadona platform alarms'
+        });
+
+        const api5xxAlarm = new cloudwatch.Alarm(this, 'AkwadonaApi5xxAlarm', {
+            alarmName: 'akwadona-api-5xx',
+            alarmDescription: 'HTTP API returned one or more 5xx in the last 5 minutes.',
+            metric: new cloudwatch.Metric({
+                namespace: 'AWS/ApiGateway',
+                metricName: '5xx',
+                dimensionsMap: { ApiId: api.apiId },
+                statistic: 'Sum',
+                period: cdk.Duration.minutes(5)
+            }),
+            threshold: 1,
+            evaluationPeriods: 1,
+            comparisonOperator: cloudwatch.ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
+            treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING
+        });
+        api5xxAlarm.addAlarmAction(new cwActions.SnsAction(alarmTopic));
+
+        const lambdaErrorsAlarm = new cloudwatch.Alarm(this, 'AkwadonaLambdaErrorsAlarm', {
+            alarmName: 'akwadona-lambda-errors',
+            alarmDescription: 'One or more Lambda invocations errored (any function) in the last 5 minutes.',
+            metric: new cloudwatch.Metric({
+                namespace: 'AWS/Lambda',
+                metricName: 'Errors',
+                statistic: 'Sum',
+                period: cdk.Duration.minutes(5)
+            }),
+            threshold: 1,
+            evaluationPeriods: 1,
+            comparisonOperator: cloudwatch.ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
+            treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING
+        });
+        lambdaErrorsAlarm.addAlarmAction(new cwActions.SnsAction(alarmTopic));
+
+        // ─────────────────────────────────────────────────────────────────────
         // Outputs
         // ─────────────────────────────────────────────────────────────────────
+        new cdk.CfnOutput(this, 'AlarmTopicArn', { value: alarmTopic.topicArn, description: 'SNS topic for alarms → subscribe your e-mail once after deploy' });
         new cdk.CfnOutput(this, 'ApiUrl', { value: api.apiEndpoint, description: 'HTTP API URL → update src/app.config.ts apiBaseUrl' });
         new cdk.CfnOutput(this, 'CloudFrontUrl', { value: `https://${distribution.distributionDomainName}`, description: 'Frontend URL → update callbackUrls + logoutUrls then redeploy' });
         new cdk.CfnOutput(this, 'S3BucketName', { value: siteBucket.bucketName, description: 'S3 bucket → ng build + aws s3 sync' });

@@ -1,0 +1,266 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1300" font-family="Segoe UI, Arial, sans-serif">
+  <defs>
+    <marker id="arrR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1e293b"/>
+    </marker>
+    <marker id="arrGrey" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <!-- Header -->
+  <text x="40" y="52" font-size="30" font-weight="700" fill="#0f172a">Encryption at Rest + Envelope Encryption – How Akwadona locks patient data</text>
+  <text x="40" y="84" font-size="16" fill="#475569">Every row has its own one-time key (DEK), locked inside a per-tenant master key (KEK), stored safely in DynamoDB.</text>
+
+  <!-- WRITE FLOW title -->
+  <text x="40" y="130" font-size="16" font-weight="700" fill="#0891b2">WRITE PATH — doctor adds a patient</text>
+
+  <!-- Flow boxes row 1 -->
+  <!-- 1. Lambda -->
+  <g>
+    <rect x="40" y="150" width="200" height="110" rx="12" fill="#fff" stroke="#ea580c" stroke-width="3"/>
+    <circle cx="70" cy="180" r="18" fill="#ea580c"/>
+    <text x="70" y="187" text-anchor="middle" font-size="18" font-weight="700" fill="#fff">λ</text>
+    <text x="105" y="186" font-size="15" font-weight="700" fill="#1e293b">Lambda</text>
+    <text x="60" y="216" font-size="13" fill="#334155">POST /patients handler</text>
+    <text x="60" y="236" font-size="12" fill="#64748b">reads JWT.tenantId,</text>
+    <text x="60" y="252" font-size="12" fill="#64748b">prepares row to write</text>
+  </g>
+
+  <!-- arrow 1 -->
+  <line x1="245" y1="205" x2="285" y2="205" stroke="#1e293b" stroke-width="2" marker-end="url(#arrR)"/>
+  <text x="265" y="195" text-anchor="middle" font-size="11" fill="#1e293b" font-weight="600">1</text>
+
+  <!-- 2. Generate DEK -->
+  <g>
+    <rect x="290" y="150" width="200" height="110" rx="12" fill="#fff" stroke="#ca8a04" stroke-width="3"/>
+    <circle cx="320" cy="180" r="18" fill="#ca8a04"/>
+    <text x="320" y="187" text-anchor="middle" font-size="18" font-weight="700" fill="#fff">?</text>
+    <text x="355" y="186" font-size="15" font-weight="700" fill="#1e293b">Generate DEK</text>
+    <text x="310" y="216" font-size="13" fill="#334155">Random AES-256 key</text>
+    <text x="310" y="236" font-size="12" fill="#64748b">Fresh for this one row</text>
+    <text x="310" y="252" font-size="12" fill="#64748b">Never reused</text>
+  </g>
+
+  <line x1="495" y1="205" x2="535" y2="205" stroke="#1e293b" stroke-width="2" marker-end="url(#arrR)"/>
+  <text x="515" y="195" text-anchor="middle" font-size="11" fill="#1e293b" font-weight="600">2</text>
+
+  <!-- 3. Encrypt PHI with DEK -->
+  <g>
+    <rect x="540" y="150" width="220" height="110" rx="12" fill="#fff" stroke="#16a34a" stroke-width="3"/>
+    <!-- lock icon -->
+    <rect x="562" y="172" width="30" height="24" rx="3" fill="#16a34a"/>
+    <path d="M568 172 v-6 a9 9 0 0 1 18 0 v6" fill="none" stroke="#16a34a" stroke-width="3"/>
+    <text x="605" y="186" font-size="15" font-weight="700" fill="#1e293b">Encrypt PHI with DEK</text>
+    <text x="560" y="216" font-size="13" fill="#334155">AES-256-GCM</text>
+    <text x="560" y="236" font-size="12" fill="#64748b">name, qid, phone,</text>
+    <text x="560" y="252" font-size="12" fill="#64748b">address → nameEnc, qidEnc …</text>
+  </g>
+
+  <line x1="765" y1="205" x2="805" y2="205" stroke="#1e293b" stroke-width="2" marker-end="url(#arrR)"/>
+  <text x="785" y="195" text-anchor="middle" font-size="11" fill="#1e293b" font-weight="600">3</text>
+
+  <!-- 4. KMS wraps DEK -->
+  <g>
+    <rect x="810" y="150" width="230" height="110" rx="12" fill="#fff" stroke="#dc2626" stroke-width="3"/>
+    <!-- vault icon -->
+    <rect x="832" y="170" width="30" height="28" rx="4" fill="none" stroke="#dc2626" stroke-width="3"/>
+    <circle cx="847" cy="184" r="4" fill="#dc2626"/>
+    <text x="880" y="186" font-size="15" font-weight="700" fill="#1e293b">KMS: Encrypt the DEK</text>
+    <text x="830" y="216" font-size="13" fill="#334155">kms:Encrypt call</text>
+    <text x="830" y="236" font-size="12" fill="#64748b">with tenant KEK</text>
+    <text x="830" y="252" font-size="12" fill="#64748b">(alias/akwadona-tenant-&lt;slug&gt;)</text>
+  </g>
+
+  <line x1="1045" y1="205" x2="1085" y2="205" stroke="#1e293b" stroke-width="2" marker-end="url(#arrR)"/>
+  <text x="1065" y="195" text-anchor="middle" font-size="11" fill="#1e293b" font-weight="600">4</text>
+
+  <!-- 5. Write DynamoDB -->
+  <g>
+    <rect x="1090" y="150" width="270" height="110" rx="12" fill="#fff" stroke="#2563eb" stroke-width="3"/>
+    <!-- DB cylinder -->
+    <ellipse cx="1127" cy="178" rx="18" ry="6" fill="#2563eb"/>
+    <path d="M1109 178 v18 a18 6 0 0 0 36 0 v-18" fill="#2563eb"/>
+    <text x="1152" y="186" font-size="15" font-weight="700" fill="#1e293b">DynamoDB write</text>
+    <text x="1108" y="216" font-size="13" fill="#334155">One row holds BOTH:</text>
+    <text x="1108" y="234" font-size="12" fill="#64748b">• encrypted PHI (nameEnc …)</text>
+    <text x="1108" y="252" font-size="12" fill="#64748b">• wrapped DEK (dekCiphertext)</text>
+  </g>
+
+  <!-- READ FLOW title -->
+  <text x="40" y="310" font-size="16" font-weight="700" fill="#7c3aed">READ PATH — doctor opens the patient record</text>
+
+  <!-- Reverse flow (dashed) -->
+  <g>
+    <rect x="40" y="330" width="200" height="100" rx="12" fill="#faf5ff" stroke="#7c3aed" stroke-width="2" stroke-dasharray="6 4"/>
+    <text x="140" y="365" text-anchor="middle" font-size="14" font-weight="700" fill="#1e293b">Lambda</text>
+    <text x="140" y="388" text-anchor="middle" font-size="12" fill="#475569">GET /patients/{id}</text>
+    <text x="140" y="408" text-anchor="middle" font-size="12" fill="#475569">reads row from DynamoDB</text>
+  </g>
+
+  <line x1="245" y1="380" x2="285" y2="380" stroke="#64748b" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#arrGrey)"/>
+
+  <g>
+    <rect x="290" y="330" width="230" height="100" rx="12" fill="#faf5ff" stroke="#7c3aed" stroke-width="2" stroke-dasharray="6 4"/>
+    <text x="405" y="365" text-anchor="middle" font-size="14" font-weight="700" fill="#1e293b">KMS: Decrypt the DEK</text>
+    <text x="405" y="388" text-anchor="middle" font-size="12" fill="#475569">unwraps dekCiphertext</text>
+    <text x="405" y="408" text-anchor="middle" font-size="12" fill="#475569">(IAM must allow — operator is DENIED)</text>
+  </g>
+
+  <line x1="525" y1="380" x2="565" y2="380" stroke="#64748b" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#arrGrey)"/>
+
+  <g>
+    <rect x="570" y="330" width="230" height="100" rx="12" fill="#faf5ff" stroke="#7c3aed" stroke-width="2" stroke-dasharray="6 4"/>
+    <text x="685" y="365" text-anchor="middle" font-size="14" font-weight="700" fill="#1e293b">Decrypt PHI with DEK</text>
+    <text x="685" y="388" text-anchor="middle" font-size="12" fill="#475569">nameEnc → "Ahmad Al-Thani"</text>
+    <text x="685" y="408" text-anchor="middle" font-size="12" fill="#475569">in memory only, never written</text>
+  </g>
+
+  <line x1="805" y1="380" x2="845" y2="380" stroke="#64748b" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#arrGrey)"/>
+
+  <g>
+    <rect x="850" y="330" width="200" height="100" rx="12" fill="#faf5ff" stroke="#7c3aed" stroke-width="2" stroke-dasharray="6 4"/>
+    <text x="950" y="365" text-anchor="middle" font-size="14" font-weight="700" fill="#1e293b">Return to browser</text>
+    <text x="950" y="388" text-anchor="middle" font-size="12" fill="#475569">plaintext in response body</text>
+    <text x="950" y="408" text-anchor="middle" font-size="12" fill="#475569">over TLS (see §4.5 diagram)</text>
+  </g>
+
+  <!-- Side panel: KMS keys per tenant -->
+  <g>
+    <rect x="1080" y="330" width="280" height="150" rx="12" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
+    <text x="1095" y="358" font-size="14" font-weight="700" fill="#dc2626">KMS Keys (one pair per tenant)</text>
+    <text x="1095" y="384" font-size="12" fill="#1e293b">• alias/akwadona-tenant-tiryaq</text>
+    <text x="1095" y="404" font-size="12" fill="#1e293b">• alias/akwadona-tenant-alshifaa</text>
+    <text x="1095" y="432" font-size="12" font-weight="700" fill="#334155">Properties:</text>
+    <text x="1095" y="450" font-size="11" fill="#475569">• AES-256, symmetric default</text>
+    <text x="1095" y="466" font-size="11" fill="#475569">• Never leaves the KMS HSM</text>
+  </g>
+
+  <!-- What a row looks like -->
+  <text x="40" y="510" font-size="16" font-weight="700" fill="#0f172a">What a stored row actually looks like</text>
+  <g>
+    <rect x="40" y="525" width="1320" height="110" rx="10" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+    <text x="60" y="552" font-size="12" font-family="Consolas, monospace" fill="#334155">{</text>
+    <text x="80" y="572" font-size="12" font-family="Consolas, monospace" fill="#334155">PK: "PATIENT#T_2572fc71#4f3a-...",   SK: "PROFILE",   tenantId: "T_2572fc71",   EntityType: "PATIENT",</text>
+    <text x="80" y="590" font-size="12" font-family="Consolas, monospace" fill="#be123c">nameEnc: "AQIDAHj...vGZ=",   qidEnc: "AQIDAHj...8xA=",   phoneEnc: "AQIDAHj...pL=",</text>
+    <text x="80" y="608" font-size="12" font-family="Consolas, monospace" fill="#be123c">dekCiphertext: "AQIDAHj... (wrapped DEK, decryptable only by this tenant's KEK) ...jQ=",</text>
+    <text x="80" y="626" font-size="12" font-family="Consolas, monospace" fill="#334155">createdAt: "2026-10-05T...", updatedAt: "2026-10-05T...", qidHash: "a1b2c3..." (HMAC — see §4.7)   }</text>
+  </g>
+
+  <!-- 5 feature cards -->
+  <text x="40" y="690" font-size="18" font-weight="700" fill="#0f172a">The five moving parts</text>
+
+  <g>
+    <rect x="40" y="710" width="250" height="200" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1"/>
+    <circle cx="68" cy="738" r="18" fill="#2563eb"/>
+    <text x="68" y="745" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">1</text>
+    <text x="98" y="745" font-size="15" font-weight="700" fill="#1e293b">KEK</text>
+    <text x="55" y="776" font-size="12" font-weight="700" fill="#334155">Key Encryption Key</text>
+    <text x="55" y="796" font-size="12" fill="#475569">One per hospital.</text>
+    <text x="55" y="812" font-size="12" fill="#475569">Lives in KMS.</text>
+    <text x="55" y="828" font-size="12" fill="#475569">Never leaves.</text>
+    <text x="55" y="856" font-size="11" fill="#64748b">Only this hospital's</text>
+    <text x="55" y="872" font-size="11" fill="#64748b">Lambda role can use it.</text>
+    <text x="55" y="888" font-size="11" fill="#64748b">Operator role: DENIED.</text>
+  </g>
+
+  <g>
+    <rect x="305" y="710" width="250" height="200" rx="10" fill="#fffbeb" stroke="#ca8a04" stroke-width="1"/>
+    <circle cx="333" cy="738" r="18" fill="#ca8a04"/>
+    <text x="333" y="745" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">2</text>
+    <text x="363" y="745" font-size="15" font-weight="700" fill="#1e293b">DEK</text>
+    <text x="320" y="776" font-size="12" font-weight="700" fill="#334155">Data Encryption Key</text>
+    <text x="320" y="796" font-size="12" fill="#475569">Random AES-256.</text>
+    <text x="320" y="812" font-size="12" fill="#475569">Generated once,</text>
+    <text x="320" y="828" font-size="12" fill="#475569">per DynamoDB row.</text>
+    <text x="320" y="856" font-size="11" fill="#64748b">Never reused.</text>
+    <text x="320" y="872" font-size="11" fill="#64748b">Never leaves memory</text>
+    <text x="320" y="888" font-size="11" fill="#64748b">in plaintext.</text>
+  </g>
+
+  <g>
+    <rect x="570" y="710" width="250" height="200" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+    <circle cx="598" cy="738" r="18" fill="#16a34a"/>
+    <text x="598" y="745" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">3</text>
+    <text x="628" y="745" font-size="15" font-weight="700" fill="#1e293b">The row</text>
+    <text x="585" y="776" font-size="12" font-weight="700" fill="#334155">Stores both:</text>
+    <text x="585" y="796" font-size="12" fill="#475569">• encrypted PHI</text>
+    <text x="585" y="812" font-size="12" fill="#475569">  (locked by DEK)</text>
+    <text x="585" y="828" font-size="12" fill="#475569">• wrapped DEK</text>
+    <text x="585" y="844" font-size="12" fill="#475569">  (locked by KEK)</text>
+    <text x="585" y="872" font-size="11" fill="#64748b">Stolen backups =</text>
+    <text x="585" y="888" font-size="11" fill="#64748b">random bytes.</text>
+  </g>
+
+  <g>
+    <rect x="835" y="710" width="250" height="200" rx="10" fill="#faf5ff" stroke="#7c3aed" stroke-width="1"/>
+    <circle cx="863" cy="738" r="18" fill="#7c3aed"/>
+    <text x="863" y="745" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">4</text>
+    <text x="893" y="745" font-size="15" font-weight="700" fill="#1e293b">To read</text>
+    <text x="850" y="776" font-size="12" font-weight="700" fill="#334155">Two-step unwrap:</text>
+    <text x="850" y="796" font-size="12" fill="#475569">1. KMS unwraps DEK</text>
+    <text x="850" y="812" font-size="12" fill="#475569">   (IAM must allow)</text>
+    <text x="850" y="828" font-size="12" fill="#475569">2. DEK decrypts PHI</text>
+    <text x="850" y="856" font-size="11" fill="#64748b">CloudTrail logs</text>
+    <text x="850" y="872" font-size="11" fill="#64748b">every kms:Decrypt call</text>
+    <text x="850" y="888" font-size="11" fill="#64748b">— auditor can replay it.</text>
+  </g>
+
+  <g>
+    <rect x="1100" y="710" width="260" height="200" rx="10" fill="#fef2f2" stroke="#dc2626" stroke-width="1"/>
+    <circle cx="1128" cy="738" r="18" fill="#dc2626"/>
+    <text x="1128" y="745" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">5</text>
+    <text x="1158" y="745" font-size="15" font-weight="700" fill="#1e293b">To erase a tenant</text>
+    <text x="1115" y="776" font-size="12" font-weight="700" fill="#334155">Cryptographic erasure:</text>
+    <text x="1115" y="796" font-size="12" fill="#475569">schedule KEK deletion</text>
+    <text x="1115" y="812" font-size="12" fill="#475569">in KMS (7-30 day wait)</text>
+    <text x="1115" y="840" font-size="12" fill="#475569">Then: every wrapped DEK</text>
+    <text x="1115" y="856" font-size="12" fill="#475569">in DynamoDB is garbage.</text>
+    <text x="1115" y="884" font-size="11" fill="#64748b">Satisfies GDPR "right to</text>
+    <text x="1115" y="900" font-size="11" fill="#64748b">be forgotten".</text>
+  </g>
+
+  <!-- Bottom: three summary panels -->
+  <g>
+    <rect x="40" y="950" width="430" height="195" rx="10" fill="#fff" stroke="#cbd5e1"/>
+    <text x="60" y="980" font-size="14" font-weight="700" fill="#0891b2">How the pieces fit</text>
+    <text x="60" y="1005" font-size="12" fill="#1e293b">Lambda &#8594; generates DEK</text>
+    <text x="60" y="1025" font-size="12" fill="#1e293b">DEK &#8594; encrypts PHI</text>
+    <text x="60" y="1045" font-size="12" fill="#1e293b">KMS KEK &#8594; wraps DEK</text>
+    <text x="60" y="1065" font-size="12" fill="#1e293b">DynamoDB &#8594; stores both</text>
+    <text x="60" y="1090" font-size="12" fill="#1e293b">To read: reverse the chain,</text>
+    <text x="60" y="1106" font-size="12" fill="#1e293b">with IAM permission at the KMS step.</text>
+    <text x="60" y="1130" font-size="11" fill="#64748b">(The operator role has an explicit DENY — see §4.11)</text>
+  </g>
+
+  <g>
+    <rect x="485" y="950" width="430" height="195" rx="10" fill="#fff" stroke="#cbd5e1"/>
+    <text x="505" y="980" font-size="14" font-weight="700" fill="#16a34a">Why it exists</text>
+    <text x="505" y="1005" font-size="12" fill="#1e293b">1. Safe backups — stolen DynamoDB</text>
+    <text x="505" y="1021" font-size="12" fill="#1e293b">    files are useless without KMS access.</text>
+    <text x="505" y="1045" font-size="12" fill="#1e293b">2. Per-row key rotation — rotate the KEK,</text>
+    <text x="505" y="1061" font-size="12" fill="#1e293b">    not every row.</text>
+    <text x="505" y="1085" font-size="12" fill="#1e293b">3. Cryptographic erasure — destroy KEK,</text>
+    <text x="505" y="1101" font-size="12" fill="#1e293b">    every row is unreadable forever.</text>
+    <text x="505" y="1125" font-size="12" fill="#1e293b">4. Tenant isolation — Tiryaq's KEK</text>
+    <text x="505" y="1141" font-size="12" fill="#1e293b">    cannot open Alshifaa's rows.</text>
+  </g>
+
+  <g>
+    <rect x="930" y="950" width="430" height="195" rx="10" fill="#fff" stroke="#cbd5e1"/>
+    <text x="950" y="980" font-size="14" font-weight="700" fill="#7c3aed">Real-life analogy</text>
+    <text x="950" y="1005" font-size="12" fill="#1e293b">Each row is a locked box (DEK).</text>
+    <text x="950" y="1025" font-size="12" fill="#1e293b">All boxes sit inside a vault (KMS).</text>
+    <text x="950" y="1045" font-size="12" fill="#1e293b">The vault key (KEK) can lock or</text>
+    <text x="950" y="1061" font-size="12" fill="#1e293b">unlock any box.</text>
+    <text x="950" y="1085" font-size="12" fill="#1e293b">Melt the vault key: every box</text>
+    <text x="950" y="1101" font-size="12" fill="#1e293b">is forever locked — even by us.</text>
+    <text x="950" y="1125" font-size="12" fill="#1e293b">That is cryptographic erasure.</text>
+  </g>
+
+  <!-- Result banner -->
+  <rect x="40" y="1170" width="1320" height="60" rx="10" fill="#0f172a"/>
+  <text x="700" y="1206" text-anchor="middle" font-size="16" font-weight="600" fill="#fff">Result: PHI at rest is doubly locked. Stolen storage = random bytes. Erase a tenant = destroy one KEK.</text>
+
+  <text x="40" y="1260" font-size="11" fill="#94a3b8">Services: AWS KMS (per-tenant CMK + HSM) · DynamoDB · Lambda · IAM (operator DENY) · CloudTrail (audits every kms:Decrypt).</text>
+</svg>

@@ -21,8 +21,8 @@
  *   ALSHIFAA_USERNAME  ALSHIFAA_PASSWORD
  *
  * Optional overrides (defaults baked in):
- *   API_BASE           default https://jxz59jh15f.execute-api.us-east-1.amazonaws.com
- *   COGNITO_CLIENT_ID  default 2nfjfipi8hri262pjohtpgl45q
+ *   API_BASE           default https://ouohmmpi31.execute-api.us-east-1.amazonaws.com
+ *   COGNITO_CLIENT_ID  default 6ndnfufmo100mq1rrmte7pqmhg
  *   COGNITO_REGION     default us-east-1
  *
  * Exit: 0 all-pass, 1 any-fail, 2 setup error, 3 unhandled.
@@ -40,8 +40,8 @@ const {
     InitiateAuthCommand
 } = require('@aws-sdk/client-cognito-identity-provider');
 
-const API_BASE          = process.env.API_BASE          || 'https://jxz59jh15f.execute-api.us-east-1.amazonaws.com';
-const COGNITO_CLIENT_ID = process.env.COGNITO_CLIENT_ID || '2nfjfipi8hri262pjohtpgl45q';
+const API_BASE          = process.env.API_BASE          || 'https://ouohmmpi31.execute-api.us-east-1.amazonaws.com';
+const COGNITO_CLIENT_ID = process.env.COGNITO_CLIENT_ID || '6ndnfufmo100mq1rrmte7pqmhg';
 const COGNITO_REGION    = process.env.COGNITO_REGION    || 'us-east-1';
 
 const C = {

@@ -56,7 +56,7 @@ Total duration: ~7 minutes. Cost: roughly $1–3 (KMS calls + Lambda invocations
 
 ## Capacity baselines (theoretical)
 
-See `docs/06-scalability-report.md` for the calculated limits + interpretation.
+See `AKW-SAD-02-Solution-Architecture-Document.md` for the calculated limits + interpretation.
 
 | Resource | Limit |
 |---|---|
